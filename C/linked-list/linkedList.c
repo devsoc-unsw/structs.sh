@@ -2,17 +2,12 @@
 #include <stdlib.h>
 #include <wchar.h>
 #include <locale.h>
+#include "linkedList.h"
 
-typedef struct node {
+struct node {
     int val;
     struct node *next;
-} Node;
-
-void printColoured(char *text) {
-    printf("\033[0;35m");
-    printf("%s", text);
-    printf("\033[0m");
-}
+};
 
 // ===== Building List =====
 // Iteratively build a list, given an array of values
@@ -80,6 +75,7 @@ Node *insertRecursive(Node *head, int value, int insertionIndex) {
 }
 
 // ===== Deleting Nodes =====
+// Iteratively delete a node with the given target value from the list
 Node *delete(Node *head, int targetValue) {
     Node *curr = head;
     Node *prev = NULL;
@@ -97,6 +93,20 @@ Node *delete(Node *head, int targetValue) {
         prev = curr;
         curr = curr -> next;
     }
+}
+
+// Recursive version
+Node *deleteRecursive(Node *head, int targetValue) {
+    if (head == NULL) {
+        return NULL;
+    }
+    if (head -> val == targetValue) {
+        Node *nextNode = head -> next;
+        free(head);
+        return nextNode;
+    }
+    head -> next = delete(head -> next, targetValue);
+    return head;
 }
 
 // ===== Determine Length =====
@@ -188,41 +198,4 @@ void traverseAndPrintRecursive(Node *head) {
     }
     printf("%d %lc ", head -> val, (wint_t)0x2192);
     traverseAndPrintRecursive(head -> next);
-}
-
-int main() {
-    printColoured("|===== Linked List =====|\n");
-    int values[5] = {2, 4, 6, 8, 10};
-    Node *head = buildList(values, 5);
-    traverseAndPrintRecursive(head);
-    head = insertRecursive(head, 69, 0);
-    traverseAndPrintRecursive(head);
-    head = insertRecursive(head, 420, 6);
-    traverseAndPrintRecursive(head);
-
-    printf("REVERSING\n");
-    head = reverseRecursive(head);
-    traverseAndPrintRecursive(head);
-
-    printf("Count: %d\n", getLengthRecursive(head));
-    head = delete(head, 8);
-    traverseAndPrintRecursive(head);
-    head = delete(head, 69);
-    traverseAndPrintRecursive(head);
-    head = delete(head, 420);
-    traverseAndPrintRecursive(head);
-    printf("Count: %d\n", getLengthRecursive(head));
-    head = delete(head, 4);
-    traverseAndPrintRecursive(head);
-    head = delete(head, 6);
-    traverseAndPrintRecursive(head);
-    printf("Count: %d\n", getLengthRecursive(head));
-    head = delete(head, 10);
-    traverseAndPrintRecursive(head);
-    head = delete(head, 0);
-    traverseAndPrintRecursive(head);
-    printf("Count: %d\n", getLengthRecursive(head));
-    freeListRecursive(head);
-
-    return 0;
 }
