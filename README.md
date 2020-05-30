@@ -1,4 +1,3 @@
 # Data Structures
+A collection of classic data structures and their algorithms.
 
-### TODO:
-- Override $$\texttt{printf}$$ to accept colours as parameters
