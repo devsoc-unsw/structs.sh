@@ -14,7 +14,7 @@ int main() {
 
     // And initialise some or all of them while you're at it
     int d, e = 42, f;
-    
+
     // You can also assign several variables to the same variable in one line like this:
     a = b = c = d = e;
     printf("c = %d\n", c);
@@ -24,12 +24,11 @@ int main() {
     a = b = c = d = e = 420;
     printf("c = %d\n", c);
 
+    // Nothing is stopping us from using uninitialised variables
     printf("f = %d\n", f);
-    int g;
-    printf("g = %d\n", g);
-    int i;
-    printf("g = %d\n", i);
     
+    char *myString;
+    printf("myString = %d\n", myString);
 
     return 0;
 }
