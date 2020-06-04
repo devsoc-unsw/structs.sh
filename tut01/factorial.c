@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 // Iterative version. Very boring
-int factorial(int n) {
+int factorialIterative(int n) {
     int result = 1;
     while (n >= 1) {
         result *= n;
@@ -11,13 +11,18 @@ int factorial(int n) {
 }
 
 // Recursive version! 
-int mysteryFunction(int n) {
-    if (n == 1) return 1;
-    return n * mysteryFunction(n - 1);
+int factorialRecursive(int n) {
+    if (n == 1) {
+        return 1
+    } else {
+        int subSolution = factorialRecursive(n - 1);
+        int solution = n * subSolution;
+        return solution;
+    }
 }
 
 int main() {
     printf("%d\n", mysteryFunction(8));
-    printf("%d\n", factorial(8));
+    printf("%d\n", factorialIterative(8));
     return 0;
 }
