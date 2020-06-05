@@ -8,6 +8,8 @@ void somethingTerribleHasHappened() {
     fprintf(stdout, "Something terrible has happened. Exiting the program.\n");
     printf("Something terrible has happened. Exiting the program.\n");
 
+    // All 3 of the 'printfs' do the same thing: they print onto the terminal
+
     // Aborts the program immediately. EXIT_FAILURE is a #defined constant inside stdlib.h
     exit(EXIT_FAILURE);
 }
@@ -21,7 +23,8 @@ void readingStdin() {
     scanf("%d", &b);
 
     printf("a = %d\n", a);
-    printf("b = %d\n", a);
+    printf("b = %d\n", b);
+
 
     int c;
 
@@ -53,12 +56,14 @@ void readFromFile() {
 void writeToFile() {
     FILE *myOutputFile = fopen("output.txt", "w");
 
-    fprintf(myOutputFile, "I love data structures and algorithms\n");
+    fprintf(myOutputFile, "asdfasdfasdf12312312");
     
     exit(EXIT_SUCCESS);
 }
 
 int main() {
+    // somethingTerribleHasHappened();
+    // readingStdin();
     // readFromFile();
     writeToFile();
     return 0;

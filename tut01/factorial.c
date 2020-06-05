@@ -12,17 +12,28 @@ int factorialIterative(int n) {
 
 // Recursive version! 
 int factorialRecursive(int n) {
-    if (n == 1) {
-        return 1
-    } else {
-        int subSolution = factorialRecursive(n - 1);
-        int solution = n * subSolution;
-        return solution;
-    }
+    if (n == 1)
+        return 1;
+    return n * factorialRecursive(n - 1);
 }
 
 int main() {
-    printf("%d\n", mysteryFunction(8));
+    printf("%d\n", factorialRecursive(8));
     printf("%d\n", factorialIterative(8));
     return 0;
 }
+
+
+
+
+
+
+/*
+if (n == 1) {
+    return 1;
+} else {
+    int subSolution = factorialRecursive(n - 1);
+    int solution = n * subSolution;
+    return solution;
+}
+*/

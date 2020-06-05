@@ -6,10 +6,10 @@ int main() {
     if (1) printf("Yes, this if statement is valid!\n");
     
     int n = 4;
-    while(n = n - 1)  // Yup, you can have assignment statements in a while loop  
+    while (n = n - 1)  // Yup, you can have assignment statements in a while loop  
         printf("Yes, this while loop is valid\n");
 
-    // You can initialise several variables at once
+    // You can declare several variables at once
     int a, b, c;
 
     // And initialise some or all of them while you're at it
@@ -28,7 +28,7 @@ int main() {
     printf("f = %d\n", f);
     
     char *myString;
-    printf("myString = %d\n", myString);
+    printf("myString = %s\n", myString);
 
     return 0;
 }
