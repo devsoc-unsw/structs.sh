@@ -38,7 +38,7 @@ int main() {
    // printf("I looped %d times\n", counter);
 
    // How does this algorithm do for larger n?
-   FILE *timingData = fopen("fib_timing", "w");
+   FILE *timingData = fopen("fib-timing", "w");
    for (int i = 1; i < 50; i++) {
       clock_t start = clock();
       printf("-------------------------------------\n");
@@ -46,7 +46,7 @@ int main() {
       printf("---> Computing Fib(%d) needed %d loops!\n", i, counter);
 
       printf("---> 1.618^(%ld) = %lf\n", i, power(1.618, i));
-      // 1.618... is the golden ratio!
+      // 1.618... is the golden ratio
       // This fib algorithm has a time complexity of O(1.618 ^ n)      
 
       clock_t end = clock();

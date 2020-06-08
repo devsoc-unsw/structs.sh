@@ -2,11 +2,11 @@
 #include <stdio.h>
 
 int powIter(int x, unsigned int n) {
-   int result = 1;
+    int result = 1;
     for (int i = 0; i < n; i++) {
         result *= x;
     }
-   return result;
+    return result;
 }
 
 int powRecur(int x, unsigned int n) {
@@ -24,9 +24,9 @@ int powLog(int x, unsigned int n) {
     }
 
     if (n % 2 == 0) {
-        return powLog(x, n / 2) * powLog(x, n / 2);
+        return powLog(x * x, n / 2);
     } else {
-        return powLog(x, n / 2) * powLog(x, (n / 2) + 1);
+        return x * powLog(x * x, n / 2);
     }
 }
 
@@ -45,34 +45,30 @@ int main() {
     FILE *powRecurTiming = fopen("pow-recur-timing", "w");
     FILE *powLogTiming = fopen("pow-log-timing", "w");
 
-    for (int i = 10; i < 20; i++) {
-        for (int j = 10; j < 20; j++) {
-            printf("-------------------------------------\n");
+    int x = 5;
+    for (int j = 1; j < 100000; j += 1000) {
+        printf("-------------------------------------\n");
 
-            clock_t start = clock();
-            int iterResult = powIter(i, j);
-            clock_t end = clock();
-            double timeTaken = (double)(end - start) / CLOCKS_PER_SEC;
-            printf("powIter:  %d^%d = %d\n", i, j, iterResult);
-            printf("---> Time taken: %lf seconds\n\n", timeTaken);
-            fprintf(powIterTiming, "%lf\n", timeTaken);
+        clock_t start = clock();
+        unsigned long int iterResult = powIter(x, j);
+        clock_t end = clock();
+        double timeTaken = (double)(end - start) / CLOCKS_PER_SEC;
+        printf("---> Time taken powIter: %lf seconds\n", timeTaken);
+        fprintf(powIterTiming, "%lf\n", timeTaken);
 
-            start = clock();
-            int recurResult = powRecur(i, j);
-            end = clock();
-            timeTaken = (double)(end - start) / CLOCKS_PER_SEC;
-            printf("powRecur: %d^%d = %d\n", i, j, recurResult);
-            printf("---> Time taken: %lf seconds\n\n", timeTaken);
-            fprintf(powRecurTiming, "%lf\n", timeTaken);
+        start = clock();
+        int recurResult = powRecur(x, j);
+        end = clock();
+        timeTaken = (double)(end - start) / CLOCKS_PER_SEC;
+        printf("---> Time taken powRecur: %lf seconds\n", timeTaken);
+        fprintf(powRecurTiming, "%lf\n", timeTaken);
 
-            start = clock();
-            int logResult = powLog(i, j);
-            end = clock();
-            timeTaken = (double)(end - start) / CLOCKS_PER_SEC;
-            printf("powLog:   %d^%d = %d\n", i, j, logResult);
-            printf("---> Time taken: %lf seconds\n\n", timeTaken);
-            fprintf(powLogTiming, "%lf\n", timeTaken);
-        }
+        start = clock();
+        int logResult = powLog(x, j);
+        end = clock();
+        timeTaken = (double)(end - start) / CLOCKS_PER_SEC;
+        printf("---> Time taken powLog: %lf seconds\n", timeTaken);
+        fprintf(powLogTiming, "%lf\n", timeTaken);
     }
 
     fclose(powIterTiming);
