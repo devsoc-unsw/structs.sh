@@ -11,8 +11,8 @@ int pow(int x, unsigned int n) {
    return result;
 }
 
-// x^n
-// Recursive mindset: x * x^(n-1)
+// 2 ^ 7
+// Recursive mindset: 2 * 2^6
 // x^(n-1)
 // x^(n-1) = x * x^(n-2)
 // x^(n-2)
@@ -27,3 +27,5 @@ int pow2(int x, unsigned int n) {
     return x * pow2(x, n - 1); 
 }
 
+// x^n
+// x^(n/2) * x^(n/2)
