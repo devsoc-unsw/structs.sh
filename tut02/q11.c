@@ -1,11 +1,15 @@
+// This is also pseudocode
+
+// What is the time-complexity of this algorithm with respect to n?
 binaryConversion(n):
     input: positive integer n
     output: binary representation of n on a stack
 
     create empty stack S         // O(1)
     while n > 0:                 // Looping ___ times
-        push (n mod 2) onto S    // O(1)
+        push (n mod 2) onto S    // O(?)
         n = n / 2                // O(?)
+
     return S
 
 
