@@ -1,6 +1,6 @@
 
-// ""In the first phase, we iteratively pop all the elements from stack S 
-// and enqueue them in queue Q
+// "In the first phase, we iteratively pop all the elements from stack S 
+// and enqueue them in queue Q"
 // Pseudocode:
 while S is not empty:
     item = pop(S)

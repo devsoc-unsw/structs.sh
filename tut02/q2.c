@@ -2,9 +2,9 @@
 #include <assert.h>
 #include <time.h>
 
-unsigned long int counter = 0;
+unsigned long counter = 0;
 
-int fib(int n) {
+unsigned long fib(int n) {
    assert(n > 0);
    counter++;
 
@@ -24,8 +24,8 @@ int main() {
    // }
 
    // 5th fibonacci number
-   // printf("%d\n", fib(5));
-   // printf("I looped %d times\n", counter);
+   printf("fib(5) = %d\n", fib(5));
+   printf("I looped %d times\n", counter);
 
 
 
@@ -35,8 +35,8 @@ int main() {
    for (int i = 1; i < 50; i++) {
       clock_t start = clock();
       printf("-------------------------------------\n");
-      printf("Fib(%d) = %d\n", i, fib(i));
-      printf("---> Computing Fib(%d) needed %d loops!\n", i, counter);
+      printf("Fib(%d) = %lu\n", i, fib(i));
+      printf("---> Computing Fib(%d) needed %lu loops!\n", i, counter);
       clock_t end = clock();
       double timeTaken = (double)(end - start) / CLOCKS_PER_SEC;
       printf("---> Time taken: %lf seconds\n\n", timeTaken);

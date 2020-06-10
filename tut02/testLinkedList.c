@@ -47,7 +47,7 @@ void traverseAndPrint(Node *head) {
     typedef struct node Node;
 */
 
-int countNodesIterative(Node *head) {
+int lengthIterative(Node *head) {
     int count = 0;
     Node *curr = head;
     while (curr != NULL) { 
@@ -58,8 +58,8 @@ int countNodesIterative(Node *head) {
 }
 
 // Recursive version
-int countNodes(Node *head) {
-
+int length(Node *head) {
+    return (head == NULL) ? (0) : (1 + length(head -> next));
 }
 
 // ===========================================
@@ -77,11 +77,21 @@ int countNodes(Node *head) {
  * Problem: given the head of a linked list, free all the nodes in the list
  */
 void freeListIterative(Node *head) {
-    
+    Node *curr = head;
+    while (curr != NULL) {
+        Node *nextNode = curr -> next;
+        free(curr);
+        curr = nextNode;
+    }   
 }
 
 void freeListRecursive(Node *head) {
-    
+    if (head == NULL) {    // The base case: when head is NULL. This is when we finally stop the recursion
+        return;
+    }
+    Node *nextNode = head -> next;
+    free(head);
+    freeListRecursive(nextNode);
 }
 
 // ===========================================
