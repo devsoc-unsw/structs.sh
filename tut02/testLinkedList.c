@@ -74,7 +74,7 @@ int length(Node *head) {
 */
 
 /*
- * Problem: given the head of a linked list, free all the nodes in the list
+ * Problem: given the head of a linked list, free all the nodes in that list
  */
 void freeListIterative(Node *head) {
     Node *curr = head;
@@ -82,11 +82,11 @@ void freeListIterative(Node *head) {
         Node *nextNode = curr -> next;
         free(curr);
         curr = nextNode;
-    }   
+    }
 }
 
 void freeListRecursive(Node *head) {
-    if (head == NULL) {    // The base case: when head is NULL. This is when we finally stop the recursion
+    if (head == NULL) {
         return;
     }
     Node *nextNode = head -> next;
@@ -109,6 +109,9 @@ int main() {
 
     // freeListIterative(head);
     // freeListRecursive(head);
+
+    printColoured("|===== Length of List 1 =====|\n");
+    printf("Length: %d\n", length(head));
 
     return 0;
 }

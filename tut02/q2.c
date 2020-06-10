@@ -23,6 +23,8 @@ int main() {
    //    printf("%d\n", fib(i));
    // }
 
+
+
    // 5th fibonacci number
    printf("fib(5) = %d\n", fib(5));
    printf("I looped %d times\n", counter);
