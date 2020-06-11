@@ -14,8 +14,9 @@ while Q is not empty:
 
 // "As a result, all the elements are now in reversed order on S."
 
-// "In the second phase, we once again pop all the elements from S, but this
-// time we also look for the element x."
+// "In the second phase, we once again pop all the elements from S and
+// enqueue the element in queue Q, but this time we also look for the 
+// element x."
 // Pseudocode:
 while S is not empty:
     item = pop(S)
