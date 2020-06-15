@@ -11,10 +11,11 @@ void printCommands() {
     char *helpLog = " ===>  exit        - quit program\n"
                     " ===>  left <d>    - perform a left rotation on node with value <d>\n"
                     " ===>  right <d>   - perform a right rotation on node with value <d>\n"
-                    " ===>  insert <d>  - perform a right rotation on node with value <d>\n"
-                    " ===>  delete <d>  - perform a right rotation on node with value <d>\n"
-                    " ===>  ";
+                    " ===>  insert <d>  - inserts a node with the value <d>\n"
+                    " ===>  delete <d>  - deletes the node with value <d>\n"
+                    " ===>  exists <d>  - searches for the node with value <d>\n";
     printf("%s", helpLog);
+    printWarning(" ===>  ");
 }
 
 // TODO: CAN'T HANDLE DUPLICATES!!!
@@ -46,7 +47,6 @@ int main(int argc, char *argv[]) {
         // Strips trailing newline character
         strtok(command, "\n");
         strtok(command, " ");
-
         printf(" You entered %s\n", command);
         if (strcmp(command, "left") == 0) {
             int val = atoi(strtok(NULL, " "));  
@@ -64,11 +64,19 @@ int main(int argc, char *argv[]) {
             int val = atoi(strtok(NULL, " "));  
             printf(" Deleting %d\n", val);
             delete(root, val);
+        } else if (strcmp(command, "exists") == 0) {
+            int val = atoi(strtok(NULL, " "));  
+            printf(" Searching for %d\n", val);
+            if (existsInTree(root, val)) {
+                printf(" %d exists in this tree!\n", val);
+            } else {
+                printf(" %d doesn't exist in this tree!\n", val);
+            }
         } else if (strcmp(command, "exit") == 0) {
             printf(" Exiting program\n");  
             break;
         } else {
-            printf(" Enter a valid command\n");
+            printWarning(" Enter a valid command\n");
         }
     }
     freeTree(root);

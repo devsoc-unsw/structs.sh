@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h> 
 #include "tree.h"
 
 /**
@@ -51,6 +52,21 @@ TreeNode *buildTree(int *values, int size) {
         root = insert(root, values[i]);
     }
     return root;
+}
+
+bool existsInTree(TreeNode *root, int targetValue) {
+    if (root == NULL) {
+        return false;
+    } else if (root -> value == targetValue) {
+        return true;
+    } 
+    if (targetValue < root -> value) {
+        // If the value exists, it must exist in the left subtree
+        return existsInTree(root -> left, targetValue);
+    } else if (targetValue > root -> value) {
+        // If the value exists, it must exist in the right subtree
+        return existsInTree(root -> right, targetValue);
+    }
 }
 
 TreeNode *leftRotate(TreeNode *root, int targetValue) {
@@ -109,6 +125,7 @@ TreeNode *rightRotate(TreeNode *root, int targetValue) {
 
 TreeNode *delete(TreeNode *root, int targetValue) {
     if (root == NULL) {
+        printf("Value %d doesn't exist in this tree\n", targetValue);
         return NULL;
     }
 

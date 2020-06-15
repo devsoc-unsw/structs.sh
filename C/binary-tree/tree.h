@@ -1,5 +1,6 @@
 #ifndef TREE
 #define TREE
+#include <stdbool.h> 
 
 struct treeNode {
     int value;
@@ -11,6 +12,7 @@ typedef struct treeNode TreeNode;
 TreeNode *newNode(int value);
 TreeNode *insert(TreeNode *root, int value);
 TreeNode *buildTree(int *values, int size);
+bool existsInTree(TreeNode *root, int targetValue);
 TreeNode *leftRotate(TreeNode *root, int targetValue);
 TreeNode *rightRotate(TreeNode *root, int targetValue);
 TreeNode *delete(TreeNode *root, int targetValue);
