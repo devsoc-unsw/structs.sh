@@ -3,6 +3,10 @@
 #include <string.h>
 #include "tree.h"
 
+/**
+ * Given a value, mallocs and returns a new tree node initialised with the
+ * supplied value.
+ */
 TreeNode *newNode(int value) {
     TreeNode *newTreeNode = malloc(sizeof(TreeNode));
     newTreeNode -> value = value;
@@ -33,6 +37,10 @@ TreeNode *insert(TreeNode *root, int value) {
     }
 }
 
+/**
+ * Given an array of values and its size, inserts them in order
+ * starting from left to right. Returns the fully constructed tree
+ */
 TreeNode *buildTree(int *values, int size) {
     TreeNode *root = NULL;
     for (int i = 0; i < size; i++) {

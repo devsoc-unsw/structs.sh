@@ -1,3 +1,4 @@
+// Adapted from: http://web.archive.org/web/20090617110918/http://www.openasthra.com/c-tidbits/printing-binary-trees-in-ascii/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,7 +6,6 @@
 #include "tree-print.h"
 #include "../util/colours.h"
 
-// Adapted from: http://web.archive.org/web/20090617110918/http://www.openasthra.com/c-tidbits/printing-binary-trees-in-ascii/
 #define MAX_HEIGHT 1000
 #define INFINITY (1<<20)
 
@@ -41,6 +41,8 @@ int MIN (int X, int Y) {
 int MAX (int X, int Y) {
     return ((X) > (Y)) ? (X) : (Y);
 }
+
+// ===================
 
 /**
  * Recursively build the ascii tree. See wrapper function
