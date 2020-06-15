@@ -8,14 +8,16 @@
 #define MAX_COMMAND_SIZE 64
 
 void printCommands() {
-    char *helpLog = " ===>  exit       - quit program\n"
-                    " ===>  left       - perform a left rotation\n"
-                    " ===>  right      - perform a right rotation\n"
-                    " ===>  insert <d> - \n"
-                    " ===>  del <d>    -";
+    char *helpLog = " ===>  exit        - quit program\n"
+                    " ===>  left <d>    - perform a left rotation on node with value <d>\n"
+                    " ===>  right <d>   - perform a right rotation on node with value <d>\n"
+                    " ===>  insert <d>  - perform a right rotation on node with value <d>\n"
+                    " ===>  delete <d>  - perform a right rotation on node with value <d>\n"
+                    " ===>  ";
     printf("%s", helpLog);
 }
 
+// TODO: CAN'T HANDLE DUPLICATES!!!
 int main(int argc, char *argv[]) {
     if (argc < 2) {
         fprintf(stderr, "Usage: %s <space separated integers> \n", argv[0]);
@@ -35,15 +37,40 @@ int main(int argc, char *argv[]) {
 
     // Interactive mode
     char *command = malloc(sizeof(char) * MAX_COMMAND_SIZE);
-    do {
+    while (1) {
         printSuccess("|===== Tree State =====|\n");
         printTree(root);
         printSuccess("|======================|\n");
         printCommands();
         command = fgets(command, MAX_COMMAND_SIZE, stdin);
+        // Strips trailing newline character
         strtok(command, "\n");
-        printf("You entered %s\n", command);
+        strtok(command, " ");
+
+        printf(" You entered %s\n", command);
+        if (strcmp(command, "left") == 0) {
+            int val = atoi(strtok(NULL, " "));  
+            printf(" Rotating left on node with value %d\n", val);
+            root = leftRotate(root, val);
+        } else if (strcmp(command, "right") == 0) {
+            int val = atoi(strtok(NULL, " "));  
+            printf(" Rotating right on node with value %d\n", val);
+            root = rightRotate(root, val);
+        } else if (strcmp(command, "insert") == 0) {
+            int val = atoi(strtok(NULL, " "));  
+            printf(" Inserting %d\n", val);
+            insert(root, val);
+        } else if (strcmp(command, "delete") == 0) {
+            int val = atoi(strtok(NULL, " "));  
+            printf(" Deleting %d\n", val);
+            delete(root, val);
+        } else if (strcmp(command, "exit") == 0) {
+            printf(" Exiting program\n");  
+            break;
+        } else {
+            printf(" Enter a valid command\n");
+        }
     }
-    while (strcmp(command, "exit") != 0);
+    freeTree(root);
     return 0;
 }

@@ -31,9 +31,13 @@ TreeNode *insert(TreeNode *root, int value) {
     if (value < root -> value) {
         // Insertion point exists somewhere in the left subtree
         root -> left = insert(root -> left, value); 
-    } else {
+    } else if (value > root -> value) {
         // Insertion point exists somewhere in the right subtree
         root -> right = insert(root -> right, value);
+    } else {
+        // Value already exists in the tree. Doing nothing
+        printf("Value %d already exists in the tree\n", value);
+        return root;
     }
 }
 
@@ -49,4 +53,111 @@ TreeNode *buildTree(int *values, int size) {
     return root;
 }
 
+TreeNode *leftRotate(TreeNode *root, int targetValue) {
+    if (root == NULL) {
+        printf("Target value %d wasn't found in the tree\n", targetValue);
+        return NULL;
+    } else if (root -> value == targetValue) {
+        TreeNode *rightChild = root -> right;
+        TreeNode *rightChildLeft = NULL;
+        if (rightChild != NULL) {
+            rightChildLeft = rightChild -> left;
+            root -> right = rightChildLeft;
+            rightChild -> left = root;
+            return rightChild;
+        } else {
+            // Can't rotate when there's no right child
+            return root;
+        }
+    }
 
+    if (targetValue < root -> value) {
+        // Target node exists somewhere in the left subtree
+        root -> left = leftRotate(root -> left, targetValue);
+    } else if (targetValue > root -> value) {
+        // Target tree exists somewhere in the right subtree
+        root -> right = leftRotate(root -> right, targetValue);
+    }
+}
+
+TreeNode *rightRotate(TreeNode *root, int targetValue) {
+    if (root == NULL) {
+        printf("Target value %d wasn't found in the tree\n", targetValue);
+        return NULL;
+    } else if (root -> value == targetValue) {
+        TreeNode *leftChild = root -> left;
+        TreeNode *leftChildRight = NULL;
+        if (leftChild != NULL) {
+            leftChildRight = leftChild -> right;
+            root -> left = leftChildRight;
+            leftChild -> right = root;
+            return leftChild;
+        } else {
+            // Can't rotate when there's no left child
+            return root;
+        }
+    }
+
+    if (targetValue < root -> value) {
+        // Target node exists somewhere in the left subtree
+        root -> left = rightRotate(root -> left, targetValue);
+    } else if (targetValue > root -> value) {
+        // Target tree exists somewhere in the right subtree
+        root -> right = rightRotate(root -> right, targetValue);
+    }
+}
+
+TreeNode *delete(TreeNode *root, int targetValue) {
+    if (root == NULL) {
+        return NULL;
+    }
+
+    if (targetValue < root -> value) {  
+        // Node to delete is somewhere in the left subtree
+        root -> left = delete(root -> left, targetValue);
+    } else if (targetValue > root -> value) { // value is in the right sub tree.
+        root -> right = delete(root -> right, targetValue);
+    } else {
+        // Case 1: 0 children - Easiest case. Just delete and return
+        if (root -> left == NULL && root -> right == NULL) {
+            free(root);
+            return NULL;
+        }
+        // Case 2: only right child exists - replace root with the right child
+        else if (root -> left == NULL && root -> right != NULL) {
+            TreeNode *rightChild = root -> right;
+            free(root);
+            return rightChild;
+        }
+        // Case 3: only left child exists - replace root with the left child
+        else if (root->right == NULL) {
+            TreeNode *leftChild = root -> left;
+            free(root);
+            return leftChild;
+        }
+        // Case 4: both children exist - find min node in right subtree, swap out root with that min node
+        else {
+            TreeNode *minNode = getMinNode(root -> right);
+            root -> value = minNode -> value;
+            root -> right = delete(root -> right, minNode -> value);
+        }
+    }
+}
+
+TreeNode *getMinNode(TreeNode *root) {
+    if (root == NULL) {
+        return NULL;
+    } else if (root -> left == NULL) {
+        return root;
+    }
+    return getMinNode(root -> left);
+}
+
+void freeTree(TreeNode *root) {
+    if (root == NULL) {
+        return;
+    }
+    freeTree(root -> left);
+    freeTree(root -> right);
+    free(root);
+}
