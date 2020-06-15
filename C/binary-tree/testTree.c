@@ -1,9 +1,10 @@
 #include <stdio.h>
+#include "tree-print.h"
 #include "tree.h"
 
 int main(int argc, char *argv[]) {
-    int values = {4, 6, 2, 8, 3};
-    TreeNode *tree = buildTree(values, 5);
+    int values[] = {4, 6, 2, 8, 3};
+    TreeNode *root = NULL;
 
     root = insert(root, 4);
     root = insert(root, 2);

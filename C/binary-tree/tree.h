@@ -1,6 +1,11 @@
 #ifndef TREE
 #define TREE
 
+struct treeNode {
+    int value;
+    struct treeNode *left;
+    struct treeNode *right;
+};
 typedef struct treeNode TreeNode;
 
 TreeNode *newNode(int value);
