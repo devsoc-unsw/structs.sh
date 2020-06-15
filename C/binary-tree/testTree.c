@@ -13,7 +13,8 @@ void printCommands() {
                     " ===>  right <d>   - perform a right rotation on node with value <d>\n"
                     " ===>  insert <d>  - inserts a node with the value <d>\n"
                     " ===>  delete <d>  - deletes the node with value <d>\n"
-                    " ===>  exists <d>  - searches for the node with value <d>\n";
+                    " ===>  exists <d>  - searches for the node with value <d>\n"
+                    " ===>  clear       - deletes the entire tree\n";
     printf("%s", helpLog);
     printWarning(" ===>  ");
 }
@@ -59,11 +60,11 @@ int main(int argc, char *argv[]) {
         } else if (strcmp(command, "insert") == 0) {
             int val = atoi(strtok(NULL, " "));  
             printf(" Inserting %d\n", val);
-            insert(root, val);
+            root = insert(root, val);
         } else if (strcmp(command, "delete") == 0) {
             int val = atoi(strtok(NULL, " "));  
             printf(" Deleting %d\n", val);
-            delete(root, val);
+            root = delete(root, val);
         } else if (strcmp(command, "exists") == 0) {
             int val = atoi(strtok(NULL, " "));  
             printf(" Searching for %d\n", val);
@@ -72,6 +73,10 @@ int main(int argc, char *argv[]) {
             } else {
                 printf(" %d doesn't exist in this tree!\n", val);
             }
+        } else if (strcmp(command, "clear") == 0) {
+            printf(" Deleting the whole tree\n");
+            freeTree(root);
+            root = NULL;
         } else if (strcmp(command, "exit") == 0) {
             printf(" Exiting program\n");  
             break;
