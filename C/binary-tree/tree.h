@@ -1,8 +1,10 @@
 #ifndef TREE
 #define TREE
 
-typedef struct treeNode Tree;
+typedef struct treeNode TreeNode;
 
-Tree *buildTree(int *arr, int size);
+TreeNode *newNode(int value);
+TreeNode *insert(TreeNode *root, int value);
+TreeNode *buildTree(int *values, int size);
 
 #endif
