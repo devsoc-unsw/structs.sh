@@ -5,10 +5,10 @@ A collection of COMP2521 tutorial problems, my own examples and implementations 
 An interactive binary search tree builder written in C. Supports standard operations such as insertion, deletion, rotation, and in-order, pre-order, post-order and level-order printing.
 
 ### Setup Instructions:
-1. `git clone https://github.com/Tymotex/DataStructures.git`
-2. `cd DataStructures/C/binary-tree`
-3. `make`
-4. `./testTree <space separated integers>`
+1. `git clone https://github.com/Tymotex/DataStructures.git` - downloads this repository
+2. `cd DataStructures/C/binary-tree` - navigates to the interactive BST project root
+3. `make` - creates the executable file `testTree`
+4. `./testTree <space separated integers>` - intially constructs a tree from the supplied sequence of integers
 
 Eg. `./testTree 6 3 10 1 4 8 12 7 9`
 
