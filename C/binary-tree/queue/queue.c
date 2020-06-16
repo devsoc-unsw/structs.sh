@@ -8,7 +8,7 @@ struct Queue {
     int head, tail, size; 
     unsigned capacity; 
     int *array; 
-}; 
+};
   
 // function to create a queue 
 // of given capacity. 

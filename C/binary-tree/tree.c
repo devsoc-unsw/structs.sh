@@ -97,32 +97,35 @@ void printPostOrder(TreeNode *root) {
 }
 
 /**
- * Levelorder printing prints level-by-level.
- * Done iteratively with the help of a queue
+ * Levelorder printing prints level-by-level using the recursive
+ * printGivenLevel function. This could also be done iteratively
+ * with the help of a queue.
  */
 void printLevelOrder(TreeNode *root) {
-    if (root == NULL) {
-        // Received a tree that is empty. Nothing to print
-        return;
-    }
-
-    struct Queue *printQueue = createQueue(MAX_TREE_SIZE); 
-    enqueue(printQueue, root -> value);
-    while (!isEmpty(printQueue)) {
-        // Dequeue the next value for printing
-        int val = dequeue(printQueue);
-        printf("%d ", val);
-        if (root -> left != NULL) {
-            // Enqueue the left node's value if it exists
-            enqueue(printQueue, root -> left -> value);
-        }
-        if (root -> right != NULL) {
-            // Enqueue the right node's value if it exists
-            enqueue(printQueue, root -> right -> value);
-        }
-    }
+    int height = getTreeHeight(root); 
+    for (int i = 1; i <= height; i++) {
+        printf("Level %d - ", i);
+        printGivenLevel(root, i); 
+        if (i != height) printf("\n");
+    } 
 }
 
+/**
+ * Given the tree and the target level, prints the nodes on that level
+ */
+void printGivenLevel(TreeNode *root, int level) { 
+    if (root == NULL) return; 
+    if (level == 1) printf("%d ", root->value); 
+    else if (level > 1) { 
+        printGivenLevel(root -> left, level - 1); 
+        printGivenLevel(root -> right, level - 1); 
+    } 
+} 
+
+/**
+ * Given a tree and a target value, returns true if that target value
+ * exists in the tree, otherwise returns false
+ */
 bool existsInTree(TreeNode *root, int targetValue) {
     if (root == NULL) {
         return false;
@@ -138,6 +141,32 @@ bool existsInTree(TreeNode *root, int targetValue) {
     }
 }
 
+/**
+ * Given a tree, counts the number of nodes in the tree and returns it.
+ */
+int getCount(TreeNode *root) {
+    return (root == NULL) ? 0 : 1 + getCount(root -> left) + getCount(root -> right);
+}
+
+/**
+ * Given a tree, computes and returns the height of that tree
+ */
+int getTreeHeight(TreeNode *root) {
+    return (root == NULL) ? 0 : 1 + max(getTreeHeight(root -> left), getTreeHeight(root -> right));
+}
+
+/**
+ * Given a tree and a target value, finds the node with that target value
+ * and returns the level it was found in.
+ */
+int getNodeDepth(TreeNode *root, int targetValue) {
+
+}
+
+/**
+ * Executes a left rotation on the node with the given target value.
+ * Returns the resultant tree.
+ */
 TreeNode *leftRotate(TreeNode *root, int targetValue) {
     if (root == NULL) {
         printf("Target value %d wasn't found in the tree\n", targetValue);
@@ -166,6 +195,10 @@ TreeNode *leftRotate(TreeNode *root, int targetValue) {
     }
 }
 
+/**
+ * Executes a right rotation on the node with the given target value.
+ * Returns the resultant tree.
+ */
 TreeNode *rightRotate(TreeNode *root, int targetValue) {
     if (root == NULL) {
         printf("Target value %d wasn't found in the tree\n", targetValue);
@@ -194,6 +227,15 @@ TreeNode *rightRotate(TreeNode *root, int targetValue) {
     }
 }
 
+/**
+ * Given a tree and a target value, finds the node containing that
+ * target value and deletes it from the tree, if it exists. All 4
+ * cases are handled as follows:
+ *    Case 1: 0 children - Easiest case. Just delete and return
+ *    Case 2: only right child exists - replace root with the right child
+ *    Case 3: only left child exists - replace root with the left child
+ *    Case 4: both children exist - find the min node in right subtree, swap out root with that min node
+ */
 TreeNode *delete(TreeNode *root, int targetValue) {
     if (root == NULL) {
         printf("Value %d doesn't exist in this tree\n", targetValue);
@@ -232,6 +274,10 @@ TreeNode *delete(TreeNode *root, int targetValue) {
     }
 }
 
+/**
+ * Given a tree, returns the node with the minimal value. This 
+ * is just the leftmost node.
+ */
 TreeNode *getMinNode(TreeNode *root) {
     if (root == NULL) {
         return NULL;
@@ -241,6 +287,9 @@ TreeNode *getMinNode(TreeNode *root) {
     return getMinNode(root -> left);
 }
 
+/**
+ * Given a tree, recursively frees every node.
+ */
 void freeTree(TreeNode *root) {
     if (root == NULL) {
         return;
@@ -249,3 +298,12 @@ void freeTree(TreeNode *root) {
     freeTree(root -> right);
     free(root);
 }
+
+// ===== Private Helper Functions =====
+/**
+ * 
+ */
+static int max(int a, int b) {
+    return (a > b) ? a : b;
+}
+

@@ -232,7 +232,10 @@ void printLevel(AsciiNode *asciiNode, int x, int level)  {
 void printTree(TreeNode *t) {
     AsciiNode *proot;
     int xmin, i;
-    if (t == NULL) return;
+    if (t == NULL) {
+        printSuccess("Tree is empty\n");
+        return;
+    }
     proot = buildAsciiTree(t);
     computeEdgeLengths(proot);
     for (i=0; i<proot -> height && i < MAX_HEIGHT; i++) {
