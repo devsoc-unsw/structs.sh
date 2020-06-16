@@ -115,7 +115,7 @@ void printLevelOrder(TreeNode *root) {
  */
 void printGivenLevel(TreeNode *root, int level) { 
     if (root == NULL) return; 
-    if (level == 1) printf("%d ", root->value); 
+    if (level == 1) printf("%d ", root -> value); 
     else if (level > 1) { 
         printGivenLevel(root -> left, level - 1); 
         printGivenLevel(root -> right, level - 1); 
@@ -297,7 +297,7 @@ TreeNode *delete(TreeNode *root, int targetValue) {
 
 /**
  * Given a tree, returns the node with the minimal value. This 
- * is just the leftmost node.
+ * is just going to be the leftmost node.
  */
 TreeNode *getMinNode(TreeNode *root) {
     if (root == NULL) {
@@ -322,7 +322,7 @@ void freeTree(TreeNode *root) {
 
 // ===== Private Helper Functions =====
 /**
- * 
+ * Given two numbers a and b, returns the one that's larger.
  */
 static int max(int a, int b) {
     return (a > b) ? a : b;
