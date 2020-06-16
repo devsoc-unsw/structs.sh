@@ -9,4 +9,4 @@ A collection of COMP2521 tutorial problems, my own examples and implementations 
 4. `./testTree <space separated integers>`
 Eg. `./testTree 4 8 2 1 5 3 6`
 
-<img src="">
+<img src="Images/InterativeTree.png" style="width: 50%;">
