@@ -8,9 +8,9 @@ binaryConversion(n):
     output: binary representation of n on a stack
 
     create empty stack S         // O(1)
-    while n > 0:                 // Looping ___ times
-        push (n mod 2) onto S    // O(?)
-        n = n / 2                // O(?)
+    while n > 0:                 // Looping logn times
+        push (n % 2) onto S      // O(1)
+        n = n / 2                // O(1)
     return S
 
 

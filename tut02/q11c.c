@@ -7,6 +7,8 @@ int main(int argc, char *argv[]) {
     int m = n;
 
     int counter = 0;
+
+    // This while loop executes about logn times
     while (n > 0) {
         counter++;
         n = n / 2;

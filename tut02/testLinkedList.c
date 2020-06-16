@@ -40,17 +40,19 @@ void traverseAndPrint(Node *head) {
 //      Determining length of the list 
 // ===========================================
 /*
+
     struct node {
         int val;
         struct node *next;
     };
     typedef struct node Node;
+
 */
 
 int lengthIterative(Node *head) {
-    int count = 0;
     Node *curr = head;
-    while (curr != NULL) { 
+    int count = 0;
+    while (curr != NULL) {
         count++;
         curr = curr -> next;
     }
@@ -59,29 +61,42 @@ int lengthIterative(Node *head) {
 
 // Recursive version
 int length(Node *head) {
-    
+    return (head == NULL) ? (0) : (1 + length(head -> next));
 }
 
 // ===========================================
 //             Freeing the list 
 // ===========================================
 /*
+
     struct node {
         int val;
         struct node *next;
     };
     typedef struct node Node;
+    
 */
 
 /*
  * Problem: given the head of a linked list, free all the nodes in that list
  */
 void freeListIterative(Node *head) {
-    
+    Node *curr = head;
+    while (curr != NULL) {
+        Node *nextNode = curr -> next;
+        free(curr);
+        curr = nextNode;
+    }
 }
 
 void freeListRecursive(Node *head) {
-
+    if (head == NULL) {
+        return;
+    } else {
+        Node *nextNode = head -> next;
+        free(head);
+        freeListRecursive(nextNode);
+    }
 }
 
 // ===========================================
@@ -95,10 +110,9 @@ int main() {
     Node *head = buildList(values, 4);
     traverseAndPrint(head);
 
-    printColoured("|===== Freeing List 1 =====|\n");
-
-    // freeListIterative(head);
-    freeListRecursive(head);
+    // printColoured("|===== Freeing List 1 =====|\n");
+    // // freeListIterative(head);
+    // freeListRecursive(head);
 
     printColoured("|===== Length of List 1 =====|\n");
     printf("Length: %d\n", length(head));

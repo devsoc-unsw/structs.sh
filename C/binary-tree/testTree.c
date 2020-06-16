@@ -19,13 +19,7 @@ void printCommands() {
     printWarning(" ===>  ");
 }
 
-// TODO: CAN'T HANDLE DUPLICATES!!!
 int main(int argc, char *argv[]) {
-    if (argc < 2) {
-        fprintf(stderr, "Usage: %s <space separated integers> \n", argv[0]);
-        exit(1);
-    }
-
     // Constructing a tree from the command-line supplied integers
     int numOfValues = argc - 1;
     int *values = malloc(sizeof(int) * numOfValues);
@@ -36,6 +30,7 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < numOfValues; i++) {
         root = insert(root, values[i]);
     }
+    free(values);
 
     // Interactive mode
     char *command = malloc(sizeof(char) * MAX_COMMAND_SIZE);

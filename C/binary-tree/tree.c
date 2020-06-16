@@ -74,6 +74,7 @@ TreeNode *leftRotate(TreeNode *root, int targetValue) {
         printf("Target value %d wasn't found in the tree\n", targetValue);
         return NULL;
     } else if (root -> value == targetValue) {
+        // Found the node to execute the left rotation on
         TreeNode *rightChild = root -> right;
         TreeNode *rightChildLeft = NULL;
         if (rightChild != NULL) {
@@ -101,6 +102,7 @@ TreeNode *rightRotate(TreeNode *root, int targetValue) {
         printf("Target value %d wasn't found in the tree\n", targetValue);
         return NULL;
     } else if (root -> value == targetValue) {
+        // Found the node to execute the right rotation on
         TreeNode *leftChild = root -> left;
         TreeNode *leftChildRight = NULL;
         if (leftChild != NULL) {
