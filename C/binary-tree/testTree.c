@@ -14,6 +14,10 @@ void printCommands() {
                     " ===>  insert <d>  - inserts a node with the value <d>\n"
                     " ===>  delete <d>  - deletes the node with value <d>\n"
                     " ===>  exists <d>  - searches for the node with value <d>\n"
+                    " ===>  inorder     - prints the nodes of the tree in ascending order\n"
+                    " ===>  preorder    - prints the nodes of the tree in pre-order\n"
+                    " ===>  postorder   - prints the nodes of the tree in post-order\n"
+                    " ===>  levelorder  - prints the nodes of the tree in level-order\n"
                     " ===>  clear       - deletes the entire tree\n";
     printf("%s", helpLog);
     printWarning(" ===>  ");
@@ -72,6 +76,22 @@ int main(int argc, char *argv[]) {
             printf(" Deleting the whole tree\n");
             freeTree(root);
             root = NULL;
+        } else if (strcmp(command, "inorder") == 0) {
+            printf(" Printing in-order\n");
+            printInOrder(root);
+            printf("\n");
+        } else if (strcmp(command, "preorder") == 0) {
+            printf(" Printing pre-order\n");
+            printPreOrder(root);
+            printf("\n");
+        } else if (strcmp(command, "postorder") == 0) {
+            printf(" Printing post-order\n");
+            printPostOrder(root);
+            printf("\n");
+        } else if (strcmp(command, "levelorder") == 0) {
+            printf(" Printing level-order\n");
+            printLevelOrder(root);
+            printf("\n");
         } else if (strcmp(command, "exit") == 0) {
             printf(" Exiting program\n");  
             break;

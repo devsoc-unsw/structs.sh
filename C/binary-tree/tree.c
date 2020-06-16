@@ -3,6 +3,9 @@
 #include <string.h>
 #include <stdbool.h> 
 #include "tree.h"
+#include "queue/queue.h"
+
+#define MAX_TREE_SIZE 64
 
 /**
  * Given a value, mallocs and returns a new tree node initialised with the
@@ -52,6 +55,72 @@ TreeNode *buildTree(int *values, int size) {
         root = insert(root, values[i]);
     }
     return root;
+}
+
+/**
+ * Inorder printing: left, root, right
+ */
+void printInOrder(TreeNode *root) {
+    if (root == NULL) {
+        // Received a tree that is empty. Nothing to print
+        return;
+    }
+    printInOrder(root -> left);
+    printf("%d ", root -> value);
+    printInOrder(root -> right);
+}
+
+/**
+ * Preorder printing: root, left, right
+ */
+void printPreOrder(TreeNode *root) {
+    if (root == NULL) {
+        // Received a tree that is empty. Nothing to print
+        return;
+    }
+    printf("%d ", root -> value);
+    printInOrder(root -> left);
+    printInOrder(root -> right);
+}
+
+/**
+ * Postorder printing: left, right, root
+ */
+void printPostOrder(TreeNode *root) {
+    if (root == NULL) {
+        // Received a tree that is empty. Nothing to print
+        return;
+    }
+    printInOrder(root -> left);
+    printInOrder(root -> right);
+    printf("%d ", root -> value);
+}
+
+/**
+ * Levelorder printing prints level-by-level.
+ * Done iteratively with the help of a queue
+ */
+void printLevelOrder(TreeNode *root) {
+    if (root == NULL) {
+        // Received a tree that is empty. Nothing to print
+        return;
+    }
+
+    struct Queue *printQueue = createQueue(MAX_TREE_SIZE); 
+    enqueue(printQueue, root -> value);
+    while (!isEmpty(printQueue)) {
+        // Dequeue the next value for printing
+        int val = dequeue(printQueue);
+        printf("%d ", val);
+        if (root -> left != NULL) {
+            // Enqueue the left node's value if it exists
+            enqueue(printQueue, root -> left -> value);
+        }
+        if (root -> right != NULL) {
+            // Enqueue the right node's value if it exists
+            enqueue(printQueue, root -> right -> value);
+        }
+    }
 }
 
 bool existsInTree(TreeNode *root, int targetValue) {
