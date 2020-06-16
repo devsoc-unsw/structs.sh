@@ -104,7 +104,7 @@ TreeNode *processCommand(TreeNode *root, char *command) {
         printf(" -> Height of the tree is: %d\n", getTreeHeight(root));
     } else if (strcmp(command, "depth") == 0) {
         int val = atoi(strtok(NULL, " "));  
-        printf(" -> Number of nodes in this tree: %d\n", getNodeDepth(root, val));
+        printf(" -> Depth of node %d in tree: %d\n", val, getNodeDepth(root, val));
     } else if (strcmp(command, "clear") == 0) {
         printf(" -> Deleting the whole tree\n");
         freeTree(root);

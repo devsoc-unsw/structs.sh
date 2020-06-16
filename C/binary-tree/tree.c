@@ -158,9 +158,30 @@ int getTreeHeight(TreeNode *root) {
 /**
  * Given a tree and a target value, finds the node with that target value
  * and returns the level it was found in.
+ * If the target node was not found, returns -1.
  */
 int getNodeDepth(TreeNode *root, int targetValue) {
-
+    if (root == NULL) {
+        return -1;
+    }
+    if (targetValue < root -> value) {
+        int depth = getNodeDepth(root -> left, targetValue);
+        if (depth == -1) {
+            return -1;
+        } else {
+            return 1 + depth;
+        }
+    } else if (targetValue > root -> value) {
+        int depth = getNodeDepth(root -> right, targetValue);
+        if (depth == -1) {
+            return -1;
+        } else {
+            return 1 + depth;
+        }
+    } else if (targetValue == root -> value) {
+        // Reached the target node
+        return 0;
+    }
 }
 
 /**
