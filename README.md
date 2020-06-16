@@ -13,10 +13,10 @@ An interactive binary search tree builder written in C. Supports standard operat
 Eg. `./testTree 6 3 10 1 4 8 12 7 9`
 
 <p float="left">
-  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/InteractiveTree1.PNG" width="35%" />
-  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/InteractiveTree2.PNG" width="35%" />
-  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/InteractiveTree3.PNG" width="35%" />
-  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/InteractiveTree4.PNG" width="35%" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/InteractiveTree1.PNG" width="50%" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/InteractiveTree2.PNG" width="45%" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/InteractiveTree3.PNG" width="45%" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/InteractiveTree4.PNG" width="45%" />
 </p>
 
 
