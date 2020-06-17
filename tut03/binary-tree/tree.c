@@ -27,7 +27,7 @@ TreeNode *newNode(int value) {
  */
 TreeNode *insert(TreeNode *root, int value) {
     if (root == NULL) {
-        // Insertion point reached if the tree is empty (vacant position)
+        // Insertion point reached if the tree is empty
         TreeNode *newTreeNode = newNode(value);
         return newTreeNode;
     }
@@ -141,9 +141,17 @@ bool existsInTree(TreeNode *root, int targetValue) {
     }
 }
 
+
+
+
+
+
+
 /**
  * Given a tree, counts the number of nodes in the tree and returns it.
  *
+ * The struct definition looks like this:
+ * 
  *   struct treeNode {
  *       int value;
  *       struct treeNode *left;
@@ -152,15 +160,39 @@ bool existsInTree(TreeNode *root, int targetValue) {
  *   typedef struct treeNode TreeNode;
  */
 int getNumNodes(TreeNode *root) {
-    return (root == NULL) ? 0 : 1 + getNumNodes(root -> left) + getNumNodes(root -> right);
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+/**
+ * Given two numbers a and b, returns the one that's larger.
+ */
+static int max(int a, int b) {
+    return (a > b) ? a : b;
 }
 
 /**
  * Given a tree, computes and returns the height of that tree
  */
 int getTreeHeight(TreeNode *root) {
-    return (root == NULL) ? 0 : 1 + max(getTreeHeight(root -> left), getTreeHeight(root -> right));
+    return 0;
 }
+
+
+
+
+
+
+
+
+
 
 /**
  * Given a tree and a target value, finds the node with that target value
@@ -168,17 +200,20 @@ int getTreeHeight(TreeNode *root) {
  * If the target node was not found, returns -1.
  */
 int getNodeDepth(TreeNode *root, int targetValue) {
-    if (root == NULL) return -1;
-    if (root -> value == targetValue) return 0;
-
-    if (targetValue > root -> value) {
-        int depthInRight = getNodeDepth(root -> right, targetValue);
-        return (depthInRight == -1) ? (-1) : (1 + depthInRight);
-    } else if (targetValue < root -> value) {
-        int depthInLeft = getNodeDepth(root -> left, targetValue);
-        return (depthInLeft == -1) ? (-1) : (1 + depthInLeft);
-    }
+    return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * Executes a left rotation on the node with the given target value.
@@ -199,7 +234,6 @@ TreeNode *leftRotate(TreeNode *root, int targetValue) {
             return rightChild;
         } else {
             // Can't rotate when there's no right child
-            printf("%d doesn't have a right child. Can't left rotate\n", targetValue);
             return root;
         }
     }
@@ -232,7 +266,6 @@ TreeNode *rightRotate(TreeNode *root, int targetValue) {
             return leftChild;
         } else {
             // Can't rotate when there's no left child
-            printf("%d doesn't have a left child. Can't right rotate\n", targetValue);
             return root;
         }
     }
@@ -320,9 +353,3 @@ void freeTree(TreeNode *root) {
 
 // ===== Private Helper Functions =====
 
-/**
- * Given two numbers a and b, returns the one that's larger.
- */
-static int max(int a, int b) {
-    return (a > b) ? a : b;
-}
