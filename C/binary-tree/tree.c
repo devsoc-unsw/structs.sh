@@ -48,6 +48,8 @@ TreeNode *insert(TreeNode *root, int value) {
 /**
  * Given an array of values and its size, inserts them in order
  * starting from left to right. Returns the fully constructed tree
+ * 
+ * This function is called when  ./testTree 1 2 3 4 ...  is executed
  */
 TreeNode *buildTree(int *values, int size) {
     TreeNode *root = NULL;
