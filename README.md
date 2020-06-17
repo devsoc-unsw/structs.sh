@@ -20,4 +20,9 @@ Eg. `./testTree 6 3 10 1 4 8 12 7 9`
   <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/InteractiveTree4.PNG" width="45%" />
 </p>
 
+### How to use this for practice:
+1. Run `rm tree.c && mv tree-blank.c tree.c` to replace the main implementation file with the file containing blank functions
+2. You can find all the functions that need to be implemented in the `tree.h` header file. Start by implementing the `insert` and then `buildTree` first. The `buildTree` function is called when you run `./testTree <space separated integers>`
+3. As you implement functions, you can test them by running `./testTree` and then entering the relevant commands
+4. If you get stuck on any function, you can check this repo for the answers
 

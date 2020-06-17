@@ -11,23 +11,23 @@ struct treeNode {
 typedef struct treeNode TreeNode;
 
 // Main operations
-TreeNode *newNode(int value);
-TreeNode *insert(TreeNode *root, int value);
-TreeNode *buildTree(int *values, int size);
-void printInOrder(TreeNode *root);
-void printPreOrder(TreeNode *root);
-void printPostOrder(TreeNode *root);
-void printLevelOrder(TreeNode *root);
-void printGivenLevel(TreeNode *root, int level);
-bool existsInTree(TreeNode *root, int targetValue);
-int getNumNodes(TreeNode *root);
-int getTreeHeight(TreeNode *root);
-int getNodeDepth(TreeNode *root, int targetValue);
-TreeNode *leftRotate(TreeNode *root, int targetValue);
-TreeNode *rightRotate(TreeNode *root, int targetValue);
-TreeNode *delete(TreeNode *root, int targetValue);
-TreeNode *getMinNode(TreeNode *root);
-void freeTree(TreeNode *root);
+TreeNode *newNode(int value);                             // COMMANDS:
+TreeNode *insert(TreeNode *root, int value);              // insert
+TreeNode *buildTree(int *values, int size);               // 
+void printInOrder(TreeNode *root);                        // inorder
+void printPreOrder(TreeNode *root);                       // preorder
+void printPostOrder(TreeNode *root);                      // postorder
+void printLevelOrder(TreeNode *root);                     // levelorder
+void printGivenLevel(TreeNode *root, int level);          // level
+bool existsInTree(TreeNode *root, int targetValue);       // exists
+int getNumNodes(TreeNode *root);                          // count
+int getTreeHeight(TreeNode *root);                        // height
+int getNodeDepth(TreeNode *root, int targetValue);        // depth
+TreeNode *leftRotate(TreeNode *root, int targetValue);    // left
+TreeNode *rightRotate(TreeNode *root, int targetValue);   // right
+TreeNode *delete(TreeNode *root, int targetValue);        // delete
+TreeNode *getMinNode(TreeNode *root);                     //
+void freeTree(TreeNode *root);                            // clear
 
 // Helper functions
 static int max(int a, int b);
