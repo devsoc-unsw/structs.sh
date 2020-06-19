@@ -158,9 +158,11 @@ bool existsInTree(TreeNode *root, int targetValue) {
  *       struct treeNode *right;
  *   };
  *   typedef struct treeNode TreeNode;
+ * 
  */
 int getNumNodes(TreeNode *root) {
-    return 0;
+    return (root == NULL) ? (0) : 
+        (1 + getNumNodes(root -> left) + getNumNodes(root -> right));
 }
 
 
@@ -179,10 +181,15 @@ static int max(int a, int b) {
 }
 
 /**
- * Given a tree, computes and returns the height of that tree
+ * Given a tree, computes and returns the height of that tree.
+ * 
+ * A tree with a single node has height 1.
  */
 int getTreeHeight(TreeNode *root) {
-    return 0;
+    if (root == NULL) return 0;
+    int lh = getTreeHeight(root -> left);
+    int rh = getTreeHeight(root -> right);
+    return 1 + max(lh, rh);
 }
 
 
@@ -199,8 +206,15 @@ int getTreeHeight(TreeNode *root) {
  * and returns the level it was found in.
  * If the target node was not found, returns -1.
  */
-int getNodeDepth(TreeNode *root, int targetValue) {
-    return 0;
+int depth(TreeNode *root, int targetValue) {
+    if (root == NULL) return -1;
+    if (root -> value == targetValue) return 0;
+
+    if (targetValue < root -> value) {
+        return 1 + depth(root -> left, targetValue);
+    } else if (targetValue > root -> value) {
+        return 1 + depth(root -> right, targetValue);
+    }
 }
 
 

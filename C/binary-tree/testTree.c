@@ -13,6 +13,7 @@
  */
 void printCommands() {
     char *helpLog = "|===== Commands =====|\n"
+                    " ===>  help        - show commands available\n"
                     " ===>  left <d>    - perform a left rotation on node with value <d>\n"
                     " ===>  right <d>   - perform a right rotation on node with value <d>\n"
                     " ===>  insert <d>  - inserts a node with the value <d>\n"
@@ -48,7 +49,9 @@ void printTreeState(TreeNode *root) {
  * command was executed.
  */
 TreeNode *processCommand(TreeNode *root, char *command) {
-    if (strcmp(command, "left") == 0) {
+    if (strcmp(command, "help") == 0) { 
+        printCommands();
+    } else if (strcmp(command, "left") == 0) {
         int val = atoi(strtok(NULL, " "));  
         printf(" -> Rotating left on node with value %d\n", val);
         root = leftRotate(root, val);

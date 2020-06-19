@@ -166,7 +166,9 @@ int getTreeHeight(TreeNode *root) {
 
 /**
  * Given a tree and a target value, finds the node with that target value
- * and returns the level it was found in.
+ * and returns the level it was found in. 
+ * A tree with a single level is considered to have a height of 1. 
+ * Another interpretation of height considers a tree with a single level to have a height of 0.
  * If the target node was not found, returns -1.
  */
 int getNodeDepth(TreeNode *root, int targetValue) {

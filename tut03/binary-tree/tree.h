@@ -22,7 +22,7 @@ void printGivenLevel(TreeNode *root, int level);
 bool existsInTree(TreeNode *root, int targetValue);
 int getNumNodes(TreeNode *root);
 int getTreeHeight(TreeNode *root);
-int getNodeDepth(TreeNode *root, int targetValue);
+int depth(TreeNode *root, int targetValue);
 TreeNode *leftRotate(TreeNode *root, int targetValue);
 TreeNode *rightRotate(TreeNode *root, int targetValue);
 TreeNode *delete(TreeNode *root, int targetValue);
