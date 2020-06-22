@@ -20,10 +20,7 @@ TreeNode *newNode(int value) {
 }
 
 /**
- * Given a tree and a value, creates a new asciiNode carrying the value
- * and inserts it into the appropriate position in the tree. Returns
- * the tree with the new asciiNode inserted
- * Doesn't handle duplicate values!
+ * Given a tree and a value, inserts that value inside the tree
  */
 TreeNode *insert(TreeNode *root, int value) {
     if (root == NULL) {
