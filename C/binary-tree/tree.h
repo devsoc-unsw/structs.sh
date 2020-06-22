@@ -13,7 +13,6 @@ typedef struct treeNode TreeNode;
 // Main operations
 TreeNode *newNode(int value);                             // COMMANDS:
 TreeNode *insert(TreeNode *root, int value);              // insert
-TreeNode *buildTree(int *values, int size);               // 
 void printInOrder(TreeNode *root);                        // inorder
 void printPreOrder(TreeNode *root);                       // preorder
 void printPostOrder(TreeNode *root);                      // postorder
