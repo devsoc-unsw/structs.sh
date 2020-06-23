@@ -13,7 +13,7 @@ tree-print.o: tree-print.c tree-print.h
 
 colours.o: ../util/colours.c ../util/colours.h
 	gcc -c ../util/colours.c
-
+	
 clean: 
 	rm *.o
 	rm testTree

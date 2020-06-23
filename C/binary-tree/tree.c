@@ -63,8 +63,8 @@ void printPreOrder(TreeNode *root) {
         return;
     }
     printf("%d ", root -> value);
-    printInOrder(root -> left);
-    printInOrder(root -> right);
+    printPreOrder(root -> left);
+    printPreOrder(root -> right);
 }
 
 /**
@@ -75,8 +75,8 @@ void printPostOrder(TreeNode *root) {
         // Received a tree that is empty. Nothing to print
         return;
     }
-    printInOrder(root -> left);
-    printInOrder(root -> right);
+    printPostOrder(root -> left);
+    printPostOrder(root -> right);
     printf("%d ", root -> value);
 }
 
