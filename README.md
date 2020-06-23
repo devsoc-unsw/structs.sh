@@ -22,10 +22,10 @@ Eg. `./testTree 6 3 10 1 4 8 12 7 9`
 
 ### Example Usage:
 <p float="left">
-  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-bst/InteractiveBST1.PNG" width="50%" />
-  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-bst/InteractiveBST2.PNG" width="45%" />
-  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-bst/InteractiveBST3.PNG" width="45%" />
-  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-bst/InteractiveBST4.PNG" width="45%" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-bst/InteractiveBST1.png" width="50%" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-bst/InteractiveBST2.png" width="45%" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-bst/InteractiveBST3.png" width="45%" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-bst/InteractiveBST4.png" width="45%" />
 </p>
 
 ### How to use this for practice:
@@ -48,9 +48,9 @@ An interactive AVL tree builder written in C. Supports AVL insertion, AVL deleti
 
 ### Example Usage:
 <p float="left">
-  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-avl-tree/InteractiveAVL1.PNG" width="90%" />
-  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-avl-tree/InteractiveAVL2.PNG" width="45%" />
-  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-avl-tree/InteractiveAVL3.PNG" width="45%" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-avl-tree/InteractiveAVL1.png" width="90%" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-avl-tree/InteractiveAVL2.png" width="45%" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-avl-tree/InteractiveAVL3.png" width="45%" />
 </p>
 
 
