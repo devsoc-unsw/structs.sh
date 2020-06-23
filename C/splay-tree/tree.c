@@ -67,8 +67,10 @@ TreeNode *splay(TreeNode *root, int targetValue) {
             root = rightRotate(root, root -> value);
         } else if (targetValue > leftChild -> value) {
             // Case 2: target is in left-right subtree - do left rotation on left child first
-            leftChild -> right = insertSplay(leftChild -> right, targetValue);
-            root -> left = rightRotate(leftChild, leftChild -> value);
+            leftChild -> right = splay(leftChild -> right, targetValue);
+            if (leftChild -> right != NULL) {
+                root -> left = leftRotate(leftChild, leftChild -> value);
+            }
         }
         // Perform right rotation on root (bringing the inserted value to the root)
         root = rightRotate(root, root -> value);
@@ -82,7 +84,9 @@ TreeNode *splay(TreeNode *root, int targetValue) {
         } else if (targetValue < rightChild -> value) {
             // Case 3: target is in right-left subtree - do right rotation on right child first
             rightChild -> left = splay(rightChild -> left, targetValue);
-            root -> right = rightRotate(rightChild, rightChild -> value);
+            if (rightChild -> left != NULL) {
+                root -> right = rightRotate(rightChild, rightChild -> value);
+            }
         } else if (targetValue > rightChild -> value) {
             // Case 4: target is in right-right subtree - do left rotation on root first
             rightChild -> right = splay(rightChild -> right, targetValue);
@@ -101,8 +105,7 @@ TreeNode *splay(TreeNode *root, int targetValue) {
  */
 TreeNode *insertSplay(TreeNode *root, int insertValue) {
     // Insertion point reached if the tree is empty (vacant position)
-    if (root == NULL) return newNode(insertValue);
-    insertStandard(root, insertValue);
+    root = insertStandard(root, insertValue);
     root = splay(root, insertValue);
     return root;
 }

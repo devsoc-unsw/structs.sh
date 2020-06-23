@@ -4,6 +4,7 @@ A collection of COMP2521 tutorial problems, my own examples and implementations 
 ## Table of Contents  
 - [Interactive BST](#interactive-bst)   
 - [Interactive AVL Tree](#interactive-avl)   
+- [Interactive Splay Tree](#interactive-splay)  
 
 
 <a name="interactive-bst"/>
@@ -56,4 +57,15 @@ Eg. `./testTree 1 2 3 4 5 6 7`
   <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-avl-tree/InteractiveAVL3.png" max-width="45%" height="500px" />
 </p>
 
+<a name="interactive-splay"/>
 
+## Interactive Splay Tree
+An interactive splay tree builder written in C. Splay trees differ from regular BSTs in that searching and inserting a value involves bringing the target/inserted node to the root. 
+
+### Setup Instructions:
+1. `git clone https://github.com/Tymotex/DataStructures.git` - downloads this repository
+2. `cd DataStructures/C/splay-tree` - navigates to the interactive AVL project root
+3. `make` - creates the executable file `testTree`
+4. `./testTree <space separated integers>` - intially constructs an AVLtree from the supplied sequence of integers
+
+Eg. `./testTree 5 3 8 7 4`

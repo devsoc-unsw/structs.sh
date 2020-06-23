@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
     }
     TreeNode *root = NULL;
     for (int i = 0; i < numOfValues; i++) {
-        root = insertStandard(root, values[i]);
+        root = insertSplay(root, values[i]);
     }
     free(values);
 
