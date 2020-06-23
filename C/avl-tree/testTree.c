@@ -7,6 +7,7 @@
 #include "tree.h"
 
 #define MAX_COMMAND_SIZE 64
+#define STATE_HEADER "Tree State"
 
 /**
  * Prints supported commands available in interactive mode
@@ -28,15 +29,6 @@ void printCommands() {
 }
 
 /**
- * Prints the state of the given tree (ascii art)
- */
-void printTreeState(TreeNode *root) {
-    printSuccess("|===== Tree State =====|\n");
-    printTree(root);
-    printSuccess("|======================|\n");
-}
-
-/**
  * Given the tree and the command, processes that command by
  * calling the relevant function from tree.c and supplies the 
  * expected arguments. Returns the resultant tree after the 
@@ -49,22 +41,22 @@ TreeNode *processCommand(TreeNode *root, char *command) {
         int val = atoi(strtok(NULL, " "));  
         printf(" -> Rotating left on node with value %d\n", val);
         root = leftRotate(root, val);
-        printTreeState(root);
+        printTreeState(root, STATE_HEADER);
     } else if (strcmp(command, "right") == 0) {
         int val = atoi(strtok(NULL, " "));  
         printf(" -> Rotating right on node with value %d\n", val);
         root = rightRotate(root, val);
-        printTreeState(root);
+        printTreeState(root, STATE_HEADER);
     } else if (strcmp(command, "insert") == 0) {
         int val = atoi(strtok(NULL, " "));  
         printf(" -> Inserting %d\n", val);
         root = insertAVL(root, val);
-        printTreeState(root);
+        printTreeState(root, STATE_HEADER);
     } else if (strcmp(command, "delete") == 0) {
         int val = atoi(strtok(NULL, " "));  
         printf(" -> Deleting %d\n", val);
         root = deleteAVL(root, val);
-        printTreeState(root);
+        printTreeState(root, STATE_HEADER);
     } else if (strcmp(command, "height") == 0) {
         printf(" -> Height of the tree is: %d\n", getTreeHeight(root));
     } else if (strcmp(command, "heightDiff") == 0) {
@@ -81,7 +73,7 @@ TreeNode *processCommand(TreeNode *root, char *command) {
         printf(" -> Deleting the whole tree\n");
         freeTree(root);
         root = NULL;
-        printTreeState(root);
+        printTreeState(root, STATE_HEADER);
     } else if (strcmp(command, "exit") == 0) {
         printf(" -> Exiting program :)\n");  
         freeTree(root);
@@ -109,7 +101,7 @@ int main(int argc, char *argv[]) {
     // Interactive mode
     char *command = malloc(sizeof(char) * MAX_COMMAND_SIZE);
     printCommands();
-    printTreeState(root);
+    printTreeState(root, STATE_HEADER);
     while (1) {
         printWarning(" ===> Enter command: ");
         command = fgets(command, MAX_COMMAND_SIZE, stdin);

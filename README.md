@@ -1,7 +1,12 @@
 # Data Structures and Algorithms
 A collection of COMP2521 tutorial problems, my own examples and implementations of classic data structures and their algorithms in C.
 
-## Interactive Binary Search Tree:
+# Table of Contents  
+[Interactive BST](#interactivebst)   
+
+<a name="interactivebst"/>
+## Interactive Binary Search Tree
+
 An interactive binary search tree builder written in C. Supports standard operations such as insertion, deletion, rotation, and in-order, pre-order, post-order and level-order printing.
 
 ### Setup Instructions:

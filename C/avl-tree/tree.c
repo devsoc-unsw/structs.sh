@@ -4,9 +4,11 @@
 #include <stdbool.h> 
 #include "../util/colours.h"
 #include "tree.h"
-#include "queue/queue.h"
+#include "tree-print.h"
 
 #define MAX_TREE_SIZE 64
+#define LOCAL_STATE_HEADER "Local Tree Fix"
+#define LOCAL_IMBALANCE_HEADER "Local Imbalance"
 
 /**
  * Given a value, mallocs and returns a new tree node initialised with the
@@ -47,34 +49,52 @@ TreeNode *insertAVL(TreeNode *root, int value) {
     }
 
     // Insertion is done by this point. Adjusting height now
-    root -> height = 1 + maxHeight(root -> left, root -> right);
+    adjustHeight(root);
 
     // Rebalancing the tree if the insertion caused a height difference
     // strictly greater than 1
+    root = rebalanceAVL(root, value);
+    return root;
+}
+
+TreeNode *rebalanceAVL(TreeNode *root, int insertedValue) {
     int lh = getHeight(root -> left);
     int rh = getHeight(root -> right);
     if (lh - rh > 1) {
         // Left subtree has 2 more levels than the right subtree. Need to do a right rotation
-        if (value > root -> left -> value) {
+        printf(" -> Imbalance found: left subtree of %d is taller than the right subtree by 2 levels\n", root -> value);
+        printTreeState(root, LOCAL_IMBALANCE_HEADER);
+        if (insertedValue > root -> left -> value) {
             // Value was inserted as the right child of the root -> left. Need to do a left rotation first
-            printf("Doing left rotation on node containing %d\n", root -> left -> value);
-            root -> left = leftRotate(root, root -> left -> value);
+            printf(" -> Doing left rotation on node containing %d\n", root -> left -> value);
+            root -> left = leftRotate(root -> left, root -> left -> value);
+            printTreeState(root, LOCAL_STATE_HEADER);
         }
-        printf("Doing right rotation on node containing %d\n", root -> value);
+        printf(" -> Doing right rotation on node containing %d\n", root -> value);
         root = rightRotate(root, root -> value);
+        printTreeState(root, LOCAL_STATE_HEADER);
     }
     if (rh - lh > 1) {
         // Right subtree has 2 more levels than the left subtree. Need to do a left rotation
-        if (value < root -> right -> value) {
+        printf(" -> Imbalance found: right subtree of %d is taller than the left subtree by 2 levels\n", root -> value);
+        printTreeState(root, LOCAL_IMBALANCE_HEADER);
+        if (insertedValue < root -> right -> value) {
             // Value was inserted as the left child of the root -> right. Need to do a right rotation first
-            printf("Doing right rotation on node containing %d\n", root -> right -> value);
-            root -> right = rightRotate(root, root -> right -> value);
+            printf(" -> Doing right rotation on node containing %d\n", root -> right -> value);
+            root -> right = rightRotate(root -> right, root -> right -> value);
+            printTreeState(root, LOCAL_STATE_HEADER);
         }
-        printf("Doing left rotation on node containing %d\n", root -> value);
+        printf(" -> Doing left rotation on node containing %d\n", root -> value);
         root = leftRotate(root, root -> value);
+        printTreeState(root, LOCAL_STATE_HEADER);
     }
     return root;
 }
+
+void adjustHeight(TreeNode *root) {
+    root -> height = 1 + maxHeight(root -> left, root -> right);
+}
+
 
 /**
  * Given a tree, computes and returns the height of that tree

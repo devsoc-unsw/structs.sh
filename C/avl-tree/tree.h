@@ -14,6 +14,10 @@ typedef struct treeNode TreeNode;
 // Main operations
 TreeNode *newNode(int value);                             // COMMANDS:
 TreeNode *insertAVL(TreeNode *root, int value);           // insert
+
+void adjustHeight(TreeNode *root);
+TreeNode *rebalanceAVL(TreeNode *root, int insertedValue);
+
 TreeNode *leftRotate(TreeNode *root, int targetValue);    // left
 TreeNode *rightRotate(TreeNode *root, int targetValue);   // right
 int getTreeHeight(TreeNode *root);                        // height

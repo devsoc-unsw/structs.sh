@@ -256,3 +256,17 @@ void printTree(TreeNode *t) {
     }
     freeAsciiTree(proot); 
 }
+
+/**
+ * Prints the state of the given tree (ascii art)
+ */
+void printTreeState(TreeNode *root, char *message) {
+    printSuccess("|===== ");
+    printSuccess(message);
+    printSuccess(" =====|\n");
+    printTree(root);
+    printSuccess("|");
+    for (int i = 0; i < strlen(message) + 12; i++)
+        printSuccess("=");
+    printSuccess("|\n");
+}

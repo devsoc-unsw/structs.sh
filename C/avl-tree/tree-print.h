@@ -12,5 +12,6 @@ void computeRProfile(AsciiNode *asciiNode, int x, int y);
 void computeEdgeLengths(AsciiNode *asciiNode);
 void printLevel(AsciiNode *asciiNode, int x, int level);
 void printTree(TreeNode *t);
+void printTreeState(TreeNode *root, char *message);
 
 #endif
