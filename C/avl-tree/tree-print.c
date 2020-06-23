@@ -48,30 +48,46 @@ int MAX (int X, int Y) {
  * Recursively build the ascii tree. See wrapper function
  * buildAsciiTree
  */
-AsciiNode *buildAsciiTreeRecursive(TreeNode *t) {
+AsciiNode *buildAsciiTreeRecursive(TreeNode *t, int option) {
     AsciiNode *asciiNode;
     if (t == NULL) return NULL;
     asciiNode = malloc(sizeof(AsciiNode));
-    asciiNode -> left = buildAsciiTreeRecursive(t -> left);
-    asciiNode -> right = buildAsciiTreeRecursive(t -> right);
+    asciiNode -> left = buildAsciiTreeRecursive(t -> left, option);
+    asciiNode -> right = buildAsciiTreeRecursive(t -> right, option);
     if (asciiNode -> left != NULL) {
         asciiNode -> left -> parent_dir = -1;
     }
     if (asciiNode -> right != NULL) {
         asciiNode -> right -> parent_dir = 1;
     }
-    sprintf(asciiNode -> label, "%d", t -> value);
-    asciiNode -> lablen = strlen(asciiNode -> label);
+    switch (option) {
+        case PRINT_VALUES:
+            sprintf(asciiNode -> label, "%d", t -> value);
+            asciiNode -> lablen = strlen(asciiNode -> label);
+            break;
+        case PRINT_BALANCE:
+            sprintf(asciiNode -> label, "%d", getHeight(t -> left) - getHeight(t -> right));
+            asciiNode -> lablen = strlen(asciiNode -> label);
+            break;
+        case PRINT_HEIGHTS:
+            sprintf(asciiNode -> label, "%d", t -> height);
+            asciiNode -> lablen = strlen(asciiNode -> label);
+            break;
+        default:
+            sprintf(asciiNode -> label, "%d", t -> value);
+            asciiNode -> lablen = strlen(asciiNode -> label);
+            break;
+    }
     return asciiNode;
 }
 
 /**
  * Copy the tree into the ascii asciiNode structure
  */
-AsciiNode *buildAsciiTree(TreeNode * t) {
+AsciiNode *buildAsciiTree(TreeNode * t, int option) {
     AsciiNode *asciiNode;
     if (t == NULL) return NULL;
-    asciiNode = buildAsciiTreeRecursive(t);
+    asciiNode = buildAsciiTreeRecursive(t, option);
     asciiNode -> parent_dir = 0;
     return asciiNode;
 }
@@ -229,14 +245,14 @@ void printLevel(AsciiNode *asciiNode, int x, int level)  {
 /** 
  * Given the tree, constructs an ascii tree and prints it
  */
-void printTree(TreeNode *t) {
+void printTree(TreeNode *t, int option) {
     AsciiNode *proot;
     int xmin, i;
     if (t == NULL) {
         printSuccess("Tree is empty\n");
         return;
     }
-    proot = buildAsciiTree(t);
+    proot = buildAsciiTree(t, option);
     computeEdgeLengths(proot);
     for (i=0; i<proot -> height && i < MAX_HEIGHT; i++) {
         lprofile[i] = INFINITY;
@@ -258,15 +274,34 @@ void printTree(TreeNode *t) {
 }
 
 /**
- * Prints the state of the given tree (ascii art)
+ * Prints the state of the given tree (ascii art) with
+ * a the given message as a header.
  */
 void printTreeState(TreeNode *root, char *message) {
     printSuccess("|===== ");
     printSuccess(message);
     printSuccess(" =====|\n");
-    printTree(root);
+    printTree(root, PRINT_VALUES);
     printSuccess("|");
     for (int i = 0; i < strlen(message) + 12; i++)
         printSuccess("=");
     printSuccess("|\n");
+}
+
+/**
+ * Prints the the given tree's nodes' balance (ascii art)
+ */
+void printTreeBalances(TreeNode *root) {
+    printSuccess("|===== Tree Height Balances =====|\n");
+    printTree(root, PRINT_BALANCE);
+    printSuccess("|================================|\n");
+}
+
+/**
+ * Prints the the given tree's nodes' height (ascii art)
+ */
+void printTreeHeights(TreeNode *root) {
+    printSuccess("|===== Tree Height Balances =====|\n");
+    printTree(root, PRINT_HEIGHTS);
+    printSuccess("|================================|\n");
 }

@@ -1,9 +1,10 @@
 # Data Structures and Algorithms
 A collection of COMP2521 tutorial problems, my own examples and implementations of classic data structures and their algorithms in C.
 
-# Table of Contents  
-[Interactive BST](#interactive-bst)   
-[Interactive AVL Tree](#interactive-avl)   
+## Table of Contents  
+- [Interactive BST](#interactive-bst)   
+- [Interactive AVL Tree](#interactive-avl)   
+
 
 <a name="interactive-bst"/>
 
@@ -21,10 +22,10 @@ Eg. `./testTree 6 3 10 1 4 8 12 7 9`
 
 ### Example Usage:
 <p float="left">
-  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/InteractiveTree1.PNG" width="50%" />
-  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/InteractiveTree2.PNG" width="45%" />
-  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/InteractiveTree3.PNG" width="45%" />
-  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/InteractiveTree4.PNG" width="45%" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-bst/InteractiveBST1.PNG" width="50%" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-bst/InteractiveBST2.PNG" width="45%" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-bst/InteractiveBST3.PNG" width="45%" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-bst/InteractiveBST4.PNG" width="45%" />
 </p>
 
 ### How to use this for practice:
@@ -37,11 +38,19 @@ Eg. `./testTree 6 3 10 1 4 8 12 7 9`
 <a name="interactive-bst"/>
 
 ## Interactive AVL Tree
-An interactive AVL tree builder written in C. 
+An interactive AVL tree builder written in C. Supports AVL insertion, AVL deletion and commands to print the height of each node and the height balance of each node.
 
 ### Setup Instructions:
 1. `git clone https://github.com/Tymotex/DataStructures.git` - downloads this repository
 2. `cd DataStructures/C/avl-tree` - navigates to the interactive AVL project root
 3. `make` - creates the executable file `testTree`
 4. `./testTree <space separated integers>` - intially constructs an AVLtree from the supplied sequence of integers
+
+### Example Usage:
+<p float="left">
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-avl-tree/InteractiveAVL1.PNG" width="90%" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-avl-tree/InteractiveAVL2.PNG" width="45%" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-avl-tree/InteractiveAVL3.PNG" width="45%" />
+</p>
+
 

@@ -1,4 +1,4 @@
-testTree: testTree.o tree.o tree-print.o colours.option
+testTree: testTree.o tree.o tree-print.o colours.o
 	gcc  -o testTree testTree.o tree.o tree-print.o colours.o
 
 # Note that gcc's -c option compiles and creates the .o file
