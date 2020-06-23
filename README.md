@@ -2,9 +2,11 @@
 A collection of COMP2521 tutorial problems, my own examples and implementations of classic data structures and their algorithms in C.
 
 # Table of Contents  
-[Interactive BST](#interactivebst)   
+[Interactive BST](#interactive-bst)   
+[Interactive AVL Tree](#interactive-avl)   
 
-<a name="interactivebst"/>
+<a name="interactive-bst"/>
+
 ## Interactive Binary Search Tree
 
 An interactive binary search tree builder written in C. Supports standard operations such as insertion, deletion, rotation, and in-order, pre-order, post-order and level-order printing.
@@ -30,4 +32,16 @@ Eg. `./testTree 6 3 10 1 4 8 12 7 9`
 2. You can find all the functions that need to be implemented in the `tree.h` header file. Start by implementing the `insert` function first
 3. As you implement more functions, you can test them out by running `./testTree` and then entering the relevant commands
 4. If you get stuck on any function, you can check this repo for the answers
+
+
+<a name="interactive-bst"/>
+
+## Interactive AVL Tree
+An interactive AVL tree builder written in C. 
+
+### Setup Instructions:
+1. `git clone https://github.com/Tymotex/DataStructures.git` - downloads this repository
+2. `cd DataStructures/C/avl-tree` - navigates to the interactive AVL project root
+3. `make` - creates the executable file `testTree`
+4. `./testTree <space separated integers>` - intially constructs an AVLtree from the supplied sequence of integers
 

@@ -1,5 +1,5 @@
-testTree: testTree.o tree.o tree-print.o colours.o queue.o
-	gcc  -o testTree testTree.o tree.o tree-print.o colours.o queue.o
+testTree: testTree.o tree.o tree-print.o colours.option
+	gcc  -o testTree testTree.o tree.o tree-print.o colours.o
 
 # Note that gcc's -c option compiles and creates the .o file
 testTree.o: testTree.c
@@ -13,9 +13,6 @@ tree-print.o: tree-print.c tree-print.h
 
 colours.o: ../util/colours.c ../util/colours.h
 	gcc -c ../util/colours.c
-
-queue.o: ./queue/queue.c ./queue/queue.h
-	gcc -c ./queue/queue.c
 
 clean: 
 	rm *.o

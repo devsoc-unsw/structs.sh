@@ -3,7 +3,6 @@
 #include <string.h>
 #include <stdbool.h> 
 #include "tree.h"
-#include "queue/queue.h"
 
 #define MAX_TREE_SIZE 64
 
@@ -57,7 +56,7 @@ void printPostOrder(TreeNode *root) {
 /**
  * Levelorder printing prints level-by-level using the recursive
  * printGivenLevel function. This could also be done iteratively
- * with the help of a queue.
+ * with the help of a queue but recursion is nicer
  */
 void printLevelOrder(TreeNode *root) {
     
