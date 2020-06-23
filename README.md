@@ -46,11 +46,14 @@ An interactive AVL tree builder written in C. Supports AVL insertion, AVL deleti
 3. `make` - creates the executable file `testTree`
 4. `./testTree <space separated integers>` - intially constructs an AVLtree from the supplied sequence of integers
 
+Eg. `./testTree 1 2 3 4 5 6 7`
+
 ### Example Usage:
+`./testTree 1 2 3 4 5 6 7`
 <p float="left">
   <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-avl-tree/InteractiveAVL1.png" width="90%" />
-  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-avl-tree/InteractiveAVL2.png" width="45%" />
-  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-avl-tree/InteractiveAVL3.png" width="45%" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-avl-tree/InteractiveAVL2.png" max-width="45%" height="500px" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-avl-tree/InteractiveAVL3.png" max-width="45%" height="500px" />
 </p>
 
 
