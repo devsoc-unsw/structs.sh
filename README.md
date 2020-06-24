@@ -36,7 +36,7 @@ Eg. `./testTree 6 3 10 1 4 8 12 7 9`
 4. If you get stuck on any function, you can check this repo for the answers
 
 
-<a name="interactive-bst"/>
+<a name="interactive-avl"/>
 
 ## Interactive AVL Tree
 An interactive AVL tree builder written in C. Supports AVL insertion, AVL deletion and commands to print the height of each node and the height balance of each node.
