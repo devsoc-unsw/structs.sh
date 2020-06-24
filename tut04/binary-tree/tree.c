@@ -206,18 +206,39 @@ int printHeightDiff (TreeNode *t) {
 
 
 
-
+int abs(int a) {
+    return (a >= 0) ? (a) : (-a);
+}
 
 
 /** 
  * 
  */
-int isHeightBalanced (TreeNode *t) { 
+// int isHeightBalanced (TreeNode *t) { 
+//     if (t == NULL) return 0;
+//     int lh = getTreeHeight(t -> left);
+//     int rh = getTreeHeight(t -> right);
+//     int heightDiff = abs(lh - rh);
+//     if (heightDiff <= 1) {
+//         int leftIsBalanced = isHeightBalanced(t -> left);
+//         int rigthIsBalanced = isHeightBalanced(t -> right);
+//         if (leftIsBalanced && rigthIsBalanced) {
+//             return getTreeHeight(t);
+//         } else {
+//             return NOT_HEIGHT_BALANCED;
+//         }
+//     } else {
+//         return NOT_HEIGHT_BALANCED;
+//     }
+// }
 
-    return NOT_HEIGHT_BALANCED;
+int isHeightBalanced (TreeNode *t) {
+    if (t == NULL) return 0;
+    int lh = isHeightBalanced(t -> left);
+    int rh = isHeightBalanced(t -> right);
+    if (lh == NOT_HEIGHT_BALANCED || rh == NOT_HEIGHT_BALANCED) return NOT_HEIGHT_BALANCED;
+    return (abs(lh - rh) <= 1) ? (1 + max(lh, rh)) : (NOT_HEIGHT_BALANCED);
 }
-
-
 
 
 

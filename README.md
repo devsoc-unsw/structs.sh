@@ -15,7 +15,7 @@ An interactive binary search tree builder written in C. Supports standard operat
 
 ### Setup Instructions:
 1. `git clone https://github.com/Tymotex/DataStructures.git` - downloads this repository
-2. `cd DataStructures/C/binary-tree` - navigates to the interactive BST project root
+2. `cd DataStructures/binary-tree` - navigates to the interactive BST project root
 3. `make` - creates the executable file `testTree`
 4. `./testTree <space separated integers>` - intially constructs a tree from the supplied sequence of integers
 
@@ -43,7 +43,7 @@ An interactive AVL tree builder written in C. Supports AVL insertion, AVL deleti
 
 ### Setup Instructions:
 1. `git clone https://github.com/Tymotex/DataStructures.git` - downloads this repository
-2. `cd DataStructures/C/avl-tree` - navigates to the interactive AVL project root
+2. `cd DataStructures/avl-tree` - navigates to the interactive AVL project root
 3. `make` - creates the executable file `testTree`
 4. `./testTree <space separated integers>` - intially constructs an AVLtree from the supplied sequence of integers
 
@@ -64,7 +64,7 @@ An interactive splay tree builder written in C. Splay trees differ from regular 
 
 ### Setup Instructions:
 1. `git clone https://github.com/Tymotex/DataStructures.git` - downloads this repository
-2. `cd DataStructures/C/splay-tree` - navigates to the interactive AVL project root
+2. `cd DataStructures/splay-tree` - navigates to the interactive AVL project root
 3. `make` - creates the executable file `testTree`
 4. `./testTree <space separated integers>` - intially constructs an AVLtree from the supplied sequence of integers
 

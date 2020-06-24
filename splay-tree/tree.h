@@ -14,7 +14,8 @@ typedef struct treeNode TreeNode;
 TreeNode *newNode(int value);                             // COMMANDS:
 TreeNode *insertStandard(TreeNode *root, int value);
 TreeNode *insertSplay(TreeNode *root, int value);         // insert
-bool searchSplay(TreeNode *root, int targetValue);        // search
+bool searchStandard(TreeNode *root, int targetValue);
+TreeNode *searchSplay(TreeNode *root, int targetValue);   // search
 TreeNode *leftRotate(TreeNode *root, int targetValue);    // left
 TreeNode *rightRotate(TreeNode *root, int targetValue);   // right
 TreeNode *deleteStandard(TreeNode *root, int targetValue);        

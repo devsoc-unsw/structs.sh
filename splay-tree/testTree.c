@@ -66,11 +66,8 @@ TreeNode *processCommand(TreeNode *root, char *command) {
     } else if (strcmp(command, "search") == 0) {
         int val = atoi(strtok(NULL, " "));  
         printf(" -> Searching for %d\n", val);
-        if (searchSplay(root, val)) {
-            printf(" -> %d found in this tree!\n", val);
-        } else {
-            printf(" -> %d doesn't exist in this tree!\n", val);
-        }
+        root = searchSplay(root, val);
+        printTreeState(root);
     } else if (strcmp(command, "clear") == 0) {
         printf(" -> Deleting the whole tree\n");
         freeTree(root);

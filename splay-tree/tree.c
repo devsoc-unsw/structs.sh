@@ -2,13 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h> 
-#include "../util/colours.h"
 #include "tree.h"
-#include "tree-print.h"
 
 #define MAX_TREE_SIZE 64
-#define LOCAL_STATE_HEADER "Local Tree Fix"
-#define LOCAL_IMBALANCE_HEADER "Local Imbalance"
 
 /**
  * Given a value, mallocs and returns a new tree node initialised with the
@@ -17,108 +13,134 @@
 TreeNode *newNode(int value) {
     TreeNode *newTreeNode = malloc(sizeof(TreeNode));
     newTreeNode -> value = value;
-    newTreeNode -> height = 1;
     newTreeNode -> left = NULL;
     newTreeNode -> right = NULL;
     return newTreeNode;
 }
 
 /**
- * Given an AVL tree and a value, creates a new node with that
- * value and inserts it into the tree, doing rebalances if 
- * necessary.  
+ * Given a tree and a value, inserts that value inside the tree.
+ * This is the standard BST insert.
  */
-TreeNode *insertAVL(TreeNode *root, int value) {
+TreeNode *insertStandard(TreeNode *root, int value) {
     if (root == NULL) {
         // Insertion point reached if the tree is empty (vacant position)
         TreeNode *newTreeNode = newNode(value);
         return newTreeNode;
     }
 
-    // Inserting somewhere in the left or right subtrees
     if (value < root -> value) {
         // Insertion point exists somewhere in the left subtree
-        root -> left = insertAVL(root -> left, value); 
+        root -> left = insertStandard(root -> left, value); 
     } else if (value > root -> value) {
         // Insertion point exists somewhere in the right subtree
-        root -> right = insertAVL(root -> right, value);
+        root -> right = insertStandard(root -> right, value);
     } else {
         // Value already exists in the tree. Doing nothing
         printf("Value %d already exists in the tree\n", value);
         return root;
     }
-
-    // Insertion is done by this point. Adjusting height now
-    adjustHeight(root);
-
-    // Rebalancing the tree if the insertion caused a height difference
-    // strictly greater than 1
-    root = rebalanceAVL(root);
-    return root;
 }
 
 /**
- * Rebalancing a height-imbalanced node in an AVL tree.
- * 
- * Height imbalances in AVL trees occur in 4 cases:
- *   1. Left-left case   - perform right rotation on current node
- *   2. Left-right case  - perform left rotation on left child, then right rotation on current node
- *   3. Right-left case  - perform right rotation on right child, then left rotation on current node
- *   4. Right-right case - perform left rotation on current node
+ * Given a tree and a target value, searches for the target value and then
+ * lifts that node up to be the new root using a sequence of rotations that
+ * are determined by the following 4 cases:
+ *   Case 1: target value is somewhere in left-left   - right rotation on root, then right rotation on root again
+ *   Case 2: target value is somewhere in left-right  - left rotation on left child, then right rotation on root
+ *   Case 3: target value is somewhere in right-left  - right rotation on left child, then left rotation on root
+ *   Case 4: target value is somewhere in right-right - left rotation on root, then right rotation on root again 
  */
-TreeNode *rebalanceAVL(TreeNode *root) {
-    int lh = getHeight(root -> left);
-    int rh = getHeight(root -> right);
-    if (lh - rh > 1) {
-        // Left subtree has 2 more levels than the right subtree. Need to do a right rotation
-        printf(" -> Imbalance found: left subtree of %d is taller than the right subtree by 2 levels\n", root -> value);
-        printTreeState(root, LOCAL_IMBALANCE_HEADER);
+TreeNode *splay(TreeNode *root, int targetValue) {
+    if (root == NULL) return root;
+    if (targetValue == root -> value) return root;
+    
+    if (targetValue < root -> value) {
+        // Target value is somewhere in the left subtree
         TreeNode *leftChild = root -> left;
-        int leftLeftHeight = getHeight(leftChild -> left);
-        int leftRightHeight = getHeight(leftChild -> right);
-        if (leftRightHeight > leftLeftHeight) {
-            // Need to do a left rotation on leftChild first
-            printf(" -> Doing left rotation on node containing %d\n", leftChild -> value);
-            root -> left = leftRotate(leftChild, leftChild -> value);
-            printTreeState(root, LOCAL_STATE_HEADER);
+        // Target value doesn't exist. Just return
+        if (leftChild == NULL) {
+            return root;
+        } else if (targetValue < leftChild -> value) {
+            // Case 1: target is in left-left subtree - do right rotation on root first
+            leftChild -> left = splay(leftChild -> left, targetValue);
+            root = rightRotate(root, root -> value);
+        } else if (targetValue > leftChild -> value) {
+            // Case 2: target is in left-right subtree - do left rotation on left child first
+            leftChild -> right = splay(leftChild -> right, targetValue);
+            if (leftChild -> right != NULL) {
+                root -> left = leftRotate(leftChild, leftChild -> value);
+            }
         }
-        printf(" -> Doing right rotation on node containing %d\n", root -> value);
+        // Perform right rotation on root (bringing the inserted value to the root)
         root = rightRotate(root, root -> value);
-        printTreeState(root, LOCAL_STATE_HEADER);
-    }
-    if (rh - lh > 1) {
-        // Right subtree has 2 more levels than the left subtree. Need to do a left rotation
-        printf(" -> Imbalance found: right subtree of %d is taller than the left subtree by 2 levels\n", root -> value);
-        printTreeState(root, LOCAL_IMBALANCE_HEADER);
+        return root;
+    } else if (targetValue > root -> value) {
+        // Target value is somewhere in the right subtree
         TreeNode *rightChild = root -> right;
-        int rightLeftHeight = getHeight(rightChild -> left);
-        int rightRightHeight = getHeight(rightChild -> right);
-        if (rightLeftHeight > rightRightHeight) {
-            // Need to do a right rotation on rightChild first
-            printf(" -> Doing right rotation on node containing %d\n", rightChild -> value);
-            root -> right = rightRotate(rightChild, rightChild -> value);
-            printTreeState(root, LOCAL_STATE_HEADER);
+        // Target value doesn't exist. Just return
+        if (rightChild == NULL) {
+            return root;
+        } else if (targetValue < rightChild -> value) {
+            // Case 3: target is in right-left subtree - do right rotation on right child first
+            rightChild -> left = splay(rightChild -> left, targetValue);
+            if (rightChild -> left != NULL) {
+                root -> right = rightRotate(rightChild, rightChild -> value);
+            }
+        } else if (targetValue > rightChild -> value) {
+            // Case 4: target is in right-right subtree - do left rotation on root first
+            rightChild -> right = splay(rightChild -> right, targetValue);
+            root = leftRotate(root, root -> value);
         }
-        printf(" -> Doing left rotation on node containing %d\n", root -> value);
+        // Perform left rotation on root (bringing the inserted value to the root)
         root = leftRotate(root, root -> value);
-        printTreeState(root, LOCAL_STATE_HEADER);
+        return root;
     }
+}
+
+/**
+ * Given a tree and a value, inserts that value inside the tree. The
+ * inserted value is then lifted up to the root by a sequence of rotations.
+ * This involves calling the splay function after doing 
+ */
+TreeNode *insertSplay(TreeNode *root, int insertValue) {
+    // Insertion point reached if the tree is empty (vacant position)
+    root = insertStandard(root, insertValue);
+    root = splay(root, insertValue);
     return root;
 }
 
 /**
- * Given a node in a tree, correctly sets its height field. 
+ * Given a tree and a target value, returns true if that target value
+ * exists in the tree, otherwise returns false.
  */
-void adjustHeight(TreeNode *root) {
-    root -> height = 1 + maxHeight(root -> left, root -> right);
+bool searchStandard(TreeNode *root, int targetValue) {
+    if (root == NULL) {
+        return false;
+    } else if (root -> value == targetValue) {
+        return true;
+    } 
+    if (targetValue < root -> value) {
+        // If the value exists, it must exist in the left subtree
+        return searchStandard(root -> left, targetValue);
+    } else if (targetValue > root -> value) {
+        // If the value exists, it must exist in the right subtree
+        return searchStandard(root -> right, targetValue);
+    }
 }
 
 /**
- * Given a tree, computes and returns the height of that tree
+ * Given a tree and a target value, returns true if that target value
+ * exists in the tree, otherwise returns false. Also executes the 
+ * splay function to lift the target value to the root.
  */
-int getTreeHeight(TreeNode *root) {
-    return (root == NULL) ? 0 : 1 + max(getTreeHeight(root -> left), getTreeHeight(root -> right));
+TreeNode *searchSplay(TreeNode *root, int targetValue) {
+    if (searchStandard(root, targetValue)) {
+        root = splay(root, targetValue);
+    }
+    return root;
 }
+
 
 /**
  * Executes a left rotation on the node with the given target value.
@@ -136,8 +158,6 @@ TreeNode *leftRotate(TreeNode *root, int targetValue) {
             rightChildLeft = rightChild -> left;
             root -> right = rightChildLeft;
             rightChild -> left = root;
-            adjustHeight(root);
-            adjustHeight(rightChild);
             return rightChild;
         } else {
             // Can't rotate when there's no right child
@@ -171,8 +191,6 @@ TreeNode *rightRotate(TreeNode *root, int targetValue) {
             leftChildRight = leftChild -> right;
             root -> left = leftChildRight;
             leftChild -> right = root;
-            adjustHeight(root);
-            adjustHeight(leftChild);
             return leftChild;
         } else {
             // Can't rotate when there's no left child
@@ -191,11 +209,6 @@ TreeNode *rightRotate(TreeNode *root, int targetValue) {
 }
 
 /**
- * AVL deletion works by first performing a standard BST deletion,
- * then adjusting the height of the current node, then rebalancing
- * the current node if it is height-imbalanced.
- *
- * Standard BST deletion:
  * Given a tree and a target value, finds the node containing that
  * target value and deletes it from the tree, if it exists. All 4
  * cases are handled as follows:
@@ -204,8 +217,7 @@ TreeNode *rightRotate(TreeNode *root, int targetValue) {
  *    Case 3: only left child exists - replace root with the left child
  *    Case 4: both children exist - find the min node in right subtree, swap out root with that min node
  */
-TreeNode *deleteAVL(TreeNode *root, int targetValue) {
-    // === STEP 1 - Standard BST deletion ===
+TreeNode *deleteStandard(TreeNode *root, int targetValue) {
     if (root == NULL) {
         printf("Value %d doesn't exist in this tree\n", targetValue);
         return NULL;
@@ -213,11 +225,10 @@ TreeNode *deleteAVL(TreeNode *root, int targetValue) {
 
     if (targetValue < root -> value) {  
         // Node to delete is somewhere in the left subtree
-        root -> left = deleteAVL(root -> left, targetValue);
+        root -> left = deleteStandard(root -> left, targetValue);
     } else if (targetValue > root -> value) { // value is in the right sub tree.
-        root -> right = deleteAVL(root -> right, targetValue);
+        root -> right = deleteStandard(root -> right, targetValue);
     } else {
-        // Found the node to be deleted
         // Case 1: 0 children - Easiest case. Just delete and return
         if (root -> left == NULL && root -> right == NULL) {
             free(root);
@@ -225,29 +236,35 @@ TreeNode *deleteAVL(TreeNode *root, int targetValue) {
         }
         // Case 2: only right child exists - replace root with the right child
         else if (root -> left == NULL && root -> right != NULL) {
-            TreeNode *tmpRight = root -> right;
+            TreeNode *rightChild = root -> right;
             free(root);
-            return NULL;
+            return rightChild;
         }
         // Case 3: only left child exists - replace root with the left child
         else if (root->right == NULL) {
-            TreeNode *tmpLeft = root -> left;
+            TreeNode *leftChild = root -> left;
             free(root);
-            *root = *tmpLeft;
+            return leftChild;
         }
         // Case 4: both children exist - find min node in right subtree, swap out root with that min node
         else {
             TreeNode *minNode = getMinNode(root -> right);
             root -> value = minNode -> value;
-            root -> right = deleteAVL(root -> right, minNode -> value);
+            root -> right = deleteStandard(root -> right, minNode -> value);
         }
     }
+}
 
-    // === STEP 2 - Adjusting height ===
-    adjustHeight(root);
-
-    // === STEP 3 - Find and fix imbalances ===
-    root = rebalanceAVL(root);
+/**
+ * Given a tree and a target value, deletes the target value from the tree
+ * by lifting the target value to the root (using splay), then performing
+ * standard BST deletion on the root node.
+ */
+TreeNode *deleteSplay(TreeNode *root, int targetValue) {
+    // Find the target value and lift it up as the new root
+    root = splay(root, targetValue);
+    // Perform a standard deletion on the root (which contains the target value)
+    root = deleteStandard(root, root -> value);
     return root;
 }
 
@@ -280,20 +297,6 @@ TreeNode *getMinNode(TreeNode *root) {
 /**
  * Given two numbers a and b, returns the one that's larger.
  */
-int max(int a, int b) {
+static int max(int a, int b) {
     return (a > b) ? a : b;
-}
-
-/**
- * Gets the height of a given tree
- */
-int getHeight(TreeNode *root) {
-    return (root == NULL) ? 0 : root -> height;
-}
-
-/**
- * Given two trees, returns the larger height of the two trees. 
- */
-int maxHeight(TreeNode *a, TreeNode *b) {
-    return max(getHeight(a), getHeight(b));  
 }
