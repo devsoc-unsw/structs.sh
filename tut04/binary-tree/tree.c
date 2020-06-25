@@ -147,6 +147,8 @@ void printPostOrder(TreeNode *root) {
     printf("%d ", root -> value);
 }
 
+
+
 /**
  * Given a tree, computes and returns the height of that tree
  */
@@ -156,8 +158,6 @@ int getTreeHeight(TreeNode *root) {
     int rh = getTreeHeight(root -> right);
     return 1 + max(lh, rh);
 }
-
-
 
 
 
@@ -176,11 +176,9 @@ int getTreeHeight(TreeNode *root) {
  * 
  */
 
-
 /**
- * Smaller problems in this question:
+ * What are the smaller problems in this question:
  * 1. 
- * 
  * 
  */
 int printHeightDiff (TreeNode *t) {
@@ -201,12 +199,8 @@ int printHeightDiff (TreeNode *t) {
 
 
 int isHeightBalanced (TreeNode *t) { 
-    return 0;
+
 }
-
-
-
-
 
 
 
