@@ -149,15 +149,7 @@ void printPostOrder(TreeNode *root) {
 
 
 
-/**
- * Given a tree, computes and returns the height of that tree
- */
-int getTreeHeight(TreeNode *root) {
-    if (root == NULL) return 0;
-    int lh = getTreeHeight(root -> left);
-    int rh = getTreeHeight(root -> right);
-    return 1 + max(lh, rh);
-}
+
 
 
 
@@ -165,7 +157,7 @@ int getTreeHeight(TreeNode *root) {
 
 
 /** 
- * STRUCT DEFINITION:
+ * ===== STRUCT DEFINITION =====
  * 
  * struct treeNode {
  *     int value;
@@ -176,13 +168,24 @@ int getTreeHeight(TreeNode *root) {
  * 
  */
 
+
+
 /**
  * What are the smaller problems in this question:
- * 1. 
- * 
+ * 1. Computing the height of a tree
+ * 2. Traversing the tree in postfix order (LRN)
  */
 int printHeightDiff (TreeNode *t) {
+    if (t == NULL) return 1;
+    printHeightDiff(t -> left);             // L
+    printHeightDiff(t -> right);            // R
 
+    int lh = getTreeHeight(t -> left);
+    int rh = getTreeHeight(t -> right);
+    int diff = lh - rh;
+
+    printf("data: %d, diff: %d\n", t -> value, diff);      // N
+    return 1 + max(lh, rh);
 }
 
 
@@ -193,14 +196,55 @@ int printHeightDiff (TreeNode *t) {
 
 
 
+/**
+ * Given a tree, computes and returns the height of that tree
+ */
+int getTreeHeight(TreeNode *root) {
+    if (root == NULL) return 1;
+    int lh = getTreeHeight(root -> left);
+    int rh = getTreeHeight(root -> right);
+    return 1 + max(lh, rh);
+}
 
+int abs(int a) {
+    return (a >= 0) ? (a) : (-a);
+}
 
+/**
+ * If the tree is height-balanced, return the height.
+ * Otherwise, return NOT_HEIGHT_BALANCED
+ */
+// int isHeightBalanced (TreeNode *t) { 
+//     if (t == NULL) return 0;
 
+//     int lh = getTreeHeight(t -> left);
+//     int rh = getTreeHeight(t -> right);
+//     int absDiff = abs(lh - rh);
+
+//     if (absDiff > 1) {
+//         return NOT_HEIGHT_BALANCED;
+//     } else {
+//         int leftIsBalanced = isHeightBalanced(t -> left);
+//         int rightIsBalanced = isHeightBalanced(t -> right);
+//         if (leftIsBalanced == NOT_HEIGHT_BALANCED || rightIsBalanced == NOT_HEIGHT_BALANCED) {
+//             return NOT_HEIGHT_BALANCED;
+//         } else {
+//             return getTreeHeight(t);
+//         }
+//     }
+// }
 
 
 int isHeightBalanced (TreeNode *t) { 
+    if (t == NULL) return 0;
 
+    int lh = isHeightBalanced(t -> left);
+    int rh = isHeightBalanced(t -> right);
+    int absDiff = abs(lh - rh);
+    if (lh == NOT_HEIGHT_BALANCED || rh == NOT_HEIGHT_BALANCED) {
+        return NOT_HEIGHT_BALANCED;
+    } 
+    return (absDiff <= 1) ? (1 + max(lh, rh)) : (NOT_HEIGHT_BALANCED);
 }
-
 
 
