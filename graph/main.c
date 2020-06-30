@@ -11,7 +11,7 @@ void printUsagePrompt(char *argv[]) {
 	exit(1);
 }
 
-void help() {
+void printCommands() {
 	int i;
 	char *helps[] = {
 		"  =>  (i)insert edge     ... i v w",
@@ -28,7 +28,7 @@ void help() {
 	};
 	printSuccess("|===== Commands =====|\n");
 	for (i = 0; helps[i] != NULL; i++) {
-		printSecondary(helps[i]);
+		printPrimary(helps[i]);
 		printf("\n");
 	}
 	printSuccess("|====================|\n");
@@ -75,10 +75,16 @@ int main(int argc, char *argv[]) {
 	}
 
 	// read and execute commands
-	show(graph);
+	printCommands();
 	printPrompt();
 	while (fgets(line,MAXLINE,stdin) != NULL) {
 		switch (line[0]) {
+		case 'm':
+			show(graph, ADJACENCY_MATRIX);
+			break;
+		case 'l':
+			show(graph, ADJACENCY_LIST);
+			break;
 		case 'i':
 			if (sscanf(line,"i %d %d",&v1,&v2) != 2)
 				printf("Usage: i v1 v2\n");
@@ -149,11 +155,10 @@ int main(int argc, char *argv[]) {
 			return 0;
 			break;
 		default:
-			help();
+			printCommands();
 			break;
 		}
 		printf("\n");
-		show(graph);
 		printPrompt();
 	}
 	return 0;

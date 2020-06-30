@@ -6,6 +6,7 @@
 #include "queue/Queue.h"
 #include "stack/Stack.h"
 #include "linked-list/List.h"
+#include "../util/colours.h"
 
 // graph representation (adjacency matrix)
 typedef struct GraphRep {
@@ -111,20 +112,42 @@ void dropGraph(Graph g) {
    free(g);
 }
 
-// display a graph (not pretty)
-void show(Graph g) {
+// display a graph
+void show(Graph g, int option) {
    assert(g != NULL);
-   printf("Graph has V=%d and E=%d\n",g->nV,g->nE);
-   printf("V    Connected to\n");
-   printf("--   ------------\n");
    int v, w;
-   for (v = 0; v < g->nV; v++) {
-      printf("%-3d ",v);
-      for (w = 0; w < g->nV; w++) {
-         if (adjacent(g,v,w)) printf(" %d",w);
-      }
-      printf("\n");
+   switch (option) {
+      case ADJACENCY_LIST:
+         printf("Showing the adjacency list\n");
+         printf("|—————————————————————————|\n");
+         printPrimary(" Vertex   Connections\n");
+         printf("|—————————————————————————|\n");
+         for (v = 0; v < g->nV; v++) {
+            printf("  %-3d   ║",v);
+            
+            for (w = 0; w < g->nV; w++) {
+               if (adjacent(g,v,w)) printf(" ⟶ %d",w);
+            }
+            printf("\n");
+         }
+         break;
+      case ADJACENCY_MATRIX:
+         printf("Showing the adjacency matrix\n");
+         printf("\n     ");
+         for (v = 0; v < g->nV; v++)
+            printf("%d ", v);
+         printf("\n\n");
+         for (v = 0; v < g->nV; v++) {
+            printf("%-2d ║ ", v);
+            for (w = 0; w < g->nV; w++) {
+               if (adjacent(g,v,w)) printf("1 ");
+               else printf("0 ");
+            }
+            printf("║\n");
+         }
+         break;
    }
+   printf("\nSummary: the graph has %d vertices and %d edges\n",g->nV,g->nE);
 }
 
 // Additions

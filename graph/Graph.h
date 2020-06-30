@@ -1,6 +1,9 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
+#define ADJACENCY_LIST   0
+#define ADJACENCY_MATRIX 1
+
 // graph representation is hidden
 typedef struct GraphRep *Graph;
 
@@ -21,7 +24,7 @@ void  removeE(Graph, Edge);
 int   edges(Graph, Edge *, int);
 Graph copy(Graph);
 void  dropGraph(Graph);
-void  show(Graph);
+void  show(Graph, int option);
 
 // DFS Algorithms on Graphs
 void dfs(Graph, Vertex);
