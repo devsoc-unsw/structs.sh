@@ -12,8 +12,7 @@ typedef struct StackRep {
 } StackRep;
 
 // set up empty stack
-Stack newStack()
-{
+Stack newStack() {
 	Stack s;
 	s = malloc(sizeof(StackRep));
 	assert(s != NULL);
@@ -22,15 +21,13 @@ Stack newStack()
 }
 
 // remove unwanted stack
-void dropStack(Stack s)
-{
+void dropStack(Stack s) {
 	assert(s != NULL);
 	free(s);
 }
 
 // insert char on top of stack
-void StackPush(Stack s, Item it)
-{
+void StackPush(Stack s, Item it) {
 	assert(s->top < MAXITEMS-1);
 	s->top++;
 	int i = s->top;
@@ -38,8 +35,7 @@ void StackPush(Stack s, Item it)
 }
 
 // remove char from top of stack
-Item  StackPop(Stack s)
-{
+Item  StackPop(Stack s) {
 	assert(s->top > -1);
 	int i = s->top;
 	Item it = s->item[i];
@@ -48,18 +44,16 @@ Item  StackPop(Stack s)
 }
 
 // check whether stack is empty
-int StackIsEmpty(Stack s)
-{
+int StackIsEmpty(Stack s) {
 	return (s->top < 0);
 }
 
 // display contents of stack
-void showStack(Stack s)
-{
+void showStack(Stack s) {
 	int i;
 	for (i = 0; i <= s->top; i++) {
 		ItemShow(s->item[i]);
-		printf("<");
+		printf(" ← ");
 	}
-	printf("top\n");
+	printf("Top\n");
 }

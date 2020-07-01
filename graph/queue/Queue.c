@@ -15,8 +15,7 @@ typedef struct QueueRep {
 } QueueRep;
 
 // create new empty Queue
-Queue newQueue()
-{
+Queue newQueue() {
 	Queue q;
 	q = malloc(sizeof(QueueRep));
 	assert(q != NULL);
@@ -26,8 +25,7 @@ Queue newQueue()
 }
 
 // free memory used by Queue
-void dropQueue(Queue Q)
-{
+void dropQueue(Queue Q) {
 	QueueNode *curr, *next;
 	assert(Q != NULL);
 	// free list nodes
@@ -42,8 +40,7 @@ void dropQueue(Queue Q)
 }
 
 // display as 3 > 5 > 4 > ...
-void showQueue(Queue Q)
-{
+void showQueue(Queue Q) {
 	QueueNode *curr;
 	assert(Q != NULL);
 	// free list nodes
@@ -51,15 +48,14 @@ void showQueue(Queue Q)
 	while (curr != NULL) {
 		ItemShow(curr->value);
 		if (curr->next != NULL)
-			printf(">");
+			printf(" → ");
 		curr = curr->next;
 	}
 	printf("\n");
 }
 
 // add item at end of Queue 
-void QueueJoin(Queue Q, Item it)
-{
+void QueueJoin(Queue Q, Item it) {
 	assert(Q != NULL);
 	QueueNode *new = malloc(sizeof(QueueNode));
 	assert(new != NULL);
@@ -73,8 +69,7 @@ void QueueJoin(Queue Q, Item it)
 }
 
 // remove item from front of Queue
-Item QueueLeave(Queue Q)
-{
+Item QueueLeave(Queue Q) {
 	assert(Q != NULL);
 	assert(Q->head != NULL);
 	Item it = ItemCopy(Q->head->value);
@@ -87,7 +82,6 @@ Item QueueLeave(Queue Q)
 }
 
 // check for no items
-int QueueIsEmpty(Queue Q)
-{
+int QueueIsEmpty(Queue Q) {
 	return (Q->head == NULL);
 }

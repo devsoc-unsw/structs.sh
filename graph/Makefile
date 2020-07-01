@@ -1,12 +1,14 @@
 CC=gcc
 CFLAGS= -g
-OBJS=main.o Graph.o queue/Queue.o stack/Stack.o priority-queue/PQueue.o linked-list/List.o ../util/colours.o
+OBJS=main.o Graph.o graph-algos.o queue/Queue.o stack/Stack.o priority-queue/PQueue.o linked-list/List.o ../util/colours.o
 
 testGraph : $(OBJS)
 	$(CC) -o testGraph $(OBJS)
 
 colours.o: ../util/colours.c ../util/colours.h
 main.o : main.c Graph.h
+
+graph-algos.o: graph-algos.c graph-algos.h
 
 Graph.o  : Graph.c Graph.h queue/Queue.h stack/Stack.h linked-list/List.h
 Queue.o  : queue/Queue.c queue/Queue.h queue/Item.h
