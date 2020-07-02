@@ -74,7 +74,7 @@ Eg. `./testTree 5 3 8 7 4`
 <a name="interactive-graph"/>
 
 ## Interactive Graph
-Unweighted undirected graph.
+Interactive unweighted undirected graph builder written in C.
 
 ### Setup Instructions:
 1. `git clone https://github.com/Tymotex/DataStructures.git` 
@@ -84,8 +84,9 @@ Unweighted undirected graph.
 
 Eg. `./testGraph tests/2.in`
 
+### Example Usage:
 <p float="left">
   <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-graph/InteractiveGraph1.png" width="45%" />
-  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-graph/InteractiveGraph2.png" max-width="45%" height="500px" />
-  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-graph/InteractiveGraph3.png" max-width="45%" height="500px" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-graph/InteractiveGraph2.png" max-width="45%" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-graph/InteractiveGraph3.png" max-width="35%" />
 </p>
