@@ -129,7 +129,7 @@ void show(Graph g, int option) {
          printf("Showing the adjacency matrix\n");
          printf("\n     ");
          for (v = 0; v < g -> nV; v++)
-            printf("%d ", v);
+         printf("%d ", v);
          printf("\n\n");
          for (v = 0; v < g -> nV; v++) {
             printf("%-2d ║ ", v);

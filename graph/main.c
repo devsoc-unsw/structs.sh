@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include <ctype.h>
 #include "Graph.h"
 #include "graph-algos.h"
@@ -17,10 +18,14 @@ void printCommands() {
 	char *helps[] = {
 		"  =>  (m)atrix representation",
 		"  =>  (l)ist representation",
-		"  =>  (r)emove edge      ... r v w",
-		"  =>  (i)nsert edge      ... i v w",
-		"  =>  (d)epth first      ... d v",
-		"  =>  (b)readth first    ... d v",
+		"  =>  (r)emove edge             ... r v w",
+		"  =>  (i)nsert edge             ... i v w",
+		"  =>  (d)epth first search      ... d v",
+		"  =>  (b)readth first search    ... d v",
+		"  =>  (c)ycle exists?",
+		"  =>  (t) REACHABLE?            ... t v w",
+		"  =>  (C)onnected components",
+		"  =>  (h)amiltonian path exists ... h v w",
 		"  =>  (q)uit",
 		NULL,
 	};
@@ -109,6 +114,39 @@ int main(int argc, char *argv[]) {
 				printf("Usage: b v\n");
 			else
 				bfs(graph, v1);
+			break;
+		case 'c':
+			if (hasCycle(graph)) {
+				printf("A cycle exists in the graph!");
+			} else {
+				printf("No cycle exists in the graph!");
+			}
+			break;
+		case 't':
+			if (sscanf(line,"t %d %d",&v1,&v2) != 2){
+				printf("Usage: t v1 v2\n");
+			} else {
+				bool reachable = isReachable(graph, v1, v2);
+				if (reachable) {
+					printf("Path exists from %d to %d!", v1, v2);
+				} else {
+					printf("Path DOES NOT exist from %d to %d!", v1, v2);
+				}
+			}
+			break;
+		case 'C':
+			showConnectedComponents(graph);
+			break;
+		case 'h':
+			if (sscanf(line,"h %d %d", &v1, &v2) != 2){
+				printf("Usage: h v1 v2\n");
+			} else {
+				if (hasHamiltonPath(graph, v1, v2)) {
+					printf("Hamiltonian path exists between %d and %d\n", v1, v2);
+				} else {
+					printf("No Hamiltonian path exists between %d and %d\n", v1, v2);
+				}
+			}
 			break;
 		case 'q':
 			return 0;
