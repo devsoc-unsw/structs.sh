@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
 	// read and execute commands
 	printCommands();
 	printPrompt();
-	while (fgets(line,MAXLINE,stdin) != NULL) {
+	while (fgets(line, MAXLINE, stdin) != NULL) {
 		switch (line[0]) {
 		case 'm':
 			show(graph, ADJACENCY_MATRIX);
@@ -84,24 +84,25 @@ int main(int argc, char *argv[]) {
 			show(graph, ADJACENCY_LIST);
 			break;
 		case 'i':
-			if (sscanf(line,"i %d %d",&v1,&v2) != 2)
+			if (sscanf(line,"i %d %d", &v1, &v2) != 2)
 				printf("Usage: i v1 v2\n");
 			else 
-				insertE(graph,makeEdge(graph,v1,v2));
+				insertE(graph,makeEdge(graph, v1, v2));
+				printf("Added edge %d-%d", v1, v2);
 			break;
 		case 'r':
 			if (sscanf(line,"r %d %d",&v1,&v2) != 2)
 				printf("Usage: r v1 v2\n");
 			else 
-				removeE(graph,makeEdge(graph,v1,v2));
+				removeE(graph,makeEdge(graph, v1, v2));
+				printf("Removed edge %d-%d", v1, v2);
+			break;
 		case 'd':
 			if (sscanf(line,"d %d",&v1) != 1)
 				printf("Usage: d v\n");
 			else
 				printPrimary("|===== Iterative DFS =====|\n");
 				DFSIterative(graph, v1);
-				printPrimary("|===== Recursive DFS =====|\n");
-				DFSRecursive(graph, v1);
 			break;
 		case 'b':
 			if (sscanf(line,"b %d",&v1) != 1)
