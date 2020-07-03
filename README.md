@@ -82,7 +82,7 @@ Interactive unweighted undirected graph builder written in C.
 3. `make` - creates the executable file `testGraph`
 4. `./testGraph <num vertices>|<input file>` - creates an empty graph with the specified number of vertices OR constructs a graph with edges specified in an input file 
 
-Eg. `./testGraph tests/2.in`
+Eg. `./testGraph tests/1.in`
 
 ### Example Usage:
 <p float="left">
