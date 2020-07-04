@@ -2,43 +2,71 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <string.h>
 #include "Graph.h"
 #include "graph-algos.h"
 #include "../util/colours.h"
 
 #define MAXLINE 100
 
+/**
+ * Prints command line usage info
+ */
 void printUsagePrompt(char *argv[]) {
 	fprintf(stderr, "Usage: %s <num vertices>|<filename>\n", argv[0]);
 	exit(1);
 }
 
+/**
+ * Prints supported commands available in interactive mode
+ */
 void printCommands() {
-	int i;
-	char *helps[] = {
-		"  =>  (m)atrix representation",
-		"  =>  (l)ist representation",
-		"  =>  (r)emove edge             ... r v w",
-		"  =>  (i)nsert edge             ... i v w",
-		"  =>  (d)epth first search      ... d v",
-		"  =>  (b)readth first search    ... d v",
-		"  =>  (c)ycle exists?",
-		"  =>  (t) REACHABLE?            ... t v w",
-		"  =>  (C)onnected components",
-		"  =>  (h)amiltonian path exists ... h v w",
-		"  =>  (q)uit",
-		NULL,
-	};
-	printSuccess("|===== Commands =====|\n");
-	for (i = 0; helps[i] != NULL; i++) {
-		printPrimary(helps[i]);
-		printf("\n");
-	}
-	printSuccess("|====================|\n");
+	char *helpLog = "|===== Commands =====|\n"
+                    " ===>  help                 - show available commands\n"
+                    " ===>  matrix               - shows matrix representation\n"
+                    " ===>  list                 - shows matrix representation\n"
+                    " ===>  insert <v1> <v2>     - inserts edge v1 to v2\n"
+                    " ===>  remove <v1> <v2>     - removes edge v1 to v2\n"
+                    " ===>  depth <v1>           - performs depth first search starting on v1\n"
+                    " ===>  breadth <v1>         - performs breadth first search starting on v1\n"
+                    " ===>  cycle                - determines whether a cycle exists in the graph\n"
+                    " ===>  showConnected        - shows all the connected subgraphs in the whole graph\n"
+					" ===>  hamilton <v1> <v2>   - checks if a Hamilton path exists from v1 to v2\n"
+                    " ===>  exit                 - quit program\n"
+                    "|====================|\n";
+    printf("%s", helpLog);
 }
 
+/**
+ * Prints prompt for the next line of user input
+ */
 void printPrompt() {
 	printSuccess("\n ===> Enter Command: ");
+}
+
+/**
+ * Given the graph and the command string, extracts arguments from the command
+ * and calls the relevant function.
+ */
+Graph processCommand(Graph g, char *command) {
+    if (strcmp(command, "help") == 0) { 
+        printCommands();
+    } else if (strcmp(command, "matrix") == 0) {
+		show(g, ADJACENCY_MATRIX);
+    } else if (strcmp(command, "list") == 0) {
+		show(g, ADJACENCY_LIST);
+    } else if (strcmp(command, "insert") == 0) {
+        int v1 = atoi(strtok(NULL, " "));  
+        int v2 = atoi(strtok(NULL, " "));  
+		insertE(g, makeEdge(g, v1, v2));
+    } else if (strcmp(command, "exit") == 0) {
+        printf(" -> Exiting program :)\n");  
+		dropGraph(g);
+        exit(0);
+    } else {
+        printFailure(" -> Enter a valid command\n");
+    }
+    return g;
 }
 
 int main(int argc, char *argv[]) {
@@ -79,7 +107,18 @@ int main(int argc, char *argv[]) {
 
 	// read and execute commands
 	printCommands();
-	printPrompt();
+	while (1) {
+		printPrompt();
+		fgets(line, MAXLINE, stdin);
+        printWarning(" You entered: ");
+        printPrimary(line);
+        // Strips trailing newline character and whitespace
+        strtok(line, "\n");
+        strtok(line, " ");
+        graph = processCommand(graph, line);
+    }
+
+
 	while (fgets(line, MAXLINE, stdin) != NULL) {
 		switch (line[0]) {
 		case 'm':
