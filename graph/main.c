@@ -7,7 +7,7 @@
 #include "graph-algos.h"
 #include "../util/colours.h"
 
-#define MAXLINE 100
+#define MAX_LINE 127
 
 /**
  * Prints command line usage info
@@ -59,6 +59,28 @@ Graph processCommand(Graph g, char *command) {
         int v1 = atoi(strtok(NULL, " "));  
         int v2 = atoi(strtok(NULL, " "));  
 		insertE(g, makeEdge(g, v1, v2));
+    } else if (strcmp(command, "remove") == 0) {
+        int v1 = atoi(strtok(NULL, " "));  
+        int v2 = atoi(strtok(NULL, " "));  
+		removeE(g, makeEdge(g, v1, v2));
+    } else if (strcmp(command, "depth") == 0) {
+        int v1 = atoi(strtok(NULL, " "));  
+		DFSIterative(g, v1);
+    } else if (strcmp(command, "breadth") == 0) {
+        int v1 = atoi(strtok(NULL, " "));  
+		BFS(g, v1);
+    } else if (strcmp(command, "cycle") == 0) {
+		printf(hasCycle(g) ? " -> A cycle exists in the graph!" : " -> No cycle exists in the graph!");
+    } else if (strcmp(command, "showConnected") == 0) {
+		showConnectedComponents(g);
+    } else if (strcmp(command, "hamilton") == 0) {
+        int v1 = atoi(strtok(NULL, " "));  
+        int v2 = atoi(strtok(NULL, " "));  
+		if (hasHamiltonPath(g, v1, v2)) {
+			printf(" -> Hamiltonian path exists between %d and %d\n", v1, v2);
+		} else {
+			printf(" -> No Hamiltonian path exists between %d and %d\n", v1, v2);
+		}
     } else if (strcmp(command, "exit") == 0) {
         printf(" -> Exiting program :)\n");  
 		dropGraph(g);
@@ -70,46 +92,45 @@ Graph processCommand(Graph g, char *command) {
 }
 
 int main(int argc, char *argv[]) {
-	Graph graph;
-	int N; 
-	char *edgeFile;
-	char line[MAXLINE];
-	Vertex v1, v2;
+	Graph graph = NULL;
+	int N = 0; 
+	char *edgeFile = NULL;
+	char line[MAX_LINE];
+	Vertex v1 = 0;
+	Vertex v2 = 0;
 
-	// collect command-line params
 	if (argc < 2) printUsagePrompt(argv);
 	if (isdigit(argv[1][0])) { N = atoi(argv[1]); edgeFile = NULL; }
 	else { N = 0; edgeFile = argv[1]; }
 
-	// build graph
+	// Building the graph
 	if (edgeFile == NULL)
 		graph = newGraph(N);
 	else {
 		// read edges and insert into graph
 		FILE *in;
 		if ((in = fopen(edgeFile,"r")) == NULL) {
-			fprintf(stderr,"Can't open edge file\n");
+			fprintf(stderr, "Can't open edge file\n");
 			printUsagePrompt(argv);
 		}
-		// first line contains #vertices
-		fgets(line,MAXLINE,in);
+		// First line in the file contains number of vertices
+		fgets(line,MAX_LINE,in);
 		sscanf(line,"%d",&N);
 		graph = newGraph(N);
-		// rest of lines contain edges
-		while (fgets(line,MAXLINE,in) != NULL) {
+		// Rest of the lines in the file contains edges v1-v2
+		while (fgets(line,MAX_LINE,in) != NULL) {
 			if (sscanf(line,"%d %d",&v1,&v2) != 2)
-				fprintf(stderr,"Bad edge (%d,%d)\n",v1,v2);
+				fprintf(stderr,"Bad edge (%d, %d)\n", v1, v2);
 			else
 				insertE(graph, makeEdge(graph,v1,v2));
 		}
 		fclose(in);
 	}
 
-	// read and execute commands
 	printCommands();
 	while (1) {
 		printPrompt();
-		fgets(line, MAXLINE, stdin);
+		fgets(line, MAX_LINE, stdin);
         printWarning(" You entered: ");
         printPrimary(line);
         // Strips trailing newline character and whitespace
@@ -117,87 +138,5 @@ int main(int argc, char *argv[]) {
         strtok(line, " ");
         graph = processCommand(graph, line);
     }
-
-
-	while (fgets(line, MAXLINE, stdin) != NULL) {
-		switch (line[0]) {
-		case 'm':
-			show(graph, ADJACENCY_MATRIX);
-			break;
-		case 'l':
-			show(graph, ADJACENCY_LIST);
-			break;
-		case 'i':
-			if (sscanf(line,"i %d %d", &v1, &v2) != 2)
-				printf("Usage: i v1 v2\n");
-			else 
-				insertE(graph,makeEdge(graph, v1, v2));
-				printf("Added edge %d-%d", v1, v2);
-			break;
-		case 'r':
-			if (sscanf(line,"r %d %d",&v1,&v2) != 2)
-				printf("Usage: r v1 v2\n");
-			else 
-				removeE(graph,makeEdge(graph, v1, v2));
-				printf("Removed edge %d-%d", v1, v2);
-			break;
-		case 'd':
-			if (sscanf(line,"d %d",&v1) != 1)
-				printf("Usage: d v\n");
-			else
-				printPrimary("|===== Iterative DFS =====|\n");
-				DFSIterative(graph, v1);
-			break;
-		case 'b':
-			if (sscanf(line,"b %d",&v1) != 1)
-				printf("Usage: b v\n");
-			else
-				bfs(graph, v1);
-			break;
-		case 'c':
-			if (hasCycle(graph)) {
-				printf("A cycle exists in the graph!");
-			} else {
-				printf("No cycle exists in the graph!");
-			}
-			break;
-		case 't':
-			if (sscanf(line,"t %d %d",&v1,&v2) != 2){
-				printf("Usage: t v1 v2\n");
-			} else {
-				bool reachable = isReachable(graph, v1, v2);
-				if (reachable) {
-					printf("Path exists from %d to %d!", v1, v2);
-				} else {
-					printf("Path DOES NOT exist from %d to %d!", v1, v2);
-				}
-			}
-			break;
-		case 'C':
-			showConnectedComponents(graph);
-			break;
-		case 'h':
-			if (sscanf(line,"h %d %d", &v1, &v2) != 2){
-				printf("Usage: h v1 v2\n");
-			} else {
-				if (hasHamiltonPath(graph, v1, v2)) {
-					printf("Hamiltonian path exists between %d and %d\n", v1, v2);
-				} else {
-					printf("No Hamiltonian path exists between %d and %d\n", v1, v2);
-				}
-			}
-			break;
-		case 'q':
-			return 0;
-			break;
-		default:
-			printCommands();
-			break;
-		}
-		printf("\n");
-		printPrompt();
-	}
 	return 0;
 }
-
-
