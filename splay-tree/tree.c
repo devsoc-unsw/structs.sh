@@ -262,6 +262,10 @@ TreeNode *deleteStandard(TreeNode *root, int targetValue) {
  */
 TreeNode *deleteSplay(TreeNode *root, int targetValue) {
     // Find the target value and lift it up as the new root
+    if (!searchStandard(root, targetValue)) {
+        printf("Target value %d doesn't exist.\n", targetValue);
+        return root;
+    }
     root = splay(root, targetValue);
     // Perform a standard deletion on the root (which contains the target value)
     root = deleteStandard(root, root -> value);
