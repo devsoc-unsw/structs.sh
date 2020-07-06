@@ -78,7 +78,7 @@ Interactive unweighted undirected graph builder written in C.
 
 ### Setup Instructions:
 1. `git clone https://github.com/Tymotex/DataStructures.git` 
-2. `cd DataStructures/graph` 
+2. `cd DataStructures/unweighted-graph` 
 3. `make` - creates the executable file `testGraph`
 4. `./testGraph <num vertices>|<input file>` - creates an empty graph with the specified number of vertices OR constructs a graph with edges specified in an input file 
 
