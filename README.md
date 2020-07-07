@@ -94,14 +94,13 @@ Eg. `./testGraph tests/1.in`
 
 <a name="interactive-weighted-graph"/>
 
-## Interactive Unweighted Graph
-Interactive weighted undirected graph builder written in C.
+## Interactive Weighted Graph
+Interactive weighted undirected graph builder written in C. Implements Dijkstra's algorithm for determining a single source spanning tree.
 
 ### Setup Instructions:
 1. `git clone https://github.com/Tymotex/DataStructures.git` 
-2. `cd DataStructures/unweighted-graph` 
+2. `cd DataStructures/weighted-graph` 
 3. `make` - creates the executable file `testGraph`
 4. `./testGraph <num vertices>|<input file>` - creates an empty graph with the specified number of vertices OR constructs a graph with edges specified in an input file 
 
 Eg. `./testGraph tests/1.in`
-
