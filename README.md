@@ -5,7 +5,8 @@ A collection of COMP2521 tutorial problems, my own examples and implementations 
 - [Interactive BST](#interactive-bst)   
 - [Interactive AVL Tree](#interactive-avl)   
 - [Interactive Splay Tree](#interactive-splay)  
-- [Interactive Graph](#interactive-graph)  
+- [Interactive Unweighted Graph](#interactive-unweighted-graph)   
+- [Interactive Weighted Graph](#interactive-weighted-graph)  
 
 
 <a name="interactive-bst"/>
@@ -71,9 +72,9 @@ An interactive splay tree builder written in C. Splay trees differ from regular 
 
 Eg. `./testTree 5 3 8 7 4`
 
-<a name="interactive-graph"/>
+<a name="interactive-unweighted-graph"/>
 
-## Interactive Graph
+## Interactive Unweighted Graph
 Interactive unweighted undirected graph builder written in C.
 
 ### Setup Instructions:
@@ -90,3 +91,17 @@ Eg. `./testGraph tests/1.in`
   <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-graph/InteractiveGraph2.png" max-width="45%" />
   <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-graph/InteractiveGraph3.png" max-width="35%" />
 </p>
+
+<a name="interactive-weighted-graph"/>
+
+## Interactive Unweighted Graph
+Interactive weighted undirected graph builder written in C.
+
+### Setup Instructions:
+1. `git clone https://github.com/Tymotex/DataStructures.git` 
+2. `cd DataStructures/unweighted-graph` 
+3. `make` - creates the executable file `testGraph`
+4. `./testGraph <num vertices>|<input file>` - creates an empty graph with the specified number of vertices OR constructs a graph with edges specified in an input file 
+
+Eg. `./testGraph tests/1.in`
+
