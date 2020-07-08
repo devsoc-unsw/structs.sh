@@ -22,14 +22,15 @@ void printCommands() {
                     " ===>  help                 - show available commands\n"
                     " ===>  matrix               - shows matrix representation\n"
                     " ===>  list                 - shows matrix representation\n"
-                    " ===>  insert <v1> <v2>     - inserts edge v1 to v2\n"
-                    " ===>  remove <v1> <v2>     - removes edge v1 to v2\n"
+                    " ===>  insert <v1> <v2> <w> - inserts a weighted edge v1 to v2 with weight w\n"
+                    " ===>  remove <v1> <v2>     - removes edge v1 to v2\n" // TODO: Fix remove
                     " ===>  depth <v1>           - performs depth first search starting on v1\n"
                     " ===>  breadth <v1>         - performs breadth first search starting on v1\n"
                     " ===>  cycle                - determines whether a cycle exists in the graph\n"
                     " ===>  showConnected        - shows all the connected subgraphs in the whole graph\n"
 					" ===>  hamilton <v1> <v2>   - checks if a Hamilton path exists from v1 to v2\n"
-                    " ===>  exit                 - quit program\n"
+                    " ===>  dijkstra <v1>        - RUNS DIJKSTRA'S SINGLE SOURCE SPANNING TREE ALGO"
+					" ===>  exit                 - quit program\n"
                     "|====================|\n";
     printf("%s", helpLog);
 }
@@ -80,6 +81,9 @@ Graph processCommand(Graph g, char *command) {
 		} else {
 			printf(" -> No Hamiltonian path exists between %d and %d\n", v1, v2);
 		}
+    } else if (strcmp(command, "dijkstra") == 0) {
+        int v1 = atoi(strtok(NULL, " "));  
+		dijkstra(g, v1);
     } else if (strcmp(command, "exit") == 0) {
         printf(" -> Exiting program :)\n");  
 		dropGraph(g);
@@ -119,7 +123,7 @@ int main(int argc, char *argv[]) {
 		Vertex v1, v2;
 		int weight;
 		while (fgets(line,MAX_LINE,in) != NULL) {
-			if (sscanf(line,"%d %d %d", &v1, &v2, &weight) != 2)
+			if (sscanf(line,"%d %d %d", &v1, &v2, &weight) != 3)
 				fprintf(stderr,"Bad edge (%d, %d, %d)\n", v1, v2, weight);
 			else
 				insertE(graph, makeEdge(graph, v1, v2, weight));

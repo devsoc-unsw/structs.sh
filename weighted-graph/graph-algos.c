@@ -1,12 +1,98 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <limits.h>
 #include "Graph.h"
 #include "graph-algos.h"
 #include "queue/Queue.h"
 #include "stack/Stack.h"
 #include "linked-list/List.h"
+#include "priority-queue/PQueue.h"
 #include "../util/colours.h"
+
+// ========== Dijkstra's Algorithm ==========
+#define NO_PRED -1
+/**
+ * Finds the next best candidate edge going out from each included 
+ * vertex
+ */
+Vertex minDistance(Graph g, int *dist, bool *included) {
+    // Initialize min value
+    int min = INT_MAX, min_index;
+    for (int v = 0; v < g -> nV; v++) {
+        if (included[v] == false && dist[v] <= min) {
+            min = dist[v];
+            min_index = v;
+        }
+    }
+   return min_index;
+}
+
+// A utility function to print the constructed distance array
+int printSolution(Graph g, int dist[], int n) {
+    printf("Vertex   Distance from Source\n");
+    for (int i = 0; i < g -> nV; i++)
+        printf("%d \t\t %d\n", i, dist[i]);
+}
+ 
+/**
+ * Dijkstra's algorithm for determining the single source spanning tree
+ * of the input graph from the starting vertex
+ */
+void dijkstra(Graph g, Vertex src) {
+    int V = g -> nV;
+    int *dist = malloc(sizeof(int) * g -> nV);  
+    bool *included = malloc(sizeof(bool) * g -> nV); 
+    int *pred = malloc(sizeof(int) * g -> nV);
+ 
+    // Initialize all distances as INFINITE and stpSet[] as false
+    for (int i = 0; i < V; i++) {
+        dist[i] = INT_MAX;
+        included[i] = false;
+        pred[i] = NO_PRED;
+    }
+
+    // Distance of source vertex from itself is always 0
+    dist[src] = 0;
+ 
+    // Find shortest path for all vertices
+    for (int count = 0; count < V-1; count++) {
+        // Pick the minimum distance vertex from the set of vertices not
+        // yet processed. u is always equal to src in first iteration.
+        int u = minDistance(g, dist, included);
+        printf("Best neighbour is %d\n", u);
+        // Mark the picked vertex as processed
+        included[u] = true;
+    
+        // Update dist value of the adjacent vertices of the picked vertex.
+        for (int v = 0; v < V; v++) {
+            // Update dist[v] only if is not in included, there is an edge from 
+            // u to v, and total weight of path from src to  v through u is 
+            // smaller than current value of dist[v]
+            if (!included[v] && g -> edges[u][v] && dist[u] != INT_MAX 
+                && dist[u]+g -> edges[u][v] < dist[v]) {
+                
+                pred[v] = u;
+                dist[v] = dist[u] + g -> edges[u][v];
+            }
+        }
+    }
+    printSolution(g, dist, V);
+    for (Vertex v = 0; v < g -> nV; v++) {
+        showPathTrace(src, v, pred);
+    }
+}
+
+/**
+ * 
+ */
+void showPathTrace(Vertex src, Vertex dest, int *pred) {
+    while (dest != src) {
+        printf("%d <- ", dest);
+        dest = pred[dest];
+    }
+    printf("%d\n", src);
+}
 
 // ========== Depth-First Search ==========
 /**
