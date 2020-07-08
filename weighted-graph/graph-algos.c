@@ -64,7 +64,7 @@ void DFSIterative(Graph g, Vertex v) {
 /**
  * Breadth-first search. Uses a queue
  */
-void bfs(Graph g, Vertex v) {
+void BFS(Graph g, Vertex v) {
     int i; 
     int order = 0;
     bool *visited = newVisitedArray(g);

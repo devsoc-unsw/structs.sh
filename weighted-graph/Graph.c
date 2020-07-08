@@ -115,7 +115,7 @@ void show(Graph g, int option) {
          for (v = 0; v < g -> nV; v++) {
             printf("  %-3d   ║", v);
             for (w = 0; w < g -> nV; w++) {
-               if (adjacent(g, v, w)) printf(" ⟶ %d", w);
+               if (adjacent(g, v, w)) printf(" ⟶ %d (weight: %d)", w, g -> edges[v][w]);
             }
             printf("\n");
          }
@@ -124,12 +124,14 @@ void show(Graph g, int option) {
          printf("Showing the adjacency matrix\n");
          printf("\n     ");
          for (v = 0; v < g -> nV; v++)
-         printf("%d ", v);
+            printf("%d ", v);
          printf("\n\n");
          for (v = 0; v < g -> nV; v++) {
             printf("%-2d ║ ", v);
             for (w = 0; w < g -> nV; w++) {
-               if (adjacent(g, v, w)) printf("%d ", );
+               if (adjacent(g, v, w)) {
+                  printf("%d ", g -> edges[v][w]);
+               }
                else printf("0 ");
             }
             printf("║\n");
