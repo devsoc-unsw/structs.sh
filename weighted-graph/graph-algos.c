@@ -12,86 +12,92 @@
 
 // ========== Dijkstra's Algorithm ==========
 #define NO_PRED -1
+
+
 /**
- * Finds the next best candidate edge going out from each included 
+ * Finds the next best candidate edge going out from each vSet 
  * vertex
  */
-Vertex minDistance(Graph g, int *dist, bool *included) {
+Vertex getLowestCostVertex(Graph g, int *dist, bool *vSet) {
     // Initialize min value
     int min = INT_MAX, min_index;
     for (int v = 0; v < g -> nV; v++) {
-        if (included[v] == false && dist[v] <= min) {
+        if (vSet[v] == false && dist[v] <= min) {
             min = dist[v];
             min_index = v;
         }
     }
    return min_index;
 }
-
-// A utility function to print the constructed distance array
-int printSolution(Graph g, int dist[], int n) {
-    printf("Vertex   Distance from Source\n");
-    for (int i = 0; i < g -> nV; i++)
-        printf("%d \t\t %d\n", i, dist[i]);
-}
  
 /**
  * Dijkstra's algorithm for determining the single source spanning tree
  * of the input graph from the starting vertex
+ * 
+ * High-level steps:
+ *   1. Look at every neighbour of the vertices we currently have in vSet
+ *   2. Find the neighbour vertex with the lowest cost to get to and 
+ *      include it in our set of vertices
+ *   3. Look at all the unincluded neighbours of the new vertex, and
+ *      update the dist array if we've found a BETTER path to those neighbours
+ *   4. Repeat 1-3 until all vertices have been included in vSet
  */
 void dijkstra(Graph g, Vertex src) {
-    int V = g -> nV;
-    int *dist = malloc(sizeof(int) * g -> nV);  
-    bool *included = malloc(sizeof(bool) * g -> nV); 
-    int *pred = malloc(sizeof(int) * g -> nV);
- 
-    // Initialize all distances as INFINITE and stpSet[] as false
-    for (int i = 0; i < V; i++) {
+    bool vSet[g -> nV]; 
+    int dist[g -> nV];  
+    int pred[g -> nV];
+    // Initialising all 3 arrays
+    for (int i = 0; i < g -> nV; i++) {
         dist[i] = INT_MAX;
-        included[i] = false;
-        pred[i] = NO_PRED;
+        vSet[i] = false;
+        pred[i] = NO_PRED;   // NO_PRED is #defined as -1
     }
-
-    // Distance of source vertex from itself is always 0
+    // The distance to itself is 0
     dist[src] = 0;
  
-    // Find shortest path for all vertices
-    for (int count = 0; count < V-1; count++) {
-        // Pick the minimum distance vertex from the set of vertices not
-        // yet processed. u is always equal to src in first iteration.
-        int u = minDistance(g, dist, included);
-        printf("Best neighbour is %d\n", u);
-        // Mark the picked vertex as processed
-        included[u] = true;
-    
-        // Update dist value of the adjacent vertices of the picked vertex.
-        for (int v = 0; v < V; v++) {
-            // Update dist[v] only if is not in included, there is an edge from 
-            // u to v, and total weight of path from src to  v through u is 
-            // smaller than current value of dist[v]
-            if (!included[v] && g -> edges[u][v] && dist[u] != INT_MAX 
-                && dist[u]+g -> edges[u][v] < dist[v]) {
-                
-                pred[v] = u;
-                dist[v] = dist[u] + g -> edges[u][v];
+    for (int count = 0; count < g -> nV - 1; count++) {
+        // Pick the minimum distance vertex from the set of vertices not yet processed
+        int u = getLowestCostVertex(g, dist, vSet);
+        // Mark the chosen vertex as included
+        vSet[u] = true;
+        for (int v = 0; v < g -> nV; v++) {
+            // Look at all the unincluded neighbours of the newly included vertex 
+            if (!vSet[v] && adjacent(g, u, v)) {
+                // Update dist[v] if the total weight of the path, dist[u] + weight of u-v, 
+                // is smaller than value of dist[v] we currently have
+                if (dist[u] != INT_MAX && dist[u]+g -> edges[u][v] < dist[v]) {
+                    dist[v] = dist[u] + g -> edges[u][v];
+                    pred[v] = u;
+                }
             }
         }
     }
-    printSolution(g, dist, V);
-    for (Vertex v = 0; v < g -> nV; v++) {
-        showPathTrace(src, v, pred);
-    }
+
+    showShortestPaths(g, src, dist, pred);
 }
 
 /**
- * 
+ * Given a source vertex, destination vertex and the predecessors of
+ * each vertex, trace a path from destination to source
  */
 void showPathTrace(Vertex src, Vertex dest, int *pred) {
     while (dest != src) {
-        printf("%d <- ", dest);
+        printf("%d ⟵ ", dest);
         dest = pred[dest];
     }
     printf("%d\n", src);
+}
+
+/**
+ * Shows all the shortest paths from a source vertex to every other
+ * vertex in the supplied graph
+ */
+int showShortestPaths(Graph g, int src, int *dist, int *pred) {
+    
+    for (Vertex v = 0; v < g -> nV; v++) {
+        printf("%d to %d (weight: %d): ", src, v, dist[v]);
+        showPathTrace(src, v, pred);
+    }
 }
 
 // ========== Depth-First Search ==========

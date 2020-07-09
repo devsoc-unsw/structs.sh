@@ -29,7 +29,7 @@ void printCommands() {
                     " ===>  cycle                - determines whether a cycle exists in the graph\n"
                     " ===>  showConnected        - shows all the connected subgraphs in the whole graph\n"
 					" ===>  hamilton <v1> <v2>   - checks if a Hamilton path exists from v1 to v2\n"
-                    " ===>  dijkstra <v1>        - RUNS DIJKSTRA'S SINGLE SOURCE SPANNING TREE ALGO"
+                    " ===>  dijkstra <v1>        - runs Dijkstra's algorithm starting from v1\n"
 					" ===>  exit                 - quit program\n"
                     "|====================|\n";
     printf("%s", helpLog);
@@ -83,6 +83,7 @@ Graph processCommand(Graph g, char *command) {
 		}
     } else if (strcmp(command, "dijkstra") == 0) {
         int v1 = atoi(strtok(NULL, " "));  
+		printf("Finding the shortest paths from %d to every other vertex\n", v1);
 		dijkstra(g, v1);
     } else if (strcmp(command, "exit") == 0) {
         printf(" -> Exiting program :)\n");  
