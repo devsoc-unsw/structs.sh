@@ -17,8 +17,8 @@ void transitiveClosure(Graph g) {
         }
     }
 
-    // For every vertex i, j, k, if a path i to j exists and if a path j to k 
-    // exists, then by transitivity we can say i has a possible path to k
+    // For every vertex i, j, k, if a path j to i exists and if a path i to k 
+    // exists, then by transitivity we can say j has a possible path to k
     for (int i = 0; i < g -> nV; i++) {
         for (int j = 0; j < g -> nV; j++) {
             for (int k = 0; k < g -> nV; k++) {
