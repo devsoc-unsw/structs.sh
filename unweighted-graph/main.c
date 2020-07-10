@@ -5,6 +5,7 @@
 #include <string.h>
 #include "Graph.h"
 #include "graph-algos.h"
+#include "floyd-warshall.h"
 #include "../util/colours.h"
 
 #define MAX_LINE 127
@@ -32,6 +33,7 @@ void printCommands() {
                     " ===>  cycle                - determines whether a cycle exists in the graph\n"
                     " ===>  showConnected        - shows all the connected subgraphs in the whole graph\n"
 					" ===>  hamilton <v1> <v2>   - checks if a Hamilton path exists from v1 to v2\n"
+					" ===>  transitiveClosure    - runs the Floyd-Warshall algorithm and displays the transitive closure matrix\n"
                     " ===>  exit                 - quit program\n"
                     "|====================|\n";
     printf("%s", helpLog);
@@ -81,6 +83,8 @@ Graph processCommand(Graph g, char *command) {
 		} else {
 			printf(" -> No Hamiltonian path exists between %d and %d\n", v1, v2);
 		}
+    } else if (strcmp(command, "transitiveClosure") == 0) {
+        transitiveClosure(g);
     } else if (strcmp(command, "exit") == 0) {
         printf(" -> Exiting program :)\n");  
 		dropGraph(g);
