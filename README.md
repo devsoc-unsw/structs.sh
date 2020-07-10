@@ -5,8 +5,8 @@ A collection of COMP2521 tutorial problems, my own examples and implementations 
 - [Interactive BST](#interactive-bst)   
 - [Interactive AVL Tree](#interactive-avl)   
 - [Interactive Splay Tree](#interactive-splay)  
-- [Interactive Unweighted Graph](#interactive-unweighted-graph)   
-- [Interactive Weighted Graph](#interactive-weighted-graph)  
+- [Interactive Unweighted Graph (Directed and Undirected)](#interactive-unweighted-graph)   
+- [Interactive Weighted Graph (Directed and Undirected)](#interactive-weighted-graph)  
 
 
 <a name="interactive-bst"/>
@@ -75,7 +75,7 @@ Eg. `./testTree 5 3 8 7 4`
 <a name="interactive-unweighted-graph"/>
 
 ## Interactive Unweighted Graph
-Interactive unweighted undirected graph builder written in C.
+Interactive unweighted directed/undirected graph builder written in C.
 
 ### Setup Instructions:
 1. `git clone https://github.com/Tymotex/DataStructures.git` 
@@ -95,7 +95,7 @@ Eg. `./testGraph tests/1.in`
 <a name="interactive-weighted-graph"/>
 
 ## Interactive Weighted Graph
-Interactive weighted undirected graph builder written in C. Implements Dijkstra's algorithm for determining a single source spanning tree.
+Interactive weighted directed/undirected graph builder written in C. Implements Dijkstra's algorithm for determining a single source spanning tree.
 
 ### Setup Instructions:
 1. `git clone https://github.com/Tymotex/DataStructures.git` 
