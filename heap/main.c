@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
         size = atoi(argv[1]);
     }
 
-    Heap heap = newHeap(10);
+    Heap heap = newHeap(size);
 	char line[MAX_LINE];
 	printCommands();
 	while (1) {
