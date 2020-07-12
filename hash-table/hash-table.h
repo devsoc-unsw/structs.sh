@@ -1,21 +1,31 @@
 #ifndef HASHTABLE
 #define HASHTABLE
 
-typedef char *Item;
+struct HashNode {
+    char *zid;
+    char *name;
+};
+typedef struct HashNode *Item;
+
+typedef char *Key;
 
 struct HashTableRep {
-    Item **items;  // Matrix of items
+    // Array of HashNode pointers
+    Item *items;    
     int numItems;
     int numSlots;
 };
 
 typedef struct HashTableRep *HashTable; 
 
+Item newItem(char *zid, char *name);
+
 HashTable newHashTable(int size);
-int hash(char *key, int size);
+int hash(Key key, int size);
 void insert(HashTable hashTable, Item newItem);
-Item *get(HashTable hashTable, Item key);
-void delete(HashTable hashTable, Item key);
-void dropHashTable(HashTable hashTable);
+void printHashTable(HashTable hashTable);
+// Item get(HashTable hashTable, Item key);
+// void delete(HashTable hashTable, Item key);
+// void dropHashTable(HashTable hashTable);
 
 #endif
