@@ -18,14 +18,17 @@ struct HashTableRep {
 
 typedef struct HashTableRep *HashTable; 
 
+Key getKey(Item item);
 Item newItem(char *zid, char *name);
+bool equals(Key firstKey, Key secondKey);
+void showItem(Item item);
 
-HashTable newHashTable(int size);
 int hash(Key key, int size);
+HashTable newHashTable(int size);
 void insert(HashTable hashTable, Item newItem);
 void printHashTable(HashTable hashTable);
-// Item get(HashTable hashTable, Item key);
-// void delete(HashTable hashTable, Item key);
-// void dropHashTable(HashTable hashTable);
+Item get(HashTable hashTable, Key key);
+void delete(HashTable hashTable, Key key);
+void dropHashTable(HashTable hashTable);
 
 #endif

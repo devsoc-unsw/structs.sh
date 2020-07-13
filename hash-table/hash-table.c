@@ -2,21 +2,16 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdint.h>
 #include "hash-table.h"
+#include "../util/colours.h"
+
+#define DELETED (uintptr_t) 0xFFFFFFFFFFFFFFFFUL
+
+// =====
 
 Key getKey(Item item) {
     return item -> zid;
-}
-
-bool equals(Key firstKey, Key secondKey) {
-    return (strcmp(firstKey, secondKey) == 0);
-}
-
-int hash(Key key, int size) {
-
-
-
-    return 1;
 }
 
 Item newItem(char *zid, char *name) {
@@ -30,6 +25,28 @@ Item newItem(char *zid, char *name) {
     return newElem;
 }
 
+bool equals(Key firstKey, Key secondKey) {
+    return (strcmp(firstKey, secondKey) == 0);
+}
+
+void showItem(Item item) {
+    printf("%s — %s\n", item -> zid, item -> name);
+}
+
+void freeItem(Item item) {
+    if (item != NULL) {
+        free(item -> zid);
+        free(item -> name);
+        free(item);
+    }
+}
+
+// =====
+
+int hash(Key key, int size) {
+    return 1;
+}
+
 HashTable newHashTable(int size) {
     HashTable hashTable = malloc(sizeof(struct HashTableRep));
     hashTable -> items = malloc(sizeof(Item *) * size);
@@ -39,6 +56,9 @@ HashTable newHashTable(int size) {
     return hashTable;
 }
 
+/**
+ * 
+ */
 void insert(HashTable hashTable, Item newItem) {
     if (hashTable -> numItems >= hashTable -> numSlots) {
         printf("Hash table is full, can't probe for available slots to insert\n");
@@ -62,43 +82,56 @@ void insert(HashTable hashTable, Item newItem) {
     printf("Inserted %s - %s into index %d of the hash table\n", newItem -> zid, newItem -> name, hashIndex);
 }
 
+/**
+ * 
+ */
 void printHashTable(HashTable hashTable) {
     for (int i = 0; i < hashTable -> numSlots; i++) {
         Item curr = hashTable -> items[i];
-        if (curr != NULL) {
-            printf("%3d. %s - %s\n", i, curr -> zid, curr -> name);
+        printf("%3d. ", i);
+        if (curr == NULL) {
+            printSecondary("NO ITEM\n");
+        } else if (curr == DELETED) {
+            printFailure("DELETED\n");
         } else {
-            printf("%3d. ___\n", i);
+            showItem(curr);
         }
     }
 }
 
-// Item get(HashTable hashTable, Key key) {
-//     int hashIndex = hash(key, hashTable -> numSlots);
-//     Item items = hashTable -> items[hashIndex];
-//     if (items != NULL && equal(*items, key)) {
-//         return items;
-//     } else {
-//         return NULL;
-//     }
-// }
+Item get(HashTable hashTable, Key key) {
+    int hashIndex = hash(key, hashTable -> numSlots);
+    for (int i = 0; i < hashTable -> numSlots; i++) {
+        Item curr = hashTable -> items[hashIndex];
+        // When NULL is reached, the item doesn't exist in the hash table
+        if (curr == NULL) break;
+        if (curr != DELETED && equals(getKey(curr), key)) return curr;
+        hashIndex = (hashIndex + 1) % hashTable -> numSlots;
+    }
+    return NULL;
+}
 
-// void delete(HashTable hashTable, Key key) {
-//     int h = hash(key, key);
+void delete(HashTable hashTable, Key key) {
+    int hashIndex = hash(key, hashTable -> numSlots);
+    Item curr = NULL;
+    for (int i = 0; i < hashTable -> numSlots; i++) {
+        Item curr = hashTable -> items[hashIndex];
+        // Target item doesn't exist in the hash table
+        if (curr == NULL) return;
+        if (equals(key, getKey(curr))) break;
+        hashIndex = (hashIndex + 1) % hashTable -> numSlots;
+    }
+    freeItem(curr);
+    hashTable -> items[hashIndex] = DELETED;
+    hashTable -> numItems--;
+}
 
-//     Item *items = hashTable -> items[h];
-//     if (items != NULL && equal(*items, key)) {
-//         free(items);
-//         hashTable -> items[h] = NULL;
-//         hashTable -> numItems--;
-//     }
-// }
-
-// void dropHashTable(HashTable hashTable) {
-//     for (int i = 0; i < hashTable -> numSlots; i++) {
-//         if (hashTable -> items[i] != NULL) {
-//             free(hashTable -> items[i]);
-//         } 
-//     }
-//     free(hashTable);
-// }
+void dropHashTable(HashTable hashTable) {
+    for (int i = 0; i < hashTable -> numSlots; i++) {
+        Item curr = hashTable -> items[i];
+        if (curr != NULL) {
+            freeItem(curr);
+        } 
+    }
+    free(hashTable);
+}

@@ -20,10 +20,11 @@ void printUsagePrompt(char *argv[]) {
  */
 void printCommands() {
 	char *helpLog = "|===== Commands =====|\n"
-                    " ===>  help                 - show available commands\n"
-                    " ===>  show                 - shows the hash table\n"
-                    " ===>  insert               - inserts a new element into the hash table\n"
-                    " ===>  exit                 - quit program\n"
+                    " ===>  help                  - show available commands\n"
+                    " ===>  show                  - shows the hash table\n"
+                    " ===>  insert <zID> \"name\"   - inserts a new student into the hash table\n"
+                    " ===>  get <zID>             - fetches the student with the zID from the hash table\n"
+                    " ===>  exit                  - quit program\n"
                     "|====================|\n";
     printf("%s", helpLog);
 }
@@ -46,11 +47,25 @@ void processCommand(HashTable hashTable, char *command) {
         printf("Showing the hash table\n");  
         printHashTable(hashTable);
     } else if (strcmp(command, "insert") == 0) {
-        char *newZid = strtok(NULL, " ");  
+        Key newZid = strtok(NULL, " ");  
         char *newName = strtok(NULL, "\"");  
         insert(hashTable, newItem(newZid, newName)); 
+    } else if (strcmp(command, "get") == 0) {
+        Key targetZid = strtok(NULL, " ");   
+        Item foundItem = get(hashTable, targetZid); 
+        if (foundItem != NULL) {
+            printf("Found student: ");
+            showItem(foundItem);
+        } else {
+            printf("Couldn't find student with zID: %s\n", targetZid);
+        }
+    } else if (strcmp(command, "delete") == 0) {
+        Key targetZid = strtok(NULL, " ");   
+        delete(hashTable, targetZid); 
+        printf("Deleted item with key %s from the hash table\n", targetZid);  
     } else if (strcmp(command, "exit") == 0) {
         printf(" -> Exiting program :)\n");  
+        dropHashTable(hashTable);
         exit(0);
     } else {
         printFailure(" -> Enter a valid command\n");
