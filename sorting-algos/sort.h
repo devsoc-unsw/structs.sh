@@ -15,6 +15,7 @@ void quicksort(int *a, int lo, int hi);
 static int partition(int *a, int lo, int hi); 
 
 void mergesort(int *a, int lo, int hi);
+static void merge(int *a, int lo, int mid, int hi);
 
 void heapsort(int *a, int lo, int hi);
 
