@@ -1,16 +1,18 @@
 #include <stdlib.h>
-#include <string.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <string.h>
 #include "Graph.h"
 #include "graph-algos.h"
-#include "dijkstra.h"
+#include "floyd-warshall.h"
 #include "../util/colours.h"
 
 #define MAX_LINE 127
-#define NO_WEIGHT -1
 
+/**
+ * Prints command line usage info
+ */
 void printUsagePrompt(char *argv[]) {
 	fprintf(stderr, "Usage: %s <num vertices>|<filename>\n", argv[0]);
 	exit(1);
@@ -24,15 +26,15 @@ void printCommands() {
                     " ===>  help                 - show available commands\n"
                     " ===>  matrix               - shows matrix representation\n"
                     " ===>  list                 - shows matrix representation\n"
-                    " ===>  insert <v1> <v2> <w> - inserts a weighted edge v1 to v2 with weight w\n"
-                    " ===>  remove <v1> <v2>     - removes edge v1 to v2\n" 
+                    " ===>  insert <v1> <v2>     - inserts edge v1 to v2\n"
+                    " ===>  remove <v1> <v2>     - removes edge v1 to v2\n"
                     " ===>  depth <v1>           - performs depth first search starting on v1\n"
                     " ===>  breadth <v1>         - performs breadth first search starting on v1\n"
                     " ===>  cycle                - determines whether a cycle exists in the graph\n"
                     " ===>  showConnected        - shows all the connected subgraphs in the whole graph\n"
 					" ===>  hamilton <v1> <v2>   - checks if a Hamilton path exists from v1 to v2\n"
-                    " ===>  dijkstra <v1>        - runs Dijkstra's algorithm starting from v1\n"
-					" ===>  exit                 - quit program\n"
+					" ===>  transitiveClosure    - runs the Floyd-Warshall algorithm and displays the transitive closure matrix\n"
+                    " ===>  exit                 - quit program\n"
                     "|====================|\n";
     printf("%s", helpLog);
 }
@@ -58,13 +60,11 @@ Graph processCommand(Graph g, char *command) {
     } else if (strcmp(command, "insert") == 0) {
         int v1 = atoi(strtok(NULL, " "));  
         int v2 = atoi(strtok(NULL, " "));  
-        int weight = atoi(strtok(NULL, " "));  
-		insertE(g, makeEdge(g, v1, v2, weight));
+		insertE(g, makeEdge(g, v1, v2));
     } else if (strcmp(command, "remove") == 0) {
         int v1 = atoi(strtok(NULL, " "));  
         int v2 = atoi(strtok(NULL, " "));  
-        int weight = atoi(strtok(NULL, " "));   // TODO: Fix makeEdge. Shouldn't require weight on deletion
-		removeE(g, makeEdge(g, v1, v2, NO_WEIGHT));
+		removeE(g, makeEdge(g, v1, v2));
     } else if (strcmp(command, "depth") == 0) {
         int v1 = atoi(strtok(NULL, " "));  
 		DFSIterative(g, v1);
@@ -83,10 +83,8 @@ Graph processCommand(Graph g, char *command) {
 		} else {
 			printf(" -> No Hamiltonian path exists between %d and %d\n", v1, v2);
 		}
-    } else if (strcmp(command, "dijkstra") == 0) {
-        int v1 = atoi(strtok(NULL, " "));  
-		printf("Finding the shortest paths from %d to every other vertex\n", v1);
-		dijkstra(g, v1);
+    } else if (strcmp(command, "transitiveClosure") == 0) {
+        transitiveClosure(g);
     } else if (strcmp(command, "exit") == 0) {
         printf(" -> Exiting program :)\n");  
 		dropGraph(g);
@@ -98,43 +96,41 @@ Graph processCommand(Graph g, char *command) {
 }
 
 int main(int argc, char *argv[]) {
-	Graph graph;
-	int N; 
-	char *edgeFile;
+	Graph graph = NULL;
+	int N = 0; 
+	char *edgeFile = NULL;
 	char line[MAX_LINE];
+	Vertex v1 = 0;
+	Vertex v2 = 0;
 
-	// collect command-line params
 	if (argc < 2) printUsagePrompt(argv);
 	if (isdigit(argv[1][0])) { N = atoi(argv[1]); edgeFile = NULL; }
 	else { N = 0; edgeFile = argv[1]; }
 
-	// build graph
+	// Building the graph
 	if (edgeFile == NULL)
 		graph = newGraph(N);
 	else {
 		// read edges and insert into graph
 		FILE *in;
 		if ((in = fopen(edgeFile,"r")) == NULL) {
-			fprintf(stderr,"Can't open edge file\n");
+			fprintf(stderr, "Can't open edge file\n");
 			printUsagePrompt(argv);
 		}
-		// first line contains #vertices
+		// First line in the file contains number of vertices
 		fgets(line,MAX_LINE,in);
 		sscanf(line,"%d",&N);
 		graph = newGraph(N);
-		// rest of lines contain edges
-		Vertex v1, v2;
-		int weight;
+		// Rest of the lines in the file contains edges v1-v2
 		while (fgets(line,MAX_LINE,in) != NULL) {
-			if (sscanf(line,"%d %d %d", &v1, &v2, &weight) != 3)
-				fprintf(stderr,"Bad edge (%d, %d, %d)\n", v1, v2, weight);
+			if (sscanf(line,"%d %d",&v1,&v2) != 2)
+				fprintf(stderr,"Bad edge (%d, %d)\n", v1, v2);
 			else
-				insertE(graph, makeEdge(graph, v1, v2, weight));
+				insertE(graph, makeEdge(graph,v1,v2));
 		}
 		fclose(in);
 	}
 
-	// read and execute commands
 	printCommands();
 	while (1) {
 		printPrompt();
@@ -148,5 +144,3 @@ int main(int argc, char *argv[]) {
     }
 	return 0;
 }
-
-

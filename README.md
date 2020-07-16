@@ -79,7 +79,7 @@ Interactive unweighted undirected graph builder written in C.
 
 ### Setup Instructions:
 1. `git clone https://github.com/Tymotex/DataStructures.git` 
-2. `cd DataStructures/unweighted-graph` 
+2. `cd DataStructures/unweighted-graph` for an undirected graph or `cd DataStructures/unweighted-digraph` for a directed graph 
 3. `make` - creates the executable file `testGraph`
 4. `./testGraph <num vertices>|<input file>` - creates an empty graph with the specified number of vertices OR constructs a graph with edges specified in an input file 
 
@@ -99,7 +99,7 @@ Interactive weighted undirected graph builder written in C. Implements Dijkstra'
 
 ### Setup Instructions:
 1. `git clone https://github.com/Tymotex/DataStructures.git` 
-2. `cd DataStructures/weighted-graph` 
+2. `cd DataStructures/weighted-graph` for undirected graph or `cd DataStructures/weighted-digraph` for a directed graph 
 3. `make` - creates the executable file `testGraph`
 4. `./testGraph <num vertices>|<input file>` - creates an empty graph with the specified number of vertices OR constructs a graph with edges specified in an input file 
 

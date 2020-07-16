@@ -25,7 +25,7 @@ void printCommands() {
                     " ===>  matrix               - shows matrix representation\n"
                     " ===>  list                 - shows matrix representation\n"
                     " ===>  insert <v1> <v2> <w> - inserts a weighted edge v1 to v2 with weight w\n"
-                    " ===>  remove <v1> <v2>     - removes edge v1 to v2\n" 
+                    " ===>  remove <v1> <v2>     - removes edge v1 to v2\n"
                     " ===>  depth <v1>           - performs depth first search starting on v1\n"
                     " ===>  breadth <v1>         - performs breadth first search starting on v1\n"
                     " ===>  cycle                - determines whether a cycle exists in the graph\n"
@@ -63,7 +63,6 @@ Graph processCommand(Graph g, char *command) {
     } else if (strcmp(command, "remove") == 0) {
         int v1 = atoi(strtok(NULL, " "));  
         int v2 = atoi(strtok(NULL, " "));  
-        int weight = atoi(strtok(NULL, " "));   // TODO: Fix makeEdge. Shouldn't require weight on deletion
 		removeE(g, makeEdge(g, v1, v2, NO_WEIGHT));
     } else if (strcmp(command, "depth") == 0) {
         int v1 = atoi(strtok(NULL, " "));  
