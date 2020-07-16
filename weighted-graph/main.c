@@ -5,6 +5,7 @@
 #include <ctype.h>
 #include "Graph.h"
 #include "graph-algos.h"
+#include "dijkstra.h"
 #include "../util/colours.h"
 
 #define MAX_LINE 127

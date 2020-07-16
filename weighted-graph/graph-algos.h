@@ -1,12 +1,6 @@
 #ifndef GRAPH_ALGOS
 #define GRAPH_ALGOS
 
-// Dijkstra's Algorithm for shortest path spanning tree
-void dijkstra(Graph g, Vertex src);
-Vertex getLowestCostVertex(Graph g, int *dist, bool *included);
-void showPathTrace(Vertex src, Vertex dest, int *pred);
-int showShortestPaths(Graph g, int src, int dist[], int *pred);
-
 // Traversals:
 void DFSIterative(Graph, Vertex);
 static void DFSR(Graph g, Vertex currVertex, bool *visited);
