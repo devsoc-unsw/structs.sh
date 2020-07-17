@@ -247,7 +247,7 @@ void swap(int *a, int i, int j) {
  */
 void showArray(int *a, int size) {
     for (int i = 0; i < size; i++) {
-        printf("%5d ", a[i]);
+        printf("%d ", a[i]);
     }
     printf("\n");
 }
