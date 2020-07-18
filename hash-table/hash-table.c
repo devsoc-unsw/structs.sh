@@ -44,7 +44,12 @@ void freeItem(Item item) {
 // =====
 
 int hash(Key key, int size) {
-    return 1;
+    int h = 0;
+    int a = 127;
+    for (char *c = key; *c != '\0'; c++) {
+        h = (a * h + *c) % size;
+    }
+    return h;
 }
 
 HashTable newHashTable(int size) {
@@ -67,6 +72,7 @@ void insert(HashTable hashTable, Item newItem) {
     // Get the key of the new item so that we can generate an index into the hash table
     Key key = getKey(newItem);
     int hashIndex = hash(getKey(newItem), hashTable -> numSlots);
+    printf("Calculated hash value: hash(\"%s\", %d) = %d\n", newItem -> zid, hashTable -> numSlots, hashIndex);
     // Linear probing until an available position
     for (int i = 0; i < hashTable -> numSlots; i++) {
         // Empty position found
@@ -75,6 +81,7 @@ void insert(HashTable hashTable, Item newItem) {
             printf("Item with key %s has already been inserted\n", key);
             return;
         }
+        printf(" ⟶ Index %d is taken. Probing for the next available index\n", hashIndex);
         hashIndex = (hashIndex + 1) % hashTable -> numSlots;
     }
     hashTable -> items[hashIndex] = newItem;

@@ -7,6 +7,9 @@ A collection of COMP2521 tutorial problems, my own examples and implementations 
 - [Interactive Splay Tree](#interactive-splay)  
 - [Interactive Unweighted Graph (Directed and Undirected)](#interactive-unweighted-graph)   
 - [Interactive Weighted Graph (Directed and Undirected)](#interactive-weighted-graph)  
+- [Interactive Hash Table](#interactive-hash-table)
+- [Interactive Heap](#interactive-heap)
+- [Interactive Sorting Algorithms](#interactive-sort)
 
 
 <a name="interactive-bst"/>
@@ -104,3 +107,43 @@ Interactive weighted directed/undirected graph builder written in C. Implements 
 4. `./testGraph <num vertices>|<input file>` - creates an empty graph with the specified number of vertices OR constructs a graph with edges specified in an input file 
 
 Eg. `./testGraph tests/1.in`
+
+
+
+
+<a name="interactive-hash"/>
+
+## Interactive Hash Table
+Interactive hash table written in C.
+
+### Setup Instructions:
+1. `git clone https://github.com/Tymotex/DataStructures.git` 
+2. `cd DataStructures/hash-table`
+3. `make` - creates the executable file `testHash`
+4. `./testHash <size>` - creates an empty hash table with the specified size (otherwise defaults to 10 slots) 
+
+
+<a name="interactive-heap"/>
+
+## Interactive Heap
+Interactive max heap table written in C.
+
+### Setup Instructions:
+1. `git clone https://github.com/Tymotex/DataStructures.git` 
+2. `cd DataStructures/heap`
+3. `make` - creates the executable file `testHeap`
+4. `./testHeap <size>` - creates an empty hash table with the specified size (otherwise defaults to 10 slots) 
+
+
+<a name="interactive-sort"/>
+
+## Interactive Sort
+A collection of classic sort algorithms written in C. Timing data is shown for each sort algorithm you try.
+
+### Setup Instructions:
+1. `git clone https://github.com/Tymotex/DataStructures.git` 
+2. `cd DataStructures/sorting-algos`
+3. `make` - creates the executable file `testSort`
+4. `./testSort <filename>` - takes in a file containing unsorted numbers 
+
+Eg. `./testSort tests/random100_01`

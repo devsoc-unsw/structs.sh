@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
+#include <stdbool.h>
 #include "heap.h"
 #include "../queue/queue.h"
 
@@ -39,6 +41,7 @@ void insert(Heap heap, Item newItem) {
  * its top-down ordering
  */
 Item pop(Heap heap) {
+    assert(heap -> numItems > 0);
     // Index 1 always contains the root element (highest priority element)
     Item root = heap -> items[1];
     Item lastElement = heap -> items[heap -> numItems];
@@ -72,6 +75,16 @@ void printHeap(Heap heap) {
     }
 }
 
+/**
+ * Returns true/false depending on whether the heap is empty or not
+ */
+bool heapIsEmpty(Heap heap) {
+    return (heap -> numItems <= 0);
+}
+
+/**
+ * Frees the memory associated with the heap
+ */
 void dropHeap(Heap heap) {
     free(heap -> items);
     free(heap);

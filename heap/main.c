@@ -45,7 +45,7 @@ Heap processCommand(Heap heap, char *command) {
     if (strcmp(command, "help") == 0) { 
         printCommands();
     } else if (strcmp(command, "show") == 0) {
-        printf("Showing the heap array (not meant to be ordered in value)\n");  
+        printf("Showing the heap array\n");  
         printHeap(heap);
     } else if (strcmp(command, "insert") == 0) {
         int newVal = atoi(strtok(NULL, " "));  

@@ -6,6 +6,7 @@
 #include "../util/colours.h"
 
 #define MAX_LINE 127
+#define DEFAULT_NUM_SLOTS 10
 
 /**
  * Prints command line usage info
@@ -73,9 +74,14 @@ void processCommand(HashTable hashTable, char *command) {
 }
 
 int main(int argc, char *argv[]) {
+    int size = DEFAULT_NUM_SLOTS;
+    if (argc > 1) {
+        size = atoi(argv[1]);
+    }
+
 	char line[MAX_LINE];
 	printCommands();
-    HashTable hashTable = newHashTable(10);
+    HashTable hashTable = newHashTable(size);
 	while (1) {
 		printPrompt();
 		fgets(line, MAX_LINE, stdin);
