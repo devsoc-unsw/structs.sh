@@ -115,7 +115,7 @@ void shellSort(int *a, int lo, int hi) {
  * 1. Pick any element as a 'pivot' (usually the first element)
  * 2. Partition the other elements around the pivot so that every element to the left
  *    of the pivot is less than it and every element to the right is greater than it
- * 3. TODO
+ * 3. Recursively call quicksort(lo, pivotIndex), quicksort(pivotIndex + 1, hi)
  * 
  * Time complexity:    O(n^2)  
  * Can it be stable:   not without O(n) space complexity, which isn't common
