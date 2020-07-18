@@ -90,8 +90,8 @@ void bubbleSort(int *a, int lo, int hi) {
  *    insertion sort
  * 
  * Time complexity:    O(n^2) - but for some particular sequences of h-values you can achieve O(n^(3/2)), for example
- * Can it be stable:   yes
- * Can it be adaptive: yes - if we stop when there were no swaps made in one full loop
+ * Can it be stable:   nope
+ * Can it be adaptive: yes
  */
 void shellSort(int *a, int lo, int hi) {
     int hVals[8] = {701, 302, 132, 57, 23, 10, 4, 1};
