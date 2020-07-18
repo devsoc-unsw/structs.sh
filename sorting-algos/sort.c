@@ -157,20 +157,20 @@ static int partition(int *a, int lo, int hi) {
  * Can it be adaptive: if it's top-down mergesort or bottom-up mergesort, then no
  */
 void mergesort(int *a, int lo, int hi) {
-    if (hi - 1 <= lo) return;
+    if (hi <= lo) return;
     int midpoint = (lo + hi) / 2;
     mergesort(a, lo, midpoint);
-    mergesort(a, midpoint, hi);
+    mergesort(a, midpoint + 1, hi);
     merge(a, lo, midpoint, hi);
 }
 
 static void merge(int *a, int lo, int mid, int hi) {
-    int *tmp = malloc(sizeof(int) * (hi - lo));
+    int *tmp = malloc(sizeof(int) * (hi - lo + 1));
     int i = lo;
-    int j = mid;
+    int j = mid + 1;
     int k = 0;
     // Merging the two halves (until you exhaust one of the halves)
-    while (i < mid && j < hi) {
+    while (i <= mid && j <= hi) {
         if (a[i] < a[j]) {
             tmp[k] = a[i];
             i++;
@@ -181,18 +181,18 @@ static void merge(int *a, int lo, int mid, int hi) {
         k++;
     }
     // Copy over the remaining values into the tmp array
-    while (i < mid) {
+    while (i <= mid) {
         tmp[k] = a[i];
         i++;
         k++;
     }
-    while (j < hi) {
+    while (j <= hi) {
         tmp[k] = a[j];
         j++;
         k++;
     }
     // Copy tmp into the original array
-    for (int i = lo, k = 0; i < hi; i++, k++) {
+    for (int i = lo, k = 0; i <= hi; i++, k++) {
         a[i] = tmp[k];
     }
     free(tmp);
