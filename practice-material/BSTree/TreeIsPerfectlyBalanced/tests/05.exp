@@ -1,0 +1,5 @@
+Enter the preorder traversal of the tree: Enter the in-order traversal of the tree: Tree:
+
+X
+
+TreeIsPerfectlyBalanced returned: TRUE

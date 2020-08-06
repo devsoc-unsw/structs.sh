@@ -39,6 +39,7 @@ TreeNode *insert(TreeNode *root, int value) {
         printf("Value %d already exists in the tree\n", value);
         return root;
     }
+    return root;
 }
 
 /**

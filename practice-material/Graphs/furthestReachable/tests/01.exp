@@ -1,0 +1,24 @@
+Enter number of vertices: Enter number of edges: Enter edges in the form v-w: 
+Graph: nV = 14
+Edges:
+ 0: 0-3 0-8 0-10
+ 1: 1-5 1-9
+ 2: 2-10
+ 3: 3-0 3-8 3-12
+ 4: 4-6 4-7 4-11
+ 5: 5-1
+ 6: 6-4
+ 7: 7-4 7-13
+ 8: 8-0 8-3
+ 9: 9-1
+10: 10-0 10-2
+11: 11-4
+12: 12-3
+13: 13-7
+
+Enter the source vertex: Furthest vertex reachable from vertex 10: 12
+Enter the source vertex: Furthest vertex reachable from vertex 12: 2
+Enter the source vertex: Furthest vertex reachable from vertex 5: 9
+Enter the source vertex: Furthest vertex reachable from vertex 11: 13
+Enter the source vertex: Furthest vertex reachable from vertex 6: 13
+Enter the source vertex: 

@@ -1,0 +1,152 @@
+#!/bin/sh
+
+# Assumes that tests are in a directory called tests/, and that the test
+# input files are called 01, 02, 03, etc.
+
+EXECUTABLE="./testBSTreeGetKth"
+VALGRIND_OUT_FILE="/tmp/valgrind.$$"
+USE_VALGRIND=1
+
+RED="\033[31m"
+GREEN="\033[32m"
+YELLOW="\033[33m"
+RESET_COLOR="\033[0m"
+
+RED_BOLD="\033[31;1m"
+GREEN_BOLD="\033[32;1m"
+
+main()
+{
+	compile
+	cleanerr
+	autotest
+}
+
+compile()
+{
+	echo "Compiling..."
+	make || exit 1
+}
+
+cleanerr()
+{
+	rm -f tests/*.err
+}
+
+autotest()
+{
+	ntests=0
+	npassed=0
+	nfailed=0
+	
+	for file in tests/??
+	do
+		ntests=$(expr $ntests + 1)
+		echo "Test $ntests"
+		
+		if run_test "$file"
+		then
+			npassed=$(expr $npassed + 1)
+			printf "${GREEN}Test passed${RESET_COLOR}\n"
+		else
+			nfailed=$(expr $nfailed + 1)
+			printf "${RED}Test failed${RESET_COLOR}\n"
+		fi
+		echo ""
+	done
+
+	show_autotest_summary "$npassed" "$nfailed"
+}
+
+# $1: test input file
+# Returns: 0 if the test passed, 1 if the test failed
+run_test()
+{
+	mismatch=0
+	memleak=0
+	memerr=0
+	
+	if [ "$USE_VALGRIND" = "1" ]
+	then
+		valgrind "$EXECUTABLE" < "$1" > "$1.out" 2> "$VALGRIND_OUT_FILE"
+	else
+		"$EXECUTABLE" < "$1" > "$1.out"
+	fi
+	
+	if ! diff "$1.out" "$1.exp" > /dev/null
+	then
+		mismatch=1
+	fi
+
+	if [ "$USE_VALGRIND" = "1" ]
+	then
+		if egrep "LEAK SUMMARY" "$VALGRIND_OUT_FILE" > /dev/null
+		then
+			memleak=1
+		fi
+
+		if ! egrep "ERROR SUMMARY: 0 errors" "$VALGRIND_OUT_FILE" > /dev/null
+		then
+			memerr=1
+		fi
+	fi
+
+	show_test_feedback "$mismatch" "$memleak" "$memerr" "$1"
+
+	case "$mismatch$memleak$memerr" in
+	?1?|??1) cp "$VALGRIND_OUT_FILE" "$1.err" ;;
+	esac
+	case "$mismatch$memleak$memerr" in
+	000) return 0 ;;
+	*)   return 1 ;;
+	esac
+}
+
+# $1: was there an output mismatch (1/0)
+# $2: was there a memory leak (1/0)
+# $3: was there a memory error (1/0)
+# $4: test input file
+show_test_feedback()
+{
+	code="$1$2$3"
+	printf "$YELLOW"
+
+	# general feedback
+	case "$code" in
+	001) printf "Your program gave the correct output, but contained memory errors. " ;;
+	010) printf "Your program gave the correct output, but contained memory leaks. " ;;
+	011) printf "Your program gave the correct output, but contained memory leaks and memory errors. " ;;
+	100) printf "Your program gave the wrong output. " ;;
+	101) printf "Your program gave the wrong output, and contained memory errors. " ;;
+	110) printf "Your program gave the wrong output, and contained memory leaks. " ;;
+	111) printf "Your program gave the wrong output, and contained memory leaks and memory errors. " ;;
+	esac
+
+	# output mismatch advice
+	case "$code" in
+	1??) printf "Compare your program's output and the expected output in $4.out and $4.exp, and check the input file in $4. " ;;
+	esac
+
+	# memory leak/error advice
+	case "$code" in
+	0?1|01?) printf "Check details of memory leaks/errors in $4.err.\n" ;;
+	1?1|11?) printf "Also check details of memory leaks/errors in $4.err.\n" ;;
+	100)     printf "\n" ;;
+	esac
+	
+	printf "$RESET_COLOR"
+}
+
+# $1: number of tests passed
+# $2: number of tests failed
+show_autotest_summary()
+{
+	printf "${GREEN_BOLD}$1 tests passed ${RED_BOLD}$2 tests failed${RESET_COLOR}\n"
+	if [ $2 -eq 0 ]
+	then
+		echo "All tests passed. You are awesome!"
+	fi
+}
+
+main "$@"
+

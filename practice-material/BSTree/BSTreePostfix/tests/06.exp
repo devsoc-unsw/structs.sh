@@ -1,0 +1,15 @@
+Enter the preorder traversal of the BST: Tree:
+
+2
+ \
+  3
+   \
+    5
+     \
+      8
+       \
+       13
+         \
+         21
+
+Values in postfix order: 21 13 8 5 3 2 

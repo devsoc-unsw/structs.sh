@@ -1,0 +1,15 @@
+Enter the preorder traversal of the tree: Enter the in-order traversal of the tree: Tree:
+
+  1
+   \
+    8
+   / \
+  3   9
+ / \
+2   6
+   / \
+  4   7
+   \
+    5
+
+TreeHeight returned: 5

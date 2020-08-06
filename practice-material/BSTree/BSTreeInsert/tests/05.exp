@@ -1,0 +1,26 @@
+Enter the preorder traversal of the BST: Enter value to insert: BST before inserting 8:
+
+1
+ \
+  2
+   \
+    3
+     \
+      4
+       \
+        5
+
+BST after inserting 8:
+
+1
+ \
+  2
+   \
+    3
+     \
+      4
+       \
+        5
+         \
+          8
+

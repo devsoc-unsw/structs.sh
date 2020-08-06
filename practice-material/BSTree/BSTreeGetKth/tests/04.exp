@@ -1,0 +1,25 @@
+Enter the preorder traversal of the BST: Tree:
+
+   3
+    \
+    18
+    / \
+   6  19
+  / \
+ 5  14
+    / \
+   /   \
+  11   15
+ /
+9
+
+Enter k: For k = 0, BSTreeGetKth returned 3
+Enter k: For k = 1, BSTreeGetKth returned 5
+Enter k: For k = 2, BSTreeGetKth returned 6
+Enter k: For k = 3, BSTreeGetKth returned 9
+Enter k: For k = 4, BSTreeGetKth returned 11
+Enter k: For k = 5, BSTreeGetKth returned 14
+Enter k: For k = 6, BSTreeGetKth returned 15
+Enter k: For k = 7, BSTreeGetKth returned 18
+Enter k: For k = 8, BSTreeGetKth returned 19
+Enter k: 

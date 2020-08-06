@@ -1,0 +1,19 @@
+Enter number of vertices: Enter number of edges: Enter edges in the form v-w: 
+Graph: nV = 10
+Edges:
+ 0: 0-1
+ 1: 1-0 1-2 1-3
+ 2: 2-1 2-4 2-5
+ 3: 3-1 3-5 3-6
+ 4: 4-2
+ 5: 5-2 5-3
+ 6: 6-3
+ 7: 7-8
+ 8: 8-7 8-9
+ 9: 9-8
+
+Enter two vertices: The shortest distance between vertices 6 and 4 is: 4
+Enter two vertices: The shortest distance between vertices 0 and 5 is: 3
+Enter two vertices: The shortest distance between vertices 7 and 9 is: 2
+Enter two vertices: There is no path between vertices 0 and 8
+Enter two vertices: 

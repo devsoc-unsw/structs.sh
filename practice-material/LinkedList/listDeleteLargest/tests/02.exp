@@ -1,0 +1,4 @@
+Enter list: 
+Original list: [2] -> [3] -> [6] -> [8] -> [9] -> [11] -> X
+After deleting largest: [2] -> [3] -> [6] -> [8] -> [9] -> X
+The largest value was: 11

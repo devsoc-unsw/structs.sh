@@ -1,0 +1,137 @@
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>COMP2521 19T3 - Tree Practice Exercises</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+	<div class="container my-5 text-justify">
+		<h1>TreeHeight</h1>
+		<hr>
+
+		<p>Your task is to write a function, TreeHeight, that returns the height of the given tree. The height of a tree is the number of edges on the longest path from the root node to a leaf node. The height of an empty tree is considered to be -1.</p>
+
+		<h3 class="mt-3">Download</h3>
+		<p>Click <a href="files/TreeHeight.zip">here</a> to download a zip of the files.</p>
+
+		<h3 class="mt-3">The Files</h3>
+		<table class="text-justify">
+			<tr>
+				<td><b>Tree.c</b></td>
+				<td>Contains code for reading and printing a binary tree</td>
+			</tr>
+			<tr>
+				<td><b>Tree.h</b></td>
+				<td>Contains the definition of the binary tree data structure and function prototypes</td>
+			</tr>
+			<tr>
+				<td class="pr-4"><b>testTreeHeight.c</b></td>
+				<td>Contains the main function, which reads in a binary tree from standard input, calls TreeHeight, and prints out the result.</td>
+			</tr>
+			<tr>
+				<td><b>TreeHeight.c</b></td>
+				<td>Contains TreeHeight, the function you must implement</td>
+			</tr>
+			<tr>
+				<td><b>Makefile</b></td>
+				<td>A makefile to compile your code</td>
+			</tr>
+			<tr>
+				<td><b>tests/</b></td>
+				<td>A directory containing the inputs and expected outputs for some basic tests</td>
+			</tr>
+			<tr>
+				<td><b>autotest<b></td>
+				<td>A script that uses the tests in the tests directory to autotest your solution. You should only run this after you have tested your solution manually.</td>
+			</tr>
+		</table>
+
+		<h3 class="mt-3">Examples</h3>
+		<p>Your program should behave like these examples:</p>
+		<pre class="terminal-window"><code>
+$ ./testTreeHeight
+Enter the preorder traversal of the tree: 2 5 7 9 6
+Enter the in-order traversal of the tree: 5 2 9 7 6
+Tree:
+
+  2
+ / \
+5   7
+   / \
+  9   6
+
+TreeHeight returned: 2
+
+Explanation: The given tree does not necessarily have to be a BST.
+		</code></pre>
+		<pre class="terminal-window"><code>
+$ ./testTreeHeight
+Enter the preorder traversal of the tree: 1 8 3 2 6 4 5 7 9
+Enter the in-order traversal of the tree: 1 2 3 4 5 6 7 8 9
+Tree:
+
+  1
+   \
+    8
+   / \
+  3   9
+ / \
+2   6
+   / \
+  4   7
+   \
+    5
+
+TreeHeight returned: 5
+		</code></pre>
+		<pre class="terminal-window"><code>
+$ ./testTreeHeight
+Enter the preorder traversal of the tree: 
+Enter the in-order traversal of the tree: 
+Tree:
+
+X
+
+TreeHeight returned: -1
+		</code></pre>
+		<pre class="terminal-window"><code>
+$ ./testTreeHeight
+Enter the preorder traversal of the tree: 5 8 3 9 1 7 4
+Enter the in-order traversal of the tree: 1 9 3 8 5 7 4
+Tree:
+
+        5
+       / \
+      8   7
+     /     \
+    3       4
+   /
+  9
+ /
+1
+
+TreeHeight returned: 4
+		</code></pre>
+		<h3 class="mt-3">Testing</h3>
+		<p>You can test your program manually by compiling your code using <code>make</code>, and then running <code>./testTreeHeight</code>, as shown above. After you are satisfied with your solution, you can autotest it by running <code>./autotest</code>. This will run some basic tests on your program.</p>
+<!--
+		<p>Once you have thoroughly tested your solution, submit it through the <code>give</code> command or WebCMS, which will run some more tests on it, possibly including cases that were not provided to you. The <code>give</code> command is:</p>
+
+		<pre class="terminal-window"><code>
+$ give cs2521 xxx xxx.c
+		</code></pre>
+-->
+	</div>
+
+	<!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>
+

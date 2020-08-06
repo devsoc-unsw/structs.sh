@@ -1,0 +1,9 @@
+Enter the preorder traversal of the tree: Enter the in-order traversal of the tree: Tree:
+
+    3
+   / \
+  2   4
+ /     \
+1       5
+
+TreeIsPerfectlyBalanced returned: TRUE

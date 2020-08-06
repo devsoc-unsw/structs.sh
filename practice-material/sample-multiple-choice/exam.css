@@ -1,0 +1,582 @@
+/* changes to make bootstrap 4 look like bootstrap 3. */
+pre {
+	padding: 9.5px;
+	margin: 0 0 10px;
+	line-height: 1.42857143;
+	color: #333;
+	word-break: break-all;
+	word-wrap: break-word;
+	background-color: #f5f5f5;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+/* lab exercise "cards" */
+.card {
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+body {
+	font-size: 14px;
+	padding: 10px 40px;
+}
+
+/* changes end here */
+
+/* changes end here */
+
+body {
+	font-family: Verdana, Tahoma, Arial, sans-serif;
+	line-height: 1.6;
+	max-width: 800px; 
+
+	/* width: 960px; */
+	/* font-size: .85em; */
+	/* margin: 0 auto; */
+}
+
+a {
+	text-decoration:none;
+}
+
+#heading {
+	/* padding-top: 30px; */
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+}
+
+.heading_button {
+	padding: 10px
+}
+
+
+#heading, .heading_button {
+	text-align: center;
+        /* x-large no longer fits? */
+	font-size:larger;
+	font-weight:bold;
+}
+
+.heading_link {
+	/* position: absolute; */
+	font-weight:lighter;
+	font-size:small;
+	top: 10px;
+}
+
+#left_heading_link {
+	left: 10px;
+}
+
+#right_heading_link {
+  	right: 10px;
+}
+
+.program_description {
+	font-size:110%;
+	font-weight:bold;
+	font-family:courier;
+}
+
+
+/* separate tut questions */
+.tut>ol>li, .separated_list>li  {
+	margin-top: 2em;
+}
+
+
+.answer {
+/*	border:thin solid #9999CC; */
+	margin-top: 1em;
+	margin-bottom: 1em;
+	margin-left: 1em;
+	margin-right: 1em;
+	padding:16px 8px;
+	border-radius:10px;
+}
+
+
+.written.answer {
+	margin-top: 0.5em;
+	padding:4px 8px;
+}
+
+.tutlab h2 {
+	text-align:center;
+}
+
+
+/* heading for a lab section */
+.lab h3, .section_heading {
+	margin: 0;
+	padding: 0;
+	border-radius:10px;
+}
+
+/* show a command-line interaction */
+.command_line {
+	font-family:"Courier New", Courier, monospace;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	margin-left: 0em;
+	margin-right: 1em;
+	padding:4px 8px;
+	border-radius:10px;
+    white-space: pre;
+	font-size: 1.5em;
+	line-height: 125%;
+	border:thin solid #9999CC;
+}
+
+.command_line kbd {
+	font-size:85%;
+	font-family: Verdana, Tahoma, Arial, sans-serif;
+	padding: 3px 3px;
+	box-shadow: none;
+}
+
+
+/* show a prompt before a shell command */
+kbd.shell:before {
+	content: '$ ';
+	background-color: #F4F4FF;
+	/* padding:3px 1px; */
+	/* font-weight:lighter; */
+	font-family:"Courier New", Courier, monospace;
+}
+
+/*
+pre.command_line {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	margin-left: 0em;
+	margin-right: 1em;
+	padding:4px 8px;
+	border-radius:10px;
+}
+*/
+
+kbd {
+	color:black;
+	background:#E0E0E0;
+}
+
+
+samp {
+	font-weight:lighter;
+	font-family:"Courier New", Courier, monospace;
+}
+
+/* indicate ctrl-d typed */
+.eof:before {
+	content: 'Ctrl-d';
+	font-weight:lighter;
+	font-style: italic;
+	font-family:"Courier New", Courier, monospace;
+	border:thin solid;
+	border-radius:5px;
+	padding:1px 4px;
+}
+
+/* programs */
+.program {
+	font-size: 1em;
+	line-height: 120%;
+	font-family: "Lucida Console", Courier, "Courier New",monospace;
+}
+
+
+pre.program {
+	border:thin solid #9999CC;
+	margin: 1em;
+	padding:4px 8px;
+	border-radius:10px;
+}
+
+.answer pre.program {
+	margin: 0.5em;
+}
+
+
+.example_link {
+	font-weight:bold;
+	font-size: 1.2em;
+	font-family:"Courier New", Courier, monospace;
+	/* margin-left: 2em; */
+}
+
+
+.example_header_comment {
+/*	font-weight:bold;
+	margin-left: 4em; */
+	font-size: 1.2em;
+	font-family: Verdana, Tahoma, Arial, sans-serif;}
+
+div.date_changed {
+	margin-top: 2em;
+	margin-left: -3em;
+	text-align:center;
+	font-family: monospace;
+	font-size:110%;
+	font-style: italic;
+}
+
+.tutors_only:after {
+	content: '(tutors-only)';
+	/* padding:3px 1px; */
+	font-weight:lighter;
+	font-size:50%;
+
+}
+
+.thin_hr {
+	height:2px;
+	border:none;
+}
+
+.thick_hr {
+	height:5px;
+	border:none;
+}
+
+.autotest_results {
+	margin-top: 0.5em;
+	margin-bottom: 0em;
+	margin-left: 0em;
+	margin-right: 1em;
+	padding:4px 8px;
+	border-radius:10px;
+	border:thin solid #9999CC;
+	font-size:110%;
+}
+
+.autotest_results_individual {
+	font-size:80%;
+}
+
+.autotest_results_emphasis {
+	font-weight: bold;
+	font-size:100%;
+}
+
+.edit_github {
+	margin: 1em;
+}
+
+.edit_github_link {
+	font-weight: bold;
+	font-size:75%;
+}
+
+.cgi_display {
+    width : 100%;
+	display: inline-block;
+	border-top: 1.5em;
+	border-bottom: 1.5em;
+}
+
+.cgi_display_title {
+    width : 100%;
+	float: left;
+    text-align : center;
+    font-weight : bold;
+}
+
+.cgi_output_panel {
+	float: left;
+    height : 20em;
+    width : 50%;
+}
+
+.cgi_source_display {
+    height: 100%;
+    width: 100%;
+    font-family: "Lucida Console", Courier, "Courier New",monospace;
+    background:#E8E8FF;
+}
+
+.cgi_output_display {
+    height: 100%;
+    width: 100%;
+}
+
+.html_source_panel {
+	float: left;
+    height : 20em;
+    width : 50%;
+    left: 50%;
+}
+
+.html_source_display {
+	padding-left: 2px;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    white-space: pre;
+    background:#F0F0FF;
+    border:thin solid #9999CC;
+}
+
+.give_marking {
+	font-family: Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace, serif;
+}
+
+.give_marking_listing_file {
+	border:thin solid #9999CC;
+	margin: 1em;
+	padding:4px 8px;
+	border-radius:10px;
+}
+
+.highlighted_note {
+	border: solid #9999CC;
+	margin: 1em;
+	padding:4px 8px;
+	border-radius:10px;
+	font-size:120%;
+}
+
+code {
+	border:none;
+	font-size:120%;
+}
+
+
+.multicolumn_block {
+    white-space:nowrap;
+}
+
+.two_column_block {
+    max-height: 64em;
+    overflow: auto;
+    width : 50%;
+    display:inline-block;
+    vertical-align : top;
+}
+
+.code_link {
+    font-weight:bold;
+    font-size: 0.9em;
+    font-family:"Courier New", Courier, monospace;
+    text-align:center;
+}
+
+.faq  {
+	margin-top: 2em;
+}
+
+/* FAQ question */ 
+.faq div:nth-child(1) {
+	margin-left: 0em;
+	margin-bottom: 0em;
+	font-size: 120%;
+	padding:4px 8px;
+	border-radius:10px;
+	border:thin solid #9999CC;
+}
+/* show a prompt before a shell command */
+.faq div:nth-child(1):before {
+	content: 'Question:';
+	font-weight:bold;
+}
+
+/* FAQ answer */ 
+.faq div:nth-child(2) {
+	margin-top: 0.4em;
+	margin-left: 2em;
+	margin-bottom: 0em;
+}
+
+.request_path {
+	text-align: center;
+        /* x-large no longer fits? */
+	font-size:larger;
+	font-weight:bold;
+}
+
+
+/* color scheme */
+
+a {
+	color:#3333FF;
+}
+
+a[href]:hover {
+	background-color:#FFFFCC;
+	color:#CC0000;
+}
+
+
+h1 {
+	color:grey;
+}
+
+h2 , h3{
+	color:darkcyan;
+}
+
+code {
+	color : black; /* why pink in bootstrap */
+	background-color:#FFFFFF; 
+}
+/* show a command-line interaction */
+.command_line  {
+	background-color:#F8F8FF;
+}
+
+.command_line kbd  {
+	background-color:#F8F8FF;
+	color: black;
+}
+
+/* indicate ctrl-d typed */
+.eof {
+/*	background-color:#F8F8FF; */
+}
+
+/* programs */
+.program {
+	background-color:#F8F8FF;
+}
+
+
+.answer code , .answer{
+	background-color:#EAFAEA;
+}
+
+.answer .command_line , pre.answer , .answer pre {
+	border:thin solid green;
+	background-color:#F1FAF1;
+}
+
+
+.tutors_only {
+	color: red;
+}
+
+#heading, .heading_button {
+	color:#4477DD;
+	color:#4477DD;
+	background-color:#FFFFFF;
+}
+
+.program_description {
+	/* color:#993300; */
+}
+
+.written.answer {
+/*	color: blue; */
+	border:thin solid green;
+	background-color:#F1FAF1;
+}
+
+/* heading for a lab section */
+.lab h3, . {
+	color: black;
+/*	background-color: #E0E0E0; */
+	background-color: #FFF8A0;
+}
+
+/* heading for a tut section */
+.tut h3 {
+	color: #4477DD;;
+}
+
+.heading {
+	color:#4477DD;
+}
+
+kbd {
+	color:black;
+	background:#E0E0E0;
+}
+
+.thin_hr {
+	color:#FDC82F;
+	background-color:#FDC82F;
+}
+
+.thick_hr {
+	color:#FDC82F;
+	background-color:#FDC82F;
+}
+
+.autotest_results  {
+	background-color: #FFF8D0;
+}
+
+
+.nav-tabs > li.active > a {
+    border-color: #FDC82F;
+}
+.nav-tabs>.active>a, .nav-tabs>.active>a:hover, .nav-tabs>.active>a:focus {
+    border-color: #FDC82F;
+    border-bottom-color: transparent;
+}
+.nav-tabs {
+   border-bottom: 1px solid #FDC82F;
+}
+
+.edit_github_link {
+	background-color: #FFE050;
+	color: #000000;
+}
+
+.give_marking_listing_file {
+	background-color:#F8F8FF;
+}
+
+.highlighted_note {
+	background-color:#FFF4F4;
+}
+
+/* FAQ question */ 
+.faq div:nth-child(1) {
+	background-color:#F6FFF6;
+}
+
+/* FAQ answer */ 
+.faq div:nth-child(2) {
+}
+
+.request_path {
+	color: black;
+}
+
+
+/*
+ * Sectioning for the home page.
+ * Replaces ad-hoc .thick_hr with a bordered section.
+ */
+section.homepage-section {
+    /* inherits .thick_hr */
+    margin-top: .5rem;
+    border-top: .25rem solid #FDC82F;
+    padding-top: .5rem;
+}
+
+/*
+ * Tidy up the login form.
+ */
+.login-form {
+	margin: 1rem auto;
+}
+
+.login-form .form-group {
+	margin-top: 0; margin-bottom: 0;
+}
+
+.login-form button {
+	margin-top: 1rem;
+}
+
+.login-form div.form-group input[type="text"] {
+	border-radius: .3rem .3rem 0 0;
+}
+
+.login-form div.form-group input[type="password"] {
+	border-radius: 0 0 .3rem .3rem;
+}
+
+p {  padding-left: 30px;   }
