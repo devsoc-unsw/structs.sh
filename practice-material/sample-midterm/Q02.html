@@ -1,0 +1,195 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>COMP2521 (19T3) Sample Week-06 Lab Practical Exam</title>
+<link rel='stylesheet' type='text/css' href='exam.css'></head>
+<body>
+<div align='center'>
+<table width='100%' border='0'>
+<tr valign='top'>
+<td align='left' width='25%'>
+  <span class='tiny'>COMP2521 19T3</span>
+</td>
+<td align='center' width='50%'>
+  <span class='heading'>COMP2521 (19T3) Sample Week-06 Lab Exam</span>
+</td>
+<td align='right' width='25%'>
+  <span class='tiny'>Data Structures and Algorithms</span>
+</td>
+</table>
+</div>
+<center><a href='index.html'>[Instructions]</a> <a target='C' href='C/index.html'>[C language]</a>  
+<br> <a href='Q01.html'>[Q1]</a>  <b>[Q2]</b> 
+</center>
+
+
+
+
+<hr>
+<div style='margin-left:40px;margin-right:40px'>
+<h3>Question 2 <span class='tiny'>(10 marks)</span></h3>
+<p>
+
+<head>
+<link rel='stylesheet' type='text/css' href='../../exam.css'></head>
+
+<p>
+
+In the <tt>q2</tt> directory, you will find the following files/directories:
+<ul class='liCl2'>
+<li><b><tt>countEven.c</tt></b>: the only file you need to modify and submit. You will also find the supporing header file <tt>countEven.h</tt>
+
+<li><tt>autotest</tt>: simple auto testing script, <i><b>important</b></i>: 
+<ul><li>This script only tests simple cases, you need to extensively test your program for a wide range of test cases. 
+<li>It is possible that this script <b>may not</b> be able to properly handle your program. 
+You need to manually test your program (if required, without <tt>autotest</tt> script)
+ in order to make sure that it satisfies the requirements.
+</ul>
+
+
+<li><tt>BST.h</tt> and <tt>BST.o</tt>: an implementation of a simple </b>binary search tree</b> ADT, 
+similar to (but not the same as) the one you used in your lab exercises. Please open and read 
+ <tt>BST.h</tt> for the available functions for this question. Please note that <tt>BST.c</tt> is NOT available for this exam.
+
+
+<li><tt>testCountEven.c</tt>: the <b>program to test</b> your function.
+
+<!--
+The program uses the available function 
+<tt>getBST</tt> to read a list from <tt>stdin</tt>, calls the function you implement <tt>countEven</tt>, and outputs the answer to <tt>stdout</tt>.
+-->
+
+The program reads tree data (and other inpt data) from <tt>stdin</tt>, calls the function you implement <tt>countEven</tt>, and 
+outputs the answer to <tt>stdout</tt>. You must carefully study how your function is tested by <tt>testCountEven.c</tt>. 
+You can find out more about the behaviour of the <tt>testCountEven</tt> program
+by looking at the files <tt>testCountEven.c</tt>, <tt>autotest</tt> and the files in the <tt>tests</tt> directory. The files named <tt>t<i>X</i>.in</tt> are input files for the test program <tt>testCountEven</tt> and the corresponding expected output are in <tt>t<i>X</i>.exp</tt>.
+
+
+<li><tt>Makefile</tt>: to build the required files.
+
+<li><tt>tests</tt>: the directory containing input (<tt>*.in</tt>) and 
+	expected output (<tt>*.exp</tt>) files for few simple test cases.
+
+</ul>
+
+</p>
+<p>
+Your task for this question is to implement the <tt>countEven(BST t)</tt> function in the file <tt>countEven.c</tt>.
+
+<ul>
+<li>The <tt>countEven(BST t)</tt> function takes one argument: a  binary search tree <tt>t</tt>, 
+and counts the number of keys that are even 
+(nodes with key values that are even) in a given tree, and returns the count.  
+
+</ul>
+
+<pre>
+int countEven(BST t);
+</pre>
+
+<!--
+<p>The following examples show how the function works:
+</p>
+<pre>
+countEven( [4, 8, 10, 5, 9, 26], 9)  <span style="font-family:sans-serif;font-size:14pt;">&rightarrow;</span>  [4, 8, 5, 9]
+countEven( [4, -10, 51, -5, -1], -2)  <span style="font-family:sans-serif;font-size:14pt;">&rightarrow;</span>  [-10, -5]
+countEven( [3, 16, 8, 16, 20], 22)  <span style="font-family:sans-serif;font-size:14pt;">&rightarrow;</span>  [3, 16, 8, 16, 20]
+countEven( [8, 18, 11, 9, 5], 2)  <span style="font-family:sans-serif;font-size:14pt;">&rightarrow;</span>  []
+</pre>
+-->
+
+
+<p>
+You can compile and test your function using the following commands:
+</p>
+<pre>
+$ <b>make </b>   <span class="comment"># builds the required program testCountEven</span>
+$ <b>./autotest</b>  <span class="comment"># apply all the tests in the tests directory to the program testCountEven</span>
+$ <b>./autotest &#60;test-number&#62; </b>  <span class="comment"># apply only one given test case from the tests directory to the program testCountEven</span>
+</pre>
+<p>
+You can find out more about the behaviour of the <tt>testCountEven</tt> program
+by looking at the files <tt>testCountEven.c</tt>, <tt>autotest</tt> and the files in the <tt>tests</tt> directory.
+
+The files named <tt>t<i>X</i>.in</tt> are input files for the test program <tt>testCountEven</tt> and 
+the corresponding expected output are in <tt>t<i>X</i>.exp</tt>.
+
+<p>
+If you want to run say test case 2, use the following command:
+</p>
+<pre>
+$ <b>./autotest 2 </b> 
+</pre>
+
+<p>
+If you want to run all the sample test cases provided, use the following command:
+</p>
+<pre>
+$ <b>./autotest  </b> 
+</pre>
+
+<p>
+After you run the tests, additional files will appear in the <tt>tests</tt>
+directory: <tt>t<i>X</i>.out</tt> contains the output (from your function) of running 
+test <tt>t<i>X</i></tt>.
+</p>
+<p>
+IMPORTANT: You can add debugging code to <tt>countEven.c</tt> or <tt>testCountEven.c</tt> if you
+want, however, make sure that you remove it before testing and submitting,
+otherwise your output won't match the expected output and you'll fail all
+the tests.
+You can also add any auxiliary functions to <tt>countEven.c</tt>
+that you think are necessary.
+</p>
+<p>
+Once you are satisfied with your program, submit it using the command:
+</p>
+<pre>
+$ <b>submit q2</b>
+</pre>
+<p>
+This will make a copy of the <tt>countEven.c</tt> file from the <tt>q2</tt>
+directory as your answer for this question.
+You can run the <tt>submit</tt> command as many times as you like,
+but make sure that your final submission compiles without any errors
+or warnings.
+
+<p>
+<h3 style='font-size:1.2em;'>Testing:</h3> 
+Test your program thoroughly, possibly using test cases additional
+to those supplied. Your program will be tested using test
+cases different to the example test cases provided in the <tt>tests</tt> directory.
+<p>If you guess a possible answer/output and pass a test, you will not be awarded marks. Your program must properly solve the task discussed above. 
+</p>
+
+
+
+<hr>
+<div style="margin:30px 15%; padding:5px 20px; border:1px dotted grey;font-size: 0.9em;
+border-radius: 20px;">
+<p>
+If, at some stage, you need to "re-install" the files (although you
+should not need to), you can copy all of the original files for a question. 
+<p>
+<b>Beware</b>: this will overwrite all of your exsting files for the given
+question, so first backup your current files/directory and only do it if you seriously mess things up.
+</p>
+<pre>
+$ re-start &lt;question-dir&gt;
+</pre>
+
+For example, say for <tt>q2</tt>,   you can copy original files into the <tt> q2 </tt> directory by running the command:
+</p>
+<pre>
+$ re-start q2
+</pre>
+
+</div
+
+<p>
+</p>
+<hr>
+
+</div>
+</body>
+</html>

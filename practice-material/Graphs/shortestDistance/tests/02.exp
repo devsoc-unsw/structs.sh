@@ -1,0 +1,16 @@
+Enter number of vertices: Enter number of edges: Enter edges in the form v-w: 
+Graph: nV = 7
+Edges:
+ 0: 0-1 0-6
+ 1: 1-0 1-2
+ 2: 2-1 2-3
+ 3: 3-2 3-4
+ 4: 4-3 4-5
+ 5: 5-4 5-6
+ 6: 6-0 6-5
+
+Enter two vertices: The shortest distance between vertices 4 and 2 is: 2
+Enter two vertices: The shortest distance between vertices 4 and 0 is: 3
+Enter two vertices: The shortest distance between vertices 1 and 5 is: 3
+Enter two vertices: The shortest distance between vertices 6 and 0 is: 1
+Enter two vertices: 

@@ -1,0 +1,21 @@
+Enter the preorder traversal of the BST: Tree:
+
+1
+ \
+  8
+ /
+3
+ \
+  6
+
+Enter key: For key = 0, BSTreeNodeDepth returned -1
+Enter key: For key = 1, BSTreeNodeDepth returned 0
+Enter key: For key = 2, BSTreeNodeDepth returned -1
+Enter key: For key = 3, BSTreeNodeDepth returned 2
+Enter key: For key = 4, BSTreeNodeDepth returned -1
+Enter key: For key = 5, BSTreeNodeDepth returned -1
+Enter key: For key = 6, BSTreeNodeDepth returned 3
+Enter key: For key = 7, BSTreeNodeDepth returned -1
+Enter key: For key = 8, BSTreeNodeDepth returned 1
+Enter key: For key = 9, BSTreeNodeDepth returned -1
+Enter key: 

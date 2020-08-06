@@ -1,0 +1,7 @@
+Enter the preorder traversal of the tree: Enter the in-order traversal of the tree: Tree:
+
+  6
+ /
+3
+
+TreeHeight returned: 1

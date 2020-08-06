@@ -1,0 +1,6 @@
+Enter the preorder traversal of the BST: 
+Tree:
+
+8
+
+BSTreeGetSmallest returned: 8

@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>C Programming Reference</title>
+<link rel='stylesheet' type='text/css' href='../exam.css'></head>
+<body>
+<div align='center'>
+<table width='100%' border='0'>
+<tr valign='top'>
+<td align='left' width='25%'>
+  <span class='tiny'>COMP2521 </span>
+</td>
+<td align='center' width='50%'>
+  <span class='heading'>COMP2521  Exam</span>
+</td>
+<td align='right' width='25%'>
+  <span class='tiny'></span>
+</td>
+</table>
+</div>
+<center>
+<h2>C Programming Reference</h2>
+</center>
+<p>
+There are two sources of information that you can use for
+the C programming language.
+<p>
+<p>
+The first is a <a href="Cref.pdf">C language quick reference</a>
+(in PDF) which gives an overview of the language.
+</p>
+<p>
+The second reference source is the Unix Programmers' Manual,
+available via the <tt>man</tt> command. The most useful
+material will probably be the library function reference,
+available in section 3 of the manual. To access the manual
+entry for a particular function, e.g. <tt>strlen</tt>, use
+the command:
+</p>
+<pre>
+man 3 strlen
+</pre>
+<p>
+If you can't remember the name of the function you want,
+use the <tt>apropos</tt> command to get a list of
+suggestions. To use <tt>apropos</tt>, simply give a
+keyword that describes some aspect of the function.
+Imagine that you've forgotten the name of the <tt>strlen</tt>
+function, but you know there's a function compute the
+length of a string. Try the following command:
+</p>
+<pre>
+apropos length
+</pre>
+<p>
+The <tt>apropos</tt> command typically gives too many suggestions,
+but you can usually find what you want somewhere in the list.
+</p>
+
+</body>
+</html>

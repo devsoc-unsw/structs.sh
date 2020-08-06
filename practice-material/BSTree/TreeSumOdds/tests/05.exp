@@ -1,0 +1,11 @@
+Enter the preorder traversal of the tree: Enter the in-order traversal of the tree: Tree:
+
+      6
+     / \
+    /   \
+   /     \
+  2      10
+ / \     / \
+0   4   8  12
+
+TreeSumOdds returned 0

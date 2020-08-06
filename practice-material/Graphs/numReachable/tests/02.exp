@@ -1,0 +1,21 @@
+Enter number of vertices: Enter number of edges: Enter edges in the form v-w: 
+Graph: nV = 12
+Edges:
+ 0: 0-1
+ 1: 1-0
+ 2: 2-3
+ 3: 3-2 3-4
+ 4: 4-3
+ 5: 5-9 5-10
+ 6:
+ 7:
+ 8:
+ 9: 9-5 9-11
+10: 10-5 10-11
+11: 11-9 11-10
+
+Enter the source vertex: Number of vertices reachable from vertex 1: 2
+Enter the source vertex: Number of vertices reachable from vertex 3: 3
+Enter the source vertex: Number of vertices reachable from vertex 6: 1
+Enter the source vertex: Number of vertices reachable from vertex 9: 4
+Enter the source vertex: 

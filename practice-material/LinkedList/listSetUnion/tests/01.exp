@@ -1,0 +1,4 @@
+Enter list 1: Enter list 2: 
+Set 1: {4, 3, 1, 7, 6}
+Set 2: {3, 2, 1, 5, 6}
+Union set: {1, 2, 3, 4, 5, 6, 7}

@@ -1,0 +1,4 @@
+Enter list 1: Enter list 2: 
+Set 1: {9, 1, 8, 2, 5}
+Set 2: {}
+Union set: {1, 2, 5, 8, 9}
