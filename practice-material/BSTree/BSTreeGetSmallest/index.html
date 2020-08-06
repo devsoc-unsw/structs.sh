@@ -1,0 +1,111 @@
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>COMP2521 19T3 - BST Practice Exercises</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+	<div class="container my-5 text-justify">
+		<h1>BSTreeGetSmallest</h1>
+		<hr>
+
+		<p>Your task is to write a function, BSTreeGetSmallest, that returns a pointer to the node containing the smallest value in the given BST. If the tree is empty, return NULL.</p>
+
+		<h3 class="mt-3">Download</h3>
+		<p>Click <a href="files/BSTreeGetSmallest.zip">here</a> to download a zip of the files.</p>
+
+		<h3 class="mt-3">The Files</h3>
+		<table class="text-justify">
+			<tr>
+				<td><b>BSTree.c</b></td>
+				<td>Contains code for reading and printing a BST</td>
+			</tr>
+			<tr>
+				<td><b>BSTree.h</b></td>
+				<td>Contains the definition of the BST data structure and function prototypes</td>
+			</tr>
+			<tr>
+				<td class="pr-4"><b>testBSTreeGetSmallest.c</b></td>
+				<td>Contains the main function, which reads in a BST from standard input, calls BSTreeGetSmallest, and prints out the result.</td>
+			</tr>
+			<tr>
+				<td><b>BSTreeGetSmallest.c</b></td>
+				<td>Contains BSTreeGetSmallest, the function you must implement</td>
+			</tr>
+			<tr>
+				<td><b>Makefile</b></td>
+				<td>A makefile to compile your code</td>
+			</tr>
+			<tr>
+				<td><b>tests/</b></td>
+				<td>A directory containing the inputs and expected outputs for some basic tests</td>
+			</tr>
+			<tr>
+				<td><b>autotest<b></td>
+				<td>A script that uses the tests in the tests directory to autotest your solution. You should only run this after you have tested your solution manually.</td>
+			</tr>
+		</table>
+
+		<h3 class="mt-3">Examples</h3>
+		<p>Your program should behave like these examples:</p>
+		<pre class="terminal-window"><code>
+$ ./testBSTreeGetSmallest 
+Enter the preorder traversal of the BST: 6 5 2 8 9
+
+Tree:
+
+    6
+   / \
+  5   8
+ /     \
+2       9
+
+BSTreeGetSmallest returned: 2
+		</code></pre>
+		<pre class="terminal-window"><code>
+$ ./testBSTreeGetSmallest
+Enter the preorder traversal of the BST: 5 8 6 9
+
+Tree:
+
+5
+ \
+  8
+ / \
+6   9
+
+BSTreeGetSmallest returned: 5
+		</code></pre>
+		<pre class="terminal-window"><code>
+$ ./testBSTreeGetSmallest
+Enter the preorder traversal of the BST: 
+
+Tree:
+
+X
+
+BSTreeGetSmallest returned: NULL
+		</code></pre>
+		<h3 class="mt-3">Testing</h3>
+		<p>You can test your program manually by compiling your code using <code>make</code>, and then running <code>./testBSTreeGetSmallest</code>, as shown above. After you are satisfied with your solution, you can autotest it by running <code>./autotest</code>. This will run some basic tests on your program.</p>
+<!--
+		<p>Once you have thoroughly tested your solution, submit it through the <code>give</code> command or WebCMS, which will run some more tests on it, possibly including cases that were not provided to you. The <code>give</code> command is:</p>
+
+		<pre class="terminal-window"><code>
+$ give cs2521 xxx xxx.c
+		</code></pre>
+-->
+	</div>
+
+	<!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>
+
