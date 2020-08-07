@@ -1,6 +1,8 @@
 # Data Structures and Algorithms
 A collection of COMP2521 tutorial problems, my own examples and implementations of classic data structures and their algorithms in C.
 
+Link to past practice questions <a href="https://tymotex.github.io/DataStructures/">here</a>
+
 ## Table of Contents  
 - [Interactive BST](#interactive-bst)   
 - [Interactive AVL Tree](#interactive-avl)   
