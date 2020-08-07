@@ -2,12 +2,12 @@
 1.  Ans: e  
         6, 5, 2, 11, 7, 4, 9, 5, 2
         Postorder traversal order: LRN
-        left subtree first, then right subtree, then node
+        left subtree first, then right subtree, then current node
 
 2.  Ans: d
         Postorder: LRN
-        Preorder: NLR
-        Inorder: LNR
+        Preorder:  NLR
+        Inorder:   LNR
 
 3.  Ans: d
         AVL trees fix imbalances as soon as they occur to maintain
@@ -40,7 +40,7 @@
             - Hamiltonian paths/circuits include every VERTEX exactly once
             - Euler paths/circuits include every EDGE exactly once
 
-9.  Ans: d
+9.  Ans: b
         A queue is used for BFS and a stack is used for DFS (or recursion)
 
 10. Ans: d

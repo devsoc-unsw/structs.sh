@@ -2,7 +2,7 @@
 <head>
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<title>COMP2521 depthFirstSearch</title>
+	<title>COMP2521 TreeIsPerfectlyBalanced</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
@@ -10,33 +10,31 @@
 </head>
 <body>
 	<div class="container my-5 text-justify">
-		<h1>depthFirstSearch</h1>
+		<h1>TreeIsPerfectlyBalanced</h1>
 		<hr>
 
-		<p>Your task is to write a function, depthFirstSearch, that performs a depth first search on a graph starting at the given vertex. It should print out the vertices as they are visited. If a vertex has multiple neighbours, visit the neighbour with the smallest vertex number first.</p>
-		
-		<p>Hint: You are not provided with a stack ADT, so you must use recursion.</p>
+		<p>Your task is to write a function, TreeIsPerfectlyBalanced, that determines whether a given tree is perfectly balanced. A tree is perfectly balanced if, for every node, the difference in size between its left and right subtrees does not exceed 1. The function should return true if the tree is perfectly balanced, and false otherwise.</p>
 
 		<h3 class="mt-3">Download</h3>
-		<p>Click <a href="depthFirstSearch.zip">here</a> to download a zip of the files.</p>
+		<p>Click <a href="TreeIsPerfectlyBalanced.zip">here</a> to download a zip of the files.</p>
 
 		<h3 class="mt-3">The Files</h3>
 		<table class="text-justify">
 			<tr>
-				<td><b>Graph.c</b></td>
-				<td>Contains the implementation of a graph ADT</td>
+				<td><b>Tree.c</b></td>
+				<td>Contains code for reading and printing a binary tree</td>
 			</tr>
 			<tr>
-				<td><b>Graph.h</b></td>
-				<td>Contains the interface of the graph ADT</td>
+				<td><b>Tree.h</b></td>
+				<td>Contains the definition of the binary tree data structure and function prototypes</td>
 			</tr>
 			<tr>
-				<td class="pr-4"><b>testDepthFirstSearch.c</b></td>
-				<td>Contains the main function, which reads in a graph and a starting vertex from standard input, and then calls depthFirstSearch.</td>
+				<td class="pr-4"><b>testTreeIsPerfectlyBalanced.c</b></td>
+				<td>Contains the main function, which reads in a binary tree from standard input, calls TreeIsPerfectlyBalanced, and prints out the result.</td>
 			</tr>
 			<tr>
-				<td><b>depthFirstSearch.c</b></td>
-				<td>Contains depthFirstSearch, the function you must implement</td>
+				<td><b>TreeIsPerfectlyBalanced.c</b></td>
+				<td>Contains TreeIsPerfectlyBalanced, the function you must implement</td>
 			</tr>
 			<tr>
 				<td><b>Makefile</b></td>
@@ -55,70 +53,49 @@
 		<h3 class="mt-3">Examples</h3>
 		<p>Your program should behave like these examples:</p>
 		<pre class="terminal-window"><code>
-$ ./testDepthFirstSearch 
-Enter number of vertices: 9
-Enter number of edges: 9
-Enter edges in the form v-w: 0-1 0-7 1-2 1-5 3-4 3-5 3-6 3-7 5-8
+$ ./testTreeIsPerfectlyBalanced
+Enter the preorder traversal of the tree: 3 2 1 4 5
+Enter the in-order traversal of the tree: 1 2 3 4 5
+Tree:
 
-Graph: nV = 9
-Edges:
- 0: 0-1 0-7
- 1: 1-0 1-2 1-5
- 2: 2-1
- 3: 3-4 3-5 3-6 3-7
- 4: 4-3
- 5: 5-1 5-3 5-8
- 6: 6-3
- 7: 7-0 7-3
- 8: 8-5
+    3
+   / \
+  2   4
+ /     \
+1       5
 
-Enter src: 0
-Depth first search starting at vertex 0: 0 1 2 5 3 4 6 7 8 
+TreeIsPerfectlyBalanced returned: TRUE
 		</code></pre>
 		<pre class="terminal-window"><code>
-$ ./testDepthFirstSearch 
-Enter number of vertices: 8
-Enter number of edges: 8
-Enter edges in the form v-w: 0-1 1-2 2-3 3-4 4-5 5-6 6-7 7-0
+$ ./testTreeIsPerfectlyBalanced
+Enter the preorder traversal of the tree: 1 2 4 7 5 3 6
+Enter the in-order traversal of the tree: 7 4 2 5 1 6 3
+Tree:
 
-Graph: nV = 8
-Edges:
- 0: 0-1 0-7
- 1: 1-0 1-2
- 2: 2-1 2-3
- 3: 3-2 3-4
- 4: 4-3 4-5
- 5: 5-4 5-6
- 6: 6-5 6-7
- 7: 7-0 7-6
+        1
+       / \
+      /   \
+     /     \
+    2       3
+   / \     /
+  4   5   6
+ /
+7
 
-Enter src: 3
-Depth first search starting at vertex 3: 3 2 1 0 7 6 5 4 
+TreeIsPerfectlyBalanced returned: FALSE
 		</code></pre>
 		<pre class="terminal-window"><code>
-$ ./testDepthFirstSearch 
-Enter number of vertices: 10
-Enter number of edges: 9
-Enter edges in the form v-w: 0-1 1-2 1-3 2-4 2-5 3-5 3-6 7-8 8-9
+$ ./testTreeIsPerfectlyBalanced
+Enter the preorder traversal of the tree: 
+Enter the in-order traversal of the tree: 
+Tree:
 
-Graph: nV = 10
-Edges:
- 0: 0-1
- 1: 1-0 1-2 1-3
- 2: 2-1 2-4 2-5
- 3: 3-1 3-5 3-6
- 4: 4-2
- 5: 5-2 5-3
- 6: 6-3
- 7: 7-8
- 8: 8-7 8-9
- 9: 9-8
+X
 
-Enter src: 6
-Depth first search starting at vertex 6: 6 3 1 0 2 4 5 
+TreeIsPerfectlyBalanced returned: TRUE
 		</code></pre>
 		<h3 class="mt-3">Testing</h3>
-		<p>You can test your program manually by compiling your code using <code>make</code>, and then running <code>./testDepthFirstSearch</code>, as shown above. After you are satisfied with your solution, you can autotest it by running <code>./autotest</code>. This will run some basic tests on your program.</p>
+		<p>You can test your program manually by compiling your code using <code>make</code>, and then running <code>./testTreeIsPerfectlyBalanced</code>, as shown above. After you are satisfied with your solution, you can autotest it by running <code>./autotest</code>. This will run some basic tests on your program.</p>
 <!--
 		<p>Once you have thoroughly tested your solution, submit it through the <code>give</code> command or WebCMS, which will run some more tests on it, possibly including cases that were not provided to you. The <code>give</code> command is:</p>
 

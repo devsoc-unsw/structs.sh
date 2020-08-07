@@ -4,8 +4,8 @@
 # input files are called 01, 02, 03, etc.
 
 EXECUTABLE="./testHasCycle"
-VALGRIND_OUT_FILE="/tmp/valgrind.$$"
-USE_VALGRIND=1
+# VALGRIND_OUT_FILE="/tmp/valgrind.$$"
+# USE_VALGRIND=1
 
 RED="\033[31m"
 GREEN="\033[32m"
