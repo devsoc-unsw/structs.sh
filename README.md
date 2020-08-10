@@ -92,9 +92,9 @@ Eg. `./testGraph tests/1.in`
 
 ### Example Usage:
 <p float="left">
-  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-graph/InteractiveGraph1.png" width="45%" />
-  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-graph/InteractiveGraph2.png" max-width="45%" />
-  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-graph/InteractiveGraph3.png" max-width="35%" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-graph/InteractiveGraph1.png" max-width="15%" max-height="500px" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-graph/InteractiveGraph2.png" max-width="15%" max-height="500px" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-graph/InteractiveGraph3.png" max-width="15%" max-height="500px" />
 </p>
 
 <a name="interactive-weighted-graph"/>
@@ -146,6 +146,12 @@ A collection of classic sort algorithms written in C. Timing data is shown for e
 1. `git clone https://github.com/Tymotex/DataStructures.git` 
 2. `cd DataStructures/sorting-algos`
 3. `make` - creates the executable file `testSort`
-4. `./testSort <filename>` - takes in a file containing unsorted numbers 
+4. Generate sequences: `./generate-tests -n <num random files> <list of sizes>`. Eg. `./generate-tests -n 5 10 100 1000`
+5. `./testSort <filename>` - takes in a file containing a sequence of numbers
+Eg. `./testSort tests/random100_01` or `./testSort --silent tests/random_100_01`
 
-Eg. `./testSort tests/random100_01`
+### Example Usage:
+<p float="left">
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-sort/InteractiveSort.png" max-width="15%" max-height="500px" />
+</p>
+

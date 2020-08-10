@@ -1,0 +1,56 @@
+#!/usr/local/bin/sh
+
+testDir="tests"
+
+BLUE='\033[1;34m'
+NC='\033[0m'
+
+printb() {
+    local myVar="$1"
+    echo -e "${BLUE}$myVar${NC}"
+}
+
+printUsage() {
+    printb "Usage: $0 [options] <list of sequence sizes>"
+    printb "Eg. $0 10 100 1000"  
+    printb "Options"
+    printb "    -h       : show this help message"
+    printb "    -n <num> : generate a specified number of random files (default 3)"
+}
+
+numRandomFiles=3
+while test $# -gt 0; do   # $# is argc
+    case "$1" in
+        -h|--help)
+            exit 0
+            ;;
+        -n)
+            shift
+            printb "Generating $1 random files for each specified size" 
+            if echo "$1" | egrep '^[1-9][0-9]*$' > /dev/null; then
+                numRandomFiles=$1
+            else
+                printUsage;
+            fi
+            shift
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+for size in "$@"; do
+    printb "→ Generating random sequences (size: $size)";
+    for i in $(seq 1 $numRandomFiles); do
+        randFilename="random_${size}_${i}"
+        echo "→ Generated ${randFilename}"
+        seq 1 $size | sort -R > $testDir/$randFilename
+    done
+    printb "→ Generating reversed sequence (size: $size)";
+    revFilename="reversed_${size}"
+    seq 1 $size | sort -nr > $testDir/$revFilename
+    printb "→ Generating sorted sequence (size: $size)";
+    sortedFilename="sorted_${size}"
+    seq 1 $size > $testDir/$sortedFilename
+done
