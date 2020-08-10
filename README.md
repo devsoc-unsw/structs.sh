@@ -124,6 +124,11 @@ Interactive hash table written in C.
 3. `make` - creates the executable file `testHash`
 4. `./testHash <size>` - creates an empty hash table with the specified size (otherwise defaults to 10 slots) 
 
+### Example Usage:
+<p float="left">
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-hash/InteractiveHash1.png" max-width="35%" max-height="500px" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-hash/InteractiveHash2.png" max-width="35%" max-height="500px" />
+</p>
 
 <a name="interactive-heap"/>
 
@@ -137,9 +142,10 @@ Interactive max heap table written in C.
 4. `./testHeap <size>` - creates an empty hash table with the specified size (otherwise defaults to 10 slots) 
 
 
+
 <a name="interactive-sort"/>
 
-## Interactive Sort
+## Interactive Sorting Algorithms
 A collection of classic sort algorithms written in C. Timing data is shown for each sort algorithm you try.
 
 ### Setup Instructions:

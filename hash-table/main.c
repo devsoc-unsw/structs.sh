@@ -15,7 +15,7 @@ void printUsagePrompt(char *argv[]) {
 	fprintf(stderr, "Usage: %s <num vertices>|<filename>\n", argv[0]);
 	exit(1);
 }
-
+ 
 /**
  * Prints supported commands available in interactive mode
  */

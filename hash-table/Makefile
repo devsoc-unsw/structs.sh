@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS= -g
+CFLAGS= -g -w
 OBJS=main.o hash-table.o ../util/colours.o
 
 testHash : $(OBJS)
