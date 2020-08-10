@@ -110,13 +110,10 @@ Interactive weighted directed/undirected graph builder written in C. Implements 
 
 Eg. `./testGraph tests/1.in`
 
-
-
-
 <a name="interactive-hash"/>
 
-## Interactive Hash Table
-Interactive hash table written in C.
+## Interactive Hash Table (Lookup Table)
+Interactive hash table for storing UNSW students, written in C.
 
 ### Setup Instructions:
 1. `git clone https://github.com/Tymotex/DataStructures.git` 
@@ -141,7 +138,11 @@ Interactive max heap table written in C.
 3. `make` - creates the executable file `testHeap`
 4. `./testHeap <size>` - creates an empty hash table with the specified size (otherwise defaults to 10 slots) 
 
-
+### Example Usage:
+<p float="left">
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-heap/InteractiveHeap1.png" max-width="35%" max-height="500px" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/interactive-heap/InteractiveHeap2.png" max-width="35%" max-height="500px" />
+</p>
 
 <a name="interactive-sort"/>
 

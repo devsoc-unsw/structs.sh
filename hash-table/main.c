@@ -24,7 +24,8 @@ void printCommands() {
                     " ===>  help                  - show available commands\n"
                     " ===>  show                  - shows the hash table\n"
                     " ===>  insert <zID> \"name\"   - inserts a new student into the hash table\n"
-                    " ===>  get <zID>             - fetches the student with the zID from the hash table\n"
+                    " ===>  get <zID>             - fetches the student with the specified zID\n"
+                    " ===>  delete <zID>          - deletes the student with the specified zID\n"
                     " ===>  exit                  - quit program\n"
                     "|====================|\n";
     printf("%s", helpLog);
