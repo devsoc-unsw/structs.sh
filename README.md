@@ -155,7 +155,7 @@ A collection of classic sort algorithms written in C. Timing data is shown for e
 3. `make` - creates the executable file `testSort`
 4. Generate sequences: `./generate-tests -n <num random files> <list of sizes>`. Eg. `./generate-tests -n 5 10 100 1000`
 5. `./testSort <filename>` - takes in a file containing a sequence of numbers
-Eg. `./testSort tests/random100_01` or `./testSort --silent tests/random_100_01`
+Eg. `./testSort tests/random100_1` or `./testSort --silent tests/random_100_1`
 
 ### Example Usage:
 <p float="left">
