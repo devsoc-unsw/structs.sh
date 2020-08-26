@@ -1,5 +1,0 @@
-You have given me 4 arguments. They are:
-argv[0] ---> ./args
-argv[1] ---> hello
-argv[2] ---> there,
-argv[3] ---> John Shepherd
