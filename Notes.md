@@ -1,3 +1,7 @@
+---
+title: Document Center
+---
+
 # COMP2521 - Data Structures and Algorithms
 
 # Week 1: Algorithm Analysis
