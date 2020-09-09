@@ -1,0 +1,1742 @@
+<h1 id="comp2521-data-structures-and-algorithms">COMP2521 - Data Structures and Algorithms</h1>
+<h1 id="week-1-algorithm-analysis">Week 1: Algorithm Analysis</h1>
+<h3 id="algorithm-analysis-">Algorithm Analysis:</h3>
+<p><strong>Terminology:</strong></p>
+<ul>
+<li><em>Empirical analysis —</em> involves implementing and running the algorithm and plotting a graph of time taken vs. input size</li>
+<li><em>Theoretical analysis</em> — involves determining running time as a <em>function</em> of input size, <em>n</em>.
+<em>independent of hardware and programming language (we can analyse </em>pseudocode<em> in terms of the number of </em>primitive operations* — maximised in the worst case)</li>
+<li><em>Primitive operations</em> — accessing an array index, calling functions, evaluating expressions, etc.</li>
+</ul>
+<h3 id="big-o-notation-time-complexity-">Big-O Notation (Time Complexity):</h3>
+<ul>
+<li><p>Formal definition: if there exists positive constants <em>c</em> and <em>b</em> such that <em>f(n) ≤ cg(n)</em> holds for all <em>n &gt; b</em>, then <em>f(n)</em> is <em>O(g(n))</em></p>
+<p>  <img src="Images/notes/ref_image_0.png" alt="Images/notes/ref_image_0.png"></p>
+</li>
+<li><p>It is true that <em>&quot;2n is O(n²)&quot;</em>, however we want the smallest class of functions, so we say <em>&quot;2n is O(n)&quot;</em></p>
+</li>
+<li>Big <em>O</em> — upper limit (worst case)   <em>f(n) ≤ cg(n)</em>
+Big <em>Θ</em> — average range                  <em>f(n) ≥ cg(n)</em>
+Big <em>Ω</em> — lower limit (best case)     <em>c&#39;g(b) ≤ f(n) ≤ c&#39;&#39;g(n)</em> 
+The worst case time-complexity is generally the most important to discuss</li>
+<li>Polynomials: for <em>f(n)</em> with degree <em>d</em>, f(n) is <em>O(nᵈ)</em></li>
+<li>For finding the worst case in recursive algorithms, we must understand the logic and work out how many steps are taken to reach the base case</li>
+<li><strong>Complexity classes:</strong>
+<em>N —</em> problems computable in polynomial time
+<em>NP —</em> problems only computable in exponential time, so no P algorithm is known (&quot;non-deterministic polynomial time on a theoretical <em>Turing Machine</em>&quot;)
+<em>&quot;tractable&quot;</em> — has a polynomial-time algorithm 
+<em>&quot;intractable&quot;</em> — only exponential-time algorithms are known<br>*It has been proved that if some NP class problem can be solved in polynomial time, then ALL NP class problems become P problems</li>
+<li><strong><em>Generate and test</em> algorithms:</strong>
+Useful when it is simple to generate new states and test whether they are a solution.
+This guarantees we either find a solution, or prove none exist.
+Eg. Checking primality by generating 2 to n-1 numbers and testing them</li>
+<li>Big-O is less about the exact number of operations and more about how the number changes with respect to problem size. A function with O(1) complexity (constant time) could take 0.000001 seconds to execute or two weeks to execute.</li>
+</ul>
+<p><em>Time-complexity for different operations on common data structures:</em></p>
+<p><img src="Images/notes/ref_image_1.png" alt="Images/notes/ref_image_1.png"></p>
+<hr>
+<p><strong>Examples:</strong>
+O(1)</p>
+<pre><code class="lang-c"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">swap</span><span class="hljs-params">(<span class="hljs-keyword">int</span> a[], <span class="hljs-keyword">int</span> i, <span class="hljs-keyword">int</span> j)</span> </span>{
+        <span class="hljs-keyword">int</span> tmp = a[i];  <span class="hljs-comment">// O(1)</span>
+        a[i] = a[j];     <span class="hljs-comment">// O(1)</span>
+        a[j] = tmp;      <span class="hljs-comment">// O(1)</span>
+}                    <span class="hljs-comment">// Total: O(1)</span>
+</code></pre>
+<p>O(n)</p>
+<pre><code class="lang-c"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) {
+        <span class="hljs-comment">// Some O(1) statements</span>
+}   <span class="hljs-comment">// Total: O(n)</span>
+</code></pre>
+<p>O(n²)</p>
+<pre><code class="lang-c"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; n; j++) {
+                <span class="hljs-comment">// Some O(1) statements</span>
+        }
+}   <span class="hljs-comment">// Total: O(n²), basically counting how many times the innermost statements get executed</span>
+</code></pre>
+<p>O(logn)</p>
+<pre><code class="lang-c">for (int i = 0; i &lt; n; i *= 2) {
+        // Some O(1) statements
+}   // Total: O(log₂n)
+// Eg. for n = 100, the loop will<span class="hljs-built_in"> execute </span>log₂(100) times, which is 6<span class="hljs-built_in"> or </span>7 times
+</code></pre>
+<h1 id="week-2-compilation-and-adts">Week 2: Compilation and ADTs</h1>
+<h3 id="abstract-data-types-">Abstract Data Types:</h3>
+<ul>
+<li><strong>Abstract data type:</strong> 
+Abstract data types provide a separation between the interface and implementation. The interface only presents high-level functions that can be performed and their pre-conditions and post-conditions without us being concerned with how they are implemented. Users of the ADT see and use only the interface, so they are completely unaware of the underlying implementation of it.</li>
+<li>The interface (header file) provides just the function signatures/prototypes and a description of their semantics</li>
+<li><strong>Collections:</strong>
+Many ADTs are a collection of items, which might be simple types with an associated key.<ul>
+<li>Collections are categorised in terms of structure: <em>linear, branching, cyclic</em>, or in terms of usage: <em>set, matrix, stack, queue, search-tree, dictionary</em></li>
+<li>Typical functions: <em>create(), insert(), remove(), find(), display(),</em> etc.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p><strong>Set ADT example:</strong>
+A typical abstract <strong>set</strong> data type requires the following functions:</p>
+<ul>
+<li><code>Set newSet()</code></li>
+<li><code>void freeSet(Set s)</code></li>
+<li><code>void displaySet(Set s)</code></li>
+<li><code>void setInsert(Set s, int data)</code></li>
+<li><code>void setRemove(Set s, int target)</code></li>
+<li><code>bool setIsMember(Set s, int target)</code></li>
+<li><code>Set setUnion(Set s, Set t)</code></li>
+<li><code>Set setIntersection(Set s, Set t)</code></li>
+<li><code>int setCardinality(Set s)</code></li>
+</ul>
+<p>ADTs are also expected to implement error-handling to check that things like pre-conditions, post-conditions and whether or not the input is valid value.</p>
+<p><em>Time-complexities for a set implementation using various underlying data structures:</em></p>
+<p><img src="Images/notes/ref_image_2.png" alt="Images/notes/ref_image_2.png"></p>
+<p>As the person implementing an abstract data type for other uses, after you decide what functions you want to supply, you go through each possible implementation and compare the set of time-complexities for each implementation and then pick the appropriate implementation based on which functions are most important to the specifications. </p>
+<hr>
+<h1 id="week-3-trees-i">Week 3: Trees I</h1>
+<h3 id="tree-data-structures-">Tree Data Structures:</h3>
+<ul>
+<li>Trees — connected graphs with no cycles where any two nodes are connected by exactly one unique path. Each node holds data and has links to child nodes</li>
+<li>Binary trees — recursive definition: &quot;a binary tree is a tree that is either empty, or consists of a node with two binary subtrees&quot;<ul>
+<li>Binary search trees — every node is the <em>root</em> of 0-2 <em>subtrees,</em> where the left subtree contains all values lower than the root value and right subtree contains all values greater than the root value</li>
+</ul>
+</li>
+<li>Balanced tree — has <em>minimal</em> height possible for the given number of nodes (for n nodes, the height is <em>log(n)</em>)<ul>
+<li>Perfectly balanced tree —  when the difference between the number of nodes in the subtrees of <em>every node</em> is no more than 1
+<code>abs(countNodes(t → left), countNodes(t → right)) ≤ 1</code></li>
+</ul>
+</li>
+<li>Degenerate tree — has <em>maximal</em> height possible for the given number of nodes (linear structure)</li>
+</ul>
+<p><em>Tree structure:</em></p>
+<p><img src="Images/notes/ref_image_3.png" alt="Images/notes/ref_image_3.png"></p>
+<p><img src="Images/notes/ref_image_4.png" alt="Images/notes/ref_image_4.png"></p>
+<p><em>Tree &#39;indexes&#39;:</em></p>
+<p><img src="Images/notes/ref_image_5.png" alt="Images/notes/ref_image_5.png"></p>
+<h3 id="binary-search-trees-">Binary Search-Trees:</h3>
+<ul>
+<li>The time-complexity for tree algorithms is typically <em>O(height of tree),</em> and for a <em>balanced</em> binary search tree, <em>height = log(n)</em>.</li>
+<li>Example: consider the <em>balanced binary search tree</em> corresponding to the sorted array: [2, 5, 10, 12, 14, 17, <strong>20</strong>, 24, 29, 30, 31, 32]<ul>
+<li>All child nodes to the left are less than the parent, all child nodes to the right are greater than the parent.-</li>
+<li>Every node has <em>at most 2 child nodes</em></li>
+<li>If the target value isn&#39;t found in the tree, then it is inserted where it was failed to be found.</li>
+</ul>
+</li>
+<li>The structure of the tree depends on the order of insertion of the elements</li>
+<li>Each node contains a pointer to the root node of its left subtree and a pointer to the root node of its right subtree</li>
+</ul>
+<p><em>Possible struct declaration:</em></p>
+<pre><code class="lang-c">typedef struct <span class="hljs-keyword">BSTNode </span>*Tree<span class="hljs-comment">;</span>
+struct <span class="hljs-keyword">BSTNode </span>{  
+        int data<span class="hljs-comment">;</span>
+        <span class="hljs-keyword">BSTNode </span>*left<span class="hljs-comment">;</span>
+        <span class="hljs-keyword">BSTNode </span>*right<span class="hljs-comment">;   // We could add more fields like: int numNodes, which counts how many nodes are under this node</span>
+}<span class="hljs-comment">;</span>
+</code></pre>
+<p><img src="Images/notes/ref_image_6.png" alt="Images/notes/ref_image_6.png"></p>
+<p><img src="Images/notes/ref_image_7.png" alt="Images/notes/ref_image_7.png"></p>
+<hr>
+<h3 id="-tree-algorithms-"><strong>Tree Algorithms:</strong></h3>
+<h3 id="-tree-traversal-"><strong>Tree traversal:</strong></h3>
+<ul>
+<li><p><strong>Preorder NLR</strong> — root → left subtree → right subtree</p>
+<pre><code class="lang-c">  void printPreorder(BSTree <span class="hljs-built_in">t</span>) {
+          <span class="hljs-built_in">if</span> (<span class="hljs-built_in">t</span> == NULL) return;
+          printf(<span class="hljs-string">"%d "</span>, <span class="hljs-built_in">t</span> -&gt; <span class="hljs-built_in">value</span>);
+          printPreorder(<span class="hljs-built_in">t</span> -&gt; <span class="hljs-built_in">left</span>);
+          printPreorder(<span class="hljs-built_in">t</span> -&gt; <span class="hljs-built_in">right</span>);
+  }
+</code></pre>
+<p>  <em>Iterative alternative, using a stack</em></p>
+<pre><code class="lang-c">  <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">printPreorder</span><span class="hljs-params">(BSTree t)</span> </span>{
+          Stack <span class="hljs-built_in">stack</span>= StackNew();   <span class="hljs-comment">// Stack contains BSTree nodes</span>
+          StackPush(<span class="hljs-built_in">stack</span>, t);
+          <span class="hljs-keyword">while</span> (StackSize(s) &gt; <span class="hljs-number">0</span>) {
+                  BSTree curr = StackPop(<span class="hljs-built_in">stack</span>);
+                  <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d "</span>, curr -&gt; value);
+                  <span class="hljs-keyword">if</span> (curr -&gt; right != <span class="hljs-literal">NULL</span>) StackPush(curr -&gt; right);
+                  <span class="hljs-keyword">if</span> (curr -&gt; left != <span class="hljs-literal">NULL</span>) StackPush(curr -&gt; left);
+          }
+          StackFree(<span class="hljs-built_in">stack</span>);
+  }
+</code></pre>
+</li>
+<li><p><strong>Inorder LNR</strong> **— left subtree → then root → then right subtree</p>
+<pre><code class="lang-c">  void printInorder(BSTree <span class="hljs-built_in">t</span>) {
+          <span class="hljs-built_in">if</span> (<span class="hljs-built_in">t</span> == NULL) return;
+          printInorder(<span class="hljs-built_in">t</span> -&gt; <span class="hljs-built_in">left</span>);
+          printf(<span class="hljs-string">"%d "</span>, <span class="hljs-built_in">t</span> -&gt; <span class="hljs-built_in">value</span>);
+          printInorder(<span class="hljs-built_in">t</span> -&gt; <span class="hljs-built_in">right</span>);
+  }
+</code></pre>
+</li>
+<li><p><strong>Postorder LRN</strong> **— left subtree → right subtree → then root</p>
+<pre><code class="lang-c">  void printPostorder(BSTree <span class="hljs-built_in">t</span>) {
+          <span class="hljs-built_in">if</span> (<span class="hljs-built_in">t</span> == NULL) return;
+          printPostorder(<span class="hljs-built_in">t</span> -&gt; <span class="hljs-built_in">left</span>);
+          printPostorder(<span class="hljs-built_in">t</span> -&gt; <span class="hljs-built_in">right</span>);
+          printf(<span class="hljs-string">"%d "</span>, <span class="hljs-built_in">t</span> -&gt; <span class="hljs-built_in">value</span>);
+  }
+</code></pre>
+</li>
+<li><p><strong>Level-order</strong> **— root → all its children from left to right → then their children from left to rightand so on</p>
+<pre><code class="lang-c">  void printLevelOrder(BSTree t) {
+          Queue q = QueueNew();   // Stack contains BSTree nodes
+          QueueEnqueue(q, t);
+          while (QueueSize(s) &gt; <span class="hljs-number">0</span>) {
+                  BSTree curr = QueueDequeue(q);
+                  printf(<span class="hljs-string">"%d "</span>, curr -&gt; value);
+                  <span class="hljs-keyword">if</span> (curr -&gt; <span class="hljs-built_in">left</span> != NULL) QueueEnqueue(curr -&gt; <span class="hljs-built_in">left</span>);
+                  <span class="hljs-keyword">if</span> (curr -&gt; <span class="hljs-built_in">right</span> != NULL) QueueEnqueue(curr -&gt; <span class="hljs-built_in">right</span>);
+          }
+          QueueFree(q);
+  }
+</code></pre>
+</li>
+</ul>
+<h3 id="t-ree-properties-">T<strong>ree Properties:</strong></h3>
+<ul>
+<li><p><strong>Searching for node:</strong></p>
+<pre><code class="lang-c">  <span class="hljs-function">bool <span class="hljs-title">BSTSearch</span><span class="hljs-params">(BSTree t, <span class="hljs-keyword">int</span> <span class="hljs-keyword">target</span>)</span> </span>{
+          <span class="hljs-keyword">if</span> (t == NULL) <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+          <span class="hljs-keyword">if</span> (t -&gt; value == <span class="hljs-keyword">target</span>) {      <span class="hljs-comment">// Target has been reached</span>
+                  <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+          }
+          <span class="hljs-function"><span class="hljs-keyword">else</span> <span class="hljs-title">if</span> <span class="hljs-params">(<span class="hljs-keyword">target</span> &lt; t -&gt; value)</span> </span>{  <span class="hljs-comment">// Go search for the target in the left subtree</span>
+                  <span class="hljs-function"><span class="hljs-keyword">return</span> <span class="hljs-title">BSTSearch</span><span class="hljs-params">(t -&gt; left, <span class="hljs-keyword">target</span>)</span></span>;
+          }
+          <span class="hljs-function"><span class="hljs-keyword">else</span> <span class="hljs-title">if</span> <span class="hljs-params">(<span class="hljs-keyword">target</span> &gt; t -&gt; value)</span> </span>{  <span class="hljs-comment">// Go search for the target in the right subtree</span>
+                  <span class="hljs-function"><span class="hljs-keyword">return</span> <span class="hljs-title">BSTSearch</span><span class="hljs-params">(t -&gt; right, <span class="hljs-keyword">target</span>)</span></span>;
+          }
+  }
+</code></pre>
+</li>
+<li><p><strong>Counting nodes:</strong></p>
+<pre><code class="lang-c">  <span class="hljs-built_in">int</span> <span class="hljs-built_in">count</span>(Tree <span class="hljs-built_in">t</span>) {
+          return <span class="hljs-built_in">t</span> == NULL ? <span class="hljs-number">0</span> <span class="hljs-symbol">:</span> <span class="hljs-number">1</span> + <span class="hljs-built_in">count</span>(<span class="hljs-built_in">t</span> -&gt; <span class="hljs-built_in">left</span>) + <span class="hljs-built_in">count</span>(<span class="hljs-built_in">t</span> -&gt; <span class="hljs-built_in">right</span>);
+  }
+</code></pre>
+</li>
+<li><p><strong>Getting the height:</strong></p>
+<pre><code class="lang-c">  int TreeHeight(Tree t) {
+      <span class="hljs-keyword">if</span> (t == NULL) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+      <span class="hljs-keyword">if</span> (t -&gt; <span class="hljs-built_in">left</span> == NULL &amp;&amp; t -&gt; <span class="hljs-built_in">right</span> == NULL) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;       // Do I need this?
+      <span class="hljs-keyword">if</span> (t -&gt; <span class="hljs-built_in">left</span> == NULL &amp;&amp; t -&gt; <span class="hljs-built_in">right</span> != NULL) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> + TreeHeight(t -&gt; <span class="hljs-built_in">right</span>);
+      <span class="hljs-keyword">if</span> (t -&gt; <span class="hljs-built_in">right</span> == NULL &amp;&amp; t -&gt; <span class="hljs-built_in">left</span> != NULL) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> + TreeHeight(t -&gt; <span class="hljs-built_in">left</span>);
+      <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> + max(TreeHeight(t -&gt; <span class="hljs-built_in">left</span>), TreeHeight(t -&gt; <span class="hljs-built_in">right</span>));
+  }
+</code></pre>
+</li>
+</ul>
+<h3 id="-tree-maintenance-"><strong>Tree Maintenance:</strong></h3>
+<ul>
+<li><strong>Merging two trees:</strong>
+<em>Pre-condition:</em> takes 2 trees, <code>t1</code> and <code>t2</code>
+<em>Post-condition:</em> ordered binary search-tree with all items in <code>t1</code> and <code>t2</code></li>
+<li>Find min node in <code>t2</code>: keep going left until NULL. We are guaranteed that this min node will have no left subtree</li>
+<li>Set this min node to be the main root node of the resultant tree</li>
+<li>Set the right subtree of the min node (if it exists) as the left subtree of the root node of <code>t2</code></li>
+<li><p>Set <code>t1</code> as the left subtree of the min node
+Return min node (which is the new root)</p>
+<p> <img src="Images/notes/ref_image_8.png" alt="Images/notes/ref_image_8.png"></p>
+</li>
+</ul>
+<pre><code class="lang-c">Tree JoinTree(Tree t1, Tree t2) {
+        <span class="hljs-keyword">if</span> (t1 == NULL) <span class="hljs-keyword">return</span> t2;
+        <span class="hljs-keyword">if</span> (t2 == NULL) <span class="hljs-keyword">return</span> t1;
+        Tree minNode = t2;         
+        Tree minNodeParent = NULL;
+        while (minNode -&gt; <span class="hljs-built_in">left</span> != NULL) {  // Find the minimum node of t2
+                minNodeParent = minNode;
+                minNode = minNode -&gt; <span class="hljs-built_in">left</span>;
+        }
+        <span class="hljs-keyword">if</span> (minNodeParent != NULL) {
+                minNodeParent -&gt; <span class="hljs-built_in">left</span> = minNode -&gt; <span class="hljs-built_in">right</span>;
+                minNode -&gt; <span class="hljs-built_in">right</span> = t2;
+        }
+        minNode -&gt; <span class="hljs-built_in">left</span> = t1;
+}
+</code></pre>
+<ul>
+<li><p><strong>Right rotation:</strong>
+Moves the left child to root, assigning the original root as the left child&#39;s right subtree</p>
+<pre><code class="lang-c">  BSTree rotateR(BSTree t) {         <span class="hljs-comment">// Shifts root node right-down and the pivot node right-up</span>
+          <span class="hljs-keyword">if</span> (t == NULL) return NULL;       
+          BST<span class="hljs-function"><span class="hljs-title">ree</span> pivot = t -&gt;</span> left;
+          <span class="hljs-keyword">if</span> (pivot == NULL) return t;   <span class="hljs-comment">// If t has no left component, then we can't do a meaningful right rotation</span>
+          <span class="hljs-function"><span class="hljs-title">t</span> -&gt;</span> <span class="hljs-function"><span class="hljs-title">left</span> = pivot -&gt;</span> right;    <span class="hljs-comment">// Assign the pivots right subtree to be the left subtree of the previous root</span>
+          <span class="hljs-function"><span class="hljs-title">pivot</span> -&gt;</span> right = t;            <span class="hljs-comment">// Assign the previous root to be the right child of the pivot</span>
+          return pivot;                  <span class="hljs-comment">// Pivot is the new root</span>
+  }
+</code></pre>
+</li>
+<li><p><strong>Left rotation:</strong>
+Moves the right child to root, assigning the original root as the right child&#39;s left subtree</p>
+<pre><code class="lang-c">  BSTree rotateR(BSTree t) {         <span class="hljs-comment">// Shifts root node left-down and the pivot node left-up</span>
+          <span class="hljs-keyword">if</span> (t == NULL) return NULL;       
+          BST<span class="hljs-function"><span class="hljs-title">ree</span> pivot = t -&gt;</span> right;
+          <span class="hljs-keyword">if</span> (pivot == NULL) return t;   <span class="hljs-comment">// If t has no right element, then the left rotation does nothing</span>
+          <span class="hljs-function"><span class="hljs-title">t</span> -&gt;</span> <span class="hljs-function"><span class="hljs-title">right</span> = pivot -&gt;</span> left;    <span class="hljs-comment">// Assign the pivots left subtree to be the right subtree of the previous root</span>
+          <span class="hljs-function"><span class="hljs-title">pivot</span> -&gt;</span> left = t;             <span class="hljs-comment">// Assign the previous root to be the left child of the pivot</span>
+          return pivot;                  <span class="hljs-comment">// Pivot is the new root</span>
+  }
+</code></pre>
+</li>
+<li><p><strong>Inserting at leaf:</strong>
+Insertion algorithm terminates when current node is NULL, which means we have reached a suitable leaf position</p>
+<pre><code class="lang-c">  BSTree BSTreeInsert(BSTree t, int val) {
+          <span class="hljs-keyword">if</span> (t == NULL) {                        // Reached leaf node (terminating <span class="hljs-built_in">case</span>)
+                  BSTree newLeaf = malloc(sizeof(struct BSTNode));
+                  newLeaf -&gt; value = val;
+                  newLeaf -&gt; <span class="hljs-built_in">left</span> = NULL;
+                  newLeaf -&gt; <span class="hljs-built_in">right</span> = NULL;
+                  <span class="hljs-keyword">return</span> newLeaf;
+          } 
+          <span class="hljs-keyword">if</span> (t -&gt; value == val) <span class="hljs-keyword">return</span> t;        // Tree already contains the value. Just <span class="hljs-keyword">return</span>
+
+          <span class="hljs-keyword">if</span> (val &lt; t -&gt; value) {                 // Go insert <span class="hljs-built_in">in</span> the <span class="hljs-built_in">left</span> subtree
+                  t -&gt; <span class="hljs-built_in">left</span> = BSTreeInsert(t -&gt; <span class="hljs-built_in">left</span>, val);
+          } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val &gt; t -&gt; value) {            // Go insert <span class="hljs-built_in">in</span> the <span class="hljs-built_in">right</span> subtree
+                  t -&gt; <span class="hljs-built_in">right</span> = BSTreeInsert(t -&gt; <span class="hljs-built_in">right</span>, val);
+          } 
+          <span class="hljs-keyword">return</span> t;
+  }
+</code></pre>
+</li>
+<li><p><strong>Inserting at root:</strong>
+Like insertion at the leaf but requires rearrangement of the tree for each insert. Recent entries are close to the root so retrieving these are quicker than if we were to insert at the leaf everytime. </p>
+</li>
+<li>Insert new node as leaf</li>
+<li><p>Lift the new node to the root by a series of rotations</p>
+<pre><code class="lang-c"> BSTree BSTreeInsert(BSTree t, int val) {
+         <span class="hljs-keyword">if</span> (t == NULL) {
+                 BSTree newLeaf = malloc(sizeof(struct BSTNode));
+                 newLeaf -&gt; value = val;
+                 newLeaf -&gt; <span class="hljs-built_in">left</span> = NULL;
+                 newLeaf -&gt; <span class="hljs-built_in">right</span> = NULL;
+                 <span class="hljs-keyword">return</span> newLeaf;
+         }
+         <span class="hljs-keyword">if</span> (val &lt; t -&gt; value) {
+                 t -&gt; <span class="hljs-built_in">left</span> = BSTreeInsert(t -&gt; <span class="hljs-built_in">left</span>, val); 
+                 <span class="hljs-keyword">return</span> rotateRight(t);
+         }
+         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (val &gt; t -&gt; value) {
+                 t -&gt; <span class="hljs-built_in">right</span> = BSTreeInsert(t -&gt; <span class="hljs-built_in">right</span>, val);
+                 <span class="hljs-keyword">return</span> rotateLeft(t);
+         }
+     // <span class="hljs-keyword">If</span> the execution reaches here, the value probably already <span class="hljs-built_in">exists</span> <span class="hljs-built_in">in</span> the tree. Do nothing
+         <span class="hljs-keyword">return</span> t;
+ }
+</code></pre>
+<p> Time-complexity: <em>O(height)</em></p>
+</li>
+</ul>
+<p><img src="Images/notes/ref_image_9.png" alt="Images/notes/ref_image_9.png"></p>
+<ul>
+<li><strong>Deleting a node:</strong>
+Do a regular search for the target node and then handle deletion by cases once reached: </li>
+<li>Target has no subtrees — simple deletion</li>
+<li>Target has 1 subtree — replace target with its child</li>
+<li>Target has 2 subtrees — call mergeTrees to merge the target&#39;s children to replace the deleted target</li>
+<li><p>Target doesn&#39;t exist — do nothing and return</p>
+<pre><code class="lang-c"> Tree deleteNode(Tree t, int target) {
+         <span class="hljs-keyword">if</span> (t != NULL) {
+                 <span class="hljs-keyword">if</span> (t -&gt; value &gt; target) {        // Target is somewhere <span class="hljs-built_in">in</span> the <span class="hljs-built_in">left</span> subtree
+                         deleteNode(t -&gt; <span class="hljs-built_in">left</span>, target);
+                 }
+                 <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (t -&gt; value &lt; target) {   // Target is somewhere <span class="hljs-built_in">in</span> the <span class="hljs-built_in">right</span> subtree
+                         deleteNode(t -&gt; <span class="hljs-built_in">right</span>, target);
+                 }
+                 <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (t -&gt; value == target) {  // Reached the target node
+                         <span class="hljs-keyword">if</span> (t -&gt; <span class="hljs-built_in">left</span> != NULL &amp;&amp; t -&gt; <span class="hljs-built_in">right</span> != NULL) {  // Both subtrees exist
+                                 Tree t1 = t -&gt; <span class="hljs-built_in">left</span>;
+                                 Tree t2 = t -&gt; <span class="hljs-built_in">right</span>;
+                                 free(t);
+                                 <span class="hljs-keyword">return</span> mergeTree(t -&gt; <span class="hljs-built_in">left</span>, t -&gt; <span class="hljs-built_in">right</span>);
+                         }
+                         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (t -&gt; <span class="hljs-built_in">left</span> != NULL) {   // Only the <span class="hljs-built_in">left</span> subtree <span class="hljs-built_in">exists</span>
+                                 Tree ret = t -&gt; <span class="hljs-built_in">left</span>;
+                                 free(t);
+                                 <span class="hljs-keyword">return</span> ret;
+                         }
+                         <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (t -&gt; <span class="hljs-built_in">right</span> != NULL) {  // Only the <span class="hljs-built_in">right</span> subtree <span class="hljs-built_in">exists</span>
+                                 Tree ret = t -&gt; <span class="hljs-built_in">right</span>;
+                                 free(t);
+                                 <span class="hljs-keyword">return</span> ret;
+                         } 
+                         <span class="hljs-keyword">else</span> {  // No subtrees. Simple deletion
+                                 free(t);        
+                                 <span class="hljs-keyword">return</span> NULL;                        
+                         }
+                 }
+         }
+         <span class="hljs-keyword">return</span> t;
+ }
+</code></pre>
+</li>
+<li><p><strong>Rebalancing:</strong> 
+Logic to rebalance any BST: </p>
+</li>
+<li>Set the <em>median node as the new root</em> using the <code>partition()</code> function</li>
+<li><p>Recurse through each subtree, setting the <em>median node as the new root</em> for every single node</p>
+<p> Time-complexity of rebalancing is <em>O(N)</em> because each node is visited
+ We can choose to rebalance periodically (eg. after every 20 insertions), or whenever the tree&#39;s imbalance exceeds a threshold</p>
+<pre><code class="lang-c"> Tree Rebalance(Tree <span class="hljs-built_in">t</span>) {
+         <span class="hljs-built_in">if</span> (countNodes(<span class="hljs-built_in">t</span>) &gt;= <span class="hljs-number">3</span>) {
+                 Tree newRoot = Partition(<span class="hljs-built_in">t</span>, <span class="hljs-built_in">n</span> / <span class="hljs-number">2</span>);  // Sets the node at <span class="hljs-built_in">index</span> <span class="hljs-built_in">n</span>/<span class="hljs-number">2</span> (the <span class="hljs-built_in">median</span> node) as the new root
+                 <span class="hljs-built_in">t</span> -&gt; <span class="hljs-built_in">left</span> = Rebalance(<span class="hljs-built_in">t</span> -&gt; <span class="hljs-built_in">left</span>);    // Rebalance both subtrees
+                 <span class="hljs-built_in">t</span> -&gt; <span class="hljs-built_in">right</span> = Rebalance(<span class="hljs-built_in">t</span> -&gt; <span class="hljs-built_in">right</span>);
+         }
+         return <span class="hljs-built_in">t</span>;
+ }
+</code></pre>
+</li>
+<li><p><strong>Partition:</strong>
+Sets the node at a <em>chosen index</em> to be the new root (using a sequence of tree rotations to lift the node at the chosen index up to the root). </p>
+</li>
+<li>Count the nodes in the left subtree, if it is equal to the target index, then the current node is the one we were after — just return t</li>
+<li><p>If the index is greater than the number of nodes in the left subtree, then we know that the target node is somewhere in the</p>
+<pre><code class="lang-c"> Tree Partition(Tree <span class="hljs-built_in">t</span>, <span class="hljs-built_in">int</span> newRootIndex) {
+         <span class="hljs-built_in">int</span> leftNumNodes = countNodes(<span class="hljs-built_in">t</span> -&gt; <span class="hljs-built_in">left</span>);
+         <span class="hljs-built_in">if</span> (leftNumNodes &gt; newRootIndex) {       // The rootIndex is somewhere in the <span class="hljs-built_in">left</span> subtree
+                 <span class="hljs-built_in">t</span> -&gt; <span class="hljs-built_in">left</span> = Partition(<span class="hljs-built_in">t</span> -&gt; <span class="hljs-built_in">left</span>, newRootIndex);        
+                 <span class="hljs-built_in">t</span> = rotateRight(<span class="hljs-built_in">t</span>);    // Rotate <span class="hljs-built_in">right</span>, to lift the new <span class="hljs-built_in">median</span> node up to root
+         }
+         else <span class="hljs-built_in">if</span> (leftNumNodes &lt; newRootIndex) {  // The rootIndex is somewhere in the <span class="hljs-built_in">right</span> subtree 
+                 <span class="hljs-built_in">t</span> -&gt; <span class="hljs-built_in">right</span> = Partition(<span class="hljs-built_in">t</span> -&gt; <span class="hljs-built_in">right</span>, newRootIndex - leftNumNodes - <span class="hljs-number">1</span>);
+                 <span class="hljs-built_in">t</span> = rotateLeft(<span class="hljs-built_in">t</span>);     // Rotate <span class="hljs-built_in">left</span>, to lift the new <span class="hljs-built_in">median</span> node up to root
+         }
+         return <span class="hljs-built_in">t</span>;
+ }
+</code></pre>
+</li>
+</ul>
+<hr>
+<h1 id="week-4-trees-ii-specialised-search-trees">Week 4: Trees II — Specialised Search Trees</h1>
+<ul>
+<li>The BST shape depends on the order of insertion. 
+The best case is that the values are inserted in preorder, so median value first, then the median of the left half, then the median of the right half, and so on
+The worst case is that the values are inserted in order or reverse order, forming a degenerate tree</li>
+<li>Randomised trees makes worst case performance unlikely</li>
+<li>Splay-trees, randomised trees and occasional rebalance trees have worst case of O(N), but ideally, we want <em>O(log(n)).</em>
+AVL trees fix imbalances as they arise, therefore maintaining a height of log(n). Repairs are done locally and not on the overall tree
+2-3-4 trees use varying-sized nodes to assist balance</li>
+</ul>
+<h3 id="-splay-trees-"><strong>Splay Trees:</strong></h3>
+<ul>
+<li>Like BST but new entries are always inserted at the root and searched entries are always brought up to the root (this is called &quot;splaying&quot;). This behaviour models caching, which means recently interacted with nodes are quicker to retrieve<ul>
+<li>The insert for splay trees modifies the standard <code>insertAtRoot()</code> function. Considers parent-child-grandchildren links and performs a sequence of rotations depending on the orientation of parent to child to grandchildren. This tends to improve tree balance more than the standard <code>insertAtRoot()</code> function</li>
+</ul>
+</li>
+<li>Amortised cost — allows very quick retrieval of recent nodes but at the cost of a slower insertion and search strategy, but splaying also tends to improve the balance of the tree
+Search operations are still O(n) since the tree is explicitly maintaining balance.</li>
+</ul>
+<p>Target node belongs somewhere in the grandchildren subtrees — zig-zig and zig-zag cases: </p>
+<ol>
+<li>Target node is in the left child&#39;s left child — zig-zig:      <code>rotateRight(t)</code> twice</li>
+<li>Target node is in the left child&#39;s right child — zig-zag:   <code>rotateLeft(t → left)</code> then <code>rotateRight(t)</code></li>
+<li>Target node is in the right child&#39;s left child — zig-zag:   <code>rotateRight(t → right)</code> then <code>rotateLeft(t)</code></li>
+<li>Target node is in the right child&#39;s right child — zig-zig: <code>rotateLeft(t)</code> twice</li>
+</ol>
+<p>If the target node belongs in the left </p>
+<pre><code class="lang-c">// Lifts a target node to the root <span class="hljs-built_in">by</span> a sequence of rotations depending on cases
+struct node *splay(struct node *root, int target) { 
+    <span class="hljs-keyword">if</span> (root == NULL |<span class="hljs-type">| root</span>-&gt;key == key) <span class="hljs-keyword">return</span> root;   // Terminating <span class="hljs-built_in">case</span>: either root is NULL root contains key
+
+        // Target is somewhere <span class="hljs-built_in">in</span> <span class="hljs-built_in">left</span> subtree  
+        <span class="hljs-keyword">if</span> (root -&gt; value &gt; target) {  
+        <span class="hljs-keyword">if</span> (root -&gt; <span class="hljs-built_in">left</span> == NULL) <span class="hljs-keyword">return</span> root;                     // Target must be <span class="hljs-built_in">in</span> the <span class="hljs-built_in">left</span> child, but there is no <span class="hljs-built_in">left</span> child, so the key must not exist
+
+                // Dealing <span class="hljs-built_in">with</span> zig-zig and zig-zag:
+        <span class="hljs-keyword">if</span> (root -&gt; <span class="hljs-built_in">left</span> -&gt; value &gt; target) {                      // Target must belong somewhere <span class="hljs-built_in">in</span> the <span class="hljs-built_in">left</span> child's <span class="hljs-built_in">left</span> child - Zig-Zig
+            root -&gt; <span class="hljs-built_in">left</span> -&gt; <span class="hljs-built_in">left</span> = splay(root -&gt; <span class="hljs-built_in">left</span> -&gt; <span class="hljs-built_in">left</span>, key);   // This call to splay recursively lifts the target node to become the root of the <span class="hljs-built_in">left</span>-<span class="hljs-built_in">left</span> node
+            root = rightRotate(root);                              // Do FIRST rotation on the parent node
+        } 
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (root -&gt; <span class="hljs-built_in">left</span> -&gt; value &lt; target) {                 // Target must be somewhere <span class="hljs-built_in">in</span> the <span class="hljs-built_in">left</span> child's <span class="hljs-built_in">right</span> child
+            root -&gt; <span class="hljs-built_in">left</span> -&gt; <span class="hljs-built_in">right</span> = splay(root -&gt; <span class="hljs-built_in">left</span> -&gt; <span class="hljs-built_in">right</span>, target);  // This call to splay recursively lifts the target node to become the root of the <span class="hljs-built_in">left</span>-<span class="hljs-built_in">left</span> node
+            <span class="hljs-keyword">if</span> (root -&gt; <span class="hljs-built_in">left</span> -&gt; <span class="hljs-built_in">right</span> != NULL)                     // <span class="hljs-keyword">If</span> the the <span class="hljs-built_in">left</span> child's <span class="hljs-built_in">right</span> child <span class="hljs-built_in">exists</span>, <span class="hljs-keyword">then</span> call rotateLeft on the <span class="hljs-built_in">left</span> child
+                root -&gt; <span class="hljs-built_in">left</span> = leftRotate(root -&gt; <span class="hljs-built_in">left</span>); 
+        } 
+        <span class="hljs-keyword">return</span> (root -&gt; <span class="hljs-built_in">left</span> == NULL) ? root: rightRotate(root);   // Do SECOND rotation, only <span class="hljs-keyword">if</span> the <span class="hljs-built_in">right</span> subtree <span class="hljs-built_in">exists</span>
+    } 
+
+        // Target is somewhere <span class="hljs-built_in">in</span> the <span class="hljs-built_in">right</span> subtree
+    <span class="hljs-keyword">else</span> {  
+        <span class="hljs-keyword">if</span> (root -&gt; <span class="hljs-built_in">right</span> == NULL) <span class="hljs-keyword">return</span> root;                    // <span class="hljs-keyword">Right</span> subtree doesn't exist so the target doesn't either
+                // Dealing <span class="hljs-built_in">with</span> zig-zig and zig-zag:
+        <span class="hljs-keyword">if</span> (root -&gt; <span class="hljs-built_in">right</span> -&gt; value &gt; target) { 
+            root -&gt; <span class="hljs-built_in">right</span> -&gt; <span class="hljs-built_in">left</span> = splay(root -&gt; <span class="hljs-built_in">right</span> -&gt; <span class="hljs-built_in">left</span>, target);     // Lifts the target to the root of the <span class="hljs-built_in">right</span> child's <span class="hljs-built_in">left</span> subtree 
+            <span class="hljs-keyword">if</span> (root -&gt; <span class="hljs-built_in">right</span> -&gt; <span class="hljs-built_in">left</span> != NULL) 
+                root -&gt; <span class="hljs-built_in">right</span> = rightRotate(root -&gt; <span class="hljs-built_in">right</span>); 
+        } 
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (root -&gt; <span class="hljs-built_in">right</span> -&gt; value &lt; target) { 
+            root -&gt; <span class="hljs-built_in">right</span> -&gt; <span class="hljs-built_in">right</span> = splay(root -&gt; <span class="hljs-built_in">right</span> -&gt; <span class="hljs-built_in">right</span>, target);   // Bring the key <span class="hljs-built_in">as</span> root of <span class="hljs-built_in">right</span>-<span class="hljs-built_in">right</span> and <span class="hljs-built_in">do</span> <span class="hljs-built_in">first</span> rotation 
+            root = leftRotate(root); 
+        } 
+        <span class="hljs-keyword">return</span> (root-&gt;<span class="hljs-built_in">right</span> == NULL)? root: leftRotate(root);      // Do second rotation <span class="hljs-keyword">for</span> root
+    } 
+}
+</code></pre>
+<p>Time-complexity: O(n) — but a better average case usually</p>
+<h3 id="avl-trees-">AVL-Trees:</h3>
+<ul>
+<li>AVL trees fix imbalances as soon as they occur by checking the height of left and right subtrees in its insertion function <code>AVLInsert()</code>. An imbalance is when <code>abs(leftSubtreeHeight - rightSubtreeHeight) &gt; 1</code></li>
+<li>The maximum height difference between <em>any node&#39;s subtrees</em> is 2, since the precondition is that we are given an AVL height balanced tree</li>
+<li>Getting the height of a tree may be expensive, so AVL trees tend to have poorer performance for insertion operations as a tradeoff for a <em>O(logn)</em> search function. 
+It may help to augment the struct declaration with more fields that keeps track of height differences, for example.</li>
+</ul>
+<pre><code class="lang-c">Tree AVLInsert(Tree t, int val) {        <span class="hljs-comment">// Expects the input tree to not have any existing imbalances</span>
+        <span class="hljs-keyword">if</span> (t == NULL) return newTree(val);  <span class="hljs-comment">// This is where insertion occurs</span>
+        <span class="hljs-function"><span class="hljs-title">if</span> (t -&gt;</span> value == val) return t;     <span class="hljs-comment">// Attempting insert a value that already exists in the tree</span>
+
+        <span class="hljs-function"><span class="hljs-title">if</span> (t -&gt;</span> value &gt; val) {
+                <span class="hljs-function"><span class="hljs-title">t</span> -&gt;</span> <span class="hljs-function"><span class="hljs-title">left</span> = AVLInsert(t -&gt;</span> left, val);                
+        }
+        <span class="hljs-function"><span class="hljs-title">else</span> <span class="hljs-keyword">if</span> (t -&gt;</span> value &lt; val) {
+                <span class="hljs-function"><span class="hljs-title">t</span> -&gt;</span> <span class="hljs-function"><span class="hljs-title">right</span> = AVLInsert(t -&gt;</span> right, val);
+        }
+        <span class="hljs-comment">// After insertion, get the heights and check if a new imbalance needs to be fixed</span>
+        <span class="hljs-function"><span class="hljs-title">int</span> leftHeight = getHeight(t -&gt;</span> left);
+        <span class="hljs-function"><span class="hljs-title">int</span> rightHeight = getHeight(t -&gt;</span> right);
+        <span class="hljs-keyword">if</span> (leftHeight - rightHeight &gt; <span class="hljs-number">1</span>) {  <span class="hljs-comment">// This means the left subtree is exactly 2 nodes deep (imbalances can only ever be a 2 node difference because we have a balanced tree to begin with)</span>
+                <span class="hljs-function"><span class="hljs-title">if</span> (val &gt; (t -&gt;</span> <span class="hljs-function"><span class="hljs-title">left</span> -&gt;</span> <span class="hljs-keyword">data</span>)) {
+                        <span class="hljs-function"><span class="hljs-title">t</span> -&gt;</span> <span class="hljs-function"><span class="hljs-title">left</span> = rotateLeft(t -&gt;</span> left);
+                        t = rotateRight(t);
+                } <span class="hljs-keyword">else</span> {
+                        t = rotateRight(t);
+                }
+        }
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (rightHeight - leftheight &gt; <span class="hljs-number">1</span>) {  <span class="hljs-comment">// Right subtree has 2 nodes more than the left</span>
+                <span class="hljs-function"><span class="hljs-title">if</span> (val &lt; (t -&gt;</span> <span class="hljs-function"><span class="hljs-title">right</span> -&gt;</span> <span class="hljs-keyword">data</span>)) {
+                        <span class="hljs-function"><span class="hljs-title">t</span> -&gt;</span> <span class="hljs-function"><span class="hljs-title">right</span> = rotateRight(t -&gt;</span> right);
+                        t = rotateLeft(t);
+                } <span class="hljs-keyword">else</span> {
+                        t = rotateLeft(t);
+                }
+        }
+        return t;        
+}
+</code></pre>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/f/fd/AVL_Tree_Example.gif" alt="https://upload.wikimedia.org/wikipedia/commons/f/fd/AVL_Tree_Example.gif"></p>
+<h3 id="2-3-4-trees-">2-3-4 Trees:</h3>
+<p>2-3-4 trees have special nodes:</p>
+<ul>
+<li>1-value node: can have 2 subtrees</li>
+<li>2-value node: can have 3 subtrees</li>
+<li>3-value node: can have 4 subtrees</li>
+</ul>
+<p>In 2-3-4 trees, <em>all leaves are equidistant from the root,</em> meaning all leaves are on the same bottom level. The insertion function for 2-3-4 trees will always maintain height balance</p>
+<p><img src="Images/notes/ref_image_10.png" alt="Images/notes/ref_image_10.png"></p>
+<p><em>2-3-4 Search:</em></p>
+<pre><code class="lang-c"><span class="hljs-function">Tree <span class="hljs-title">Search234</span><span class="hljs-params">(Tree t, <span class="hljs-keyword">int</span> item)</span> </span>{
+        <span class="hljs-keyword">if</span> (t == <span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span> t;
+        <span class="hljs-keyword">int</span> slotIndex = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">while</span> (slotIndex &lt; (t -&gt; type- <span class="hljs-number">1</span>) &amp;&amp; item &gt; t -&gt; nodeValues[slotIndex) {
+                <span class="hljs-comment">// Keep iterating until either we've reached the end of the current node's values or if we've bumped into a value greater than the one we want</span>
+                slotIndex++;  
+        }
+        <span class="hljs-keyword">if</span> (item == t -&gt; nodeValues[slotIndex]) {
+                <span class="hljs-keyword">return</span> t;  <span class="hljs-comment">// Item was found in the current node</span>
+        } <span class="hljs-keyword">else</span> {
+                <span class="hljs-keyword">return</span> Search234(t -&gt; children[slotIndex], item)  <span class="hljs-comment">// Item was not found in the current node and so must be somewhere in the child at slotIndex</span>
+        }
+}
+</code></pre>
+<p><em>Time-complexity</em>:</p>
+<ul>
+<li>Worst case: all nodes are 2-nodes, so O(log2(n)). Remember, 2-3-4 trees are always height balanced</li>
+<li>Best case: all nodes are 4-nodes, so O(log4(n))</li>
+</ul>
+<p><em>Possible struct declaration</em></p>
+<pre><code class="lang-c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">treeNode</span></span> {
+        <span class="hljs-keyword">int</span> <span class="hljs-class"><span class="hljs-keyword">type</span>;</span>                      <span class="hljs-comment">// Can take the values: 2, 3 or 4</span>
+        <span class="hljs-keyword">int</span> nodeValues[<span class="hljs-number">3</span>];             <span class="hljs-comment">// Items held in the node (a 4 node holds a maximum of 3 values)</span>
+        <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">treeNode</span></span> *children[<span class="hljs-number">4</span>];  <span class="hljs-comment">// Array of pointers to children treeNodes</span>
+};
+</code></pre>
+<p><strong><em>234Insert</em></strong></p>
+<ol>
+<li>Find where to insert using Search()</li>
+<li>If not full, insert into the node&#39;s <code>nodeValues[ ]</code> and promote its type, <code>type++</code></li>
+<li>If full: <ul>
+<li>Push the middle node <code>nodeValues[1]</code> into the parent&#39;s <code>nodeValues</code> array, then split into two 2-nodes, storing nodeValues[0] and nodeValues[1] and inserting the new entry into the correct 2-node<ul>
+<li>If the parent is also full, then the parent must be split as well by the same process</li>
+<li>If the root node is full, then it must be split by the same process but create a new 2-node as the new root</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p><em>2-3-4 Insertion 
+Just watch the visualisation (implementation out of the scope of this course): <a href="https://people.ok.ubc.ca/ylucet/DS/BTree.html">https://people.ok.ubc.ca/ylucet/DS/BTree.html</a>):</em></p>
+<pre><code class="lang-c">Tree Insert234(Tree t, int item) {
+        <span class="hljs-keyword">if</span> (t == NULL) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span><span class="hljs-type">Tree</span>(item);
+        Tree insertionNode = Search234(t, item);
+        Tree parentNode = parent of insertionNode;  <span class="hljs-comment">// Parent of insertionNode</span>
+
+        <span class="hljs-keyword">if</span> (insertionNode -&gt; type &lt; <span class="hljs-number">4</span>) {  <span class="hljs-comment">// Node is not full</span>
+                insertionNode -&gt; type++;      <span class="hljs-comment">// Insert into ordered array</span>
+        }
+        <span class="hljs-keyword">else</span> {  <span class="hljs-comment">// Node is full</span>
+                int promoteVal = insertionNode -&gt; nodeValues[<span class="hljs-number">1</span>];
+                Tree <span class="hljs-keyword">new</span><span class="hljs-type">Leaf1</span> = <span class="hljs-keyword">new</span><span class="hljs-type">Tree</span>(insertionNode -&gt; nodeValues[<span class="hljs-number">0</span>]);
+                Tree <span class="hljs-keyword">new</span><span class="hljs-type">Leaf2</span> = <span class="hljs-keyword">new</span><span class="hljs-type">Tree</span>(insertionNode -&gt; nodeValues[<span class="hljs-number">2</span>]);
+                <span class="hljs-keyword">if</span> (item &lt; <span class="hljs-keyword">new</span><span class="hljs-type">Leaf1</span>) {        <span class="hljs-comment">// Insert in the left leaf fragment</span>
+                        Insert234(<span class="hljs-keyword">new</span><span class="hljs-type">Leaf1</span>, item);
+                }
+                <span class="hljs-keyword">else</span> {  <span class="hljs-comment">// Otherwise insert in the right leaf fragment</span>
+                        Insert234(<span class="hljs-keyword">new</span><span class="hljs-type">Leaf2</span>, item); 
+                }
+                <span class="hljs-keyword">if</span> (parentNode == t) {        <span class="hljs-comment">// If the parent is the root, then split the root by the same process and </span>
+
+                }
+                Insert234(parentNode, promoteVal);
+                <span class="hljs-keyword">while</span>(parentNode -&gt; order == <span class="hljs-number">4</span>) {
+                        <span class="hljs-keyword">continue</span> promoting nodes up
+                }
+                <span class="hljs-keyword">if</span> (parentNode == root of tree &amp;&amp; parent -&gt; order == <span class="hljs-number">4</span>) {
+                        split root, malloc a <span class="hljs-keyword">new</span> <span class="hljs-type">node</span> and <span class="hljs-keyword">set</span> that as the <span class="hljs-keyword">new</span> <span class="hljs-type">root</span> of the entire tree
+                }
+        }
+}
+</code></pre>
+<h1 id="week-5-graphs-i">Week 5: Graphs I</h1>
+<h3 id="graph-data-structures">Graph Data Structures</h3>
+<p>A graph is a set of Vertices <em>V</em> and a set of edges <em>E</em> (a subset of the Cartesian product <em>V × V</em>)</p>
+<p><strong>Graph Theory basics:</strong></p>
+<ul>
+<li>A graph with <em>V</em> vertices has at most <em>V(V-1)/2</em> edges</li>
+<li>A graph is <em>dense</em> if |E| is closer to V²
+A graph is <em>sparse</em> if |E| is closer to V</li>
+<li>Connected vertices are called <em>adjacent</em>. The edge between them is <em>incident</em> on them</li>
+<li><strong>Degree:</strong> number of edges <em>incident</em> on a vertex</li>
+<li><strong>Walk:</strong> a sequence of vertices to travel from one vertex to another</li>
+<li><strong>Path:</strong> a <em>walk</em> with no repeated vertices (hence no repeated edges)<ul>
+<li><strong>Euler path:</strong> a <em>path</em> that includes <em>all edges exactly once</em>, possibly revisiting used vertices</li>
+<li><strong>Hamiltonian path:</strong> a <em>path</em> that includes <em>all vertices exactly once</em>, possibly revisiting used edges</li>
+</ul>
+</li>
+<li><strong>Circuit:</strong> a <em>path</em> that ends on the same vertex<ul>
+<li><strong>Euler circuit:</strong> a <em>circuit</em> including <em>all edges exactly once</em>, possibly revisiting used vertices</li>
+<li><strong>Hamiltonian circuit:</strong> a <em>circuit</em> including <em>all vertices exactly once</em>, possibly revisiting used edges</li>
+</ul>
+</li>
+</ul>
+<p><strong>Graph Types:</strong></p>
+<ul>
+<li><strong>Connected graph:</strong> there exists a <em>path between any two vertices</em></li>
+<li><strong>Complete graph:</strong> **there is an edge from every vertex to every other vertex (|E| = V(V-1)/2, which is the maximal amount of edges a graph can have)</li>
+<li><strong>Tree:</strong> <em>connected subgraph</em> of the graph containing no possible <em>circuits</em><ul>
+<li><strong>Spanning tree:</strong> a <em>tree</em> containing every vertex in the original graph<ul>
+<li><strong>Minimum spanning tree:</strong> a <em>spanning tree</em> where the sum of all weights is minimised.</li>
+<li><strong>Shortest path spanning tree:</strong> a spanning tree where the weighted paths from a source vertex to every other vertex is minimised</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Clique:</strong> a <em>complete graph</em> which is a <em>subgraph</em> of the original graph</li>
+<li><strong>Undirected graph:</strong> any graph with only bidirectional relations</li>
+<li><strong>Directed graph:</strong> any graph with unidirectional relations</li>
+<li><strong>Weighted graph:</strong> any graph where edges have an associated value (weight)</li>
+<li><strong>Multi-graph:</strong> any graph that contains parallel edges between vertices</li>
+</ul>
+<p><em>Possible struct declaration:</em></p>
+<pre><code class="lang-c">struct graphRep {
+       <span class="hljs-built_in"> int </span>numNodes;
+       <span class="hljs-built_in"> int </span>numEdges;     
+       <span class="hljs-built_in"> int </span>**edgeMatrix;  // Using an adjacency matrix to store all connections. We could alternatively use an<span class="hljs-built_in"> array </span>of edges<span class="hljs-built_in"> or </span>an adjacency list
+};
+</code></pre>
+<p><strong>Graph Data Structures:</strong>
+A graph is representable as an: <em>array of edges</em>, <em>adjacency matrix</em> and <em>adjacency list</em>. These representations each provide sufficient information to reconstruct the same graph diagrammatically. The choice of which underlying data structure to use for a graph ADT depends on which operations we want to optimise the most.</p>
+<p><strong>Array of edges:</strong>
+<code>{(v1, w1), ..., (vn, wn)}</code> — array of 2-tuples. Could also use 3-tuples to store the weight of the edge.
+Vertex tuples are <em>ordered</em> for directed graphs, to encode direction. In undirected graphs, <code>(1, 2)</code> is equivalent to <code>(2, 1)</code></p>
+<p><em>Time-complexities of functions:</em></p>
+<ul>
+<li>Initialisating a new graph: O(1)</li>
+<li>Insertion: O(E) — loop through until the end to check the edge doesn&#39;t already exist</li>
+<li>Deletion: O(E) — loop through, delete target, then shift all elements thereafter down by 1 index</li>
+</ul>
+<p>Note: if we maintain an ordered array of edges, then the time complexity of insertion and deletion can be reduced to O(log(E)) with a binary search algorithm</p>
+<p><em>Space-complexity:</em> O(E)</p>
+<p><strong>Adjacency matrix:</strong>
+<em><code>V × V</code></em> matrix — where each coordinate in the matrix correspondeds to an edge&#39;s existence (and its weight, conveniently).
+Undirected graphs have a symmetric matrix while directed graphs usually have a non-symmetric matrix</p>
+<p><em>Time-complexities of functions:</em></p>
+<ul>
+<li>Initialisating a new graph: O(V²) — for setting all coordinates to 0</li>
+<li>Insertion: O(1) — assign a new value to a coordinate</li>
+<li>Deletion: O(1) — reset a coordinate to 0</li>
+</ul>
+<p><em>Space-complexity:</em> O(V²)</p>
+<p><strong>Adjacency list:</strong>
+Array of linked list heads — for each vertex, store a linked list of its neighbour vertices.</p>
+<p><em>Time-complexities of functions:</em></p>
+<ul>
+<li>Initialisating a new graph: O(V) — Initialise all linked list heads to <code>NULL</code></li>
+<li>Insertion: O(1) — access index and insert the vertex value into the linked list</li>
+<li>Deletion: O(E) — search for the target value in the list</li>
+</ul>
+<p><em>Space-complexity:</em> O(V+E) — O(V) for the array size, O(E) for the size of the all the linked lists attached to each array index</p>
+<h3 id="graph-algorithms-">Graph <strong>Algorithms:</strong></h3>
+<h3 id="graph-traversal-">Graph Traversal:</h3>
+<p>Two traversal methods are depth-first search and breadth-first search. Both use a <code>bool visited[]</code> array to prevent the algorithm from returning to an already visited node</p>
+<p><strong>Depth-First Search:</strong> 
+Follows one single path to completion and then considers other paths one step back and so on.
+Can be implemented recursively or iteratively (using a stack structure)</p>
+<p><em>A skeleton for a recursive DFS algorithm:</em></p>
+<pre><code class="lang-c">// Expects all elements of the visited<span class="hljs-built_in"> array </span>to be intialised to false
+void DepthFirstSearch(Graph g,<span class="hljs-built_in"> int </span>start, bool visited[]) {
+        visited[start] = true;
+        for (int i = 0; i &lt; g -&gt; numVertices; i++) {
+               <span class="hljs-built_in"> if </span>(isAdjacent(start, i) &amp;&amp; visited[i] == false) {
+                        depthFirstSearch(g, i, visited);
+                }
+        }
+}
+// Could modify this function to do things like: 
+// - print all elements
+// -<span class="hljs-built_in"> return </span>a bool<span class="hljs-built_in"> if </span>a path exists from src to dest, etc.
+// - pass a<span class="hljs-built_in"> int </span>pred[]<span class="hljs-built_in"> array </span>to track predecessor nodes (which lets us then trace<span class="hljs-built_in"> and </span>print paths from src to dest)
+</code></pre>
+<p>Time-complexity: O(V+E) — each vertex is accessed, and possibly every edge</p>
+<p><em>Iterative DFS using a stack ADT:</em></p>
+<pre><code class="lang-c">void <span class="hljs-type">DepthFirstSearch</span>(<span class="hljs-type">Graph</span> g, <span class="hljs-built_in">int</span> src) {
+        <span class="hljs-built_in">bool</span> visited[g -&gt; numVertices];
+        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; g -&gt; numVertices; i++) visited[i] = <span class="hljs-literal">false</span>;
+        <span class="hljs-type">Stack</span> s = newStack<span class="hljs-literal">()</span>;
+        <span class="hljs-type">StackPush</span>(s, src);
+        <span class="hljs-keyword">while</span> (<span class="hljs-type">StackSize</span>(s) &gt; <span class="hljs-number">0</span>) {
+                <span class="hljs-built_in">int</span> curr = <span class="hljs-type">StackPop</span>(s);
+                visited[curr] = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; g -&gt; numVertices; i++) {
+                        <span class="hljs-keyword">if</span> (isAdjacent(g, curr, i) &amp;&amp; visited[i] == <span class="hljs-literal">false</span>) {
+                                <span class="hljs-type">StackPush</span>(s, i);
+                        }
+                }
+        }
+        <span class="hljs-type">StackFree</span>(s);
+}
+</code></pre>
+<p><strong>Breadth-First Search:</strong>
+Spreads outwards, like a level-order traversal, only considering adjacent vertices. </p>
+<p><em>A skeleton for iterative BFS: (basically iterative DFS but with a queue ADT)</em></p>
+<pre><code class="lang-c">void BreadthFirstSearch(Graph g, <span class="hljs-keyword">int</span> src, <span class="hljs-keyword">bool</span> visited[]) {
+        <span class="hljs-keyword">bool</span> visited[g -&gt; numVertices];
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; g -&gt; numVertices; i++) visited[i] = <span class="hljs-literal">false</span>;
+        Queue q = QueueNew();
+        QueueEnqueue(q, src);
+        <span class="hljs-keyword">while</span> (QueueSize(q) &gt; <span class="hljs-number">0</span>) {
+                <span class="hljs-keyword">int</span> curr = QueueDequeue(q);
+                visited[curr] = <span class="hljs-literal">true</span>;
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; g -&gt; numVertices; i++) {
+                        <span class="hljs-keyword">if</span> (isAdjacent(g, curr, i) &amp;&amp; visited[i] == <span class="hljs-literal">false</span>) {
+                                QueueEnqueue(q, i);
+                        }
+                }
+        }
+        QueueFree(q);
+}
+<span class="hljs-comment">// Could use this function for:</span>
+<span class="hljs-comment">// - tracing paths (using an int pred[] array)</span>
+<span class="hljs-comment">// - finding the shortest path (fewest edges) from a source to a destination</span>
+</code></pre>
+<p>Time-complexity: O(V+E) — each vertex is visited, and possibly every edge</p>
+<hr>
+<h3 id="graph-properties-">Graph Properties:</h3>
+<p><strong>Finding all connected subgraphs:</strong>
+<code>numConnected()</code> returns the number of connected subgraphs the given graph has</p>
+<pre><code class="lang-c"><span class="hljs-keyword">int</span> numConnected(Graph g) {
+    <span class="hljs-keyword">int</span> subgraphID[GraphNumVertices(g)];
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; GraphNumVertices(g); i++) subgraphID[i] = <span class="hljs-number">-1</span>;
+    <span class="hljs-keyword">int</span> numConnected = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; GraphNumVertices(g); i++) {
+        <span class="hljs-keyword">if</span> (subgraphID[i] == <span class="hljs-number">-1</span>) {  <span class="hljs-comment">// The current vertex hasn't been marked as belonging to a connected subgraph</span>
+            dfsSetConnected(g, i, numConnected, subgraphID);
+            numConnected++;
+        }
+    }
+    <span class="hljs-keyword">return</span> numConnected;
+}
+
+<span class="hljs-comment">// Goes through every reachable vertex and marks them with an ID</span>
+<span class="hljs-keyword">void</span> dfsSetConnected(Graph g, <span class="hljs-keyword">int</span> start, <span class="hljs-keyword">int</span> <span class="hljs-keyword">id</span>, <span class="hljs-keyword">int</span> subgraphID[]) {
+    subgraphID[start] = <span class="hljs-keyword">id</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; GraphNumVertices(g); i++) {
+        <span class="hljs-keyword">if</span> (GraphIsAdjacent(g, start, i) &amp;&amp; subgraphID[i] == <span class="hljs-number">-1</span>) {
+            dfsSetConnected(g, i, <span class="hljs-keyword">id</span>, subgraphID);
+        }
+    }
+}
+</code></pre>
+<p><strong>Determining reachability:</strong>
+Checks if a <code>dest</code> vertex is reachable from a <code>src</code> vertex:</p>
+<pre><code class="lang-c"><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">reachableDFS</span><span class="hljs-params">(Graph g, <span class="hljs-keyword">int</span> src, <span class="hljs-keyword">int</span> dest, <span class="hljs-keyword">bool</span> visited[])</span> </span>{
+    <span class="hljs-keyword">if</span> (src == dest) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;  <span class="hljs-comment">// Reached destination from some DFS path from src</span>
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; GraphNumVertices(g); i++) {
+        <span class="hljs-keyword">if</span> (GraphIsAdjacent(g, src, i) &amp;&amp; visited[i] == <span class="hljs-literal">false</span>) {
+            visited[i] = <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">if</span> (reachableDFS(g, i, dest, visited)) {
+                <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+            }
+        }
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+}
+</code></pre>
+<p><strong>Eulerian Paths:</strong>
+A path containing every edge exactly once. Allowed to visit vertices more than once</p>
+<p>Could implement a brute force algorithm, but we know some important theorems:
+<em>Theorem</em>. A graph has an <em>Euler circuit</em> iff it is connected with all vertices of even degree
+<em>Theorem.</em> A graph has an <em>Euler path</em> iff it is connected and exactly two vertices are of odd degree</p>
+<pre><code class="lang-c"><span class="hljs-comment">// Assumes src != dest</span>
+<span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">hasEulerianPath</span><span class="hljs-params">(Graph g, <span class="hljs-keyword">int</span> src, <span class="hljs-keyword">int</span> dest)</span> </span>{
+    <span class="hljs-keyword">if</span> (numConnectedSubgraphs(g) &gt; <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;  <span class="hljs-comment">// Graph must be connected for an Euler path to exist</span>
+    <span class="hljs-keyword">if</span> (degree(g, src) % <span class="hljs-number">2</span> == <span class="hljs-number">1</span> &amp;&amp; degree(g, dest) % <span class="hljs-number">2</span> == <span class="hljs-number">1</span>) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; GraphNumVertices(g); i++) {
+            <span class="hljs-keyword">if</span> (i != src &amp;&amp; i != dest) {
+                <span class="hljs-keyword">if</span> (degree(g, i) % <span class="hljs-number">2</span> == <span class="hljs-number">1</span>) {
+                    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;  <span class="hljs-comment">// Return false since there exists some vertex with odd degree which is not the start or dest vertex </span>
+                }
+            }
+        }
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;   
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+}
+</code></pre>
+<p><em>Time-complexity:</em> O(V) — to check if all other vertices are of odd degree. This becomes O(V²) if getting the degree of a vertex requires looping</p>
+<p><strong>Hamiltonian Paths (brute force generate-and-test):</strong>
+Requires brute force algorithm (no simpler algorithm known):  </p>
+<ol>
+<li>Generate all simple paths from v to w (using dfs for example), </li>
+<li>Keep a counter of number of vertices visited for the current path,</li>
+<li>Successful path has been found if this counter is equal to the total number of vertices. Otherwise unsuccessful if all simple paths have been exhausted</li>
+</ol>
+<pre><code class="lang-c"><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">hasHamiltonianPath</span><span class="hljs-params">(Graph g, <span class="hljs-keyword">int</span> src, <span class="hljs-keyword">int</span> dest)</span> </span>{
+    <span class="hljs-keyword">bool</span> visited[GraphNumVertices(g)];
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; GraphNumVertices(g); i++) visited[i] = <span class="hljs-literal">false</span>;
+    <span class="hljs-keyword">return</span> hamiltonR(g, src, dest, GraphNumVertices(g) - <span class="hljs-number">1</span>, visited);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">hamiltonR</span><span class="hljs-params">(Graph g, <span class="hljs-keyword">int</span> src, <span class="hljs-keyword">int</span> dest, <span class="hljs-keyword">int</span> dist, <span class="hljs-keyword">bool</span> visited[])</span> </span>{
+    <span class="hljs-keyword">if</span> (src == dest) {
+        <span class="hljs-keyword">if</span> (dist == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    }    
+    <span class="hljs-keyword">else</span> {
+        visited[src] = <span class="hljs-literal">true</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; GraphNumVertices(g); i++) {
+            <span class="hljs-keyword">if</span> (GraphIsAdjacent(g, src, i) &amp;&amp; visited[i] == <span class="hljs-literal">false</span>) {
+                <span class="hljs-keyword">if</span> (hamiltonR(g, i, dest, dist - <span class="hljs-number">1</span>, visited)) {
+                    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+                }
+            }
+        }
+    }
+    visited[src] = <span class="hljs-literal">false</span>;  <span class="hljs-comment">// Set this vertex back to false, so we don't avoid using it in the generation of other possible paths</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;   
+}
+</code></pre>
+<p><em>Time-complexity:</em> O((V-1)!) — since there could be (V-1)! paths to examine</p>
+<h1 id="week-6-graphs-ii">Week 6: Graphs II</h1>
+<h3 id="more-on-graph-representation-">More on Graph Representation:</h3>
+<h3 id="directed-graphs-">Directed Graphs:</h3>
+<p>Directed graphs can be represented with the same basic data structures, like an:</p>
+<ul>
+<li>Adjacency matrix — which is not necessarily symmetrical</li>
+<li>Adjacency list</li>
+<li>Array of edges — where the order of the two vertices encode direction</li>
+</ul>
+<p><strong>Transitive Closure Matrix and Reachability:</strong>
+The transitive closure matrix records reachability and directed paths between vertices. With a matrix that records reachability, we can quickly access indexes and if <code>tcm[start][dest] == 1</code>, then we know that <code>dest</code> is reachable from <code>start</code>. </p>
+<pre><code class="lang-c"><span class="hljs-keyword">int</span> **transitiveClosureMatrix(Graph g) {
+        <span class="hljs-comment">// Setting up the matrix (needs to copy the graph's adjacency matrix)</span>
+        <span class="hljs-keyword">int</span> **tcm = malloc(<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">int</span>) * g -&gt; numNodes);
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; g -&gt; numNodes; i++) {
+                tcm[i] = malloc(<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">int</span>) * g -&gt; numNodes);
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; g -&gt; numNodes; j++) {
+                        tcm[i][j] = g -&gt; edges[i][j];  <span class="hljs-comment">// Copies the elements of the graph's adjacency matrix</span>
+                }
+        }
+        <span class="hljs-comment">// Warshall's algorithm:</span>
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; g -&gt; numNodes; i++) {
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j &lt; g -&gt; numNodes; j++) {
+                        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> k = <span class="hljs-number">0</span>; k &lt; g -&gt; numNodes; k++) {
+                                <span class="hljs-keyword">if</span> (tcm[j][i] &amp;&amp; tcm[i][k]) {  <span class="hljs-comment">// if j -&gt; i exists and i -&gt; k exists, then j -&gt; k must exist</span>
+                                        tcm[j][k] = <span class="hljs-number">1</span>;  
+                                }
+                        }
+                }
+        }
+        <span class="hljs-keyword">return</span> tcm;
+}  <span class="hljs-comment">// Very expensive to construct and store</span>
+</code></pre>
+<p>Time-complexity: O(V³)
+Space-complexity: O(V²)</p>
+<h3 id="weighted-graphs-">Weighted Graphs:</h3>
+<p><strong>Weighted graph representation:</strong>
+Weighted graphs can be represented with the same basic data structures, like an:</p>
+<ul>
+<li>Adjacency matrix — where instead of on/off, we just have the weight value for connected vertices</li>
+<li>Adjacency list — where we add an extra field to the list nodes</li>
+<li>Array of edges — with 3-tuples for holding both vertices and the weight between them</li>
+</ul>
+<p><em>Possible struct declaration for a weighted edge:</em></p>
+<pre><code class="lang-c">typedef struct Edge {
+        Vertex v<span class="hljs-comment">;</span>
+        Vertex w<span class="hljs-comment">;</span>
+        int weight<span class="hljs-comment">;</span>
+} Edge<span class="hljs-comment">;</span>
+</code></pre>
+<p><em>Representation with an adjacency matrix:</em></p>
+<pre><code class="lang-c">typedef <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">GraphRep</span></span> {
+        <span class="hljs-keyword">int</span> **edges;  <span class="hljs-comment">// Adjacency matrix storing intger weights</span>
+        <span class="hljs-keyword">int</span> nV;
+        <span class="hljs-keyword">int</span> nE;
+} GraphRep;
+
+void insertEdge(GraphRep G, Edge e) {
+        <span class="hljs-keyword">if</span> (g -&gt; edges[e.v][e.w] == <span class="hljs-number">0</span>) {  <span class="hljs-comment">// Then there is no edge recorded between v and w</span>
+                g -&gt; edges[e.v][e.w] = e.weight;
+                g -&gt; edges[e.w][e.v] = e.weight;
+                g -&gt; nE++;
+        }        
+}
+</code></pre>
+<h3 id="graph-spanning-tree-algorithms-">Graph Spanning Tree Algorithms:</h3>
+<p><strong>Kruskal&#39;s Algorithm:</strong>
+We could find minimum spanning trees via a brute-force generate-and-test algorithm which examines every spanning tree and returns the one with the best cost. Or we can apply <em>Kruskal&#39;s algorithm</em>:
+Start with all vertices and no edges → sort all edges in ascending order → add edges from smallest weight upwards, skipping edges that introduce a cycle and stopping if we achieve a conencted graph</p>
+<pre><code class="lang-c"><span class="hljs-keyword">Graph</span> kruskal(<span class="hljs-keyword">Graph</span> g) {
+        <span class="hljs-keyword">Graph</span> MST = newGraph();
+        // <span class="hljs-number">1.</span> Get an ascending list of the cheapest weights
+        Edge edges[g -&gt; numNodes];
+        copyEdges(edges, g);  // Copy the edges over
+        sortAscending(edges);        
+        // <span class="hljs-number">2.</span> <span class="hljs-keyword">Add</span> them one <span class="hljs-built_in">by</span> one, each <span class="hljs-built_in">time</span> checking <span class="hljs-keyword">if</span> we've introduced a <span class="hljs-built_in">cycle</span> or <span class="hljs-keyword">if</span> we're done
+        <span class="hljs-keyword">for</span> (int i = <span class="hljs-number">0</span>; i &lt; g -&gt; numNodes; i++) {
+                insertEdge(MST, edges[i]);
+                <span class="hljs-keyword">if</span> (hasCycle(MST)) {
+                        removeEdge(MST, edges[i]);
+                }
+                <span class="hljs-keyword">if</span> (MST -&gt; numNodes == g -&gt; numNodes) {
+                        break;  
+                }
+        }
+        <span class="hljs-keyword">return</span> MST;
+}
+</code></pre>
+<p>Time-complexity: hard to estimate — the edge sorting could be O(E²) or O(ElogE) and the cycle checking could be O(V+E) if we use a DFS cycle checking algorithm</p>
+<p><strong>Prim&#39;s algorithm:</strong></p>
+<ol>
+<li>Start from any vertex <code>src</code> and with an empty MST</li>
+<li>Consider all neighbours of all vertices in the <em>current MST</em> which won&#39;t introduce cycles. Pick the cheapest edge of the considered edges. Repeat until all vertices have been added</li>
+</ol>
+<p>Note: a priority queue helps this algorithm select the best edge. For a priority queues, the first element that is dequeued is the one that has the highest <em>priority</em> value, so in this case, the lowest weight corresponds to the highest priority</p>
+<p><strong>Dijkstra&#39;s Algorithm:</strong> 
+Uses a <code>dist[]</code> array to keep track of shortest distances recorded and uses a <code>pred[]</code> array so we can trace the actual shortest path</p>
+<p><em>Edge relaxation:</em> a function that updates the shortest distance to a certain dest node. 
+Pretty much just: <code>if (dist[v] + weight &lt; dist[w]) { dist[w] = dist[v] + weight; pred[w] = v; }</code></p>
+<pre><code class="lang-python">dist[]
+pred[]
+
+def dijkstra(G, <span class="hljs-keyword">start</span>):
+        <span class="hljs-keyword">set</span> all dist <span class="hljs-keyword">to</span> ∞, <span class="hljs-keyword">set</span> dist[<span class="hljs-keyword">start</span>] = <span class="hljs-number">0</span> 
+        <span class="hljs-keyword">set</span> all pred <span class="hljs-keyword">to</span> <span class="hljs-number">-1</span>
+        vertexSet = all vertices <span class="hljs-keyword">of</span> G
+        <span class="hljs-keyword">while</span> vertexSet <span class="hljs-keyword">not</span> <span class="hljs-keyword">empty</span>:
+                find <span class="hljs-keyword">some</span> vertex s <span class="hljs-keyword">in</span> vertextSet <span class="hljs-keyword">with</span> <span class="hljs-keyword">minimum</span> dist[s]   # We can <span class="hljs-keyword">use</span> a <span class="hljs-keyword">priority</span> queue here <span class="hljs-keyword">to</span> achieve O(E + Vlog(V))
+                <span class="hljs-keyword">for</span> <span class="hljs-keyword">each</span> (s, t, w) <span class="hljs-keyword">in</span> edges <span class="hljs-keyword">of</span> G:
+                        relax along (s, t, w)  
+                vertextSet = vertexSet \ {s}  # Means remove s <span class="hljs-keyword">from</span> vertexSet
+</code></pre>
+<p><em>Time-complexity:</em> O(E + V²) — each edge needs to be considered once, and the outer loop has O(V) iterations... Apparently the overall cost is O(E + V²), and the best known implementation using a priority queue gets O(E + Vlog(V))</p>
+<h1 id="week-7-heaps-and-hashing">Week 7: Heaps and Hashing</h1>
+<h3 id="heaps-">Heaps:</h3>
+<ul>
+<li>Heaps can be viewed as binary trees with top-down ordering.</li>
+<li>A <em>min heap</em> has its root node as its minimal value, so every level below increases in value
+A <em>max heap</em> has its root node as the maximal value, so every level below it decreases in value</li>
+<li>Heaps are implementable by an array (if we know the size), since we know where the index of the left and right child are</li>
+<li>Heaps are a useful underlying structure for implementing priority queues, since higher priority nodes will be at the top of the heap</li>
+<li>Insertion always occurs at a leaf node with the next unoccupied index, and is bubbled to the right place by a series of swaps with the parent</li>
+<li>Deletion always occurs at the roots, which makes sense for a priority queue&#39;s dequeue function. When the root is deleted, it it replaced by the element at the last occupied index and then that element gets bubbled down to its right place by a series of swaps with the left child</li>
+</ul>
+<p>Suppose our current node has index <code>i</code>:</p>
+<ul>
+<li>The left child is at index <code>2i</code></li>
+<li>The right child is at index <code>2i + 1</code></li>
+<li>The parent is at index <code>floor(i/2)</code></li>
+</ul>
+<p><em>Heap indexing:</em>
+Goes left to right, top to down across each level. The next free index for insertion would be the lower-most left-most unoccupied leaf node
+Heap indexing actually starts at 1, not 0</p>
+<p><img src="Images/notes/ref_image_11.png" alt="Images/notes/ref_image_11.png"></p>
+<p><em>Possible struct declaration:</em></p>
+<pre><code class="lang-c">typedef <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">heapRep</span></span> *Heap;
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">heapRep</span></span> {
+        <span class="hljs-keyword">int</span> *nodes;
+        <span class="hljs-keyword">int</span> currSize;
+        <span class="hljs-keyword">int</span> maxSize;
+};
+</code></pre>
+<p><em>Possible implementation:</em> </p>
+<pre><code class="lang-c">Heap newHeap (int size) {
+        Heap heap = malloc(sizeof (struct heapRep));
+        <span class="hljs-function"><span class="hljs-title">int</span> *items = malloc(sizeof(int) * (size + 1));  // size + 1, so our index range becomes 1 -&gt;</span> N, <span class="hljs-function"><span class="hljs-title">not</span> 0 -&gt;</span> (N-<span class="hljs-number">1</span>). This <span class="hljs-keyword">is</span> because heaps are indexed starting from <span class="hljs-number">1</span>
+        <span class="hljs-function"><span class="hljs-title">heap</span> -&gt;</span> nodes = items;
+        <span class="hljs-function"><span class="hljs-title">heap</span> -&gt;</span> currSize = <span class="hljs-number">0</span>;
+        <span class="hljs-function"><span class="hljs-title">heap</span> -&gt;</span> maxSize = size;        
+}
+
+<span class="hljs-comment">// Inserts at the next free array slot, then bubbles it up to the right position in the heap by a series of swaps with the parent node</span>
+void insertInHeap(Heap heap, int value) {
+        <span class="hljs-function"><span class="hljs-title">heap</span> -&gt;</span> currSize++;
+        <span class="hljs-function"><span class="hljs-title">int</span> i = heap -&gt;</span> currSize;
+        <span class="hljs-function"><span class="hljs-title">heap</span> -&gt;</span> nodes[i] = value;
+        <span class="hljs-keyword">while</span> (i &gt; <span class="hljs-number">1</span> &amp;&amp; a[i] &lt; a[i / <span class="hljs-number">2</span>]) {  <span class="hljs-comment">// If the parent is greater than the child, swap the child and parent (since greater values are at the top)</span>
+                int tmp = a[i / <span class="hljs-number">2</span>];  
+                a[i / <span class="hljs-number">2</span>] = a[i];
+                a[i] = tmp;
+                i /= <span class="hljs-number">2</span>;
+        }
+}
+
+<span class="hljs-comment">// Pops the root node, replaces the root node with the last indexed node and bubbles it down to the right place</span>
+int popHeap(Heap heap) {
+        <span class="hljs-function"><span class="hljs-title">int</span> top = heap -&gt;</span> nodes[<span class="hljs-number">1</span>];
+        <span class="hljs-function"><span class="hljs-title">heap</span> -&gt;</span> <span class="hljs-function"><span class="hljs-title">nodes</span>[1] = heap -&gt;</span> <span class="hljs-function"><span class="hljs-title">nodes</span>[heap -&gt;</span> currSize];  <span class="hljs-comment">// Delete the root everytime </span>
+        <span class="hljs-function"><span class="hljs-title">heap</span> -&gt;</span> currSize--;
+        int i = <span class="hljs-number">1</span>;
+        <span class="hljs-function"><span class="hljs-title">while</span> (2 * i &lt;= heap -&gt;</span> maxSize) {
+                <span class="hljs-function"><span class="hljs-title">int</span> curr = heap -&gt;</span> nodes[i];
+                int j = <span class="hljs-number">2</span> * i;
+                <span class="hljs-keyword">if</span> (j &lt; N &amp;&amp; a[j] &lt; a[j + <span class="hljs-number">1</span>]) j++;  <span class="hljs-comment">// Pick the larger child for swapping</span>
+                <span class="hljs-keyword">if</span> (a[j] &gt;= curr) {
+                        int tmp = j;
+                        <span class="hljs-function"><span class="hljs-title">heap</span> -&gt;</span> <span class="hljs-function"><span class="hljs-title">nodes</span>[j] = heap -&gt;</span> nodes[i];
+                        <span class="hljs-function"><span class="hljs-title">heap</span> -&gt;</span> <span class="hljs-function"><span class="hljs-title">nodes</span>[i] = heap -&gt;</span> nodes[tmp];
+                }
+                i *= <span class="hljs-number">2</span>;
+        }
+        return top;
+}
+</code></pre>
+<p>Time-complexities:</p>
+<ul>
+<li>Insertion: O(logn) — requires bubbling up the leaf node to the right place across up to <code>n</code> levels</li>
+<li>Deletion: O(logn) — requires bubbling the root node down to the right place across <code>n</code> levels</li>
+</ul>
+<h3 id="hashing-">Hashing:</h3>
+<p>A hash table associates a key with a hash function value which is associated to a specific index in an array like data structure. This allows for very quick key-value lookups which would otherwise take O(n) or O(logn) with an array search algorithm. Hashing is used widely in database systems.</p>
+<ul>
+<li>A hash tables is basically a primitive array data structure that allows arbitrary key types (like strings, instead of integer indexes), eg. <code>course[&quot;COMP3311&quot;]  == &quot;Database systems&quot;</code></li>
+<li>A hash function — <em>h: key → [0, N-1]</em>, maps a given key to a hash function value which is an index into a hash table. This index into the hash table is calculated using the input itself</li>
+<li>We can lookup a value in an array in O(1), provided that we know which index it is at. If we didn&#39;t then we would need a O(n) or O(logn) search algorithm.
+With a hash table, we don&#39;t need to know which index of the table the value we want to fetch is at. We can just pass a key through a hash function that returns an index into the hash table which is roughly where we can expect to find our target value, and then perform a very short scan from there on. Sometimes lookups can be immediate</li>
+<li>Collision resolution: the range of the hash function <em>[0, N-1]</em> may be smaller than the set of <em>keys</em> , so by the pigeonhole principle, the hash function could map different keys to the same hash value. There are different strategies for handling these collisions: separate chaining or linear, quadratic and double hash probing</li>
+</ul>
+<p>Problems with hashing:</p>
+<ul>
+<li>The hash function uses the hash table&#39;s size in its computation, so we can&#39;t expand the size of the hash table without having to recompute and reinsert all existing entries</li>
+<li>Items are stored in unpredictable order</li>
+</ul>
+<p><em>Possible struct declaration:</em></p>
+<pre><code class="lang-c"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> EMPTY_SLOT -1</span>
+
+<span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> hashTableRep *HashTable
+<span class="hljs-keyword">struct</span> hashTableRep {
+        Item **items;  <span class="hljs-comment">// Array of Item pointers, where the 'Item' data type could be a struct containing some fields</span>
+        <span class="hljs-keyword">int</span> currSize;  <span class="hljs-comment">// Current number of entries in the hash table</span>
+        <span class="hljs-keyword">int</span> N;         <span class="hljs-comment">// Array size. The hash function should map keys to a value within [0, N - 1]</span>
+};
+</code></pre>
+<p><em>Basic function prototypes:</em></p>
+<pre><code class="lang-c"><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> HashTabRep *HashTable;
+<span class="hljs-function">HashTable <span class="hljs-title">newHashTable</span><span class="hljs-params">(<span class="hljs-keyword">int</span> size)</span></span>;             
+<span class="hljs-function">Item *<span class="hljs-title">search</span><span class="hljs-params">(HashTable hashtab, Item key)</span></span>;          <span class="hljs-comment">// Find item with specified key</span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">insert</span><span class="hljs-params">(HashTable hashtab, Item item)</span></span>;          <span class="hljs-comment">// Add a new item to the hash table</span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">delete</span><span class="hljs-params">(HashTable hashtab, Item target)</span></span>;        <span class="hljs-comment">// Delete a target entry from the hash table</span>
+</code></pre>
+<hr>
+<p><strong>Hash Functions:</strong>
+<em>Very basic hash function for string keys:</em></p>
+<pre><code class="lang-c"><span class="hljs-built_in">int</span> hash(<span class="hljs-built_in">char</span> *key, <span class="hljs-built_in">int</span> N) {  // The <span class="hljs-string">'Key'</span> <span class="hljs-keyword">type</span> <span class="hljs-keyword">in</span> this example is a string
+        <span class="hljs-built_in">int</span> val = strlen(key);
+        <span class="hljs-keyword">return</span> val % N;  // <span class="hljs-keyword">Use</span> <span class="hljs-built_in">mod</span> <span class="hljs-function"><span class="hljs-keyword">function</span></span> to map <span class="hljs-built_in">any</span> <span class="hljs-keyword">integer</span> to another <span class="hljs-keyword">integer</span> within the <span class="hljs-built_in">range</span> [<span class="hljs-number">0</span>, N-<span class="hljs-number">1</span>]
+}
+</code></pre>
+<p>There are a ridiculous number of deficiencies with this hash function. A better hash function would introduce some randomness to make the output a bit more unique so as to minimise collisions.</p>
+<p><em>&#39;Universal&#39; hashing:</em>
+Tends to return a more unique hash function value, so the output is more reasonably distributed across the indexes in [0, N-1], therefore minimising collisions</p>
+<pre><code class="lang-c"><span class="hljs-built_in">int</span> hash(<span class="hljs-built_in">char</span> *<span class="hljs-built_in">key</span>, <span class="hljs-built_in">int</span> N) {
+        <span class="hljs-built_in">int</span> a = <span class="hljs-number">31415</span>;  <span class="hljs-comment">// Prime numbers. These are better for introducing unpredictability than non-primes</span>
+        <span class="hljs-built_in">int</span> b = <span class="hljs-number">21783</span>;
+        <span class="hljs-built_in">int</span> val = <span class="hljs-number">0</span>;
+        <span class="hljs-built_in">char</span> *c;
+        <span class="hljs-keyword">for</span> (c = <span class="hljs-built_in">key</span>; c != <span class="hljs-string">'\0'</span>; c++) {
+                a = (a * b) % (N - <span class="hljs-number">1</span>);
+                val = (a * h + *c) &amp; N;
+        }
+        <span class="hljs-keyword">return</span> val;
+}
+</code></pre>
+<hr>
+<p><strong>Collision Handling:</strong></p>
+<ul>
+<li>Chaining — make each cell of the hash table point to a linked list of records that share the same hash function value</li>
+<li>Open addressing — the item is inserted to the next available cell
+→ <em>Linear probing:</em> if the index of the array is occupied, then use a linear search algorithm to find the next available cell and place it there, wrapping around to the start of the array if necessary. When retrieving the value, we perform a linear search from the point we expected it to be, but which was occupied
+→ <em>Quadratic probing:</em> scans from the mapped value onwards but takes quadratic steps each time instead of one by one like for linear probing
+→ <em>Double hashing:</em> uses a second hash function to calculate how many steps to jump</li>
+</ul>
+<p><em>Separate Chaining:</em>
+The hash table becomes an array of linked list heads which stores all the entries that have the same function value</p>
+<p><em>Possible struct declaration to set up separate chaining:</em></p>
+<pre><code class="lang-c">typedef struct HashTabRep {
+   <span class="hljs-class">List *lists;</span>    //<span class="hljs-built_in"> array </span>of Lists of Items
+  <span class="hljs-built_in"> int </span> currSize;  // Number of items stored in HashTable
+  <span class="hljs-built_in"> int </span> N;         // Slots in the<span class="hljs-built_in"> array
+</span>} HashTabRep;
+</code></pre>
+<ul>
+<li>Insertion — pass key into hash function → insert into the linked list at <code>hashtab → lists[hashVal]</code></li>
+<li>Search — pass key into hash function → search in linked list at <code>hashtab → lists[hashVal]</code></li>
+<li>Deletion — pass key into hash function → delete in linked list at <code>hashtab → lists[hashVal]</code></li>
+</ul>
+<p>Time-complexity: O(M) — where M is the number of entries. All entries could be stuffed into a single linked list at the same hash table index</p>
+<p><em>Linear probing:</em>
+If the hash table index is occupied, just perform a linear scan onwards for the next free slot</p>
+<pre><code class="lang-c">void insert(HashTable hashtab, Item item) {
+        <span class="hljs-keyword">int</span> N = hashtab -&gt; N;
+        <span class="hljs-keyword">int</span> insertIndex = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">int</span> k = hash(item, N);
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; N; i++) {
+                insertIndex = (k + i) % N;   <span class="hljs-comment">// Search starting from the hash function value index, wrapping around the array if necessary</span>
+                <span class="hljs-keyword">if</span> (hashtab -&gt; items[insertIndex] == EMPTY_SLOT) <span class="hljs-keyword">break</span>;  <span class="hljs-comment">// Free slot found</span>
+                <span class="hljs-keyword">if</span> (hashtab -&gt; items[insertIndex] == item) <span class="hljs-keyword">break</span>;        <span class="hljs-comment">// Item already exists</span>
+        }
+        <span class="hljs-keyword">if</span> (a[insertIndex] == EMPTY_SLOT) {
+                hashtab -&gt; currSize++;
+                hashtab -&gt; items[insertIndex] = item;
+        }
+}
+</code></pre>
+<p>Time-complexity: O(M) — the search and delete functions would land on the hash index and then perform a linear scan until the target is found
+Note: the <code>search()</code> and <code>delete()</code> functions stop when it reaches an <code>EMPTY_SLOT</code> that <em>has not been in use before</em>. There could be <code>EMPTY_SLOTS</code> between the landing index and where the target is if we have deleted entries between them at some point after the target was inserted. This means we need some sort of way to identify that the slot is empty but has been used before, and therefore shouldn&#39;t signal our scanning to stop.</p>
+<p><em>Quadratic probing:</em>
+Like linear probing, but instead of searching in jumps of 1, make jumps of 1, 4, 9, etc.</p>
+<p><em>Double hashing:</em>
+Like quadratic probing, but makes a more calculated jump which is determined by a second hash function</p>
+<pre><code class="lang-c">typedef <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">hashTableRep</span></span> *HashTable
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">hashTableRep</span></span> {
+        Item *items;  
+        <span class="hljs-keyword">int</span> currSize;  
+        <span class="hljs-keyword">int</span> N;         <span class="hljs-comment">// Array size</span>
+        <span class="hljs-keyword">int</span> N2;        <span class="hljs-comment">// A modulo operand we can use for our second hash function. This should be set in the newHashTable function</span>
+};
+</code></pre>
+<pre><code class="lang-c">void insert(HashTable hashtab, Item item) {
+        <span class="hljs-keyword">int</span> N = hashtab -&gt; N;
+        <span class="hljs-keyword">int</span> insertIndex = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">int</span> k = hash(item, N);
+        <span class="hljs-keyword">int</span> jump = hash2(item, hashtab -&gt; N2);
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; N; i += jump) {  <span class="hljs-comment">// Incremement by the hash2 function value</span>
+                insertIndex = (k + i) % N;
+                <span class="hljs-keyword">if</span> (hashtab -&gt; items[insertIndex] == EMPTY_SLOT) <span class="hljs-keyword">break</span>;
+                <span class="hljs-keyword">if</span> (hashtab -&gt; items[insertIndex] == item) <span class="hljs-keyword">break</span>;
+        }    
+        <span class="hljs-keyword">if</span> (hashtab -&gt; items[insertIndex] == EMPTY_SLOT) {
+                hashtab -&gt; currSize++;
+                hashtab -&gt; items[insertIndex] = item;
+        }
+}
+</code></pre>
+<p>The second has function hash2: key → [1, N2 - 1]</p>
+<p>The amount we increment must ensure that all <em>elements are visitable</em>. We can pick an increment number that is coprime with <code>N</code> to ensure this. 
+When we&#39;re creating the table for the first time, it&#39;s smart to pick a prime number size so our <code>hash2()</code> function values will be suitable to use for probing.</p>
+<hr>
+<p>Performance of insertion, search and deletion when there are collisions:</p>
+<ul>
+<li>When we are scanning the array from the mapped value onwards, performance depends on the <em>load factor</em> <code>α = M / N</code> which is a measure of how &#39;full&#39; the hashtable is.
+As α → 1, unsuccessful searches make the search algorithm very expensive since almost the whole table would have to be scanned before the function can say with certainty that the target element does not exist</li>
+<li>With linear probing, unsuccessful search is very expensive. 
+With quadratic probing and double hashing, unsuccessful search is substantially less expensive</li>
+</ul>
+<h1 id="week-8-sorting-algorithms">Week 8: Sorting Algorithms</h1>
+<h2 id="sorting-">Sorting:</h2>
+<p>Sorting involves arranging a collection of items in order, based on some property of the items. This is an important problem because sorted collections allow better search algorithms to be implemented as well as other algorithms like duplicate detection, etc.</p>
+<ul>
+<li><em>Stable sorting algorithms:</em> if two elements are identical with x occurring before y in the input, the ordered output will also have x occurring before y</li>
+<li><em>Adaptive sorting algorithms:</em> can analyse the input sequence and adopt the sorting strategy which is most suitable. For example, if the input array was already sorted, then the adaptive sorting algorithm will recognise that and just return the original input without doing unnecessary work</li>
+<li>Main sorting algorithms:<ul>
+<li>Selection sort</li>
+<li>Bubble sort</li>
+<li>Insertion sort</li>
+<li>Shell sort</li>
+<li>Quick sort</li>
+<li>Merge sort</li>
+<li>Heap sort</li>
+<li>Radix sort</li>
+<li>Bucket sort</li>
+<li>External mergesort</li>
+</ul>
+</li>
+<li><code>qsort(array, n, size, int (*cmpFunc)())</code> from <code>stdlib</code> sorts any kind of array, containing <code>n</code> items of <code>size</code> byte, if we supply the appropriate function pointer for comparison operations.</li>
+</ul>
+<hr>
+<h3 id="comparison-sorting-algorithms-">Comparison Sorting Algorithms:</h3>
+<p><strong>Selection sort:</strong> 
+<em>Logic:</em> find min, swap it with what&#39;s in the zeroeth index of the array, then find the next smallest and place it in first index, and so on</p>
+<ul>
+<li>Grows from left to right</li>
+<li>Stability depends on implementation. Not adaptive</li>
+</ul>
+<pre><code class="lang-c"><span class="hljs-comment">// Sorts to ascending order</span>
+<span class="hljs-keyword">void</span> selectionSort(<span class="hljs-keyword">int</span> input[], <span class="hljs-keyword">int</span> lo, <span class="hljs-keyword">int</span> hi) {
+    <span class="hljs-built_in">for</span> (<span class="hljs-keyword">int</span> i = lo; i &lt; hi - <span class="hljs-number">1</span>; i++) {
+        <span class="hljs-keyword">int</span> <span class="hljs-built_in">min</span> = i;
+        <span class="hljs-built_in">for</span> (<span class="hljs-keyword">int</span> j = i + <span class="hljs-number">1</span>; j &lt; hi; j++) {  <span class="hljs-comment">// Start scanning the unsorted segment for the minimum value</span>
+            <span class="hljs-built_in">if</span> (input[j] &lt; input[<span class="hljs-built_in">min</span>]) {
+                <span class="hljs-built_in">min</span> = j;
+            }
+        }
+        swap(input, i, <span class="hljs-built_in">min</span>);
+    }
+}
+</code></pre>
+<p><em>Time-complexity:</em> O(n²)  — max total comparisons given by: <code>(n-1) + (n-2) + ... + 1 = n(n + 1)/2</code>, total swaps given by: <code>n-1</code>
+In both best and worst cases, we&#39;re still making the same number of comparisons to identify the mininimum each iteration</p>
+<p><img src="Images/notes/ref_image_12.png" alt="Images/notes/ref_image_12.png"></p>
+<p><em>Swap function:</em></p>
+<pre><code class="lang-c"><span class="hljs-keyword">void</span> swap (<span class="hljs-keyword">int</span> <span class="hljs-keyword">input</span>[], <span class="hljs-keyword">int</span> i, <span class="hljs-keyword">int</span> j) {
+    <span class="hljs-keyword">int</span> tmp = <span class="hljs-keyword">input</span>[j];
+    <span class="hljs-keyword">input</span>[j] = <span class="hljs-keyword">input</span>[i];
+    <span class="hljs-keyword">input</span>[i] = tmp;
+}
+</code></pre>
+<p><strong>Bubble sort:</strong> 
+<em>Logic:</em> looks at adjacent items and swaps if out of order, bubbling the item up
+When the element being bubbled encounters an element it should swap with, that other element becomes the one being bubbled. Doing this <code>n</code> times across the whole array results in a sorted array</p>
+<ul>
+<li>Grows from left to right, with the max item encountered being bubbled to the far right</li>
+<li>Can be stable and adaptive, because it can check if the array is already sorted</li>
+</ul>
+<pre><code class="lang-c">// Sorts to ascending order
+void bubbleSort(int input[],<span class="hljs-built_in"> int </span>lo,<span class="hljs-built_in"> int </span>hi) {
+    for (int i = lo; i &lt; hi; i++) {
+               <span class="hljs-built_in"> int </span>swaps = 0;
+                for (int j = hi - 1; j &gt; i; j--) {
+                   <span class="hljs-built_in"> if </span>(input[j] &lt; input[j - 1]) {
+                        swap(input, j, j - 1);
+                                        swaps++;
+                    }
+                }
+             <span class="hljs-built_in"> if </span>(swaps == 0) break;  // Since the<span class="hljs-built_in"> array </span>was scanned<span class="hljs-built_in"> and </span>no swaps were made, the<span class="hljs-built_in"> array </span>must be sorted, so break
+    }
+}
+</code></pre>
+<p><em>Time-complexity:</em> O(n²) 
+Best case: the array is already sorted, so just 1 + 1 + ... + 1 comparisons (n)
+Worst case: the array is reverse sorted, so (n-1) + (n-2) + ... + 1 = </p>
+<p><img src="Images/notes/ref_image_13.png" alt="Images/notes/ref_image_13.png"></p>
+<p><strong>Insertion sort:</strong>
+<em>Logic:</em> on each iteration, consider the element right next to the sorted segment. Bubble that element to the right place within the sorted array by comparing with elements in the already sorted segment.</p>
+<ul>
+<li>Grows from left to right, considering elements directly next to the end of the sorted array.</li>
+<li>Stability depends on implementation, adaptive if it stops scanning when the position is found</li>
+</ul>
+<pre><code class="lang-c"><span class="hljs-comment">// Sorts to ascending order</span>
+<span class="hljs-keyword">void</span> insertionSort(<span class="hljs-keyword">int</span> <span class="hljs-keyword">input</span>[], <span class="hljs-keyword">int</span> lo, <span class="hljs-keyword">int</span> hi) {
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = lo; i &lt; hi; i++) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = lo; j &lt; i; j++) {
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">input</span>[i] &lt; <span class="hljs-keyword">input</span>[j]) {
+                swap(<span class="hljs-keyword">input</span>, i, j);  <span class="hljs-comment">// Bubble it to the right place in the sorted segment</span>
+            }
+        }
+    }
+}
+</code></pre>
+<p><em>Time-complexity:</em> O(n²)
+Best case: the array is already sorted, so we just have 1 + 1 + ... + 1 comparisons (n)
+Worst case: the array is reverse sorted, so we have a growing number of comparisons to find where to insert the new element in the sorted segment (same as for selection sort: <code>n(n+1)/2</code>)</p>
+<p><img src="Images/notes/ref_image_14.png" alt="Images/notes/ref_image_14.png"></p>
+<p><strong>Shell sort:</strong>
+Also known as <em>h-sorting,</em> which is an improvement on insertion sort.
+A 3-sorted array means that if we take elements <code>array[0]</code>, <code>array[3]</code>, <code>array[6]</code>, ..., they will be in order.
+A 2-sorted array means that if we take elements <code>array[0]</code>, <code>array[2]</code>, <code>array[4]</code>, ..., they will be in order.
+A 1-sorted array means that the array is sorted
+Algorithm uses a characteristic sequence of <em>h-values</em>. Such sequences are determined empirically, for example 1093, 364, 121, 40, 13, 4, 1, or something else</p>
+<pre><code class="lang-c"><span class="hljs-comment">// Sorts to ascending order</span>
+<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">shellSort</span>(<span class="hljs-params"><span class="hljs-keyword">int</span> a[], <span class="hljs-keyword">int</span> lo, <span class="hljs-keyword">int</span> hi</span>) </span>{
+        <span class="hljs-keyword">int</span> hValues[<span class="hljs-number">8</span>] = {<span class="hljs-number">701</span>, <span class="hljs-number">301</span>, <span class="hljs-number">132</span>, <span class="hljs-number">57</span>, <span class="hljs-number">23</span>, <span class="hljs-number">10</span>, <span class="hljs-number">4</span>, <span class="hljs-number">1</span>}
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">8</span>; i++) {
+                <span class="hljs-keyword">int</span> h = hValues[i];
+                <span class="hljs-keyword">int</span> start = h + lo;
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> n = start; n &lt; hi, n++) {
+                        <span class="hljs-keyword">int</span> <span class="hljs-keyword">value</span> = a[n];
+                        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> k = n; k &gt;= start &amp;&amp; <span class="hljs-keyword">value</span> &lt; a[k - h]; k -= h) {
+                                move(a, k, k - h);
+                        }
+                        a[k] = <span class="hljs-keyword">value</span>;
+                }
+        }
+}
+</code></pre>
+<p>Efficiency depends on the h-values used, which we can achieve O(n^(3/2)) with, or even better with the right sequence.  Shell sort has not yet been fully analysed.</p>
+<p><strong>Quick sort (recursive):</strong></p>
+<p><em>Logic:</em> pick a pivot element, then sort the array such that everything to the left of that pivot is less than it while everything to the right is greater than it, and then start sorting left and right by the same function.</p>
+<ul>
+<li>Usually not stable and not adaptive</li>
+</ul>
+<pre><code class="lang-c"><span class="hljs-comment">// Sorts to ascending order</span>
+<span class="hljs-keyword">void</span> quickSort(<span class="hljs-keyword">int</span> <span class="hljs-keyword">input</span>[], <span class="hljs-keyword">int</span> lo, <span class="hljs-keyword">int</span> hi) {
+        <span class="hljs-keyword">if</span> (lo &gt;= hi) <span class="hljs-keyword">return</span>;              <span class="hljs-comment">// Terminating case</span>
+        <span class="hljs-keyword">int</span> i = partition(<span class="hljs-keyword">input</span>, lo, hi);  <span class="hljs-comment">// Partition returns the index of where the pivot element input[lo] belongs </span>
+        quickSort(<span class="hljs-keyword">input</span>, lo, i - <span class="hljs-number">1</span>);       <span class="hljs-comment">// Sort the unsorted left segment</span>
+        quickSort(<span class="hljs-keyword">input</span>, i + <span class="hljs-number">1</span>, hi);       <span class="hljs-comment">// Sort the unsorted right segment</span>
+}
+</code></pre>
+<p>In the partition function, we are finding the right spot to place the pivot element and swapping elements from left and right segments so that everything to the left of the pivot is less than it and everything to the right is greater than it</p>
+<ol>
+<li>Scan from the left, if the pivot encounters something greater than it, stop</li>
+<li>Scan from right, if the pivot encounters something less than it, stop</li>
+<li>Swap the elements which caused scanning to stop</li>
+<li>Continue the scanning from left, then scanning from right and swapping. </li>
+<li>Stop when the left and right scanners cross each other</li>
+<li>Swap the pivot element with where this intersection occurred</li>
+</ol>
+<pre><code class="lang-c"><span class="hljs-comment">// Sorts to ascending order</span>
+<span class="hljs-keyword">int</span> partition(<span class="hljs-keyword">int</span> <span class="hljs-keyword">input</span>[], <span class="hljs-keyword">int</span> lo, <span class="hljs-keyword">int</span> hi) {
+    <span class="hljs-keyword">int</span> pivotIndex = lo;  <span class="hljs-comment">// Choose the first element to be pivot element. We could make smarter choices </span>
+    <span class="hljs-keyword">int</span> i = lo + <span class="hljs-number">1</span>;       <span class="hljs-comment">// Left scanner</span>
+    <span class="hljs-keyword">int</span> j = hi;           <span class="hljs-comment">// Right scanner</span>
+    <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>) {
+        <span class="hljs-keyword">while</span> (<span class="hljs-keyword">input</span>[i] &lt; <span class="hljs-keyword">input</span>[pivotIndex] &amp;&amp; i &lt; j) {  <span class="hljs-comment">// Pause when an item in the left segment was found to be larger than the pivot value </span>
+            i++;  
+        }
+        <span class="hljs-keyword">while</span> (<span class="hljs-keyword">input</span>[j] &gt; <span class="hljs-keyword">input</span>[pivotIndex] &amp;&amp; i &lt; j) {  <span class="hljs-comment">// Pause when an item in the right segment was found to be smaller than the pivot value</span>
+            j--;
+        }
+        <span class="hljs-keyword">if</span> (i == j) <span class="hljs-keyword">break</span>;          <span class="hljs-comment">// Stop once i and j cross over</span>
+        <span class="hljs-keyword">else</span> swap(<span class="hljs-keyword">input</span>, i, j);     <span class="hljs-comment">// Swap and then resume scanning from where we left off</span>
+    }
+    j = (<span class="hljs-keyword">input</span>[i] &lt; <span class="hljs-keyword">input</span>[pivotIndex]) ? i : i - <span class="hljs-number">1</span>;  <span class="hljs-comment">// If where element at where i stopped is smaller than the pivot value, set j to i, otherwise set it to i - 1 </span>
+    swap(<span class="hljs-keyword">input</span>, pivotIndex, j);  <span class="hljs-comment">// Swap the pivot element at input[lo] to where it should be -- at index j where the left scanner and right scanner intersected</span>
+    <span class="hljs-keyword">return</span> j;  <span class="hljs-comment">// The pivot is now at j, where it belongs</span>
+}
+</code></pre>
+<p><em>Time-Complexity:</em> O(n²) — but the average case is usually better
+Best case: the choice of pivot leads to equal partitions for each recursive step, so there will be log(n) levels, each level requiring n comparisons, hence O(nlogn)
+Worst case: the choice of pivot leads to paritions of sizes 1 and (n-1) for each recursive step, so there will be n levels, requiring n comparisons, hence O(n²)
+Eg. for sorted arrays, we will make n recursive calls, forming 1 and n-1 partitions</p>
+<p><em>Partitioning steps:</em> </p>
+<p><img src="Images/notes/ref_image_15.png" alt="Images/notes/ref_image_15.png"></p>
+<p><strong>Improving partition:</strong></p>
+<ul>
+<li>Could select the pivot in other ways instead of taking the first element every recursive step</li>
+<li>Parititioning is inefficient when dealing with small partitions. We could solve small partitions differently by, for example, switching to insertion sort.</li>
+<li>If the array contains duplicates of the pivot value, we could 3 partitions with the middle one containing duplicates of pivot.</li>
+</ul>
+<p><em>Quicksort can be implemented iteratively using a stack:</em></p>
+<pre><code class="lang-c"><span class="hljs-keyword">void</span> quickSort(<span class="hljs-keyword">int</span> <span class="hljs-keyword">input</span>[], <span class="hljs-keyword">int</span> lo, <span class="hljs-keyword">int</span> hi) {
+        Stack s = newStack();
+        StackPush(s, hi);
+        StackPush(s, lo);
+        <span class="hljs-keyword">while</span> (StackSize(s) &gt; <span class="hljs-number">0</span>) {
+                <span class="hljs-keyword">int</span> low = StackPop(s);
+                <span class="hljs-keyword">int</span> high = StackPop(s);
+                <span class="hljs-keyword">if</span> (high &gt; low) {
+                        <span class="hljs-keyword">int</span> i = partition(<span class="hljs-keyword">input</span>, lo, hi);
+                        StackPush(s, hi);
+                        StackPush(s, i + <span class="hljs-number">1</span>);
+                        StackPush(s, i - <span class="hljs-number">1</span>);
+                        StackPush(s, lo);
+                }
+        }
+}
+</code></pre>
+<p><strong>Merge sort (recursive):</strong>
+<em>Logic:</em> <em>**</em>split the array into two equal partitions, sort each partition, then merge it into a final sorted array. </p>
+<pre><code class="lang-c">// Sorts to ascending order
+void mergeSort(int input[],<span class="hljs-built_in"> int </span>lo,<span class="hljs-built_in"> int </span>hi) {
+   <span class="hljs-built_in"> if </span>(lo &gt;= hi) return;
+   <span class="hljs-built_in"> int </span>mid = (lo + hi) / 2;
+    mergeSort(input, lo, mid);
+    mergeSort(input, mid + 1, hi);
+    merge(input, lo, mid, hi);
+}
+
+void merge(int a[],<span class="hljs-built_in"> int </span>lo,<span class="hljs-built_in"> int </span>mid,<span class="hljs-built_in"> int </span>hi) {
+  <span class="hljs-built_in"> int </span>i = lo;
+  <span class="hljs-built_in"> int </span>j = mid + 1;
+  <span class="hljs-built_in"> int </span>k = 0;   // Indexer for temporary<span class="hljs-built_in"> array
+</span>  <span class="hljs-built_in"> int </span>tmp[hi - lo + 1];  // Temporary<span class="hljs-built_in"> array </span>to store sorted values
+
+   while (i &lt;= mid &amp;&amp; j &lt;= hi) {  // Scan through both segments, choosing the one that's less than the other
+    <span class="hljs-built_in"> if </span>(a[i] &lt; a[j])
+        tmp[k++] = a[i++];        // Move the index of the left segment along
+     else
+        tmp[k++] = a[j++];        // Move the index of the right segment along
+   }
+
+   // One of the segments will still have elements that need to be copied over
+   while (i &lt;= mid) tmp[k++] = a[i++];
+   while (j &lt;= hi) tmp[k++] = a[j++];
+
+   // Copy the sorted dummy<span class="hljs-built_in"> array </span>into the main<span class="hljs-built_in"> array
+</span>   for (i = lo, k = 0; i &lt;= hi; i++, k++)
+      a[i] = tmp[k];
+}
+</code></pre>
+<p><em>Time-complexity</em>: O(nlogn)
+Best case: each level requires less than n comparisons when merging — O(nlogn)
+Worst case: each level requires comparisons made all the way until the end of partitions — O(nlogn)</p>
+<p><em>Space-complexity:</em> O(N)</p>
+<p><img src="Images/notes/ref_image_16.png" alt="Images/notes/ref_image_16.png"></p>
+<p><em>Mergesort can be implemented non-recursively, without a stack.</em><br><strong>Bottom-up Mergesort (iterative):</strong></p>
+<pre><code class="lang-c"><span class="hljs-keyword">void</span> mergeSort(<span class="hljs-keyword">int</span> a[], <span class="hljs-keyword">int</span> lo, <span class="hljs-keyword">int</span> hi) {
+        <span class="hljs-keyword">int</span> <span class="hljs-built_in">end</span>;
+        <span class="hljs-built_in">for</span> (<span class="hljs-keyword">int</span> m = <span class="hljs-number">1</span>; m &lt;= lo - hi; m = m * <span class="hljs-number">2</span>) {  <span class="hljs-comment">// Run lengths are: 1, 2, 4, ... until the run length is greater than the array size</span>
+                <span class="hljs-built_in">for</span> (<span class="hljs-keyword">int</span> i = lo; i &lt;= hi - m; i += <span class="hljs-number">2</span> * m) {
+                        <span class="hljs-built_in">end</span> = <span class="hljs-built_in">min</span>(<span class="hljs-number">1</span> + <span class="hljs-number">2</span> * m - <span class="hljs-number">1</span>, hi);  <span class="hljs-comment">// End is the endpoint of the two segments (runs). Select end = hi, so we don't run over the array size</span>
+                        merge(a, i, i + m - <span class="hljs-number">1</span>, <span class="hljs-built_in">end</span>);   <span class="hljs-comment">// i + m - 1 is the midpoint of the start of the first segment and end of the second</span>
+                }
+        } 
+}
+</code></pre>
+<hr>
+<p>Sorting lower bound of performance: any comparison-based sorting algorithm <em>must take at least Ω(nlogn) time</em> to sort n elements.
+<em>Proof.</em> Suppose that we have a sequence of n unique values. There are n! permutations, where one sequence is ordered.  For a binary decision tree, the height is at least log2(n!), so the number of comparisons required is log2(n!), which using inequalities, can be proven to be greater than nlogn. Hence Ω(nlogn) is the lower bound for all comparison based sorting algorithms.</p>
+<p><img src="Images/notes/ref_image_17.png" alt="Images/notes/ref_image_17.png"></p>
+<hr>
+<h3 id="non-comparison-based-sorting">Non-Comparison based sorting</h3>
+<p><strong>Radix Sort:</strong>
+<em>Logic:</em> sort the array by the last digit, then by the next and so on until the largest radix is sorted. At this point, the array is sorted. This works only if the implementation is stable</p>
+<p><em>Time-complexity:</em> O(mn) — where m is the number of radix points. This generally outperforms comparison based sorting algorithms when n → ∞</p>
+<h1 id="week-9-text-processing-algorithms">Week 9: Text Processing Algorithms</h1>
+<p><strong>Notes:</strong></p>
+<ul>
+<li>Alphabet Σ — defines the <em>set of characters</em> usable in strings
+Empty string λ — string of length 0, &quot;&quot;</li>
+<li>Brute-force pattern matching involves comparing a substring to a chunk of the main text and only moving the chunk along by 1 after each iteration.</li>
+<li>Boyer-Moore&#39;s and Knuth-Morris-Pratt&#39;s pattern matching algorithms are like the brute force algorithm but they can compute a smarter jump length for each iteration</li>
+<li>Boyer-Moore works well for texts with large alphabets with a reasonable distribution of different characters.
+Knuth-Morris-Pratt works well for texts with smaller alphabets (eg. DNA sequences).
+Both algorithms aim to shift the text substring forward more intelligently than the brute-force approach</li>
+</ul>
+<h3 id="boyer-moore-algorithm-">Boyer-Moore Algorithm:</h3>
+<p><em>Logic:</em> compare the last character of the pattern to the corresponding character in the text. If mismatch, then check if that mismatching character from the text appears in the pattern. If it does, then jump forward a calculated amount. If it doesn&#39;t then jump by <code>strlen(pattern)</code> characters.</p>
+<p>The Boyer-Moore algorithm requires some preprocessing using the <em>last occurrence function:</em>  <strong>L : Σ → {0, 1, ..., m}</strong></p>
+<ul>
+<li>Consider the string &quot;acab&quot;
+L(a) = 2   → Although a also appears at index 0, we only want the last occurrence
+L(b) = 3
+L(c) = 1
+L(d) = -1 → Setting to unused characters to -1 is important in computing the jump distance
+... 
+L(z) = -1</li>
+<li>L maps each letter of the alphabet to the index where the character last occurred in the string. So when calculating the last occurrence index, it first has L(a) = 0 and then updates it to L(a) = 2 to record the last occurrence of a.</li>
+<li><em>Time-complexity:</em> O(m+s) — where <code>m</code> is the length of the string and <code>s</code> is the cardinality of the alphabet</li>
+</ul>
+<p><em>Boyer-Moore algorithm:</em></p>
+<pre><code class="lang-c"><span class="hljs-keyword">int</span> BoyerMooreMatch(<span class="hljs-keyword">char</span> *<span class="hljs-built_in">text</span>, <span class="hljs-keyword">char</span> *pattern, <span class="hljs-keyword">char</span> *alphabet) {
+        <span class="hljs-keyword">int</span> i = m - <span class="hljs-number">1</span>;  <span class="hljs-comment">// Where m is the length of the pattern</span>
+        <span class="hljs-keyword">int</span> j = m - <span class="hljs-number">1</span>;  
+        <span class="hljs-built_in">while</span> (i &lt; n) {  <span class="hljs-comment">// Where n is the length of the text</span>
+                <span class="hljs-built_in">if</span> (<span class="hljs-built_in">text</span>[i] == pattern[j]) {
+                        <span class="hljs-built_in">if</span> (j == <span class="hljs-number">0</span>) {
+                                <span class="hljs-built_in">return</span> i;  <span class="hljs-comment">// The pattern survived all character matches, so return the index of the main text where the pattern was found</span>
+                        } <span class="hljs-built_in">else</span> {
+                                i--;  <span class="hljs-comment">// Decrement to match the next pair of characters</span>
+                                j--;
+                        }
+                } <span class="hljs-built_in">else</span> {
+                        i += m - <span class="hljs-built_in">min</span>(j, <span class="hljs-number">1</span> + L(<span class="hljs-built_in">text</span>[i]));  <span class="hljs-comment">// If the last occurrence of text[i] is AFTER j, then jump (m - j) characters. Else, if the last occurrence of text[i] is before j, then jump (m - (1 + L(text[i]))) -- This aligns the character in 'pattern' with text[i]</span>
+                        j = m - <span class="hljs-number">1</span>;
+                }
+        } 
+        <span class="hljs-built_in">return</span> NO_RESULTS;
+}
+</code></pre>
+<p><em>Time-complexity:</em> O(nm + s)
+Worst case: finding pattern &quot;baaa&quot; in &quot;aaaaaaaa...aaa&quot;</p>
+<p><strong>Case 1:</strong>
+<code>text[i]</code> does not occur in the pattern string (so <code>L(text[i])</code> is -1). Jump <code>m - (1 + L(text[i]))</code>, which is the biggest jump possible — <code>m</code> characters</p>
+<p><img src="Images/notes/ref_image_18.png" alt="Images/notes/ref_image_18.png"></p>
+<p><strong>Case 2:</strong> 
+<code>text[i]</code>&#39;s last occurrence in pattern is <em>after</em> <em><code>j</code></em>, so jump <code>m - j</code> characters</p>
+<p><img src="Images/notes/ref_image_19.png" alt="Images/notes/ref_image_19.png"></p>
+<p><strong>Case 3:</strong> 
+<code>text[i]</code>&#39;s last occurrence in pattern is <em>before</em> <code>j</code>, so jump <code>m - (1 + L(text[i]))</code> characters
+The mismatched <code>text[i]</code> is aligned with the same character found before <code>j</code> in the pattern</p>
+<p><img src="Images/notes/ref_image_20.png" alt="Images/notes/ref_image_20.png"></p>
+<h3 id="knuth-morris-pratt-algorithm-">Knuth-Morris-Pratt Algorithm:</h3>
+<p><strong>Failure function:</strong> 
+KMP also requires preprocessing on the pattern to find if prefixes occur in the rest of the pattern.</p>
+<p>For each index <code>j</code>, find the longest prefix from 0 to <code>j</code> that matches the suffix in [1, j], up to and including index j, then record the function value as the number of characters in the prefix.</p>
+<p><img src="Images/notes/ref_image_21.png" alt="Images/notes/ref_image_21.png"></p>
+<p>For j = 0: &quot;a&quot;           — no prefix matches suffix — record F(0) = 0
+For j = 1: &quot;ab&quot;         — no prefix matches suffix — record F(1) = 0
+For j = 2: &quot;aba&quot;       — &quot;a&quot; works                        — record F(2) = 1
+For j = 3: &quot;abaa&quot;     — &quot;a&quot; works                        — record F(3) = 1
+For j = 4: &quot;abaab&quot;   — &quot;ab&quot; works                      — record F(4) = 2
+For j = 5: &quot;abaaba&quot; — &quot;aba&quot; works                    — record F(5) = 3</p>
+<p><em>Time-complexity:</em> O(m)</p>
+<p><em>Knuth-Morris-Pratt algorithm:</em>
+KMP scans from left to right, unlike Boyer-Moore.</p>
+<pre><code class="lang-c"><span class="hljs-keyword">int</span> KMPMatch(<span class="hljs-keyword">char</span> *<span class="hljs-built_in">text</span>, <span class="hljs-keyword">char</span> *pattern) {
+        <span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>;  <span class="hljs-comment">// Start scans from left to right</span>
+        <span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">int</span> F[m];
+        failure(F, m);  <span class="hljs-comment">// Fill up array F with function values</span>
+        <span class="hljs-built_in">while</span> (i &lt; n)) {  <span class="hljs-comment">// Where n = strlen(text)</span>
+                <span class="hljs-built_in">if</span> (<span class="hljs-built_in">text</span>[i] == pattern[j]) {
+                        <span class="hljs-built_in">if</span> (j == m - <span class="hljs-number">1</span>) {
+                                <span class="hljs-built_in">return</span> (i - j);  <span class="hljs-comment">// Pattern found, return the index at the start of the successful match</span>
+                        } <span class="hljs-built_in">else</span> {
+                                i++;
+                                j++;
+                        }
+                } <span class="hljs-built_in">else</span> {  
+                        <span class="hljs-built_in">if</span> (j &gt; <span class="hljs-number">0</span>) {
+                                j = F[j - <span class="hljs-number">1</span>];  <span class="hljs-comment">// On failure, resume comparing the pattern starting from F(j - 1)</span>
+                        } <span class="hljs-built_in">else</span> { 
+                                i++;
+                        }
+                }
+        }
+        <span class="hljs-built_in">return</span> NO_MATCHES
+}
+</code></pre>
+<p><em>Time-complexity:</em> O(m + n) — O(m) for the failure function preprocessing and O(n) for scanning through the whole text</p>
+<p>On mismatch, reset <code>j</code> to <code>F(j - 1)</code> if <code>j &gt; 0</code> and continue scanning. If <code>j == 0</code>, then just increment <code>i</code> and continue scanning</p>
+<p><img src="Images/notes/ref_image_22.png" alt="Images/notes/ref_image_22.png"></p>
+<h3 id="tries-">Tries:</h3>
+<p>A <em>trie</em> is a tree which holds a <em>set of strings</em>, like all the words in a text or a dictionary, and handles two main operations: <code>search()</code> and <code>insert()</code>. Trie&#39;s name comes from re<em>trie</em>val. </p>
+<p>Boyer-Moore and Knuth-Morris-Pratt&#39;s algorithms preprocessed their <em>pattern</em> string. If the text is large, immutable and searched for often, like <em>Hamlet</em>, then we can preprocess the <em>main</em> text instead, allowing for quick pattern queries using the trie data structure.</p>
+<p>The depth of a tree is equal to the longest string length. </p>
+<p>Each node:</p>
+<ul>
+<li>Contains just one character</li>
+<li>Has 0-26 children</li>
+<li>May be marked as a terminating node (but can still have children) to identify that the node is the end of a complete recorded word</li>
+<li>Terminating nodes may also hold the line numbers/index of the word&#39;s occurrences in the text as a struct field</li>
+</ul>
+<p>The number of words stored = the number of terminating nodes</p>
+<p><em>Possible struct declaration:</em></p>
+<pre><code class="lang-c">#define ALPHABET_SIZE <span class="hljs-number">26</span>
+typedef <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">trieNode</span></span> *Trie;
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">trieNode</span></span> {
+        <span class="hljs-keyword">bool</span> isLastChar;  <span class="hljs-comment">// If this is true, then a complete word has been formed when this node is reached</span>
+        <span class="hljs-keyword">char</span> character;   <span class="hljs-comment">// Current node's character</span>
+        Trie *children;   <span class="hljs-comment">// An array of size ALPHABET_SIZE    </span>
+};
+
+<span class="hljs-comment">// Returns a pointer to the node where the target string was found</span>
+Trie findInTrie(Trie trie, <span class="hljs-keyword">char</span> *target) {
+        <span class="hljs-keyword">char</span> *ch;
+        Trie curr = trie;
+        <span class="hljs-keyword">for</span> (ch = target; ch != <span class="hljs-string">'\0'</span>; ch++) {        
+                <span class="hljs-keyword">if</span> (curr -&gt; children[ch]) {
+                        curr = curr -&gt; children[ch];  <span class="hljs-comment">// Move down the trie, following the target string's characters</span>
+                } <span class="hljs-keyword">else</span> {
+                        <span class="hljs-keyword">return</span> NULL;  <span class="hljs-comment">// Character node doesn't exist</span>
+                }
+        }
+        <span class="hljs-keyword">if</span> (curr -&gt; isLastNode == <span class="hljs-literal">true</span>) {
+                <span class="hljs-keyword">return</span> curr;
+        } <span class="hljs-keyword">else</span> {
+                <span class="hljs-keyword">return</span> NULL;  <span class="hljs-comment">// Character was found, but it wasn't marked as a finishing node. So the word wasn't actually recorded</span>
+        }
+}
+
+<span class="hljs-comment">// Not sure if this works... </span>
+Trie insert(Trie trie, <span class="hljs-keyword">char</span> *newWord, <span class="hljs-keyword">int</span> length) {
+        Trie t;
+        <span class="hljs-keyword">if</span> (trie == NULL) {
+                t = malloc(<span class="hljs-keyword">sizeof</span>(<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">trieNode</span></span>));
+                t -&gt; character = newWord[<span class="hljs-number">0</span>];
+        }
+        <span class="hljs-keyword">if</span> (m == <span class="hljs-number">0</span>) {
+                t -&gt; finish = <span class="hljs-literal">true</span>;
+                t -&gt; data = newWord;
+        } <span class="hljs-keyword">else</span> {
+                t -&gt; children[newWord[<span class="hljs-number">1</span>]] = insert(trie, &amp;newWord[<span class="hljs-number">1</span>], length - <span class="hljs-number">1</span>);  <span class="hljs-comment">// Pass a string one character shorter to the next insert() call</span>
+        }
+        <span class="hljs-keyword">return</span> t;        
+}
+</code></pre>
+<p><em>Time-complexity:</em> O(sm) — where m is strlen(target string) and s is the size of the alphabet. The time-complexity is independent of how many actual entries there are in the tree.
+<em>Space-complexity:</em> O(n) — size of text (eg. total number of characters in each word in a dictionary)</p>
+<hr>
+<h3 id="compressed-tries-">Compressed Tries:</h3>
+<p>Compressing a trie involves <strong>c</strong>ollapsing linear branches into a single node:</p>
+<p><img src="Images/notes/ref_image_23.png" alt="Images/notes/ref_image_23.png"></p>
+<p>Using 3-tuples, (i, j, k), we can encode a slice of strings for collapsed linear branches. 
+So (8, 2, 3) navigates to the 8th word and then takes the slice of S[8] from index 2 to 3</p>
+<p><img src="Images/notes/ref_image_24.png" alt="Images/notes/ref_image_24.png"></p>
+<p><strong>Compressed Suffix Tries — For pattern matching:</strong></p>
+<p>Insert all suffixes of a given word as separate entries into a trie and then compress it.</p>
+<p>For example, for &quot;minimize&quot;:
+Insert all suffixes: &quot;e&quot;, &quot;ze&quot;, &quot;ize&quot;, ..., &quot;minimize&quot; into a regular trie, then compress.</p>
+<p><img src="Images/notes/ref_image_25.png" alt="Images/notes/ref_image_25.png"></p>
+<p>2-tuples representing slices of the text, &quot;minimize&quot;</p>
+<p><img src="Images/notes/ref_image_26.png" alt="Images/notes/ref_image_26.png"></p>
+<p><em>For constructing the suffice tree:</em>
+<em>Time-complexity</em>: O(n) — 
+<em>Space-complexity</em>: O(n) — </p>
+<p>Pattern matching:
+<em>Time-complexity:</em> O(ms) — where m is the length of the pattern and s is the size of the alphabet</p>
+<h3 id="-text-compression-huffman-s-algorithm-"><strong>Text Compression — Huffman&#39;s Algorithm:</strong></h3>
+<p>Text compression revolves around the problem: <em>&quot;can we efficiently encode a string X with a smaller string Y?&quot;</em></p>
+<p>Lossy compression: a class of <em>irreversible</em> data compression methods using approximations and partial data discarding to represent the content, causing a loss of quality/resolution.</p>
+<ul>
+<li>For MP3, there are certain frequencies that aren&#39;t human detectable so we can remove the bits encoding those frequencies</li>
+<li>JPG is a lossy compression method for digital images. We can reduce the colour encoding size — meaning that for heavier compressions, the difference between colours is less fine because the colour encoding capability is made smaller since we&#39;ve reduced the amount of bits available to encode each pixel&#39;s colour</li>
+</ul>
+<p><strong>Huffman&#39;s algorithm:</strong>
+Huffman&#39;s algorithm provides a <em>lossless</em> text compression system. It defines bit-codes for characters such that each bit code is <em>not a prefix for any other bit code</em>, which is crucial for navigating the Huffman encoding tree.
+Higher frequency characters are assigned shorter bit codes.</p>
+<ol>
+<li>Go through entire text and calculate the frequency of every character</li>
+<li><p>Build the encoding tree:
+→ Initially have single nodes representing each character in the text
+→ Merge the two lowest frequency characters into a single cluster
+→ Repeat the process until a full tree is created</p>
+<p><img src="Images/notes/ref_image_27.png" alt="Images/notes/ref_image_27.png"></p>
+</li>
+</ol>
+<p>The path to a leaf node corresponds to a bit-code</p>
+<p><img src="Images/notes/ref_image_28.png" alt="Images/notes/ref_image_28.png"></p>
+<pre><code class="lang-c"><span class="hljs-function">Tree <span class="hljs-title">createTree</span><span class="hljs-params">(<span class="hljs-keyword">char</span> *text)</span> </span>{
+        <span class="hljs-keyword">int</span> frequencies[ALPHABET_SIZE];
+        computeFrequencies(frequencies, text); 
+        PQueue pqueue = newPQueue();
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">char</span> c = <span class="hljs-string">'a'</span>; c &lt;= <span class="hljs-string">'z'</span>; c++) {
+                <span class="hljs-keyword">if</span> (frequencies[c] != <span class="hljs-number">0</span>) {
+                        Tree t = <span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">struct</span> treeNode));
+                        t -&gt; freq = frequencies[c];
+                        t -&gt; left = <span class="hljs-literal">NULL</span>;
+                        t -&gt; right = <span class="hljs-literal">NULL</span>;
+                        PQueueJoin(<span class="hljs-built_in">queue</span>, t);
+                }
+        }
+        <span class="hljs-keyword">while</span> (QueueSize(<span class="hljs-built_in">queue</span>) &gt;= <span class="hljs-number">2</span>) {
+                t1 = PQueueLeave(<span class="hljs-built_in">queue</span>);  <span class="hljs-comment">// t1 has highest priority (frequency)</span>
+                t2 = PQueueLeave(<span class="hljs-built_in">queue</span>);  <span class="hljs-comment">// t2 has next highest priority</span>
+                freq1 = t1 -&gt; freq;
+                freq2 = t2 -&gt; freq;
+                Tree t = <span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">struct</span> treeNode));  <span class="hljs-comment">// Create a new tree which has t1 and t2 as subtrees and contains the sum of both their frequencies</span>
+                t -&gt; freq = freq1 + freq2;
+                t -&gt; left = t1;
+                t -&gt; right = t2;
+                PQJoin(<span class="hljs-built_in">queue</span>, t);  <span class="hljs-comment">// Join this tree into the queue of nodes to join</span>
+        }
+        <span class="hljs-keyword">return</span> PQLeave(<span class="hljs-built_in">queue</span>);  <span class="hljs-comment">// There should be last element left in the queue, which is the root node of a completed encoding tree</span>
+}
+</code></pre>
+<p><em>Time-complexity:</em> O(n + slogs) — for computing frequencies, creating nodes for each occurring character and building the encoding tree, where s is number of unique characters</p>
+<hr>
+<h2 id="c-extras-">C Extras:</h2>
+<ul>
+<li><p><strong>Switch-case statements:</strong>
+A nicer alternative to a series of <em>else if</em> statements</p>
+<pre><code class="lang-c">  <span class="hljs-keyword">switch</span> (expression) { <span class="hljs-comment">// The expression is evaluated and compared with each case{</span>
+      <span class="hljs-keyword">case</span> <span class="hljs-string">constant1:</span>   <span class="hljs-comment">// This block is executed if expression resolves to constant1</span>
+        <span class="hljs-comment">// statements</span>
+        <span class="hljs-keyword">break</span>;          <span class="hljs-comment">// Breaks out of the curly brackets</span>
+      <span class="hljs-keyword">case</span> <span class="hljs-string">constant2:</span>
+        <span class="hljs-comment">// statements</span>
+        <span class="hljs-keyword">break</span>;
+      ...
+<span class="hljs-symbol">      default:</span>          <span class="hljs-comment">// Optional. This block is executed when no cases were matched</span>
+        <span class="hljs-comment">// default statements</span>
+  }
+</code></pre>
+</li>
+<li><p><strong>Ternary conditional operators:</strong> 
+Resolves to one value if the condition is true, or resolves to another if the condition is false:</p>
+<pre><code class="lang-c">  int <span class="hljs-attr">x</span> = <span class="hljs-number">1</span>, y;
+  <span class="hljs-attr">y</span> = (<span class="hljs-attr">x</span> == <span class="hljs-number">1</span> ? <span class="hljs-number">0</span> : <span class="hljs-number">1</span>);  // Assigns y to be <span class="hljs-number">0</span>, since <span class="hljs-attr">x</span> == <span class="hljs-number">1</span> is <span class="hljs-literal">true</span>. Syntax: <span class="hljs-attr">y</span> = (condition ? trueValue : falseValue)
+</code></pre>
+</li>
+</ul>
+<h3 id="compilation-and-makefiles-">Compilation and Makefiles:</h3>
+<p>The separation between .h and .c files is crucial and will be used extensively in implementing abstract data types</p>
+<ul>
+<li>Compilers are <em>programs</em> that convert source code to executable machine code
+gcc — Gnu C compiler, a multi-purpose tool that compiles (-c), links and produces executables (-o)</li>
+<li><strong>Compilation steps:</strong></li>
+<li>Preprocessing phase — for preprocessor directives like #define, the compiler replaces all macros with their associated value</li>
+<li>Compiles source code to produce <em>object files</em> </li>
+<li>Object files and libraries are linked to produce the final executable file</li>
+</ul>
+<p><img src="Images/notes/ref_image_29.png" alt="Images/notes/ref_image_29.png"></p>
+<pre><code class="lang-bash">gcc -c Stack.c                <span class="hljs-comment"># Produces Stack.o from Stack.c and Stack.h</span>
+gcc -c <span class="hljs-keyword">bracket.c </span>             <span class="hljs-comment"># Produces bracket.o from bracket.c and bracket.h</span>
+gcc -o rbt <span class="hljs-keyword">bracket.o </span>Stack.o  <span class="hljs-comment"># Links bracket.o, Stack.o and libraries and produce the executable named 'rbt'</span>
+                                                            <span class="hljs-comment"># If the executable name isn't specified then by default the name is a.out </span>
+                                                            <span class="hljs-comment"># The libraries are included implicitly</span>
+</code></pre>
+<ul>
+<li><strong>Include directive:</strong>
+The #include preprocessor directive is used to paste code into the current flower.
+<code>#include &lt;stdio.h&gt;</code> — the <code>&lt;&gt;</code> tells the compiler to search for header files in the System Libraries
+<code>#include &quot;myfile.h&quot;</code>  — the <code>&quot;&quot;</code> tells the compiler to search for header files in the current directory
+Header files vs .c file is like the interface vs. implementation</li>
+<li><code>#include</code> preprocessor directive is used to paste code of given file into current file.</li>
+<li><strong>For example #include <stdio.h></strong> : These directives tell the c processor to get stdio.h from System Libraries and add the text to the current source file.</li>
+</ul>
+<p><strong>Makefile:</strong>
+Allows us to see <em>dependencies</em> in our code and conveniently compile using the <code>make</code> command</p>
+<pre><code class="lang-bash"><span class="hljs-selector-tag">target</span> : <span class="hljs-selector-tag">source1</span> <span class="hljs-selector-tag">source2</span> …  
+        <span class="hljs-selector-tag">commands</span> <span class="hljs-selector-tag">to</span> <span class="hljs-selector-tag">build</span> <span class="hljs-selector-tag">target</span> <span class="hljs-selector-tag">from</span> <span class="hljs-selector-tag">sources</span>
+
+# <span class="hljs-selector-tag">Example</span>:
+<span class="hljs-selector-tag">game</span> : <span class="hljs-selector-tag">main</span><span class="hljs-selector-class">.o</span> <span class="hljs-selector-tag">graphics</span><span class="hljs-selector-class">.o</span> <span class="hljs-selector-tag">world</span><span class="hljs-selector-class">.o</span> # <span class="hljs-selector-tag">These</span> <span class="hljs-selector-tag">sourcese</span> <span class="hljs-selector-tag">are</span> <span class="hljs-selector-tag">dependencies</span>
+                <span class="hljs-selector-tag">gcc</span> <span class="hljs-selector-tag">-o</span> <span class="hljs-selector-tag">game</span> <span class="hljs-selector-tag">main</span><span class="hljs-selector-class">.o</span> <span class="hljs-selector-tag">graphics</span><span class="hljs-selector-class">.o</span> <span class="hljs-selector-tag">world</span><span class="hljs-selector-class">.o</span>
+</code></pre>
+<h3 id="function-pointers-">Function Pointers:</h3>
+<p>Function pointers are the memory address of functions.
+Function pointer declaration: <code>int (*fp) (int)</code> —   fp points to a function that returns an int and has one argument of type int</p>
+<pre><code class="lang-c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">square</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span> </span>{ 
+        <span class="hljs-keyword">return</span> x * x;
+}
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">timesTwo</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span> </span>{
+        <span class="hljs-keyword">return</span> x * <span class="hljs-number">2</span>;
+}
+
+<span class="hljs-keyword">int</span> (*funcPointer) (<span class="hljs-keyword">int</span>);
+fp = &amp;square;       <span class="hljs-comment">// fp points to the square function</span>
+<span class="hljs-keyword">int</span> n = (*fp)(<span class="hljs-number">10</span>);  <span class="hljs-comment">// calls square(10)</span>
+fp = timesTwo;      <span class="hljs-comment">// &amp; is optional, fp now points to timesTwo</span>
+n = (*fp)(<span class="hljs-number">2</span>);       <span class="hljs-comment">// calls timesTwo(2)</span>
+n = fp(<span class="hljs-number">2</span>);          <span class="hljs-comment">// (*...) is optional, normal function call</span>
+</code></pre>
+<p><em>Higher-order functions:</em> functions that has function pointers as arguments or returns function pointers</p>
+<pre><code class="lang-c"><span class="hljs-literal">void</span> traverse (<span class="hljs-built_in">List</span> head, <span class="hljs-literal">void</span> (*fp) (<span class="hljs-built_in">List</span>)) {
+        <span class="hljs-built_in">List</span> curr = head;
+        <span class="hljs-keyword">while</span> (curr != <span class="hljs-built_in">NULL</span>) {
+                fp(curr);  <span class="hljs-comment">// Applies the given function to curr! Traverse can apply any to all nodes any function with the signature void *funcName (List) </span>
+                curr = curr -&gt; next;
+        }
+}
+</code></pre>
+<pre><code class="lang-c"><span class="hljs-literal">void</span> printName (<span class="hljs-built_in">List</span> head);
+<span class="hljs-literal">void</span> printZID (<span class="hljs-built_in">List</span> head);
+<span class="hljs-params">...</span>
+traverse(studentList, printName);   <span class="hljs-comment">// Where printName fills the parameter: void (*fp) (List)</span>
+traverse(studentList, printZID);    <span class="hljs-comment">// Where printZID fills the parameter: void (*fp) (List)</span>
+</code></pre>
+<h3 id="generic-types-">Generic Types:</h3>
+<p><strong>Polymorphism:</strong> ability of the same code to operate on different data types</p>
+<ul>
+<li><strong>Parametric polymorphism:</strong> generic function parameters — a function argument that can accept multiple data types</li>
+<li><strong>Subtype polymorphism:</strong> associated with inheritance hierarchies</li>
+</ul>
+<p>void <em> pointers allow generic data types. By declaring values of type void </em>, we could pass those values into functions which <em>downcast</em> the void pointers to the correct type before operating on them. In object-oriented programming, <em>downcasting</em> or type refinement is the act of casting a reference of a base class to one of its derived classes.</p>
+<hr>
+<p><a href="https://www.notion.so/GDB-56edf61bf51846b8b8a9f1a011536aa6">GDB</a></p>
