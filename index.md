@@ -1,7 +1,3 @@
----
-title: Document Center
----
-
 # COMP2521 - Data Structures and Algorithms
 
 # Week 1: Algorithm Analysis
@@ -2042,5 +2038,3 @@ traverse(studentList, printZID);    // Where printZID fills the parameter: void 
 void * pointers allow generic data types. By declaring values of type void *, we could pass those values into functions which *downcast* the void pointers to the correct type before operating on them. In object-oriented programming, *downcasting* or type refinement is the act of casting a reference of a base class to one of its derived classes.
 
 ---
-
-[GDB](https://www.notion.so/GDB-56edf61bf51846b8b8a9f1a011536aa6)
