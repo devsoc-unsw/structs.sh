@@ -1,6 +1,6 @@
 ---
-title: [COMP2521 Notes]
-description: [A complete set of notes for COMP2521 (made in 19T3)]
+title: COMP2521 Notes
+description: A complete set of notes for COMP2521 (made in 19T3)
 show_downloads: true
 ---
 
