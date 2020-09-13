@@ -12,7 +12,7 @@ A collection of implementations of classic data structures and their algorithms 
 - [Interactive Heap](#interactive-heap)
 - [Interactive Sorting Algorithms](#interactive-sort)
 
-<a name="interactive-linked-list>
+<a name="interactive-linked-list">
 
 ## Interactive Linked List
 
