@@ -2,6 +2,7 @@
 A collection of implementations of classic data structures and their algorithms in C for COMP2521. Link to past practice questions <a href="https://tymotex.github.io/DataStructures/">here</a>
 
 ## Table of Contents  
+- [Interactive Linked List](#interactive-linked-list)   
 - [Interactive BST](#interactive-bst)   
 - [Interactive AVL Tree](#interactive-avl)   
 - [Interactive Splay Tree](#interactive-splay)  
@@ -11,6 +12,11 @@ A collection of implementations of classic data structures and their algorithms 
 - [Interactive Heap](#interactive-heap)
 - [Interactive Sorting Algorithms](#interactive-sort)
 
+<a name="interactive-linked-list>
+
+## Interactive Linked List
+
+An interactive linked list builder written in C. Supports standard operations such as insertion, deletion, searching and reversing.
 
 <a name="interactive-bst"/>
 

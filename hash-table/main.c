@@ -17,7 +17,7 @@ void printUsagePrompt(char *argv[]) {
 }
  
 /**
- * Prints supported commands available in interactive mode
+ * Prints commands available in interactive mode
  */
 void printCommands() {
 	char *helpLog = "|===== Commands =====|\n"
@@ -39,7 +39,7 @@ void printPrompt() {
 }
 
 /**
- * Given the graph and the command string, extracts arguments from the command
+ * Given the hash table and the command string, extracts arguments from the command
  * and calls the relevant function.
  */
 void processCommand(HashTable hashTable, char *command) {

@@ -17,7 +17,7 @@ void printUsagePrompt(char *argv[]) {
 }
 
 /**
- * Prints supported commands available in interactive mode
+ * Prints the commands available in interactive mode
  */
 void printCommands() {
 	char *helpLog = "|===== Commands =====|\n"
@@ -38,7 +38,7 @@ void printPrompt() {
 }
 
 /**
- * Given the graph and the command string, extracts arguments from the command
+ * Given the heap and the command string, extracts arguments from the command
  * and calls the relevant function.
  */
 Heap processCommand(Heap heap, char *command) {

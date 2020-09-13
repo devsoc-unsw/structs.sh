@@ -28,7 +28,7 @@ void printPrompt() {
 
 
 /**
- * Prints supported commands available in interactive mode
+ * Prints the commands available in interactive mode
  */
 void printCommands() {
 	char *helpLog = "|===== Commands =====|\n"

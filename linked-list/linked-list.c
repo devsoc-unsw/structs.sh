@@ -2,40 +2,13 @@
 #include <stdlib.h>
 #include <wchar.h>
 #include <locale.h>
-#include "linkedList.h"
+#include <limits.h>
+#include "linked-list.h"
 
 struct node {
     int val;
     struct node *next;
 };
-
-// ===== Building List =====
-// Iteratively build a list, given an array of values
-Node *buildList(int *values, int size) {
-    if (size == 0) {
-        return NULL;
-    }
-    Node *head = malloc(sizeof(struct node));
-    Node *curr = head;
-    curr -> val = values[0];
-    for (int i = 1; i < size; i++) {
-        curr -> next = malloc(sizeof(struct node));
-        curr -> val = values[i];
-        curr = curr -> next;
-    }
-    return head;
-}
-
-// Recursive version
-Node *buildListRecursive(int *values, int size) {
-    if (size == 0) {
-        return NULL;
-    }
-    Node *curr = malloc(sizeof(struct node));
-    curr -> val = values[0];
-    curr -> next = buildList(values + 1, size - 1);
-    return curr;
-}
 
 // ===== Inserting Nodes =====
 // Iteratively insert a node into a linked list
@@ -129,6 +102,24 @@ int getLengthRecursive(Node *head) {
     return 1 + getLengthRecursive(head -> next);
 }
 
+// ===== Search List =====
+// Iteratively search for a value in the list. Returns true if the value exists,
+// false otherwise
+bool search(Node *head, int targetValue) {
+    Node *curr = head;
+    while (curr != NULL) {
+
+        curr = curr -> next;
+    }
+    return false;
+}
+
+// Recursively search for a value in the list. Returns true if the value exists,
+// false otherwise
+bool searchRecursive(Node *head, int targetValue) {
+    return false;
+}
+
 // ===== Reverse List =====
 // Iteratively reverse the list
 Node *reverse(Node *head) {
@@ -153,6 +144,45 @@ Node *reverseRecursive(Node *head) {
     nextNode -> next = head;
     head -> next = NULL;
     return reversedListHead;
+}
+
+// ===== Sorting List =====
+// Iteratively sort the list
+Node *sortList(Node *head) {
+    Node *newHead = NULL;
+    int size = getLength(head);
+    for (int i = 0; i < size; i++) {
+        int min = INT_MAX;
+        Node *curr = head;
+        while (curr != NULL) {
+            if (curr -> val < min) {
+                min = curr -> val;
+            }
+            curr = curr -> next;
+        }
+        head = delete(head, min);
+        newHead = append(newHead, min);
+    }
+    return newHead;
+}
+
+// Recursively sort the list
+Node *sortListRecursive(Node *head) {
+    if (head == NULL) return head;
+    Node *curr = head;
+    int min = INT_MAX;
+    Node *minNode = NULL;
+    while (curr != NULL) {
+        if (curr -> val < min) {
+            min = curr -> val;
+            minNode = curr; 
+        }
+        curr = curr -> next;
+    }
+    minNode -> val = head -> val;
+    head -> val = min;
+    head -> next = sortListRecursive(head -> next);
+    return head;
 }
 
 // ===== Free List =====
@@ -198,4 +228,20 @@ void traverseAndPrintRecursive(Node *head) {
     }
     printf("%d %lc ", head -> val, (wint_t)0x2192);
     traverseAndPrintRecursive(head -> next);
+}
+
+// ===== Others Functions =====
+
+static int getLastBound() {
+
+}
+
+Node *append(Node *head, int newValue) {
+    int size = getLength(head);
+    if (head == NULL) {
+        head = insertRecursive(head, newValue, 0);
+    } else {
+        head = insertRecursive(head, newValue, size);
+    }
+    return head;
 }

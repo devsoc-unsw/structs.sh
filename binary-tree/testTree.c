@@ -9,7 +9,7 @@
 #define MAX_COMMAND_SIZE 64
 
 /**
- * Prints supported commands available in interactive mode
+ * Prints commands available in interactive mode
  */
 void printCommands() {
     char *helpLog = "|===== Commands =====|\n"
