@@ -21,7 +21,7 @@ void printCommands() {
                     " ===>  show                     - shows the list\n"
                     " ===>  exit                     - quit program\n"
                     "|====================|\n";
-    printf("%s", helpLog);
+    printPrimary(helpLog);
 }
 
 /**
