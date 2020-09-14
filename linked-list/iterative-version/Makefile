@@ -1,11 +1,11 @@
 CC=gcc
 CFLAGS= -g
-OBJS=main.o linked-list.o ../util/colours.o
+OBJS=main.o linked-list.o ../../util/colours.o
 
 testLinkedList : $(OBJS)
 	$(CC) -o testLinkedList $(OBJS)
 
-colours.o: ../util/colours.c ../util/colours.h
+colours.o: ../../util/colours.c ../../util/colours.h
 main.o : main.c
 linked-list.o   : linked-list.c linked-list.h
 

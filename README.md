@@ -16,11 +16,11 @@ A collection of implementations of classic data structures and their algorithms 
 
 ## Interactive Linked List
 
-An interactive linked list builder written in C. Supports standard operations such as insertion, deletion, searching and reversing.
+An interactive linked list builder written in C. Supports standard operations (iteratively and recursively) such as insertion, deletion, searching, sorting and reversing. 
 
 ### Setup Instructions:
 1. `git clone https://github.com/Tymotex/DataStructures.git` - downloads this repository
-2. `cd DataStructures/linked-list` - navigates to the interactive BST project root
+2. `cd DataStructures/linked-list/iterative-version` - navigates to the interactive linked list project root
 3. `make` - creates the executable file `testLinkedList`
 4. `./testLinkedList <space separated integers>` - initially constructs a linked list from the supplied sequence of integers
 

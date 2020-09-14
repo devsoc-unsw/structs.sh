@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "linked-list.h"
-#include "../util/colours.h"
+#include "../../util/colours.h"
 
 #define MAX_COMMAND_SIZE 64
 
@@ -16,6 +16,7 @@ void printCommands() {
                     " ===>  append <num>             - appends the given number\n"
                     " ===>  delete <num>             - deletes the given number\n"
                     " ===>  search <num>             - searches for the given number\n"
+                    " ===>  length                   - computes the length of the list\n"
                     " ===>  reverse                  - reverses the current list\n"
                     " ===>  sort                     - sorts the list in ascending order\n"
                     " ===>  show                     - shows the list\n"
@@ -45,7 +46,7 @@ Node *processCommand(Node *head, char *command) {
     } else if (strcmp(command, "insert") == 0) {
         int val = atoi(strtok(NULL, " "));  
         int position = atoi(strtok(NULL, " "));  
-        int currSize = getLength(head);
+        int currSize = getLengthRecursive(head);
         currSize = (currSize - 1 < 0) ? 0 : currSize;
         if (position >= 0 && position <= currSize) {
             printf(" -> Inserting %d at position %d\n", val, position);
@@ -74,7 +75,7 @@ Node *processCommand(Node *head, char *command) {
             printf("%d doesn't exist\n", val);
         }
     } else if (strcmp(command, "reverse") == 0) {
-        head = reverse(head);
+        head = reverseRecursive(head);
         printListState(head);
     } else if (strcmp(command, "sort") == 0) {
         head = sortListRecursive(head);
@@ -102,7 +103,7 @@ int main(int argc, char *argv[]) {
     // Populating the list with initial values
     Node *head = NULL;
     for (int i = 0; i < numOfValues; i++) {
-        head = insert(head, values[i], i);
+        head = insertRecursive(head, values[i], i);
     }
     free(values);
 
