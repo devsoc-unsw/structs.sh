@@ -1,4 +1,12 @@
 
+// Typical node definition:
+struct node {
+    int val;
+    struct node *next;
+};
+typedef struct node Node;
+
+
 // These two functions do EXACTLY the same thing. 
 // They both print the values in a linked list
 
@@ -13,7 +21,7 @@ void printList(Node *head) {
 
 // Recursive version
 void printList(Node *head) {
-    if (head == NULL) {
+    if (head == NULL) {   // Base condition here
         return;
     } else {
         printf("%d\n", head -> val);

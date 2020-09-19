@@ -19,4 +19,4 @@ struct treeNode {
 // Example struct definition for a graph
 struct graph {
     int **adjacencyMatrix;   // This is just a matrix of integers. 
-}
+}                            // No need to know about this until about week 6 
