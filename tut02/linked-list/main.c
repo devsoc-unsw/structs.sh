@@ -13,13 +13,8 @@ void printCommands() {
     char *helpLog = "|===== Commands =====|\n"
                     " ===>  help                     - show commands available\n"
                     " ===>  insert <num> <position>  - inserts a number at the specified position (index starts at 0)\n"
-                    " ===>  append <num>             - appends the given number\n"
-                    " ===>  delete <num>             - deletes the given number\n"
-                    " ===>  search <num>             - searches for the given number\n"
                     " ===>  length                   - computes the length of the list\n"
-                    " ===>  reverse                  - reverses the current list\n"
-                    " ===>  sort                     - sorts the list in ascending order\n"
-                    " ===>  show                     - shows the list\n"
+                    " ===>  isSorted                 - determines if the list is sorted\n"
                     " ===>  exit                     - quit program\n"
                     "|====================|\n";
     printPrimary(helpLog);
@@ -46,7 +41,7 @@ Node *processCommand(Node *head, char *command) {
     } else if (strcmp(command, "insert") == 0) {
         int val = atoi(strtok(NULL, " "));  
         int position = atoi(strtok(NULL, " "));  
-        int currSize = getLength(head);
+        int currSize = length(head);
         currSize = (currSize - 1 < 0) ? 0 : currSize;
         if (position >= 0 && position <= currSize) {
             printf(" -> Inserting %d at position %d\n", val, position);
@@ -55,33 +50,14 @@ Node *processCommand(Node *head, char *command) {
         } else {
             printf("Position out of bounds. Try a position between 0 and %d\n", currSize);
         }
-    } else if (strcmp(command, "append") == 0) {
-        int val = atoi(strtok(NULL, " "));  
-        head = append(head, val);
-        printListState(head);
-    } else if (strcmp(command, "delete") == 0) {
-        int val = atoi(strtok(NULL, " "));  
-        printf(" -> Deleting %d\n", val);
-        head = delete(head, val);
-        printListState(head);
     } else if (strcmp(command, "length") == 0) {
-        printf(" -> Length: %d\n", getLength(head));
-    } else if (strcmp(command, "search") == 0) {
-        int val = atoi(strtok(NULL, " "));  
-        printf(" -> Searching for %d\n", val);
-        if (search(head, val)) {
-            printf("%d exists\n", val);
+        printf(" -> Length: %d\n", length(head));
+    } else if (strcmp(command, "isSorted") == 0) {
+        if (isSorted(head)) {
+            printf("-> List IS sorted!\n");
         } else {
-            printf("%d doesn't exist\n", val);
+            printf("-> List is NOT sorted!\n");
         }
-    } else if (strcmp(command, "reverse") == 0) {
-        head = reverse(head);
-        printListState(head);
-    } else if (strcmp(command, "sort") == 0) {
-        head = sortList(head);
-        printListState(head);
-    } else if (strcmp(command, "show") == 0) {
-        printListState(head);
     } else if (strcmp(command, "exit") == 0) {
         printf(" -> Exiting program :)\n");  
         freeList(head);

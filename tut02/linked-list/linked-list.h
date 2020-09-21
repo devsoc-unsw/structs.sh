@@ -9,7 +9,7 @@ Node *insert(Node *head, int value, int insertionIndex);
 
 Node *delete(Node *head, int targetValue);
 
-int getLength(Node *head);
+int length(Node *head);
 
 Node *reverse(Node *head);
 

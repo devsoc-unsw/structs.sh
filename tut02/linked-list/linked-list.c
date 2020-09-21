@@ -5,28 +5,26 @@
 #include <limits.h>
 #include "linked-list.h"
 
-struct node {
-    int val;
-    struct node *next;
-};
+
 
 // Question 1: 
 // Write a function to compute the length of a linked list iteratively
 // and recursively
 
-
+struct node {
+    int val;
+    struct node *next;
+};
 
 // Iterative version
-int getLength(Node *head) {
+int length(Node *head) {
     printf("Not implemented yet!\n");
     return 42;
 }
 
 
-
-
 // Recursive version
-// int getLength(Node *head) {
+// int length(Node *head) {
 //     printf("Not implemented yet!\n");
 //     return 42;
 // }
@@ -51,10 +49,10 @@ bool isSorted() {
 }
 
 
-bool isSorted() {
-    printf("Not implemented yet!\n");
-    return false;
-}
+// bool isSorted() {
+//     printf("Not implemented yet!\n");
+//     return false;
+// }
 
 
 
@@ -153,7 +151,7 @@ Node *reverse(Node *head) {
 // Iteratively sort the list
 Node *sortList(Node *head) {
     Node *newHead = NULL;
-    int size = getLength(head);
+    int size = length(head);
     for (int i = 0; i < size; i++) {
         int min = INT_MAX;
         Node *curr = head;
@@ -196,7 +194,7 @@ void traverseAndPrint(Node *head) {
 // ===== Others Functions =====
 
 Node *append(Node *head, int newValue) {
-    int size = getLength(head);
+    int size = length(head);
     if (head == NULL) {
         head = insert(head, newValue, 0);
     } else {

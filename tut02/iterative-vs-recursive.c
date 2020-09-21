@@ -20,12 +20,11 @@ void printList(Node *head) {
 
 // Recursive version
 void printList(Node *head) {
-    if (head == NULL) {   // Base condition here
+    if (head == NULL) {   // Base condition here (also called the exit condition)
         return;
-    } else {
-        printf("%d\n", head -> val);
-        printList(head -> next);
     }
+    printf("%d\n", head -> val);
+    printList(head -> next);
 }
 
 

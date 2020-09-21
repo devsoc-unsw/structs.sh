@@ -2,6 +2,7 @@
 // Example struct definition for a 'node' in a linked list:
 struct node {
     int data;
+    char *name;
     struct node *next;    // Each node holds the address of the next node
 }
 
