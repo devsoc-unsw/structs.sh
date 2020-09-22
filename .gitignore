@@ -1,3 +1,5 @@
 deprecated
 *.o
 .vscode/
+tut01
+tut02
