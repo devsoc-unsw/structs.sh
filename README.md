@@ -12,6 +12,11 @@ A collection of implementations of classic data structures and their algorithms 
 - [Interactive Heap](#interactive-heap)
 - [Interactive Sorting Algorithms](#interactive-sort)
 
+### Todo:
+- Link all interactive programs to the main menu
+- Remove absolute paths for bmenu in terminal-serve.sh and .menu-options
+- Setup up TLS/SSL certificate
+
 <a name="interactive-linked-list">
 
 ## Interactive Linked List

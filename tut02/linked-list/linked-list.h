@@ -9,6 +9,8 @@ Node *insert(Node *head, int value, int insertionIndex);
 
 Node *delete(Node *head, int targetValue);
 
+bool isSorted();
+
 int length(Node *head);
 
 Node *reverse(Node *head);
