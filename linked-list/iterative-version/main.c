@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "linked-list.h"
 #include "../../util/colours.h"
+#include "../../util/menu-interface.h"
 
 #define MAX_COMMAND_SIZE 64
 
@@ -86,7 +88,8 @@ Node *processCommand(Node *head, char *command) {
         printf(" -> Exiting program :)\n");  
         freeList(head);
         free(command);
-        exit(0);
+        returnToMenu();
+        // exit(0);
     } else {
         printFailure(" -> Enter a valid command\n");
     }
