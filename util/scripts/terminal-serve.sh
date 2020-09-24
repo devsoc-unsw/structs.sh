@@ -2,10 +2,10 @@
 # Starts the GoTTY server. See https://github.com/yudai/gotty 
 
 # Compile the terminal-menu
-sh make_recurse.sh terminal-menu > /dev/null
+make_recurse terminal-menu > /dev/null
 
 # Compile every available interactive data structure and algorithm 
-sh make_recurse.sh ../../
+make_recurse ../../
 
 gotty -w --config ./.gotty-config --title-format "Data Structures & Algorithms" \
     '../terminal-menu/bin/menu' -c '/home/tim/DataStructures/util/terminal-menu/.menu-options'

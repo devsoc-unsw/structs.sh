@@ -1,5 +1,9 @@
 # Data Structures and Algorithms &#128187;
-A collection of implementations of classic data structures and their algorithms in C for COMP2521. View my notes and practice material for this course <a href="https://tymotex.github.io/DataStructures/">here</a>.
+A collection of implementations of classic data structures and their algorithms in C for COMP2521. 
+
+View the web terminal interface for all the interactive programs <a href="http://www.data-structures.xyz">here</a>.
+
+View my notes and practice material for this course <a href="https://tymotex.github.io/DataStructures/">here</a>.
 
 ## Table of Contents  
 - [Interactive Linked List](#interactive-linked-list)   
@@ -11,11 +15,6 @@ A collection of implementations of classic data structures and their algorithms 
 - [Interactive Hash Table](#interactive-hash-table)
 - [Interactive Heap](#interactive-heap)
 - [Interactive Sorting Algorithms](#interactive-sort)
-
-### Todo:
-- Link all interactive programs to the main menu
-- Remove absolute paths for bmenu in terminal-serve.sh and .menu-options
-- Setup up TLS/SSL certificate
 
 <a name="interactive-linked-list">
 

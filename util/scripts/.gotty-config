@@ -8,6 +8,5 @@ port = "8080"
 // hterm preferences
 // Smaller font and a little bit bluer background color
 preferences {
-    font_size = 24
-    background_color = "rgb(16, 16, 32)"
+    background_color = "rgb(20, 20, 40)"
 }

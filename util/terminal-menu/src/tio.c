@@ -38,7 +38,7 @@
 #define COLOR_WHITE   7
 
 // Static variables
-static int foregroundColor = COLOR_BLUE;            // Foreground color setting
+static int foregroundColor = COLOR_CYAN;            // Foreground color setting
 
 // Function prototypes
 static void tio_set_terminal(int);
