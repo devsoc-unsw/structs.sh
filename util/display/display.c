@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <ctype.h>
 #include <stdarg.h>
+#include "display.h"
 
 #define COMMANDS_HEADER     "Linked List Commands"
 #define HEADER_BORDER_LEFT  "╠"
@@ -63,6 +64,22 @@ void printColoured(char *colour, char *formattedMessage, ...) {
     } else if (strcmp(colour, PURPLE) == 0) {
         printf("\033[0;35m");
     } 
+    
+    // Print the formatted string
+    vprintf(formattedMessage, args);
+
+    // Reset colouration
+    printf("\033[0m");
+
+    va_end(args);
+}
+
+void printInvalidCommand(char *formattedMessage, ...) {
+    va_list args;
+    va_start(args, formattedMessage);
+
+    // Set red text
+    printf("\033[0;31m");
     
     // Print the formatted string
     vprintf(formattedMessage, args);

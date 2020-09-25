@@ -19,5 +19,10 @@ void printHeader(char *header);
  */
 void printColoured(char *colour, char *message, ...);
 
+/**
+ * Prints a formatted string, like printf. Clearly indicates the user misuse
+ * of a command.
+ */
+void printInvalidCommand(char *formattedMessage, ...);
 
 #endif
