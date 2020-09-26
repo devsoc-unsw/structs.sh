@@ -25,4 +25,10 @@ void printColoured(char *colour, char *message, ...);
  */
 void printInvalidCommand(char *formattedMessage, ...);
 
+/**
+ * Prints the contents of commands.txt in the currently executing process'
+ * directory
+ */
+void printCommands();
+
 #endif

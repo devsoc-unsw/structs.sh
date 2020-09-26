@@ -30,4 +30,10 @@ bool notEmpty(char *str);
  */
 bool isNumeric(char *str);
 
+/**
+ * Gets the directory of the currently running executable (irrespective of
+ * calling path)
+ */
+char *getDirOfCurrExecutable();
+
 #endif

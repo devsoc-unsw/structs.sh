@@ -2,44 +2,24 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "../util/colours.h"
 #include "tree-print.h"
 #include "tree.h"
+#include "../util/colours.h"
+#include "../util/menu-interface.h"
+#include "../util/display/display.h"
+#include "../util/utilities/processing.h"
 
 #define MAX_COMMAND_SIZE 64
-
-/**
- * Prints commands available in interactive mode
- */
-void printCommands() {
-    char *helpLog = "|===== Commands =====|\n"
-                    " ===>  help        - show commands available\n"
-                    " ===>  left <d>    - perform a left rotation on node with value <d>\n"
-                    " ===>  right <d>   - perform a right rotation on node with value <d>\n"
-                    " ===>  insert <d>  - inserts a node with the value <d>\n"
-                    " ===>  delete <d>  - deletes the node with value <d>\n"
-                    " ===>  exists <d>  - searches for the node with value <d>\n"
-                    " ===>  inorder     - prints the nodes of the tree in ascending order\n"
-                    " ===>  preorder    - prints the nodes of the tree in pre-order\n"
-                    " ===>  postorder   - prints the nodes of the tree in post-order\n"
-                    " ===>  levelorder  - prints the nodes of the tree in level-order\n"
-                    " ===>  level <d>   - prints the nodes on level <d>\n"
-                    " ===>  count       - prints the number of nodes in the tree\n"
-                    " ===>  height      - prints the height of the tree\n"
-                    " ===>  depth <d>   - prints the depth of the node with value <d> in the tree\n"
-                    " ===>  clear       - deletes the entire tree\n"
-                    " ===>  exit        - quit program\n"
-                    "|====================|\n";
-    printf("%s", helpLog);
-}
 
 /**
  * Prints the state of the given tree (ascii art)
  */
 void printTreeState(TreeNode *root) {
-    printSuccess("|===== Tree State =====|\n");
+    printHeader("Showing Tree");
+    printf("\n");
     printTree(root);
-    printSuccess("|======================|\n");
+    printf("\n");
+    printHeader("Done Showing");
 }
 
 /**
@@ -49,77 +29,163 @@ void printTreeState(TreeNode *root) {
  * command was executed.
  */
 TreeNode *processCommand(TreeNode *root, char *command) {
-    if (strcmp(command, "help") == 0) { 
+    char **tokens = tokenise(command);
+    char *commandName = tokens[0];
+    int numArgs = getNumTokens(tokens);
+    char *token = commandName;
+
+    if (numArgs <= 0) {
+    } else if (!commandName) {
+        printInvalidCommand("Enter a valid command\n");
+    } else if (strcmp(command, "help") == 0) { 
+        // Format: help
+        if (numArgs != 1) {
+            printInvalidCommand("Help command format: length\n");
+        } 
         printCommands();
     } else if (strcmp(command, "left") == 0) {
-        int val = atoi(strtok(NULL, " "));  
-        printf(" -> Rotating left on node with value %d\n", val);
-        root = leftRotate(root, val);
-        printTreeState(root);
-    } else if (strcmp(command, "right") == 0) {
-        int val = atoi(strtok(NULL, " "));  
-        printf(" -> Rotating right on node with value %d\n", val);
-        root = rightRotate(root, val);
-        printTreeState(root);
-    } else if (strcmp(command, "insert") == 0) {
-        int val = atoi(strtok(NULL, " "));  
-        printf(" -> Inserting %d\n", val);
-        root = insert(root, val);
-        printTreeState(root);
-    } else if (strcmp(command, "delete") == 0) {
-        int val = atoi(strtok(NULL, " "));  
-        printf(" -> Deleting %d\n", val);
-        root = delete(root, val);
-        printTreeState(root);
-    } else if (strcmp(command, "exists") == 0) {
-        int val = atoi(strtok(NULL, " "));  
-        printf(" -> Searching for %d\n", val);
-        if (existsInTree(root, val)) {
-            printf(" -> %d exists in this tree!\n", val);
+        // Format: left <node>
+        if (numArgs != 2 || !isNumeric(tokens[1])) {
+            printInvalidCommand("Insert command format: insert <num> <position>\n");
         } else {
-            printf(" -> %d doesn't exist in this tree!\n", val);
+            int val = atoi(tokens[1]);
+            printf(" ➤ Rotating left on node with value %d\n", val);
+            root = leftRotate(root, val);
+            printTreeState(root);
+        }
+    } else if (strcmp(command, "right") == 0) {
+        // Format: right <node>
+        if (numArgs != 2 || !isNumeric(tokens[1])) {
+            printInvalidCommand("Insert command format: insert <num> <position>\n");
+        } else {
+            int val = atoi(tokens[1]);
+            printf(" ➤ Rotating right on node with value %d\n", val);
+            root = rightRotate(root, val);
+            printTreeState(root);
+        }
+    } else if (strcmp(command, "insert") == 0) {
+        // Format: insert <node>
+        if (numArgs != 2 || !isNumeric(tokens[1])) {
+            printInvalidCommand("Insert command format: insert <num> <position>\n");
+        } else {
+            int val = atoi(tokens[1]);
+            printf(" ➤ Inserting %d\n", val);
+            root = insert(root, val);
+            printTreeState(root);
+        }
+    } else if (strcmp(command, "delete") == 0) {
+        // Format: delete <node>
+        if (numArgs != 2 || !isNumeric(tokens[1])) {
+            printInvalidCommand("Insert command format: insert <num> <position>\n");
+        } else {
+            int val = atoi(tokens[1]);
+            printf(" ➤ Deleting %d\n", val);
+            root = delete(root, val);
+            printTreeState(root);
+        }
+    } else if (strcmp(command, "exists") == 0) {
+        // Format: exists <node>
+        if (numArgs != 2 || !isNumeric(tokens[1])) {
+            printInvalidCommand("Insert command format: insert <num> <position>\n");
+        } else {
+            int val = atoi(tokens[1]);
+            printf(" ➤ Searching for %d\n", val);
+            if (existsInTree(root, val)) {
+                printf(" ➤ %d exists in this tree!\n", val);
+            } else {
+                printf(" ➤ %d doesn't exist in this tree!\n", val);
+            }
         }
     } else if (strcmp(command, "inorder") == 0) {
-        printf(" -> Printing in-order\n");
-        printInOrder(root);
-        printf("\n");
+        // Format: inorder
+        if (numArgs != 1) {
+            printInvalidCommand("Insert command format: insert <num> <position>\n");
+        } else {
+            printf(" ➤ Printing in-order\n");
+            printInOrder(root);
+            printf("\n");
+        }
     } else if (strcmp(command, "preorder") == 0) {
-        printf(" -> Printing pre-order\n");
-        printPreOrder(root);
-        printf("\n");
+        // Format: preorder
+        if (numArgs != 1) {
+            printInvalidCommand("Insert command format: insert <num> <position>\n");
+        } else {
+            printf(" ➤ Printing pre-order\n");
+            printPreOrder(root);
+            printf("\n");
+        }
     } else if (strcmp(command, "postorder") == 0) {
-        printf(" -> Printing post-order\n");
-        printPostOrder(root);
-        printf("\n");
+        // Format: postorder
+        if (numArgs != 1) {
+            printInvalidCommand("Insert command format: insert <num> <position>\n");
+        } else {
+            printf(" ➤ Printing post-order\n");
+            printPostOrder(root);
+            printf("\n");
+        }
     } else if (strcmp(command, "levelorder") == 0) {
-        printf(" -> Printing level-order\n");
-        printLevelOrder(root);
-        printf("\n");
+        // Format: inorder
+        if (numArgs != 1) {
+            printInvalidCommand("Insert command format: insert <num> <position>\n");
+        } else {
+            printf(" ➤ Printing level-order\n");
+            printLevelOrder(root);
+            printf("\n");
+        }
     } else if (strcmp(command, "level") == 0) {
-        int val = atoi(strtok(NULL, " "));  
-        printf(" -> Printing level %d\n", val);
-        printf(" Level %d - ", val);
-        printGivenLevel(root, val);
-        printf("\n");
+        // Format: level <num>
+        if (numArgs != 2 || !isNumeric(tokens[1])) {
+            printInvalidCommand("Insert command format: insert <num> <position>\n");
+        } else {
+            int val = atoi(tokens[1]);
+            printf(" ➤ Printing level %d\n", val);
+            printf(" Level %d - ", val);
+            printGivenLevel(root, val);
+            printf("\n");
+        }
     } else if (strcmp(command, "count") == 0) {
-        printf(" -> Number of nodes in this tree: %d\n", getNumNodes(root));
+        // Format: count
+        if (numArgs != 1) {
+            printInvalidCommand("Exit command format: exit\n");
+        } else {
+            printf(" ➤ Number of nodes in this tree: %d\n", getNumNodes(root));
+        }
     } else if (strcmp(command, "height") == 0) {
-        printf(" -> Height of the tree is: %d\n", getTreeHeight(root));
+        // Format: height
+        if (numArgs != 1) {
+            printInvalidCommand("Exit command format: exit\n");
+        } else {
+            printf(" ➤ Height of the tree is: %d\n", getTreeHeight(root));
+        }
     } else if (strcmp(command, "depth") == 0) {
-        int val = atoi(strtok(NULL, " "));  
-        printf(" -> Depth of node %d in tree: %d\n", val, getNodeDepth(root, val));
+        // Format: depth <node>
+        if (numArgs != 2 || !isNumeric(tokens[1])) {
+            printInvalidCommand("Insert command format: insert <num> <position>\n");
+        } else {
+            int val = atoi(tokens[1]);
+            printf(" ➤ Depth of node %d in tree: %d\n", val, getNodeDepth(root, val));
+        }
     } else if (strcmp(command, "clear") == 0) {
-        printf(" -> Deleting the whole tree\n");
-        freeTree(root);
-        root = NULL;
-        printTreeState(root);
+        // Format: clear
+        if (numArgs != 1) {
+            printInvalidCommand("Exit command format: exit\n");
+        } else {
+            printf(" ➤ Deleting the whole tree\n");
+            freeTree(root);
+            root = NULL;
+            printTreeState(root);
+        }
     } else if (strcmp(command, "exit") == 0) {
-        printf(" -> Exiting program :)\n");  
-        freeTree(root);
-        free(command);
-        exit(0);
+        // Format: exit
+        if (numArgs != 1) {
+            printInvalidCommand("Exit command format: exit\n");
+        } else {
+            freeTree(root);
+            free(command);
+            returnToMenu();
+        }
     } else {
-        printFailure(" -> Enter a valid command\n");
+        printInvalidCommand("Unknown command\n");
     }
     return root;
 }
@@ -142,14 +208,12 @@ int main(int argc, char *argv[]) {
     printCommands();
     printTreeState(root);
     while (1) {
-        printWarning(" ===> Enter command: ");
+        printPrompt("Enter command");
         command = fgets(command, MAX_COMMAND_SIZE, stdin);
-        printWarning(" You entered: ");
-        printPrimary(command);
-        // Strips trailing newline character and whitespace
-        strtok(command, "\n");
-        strtok(command, " ");
-        root = processCommand(root, command);
+        // Ignore processing empty strings
+        if (notEmpty(command)) {
+            root = processCommand(root, command);
+        }
     }
     freeTree(root);
     free(command);

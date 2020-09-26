@@ -1,4 +1,5 @@
 // Copyright (c) 2017 Brian Barto
+// Copyright (c) 2020 Tim Zhang
 //
 // This program is free software; you can redistribute it and/or modify it
 // under the terms of the GNU General Public License as published by the Free
@@ -38,7 +39,7 @@
 
 // Static Variables
 static char *menu_title = "Select Option";
-static char *menu_config = ".bmenu";
+static char *menu_config = ".data-structures-menu";
 static char *menu[MAX_MENU_OPTIONS];
 static char *command[MAX_MENU_OPTIONS];
 static int  menu_count = 0;

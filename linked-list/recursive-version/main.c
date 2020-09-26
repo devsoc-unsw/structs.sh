@@ -15,29 +15,6 @@
 #define COMMANDS_FILE       "commands.txt"
 
 /**
- * Prints supported commands available in interactive mode
- */
-void printCommands() {
-    printHeader(COMMANDS_HEADER);
-    char pathToExecutable[MAX_LINE];
-    readlink("/proc/self/exe", pathToExecutable, MAX_LINE);
-    char *directory = dirname(pathToExecutable);
-    char *commandsFilePath = strcat(directory, "/");
-    commandsFilePath = strcat(commandsFilePath, COMMANDS_FILE);
-
-    FILE *commandsFile = fopen(commandsFilePath, "r");
-    if (commandsFile == NULL) {
-        fprintf(stderr, "Commands file is missing\n");
-        exit(EXIT_FAILURE);
-    }
-    char commandStr[MAX_LINE];
-    while(fgets(commandStr, MAX_LINE, commandsFile)) {
-        printColoured("blue", " ➤ %s", commandStr);
-    }
-    printf("\n");
-}
-
-/**
  * Prints the state of the given linked list
  */
 void printListState(Node *head) {

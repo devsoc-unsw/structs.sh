@@ -1,4 +1,5 @@
 // Copyright (c) 2017 Brian Barto
+// Copyright (c) 2020 Tim Zhang
 //
 // This program is free software; you can redistribute it and/or modify it
 // under the terms of the GNU General Public License as published by the Free
@@ -14,7 +15,7 @@
 
 
 #define NAME_EXTENSION     "(source code: github.com/Tymotex/DataStructures)"
-#define INITIAL_PROMPT     "Press any key to start!"
+#define INITIAL_PROMPT     "Press any key to continue!"
 
 #define KEY_ENTER   10          // enter key
 #define KEY_ESC     27          // escape char indicating an arrow key

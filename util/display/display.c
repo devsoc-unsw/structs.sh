@@ -6,7 +6,9 @@
 #include <ctype.h>
 #include <stdarg.h>
 #include "display.h"
+#include "../utilities/processing.h"
 
+#define COMMANDS_FILE       "commands.txt"
 #define COMMANDS_HEADER     "Linked List Commands"
 #define HEADER_BORDER_LEFT  "╠"
 #define HEADER_BORDER_RIGHT "╣"
@@ -103,4 +105,22 @@ void printInvalidCommand(char *formattedMessage, ...) {
     printf("\033[0m");
 
     va_end(args);
+}
+
+void printCommands() {
+    printHeader(COMMANDS_HEADER);
+    char *commandsFilePath = getDirOfCurrExecutable();
+    commandsFilePath = strcat(commandsFilePath, COMMANDS_FILE);
+    FILE *commandsFile = fopen(commandsFilePath, "r");
+    if (commandsFile == NULL) {
+        fprintf(stderr, "Commands file is missing\n");
+        printf("FAILED\n");
+        exit(EXIT_FAILURE);
+    }
+    char commandStr[MAX_LINE];
+    while(fgets(commandStr, MAX_LINE, commandsFile)) {
+        printColoured("blue", " ➤ %s", commandStr);
+    }
+    free(commandsFilePath);
+    printf("\n");
 }

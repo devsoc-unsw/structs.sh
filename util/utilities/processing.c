@@ -4,10 +4,13 @@
 #include <assert.h>
 #include <ctype.h>
 #include <stdbool.h>
+#include <libgen.h>
+#include <unistd.h>
 #include "processing.h"
 
 #define WORD_SEPARATORS " \t\r\n"
-#define SPECIAL_CHARS "!|<>"
+#define SPECIAL_CHARS   "!|<>"
+#define MAX_LINE        256
 
 char **tokenise(char *command) {
     size_t numTokens = 0;
@@ -66,4 +69,14 @@ bool isNumeric(char *str) {
             return false;
         }
     return true;
+}
+
+char *getDirOfCurrExecutable() {
+    char pathToExecutable[MAX_LINE];
+    readlink("/proc/self/exe", pathToExecutable, MAX_LINE);
+    char *directory = dirname(pathToExecutable);
+    char *result = malloc(sizeof(char) * MAX_LINE);
+    strcpy(result, directory);
+    strcat(result, "/");
+    return result;
 }
