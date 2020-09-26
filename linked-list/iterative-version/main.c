@@ -42,9 +42,10 @@ Node *processCommand(Node *head, char *command) {
     } else if (strcmp(commandName, "help") == 0) { 
         // Format: help
         if (numArgs != 1) {
-            printInvalidCommand("Help command format: length\n");
-        } 
-        printCommands();
+            printInvalidCommand("Help command format: help\n");
+        } else {
+            printCommands();
+        }
     } else if (strcmp(commandName, "insert") == 0) {
         // Format: insert <num> <position>
         if (numArgs != 3 || !isNumeric(tokens[1]) || !isNumeric(tokens[2])) {
@@ -89,7 +90,7 @@ Node *processCommand(Node *head, char *command) {
     } else if (strcmp(commandName, "search") == 0) {
         // Format: search <num>
         if (numArgs != 2 || !isNumeric(tokens[1])) {
-            printInvalidCommand("Length command format: length\n");
+            printInvalidCommand("Search command format: search\n");
         } else {
             int val = atoi(tokens[1]);
             if (search(head, val)) {

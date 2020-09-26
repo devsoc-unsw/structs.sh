@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h> 
 #include "tree.h"
+#include "../util/display/display.h"
 
 #define MAX_TREE_SIZE 64
 
@@ -36,7 +37,7 @@ TreeNode *insert(TreeNode *root, int value) {
         root -> right = insert(root -> right, value);
     } else {
         // Value already exists in the tree. Doing nothing
-        printf("Value %d already exists in the tree\n", value);
+        printColoured("red", " ➤ Value %d already exists in the tree\n", value);
         return root;
     }
     return root;
@@ -89,7 +90,7 @@ void printPostOrder(TreeNode *root) {
 void printLevelOrder(TreeNode *root) {
     int height = getTreeHeight(root); 
     for (int i = 1; i <= height; i++) {
-        printf("Level %d - ", i);
+        printf("Level %d: ", i);
         printGivenLevel(root, i); 
         if (i != height) printf("\n");
     } 
@@ -99,7 +100,7 @@ void printLevelOrder(TreeNode *root) {
  * Given the tree and the target level, prints the nodes on that level
  */
 void printGivenLevel(TreeNode *root, int level) { 
-    if (root == NULL) return; 
+    if (root == NULL) return;
     if (level == 1) printf("%d ", root -> value); 
     else if (level > 1) { 
         printGivenLevel(root -> left, level - 1); 
@@ -128,13 +129,6 @@ bool existsInTree(TreeNode *root, int targetValue) {
 
 /**
  * Given a tree, counts the number of nodes in the tree and returns it.
- *
- *   struct treeNode {
- *       int value;
- *       struct treeNode *left;
- *       struct treeNode *right;
- *   };
- *   typedef struct treeNode TreeNode;
  */
 int getNumNodes(TreeNode *root) {
     return (root == NULL) ? 0 : 1 + getNumNodes(root -> left) + getNumNodes(root -> right);
@@ -173,7 +167,7 @@ int getNodeDepth(TreeNode *root, int targetValue) {
  */
 TreeNode *leftRotate(TreeNode *root, int targetValue) {
     if (root == NULL) {
-        printf("Target value %d wasn't found in the tree\n", targetValue);
+        printColoured("red", " ➤ Target value %d wasn't found in the tree\n", targetValue);
         return NULL;
     } else if (root -> value == targetValue) {
         // Found the node to execute the left rotation on
@@ -186,7 +180,7 @@ TreeNode *leftRotate(TreeNode *root, int targetValue) {
             return rightChild;
         } else {
             // Can't rotate when there's no right child
-            printf("%d doesn't have a right child. Can't left rotate\n", targetValue);
+            printf(" ➤ %d doesn't have a right child. Can't left rotate\n", targetValue);
             return root;
         }
     }
@@ -198,6 +192,7 @@ TreeNode *leftRotate(TreeNode *root, int targetValue) {
         // Target tree exists somewhere in the right subtree
         root -> right = leftRotate(root -> right, targetValue);
     }
+    return root;
 }
 
 /**
@@ -206,7 +201,7 @@ TreeNode *leftRotate(TreeNode *root, int targetValue) {
  */
 TreeNode *rightRotate(TreeNode *root, int targetValue) {
     if (root == NULL) {
-        printf("Target value %d wasn't found in the tree\n", targetValue);
+        printColoured("red", " ➤ Target value %d wasn't found in the tree\n", targetValue);
         return NULL;
     } else if (root -> value == targetValue) {
         // Found the node to execute the right rotation on
@@ -219,7 +214,7 @@ TreeNode *rightRotate(TreeNode *root, int targetValue) {
             return leftChild;
         } else {
             // Can't rotate when there's no left child
-            printf("%d doesn't have a left child. Can't right rotate\n", targetValue);
+            printf(" ➤ %d doesn't have a left child. Can't right rotate\n", targetValue);
             return root;
         }
     }
@@ -231,13 +226,14 @@ TreeNode *rightRotate(TreeNode *root, int targetValue) {
         // Target tree exists somewhere in the right subtree
         root -> right = rightRotate(root -> right, targetValue);
     }
+    return root;
 }
 
 /**
  * Given a tree and a target value, finds the node containing that
  * target value and deletes it from the tree, if it exists. All 4
  * cases are handled as follows:
- *    Case 1: 0 children - Easiest case. Just delete and return
+ *    Case 1: 0 children - easiest case. Just delete and return
  *    Case 2: only right child exists - replace root with the right child
  *    Case 3: only left child exists - replace root with the left child
  *    Case 4: both children exist - find the min node in right subtree, swap out root with that min node
@@ -280,6 +276,7 @@ TreeNode *delete(TreeNode *root, int targetValue) {
             // root -> right = delete(root -> right, minNode -> value);
         }
     }
+    return root;
 }
 
 /**

@@ -233,7 +233,7 @@ void printTree(TreeNode *t) {
     AsciiNode *proot;
     int xmin, i;
     if (t == NULL) {
-        printColoured("green", "Tree is empty\n");
+        printColoured("red", "(tree is empty)\n");
         return;
     }
     proot = buildAsciiTree(t);

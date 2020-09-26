@@ -1,10 +1,8 @@
-
-
 help             - show commands available
 left <node>      - perform a left rotation on node with value <node>
 right <node>     - perform a right rotation on node with value <node>
-insert <node>    - inserts a node with the value <node>
-delete <node>    - deletes the node with value <node>
+insert <nodes>   - inserts a node with the value <node>
+delete <nodes>   - deletes the node with value <node>
 exists <node>    - searches for the node with value <node>
 inorder          - prints the nodes of the tree in ascending order
 preorder         - prints the nodes of the tree in pre-order
@@ -14,5 +12,6 @@ level <num>      - prints the nodes on level <num>
 count            - prints the number of nodes in the tree
 height           - prints the height of the tree
 depth <node>     - prints the depth of the node with value <node> in the tree
+show             - shows the entire tree
 clear            - deletes the entire tree
 exit             - quit program

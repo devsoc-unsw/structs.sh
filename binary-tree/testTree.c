@@ -37,56 +37,70 @@ TreeNode *processCommand(TreeNode *root, char *command) {
     if (numArgs <= 0) {
     } else if (!commandName) {
         printInvalidCommand("Enter a valid command\n");
-    } else if (strcmp(command, "help") == 0) { 
+    } else if (strcmp(commandName, "help") == 0) { 
         // Format: help
         if (numArgs != 1) {
-            printInvalidCommand("Help command format: length\n");
-        } 
-        printCommands();
-    } else if (strcmp(command, "left") == 0) {
+            printInvalidCommand("Help command format: help\n");
+        } else {
+            printCommands();
+        }
+    } else if (strcmp(commandName, "left") == 0) {
         // Format: left <node>
         if (numArgs != 2 || !isNumeric(tokens[1])) {
-            printInvalidCommand("Insert command format: insert <num> <position>\n");
+            printInvalidCommand("Left command format: left <node>\n");
         } else {
             int val = atoi(tokens[1]);
             printf(" ➤ Rotating left on node with value %d\n", val);
             root = leftRotate(root, val);
             printTreeState(root);
         }
-    } else if (strcmp(command, "right") == 0) {
+    } else if (strcmp(commandName, "right") == 0) {
         // Format: right <node>
         if (numArgs != 2 || !isNumeric(tokens[1])) {
-            printInvalidCommand("Insert command format: insert <num> <position>\n");
+            printInvalidCommand("Right command format: right <node>\n");
         } else {
             int val = atoi(tokens[1]);
             printf(" ➤ Rotating right on node with value %d\n", val);
             root = rightRotate(root, val);
             printTreeState(root);
         }
-    } else if (strcmp(command, "insert") == 0) {
+    } else if (strcmp(commandName, "insert") == 0) {
         // Format: insert <node>
-        if (numArgs != 2 || !isNumeric(tokens[1])) {
-            printInvalidCommand("Insert command format: insert <num> <position>\n");
+        if (numArgs < 2) {
+            printInvalidCommand("Insert command format: insert <node>\n");
         } else {
-            int val = atoi(tokens[1]);
-            printf(" ➤ Inserting %d\n", val);
-            root = insert(root, val);
-            printTreeState(root);
+            for (int i = 0; i < numArgs - 1; i++) {
+                if (!isNumeric(tokens[i + 1])) {
+                    printColoured("red", " ➤ %s is not numeric\n", tokens[i + 1]);
+                } else {
+                    int val = atoi(tokens[i + 1]);
+                    printf(" ➤ Inserting %d\n", val);
+                    root = insert(root, val);
+                    printTreeState(root);
+                }
+            }
         }
-    } else if (strcmp(command, "delete") == 0) {
+    } else if (strcmp(commandName, "delete") == 0) {
         // Format: delete <node>
-        if (numArgs != 2 || !isNumeric(tokens[1])) {
-            printInvalidCommand("Insert command format: insert <num> <position>\n");
+        if (numArgs < 2) {
+            printInvalidCommand("Delete command format: Delete <node>\n");
         } else {
-            int val = atoi(tokens[1]);
-            printf(" ➤ Deleting %d\n", val);
-            root = delete(root, val);
-            printTreeState(root);
+            for (int i = 0; i < numArgs - 1; i++) {
+                if (!isNumeric(tokens[i + 1])) {
+                    printColoured("red", " ➤ %s is not numeric\n", tokens[i + 1]);
+                } else {
+                    int val = atoi(tokens[i + 1]);
+                    printf(" ➤ Deleting %d\n", val);
+                    root = delete(root, val);
+                    printTreeState(root);
+                }
+            }
+            
         }
-    } else if (strcmp(command, "exists") == 0) {
+    } else if (strcmp(commandName, "exists") == 0) {
         // Format: exists <node>
         if (numArgs != 2 || !isNumeric(tokens[1])) {
-            printInvalidCommand("Insert command format: insert <num> <position>\n");
+            printInvalidCommand("Exists command format: exists <node>\n");
         } else {
             int val = atoi(tokens[1]);
             printf(" ➤ Searching for %d\n", val);
@@ -96,92 +110,94 @@ TreeNode *processCommand(TreeNode *root, char *command) {
                 printf(" ➤ %d doesn't exist in this tree!\n", val);
             }
         }
-    } else if (strcmp(command, "inorder") == 0) {
+    } else if (strcmp(commandName, "inorder") == 0) {
         // Format: inorder
         if (numArgs != 1) {
-            printInvalidCommand("Insert command format: insert <num> <position>\n");
+            printInvalidCommand("Inorder command format: inorder\n");
         } else {
             printf(" ➤ Printing in-order\n");
             printInOrder(root);
             printf("\n");
         }
-    } else if (strcmp(command, "preorder") == 0) {
+    } else if (strcmp(commandName, "preorder") == 0) {
         // Format: preorder
         if (numArgs != 1) {
-            printInvalidCommand("Insert command format: insert <num> <position>\n");
+            printInvalidCommand("Preorder command format: preorder\n");
         } else {
             printf(" ➤ Printing pre-order\n");
             printPreOrder(root);
             printf("\n");
         }
-    } else if (strcmp(command, "postorder") == 0) {
+    } else if (strcmp(commandName, "postorder") == 0) {
         // Format: postorder
         if (numArgs != 1) {
-            printInvalidCommand("Insert command format: insert <num> <position>\n");
+            printInvalidCommand("Postorder command format: postorder\n");
         } else {
             printf(" ➤ Printing post-order\n");
             printPostOrder(root);
             printf("\n");
         }
-    } else if (strcmp(command, "levelorder") == 0) {
-        // Format: inorder
+    } else if (strcmp(commandName, "levelorder") == 0) {
+        // Format: levelorder
         if (numArgs != 1) {
-            printInvalidCommand("Insert command format: insert <num> <position>\n");
+            printInvalidCommand("Levelorder command format: levelorder\n");
         } else {
             printf(" ➤ Printing level-order\n");
             printLevelOrder(root);
             printf("\n");
         }
-    } else if (strcmp(command, "level") == 0) {
+    } else if (strcmp(commandName, "level") == 0) {
         // Format: level <num>
         if (numArgs != 2 || !isNumeric(tokens[1])) {
-            printInvalidCommand("Insert command format: insert <num> <position>\n");
+            printInvalidCommand("Level command format: level <num>\n");
         } else {
             int val = atoi(tokens[1]);
             printf(" ➤ Printing level %d\n", val);
-            printf(" Level %d - ", val);
+            printf(" ➤ Level %d - ", val);
             printGivenLevel(root, val);
             printf("\n");
         }
-    } else if (strcmp(command, "count") == 0) {
+    } else if (strcmp(commandName, "count") == 0) {
         // Format: count
         if (numArgs != 1) {
-            printInvalidCommand("Exit command format: exit\n");
+            printInvalidCommand("Count command format: count\n");
         } else {
             printf(" ➤ Number of nodes in this tree: %d\n", getNumNodes(root));
         }
-    } else if (strcmp(command, "height") == 0) {
+    } else if (strcmp(commandName, "height") == 0) {
         // Format: height
         if (numArgs != 1) {
-            printInvalidCommand("Exit command format: exit\n");
+            printInvalidCommand("Height command format: height\n");
         } else {
             printf(" ➤ Height of the tree is: %d\n", getTreeHeight(root));
         }
-    } else if (strcmp(command, "depth") == 0) {
+    } else if (strcmp(commandName, "depth") == 0) {
         // Format: depth <node>
         if (numArgs != 2 || !isNumeric(tokens[1])) {
-            printInvalidCommand("Insert command format: insert <num> <position>\n");
+            printInvalidCommand("Depth command format: depth <node>\n");
         } else {
             int val = atoi(tokens[1]);
             printf(" ➤ Depth of node %d in tree: %d\n", val, getNodeDepth(root, val));
         }
-    } else if (strcmp(command, "clear") == 0) {
+    } else if (strcmp(commandName, "clear") == 0) {
         // Format: clear
         if (numArgs != 1) {
-            printInvalidCommand("Exit command format: exit\n");
+            printInvalidCommand("Clear command format: clear\n");
         } else {
             printf(" ➤ Deleting the whole tree\n");
             freeTree(root);
             root = NULL;
             printTreeState(root);
         }
-    } else if (strcmp(command, "exit") == 0) {
+    } else if (strcmp(commandName, "show") == 0) {
+        printTreeState(root);
+    } else if (strcmp(commandName, "exit") == 0) {
         // Format: exit
         if (numArgs != 1) {
             printInvalidCommand("Exit command format: exit\n");
         } else {
             freeTree(root);
-            free(command);
+            free(commandName);
             returnToMenu();
         }
     } else {
