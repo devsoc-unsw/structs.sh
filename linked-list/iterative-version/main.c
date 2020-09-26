@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <libgen.h>
 #include "linked-list.h"
 #include "../../util/colours.h"
 #include "../../util/menu-interface.h"
@@ -11,13 +12,20 @@
 #define MAX_COMMAND_SIZE    64
 #define MAX_LINE            256
 #define COMMANDS_HEADER     "Linked List Commands"
+#define COMMANDS_FILE       "commands.txt"
 
 /**
  * Prints supported commands available in interactive mode
  */
 void printCommands() {
     printHeader(COMMANDS_HEADER);
-    FILE *commandsFile = fopen("commands.txt", "r");
+    char pathToExecutable[MAX_LINE];
+    readlink("/proc/self/exe", pathToExecutable, MAX_LINE);
+    char *directory = dirname(pathToExecutable);
+    char *commandsFilePath = strcat(directory, "/");
+    commandsFilePath = strcat(commandsFilePath, COMMANDS_FILE);
+
+    FILE *commandsFile = fopen(commandsFilePath, "r");
     if (commandsFile == NULL) {
         fprintf(stderr, "Commands file is missing\n");
         exit(EXIT_FAILURE);
