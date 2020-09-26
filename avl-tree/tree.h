@@ -17,8 +17,6 @@ TreeNode *insertAVL(TreeNode *root, int value);           // insert
 TreeNode *leftRotate(TreeNode *root, int targetValue);    // left
 TreeNode *rightRotate(TreeNode *root, int targetValue);   // right
 int getTreeHeight(TreeNode *root);                        // height
-// int heightDiff(TreeNode *root);                           // heightDiff
-// int isHeightBalanced(TreeNode *root);                     // heightBalanced
 TreeNode *deleteAVL(TreeNode *root, int targetValue);     // delete
 void freeTree(TreeNode *root);                            // clear
 

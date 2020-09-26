@@ -189,7 +189,11 @@ TreeNode *processCommand(TreeNode *root, char *command) {
             printTreeState(root);
         }
     } else if (strcmp(commandName, "show") == 0) {
-        printTreeState(root);
+        if (numArgs != 1) {
+            printInvalidCommand("Show command format: show\n");
+        } else {
+            printTreeState(root);
+        }
     } else if (strcmp(commandName, "exit") == 0) {
         // Format: exit
         if (numArgs != 1) {

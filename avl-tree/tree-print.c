@@ -4,7 +4,7 @@
 #include <string.h>
 #include "tree.h"
 #include "tree-print.h"
-#include "../util/colours.h"
+#include "../util/display/display.h"
 
 #define MAX_HEIGHT 1000
 #define INFINITY (1<<20)
@@ -211,7 +211,7 @@ void printLevel(AsciiNode *asciiNode, int x, int level)  {
         printNext += i;
         char tmp[80];
         sprintf(tmp, "%s", asciiNode -> label);
-        printSuccess(tmp);
+        printColoured("green", tmp);
         printNext += asciiNode -> lablen;
     } 
     else if (asciiNode -> edgeLength >= level) {
@@ -220,7 +220,7 @@ void printLevel(AsciiNode *asciiNode, int x, int level)  {
                 printf(" ");
             }
             printNext += i;
-            printSecondary("/");
+            printColoured("purple", "/");
             printNext++;
         }
         if (asciiNode -> right != NULL) {
@@ -228,7 +228,7 @@ void printLevel(AsciiNode *asciiNode, int x, int level)  {
                 printf(" ");
             }
             printNext += i;
-            printSecondary("\\");
+            printColoured("purple", "\\");
             printNext++;
         }
     } 
@@ -244,12 +244,15 @@ void printLevel(AsciiNode *asciiNode, int x, int level)  {
 
 /** 
  * Given the tree, constructs an ascii tree and prints it
+ * - PRINT_VALUES  1
+ * - PRINT_BALANCE 2
+ * - PRINT_HEIGHTS 3
  */
 void printTree(TreeNode *t, int option) {
     AsciiNode *proot;
     int xmin, i;
     if (t == NULL) {
-        printSuccess("Tree is empty\n");
+        printColoured("red", "Tree is empty\n");
         return;
     }
     proot = buildAsciiTree(t, option);
@@ -277,31 +280,26 @@ void printTree(TreeNode *t, int option) {
  * Prints the state of the given tree (ascii art) with
  * a the given message as a header.
  */
-void printTreeState(TreeNode *root, char *message) {
-    printSuccess("|===== ");
-    printSuccess(message);
-    printSuccess(" =====|\n");
+void printCurrTreeState(TreeNode *root, char *message) {
+    printHeader(message);
     printTree(root, PRINT_VALUES);
-    printSuccess("|");
-    for (int i = 0; i < strlen(message) + 12; i++)
-        printSuccess("=");
-    printSuccess("|\n");
+    printHeader("Done Showing");
 }
 
 /**
  * Prints the the given tree's nodes' balance (ascii art)
  */
 void printTreeBalances(TreeNode *root) {
-    printSuccess("|===== Tree Height Balances =====|\n");
+    printHeader("Tree Height Balances");
     printTree(root, PRINT_BALANCE);
-    printSuccess("|================================|\n");
+    printHeader("Done Showing");
 }
 
 /**
  * Prints the the given tree's nodes' height (ascii art)
  */
 void printTreeHeights(TreeNode *root) {
-    printSuccess("|===== Tree Height Balances =====|\n");
+    printHeader("Tree Height Balances");
     printTree(root, PRINT_HEIGHTS);
-    printSuccess("|================================|\n");
+    printHeader("Done Showing");
 }

@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h> 
-#include "../util/colours.h"
 #include "tree.h"
 #include "tree-print.h"
+#include "../util/display/display.h"
 
 #define MAX_TREE_SIZE 64
 #define LOCAL_STATE_HEADER "Local Tree Fix"
@@ -44,7 +44,7 @@ TreeNode *insertAVL(TreeNode *root, int value) {
         root -> right = insertAVL(root -> right, value);
     } else {
         // Value already exists in the tree. Doing nothing
-        printf("Value %d already exists in the tree\n", value);
+        printColoured("red", "Value %d already exists in the tree\n", value);
         return root;
     }
 
@@ -73,37 +73,37 @@ TreeNode *rebalanceAVL(TreeNode *root) {
     int rh = getHeight(root -> right);
     if (lh - rh > 1) {
         // Left subtree has 2 more levels than the right subtree. Need to do a right rotation
-        printf(" -> Imbalance found: left subtree of %d is taller than the right subtree by 2 levels\n", root -> value);
-        printTreeState(root, LOCAL_IMBALANCE_HEADER);
+        printf(" ➤ Imbalance found: left subtree of %d is taller than the right subtree by 2 levels\n", root -> value);
+        printCurrTreeState(root, LOCAL_IMBALANCE_HEADER);
         TreeNode *leftChild = root -> left;
         int leftLeftHeight = getHeight(leftChild -> left);
         int leftRightHeight = getHeight(leftChild -> right);
         if (leftRightHeight > leftLeftHeight) {
             // Need to do a left rotation on leftChild first
-            printf(" -> Doing left rotation on node containing %d\n", leftChild -> value);
+            printf(" ➤ Doing left rotation on node containing %d\n", leftChild -> value);
             root -> left = leftRotate(leftChild, leftChild -> value);
-            printTreeState(root, LOCAL_STATE_HEADER);
+            printCurrTreeState(root, LOCAL_STATE_HEADER);
         }
-        printf(" -> Doing right rotation on node containing %d\n", root -> value);
+        printf(" ➤ Doing right rotation on node containing %d\n", root -> value);
         root = rightRotate(root, root -> value);
-        printTreeState(root, LOCAL_STATE_HEADER);
+        printCurrTreeState(root, LOCAL_STATE_HEADER);
     }
     if (rh - lh > 1) {
         // Right subtree has 2 more levels than the left subtree. Need to do a left rotation
-        printf(" -> Imbalance found: right subtree of %d is taller than the left subtree by 2 levels\n", root -> value);
-        printTreeState(root, LOCAL_IMBALANCE_HEADER);
+        printf(" ➤ Imbalance found: right subtree of %d is taller than the left subtree by 2 levels\n", root -> value);
+        printCurrTreeState(root, LOCAL_IMBALANCE_HEADER);
         TreeNode *rightChild = root -> right;
         int rightLeftHeight = getHeight(rightChild -> left);
         int rightRightHeight = getHeight(rightChild -> right);
         if (rightLeftHeight > rightRightHeight) {
             // Need to do a right rotation on rightChild first
-            printf(" -> Doing right rotation on node containing %d\n", rightChild -> value);
+            printf(" ➤ Doing right rotation on node containing %d\n", rightChild -> value);
             root -> right = rightRotate(rightChild, rightChild -> value);
-            printTreeState(root, LOCAL_STATE_HEADER);
+            printCurrTreeState(root, LOCAL_STATE_HEADER);
         }
-        printf(" -> Doing left rotation on node containing %d\n", root -> value);
+        printf(" ➤ Doing left rotation on node containing %d\n", root -> value);
         root = leftRotate(root, root -> value);
-        printTreeState(root, LOCAL_STATE_HEADER);
+        printCurrTreeState(root, LOCAL_STATE_HEADER);
     }
     return root;
 }
@@ -128,7 +128,7 @@ int getTreeHeight(TreeNode *root) {
  */
 TreeNode *leftRotate(TreeNode *root, int targetValue) {
     if (root == NULL) {
-        printf("Target value %d wasn't found in the tree\n", targetValue);
+        printColoured("red", "Target value %d wasn't found in the tree\n", targetValue);
         return NULL;
     } else if (root -> value == targetValue) {
         // Found the node to execute the left rotation on
@@ -143,7 +143,7 @@ TreeNode *leftRotate(TreeNode *root, int targetValue) {
             return rightChild;
         } else {
             // Can't rotate when there's no right child
-            printf("%d doesn't have a right child. Can't left rotate\n", targetValue);
+            printColoured("red", "%d doesn't have a right child. Can't left rotate\n", targetValue);
             return root;
         }
     }
@@ -155,6 +155,7 @@ TreeNode *leftRotate(TreeNode *root, int targetValue) {
         // Target tree exists somewhere in the right subtree
         root -> right = leftRotate(root -> right, targetValue);
     }
+    return root;
 }
 
 /**
@@ -163,7 +164,7 @@ TreeNode *leftRotate(TreeNode *root, int targetValue) {
  */
 TreeNode *rightRotate(TreeNode *root, int targetValue) {
     if (root == NULL) {
-        printf("Target value %d wasn't found in the tree\n", targetValue);
+        printColoured("red", "Target value %d wasn't found in the tree\n", targetValue);
         return NULL;
     } else if (root -> value == targetValue) {
         // Found the node to execute the right rotation on
@@ -178,7 +179,7 @@ TreeNode *rightRotate(TreeNode *root, int targetValue) {
             return leftChild;
         } else {
             // Can't rotate when there's no left child
-            printf("%d doesn't have a left child. Can't right rotate\n", targetValue);
+            printColoured("red", "%d doesn't have a left child. Can't right rotate\n", targetValue);
             return root;
         }
     }
@@ -190,6 +191,7 @@ TreeNode *rightRotate(TreeNode *root, int targetValue) {
         // Target tree exists somewhere in the right subtree
         root -> right = rightRotate(root -> right, targetValue);
     }
+    return root;
 }
 
 /**
@@ -209,7 +211,7 @@ TreeNode *rightRotate(TreeNode *root, int targetValue) {
 TreeNode *deleteAVL(TreeNode *root, int targetValue) {
     // === STEP 1 - Standard BST deletion ===
     if (root == NULL) {
-        printf("Value %d doesn't exist in this tree\n", targetValue);
+        printColoured("red", "Value %d doesn't exist in this tree\n", targetValue);
         return NULL;
     }
 
