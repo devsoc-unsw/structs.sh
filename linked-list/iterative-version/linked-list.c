@@ -138,7 +138,7 @@ void traverseAndPrint(Node *head) {
     setlocale(LC_CTYPE, "");
     while (head != NULL) {
         // Prints the → unicode character
-        printColoured("yellow", "%d %lc ", head -> val, (wint_t)0x2192);
+        printf("%d %lc ", head -> val, (wint_t)0x2192);
         head = head -> next;
     }
     // Prints the ╳ unicode character

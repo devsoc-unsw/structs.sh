@@ -57,7 +57,7 @@ void printHeader(char *header, ...) {
 
 
 void printPrompt(char *promptPreMessage) {
-    printColoured("yellow", "%s ➤  ", promptPreMessage);
+    printColoured("yellow", "%s ➤ ", promptPreMessage);
 }
 
 

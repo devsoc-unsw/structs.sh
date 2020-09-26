@@ -4,6 +4,7 @@
 #include <locale.h>
 #include <limits.h>
 #include "linked-list.h"
+#include "../../util/display/display.h"
 
 struct node {
     int val;
@@ -27,6 +28,7 @@ Node *insertRecursive(Node *head, int value, int insertionIndex) {
 // Recursively delete a node with the given target value from the list
 Node *deleteRecursive(Node *head, int targetValue) {
     if (head == NULL) {
+        printColoured("red", " ➤ %d wasn't found\n", targetValue);
         return NULL;
     }
     if (head -> val == targetValue) {

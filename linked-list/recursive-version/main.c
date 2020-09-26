@@ -1,37 +1,51 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <libgen.h>
 #include "linked-list.h"
 #include "../../util/colours.h"
+#include "../../util/menu-interface.h"
+#include "../../util/display/display.h"
+#include "../../util/utilities/processing.h"
 
-#define MAX_COMMAND_SIZE 64
+#define MAX_COMMAND_SIZE    64
+#define MAX_LINE            256
+#define COMMANDS_HEADER     "Linked List Commands (Recursive)"
+#define COMMANDS_FILE       "commands.txt"
 
 /**
  * Prints supported commands available in interactive mode
  */
 void printCommands() {
-    char *helpLog = "|===== Commands =====|\n"
-                    " ===>  help                     - show commands available\n"
-                    " ===>  insert <num> <position>  - inserts a number at the specified position (index starts at 0)\n"
-                    " ===>  append <num>             - appends the given number\n"
-                    " ===>  delete <num>             - deletes the given number\n"
-                    " ===>  search <num>             - searches for the given number\n"
-                    " ===>  length                   - computes the length of the list\n"
-                    " ===>  reverse                  - reverses the current list\n"
-                    " ===>  sort                     - sorts the list in ascending order\n"
-                    " ===>  show                     - shows the list\n"
-                    " ===>  exit                     - quit program\n"
-                    "|====================|\n";
-    printPrimary(helpLog);
+    printHeader(COMMANDS_HEADER);
+    char pathToExecutable[MAX_LINE];
+    readlink("/proc/self/exe", pathToExecutable, MAX_LINE);
+    char *directory = dirname(pathToExecutable);
+    char *commandsFilePath = strcat(directory, "/");
+    commandsFilePath = strcat(commandsFilePath, COMMANDS_FILE);
+
+    FILE *commandsFile = fopen(commandsFilePath, "r");
+    if (commandsFile == NULL) {
+        fprintf(stderr, "Commands file is missing\n");
+        exit(EXIT_FAILURE);
+    }
+    char commandStr[MAX_LINE];
+    while(fgets(commandStr, MAX_LINE, commandsFile)) {
+        printColoured("blue", " ➤ %s", commandStr);
+    }
+    printf("\n");
 }
 
 /**
  * Prints the state of the given linked list
  */
 void printListState(Node *head) {
-    printSuccess("|===== List =====|\n  ");
+    printHeader("Showing List");
+    printf("\n");
     traverseAndPrintRecursive(head);
-    printSuccess("|================|\n");
+    printf("\n");
+    printHeader("Done Showing");
 }
 
 /**
@@ -41,55 +55,108 @@ void printListState(Node *head) {
  * command was executed.
  */
 Node *processCommand(Node *head, char *command) {
-    if (strcmp(command, "help") == 0) { 
+    char **tokens = tokenise(command);
+    char *commandName = tokens[0];
+    int numArgs = getNumTokens(tokens);
+    char *token = commandName;
+    if (numArgs <= 0) {
+    } else if (!commandName) {
+        printInvalidCommand("Enter a valid command\n");
+    } else if (strcmp(commandName, "help") == 0) { 
+        // Format: help
+        if (numArgs != 1) {
+            printInvalidCommand("Help command format: length\n");
+        } 
         printCommands();
-    } else if (strcmp(command, "insert") == 0) {
-        int val = atoi(strtok(NULL, " "));  
-        int position = atoi(strtok(NULL, " "));  
-        int currSize = getLengthRecursive(head);
-        currSize = (currSize - 1 < 0) ? 0 : currSize;
-        if (position >= 0 && position <= currSize) {
-            printf(" -> Inserting %d at position %d\n", val, position);
-            head = insertRecursive(head, val, position);
+    } else if (strcmp(commandName, "insert") == 0) {
+        // Format: insert <num> <position>
+        if (numArgs != 3 || !isNumeric(tokens[1]) || !isNumeric(tokens[2])) {
+            printInvalidCommand("Insert command format: insert <num> <position>\n");
+        } else {
+            int val = atoi(tokens[1]);
+            int position = atoi(tokens[2]);
+            int currSize = getLengthRecursive(head);
+            currSize = (currSize - 1 < 0) ? 0 : currSize;
+            if (position >= 0 && position <= currSize) {
+                head = insertRecursive(head, val, position);
+                printListState(head);
+            } else {
+                printColoured("red", "Position out of bounds. Try a position between 0 and %d\n", currSize);
+            }
+        }
+    } else if (strcmp(commandName, "append") == 0) {
+        // Format: append <num>
+        if (numArgs != 2 || !isNumeric(tokens[1])) {
+            printInvalidCommand("Append command format: append <num>\n");
+        } else {
+            int val = atoi(tokens[1]);
+            head = append(head, val);
             printListState(head);
-        } else {
-            printf("Position out of bounds. Try a position between 0 and %d\n", currSize);
         }
-    } else if (strcmp(command, "append") == 0) {
-        int val = atoi(strtok(NULL, " "));  
-        head = append(head, val);
-        printListState(head);
-    } else if (strcmp(command, "delete") == 0) {
-        int val = atoi(strtok(NULL, " "));  
-        printf(" -> Deleting %d\n", val);
-        head = deleteRecursive(head, val);
-        printListState(head);
-    } else if (strcmp(command, "length") == 0) {
-        printf(" -> Length: %d\n", getLengthRecursive(head));
-    } else if (strcmp(command, "search") == 0) {
-        int val = atoi(strtok(NULL, " "));  
-        printf(" -> Searching for %d\n", val);
-        if (searchRecursive(head, val)) {
-            printf("%d exists\n", val);
+    } else if (strcmp(commandName, "delete") == 0) {
+        // Format: delete <num>
+        if (numArgs != 2 || !isNumeric(tokens[1])) {
+            printInvalidCommand("Delete command format: delete <num>\n");
         } else {
-            printf("%d doesn't exist\n", val);
+            int val = atoi(tokens[1]);
+            head = deleteRecursive(head, val);
+            printListState(head);
         }
-    } else if (strcmp(command, "reverse") == 0) {
-        head = reverseRecursive(head);
-        printListState(head);
-    } else if (strcmp(command, "sort") == 0) {
-        head = sortListRecursive(head);
-        printListState(head);
-    } else if (strcmp(command, "show") == 0) {
-        printListState(head);
-    } else if (strcmp(command, "exit") == 0) {
-        printf(" -> Exiting program :)\n");  
-        freeListRecursive(head);
-        free(command);
-        exit(0);
+    } else if (strcmp(commandName, "length") == 0) {
+        // Format: length
+        if (numArgs != 1) {
+            printInvalidCommand("Length command format: length\n");
+        } else {
+            printColoured("yellow", " ➤ Length: %d\n", getLengthRecursive(head));
+        }
+    } else if (strcmp(commandName, "search") == 0) {
+        // Format: search <num>
+        if (numArgs != 2 || !isNumeric(tokens[1])) {
+            printInvalidCommand("Length command format: length\n");
+        } else {
+            int val = atoi(tokens[1]);
+            if (searchRecursive(head, val)) {
+                printColoured("green", "%d exists\n", val);
+            } else {
+                printColoured("red", "%d doesn't exist\n", val);
+            }
+        }
+    } else if (strcmp(commandName, "reverse") == 0) {
+        // Format: reverse
+        if (numArgs != 1) {
+            printInvalidCommand("Reverse command format: reverse\n");
+        } else {
+            head = reverseRecursive(head);
+            printListState(head);
+        }
+    } else if (strcmp(commandName, "sort") == 0) {
+        // Format: sort
+        if (numArgs != 1) {
+            printInvalidCommand("Sort command format: sort\n");
+        } else {
+            head = sortListRecursive(head);
+            printListState(head);
+        }
+    } else if (strcmp(commandName, "show") == 0) {
+        // Format: show
+        if (numArgs != 1) {
+            printInvalidCommand("Show command format: show\n");
+        } else {
+            printListState(head);
+        }
+    } else if (strcmp(commandName, "exit") == 0) {
+        // Format: exit
+        if (numArgs != 1) {
+            printInvalidCommand("Exit command format: exit\n");
+        } else {
+            freeListRecursive(head);
+            free(commandName);
+            returnToMenu();
+        }
     } else {
-        printFailure(" -> Enter a valid command\n");
+        printInvalidCommand("Unknown command\n");
     }
+    freeTokens(tokens);
     return head;
 }
 
@@ -112,17 +179,14 @@ int main(int argc, char *argv[]) {
     printCommands();
     printListState(head);
     while (1) {
-        printWarning(" ===> Enter command: ");
+        printPrompt("Enter command");
         command = fgets(command, MAX_COMMAND_SIZE, stdin);
-        printWarning(" You entered: ");
-        printPrimary(command);
-        // Strips trailing newline character and whitespace
-        strtok(command, "\n");
-        strtok(command, " ");
-        head = processCommand(head, command);
+        // Ignore processing empty strings
+        if (notEmpty(command)) {
+            head = processCommand(head, command);
+        }
     }
     freeListRecursive(head);
     free(command);
-
     return 0;
 }
