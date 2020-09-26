@@ -24,7 +24,7 @@ void printCommands() {
     }
     char commandStr[MAX_LINE];
     while(fgets(commandStr, MAX_LINE, commandsFile)) {
-        printf(" ➤ %s", commandStr);
+        printColoured("blue", " ➤ %s", commandStr);
     }
     printf("\n");
 }
@@ -37,7 +37,7 @@ void printListState(Node *head) {
     printf("\n");
     traverseAndPrint(head);
     printf("\n");
-    printHeader("Done");
+    printHeader("Done Showing");
 }
 
 /**
@@ -70,11 +70,10 @@ Node *processCommand(Node *head, char *command) {
             int currSize = getLength(head);
             currSize = (currSize - 1 < 0) ? 0 : currSize;
             if (position >= 0 && position <= currSize) {
-                printf(" -> Inserting %d at position %d\n", val, position);
                 head = insert(head, val, position);
                 printListState(head);
             } else {
-                printf("Position out of bounds. Try a position between 0 and %d\n", currSize);
+                printColoured("red", "Position out of bounds. Try a position between 0 and %d\n", currSize);
             }
         }
     } else if (strcmp(commandName, "append") == 0) {
@@ -89,10 +88,9 @@ Node *processCommand(Node *head, char *command) {
     } else if (strcmp(commandName, "delete") == 0) {
         // Format: delete <num>
         if (numArgs != 2 || !isNumeric(tokens[1])) {
-            printInvalidCommand("Append command format: append <num>\n");
+            printInvalidCommand("Delete command format: delete <num>\n");
         } else {
             int val = atoi(tokens[1]);
-            printf(" -> Deleting %d\n", val);
             head = delete(head, val);
             printListState(head);
         }
@@ -101,7 +99,7 @@ Node *processCommand(Node *head, char *command) {
         if (numArgs != 1) {
             printInvalidCommand("Length command format: length\n");
         } else {
-            printColoured("yellow", " -> Length: %d\n", getLength(head));
+            printColoured("yellow", " ➤ Length: %d\n", getLength(head));
         }
     } else if (strcmp(commandName, "search") == 0) {
         // Format: search <num>
@@ -109,11 +107,10 @@ Node *processCommand(Node *head, char *command) {
             printInvalidCommand("Length command format: length\n");
         } else {
             int val = atoi(tokens[1]);
-            printf(" -> Searching for %d\n", val);
             if (search(head, val)) {
-                printf("%d exists\n", val);
+                printColoured("green", "%d exists\n", val);
             } else {
-                printf("%d doesn't exist\n", val);
+                printColoured("red", "%d doesn't exist\n", val);
             }
         }
     } else if (strcmp(commandName, "reverse") == 0) {

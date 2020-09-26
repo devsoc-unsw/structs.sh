@@ -4,6 +4,7 @@
 #include <locale.h>
 #include <limits.h>
 #include "linked-list.h"
+#include "../../util/display/display.h"
 
 struct node {
     int val;
@@ -54,6 +55,8 @@ Node *delete(Node *head, int targetValue) {
         prev = curr;
         curr = curr -> next;
     }
+    printColoured("red", " ➤ %d wasn't found\n", targetValue);
+    return head;
 }
 
 // ===== Determine Length =====
@@ -128,14 +131,18 @@ void freeList(Node *head) {
 // ===== Traverse List =====
 // Iteratively traverse and print the list
 void traverseAndPrint(Node *head) {
+    if (head == NULL) {
+        printColoured("red", "(empty list)\n");
+        return;
+    } 
     setlocale(LC_CTYPE, "");
     while (head != NULL) {
         // Prints the → unicode character
-        printf("%d %lc ", head -> val, (wint_t)0x2192);
+        printColoured("yellow", "%d %lc ", head -> val, (wint_t)0x2192);
         head = head -> next;
     }
     // Prints the ╳ unicode character
-    printf("%lc\n", (wint_t)0x2573);
+    printColoured("red", " %lc\n", (wint_t)0x2573);
 }
 
 // ===== Others Functions =====

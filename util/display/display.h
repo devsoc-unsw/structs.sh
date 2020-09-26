@@ -10,7 +10,7 @@ void printPrompt(char *promptPreMessage);
  * Prints a full-width header on the current terminal instance
  * with a central header text.
  */
-void printHeader(char *header);
+void printHeader(char *header, ...);
 
 /**
  * Prints a formatted string, like printf. First argument specifies
