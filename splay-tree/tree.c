@@ -38,8 +38,8 @@ TreeNode *insertStandard(TreeNode *root, int value) {
     } else {
         // Value already exists in the tree. Doing nothing
         printf("Value %d already exists in the tree\n", value);
-        return root;
     }
+    return root;
 }
 
 /**
@@ -74,7 +74,6 @@ TreeNode *splay(TreeNode *root, int targetValue) {
         }
         // Perform right rotation on root (bringing the inserted value to the root)
         root = rightRotate(root, root -> value);
-        return root;
     } else if (targetValue > root -> value) {
         // Target value is somewhere in the right subtree
         TreeNode *rightChild = root -> right;
@@ -94,8 +93,8 @@ TreeNode *splay(TreeNode *root, int targetValue) {
         }
         // Perform left rotation on root (bringing the inserted value to the root)
         root = leftRotate(root, root -> value);
-        return root;
     }
+    return root;
 }
 
 /**
@@ -141,7 +140,6 @@ TreeNode *searchSplay(TreeNode *root, int targetValue) {
     return root;
 }
 
-
 /**
  * Executes a left rotation on the node with the given target value.
  * Returns the resultant tree.
@@ -173,6 +171,7 @@ TreeNode *leftRotate(TreeNode *root, int targetValue) {
         // Target tree exists somewhere in the right subtree
         root -> right = leftRotate(root -> right, targetValue);
     }
+    return root;
 }
 
 /**
@@ -206,6 +205,7 @@ TreeNode *rightRotate(TreeNode *root, int targetValue) {
         // Target tree exists somewhere in the right subtree
         root -> right = rightRotate(root -> right, targetValue);
     }
+    return root;
 }
 
 /**

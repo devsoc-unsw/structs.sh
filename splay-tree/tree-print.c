@@ -4,7 +4,7 @@
 #include <string.h>
 #include "tree.h"
 #include "tree-print.h"
-#include "../util/colours.h"
+#include "../util/display/display.h"
 
 #define MAX_HEIGHT 1000
 #define INFINITY (1<<20)
@@ -195,7 +195,7 @@ void printLevel(AsciiNode *asciiNode, int x, int level)  {
         printNext += i;
         char tmp[80];
         sprintf(tmp, "%s", asciiNode -> label);
-        printSuccess(tmp);
+        printColoured("green", tmp);
         printNext += asciiNode -> lablen;
     } 
     else if (asciiNode -> edgeLength >= level) {
@@ -204,7 +204,7 @@ void printLevel(AsciiNode *asciiNode, int x, int level)  {
                 printf(" ");
             }
             printNext += i;
-            printSecondary("/");
+            printColoured("purple", "/");
             printNext++;
         }
         if (asciiNode -> right != NULL) {
@@ -212,7 +212,7 @@ void printLevel(AsciiNode *asciiNode, int x, int level)  {
                 printf(" ");
             }
             printNext += i;
-            printSecondary("\\");
+            printColoured("purple", "\\");
             printNext++;
         }
     } 
@@ -233,7 +233,7 @@ void printTree(TreeNode *t) {
     AsciiNode *proot;
     int xmin, i;
     if (t == NULL) {
-        printSuccess("Tree is empty\n");
+        printColoured("red", "Tree is empty\n");
         return;
     }
     proot = buildAsciiTree(t);

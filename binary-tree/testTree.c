@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include "tree-print.h"
 #include "tree.h"
-#include "../util/colours.h"
 #include "../util/menu-interface.h"
 #include "../util/display/display.h"
 #include "../util/utilities/processing.h"
