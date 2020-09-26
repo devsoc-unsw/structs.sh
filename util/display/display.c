@@ -9,7 +9,7 @@
 #include "../utilities/processing.h"
 
 #define COMMANDS_FILE       "commands.txt"
-#define COMMANDS_HEADER     "Linked List Commands"
+#define COMMANDS_HEADER     "Commands"
 #define HEADER_BORDER_LEFT  "╠"
 #define HEADER_BORDER_RIGHT "╣"
 #define MAX_LINE            256
