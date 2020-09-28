@@ -4,15 +4,18 @@ require "tty-prompt"
 prompt = TTY::Prompt.new
 
 begin
-    choices = ["linked list", "binary search tree"]
+    choices = ["Linked List", "Binary Search Tree", "AVL Tree", "Splay Tree"]
     selectedIndex = prompt.select("Select a data structure", choices)
-    puts "You selected %s\n" % [selectedIndex]
+    puts "Starting: %s\n" % [selectedIndex]
     case selectedIndex
-    when "linked list"
+    when "Linked List"
         system("linked-list/iterative-version/testLinkedList")
-    when "binary search tree"
+    when "Binary Search Tree"
         system("binary-tree/testTree")
-        # TODO: Add txt file with all paths
+    when "AVL Tree"
+        system("avl-tree/testTree")
+    when "Splay Tree"
+        system("splay-tree/testTree")
     end
 rescue SignalException => e
     nil
