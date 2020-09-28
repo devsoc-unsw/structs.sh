@@ -27,10 +27,14 @@
 
 */
 
+// Goal: return the number of nodes in the tree
 int count(TreeNode *root) {
-    printf("Implement me!\n");
+    printf("Implement me plz!\n");
     return 0;
 }
+
+
+
 
 
 
@@ -48,15 +52,11 @@ int max(int a, int b) {
     else return b;
 }
 
-
+// Goal: return the height of the tree
 int height(TreeNode *root) {
-    printf("Implement me!\n");
+    printf("Implement me plz!\n");
     return 0;
 }
-
-
-
-
 
 
 
