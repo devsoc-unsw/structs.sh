@@ -7,7 +7,7 @@
 #include "queue/Queue.h"
 #include "stack/Stack.h"
 #include "linked-list/List.h"
-#include "../util/colours.h"
+#include "../util/display/display.h"
 
 /** 
  * Check vertex is valid
@@ -112,7 +112,7 @@ void show(Graph g, int option) {
       case ADJACENCY_LIST:
          printf("Showing the adjacency list\n");
          printf("|—————————————————————————|\n");
-         printPrimary(" Vertex   Connections\n");
+         printColoured("yellow", " Vertex   Connections\n");
          printf("|—————————————————————————|\n");
          for (v = 0; v < g -> nV; v++) {
             printf("  %-3d   ║", v);

@@ -121,12 +121,13 @@ TreeNode *processCommand(TreeNode *root, char *command) {
             printInvalidCommand("Exit command format: exit\n");
         } else {
             freeTree(root);
-            free(commandName);
+			freeTokens(tokens);
             returnToMenu();
         }
     } else {
         printInvalidCommand("Unknown command\n");
     }
+    freeTokens(tokens);
     return root;
 }
 

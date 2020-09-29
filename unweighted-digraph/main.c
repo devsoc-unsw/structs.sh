@@ -6,7 +6,9 @@
 #include "Graph.h"
 #include "graph-algos.h"
 #include "floyd-warshall.h"
-#include "../util/colours.h"
+#include "../util/menu-interface.h"
+#include "../util/display/display.h"
+#include "../util/utilities/processing.h"
 
 #define MAX_LINE 127
 
@@ -19,79 +21,124 @@ void printUsagePrompt(char *argv[]) {
 }
 
 /**
- * Prints supported commands available in interactive mode
- */
-void printCommands() {
-	char *helpLog = "|===== Commands =====|\n"
-                    " ===>  help                 - show available commands\n"
-                    " ===>  matrix               - shows matrix representation\n"
-                    " ===>  list                 - shows matrix representation\n"
-                    " ===>  insert <v1> <v2>     - inserts edge v1 to v2\n"
-                    " ===>  remove <v1> <v2>     - removes edge v1 to v2\n"
-                    " ===>  depth <v1>           - performs depth first search starting on v1\n"
-                    " ===>  breadth <v1>         - performs breadth first search starting on v1\n"
-                    " ===>  cycle                - determines whether a cycle exists in the graph\n"
-                    " ===>  showConnected        - shows all the connected subgraphs in the whole graph\n"
-					" ===>  hamilton <v1> <v2>   - checks if a Hamilton path exists from v1 to v2\n"
-					" ===>  transitiveClosure    - runs the Floyd-Warshall algorithm and displays the transitive closure matrix\n"
-                    " ===>  exit                 - quit program\n"
-                    "|====================|\n";
-    printf("%s", helpLog);
-}
-
-/**
- * Prints prompt for the next line of user input
- */
-void printPrompt() {
-	printSuccess("\n ===> Enter Command: ");
-}
-
-/**
  * Given the graph and the command string, extracts arguments from the command
  * and calls the relevant function.
  */
 Graph processCommand(Graph g, char *command) {
-    if (strcmp(command, "help") == 0) { 
-        printCommands();
-    } else if (strcmp(command, "matrix") == 0) {
-		show(g, ADJACENCY_MATRIX);
-    } else if (strcmp(command, "list") == 0) {
-		show(g, ADJACENCY_LIST);
-    } else if (strcmp(command, "insert") == 0) {
-        int v1 = atoi(strtok(NULL, " "));  
-        int v2 = atoi(strtok(NULL, " "));  
-		insertE(g, makeEdge(g, v1, v2));
-    } else if (strcmp(command, "remove") == 0) {
-        int v1 = atoi(strtok(NULL, " "));  
-        int v2 = atoi(strtok(NULL, " "));  
-		removeE(g, makeEdge(g, v1, v2));
-    } else if (strcmp(command, "depth") == 0) {
-        int v1 = atoi(strtok(NULL, " "));  
-		DFSIterative(g, v1);
-    } else if (strcmp(command, "breadth") == 0) {
-        int v1 = atoi(strtok(NULL, " "));  
-		BFS(g, v1);
-    } else if (strcmp(command, "cycle") == 0) {
-		printf(hasCycle(g) ? " -> A cycle exists in the graph!" : " -> No cycle exists in the graph!");
-    } else if (strcmp(command, "showConnected") == 0) {
-		showConnectedComponents(g);
-    } else if (strcmp(command, "hamilton") == 0) {
-        int v1 = atoi(strtok(NULL, " "));  
-        int v2 = atoi(strtok(NULL, " "));  
-		if (hasHamiltonPath(g, v1, v2)) {
-			printf(" -> Hamiltonian path exists between %d and %d\n", v1, v2);
-		} else {
-			printf(" -> No Hamiltonian path exists between %d and %d\n", v1, v2);
-		}
-    } else if (strcmp(command, "transitiveClosure") == 0) {
-        transitiveClosure(g);
-    } else if (strcmp(command, "exit") == 0) {
-        printf(" -> Exiting program :)\n");  
-		dropGraph(g);
-        exit(0);
+	char **tokens = tokenise(command);
+    char *commandName = tokens[0];
+    int numArgs = getNumTokens(tokens);
+    char *token = commandName;
+
+    if (numArgs <= 0) {
+    } else if (!commandName) {
+        printInvalidCommand("Enter a valid command\n");
+    } else if (strcmp(commandName, "help") == 0) { 
+        // Format: help
+        if (numArgs != 1) {
+            printInvalidCommand("Help command format: help\n");
+        } else {
+            printCommands();
+        }
+    } else if (strcmp(commandName, "matrix") == 0) {
+		// Format: matrix
+        if (numArgs != 1) {
+            printInvalidCommand("Help command format: help\n");
+        } else {
+			show(g, ADJACENCY_MATRIX);
+        }
+    } else if (strcmp(commandName, "list") == 0) {
+		// Format: list
+        if (numArgs != 1) {
+            printInvalidCommand("Help command format: help\n");
+        } else {
+			show(g, ADJACENCY_LIST);
+        }
+    } else if (strcmp(commandName, "insert") == 0) {
+		// Format: insert <v1> <v2>
+        if (numArgs != 3 || !isNumeric(tokens[1]) || !isNumeric(tokens[2])) {
+            printInvalidCommand("Help command format: help\n");
+        } else {
+            int v1 = atoi(tokens[1]);
+            int v2 = atoi(tokens[2]);
+			insertE(g, makeEdge(g, v1, v2));
+        }
+    } else if (strcmp(commandName, "remove") == 0) {
+        // Format: remove <v1> <v2>
+        if (numArgs != 3 || !isNumeric(tokens[1]) || !isNumeric(tokens[2])) {
+            printInvalidCommand("Help command format: help\n");
+        } else {
+            int v1 = atoi(tokens[1]);
+            int v2 = atoi(tokens[2]);
+			removeE(g, makeEdge(g, v1, v2));
+        }
+    } else if (strcmp(commandName, "depth") == 0) {
+		// Format: depth <vertex>
+        if (numArgs != 2 || !isNumeric(tokens[1])) {
+            printInvalidCommand("Help command format: help\n");
+        } else {
+            int vertex = atoi(tokens[1]);
+			DFSIterative(g, vertex);
+        }
+    } else if (strcmp(commandName, "breadth") == 0) {
+		// Format: breadth <vertex>
+        if (numArgs != 2 || !isNumeric(tokens[1])) {
+            printInvalidCommand("Help command format: help\n");
+        } else {
+            int startingVertex = atoi(tokens[1]);
+			BFS(g, startingVertex);
+        }
+    } else if (strcmp(commandName, "cycle") == 0) {
+		// Format: hasCycle
+        if (numArgs != 1) {
+            printInvalidCommand("Help command format: help\n");
+        } else {
+			printf(
+				hasCycle(g) ? 
+				" ➤ A cycle exists in the graph!" : 
+				" ➤ No cycle exists in the graph!"
+			);
+        }
+    } else if (strcmp(commandName, "showConnected") == 0) {
+		// Format: hasCycle
+        if (numArgs != 1) {
+            printInvalidCommand("Help command format: help\n");
+        } else {
+			showConnectedComponents(g);
+        }
+    } else if (strcmp(commandName, "hamilton") == 0) {
+		// Format: hamilton <v1> <v2>
+        if (numArgs != 2 || !isNumeric(tokens[1])) {
+            printInvalidCommand("Help command format: help\n");
+        } else {
+            int v1 = atoi(tokens[1]);
+            int v2 = atoi(tokens[2]);
+			if (hasHamiltonPath(g, v1, v2)) {
+				printf(" ➤ Hamiltonian path exists between %d and %d\n", v1, v2);
+			} else {
+				printf(" ➤ No Hamiltonian path exists between %d and %d\n", v1, v2);
+			}
+        }
+    } else if (strcmp(commandName, "transitiveClosure") == 0) {
+		// Format: transitiveClosure
+        if (numArgs != 1) {
+            printInvalidCommand("Help command format: help\n");
+        } else {
+			transitiveClosure(g);
+        }
+    } else if (strcmp(commandName, "exit") == 0) {
+		// Format: exit
+        if (numArgs != 1) {
+            printInvalidCommand("Exit command format: exit\n");
+        } else {
+			dropGraph(g);
+			freeTokens(tokens);
+            returnToMenu();
+        }
     } else {
-        printFailure(" -> Enter a valid command\n");
+        printInvalidCommand("Unknown command\n");
     }
+	freeTokens(tokens);
     return g;
 }
 
@@ -133,14 +180,13 @@ int main(int argc, char *argv[]) {
 
 	printCommands();
 	while (1) {
-		printPrompt();
+        printPrompt("Enter command");
 		fgets(line, MAX_LINE, stdin);
-        printWarning(" You entered: ");
-        printPrimary(line);
-        // Strips trailing newline character and whitespace
-        strtok(line, "\n");
-        strtok(line, " ");
-        graph = processCommand(graph, line);
+		// Ignore processing empty strings
+        if (notEmpty(line)) {
+			graph = processCommand(graph, line);
+        }
     }
+	dropGraph(graph);
 	return 0;
 }
