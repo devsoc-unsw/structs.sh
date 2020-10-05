@@ -3,9 +3,86 @@
 #include <string.h>
 #include <stdbool.h> 
 #include "tree.h"
-#include "../util/display/display.h"
+#include "../../util/display/display.h"
 
 #define MAX_TREE_SIZE 64
+
+
+// Given two numbers a and b, returns the one that's larger
+int max(int a, int b) {
+    if (a > b) return a;
+    else return b;
+}
+
+// Goal: return the height of the tree
+int height(TreeNode *root) {
+    if (root == NULL) {
+        return 0;
+    }
+    int leftH = height(root -> left);
+    int rightH = height(root -> right);
+    return 1 + max(leftH, rightH);
+}
+
+
+
+
+
+
+// Smoler problems in this this bigger problem
+// 1. compute the height of a tree
+// 2. traversing the tree in postfix order (LRN)
+
+int printHeightDiff(TreeNode *root) {
+    if (root == NULL) {
+        return 0;
+    }
+
+    int leftH = printHeightDiff(root -> left);
+    int rightH = printHeightDiff(root -> right);
+    int diff = leftH - rightH;
+
+    printf("data: %d, diff:  %d\n", root -> value, diff);
+    return 1 + max(leftH, rightH);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+int abs(int a) {
+    if (a >= 0) return a;
+    else return -a;
+}
+
+
+#define NOT_HEIGHT_BALANCED -99
+
+int isHeightBalanced(TreeNode *root) {
+    printf("Implement me plz\n");
+    return 0;
+}
+
+
+
+
+
+
+
+
+
 
 /**
  * Given a value, mallocs and returns a new tree node initialised with the
@@ -302,13 +379,4 @@ void freeTree(TreeNode *root) {
     freeTree(root -> left);
     freeTree(root -> right);
     free(root);
-}
-
-// ===== Private Helper Functions =====
-
-/**
- * Given two numbers a and b, returns the one that's larger.
- */
-static int max(int a, int b) {
-    return (a > b) ? a : b;
 }
