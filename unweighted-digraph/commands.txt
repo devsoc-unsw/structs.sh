@@ -1,0 +1,12 @@
+help                 - show available commands
+matrix               - shows matrix representation
+list                 - shows matrix representation
+insert <v1> <v2>     - inserts edge v1 to v2
+remove <v1> <v2>     - removes edge v1 to v2
+depth <v1>           - performs depth first search starting on v1
+breadth <v1>         - performs breadth first search starting on v1
+cycle                - determines whether a cycle exists in the graph
+showConnected        - shows all the connected subgraphs in the whole graph
+hamilton <v1> <v2>   - checks if a Hamilton path exists from v1 to v2
+transitiveClosure    - runs the Floyd-Warshall algorithm and displays the transitive closure matrix
+exit                 - quit program

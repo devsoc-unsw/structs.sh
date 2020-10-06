@@ -7,6 +7,9 @@
 # Unignore all dirs
 !*/
 
+# Unignore Gemfile
+!Gemfile
+
 ### Above combination will ignore all files without extension ###
 
 
@@ -16,4 +19,4 @@ deprecated
 practice-material/
 tut01
 tut02
-
+*.out
