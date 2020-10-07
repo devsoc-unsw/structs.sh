@@ -12,6 +12,7 @@
 #define COMMANDS_HEADER     "Commands"
 #define HEADER_BORDER_LEFT  "╠"
 #define HEADER_BORDER_RIGHT "╣"
+#define BORDER_UNIT         "━"
 #define MAX_LINE            256
 
 #define GREEN   "green"
@@ -57,6 +58,15 @@ void printHeader(char *header, ...) {
     va_end(args);
 }
 
+void printHorizontalRule() {
+    // Fetching the terminal instance's dimensions
+    struct winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+    int width = w.ws_col, height = w.ws_row; 
+    for (int currPos = 0; currPos < width; currPos++) {
+        printf("%s", BORDER_UNIT);
+    }
+}
 
 void printPrompt(char *promptPreMessage) {
     printColoured("yellow", "%s ➤ ", promptPreMessage);

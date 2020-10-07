@@ -9,6 +9,14 @@
 #include "linked-list/List.h"
 #include "../util/display/display.h"
 
+#define EDGE_CHAR_VERTICAL   "┃"
+#define EDGE_CHAR_HORIZONTAL "━"
+#define EDGE_CHAR_TOP_LEFT "┏"
+#define EDGE_CHAR_TOP_RIGHT "┓"
+#define EDGE_CHAR_BOTTOM_LEFT "┗"
+#define EDGE_CHAR_BOTTOM_RIGHT "┛"
+
+
 /** 
  * Check vertex is valid
  */
@@ -111,32 +119,43 @@ void show(Graph g, int option) {
    switch (option) {
       case ADJACENCY_LIST:
          printf("Showing the adjacency list\n");
-         printf("|—————————————————————————|\n");
+         printHorizontalRule();
          printColoured("yellow", " Vertex   Connections\n");
-         printf("|—————————————————————————|\n");
+         printHorizontalRule();
          for (v = 0; v < g -> nV; v++) {
-            printf("  %-3d   ║", v);
+            printf("  %-3d   %s", v, EDGE_CHAR_VERTICAL);
             
             for (w = 0; w < g -> nV; w++) {
                if (adjacent(g, v, w)) printf(" ⟶ %d", w);
             }
             printf("\n");
          }
+         printHorizontalRule();
          break;
       case ADJACENCY_MATRIX:
          printf("Showing the adjacency matrix\n");
+         printHorizontalRule();
          printf("\n     ");
-         for (v = 0; v < g -> nV; v++)
-         printf("%d ", v);
-         printf("\n\n");
+         // Printing upper row of column numbers
+         for (v = 0; v < g -> nV; v++) printColoured("yellow", "%d ", v);
+         printf("\n");
+         // Printing upper matrix border
+         printf("   %s", EDGE_CHAR_TOP_LEFT);
+         for (v = 0; v < 2 * (g -> nV) + 1; v++) printf("%s", EDGE_CHAR_HORIZONTAL);
+         printf("%s\n", EDGE_CHAR_TOP_RIGHT);
          for (v = 0; v < g -> nV; v++) {
-            printf("%-2d ║ ", v);
+            printColoured("yellow", "%-2d %s ", v, EDGE_CHAR_VERTICAL);
             for (w = 0; w < g -> nV; w++) {
-               if (adjacent(g, v, w)) printf("1 ");
-               else printf("0 ");
+               if (adjacent(g, v, w)) printColoured("green", "1 ");
+               else printColoured("purple", "0 ");
             }
-            printf("║\n");
+            printf("%s\n", EDGE_CHAR_VERTICAL);
          }
+         // Printing lower matrix border
+         printf("   %s", EDGE_CHAR_BOTTOM_LEFT);
+         for (v = 0; v < 2 * (g -> nV) + 1; v++) printf("%s", EDGE_CHAR_HORIZONTAL);
+         printf("%s\n", EDGE_CHAR_BOTTOM_RIGHT);
+         printHorizontalRule();
          break;
    }
    printf("\nSummary: the graph has %d vertices and %d edges\n", g -> nV, g -> nE);

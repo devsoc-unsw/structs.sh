@@ -13,6 +13,11 @@ void printPrompt(char *promptPreMessage);
 void printHeader(char *header, ...);
 
 /**
+ * Prints a full-width horizontal border on the current terminal instance.
+ */
+void printHorizontalRule();
+
+/**
  * Prints a formatted string, like printf. First argument specifies
  * the colour.
  * Supported colours: green, blue, red, yellow, purple

@@ -9,18 +9,25 @@ def is_num(num_given)
 end
 
 begin
-    choices = ["Linked List", "Binary Search Tree", "AVL Tree", "Splay Tree", "Graphs", "Hash Table", "Heap", "Exit"]
-    selection = prompt.select("Select a data structure".yellow, choices)
-    puts "Starting: %s\n".blue % [selection]
+    choices = ["Linked List", "Trees", "Graphs", "Hash Table", "Heap", "Exit"]
+    choices.map { |choice| choice.blue }
+    selection = prompt.select("Select a data structure:".yellow, choices)
+    puts "Starting: %s\n".red % [selection]
     case selection
     when "Linked List"
         system("linked-list/iterative-version/testLinkedList")
-    when "Binary Search Tree"
+    when "Trees"
+        treeFlavours = ["Standard Binary Search Tree", "AVL Tree", "Splay Tree"]
+        selectedTree = prompt.select("Select tree type:".yellow, treeFlavours) 
+        case selectedTree
+        when "Standard Binary Search Tree"
+            system("binary-tree/testTree")
+        when "AVL Tree"
+            system("avl-tree/testTree")
+        when "Splay Tree"
+            system("splay-tree/testTree")
+        end
         system("binary-tree/testTree")
-    when "AVL Tree"
-        system("avl-tree/testTree")
-    when "Splay Tree"
-        system("splay-tree/testTree")
     when "Graphs"
         subtypeWeighted = ["Unweighted", "Weighted"]
         subtypeDirected = ["Undirected", "Directed"]
