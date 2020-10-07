@@ -8,20 +8,7 @@
 #include "display.h"
 #include "../utilities/processing.h"
 
-#define COMMANDS_FILE       "commands.txt"
-#define COMMANDS_HEADER     "Commands"
-#define HEADER_BORDER_LEFT  "╠"
-#define HEADER_BORDER_RIGHT "╣"
-#define BORDER_UNIT         "━"
-#define MAX_LINE            256
-
-#define GREEN   "green"
-#define BLUE    "blue"
-#define PURPLE  "purple"
-#define RED     "red"
-#define YELLOW  "yellow"
-#define CYAN    "cyan"
-
+// Transform string to lowercase
 #define lowercase(str) for (int i = 0; str[i]; i++) { str[i] = tolower(str[i]); }
 
 void printHeader(char *header, ...) {

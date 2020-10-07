@@ -9,14 +9,6 @@
 #include "linked-list/List.h"
 #include "../util/display/display.h"
 
-#define EDGE_CHAR_VERTICAL   "┃"
-#define EDGE_CHAR_HORIZONTAL "━"
-#define EDGE_CHAR_TOP_LEFT "┏"
-#define EDGE_CHAR_TOP_RIGHT "┓"
-#define EDGE_CHAR_BOTTOM_LEFT "┗"
-#define EDGE_CHAR_BOTTOM_RIGHT "┛"
-
-
 /** 
  * Check vertex is valid
  */
@@ -123,7 +115,7 @@ void show(Graph g, int option) {
          printColoured("yellow", " Vertex   Connections\n");
          printHorizontalRule();
          for (v = 0; v < g -> nV; v++) {
-            printf("  %-3d   %s", v, EDGE_CHAR_VERTICAL);
+            printf("  %-3d   %s", v, BOX_EDGE_CHAR_VERTICAL);
             
             for (w = 0; w < g -> nV; w++) {
                if (adjacent(g, v, w)) printf(" ⟶ %d", w);
@@ -140,21 +132,21 @@ void show(Graph g, int option) {
          for (v = 0; v < g -> nV; v++) printColoured("yellow", "%d ", v);
          printf("\n");
          // Printing upper matrix border
-         printf("   %s", EDGE_CHAR_TOP_LEFT);
-         for (v = 0; v < 2 * (g -> nV) + 1; v++) printf("%s", EDGE_CHAR_HORIZONTAL);
-         printf("%s\n", EDGE_CHAR_TOP_RIGHT);
+         printf("   %s", BOX_EDGE_CHAR_TOP_LEFT);
+         for (v = 0; v < 2 * (g -> nV) + 1; v++) printf("%s", BOX_EDGE_CHAR_HORIZONTAL);
+         printf("%s\n", BOX_EDGE_CHAR_TOP_RIGHT);
          for (v = 0; v < g -> nV; v++) {
-            printColoured("yellow", "%-2d %s ", v, EDGE_CHAR_VERTICAL);
+            printColoured("yellow", "%-2d %s ", v, BOX_EDGE_CHAR_VERTICAL);
             for (w = 0; w < g -> nV; w++) {
                if (adjacent(g, v, w)) printColoured("green", "1 ");
                else printColoured("purple", "0 ");
             }
-            printf("%s\n", EDGE_CHAR_VERTICAL);
+            printf("%s\n", BOX_EDGE_CHAR_VERTICAL);
          }
          // Printing lower matrix border
-         printf("   %s", EDGE_CHAR_BOTTOM_LEFT);
-         for (v = 0; v < 2 * (g -> nV) + 1; v++) printf("%s", EDGE_CHAR_HORIZONTAL);
-         printf("%s\n", EDGE_CHAR_BOTTOM_RIGHT);
+         printf("   %s", BOX_EDGE_CHAR_BOTTOM_LEFT);
+         for (v = 0; v < 2 * (g -> nV) + 1; v++) printf("%s", BOX_EDGE_CHAR_HORIZONTAL);
+         printf("%s\n", BOX_EDGE_CHAR_BOTTOM_RIGHT);
          printHorizontalRule();
          break;
    }
