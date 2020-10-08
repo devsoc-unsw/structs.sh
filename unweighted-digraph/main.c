@@ -10,8 +10,6 @@
 #include "../util/display/display.h"
 #include "../util/utilities/processing.h"
 
-#define MAX_LINE 127
-
 /**
  * Prints command line usage info
  */
