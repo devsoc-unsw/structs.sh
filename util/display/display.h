@@ -66,4 +66,9 @@ void printInvalidCommand(char *formattedMessage, ...);
  */
 void printCommands();
 
+/**
+ * Get the width of the current terminal instance (in characters)
+ */
+int getTermWidth();
+
 #endif

@@ -36,4 +36,9 @@ bool isNumeric(char *str);
  */
 char *getDirOfCurrExecutable();
 
+/**
+ * Gets the number of digits in the specified number
+ */
+int getNumDigits(int num);
+
 #endif
