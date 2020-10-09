@@ -27,7 +27,6 @@ begin
         when "Splay Tree"
             system("splay-tree/testTree")
         end
-        system("binary-tree/testTree")
     when "Graphs"
         subtypeWeighted = ["Unweighted", "Weighted"]
         subtypeDirected = ["Undirected", "Directed"]
