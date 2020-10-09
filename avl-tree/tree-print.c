@@ -281,9 +281,9 @@ void printTree(TreeNode *t, int option) {
  * a the given message as a header.
  */
 void printCurrTreeState(TreeNode *root, char *message) {
-    printHeader(message);
+    printColouredHeader("red", message);
     printTree(root, PRINT_VALUES);
-    printHeader("Done Showing");
+    printColouredHeader("red", "<>");
 }
 
 /**

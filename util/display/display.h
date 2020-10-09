@@ -43,6 +43,11 @@ void printPrompt(char *promptPreMessage);
 void printHeader(char *header, ...);
 
 /**
+ * Alternative to printHeader for colour overriding.
+ */
+void printColouredHeader(char *colour, char *header, ...);
+
+/**
  * Prints a full-width horizontal border on the current terminal instance.
  */
 void printHorizontalRule();

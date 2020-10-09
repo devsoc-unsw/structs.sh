@@ -11,6 +11,28 @@
 // Transform string to lowercase
 #define lowercase(str) for (int i = 0; str[i]; i++) { str[i] = tolower(str[i]); }
 
+static void setColour(char *colour) {
+    // Set ANSI colour code
+    if (strcmp(colour, GREEN) == 0) {
+        printf("\033[1;32m");
+    } else if (strcmp(colour, BLUE) == 0) {
+        printf("\033[1;34m");
+    } else if (strcmp(colour, RED) == 0) {
+        printf("\033[1;31m");
+    } else if (strcmp(colour, YELLOW) == 0) {
+        printf("\033[1;33m");
+    } else if (strcmp(colour, PURPLE) == 0) {
+        printf("\033[1;35m");
+    } else if (strcmp(colour, CYAN) == 0) {
+        printf("\033[1;36m");
+    } 
+}
+
+static void resetColour() {
+    // Reset colouration
+    printf("\033[0m");
+}
+
 void printHeader(char *header, ...) {
     va_list args;
     va_start(args, header);
@@ -39,11 +61,44 @@ void printHeader(char *header, ...) {
             printf("═");
         }
     }
-    // Reset colouration
-    printf("\033[0m");
+    resetColour();
     printf("\n");
     va_end(args);
 }
+
+void printColouredHeader(char *colour, char *header, ...) {
+    va_list args;
+    va_start(args, header);
+
+    // Fetching the terminal instance's dimensions
+    struct winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+    int width = w.ws_col, height = w.ws_row; 
+    int headerStartPos = ((width - strlen(header)) / 2) - 2;
+    int headerEndPos = headerStartPos + strlen(header) + 4;
+
+    // Set green ANSI colour code
+    setColour(colour);
+
+    for (int currPos = 0; currPos <= width; currPos++) {
+        if (currPos == 0) {
+            printf("%s", HEADER_BORDER_LEFT);
+        } else if (currPos == width) {
+            printf("%s", HEADER_BORDER_RIGHT);  
+        } else if (currPos >= headerStartPos && currPos <= headerEndPos) {
+            printf("%s ", HEADER_BORDER_RIGHT);
+            vprintf(header, args);
+            printf(" %s", HEADER_BORDER_LEFT);
+            currPos += headerEndPos - headerStartPos;
+        } else {
+            printf("═");
+        }
+    }
+    resetColour();
+    printf("\n");
+    va_end(args);
+}
+
 
 void printHorizontalRule() {
     // Fetching the terminal instance's dimensions
@@ -64,20 +119,7 @@ void printColoured(char *colour, char *formattedMessage, ...) {
     va_list args;
     va_start(args, formattedMessage);
 
-    // Set ANSI colour code
-    if (strcmp(colour, GREEN) == 0) {
-        printf("\033[1;32m");
-    } else if (strcmp(colour, BLUE) == 0) {
-        printf("\033[1;34m");
-    } else if (strcmp(colour, RED) == 0) {
-        printf("\033[1;31m");
-    } else if (strcmp(colour, YELLOW) == 0) {
-        printf("\033[1;33m");
-    } else if (strcmp(colour, PURPLE) == 0) {
-        printf("\033[1;35m");
-    } else if (strcmp(colour, CYAN) == 0) {
-        printf("\033[1;36m");
-    } 
+    setColour(colour);
     
     // Print the formatted string
     vprintf(formattedMessage, args);
@@ -127,3 +169,4 @@ int getTermWidth() {
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     return w.ws_col; 
 }
+
