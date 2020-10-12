@@ -1,6 +1,36 @@
 #ifndef DISPLAY
 #define DISPLAY
 
+// Commands file default name
+#define COMMANDS_FILE       "commands.txt"
+#define COMMANDS_HEADER     "Commands"
+
+// Header border characters:
+#define HEADER_BORDER_LEFT  "╠"
+#define HEADER_BORDER_RIGHT "╣"
+
+// For horizontal rules
+#define BORDER_UNIT         "━"
+
+// Box edge characters. See https://en.wikipedia.org/wiki/Box-drawing_character
+#define BOX_EDGE_CHAR_VERTICAL     "┃"
+#define BOX_EDGE_CHAR_HORIZONTAL   "━"
+#define BOX_EDGE_CHAR_TOP_LEFT     "┏"
+#define BOX_EDGE_CHAR_TOP_RIGHT    "┓"
+#define BOX_EDGE_CHAR_BOTTOM_LEFT  "┗"
+#define BOX_EDGE_CHAR_BOTTOM_RIGHT "┛"
+
+// String buffer character limit
+#define MAX_LINE 256
+
+// Colours
+#define GREEN   "green"
+#define BLUE    "blue"
+#define PURPLE  "purple"
+#define RED     "red"
+#define YELLOW  "yellow"
+#define CYAN    "cyan"
+
 /**
  * Prints a message prompting the user for a command.
  */
@@ -11,6 +41,16 @@ void printPrompt(char *promptPreMessage);
  * with a central header text.
  */
 void printHeader(char *header, ...);
+
+/**
+ * Alternative to printHeader for colour overriding.
+ */
+void printColouredHeader(char *colour, char *header, ...);
+
+/**
+ * Prints a full-width horizontal border on the current terminal instance.
+ */
+void printHorizontalRule();
 
 /**
  * Prints a formatted string, like printf. First argument specifies
@@ -30,5 +70,10 @@ void printInvalidCommand(char *formattedMessage, ...);
  * directory
  */
 void printCommands();
+
+/**
+ * Get the width of the current terminal instance (in characters)
+ */
+int getTermWidth();
 
 #endif

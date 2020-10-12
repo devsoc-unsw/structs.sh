@@ -26,4 +26,17 @@ void  removeE(Graph, Edge);
 void  dropGraph(Graph);
 void  show(Graph, int option);
 
+// Utilities:
+/**
+ * Gets the fattest possible cell spacing based on the maximum number
+ * of digits in the adjacency matrix weights or the number of vertices
+ */
+int getCellSpacing(int numVertices, int **adjMatrix);
+
+/**
+ * Gets a formatted string of connections from a src vertex. Eg.
+ * 2 -> 5 -> 10 -> 13
+ */
+char *getConnectionsString(Graph g, Vertex src);
+
 #endif

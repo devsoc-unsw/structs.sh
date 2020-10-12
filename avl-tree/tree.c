@@ -7,8 +7,8 @@
 #include "../util/display/display.h"
 
 #define MAX_TREE_SIZE 64
-#define LOCAL_STATE_HEADER "Local Tree Fix"
-#define LOCAL_IMBALANCE_HEADER "Local Imbalance"
+#define LOCAL_STATE_HEADER     "Performing Localised Tree Fix"
+#define LOCAL_IMBALANCE_HEADER "Detected Imbalance"
 
 /**
  * Given a value, mallocs and returns a new tree node initialised with the

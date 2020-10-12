@@ -80,3 +80,13 @@ char *getDirOfCurrExecutable() {
     strcat(result, "/");
     return result;
 }
+
+int getNumDigits(int num) {
+    num = (num > 0) ? (num) : (-num);
+    int digits = 0;
+    while (num > 0) {
+        num = num / 10;
+        digits++;
+    }
+    return digits;
+}
