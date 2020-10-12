@@ -82,11 +82,11 @@ TreeNode *insertAVL(TreeNode *root, int value) {
     }
 
     // ===== AVL STUFF BELOW =====
-    // Insertion is done by this point. Now we'll update the height of this node
-    updateHeight(root);
+    // 1. Insertion is done by this point. Now we'll update the height of this node
+    // updateHeight(root);
 
-    // Rebalancing the tree if the insertion caused a height difference of 2 or -2:
-    rebalanceAVL(root);
+    // 2. Rebalancing the tree if the insertion caused a height difference of 2 or -2:
+    // rebalanceAVL(root);
 
     return root;
 }
