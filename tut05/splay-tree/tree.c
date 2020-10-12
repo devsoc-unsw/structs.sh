@@ -19,9 +19,9 @@ TreeNode *insertSplay(TreeNode *root, int insertValue) {
     }
 
     if (insertValue < root -> value) {
-        root -> left = insertStandard(root -> left, insertValue); 
+        root -> left = insertSplay(root -> left, insertValue); 
     } else if (insertValue > root -> value) {
-        root -> right = insertStandard(root -> right, insertValue);
+        root -> right = insertSplay(root -> right, insertValue);
     } else {
         printf("Value %d already exists in the tree\n", insertValue);
         return root;
@@ -36,6 +36,45 @@ TreeNode *insertSplay(TreeNode *root, int insertValue) {
 
 
 
+
+/**
+ * Executes a left rotation on the root node.
+ * Returns the resultant tree.
+ */
+TreeNode *rotateLeft(TreeNode *root) {
+    if (root == NULL) return NULL;
+
+    TreeNode *rightChild = root -> right;
+    if (rightChild != NULL) {
+        TreeNode *rightChildLeft = rightChild -> left;
+        rightChild -> left = root;
+        root -> right = rightChildLeft;
+        return rightChild;
+    } else {
+        // Can't do the rotation here. Need to have rightChild
+        return root;
+    }
+}
+
+
+/**
+ * Executes a right rotation on the root node.
+ * Returns the resultant tree.
+ */
+TreeNode *rotateRight(TreeNode *root) {
+    if (root == NULL) return NULL;
+
+    TreeNode *leftChild = root -> left;
+    if (leftChild != NULL) {
+        TreeNode *leftChildRight = leftChild-> right;
+        leftChild -> right = root;
+        root -> left = leftChildRight;
+        return leftChild;
+    } else {
+        // Can't do the rotation here. Need to have leftChild
+        return root;
+    }
+}
 
 
 

@@ -28,7 +28,7 @@ int getHeight(TreeNode *root) {
  * Returns the resultant tree.
  */
 TreeNode *leftRotate(TreeNode *root) {
-
+    return NULL;
 }
 
 /**
@@ -36,7 +36,7 @@ TreeNode *leftRotate(TreeNode *root) {
  * Returns the resultant tree.
  */
 TreeNode *rightRotate(TreeNode *root) {
-
+    return NULL;
 }
 
 
@@ -59,7 +59,7 @@ TreeNode *rightRotate(TreeNode *root) {
         struct treeNode *left;
         struct treeNode *right;
     };
-    
+
 */
 typedef struct treeNode TreeNode;
 
@@ -86,7 +86,7 @@ TreeNode *insertAVL(TreeNode *root, int value) {
     updateHeight(root);
 
     // Rebalancing the tree if the insertion caused a height difference of 2 or -2:
-    rebalance(root);
+    rebalanceAVL(root);
 
     return root;
 }

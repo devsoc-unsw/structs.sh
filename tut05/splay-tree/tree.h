@@ -26,4 +26,7 @@ void freeTree(TreeNode *root);                            // clear
 TreeNode *getMinNode(TreeNode *root);                     
 static int max(int a, int b);
 
+TreeNode *rotateLeft(TreeNode *root);
+TreeNode *rotateRight(TreeNode *root);
+
 #endif
