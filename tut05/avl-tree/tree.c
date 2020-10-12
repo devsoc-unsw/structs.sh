@@ -28,22 +28,7 @@ int getHeight(TreeNode *root) {
  * Returns the resultant tree.
  */
 TreeNode *leftRotate(TreeNode *root) {
-    if (root == NULL) return NULL;
 
-    TreeNode *rightChild = root -> right;
-    if (rightChild != NULL) {
-        TreeNode *rightChildLeft = rightChild -> left;
-        rightChild -> left = root;
-        root -> right = rightChildLeft;
-
-        root -> height = 1 + max(getHeight(root -> left), getHeight(root -> right));
-        rightChild -> height = 1 + max(getHeight(rightChild -> left), getHeight(rightChild -> right));
-
-        return rightChild;
-    } else {
-        // Can't do the rotation here. Need to have rightChild
-        return root;
-    }
 }
 
 /**
@@ -51,22 +36,7 @@ TreeNode *leftRotate(TreeNode *root) {
  * Returns the resultant tree.
  */
 TreeNode *rightRotate(TreeNode *root) {
-    if (root == NULL) return NULL;
 
-    TreeNode *leftChild = root -> left;
-    if (leftChild != NULL) {
-        TreeNode *leftChildRight = leftChild-> right;
-        leftChild -> right = root;
-        root -> left = leftChildRight;
-
-        root -> height = 1 + max(getHeight(root -> left), getHeight(root -> right));
-        leftChild -> height = 1 + max(getHeight(leftChild -> left), getHeight(leftChild -> right));
-
-        return leftChild;
-    } else {
-        // Can't do the rotation here. Need to have leftChild
-        return root;
-    }
 }
 
 
@@ -81,14 +51,17 @@ TreeNode *rightRotate(TreeNode *root) {
 
 
 
-// Struct definition
-// struct treeNode {
-//     int value;
-//     int height;
-//     struct treeNode *left;
-//     struct treeNode *right;
-// };
-// typedef struct treeNode TreeNode;
+/* Struct definition
+
+    struct treeNode {
+        int value;
+        int height;
+        struct treeNode *left;
+        struct treeNode *right;
+    };
+    
+*/
+typedef struct treeNode TreeNode;
 
 TreeNode *insertAVL(TreeNode *root, int value) {
     // ===== Standard BST insertion =====
@@ -110,24 +83,11 @@ TreeNode *insertAVL(TreeNode *root, int value) {
 
     // ===== AVL STUFF BELOW =====
     // Insertion is done by this point. Now we'll update the height of this node
-    int leftH = getHeight(root -> left);
-    int rightH = getHeight(root -> right);
-    root -> height = 1 + max(leftH, rightH);
+    updateHeight(root);
 
     // Rebalancing the tree if the insertion caused a height difference of 2 or -2:
-    if (leftH - rightH > 1) {
-        // Left subtree is taller than right subtree by 2 levels
-        if (value > root -> left -> value) {
-            root -> left = leftRotate(root -> left);
-        }
-        root = rightRotate(root);
-    } else if (rightH - leftH > 1) {
-        // Right subtree is taller than left subtree by 2 levels
-        if (value < root -> right -> value) {
-            root -> right = rightRotate(root -> right);
-        }
-        root = leftRotate(root);
-    }
+    rebalance(root);
+
     return root;
 }
 
