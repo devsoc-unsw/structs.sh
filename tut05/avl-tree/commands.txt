@@ -1,0 +1,8 @@
+help               - show commands available
+left               - does a left rotation on the root
+right              - does a right roration on the root
+insert <nodes>     - inserts the given nodes with the AVL insertion algorithm
+height             - determines the height of the tree
+show               - shows the current tree state
+clear              - deletes the entire tree
+exit               - quit program
