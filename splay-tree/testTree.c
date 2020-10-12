@@ -103,8 +103,10 @@ TreeNode *processCommand(TreeNode *root, char *command) {
         } else {
             int val = atoi(tokens[1]);
             printf(" ➤ Searching for %d\n", val);
-            if (searchSplay(root, val)) {
+            root = searchSplay(root, val);
+            if (root -> value == val) {
                 printf(" ➤ %d exists in this tree!\n", val);
+                printTreeState(root);
             } else {
                 printf(" ➤ %d doesn't exist in this tree!\n", val);
             }

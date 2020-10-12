@@ -9,9 +9,9 @@ def is_num(num_given)
 end
 
 begin
-    choices = ["Linked List", "Trees", "Graphs", "Hash Table", "Heap", "Exit"]
+  choices = ["Linked List", "Trees", "Graphs", "Exit".red]
     choices.map { |choice| choice.blue }
-    selection = prompt.select("Select a data structure:".yellow, choices)
+    selection = prompt.select("Select a data structure: (see the implementations here: https://github.com/Tymotex/DataStructures)".yellow, choices)
     puts "Starting: %s\n".red % [selection]
     case selection
     when "Linked List"

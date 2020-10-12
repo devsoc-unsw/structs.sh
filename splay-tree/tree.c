@@ -54,7 +54,6 @@ TreeNode *insertStandard(TreeNode *root, int value) {
 TreeNode *splay(TreeNode *root, int targetValue) {
     if (root == NULL) return root;
     if (targetValue == root -> value) return root;
-    
     if (targetValue < root -> value) {
         // Target value is somewhere in the left subtree
         TreeNode *leftChild = root -> left;
