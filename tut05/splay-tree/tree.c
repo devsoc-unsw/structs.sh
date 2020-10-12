@@ -6,6 +6,43 @@
 
 #define MAX_TREE_SIZE 64
 
+
+/**
+ * Given a tree and a value, inserts that value inside the tree. The
+ * inserted value is then lifted up to the root by a sequence of rotations.
+ * This involves calling the splay function after doing 
+ */
+TreeNode *insertSplay(TreeNode *root, int insertValue) {
+    if (root == NULL) {
+        TreeNode *newTreeNode = newNode(insertValue);
+        return newTreeNode;
+    }
+
+    if (insertValue < root -> value) {
+        root -> left = insertStandard(root -> left, insertValue); 
+        root = rightRotate(root, root -> value);
+    } else if (insertValue > root -> value) {
+        root -> right = insertStandard(root -> right, insertValue);
+        root = leftRotate(root, root -> value);
+    } else {
+        printf("Value %d already exists in the tree\n", insertValue);
+        return root;
+    }
+    
+    return root;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  * Given a value, mallocs and returns a new tree node initialised with the
  * supplied value.
@@ -32,11 +69,9 @@ TreeNode *insertStandard(TreeNode *root, int value) {
     if (value < root -> value) {
         // Insertion point exists somewhere in the left subtree
         root -> left = insertStandard(root -> left, value); 
-        root = rightRotate(root, root -> value);
     } else if (value > root -> value) {
         // Insertion point exists somewhere in the right subtree
         root -> right = insertStandard(root -> right, value);
-        root = leftRotate(root, root -> value);
     } else {
         // Value already exists in the tree. Doing nothing
         printf("Value %d already exists in the tree\n", value);
@@ -56,6 +91,7 @@ TreeNode *insertStandard(TreeNode *root, int value) {
 TreeNode *splay(TreeNode *root, int targetValue) {
     if (root == NULL) return root;
     if (targetValue == root -> value) return root;
+    
     if (targetValue < root -> value) {
         // Target value is somewhere in the left subtree
         TreeNode *leftChild = root -> left;
@@ -98,17 +134,7 @@ TreeNode *splay(TreeNode *root, int targetValue) {
     return root;
 }
 
-/**
- * Given a tree and a value, inserts that value inside the tree. The
- * inserted value is then lifted up to the root by a sequence of rotations.
- * This involves calling the splay function after doing 
- */
-TreeNode *insertSplay(TreeNode *root, int insertValue) {
-    // Insertion point reached if the tree is empty (vacant position)
-    root = insertStandard(root, insertValue);
-    root = splay(root, insertValue);
-    return root;
-}
+
 
 /**
  * Given a tree and a target value, returns true if that target value
