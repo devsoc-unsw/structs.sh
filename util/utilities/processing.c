@@ -90,3 +90,17 @@ int getNumDigits(int num) {
     }
     return digits;
 }
+
+int *tokeniseEdges(char *vertexPair, int numVertices) {
+    int pairLen = strlen(vertexPair);
+    int i = 0;
+    int *tokens = malloc(sizeof(int) * numVertices);
+    char *currToken = malloc(sizeof(char) * pairLen);
+    strcpy(currToken, strtok(vertexPair, "-"));
+    tokens[i] = currToken;
+    while(currToken != NULL) {
+        currToken = strtok(NULL, "-");
+        tokens[++i] = atoi(currToken);
+    }    
+    return tokens;
+}

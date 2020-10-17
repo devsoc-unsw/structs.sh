@@ -1,7 +1,7 @@
 help                 - show available commands
 matrix               - shows matrix representation
 list                 - shows matrix representation
-insert <v1> <v2>     - inserts edge v1 to v2
+insert <v1>-<v2>     - inserts edge v1 to v2. Eg. insert 1-2 3-4 5-6
 remove <v1> <v2>     - removes edge v1 to v2
 depth <v1>           - performs depth first search starting on v1
 breadth <v1>         - performs breadth first search starting on v1

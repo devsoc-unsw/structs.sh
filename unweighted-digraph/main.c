@@ -37,29 +37,45 @@ Graph processCommand(Graph g, char *command) {
             printInvalidCommand("Help command format: help\n");
         } else {
             printCommands();
+            printHorizontalRule();
         }
     } else if (strcmp(commandName, "matrix") == 0) {
 		// Format: matrix
         if (numArgs != 1) {
-            printInvalidCommand("Help command format: help\n");
+            printInvalidCommand("Matrix command format: matrix\n");
         } else {
 			show(g, ADJACENCY_MATRIX);
         }
     } else if (strcmp(commandName, "list") == 0) {
 		// Format: list
         if (numArgs != 1) {
-            printInvalidCommand("Help command format: help\n");
+            printInvalidCommand("List command format: list\n");
         } else {
 			show(g, ADJACENCY_LIST);
         }
     } else if (strcmp(commandName, "insert") == 0) {
-		// Format: insert <v1> <v2>
-        if (numArgs != 3 || !isNumeric(tokens[1]) || !isNumeric(tokens[2])) {
-            printInvalidCommand("Help command format: help\n");
+		// Format: insert <v1>-<v2>
+        if (numArgs < 2) {
+            printInvalidCommand("Insert command format: insert <v1>-<v2>\n");
         } else {
-            int v1 = atoi(tokens[1]);
-            int v2 = atoi(tokens[2]);
-			insertE(g, makeEdge(g, v1, v2));
+            for (int i = 1; i < numArgs; i++) {
+                char *currPair = tokens[i];
+                printf("Attempting to insert currPair %s\n", currPair);
+
+                // TODO: need to check that the args are numeric! Eg. can't have 1-1a0dadf  
+
+                // if (!isNumeric(tokens[i + 1])) {
+                //     printColoured("red", " ➤ %s is not numeric\n", tokens[i + 1]);
+                // } else {
+                //     int val = atoi(tokens[i + 1]);
+                //     printf(" ➤ Inserting %d\n", val);
+                //     root = insert(root, val);
+                //     printTreeState(root);
+                // }
+            }
+            // int v1 = atoi(tokens[1]);
+            // int v2 = atoi(tokens[2]);
+			// insertE(g, makeEdge(g, v1, v2));
         }
     } else if (strcmp(commandName, "remove") == 0) {
         // Format: remove <v1> <v2>
@@ -177,6 +193,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	printCommands();
+    printHorizontalRule();
 	while (1) {
         printPrompt("Enter command");
 		fgets(line, MAX_LINE, stdin);
