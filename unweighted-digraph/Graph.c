@@ -78,7 +78,7 @@ bool adjacent(Graph g, Vertex v, Vertex w) {
 /** 
  * Inserts the given edge into the graph 
  */
-void  insertE(Graph g, Edge e) {
+void insertE(Graph g, Edge e) {
    assert(g != NULL);
    assert(validV(g, e.v) && validV(g, e.w));
    if (g -> edges[e.v][e.w]) return;

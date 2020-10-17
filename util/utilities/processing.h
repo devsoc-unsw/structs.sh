@@ -42,9 +42,15 @@ char *getDirOfCurrExecutable();
 int getNumDigits(int num);
 
 /**
- * Given a string like "1-2 3-4-5-6 7-8", returns an array of integers 
- * containing: [1, 2, 3, 4, 4, 5, 5, 6, 7, 8]
+ * Given a string like "3-4-5-6", returns a count of how many
+ * vertices are present, eg. 4 vertices are present in "3-4-5-6"
  */
-int *tokeniseEdges(char *vertexPair, int numVertices)
+int countVertices(char *vertexPair);
+
+/**
+ * Given a string like "3-4-5-6", returns an array of integers 
+ * containing: [3, 4, 4, 5, 5, 6]
+ */
+int *tokeniseEdges(char *vertexPair, int numVertices);
 
 #endif

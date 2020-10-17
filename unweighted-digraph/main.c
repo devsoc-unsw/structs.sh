@@ -59,23 +59,19 @@ Graph processCommand(Graph g, char *command) {
             printInvalidCommand("Insert command format: insert <v1>-<v2>\n");
         } else {
             for (int i = 1; i < numArgs; i++) {
-                char *currPair = tokens[i];
-                printf("Attempting to insert currPair %s\n", currPair);
-
-                // TODO: need to check that the args are numeric! Eg. can't have 1-1a0dadf  
-
-                // if (!isNumeric(tokens[i + 1])) {
-                //     printColoured("red", " ➤ %s is not numeric\n", tokens[i + 1]);
-                // } else {
-                //     int val = atoi(tokens[i + 1]);
-                //     printf(" ➤ Inserting %d\n", val);
-                //     root = insert(root, val);
-                //     printTreeState(root);
-                // }
+                char *currPair = malloc(sizeof(char) * (strlen(tokens[i]) + 1));
+                strcpy(currPair, tokens[i]);
+                printf("Attempting to insert chain %s\n", currPair);
+                int *vertexPairs = tokeniseEdges(currPair, g -> nV);
+                int vertexCount = countVertices(currPair);
+                if (!vertexPairs) break;
+                for (int j = 0; j < (vertexCount - 1) * 2; j += 2) {
+                    Edge edge = makeEdge(g, vertexPairs[j], vertexPairs[j + 1]);
+                    printf(" ➤ Inserting: %d - %d\n", vertexPairs[j], vertexPairs[j + 1]);
+                    insertE(g, edge);
+                }
+                free(vertexPairs);
             }
-            // int v1 = atoi(tokens[1]);
-            // int v2 = atoi(tokens[2]);
-			// insertE(g, makeEdge(g, v1, v2));
         }
     } else if (strcmp(commandName, "remove") == 0) {
         // Format: remove <v1> <v2>
