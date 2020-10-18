@@ -132,6 +132,10 @@ int *tokeniseEdges(char *vertexPairs, int numVertices) {
         tokens[i++] = atoi(currToken);
         currToken = strtok(NULL, "-");
     }    
+    if (i <= 1) {
+        printColoured("red", "Invalid edges\n");
+        return NULL;
+    }
     int *pairs = malloc(sizeof(int) * (i - 1) * 2); 
     populatePairs(tokens, pairs, i);
     return pairs;

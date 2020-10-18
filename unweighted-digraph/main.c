@@ -61,47 +61,56 @@ Graph processCommand(Graph g, char *command) {
             for (int i = 1; i < numArgs; i++) {
                 char *currPair = malloc(sizeof(char) * (strlen(tokens[i]) + 1));
                 strcpy(currPair, tokens[i]);
-                printf("Attempting to insert chain %s\n", currPair);
                 int *vertexPairs = tokeniseEdges(currPair, g -> nV);
                 int vertexCount = countVertices(currPair);
                 if (!vertexPairs) break;
                 for (int j = 0; j < (vertexCount - 1) * 2; j += 2) {
                     Edge edge = makeEdge(g, vertexPairs[j], vertexPairs[j + 1]);
-                    printf(" ➤ Inserting: %d - %d\n", vertexPairs[j], vertexPairs[j + 1]);
+                    printf(" ➤ Inserting edge: %d - %d\n", vertexPairs[j], vertexPairs[j + 1]);
                     insertE(g, edge);
                 }
                 free(vertexPairs);
             }
         }
     } else if (strcmp(commandName, "remove") == 0) {
-        // Format: remove <v1> <v2>
-        if (numArgs != 3 || !isNumeric(tokens[1]) || !isNumeric(tokens[2])) {
-            printInvalidCommand("Help command format: help\n");
+        // Format: remove <v1>-<v2>
+        if (numArgs < 2) {
+            printInvalidCommand("Remove command format: remove <v1>-<v2>\n");
         } else {
-            int v1 = atoi(tokens[1]);
-            int v2 = atoi(tokens[2]);
-			removeE(g, makeEdge(g, v1, v2));
+            for (int i = 1; i < numArgs; i++) {
+                char *currPair = malloc(sizeof(char) * (strlen(tokens[i]) + 1));
+                strcpy(currPair, tokens[i]);
+                int *vertexPairs = tokeniseEdges(currPair, g -> nV);
+                int vertexCount = countVertices(currPair);
+                if (!vertexPairs) break;
+                for (int j = 0; j < (vertexCount - 1) * 2; j += 2) {
+                    Edge edge = makeEdge(g, vertexPairs[j], vertexPairs[j + 1]);
+                    printf(" ➤ Removing edge: %d - %d\n", vertexPairs[j], vertexPairs[j + 1]);
+                    removeE(g, edge);
+                }
+                free(vertexPairs);
+            }
         }
-    } else if (strcmp(commandName, "depth") == 0) {
-		// Format: depth <vertex>
+    } else if (strcmp(commandName, "dfs") == 0) {
+		// Format: dfs <vertex>
         if (numArgs != 2 || !isNumeric(tokens[1])) {
-            printInvalidCommand("Help command format: help\n");
+            printInvalidCommand("DFS command format: dfs <vertex>\n");
         } else {
             int vertex = atoi(tokens[1]);
 			DFSIterative(g, vertex);
         }
-    } else if (strcmp(commandName, "breadth") == 0) {
-		// Format: breadth <vertex>
+    } else if (strcmp(commandName, "bfs") == 0) {
+		// Format: bfs <vertex>
         if (numArgs != 2 || !isNumeric(tokens[1])) {
-            printInvalidCommand("Help command format: help\n");
+            printInvalidCommand("BFS command format: bfs <vertex>\n");
         } else {
             int startingVertex = atoi(tokens[1]);
 			BFS(g, startingVertex);
         }
     } else if (strcmp(commandName, "cycle") == 0) {
-		// Format: hasCycle
+		// Format: cycle
         if (numArgs != 1) {
-            printInvalidCommand("Help command format: help\n");
+            printInvalidCommand("Cycle command format: cycle\n");
         } else {
 			printf(
 				hasCycle(g) ? 
@@ -109,17 +118,17 @@ Graph processCommand(Graph g, char *command) {
 				" ➤ No cycle exists in the graph!"
 			);
         }
-    } else if (strcmp(commandName, "showConnected") == 0) {
-		// Format: hasCycle
+    } else if (strcmp(commandName, "connected") == 0) {
+		// Format: connected
         if (numArgs != 1) {
-            printInvalidCommand("Help command format: help\n");
+            printInvalidCommand("Connected command format: connected\n");
         } else {
 			showConnectedComponents(g);
         }
     } else if (strcmp(commandName, "hamilton") == 0) {
 		// Format: hamilton <v1> <v2>
         if (numArgs != 2 || !isNumeric(tokens[1])) {
-            printInvalidCommand("Help command format: help\n");
+            printInvalidCommand("Hamilton command format: hamilton <v1> <v2>\n");
         } else {
             int v1 = atoi(tokens[1]);
             int v2 = atoi(tokens[2]);
@@ -129,12 +138,42 @@ Graph processCommand(Graph g, char *command) {
 				printf(" ➤ No Hamiltonian path exists between %d and %d\n", v1, v2);
 			}
         }
-    } else if (strcmp(commandName, "transitiveClosure") == 0) {
-		// Format: transitiveClosure
+    } else if (strcmp(commandName, "closure") == 0) {
+		// Format: closure
         if (numArgs != 1) {
-            printInvalidCommand("Help command format: help\n");
+            printInvalidCommand("Closure command format: closure\n");
         } else {
 			transitiveClosure(g);
+        }
+    } else if (strcmp(commandName, "randomise") == 0) {
+		// Format: randomise dense|sparse
+        if (numArgs != 2) {
+            printInvalidCommand("Randomise command format: randomise dense|sparse\n");
+        } else {
+            int numVertices = g -> nV;
+            if (strcmp(tokens[1], "dense") == 0) {
+                printf(" ➤ Initialising dense graph\n");
+                dropGraph(g);
+                g = newRandomGraph(numVertices, 2);
+                show(g, ADJACENCY_MATRIX);
+            } else if (strcmp(tokens[1], "sparse") == 0) {
+                printf(" ➤ Initialising sparse graph\n");
+                dropGraph(g);
+                g = newRandomGraph(numVertices, 5);
+                show(g, ADJACENCY_MATRIX);
+            } else {
+                printInvalidCommand("Randomise command format: randomise dense|sparse\n");
+            }
+        }
+    } else if (strcmp(commandName, "clear") == 0) {
+		// Format: clear
+        if (numArgs != 1) {
+            printInvalidCommand("Clear command format: clear\n");
+        } else {
+            int numVertices = g -> nV;
+			dropGraph(g);
+            g = newGraph(numVertices);
+            printf(" ➤ Cleared graph\n");
         }
     } else if (strcmp(commandName, "exit") == 0) {
 		// Format: exit
@@ -181,7 +220,7 @@ int main(int argc, char *argv[]) {
 		// Rest of the lines in the file contains edges v1-v2
 		while (fgets(line,MAX_LINE,in) != NULL) {
 			if (sscanf(line,"%d %d",&v1,&v2) != 2)
-				fprintf(stderr,"Bad edge (%d, %d)\n", v1, v2);
+				fprintf(stderr, "Invalid edge (%d, %d)\n", v1, v2);
 			else
 				insertE(graph, makeEdge(graph,v1,v2));
 		}

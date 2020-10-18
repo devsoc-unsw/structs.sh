@@ -19,7 +19,7 @@ typedef struct { Vertex v; Vertex w; } Edge;
 int   validV(Graph, Vertex); 
 Edge  makeEdge(Graph, Vertex, Vertex);
 Graph newGraph(int nV); 
-Graph newRandomGraph(int nV);  
+Graph newRandomGraph(int nV, int sparsityFactor);  
 bool  adjacent(Graph g, Vertex v, Vertex w);
 void  insertE(Graph, Edge);
 void  removeE(Graph, Edge);

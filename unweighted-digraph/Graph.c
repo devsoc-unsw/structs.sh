@@ -22,18 +22,25 @@
  * Check vertex is valid
  */
 int validV(Graph g, Vertex v) {
-   return (g != NULL && v >= 0 && v < g -> nV);
+   return g != NULL && v >= 0 && v < g -> nV;
 }
 
 /** 
  * Create and return an Edge
  */
 Edge makeEdge(Graph g, Vertex v, Vertex w) {
-   assert(validV(g, v) && validV(g, w));
    Edge e; 
    e.v = v; 
    e.w = w;
    return e;
+}
+
+bool edgeIsValid(Graph g, Edge e) {
+   if (!(validV(g, e.v) && validV(g, e.w))) {
+      printColoured("red", "Invalid edge: %d - %d\n", e.v, e.w);
+      return false;
+   }
+   return true;
 }
 
 /** 
@@ -56,12 +63,12 @@ Graph newGraph(int nV) {
 /** 
  * Initialises a graph with random values
  */
-Graph newRandomGraph(int nV) {
+Graph newRandomGraph(int nV, int sparsityFactor) {
    Graph g = newGraph(nV);
    for (int v = 0; v < nV; v++) {
-      for (int w = v+1; w < nV; w++) {
-         if (rand()%4 == 0)
-            insertE(g, makeEdge(g, v, w));
+      for (int w = v + 1; w < nV; w++) {
+         if (rand() % sparsityFactor == 0) insertE(g, makeEdge(g, v, w));
+         if (rand() % sparsityFactor == 0) insertE(g, makeEdge(g, w, v));
       }
    }
    return g;
@@ -71,8 +78,11 @@ Graph newRandomGraph(int nV) {
  * Checks if the two given vertices are adjacent in the graph
  */
 bool adjacent(Graph g, Vertex v, Vertex w) {
-   assert(validV(g, v) && validV(g, w));
-   return (g -> edges[v][w] != 0);
+   if (validV(g, v) && validV(g, w)) {
+      return (g -> edges[v][w] != 0);
+   } else {
+
+   }
 }
 
 /** 
@@ -80,8 +90,11 @@ bool adjacent(Graph g, Vertex v, Vertex w) {
  */
 void insertE(Graph g, Edge e) {
    assert(g != NULL);
-   assert(validV(g, e.v) && validV(g, e.w));
-   if (g -> edges[e.v][e.w]) return;
+   if (!edgeIsValid(g, e)) return;
+   if (g -> edges[e.v][e.w]) {
+      printColoured("red", "Edge already exists: %d - %d\n", e.v, e.w);
+      return;
+   }
    g -> edges[e.v][e.w] = 1;
    g -> nE++;
 }
@@ -89,10 +102,13 @@ void insertE(Graph g, Edge e) {
 /** 
  * Deletes the given edge from the graph
  */
-void  removeE(Graph g, Edge e) {
+void removeE(Graph g, Edge e) {
    assert(g != NULL);
-   assert(validV(g, e.v) && validV(g, e.w));
-   if (!g -> edges[e.v][e.w]) return;
+   if (!edgeIsValid(g, e)) return;
+   if (!(g -> edges[e.v][e.w])) {
+      printColoured("red", "Edge doesn't exist: %d - %d\n", e.v, e.w);
+      return;
+   }
    g -> edges[e.v][e.w] = 0;
    g -> nE--;
 }
@@ -119,8 +135,7 @@ void show(Graph g, int option) {
    int v, w;
    switch (option) {
       case ADJACENCY_LIST:
-         printf("Showing the adjacency list\n");
-         printHorizontalRule();
+         printHeader("Adjacency List");
          printColoured("yellow", " Vertex   Connections\n");
          printHorizontalRule();
          for (v = 0; v < g -> nV; v++) {
@@ -133,18 +148,15 @@ void show(Graph g, int option) {
             printf("%s\n", connections);
             free(connections);
          }
-         printHorizontalRule();
          break;
       case ADJACENCY_MATRIX:
-         printf("Showing the adjacency matrix\n");
+         printHeader("Adjacency Matrix");
          int cellSpacing = getCellSpacing(g -> nV, g -> edges);
          int horizontalBorderWidth = (cellSpacing + 1) * (g -> nV) + 1;
          if (horizontalBorderWidth + 3 >= getTermWidth()) {   // Note: the +3 comes from the left column of row numbers
-            printColoured("red", "The matrix is too large to be printed here. Sorry\n");
+            printColoured("red", "The matrix is too large to be printed here. Try resizing the window\n");
             return;
          }
-
-         printHorizontalRule();
          printf("\n     ");
          // Printing upper row of column numbers
          for (v = 0; v < g -> nV; v++) printColoured("yellow", "%-*d ", cellSpacing, v);
@@ -165,10 +177,10 @@ void show(Graph g, int option) {
          printf("   %s", BOX_EDGE_CHAR_BOTTOM_LEFT);
          for (v = 0; v < (cellSpacing + 1) * (g -> nV) + 1; v++) printf("%s", BOX_EDGE_CHAR_HORIZONTAL);
          printf("%s\n", BOX_EDGE_CHAR_BOTTOM_RIGHT);
-         printHorizontalRule();
          break;
    }
    printf("\nSummary: the graph has %d vertices and %d edges\n", g -> nV, g -> nE);
+   printHorizontalRule();
 }
 
 int getCellSpacing(int numVertices, int **adjMatrix) {
