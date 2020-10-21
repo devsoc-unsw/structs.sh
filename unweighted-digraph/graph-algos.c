@@ -6,134 +6,55 @@
 #include "queue/Queue.h"
 #include "stack/Stack.h"
 #include "linked-list/List.h"
-#include "../util/colours.h"
+#include "../util/display/display.h"
 
 // ========== Depth-First Search ==========
 /**
  * Recursive depth-first search. This is a wrapper around the 
  * DFSR helper function below.
  */
-void DFSRecursive(Graph g, Vertex v) {
+void dfs(Graph g, Vertex v) {
+    showTraversalTrace(g, v);
+    printf("Traversal order (from top to bottom in the above stacktrace):\n");
     bool *visited = newVisitedArray(g);
-    printf("Showing recursive stacktrace:\n");
-    bool *levelConnector = malloc(sizeof(int) * g -> nV);
-    for (int i = 0; i < g -> nV; i++) levelConnector[i] = false;
-    DFSRecursiveStacktracer(g, v, visited, 0, levelConnector);
-    free(visited);
-    printf("Traversal order:\n");
-    visited = newVisitedArray(g);
-    DFSRecursivePrint(g, v, visited);
+    dfsRecursive(g, v, visited);
     printf("\n");
     free(visited);
 }
 
-static void DFSRecursiveStacktracer(Graph g, Vertex currVertex, bool *visited, int indentLevel, bool *levelConnector) {
-    int currIndentLevel = indentLevel;
-    while (currIndentLevel > 1) {
-        if (levelConnector[indentLevel - currIndentLevel]) printf("┃");
-        else printf(" ");
-        for (int i = 0; i < 3; i++) printf(" ");
-        currIndentLevel--;
-    }
-    if (currIndentLevel == 1) {
-        printf("┗━━━");
-    }
-    printf("%-2d\n", currVertex);
-    visited[currVertex] = true;
-    int numUnvisitedNeighbours = 0;
-    for (Vertex w = 0; w < g -> nV; w++) {
-        if (adjacent(g, currVertex, w) && visited[w] == false) numUnvisitedNeighbours++;
-    }
-    for (Vertex w = 0; w < g -> nV; w++) {
-        if (adjacent(g, currVertex, w) && visited[w] == false) {
-            bool hasUnder = false;
-            if (numUnvisitedNeighbours > 1) hasUnder = true;
-            if (hasUnder) {
-                bool *nextLevelConnector = malloc(sizeof(int) * g -> nV);
-                for (int i = 0; i < g -> nV; i++) nextLevelConnector[i] = levelConnector[i];
-                nextLevelConnector[indentLevel] = true;
-                DFSRecursiveStacktracer(g, w, visited, indentLevel + 1, nextLevelConnector);
-                numUnvisitedNeighbours--;
-            } else {
-                DFSRecursiveStacktracer(g, w, visited, indentLevel + 1, levelConnector);
-            }
-        }
-    }
-}
-
-static void DFSRecursivePrint(Graph g, Vertex currVertex, bool *visited) {
+static void dfsRecursive(Graph g, Vertex currVertex, bool *visited) {
     printf("%-2d ", currVertex);
     visited[currVertex] = true;
     for (Vertex w = 0; w < g -> nV; w++) {
         if (adjacent(g, currVertex, w) && visited[w] == false) {
             printf("→ ");
-            DFSRecursivePrint(g, w, visited);
+            dfsRecursive(g, w, visited);
         }
     }
 }
 
-
-/**
- * Iterative depth-first search. Uses a stack
- */
-void DFSIterative(Graph g, Vertex v) {
-    bool *visited = newVisitedArray(g);
-    Stack s = newStack();
-    StackPush(s, v);
-    while (!StackIsEmpty(s)) {
-        Vertex x = StackPop(s);
-        if (visited[x] == true) {
-            printf(" ===> Already visited %-2d  |\n", x);
-            continue;
-        }
-        printf(" ===> Current Vertex: %-2d", x);
-        visited[x] = true;
-        for (Vertex y = g -> nV - 1; y >= 0; y--) {
-            if (y == -1) 
-                break;
-            if (!adjacent(g, x, y)) 
-                continue;
-            if (visited[y] == false)
-                StackPush(s, y);
-        }
-        printf("  |   DFS Stack: ");
-        showStack(s);
-        printf("                          |   ");
-        showVisited(g, visited);
-    }
-    free(visited);
-}
-
-
-// ========== Depth-First Search ==========
+// ========== Breadth-First Search ==========
 /**
  * Breadth-first search. Uses a queue
  */
-void BFS(Graph g, Vertex v) {
-    int i; 
-    int order = 0;
+void bfs(Graph g, Vertex v) {
+    showTraversalTrace(g, v);
+    printf("Traversal order (from left to right, layer by layer in the above stacktrace):\n");
     bool *visited = newVisitedArray(g);
     Queue q = newQueue();
     QueueJoin(q, v);
     while (!QueueIsEmpty(q)) {
         Vertex x = QueueLeave(q);
-        if (visited[x] != false) {
-            printf(" ===> Already visited %-2d  |\n", x);
-            continue;
-        }
-        printf(" ===> Current Vertex: %-2d", x);
+        if (visited[x] != false) continue;
+        if (x != v) printf(" → ");
+        printf("%-2d", x);
         visited[x] = true;
         for (Vertex y = 0; y < g -> nV; y++) {
-            if (!adjacent(g, x, y)) 
-                continue;
-            if (visited[y] == false) 
-                QueueJoin(q, y);
+            if (!adjacent(g, x, y)) continue;
+            if (visited[y] == false) QueueJoin(q, y);
         }
-        printf("  |   BFS Queue: ");
-        showQueue(q);
-        printf("                          |   ");
-        showVisited(g, visited);
     }
+    printf("\n");
     free(visited);
 }
 
@@ -269,3 +190,72 @@ static void showVisited(Graph g, bool *visited) {
     }
     printf("\n");
 }
+
+
+// ===== Traversal Tracer =====
+
+void showTraversalTrace(Graph g, Vertex startingVertex) {
+    printHeader("Paths from %d", startingVertex);
+    bool *levelConnector = malloc(sizeof(int) * g -> nV);
+    bool *visited = newVisitedArray(g);
+    for (int i = 0; i < g -> nV; i++) levelConnector[i] = false;
+    traversalTracer(g, startingVertex, visited, 0, levelConnector);
+    free(visited);
+}
+
+static void markVisited(Graph g, Vertex startVertex, bool *visited) {
+    for (Vertex neighbour = 0; neighbour < g -> nV; neighbour++) {
+        if (adjacent(g, startVertex, neighbour) && !visited[neighbour]) {
+            visited[neighbour] = true;
+            markVisited(g, neighbour, visited);
+        }
+    }
+}
+
+static int numNextHops(Graph g, Vertex startVertex, bool *visited) {
+    bool *newVisited = newVisitedArray(g);
+    for (int i = 0; i < g -> nV; i++) newVisited[i] = visited[i];
+    int numPathsFromStart = 0;
+    for (Vertex neighbour = 0; neighbour < g -> nV; neighbour++) {
+        if (adjacent(g, startVertex, neighbour) && !newVisited[neighbour]) {
+            markVisited(g, neighbour, newVisited);
+            numPathsFromStart++;
+        }
+    }
+    return numPathsFromStart;
+}
+
+static void traversalTracer(Graph g, Vertex currVertex, bool *visited, int indentLevel, bool *levelConnector) {
+    int currIndentLevel = indentLevel;
+    while (currIndentLevel > 1) {
+        if (levelConnector[indentLevel - currIndentLevel]) printColoured("purple", "┃");
+        else printf(" ");
+        for (int i = 0; i < 3; i++) printf(" ");
+        currIndentLevel--;
+    }
+    if (currIndentLevel == 1) {
+        if (levelConnector[indentLevel - currIndentLevel]) printColoured("purple", "┣");
+        else printColoured("purple", "┗");
+        printColoured("purple", "━━━");
+    }
+    printColoured("green", "%-2d\n", currVertex);
+    visited[currVertex] = true;
+    int numPathsFromStart = numNextHops(g, currVertex, visited);
+    // printf("Num paths from start for %d : %d\n", currVertex, numPathsFromStart);
+    for (Vertex w = 0; w < g -> nV; w++) {
+        if (adjacent(g, currVertex, w) && !visited[w]) {
+            bool hasUnder = false;
+            if (numPathsFromStart > 1) hasUnder = true;
+            if (hasUnder) {
+                bool *nextLevelConnector = malloc(sizeof(int) * g -> nV);
+                for (int i = 0; i < g -> nV; i++) nextLevelConnector[i] = levelConnector[i];
+                nextLevelConnector[indentLevel] = true;
+                traversalTracer(g, w, visited, indentLevel + 1, nextLevelConnector);
+                numPathsFromStart--;
+            } else {
+                traversalTracer(g, w, visited, indentLevel + 1, levelConnector);
+            }
+        }
+    }
+}
+

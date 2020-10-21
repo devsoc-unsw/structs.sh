@@ -96,10 +96,10 @@ Graph processCommand(Graph g, char *command) {
     } else if (strcmp(commandName, "dfs") == 0) {
 		// Format: dfs <vertex>
         if (numArgs != 2 || !isNumeric(tokens[1])) {
-            printInvalidCommand("DFS command format: dfs <vertex>\n");
+            printInvalidCommand("dfs command format: dfs <vertex>\n");
         } else {
             int vertex = atoi(tokens[1]);
-			DFSRecursive(g, vertex);
+			dfs(g, vertex);
         }
     } else if (strcmp(commandName, "bfs") == 0) {
 		// Format: bfs <vertex>
@@ -107,7 +107,7 @@ Graph processCommand(Graph g, char *command) {
             printInvalidCommand("BFS command format: bfs <vertex>\n");
         } else {
             int startingVertex = atoi(tokens[1]);
-			BFS(g, startingVertex);
+			bfs(g, startingVertex);
         }
     } else if (strcmp(commandName, "cycle") == 0) {
 		// Format: cycle
@@ -119,6 +119,19 @@ Graph processCommand(Graph g, char *command) {
 				" ➤ A cycle exists in the graph!" : 
 				" ➤ No cycle exists in the graph!"
 			);
+        }
+    } else if (strcmp(commandName, "path") == 0) {
+		// Format: path <v1> <v2>
+        if (numArgs != 3 || !isNumeric(tokens[1]) || !isNumeric(tokens[2])) {
+            printInvalidCommand("Path command format: path <v1> <v2>\n");
+        } else {
+            int v1 = atoi(tokens[1]);
+            int v2 = atoi(tokens[2]);
+			if (isReachable(g, v1, v2)) {
+				printf(" ➤ A path exists between %d and %d\n", v1, v2);
+			} else {
+				printf(" ➤ No path exists between %d and %d\n", v1, v2);
+			}
         }
     } else if (strcmp(commandName, "connected") == 0) {
 		// Format: connected

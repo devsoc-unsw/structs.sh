@@ -18,16 +18,10 @@
 #define max(a, b) (a > b) ? a : b
 
 
-/** 
- * Check vertex is valid
- */
 int validV(Graph g, Vertex v) {
    return g != NULL && v >= 0 && v < g -> nV;
 }
 
-/** 
- * Create and return an Edge
- */
 Edge makeEdge(Graph g, Vertex v, Vertex w) {
    Edge e; 
    e.v = v; 
@@ -43,9 +37,6 @@ bool edgeIsValid(Graph g, Edge e) {
    return true;
 }
 
-/** 
- * Instantiates an empty graph
- */
 Graph newGraph(int nV) {
    assert(nV > 0);
    int **e = malloc(nV * sizeof(int *));
@@ -60,9 +51,6 @@ Graph newGraph(int nV) {
    return g;
 }
 
-/** 
- * Initialises a graph with random values
- */
 Graph newRandomGraph(int nV, int sparsityFactor) {
    Graph g = newGraph(nV);
    for (int v = 0; v < nV; v++) {
@@ -74,9 +62,6 @@ Graph newRandomGraph(int nV, int sparsityFactor) {
    return g;
 }
 
-/** 
- * Checks if the two given vertices are adjacent in the graph
- */
 bool adjacent(Graph g, Vertex v, Vertex w) {
    if (validV(g, v) && validV(g, w)) {
       return (g -> edges[v][w] != 0);
@@ -85,9 +70,6 @@ bool adjacent(Graph g, Vertex v, Vertex w) {
    }
 }
 
-/** 
- * Inserts the given edge into the graph 
- */
 void insertE(Graph g, Edge e) {
    assert(g != NULL);
    if (!edgeIsValid(g, e)) return;
@@ -99,9 +81,6 @@ void insertE(Graph g, Edge e) {
    g -> nE++;
 }
 
-/** 
- * Deletes the given edge from the graph
- */
 void removeE(Graph g, Edge e) {
    assert(g != NULL);
    if (!edgeIsValid(g, e)) return;
@@ -113,9 +92,6 @@ void removeE(Graph g, Edge e) {
    g -> nE--;
 }
 
-/** 
- * Frees the memory associated with graph
- */
 void dropGraph(Graph g) {
    assert(g != NULL);
    for (int i = 0; i < g -> nV; i++)
@@ -124,12 +100,6 @@ void dropGraph(Graph g) {
    free(g);
 }
 
-/** 
- * Displays the given graph, responsive to terminal width.
- * Options:
- *   1. ADJACENCY_MATRIX
- *   2. ADJACENCY_LIST
- */
 void showGraph(Graph g, int option) {
    assert(g != NULL);
    int v, w;
