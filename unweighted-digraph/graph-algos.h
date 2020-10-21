@@ -3,9 +3,10 @@
 
 // Traversals:
 void DFSIterative(Graph, Vertex);
-static void DFSR(Graph g, Vertex currVertex, bool *visited);
 
 void DFSRecursive(Graph, Vertex);
+static void DFSRecursiveStacktracer(Graph g, Vertex currVertex, bool *visited, int indentLevel, bool *levelConnector);
+static void DFSRecursivePrint(Graph g, Vertex currVertex, bool *visited);
 
 void BFS(Graph, Vertex);
 

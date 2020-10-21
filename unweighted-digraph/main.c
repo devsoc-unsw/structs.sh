@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <ctype.h>
 #include <string.h>
-#include "Graph.h"
+#include "graph.h"
 #include "graph-algos.h"
 #include "floyd-warshall.h"
 #include "../util/menu-interface.h"
@@ -44,14 +44,14 @@ Graph processCommand(Graph g, char *command) {
         if (numArgs != 1) {
             printInvalidCommand("Matrix command format: matrix\n");
         } else {
-			show(g, ADJACENCY_MATRIX);
+			showGraph(g, ADJACENCY_MATRIX);
         }
     } else if (strcmp(commandName, "list") == 0) {
 		// Format: list
         if (numArgs != 1) {
             printInvalidCommand("List command format: list\n");
         } else {
-			show(g, ADJACENCY_LIST);
+			showGraph(g, ADJACENCY_LIST);
         }
     } else if (strcmp(commandName, "insert") == 0) {
 		// Format: insert <v1>-<v2>
@@ -71,6 +71,7 @@ Graph processCommand(Graph g, char *command) {
                 }
                 free(vertexPairs);
             }
+            showGraph(g, ADJACENCY_MATRIX);
         }
     } else if (strcmp(commandName, "remove") == 0) {
         // Format: remove <v1>-<v2>
@@ -90,6 +91,7 @@ Graph processCommand(Graph g, char *command) {
                 }
                 free(vertexPairs);
             }
+            showGraph(g, ADJACENCY_MATRIX);
         }
     } else if (strcmp(commandName, "dfs") == 0) {
 		// Format: dfs <vertex>
@@ -97,7 +99,7 @@ Graph processCommand(Graph g, char *command) {
             printInvalidCommand("DFS command format: dfs <vertex>\n");
         } else {
             int vertex = atoi(tokens[1]);
-			DFSIterative(g, vertex);
+			DFSRecursive(g, vertex);
         }
     } else if (strcmp(commandName, "bfs") == 0) {
 		// Format: bfs <vertex>
@@ -155,12 +157,12 @@ Graph processCommand(Graph g, char *command) {
                 printf(" ➤ Initialising dense graph\n");
                 dropGraph(g);
                 g = newRandomGraph(numVertices, 2);
-                show(g, ADJACENCY_MATRIX);
+                showGraph(g, ADJACENCY_MATRIX);
             } else if (strcmp(tokens[1], "sparse") == 0) {
                 printf(" ➤ Initialising sparse graph\n");
                 dropGraph(g);
                 g = newRandomGraph(numVertices, 5);
-                show(g, ADJACENCY_MATRIX);
+                showGraph(g, ADJACENCY_MATRIX);
             } else {
                 printInvalidCommand("Randomise command format: randomise dense|sparse\n");
             }

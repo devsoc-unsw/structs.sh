@@ -24,7 +24,7 @@ bool  adjacent(Graph g, Vertex v, Vertex w);
 void  insertE(Graph, Edge);
 void  removeE(Graph, Edge);
 void  dropGraph(Graph);
-void  show(Graph, int option);
+void  showGraph(Graph, int option);
 
 // Utilities:
 /**

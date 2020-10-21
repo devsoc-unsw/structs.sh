@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include "Graph.h"
+#include "graph.h"
 #include "graph-algos.h"
 #include "queue/Queue.h"
 #include "stack/Stack.h"
@@ -15,18 +15,63 @@
  */
 void DFSRecursive(Graph g, Vertex v) {
     bool *visited = newVisitedArray(g);
-    DFSR(g, v, visited);
+    printf("Showing recursive stacktrace:\n");
+    bool *levelConnector = malloc(sizeof(int) * g -> nV);
+    for (int i = 0; i < g -> nV; i++) levelConnector[i] = false;
+    DFSRecursiveStacktracer(g, v, visited, 0, levelConnector);
+    free(visited);
+    printf("Traversal order:\n");
+    visited = newVisitedArray(g);
+    DFSRecursivePrint(g, v, visited);
+    printf("\n");
     free(visited);
 }
 
-static void DFSR(Graph g, Vertex currVertex, bool *visited) {
-    printf(" ===> Current Vertex: %-2d\n", currVertex);
+static void DFSRecursiveStacktracer(Graph g, Vertex currVertex, bool *visited, int indentLevel, bool *levelConnector) {
+    int currIndentLevel = indentLevel;
+    while (currIndentLevel > 1) {
+        if (levelConnector[indentLevel - currIndentLevel]) printf("┃");
+        else printf(" ");
+        for (int i = 0; i < 3; i++) printf(" ");
+        currIndentLevel--;
+    }
+    if (currIndentLevel == 1) {
+        printf("┗━━━");
+    }
+    printf("%-2d\n", currVertex);
     visited[currVertex] = true;
+    int numUnvisitedNeighbours = 0;
     for (Vertex w = 0; w < g -> nV; w++) {
-        if (adjacent(g, currVertex, w) && visited[w] == false) 
-            DFSR(g, w, visited);
+        if (adjacent(g, currVertex, w) && visited[w] == false) numUnvisitedNeighbours++;
+    }
+    for (Vertex w = 0; w < g -> nV; w++) {
+        if (adjacent(g, currVertex, w) && visited[w] == false) {
+            bool hasUnder = false;
+            if (numUnvisitedNeighbours > 1) hasUnder = true;
+            if (hasUnder) {
+                bool *nextLevelConnector = malloc(sizeof(int) * g -> nV);
+                for (int i = 0; i < g -> nV; i++) nextLevelConnector[i] = levelConnector[i];
+                nextLevelConnector[indentLevel] = true;
+                DFSRecursiveStacktracer(g, w, visited, indentLevel + 1, nextLevelConnector);
+                numUnvisitedNeighbours--;
+            } else {
+                DFSRecursiveStacktracer(g, w, visited, indentLevel + 1, levelConnector);
+            }
+        }
     }
 }
+
+static void DFSRecursivePrint(Graph g, Vertex currVertex, bool *visited) {
+    printf("%-2d ", currVertex);
+    visited[currVertex] = true;
+    for (Vertex w = 0; w < g -> nV; w++) {
+        if (adjacent(g, currVertex, w) && visited[w] == false) {
+            printf("→ ");
+            DFSRecursivePrint(g, w, visited);
+        }
+    }
+}
+
 
 /**
  * Iterative depth-first search. Uses a stack

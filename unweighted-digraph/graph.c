@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <stdbool.h>
 #include <string.h>
-#include "Graph.h"
+#include "graph.h"
 #include "graph-algos.h"
 #include "queue/Queue.h"
 #include "stack/Stack.h"
@@ -125,12 +125,12 @@ void dropGraph(Graph g) {
 }
 
 /** 
- * Displays the graph. 
+ * Displays the given graph, responsive to terminal width.
  * Options:
  *   1. ADJACENCY_MATRIX
  *   2. ADJACENCY_LIST
  */
-void show(Graph g, int option) {
+void showGraph(Graph g, int option) {
    assert(g != NULL);
    int v, w;
    switch (option) {
@@ -166,7 +166,8 @@ void show(Graph g, int option) {
          for (v = 0; v < (cellSpacing + 1) * (g -> nV) + 1; v++) printf("%s", BOX_EDGE_CHAR_HORIZONTAL);
          printf("%s\n", BOX_EDGE_CHAR_TOP_RIGHT);
          for (v = 0; v < g -> nV; v++) {
-            printColoured("yellow", "%-2d %s ", v, BOX_EDGE_CHAR_VERTICAL);
+            printColoured("yellow", "%-2d ", v);
+            printf("%s ", BOX_EDGE_CHAR_VERTICAL);
             for (w = 0; w < g -> nV; w++) {
                if (adjacent(g, v, w)) printColoured("green", "%-*d ", cellSpacing, 1);
                else printColoured("purple", "%-*d ", cellSpacing, 0);
