@@ -141,17 +141,18 @@ Graph processCommand(Graph g, char *command) {
         }
     } else if (strcmp(commandName, "hamilton") == 0) {
 		// Format: hamilton <v1> <v2>
-        if (numArgs != 2 || !isNumeric(tokens[1])) {
-            printInvalidCommand("Hamilton command format: hamilton <v1> <v2>\n");
-        } else {
-            int v1 = atoi(tokens[1]);
-            int v2 = atoi(tokens[2]);
-			if (hasHamiltonPath(g, v1, v2)) {
-				printf(" ➤ Hamiltonian path exists between %d and %d\n", v1, v2);
-			} else {
-				printf(" ➤ No Hamiltonian path exists between %d and %d\n", v1, v2);
-			}
-        }
+        showHamilton(g, 1, 4);
+        // if (numArgs != 2 || !isNumeric(tokens[1])) {
+        //     printInvalidCommand("Hamilton command format: hamilton <v1> <v2>\n");
+        // } else {
+        //     int v1 = atoi(tokens[1]);
+        //     int v2 = atoi(tokens[2]);
+		// 	if (hasHamiltonPath(g, v1, v2)) {
+		// 		printf(" ➤ Hamiltonian path exists between %d and %d\n", v1, v2);
+		// 	} else {
+		// 		printf(" ➤ No Hamiltonian path exists between %d and %d\n", v1, v2);
+		// 	}
+        // }
     } else if (strcmp(commandName, "closure") == 0) {
 		// Format: closure
         if (numArgs != 1) {

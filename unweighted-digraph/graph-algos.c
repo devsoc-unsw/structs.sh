@@ -222,7 +222,7 @@ void transitiveClosure(Graph g) {
  * Returns a boolean array that keeps track of whether or not
  * the vertex at the corresponding index has been visited 
  */ 
-static bool *newVisitedArray(Graph g) {
+bool *newVisitedArray(Graph g) {
     bool *visited = malloc(sizeof(bool) * g -> nV); 
     for (int i = 0; i < g -> nV; i++)
         visited[i] = false;
@@ -230,10 +230,21 @@ static bool *newVisitedArray(Graph g) {
 }
 
 /**
+ * Returns a Vertex array that keeps track of each vertex's predecessor
+ * in a path
+ */ 
+Vertex *newPredArray(Graph g) {
+    Vertex *pred = malloc(sizeof(Vertex) * g -> nV); 
+    for (int i = 0; i < g -> nV; i++)
+        pred[i] = -1;
+    return pred;
+}
+
+/**
  * Given a graph and the visited array, prints the nodes
  * that have been visited
  */ 
-static void showVisited(Graph g, bool *visited) {
+void showVisited(Graph g, bool *visited) {
     printf("Visited  :");
     for (Vertex i = 0; i < g -> nV; i++) {
         if (visited[i]) {
@@ -243,6 +254,20 @@ static void showVisited(Graph g, bool *visited) {
     printf("\n");
 }
 
+/**
+ * Given a graph and the visited array, prints the nodes
+ * that have been visited
+ */ 
+void tracePred(Vertex *pred, Vertex dest) {
+    printf("Pred  :");
+    int i = dest;
+    printf("%d", i);
+    while (pred[i] != -1) {
+        printf(" <- %d", pred[i]);
+        i = pred[i];
+    }
+    printf("Done\n");
+}
 
 // ===== Traversal Tracer =====
 

@@ -100,6 +100,22 @@ void dropGraph(Graph g) {
    free(g);
 }
 
+void showGraph(Graph g, int option) {
+   assert(g != NULL);
+   switch (option) {
+      case ADJACENCY_LIST:
+         printHeader("Adjacency List");
+         showAdjacencyList(g);
+         break;
+      case ADJACENCY_MATRIX:
+         printHeader("Adjacency Matrix");
+         showAdjacencyMatrix(g);
+         break;
+   }
+   printf("\nSummary: the graph has %d vertices and %d edges\n", g -> nV, g -> nE);
+   printHorizontalRule();
+}
+
 static void showAdjacencyMatrix(Graph g) {
    int cellSpacing = getCellSpacing(g -> nV, g -> edges);
    int horizontalBorderWidth = (cellSpacing + 1) * (g -> nV) + 1;
@@ -145,22 +161,6 @@ static void showAdjacencyList(Graph g) {
    }
 }
 
-void showGraph(Graph g, int option) {
-   assert(g != NULL);
-   switch (option) {
-      case ADJACENCY_LIST:
-         printHeader("Adjacency List");
-         showAdjacencyList(g);
-         break;
-      case ADJACENCY_MATRIX:
-         printHeader("Adjacency Matrix");
-         showAdjacencyMatrix(g);
-         break;
-   }
-   printf("\nSummary: the graph has %d vertices and %d edges\n", g -> nV, g -> nE);
-   printHorizontalRule();
-}
-
 int getCellSpacing(int numVertices, int **adjMatrix) {
    int cellSpacing = 0;
    for (int row = 0; row < numVertices; row++) {
@@ -190,3 +190,48 @@ char *getConnectionsString(Graph g, Vertex src) {
    }
    return connectionString;
 }
+
+
+
+
+
+
+
+
+bool traceHamiltonPath(Graph g, Vertex src, int distanceRemaining, bool *visited, Vertex *pred) {
+   if (distanceRemaining <= 0) return true;
+   for (Vertex neighbour = 0; neighbour < g -> nV; neighbour++) {
+      if (adjacent(g, src, neighbour) && !visited[neighbour]) {
+         // Pursue this unvisited neighbour
+         pred[neighbour] = src;
+         visited[neighbour] = true;
+         if (traceHamiltonPath(g, neighbour, distanceRemaining - 1, visited, pred)) {
+            // If this next hop succeded, then stop tracing 
+            return true;
+         } else {
+            // This next hop did not lead to a valid Hamiltonian path. Unmark this neighbour as visited
+            // and keep pursuing further paths
+            pred[neighbour] = -1;
+            visited[neighbour] = false;
+         }
+      }
+   }
+   return false;
+}
+
+void showHamilton(Graph g, Vertex src, Vertex dest) {
+   bool *visited = newVisitedArray(g);
+   Vertex *pred = newPredArray(g);
+   visited[src] = true;
+
+   traceHamiltonPath(g, src, g -> nV - 1, visited, pred);
+   tracePred(pred, dest);
+}
+
+void traceEulerPath() {
+
+}
+
+
+
+

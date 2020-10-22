@@ -66,12 +66,23 @@ static bool hamiltonPathCheck(Graph g, Vertex v, Vertex w, int d, bool *visited)
  * Mallocates a bool array for tracking whether each node of the graph
  * has been visited or not
  */
-static bool *newVisitedArray(Graph g);
+bool *newVisitedArray(Graph g); 
+
+/**
+ * Mallocates a Vertex array for tracking the predecessor vertex for each
+ * vertex
+ */
+Vertex *newPredArray(Graph g);
 
 /**
  * Prints the visited vertices
  */
-static void showVisited(Graph g, bool *visited);
+void showVisited(Graph g, bool *visited);
+
+/**
+ * Prints the route from the destination traced by the given predecessor array
+ */
+void tracePred(Vertex *pred, Vertex dest);
 
 /**
  * Prints out a pretty structure illustrating the traversal paths
