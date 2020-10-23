@@ -100,54 +100,61 @@ void dropGraph(Graph g) {
    free(g);
 }
 
+static void showAdjacencyMatrix(Graph g) {
+   int cellSpacing = getCellSpacing(g -> nV, g -> edges);
+   int horizontalBorderWidth = (cellSpacing + 1) * (g -> nV) + 1;
+   if (horizontalBorderWidth + 3 >= getTermWidth()) {   // Note: the +3 comes from the left column of row numbers
+      printColoured("red", "The matrix is too large to be printed here. Try resizing the window\n");
+      return;
+   }
+   printf("\n     ");
+   // Printing upper row of column numbers
+   for (Vertex v = 0; v < g -> nV; v++) printColoured("yellow", "%-*d ", cellSpacing, v);
+   printf("\n");
+   // Printing upper matrix border
+   printf("   %s", BOX_EDGE_CHAR_TOP_LEFT);
+   for (Vertex v = 0; v < (cellSpacing + 1) * (g -> nV) + 1; v++) printf("%s", BOX_EDGE_CHAR_HORIZONTAL);
+   printf("%s\n", BOX_EDGE_CHAR_TOP_RIGHT);
+   for (Vertex v = 0; v < g -> nV; v++) {
+      printColoured("yellow", "%-2d ", v);
+      printf("%s ", BOX_EDGE_CHAR_VERTICAL);
+      for (Vertex w = 0; w < g -> nV; w++) {
+         if (adjacent(g, v, w)) printColoured("green", "%-*d ", cellSpacing, 1);
+         else printColoured("purple", "%-*d ", cellSpacing, 0);
+      }
+      printf("%s\n", BOX_EDGE_CHAR_VERTICAL);
+   }
+   // Printing lower matrix border
+   printf("   %s", BOX_EDGE_CHAR_BOTTOM_LEFT);
+   for (Vertex v = 0; v < (cellSpacing + 1) * (g -> nV) + 1; v++) printf("%s", BOX_EDGE_CHAR_HORIZONTAL);
+   printf("%s\n", BOX_EDGE_CHAR_BOTTOM_RIGHT);
+}
+
+static void showAdjacencyList(Graph g) {
+   printColoured("yellow", " Vertex   Connections\n");
+   printHorizontalRule();
+   for (Vertex v = 0; v < g -> nV; v++) {
+      printf("    %3d %s", v, BOX_EDGE_CHAR_VERTICAL);
+      char *connections = getConnectionsString(g, v);
+      if (strlen(connections) + 8 >= getTermWidth()) {   // Note: the +8 comes from the width of the left column of vertices 
+         printColoured("red", "Too many to print\n");
+         continue;
+      }
+      printf("%s\n", connections);
+      free(connections);
+   }
+}
+
 void showGraph(Graph g, int option) {
    assert(g != NULL);
-   int v, w;
    switch (option) {
       case ADJACENCY_LIST:
          printHeader("Adjacency List");
-         printColoured("yellow", " Vertex   Connections\n");
-         printHorizontalRule();
-         for (v = 0; v < g -> nV; v++) {
-            printf("    %3d %s", v, BOX_EDGE_CHAR_VERTICAL);
-            char *connections = getConnectionsString(g, v);
-            if (strlen(connections) + 8 >= getTermWidth()) {   // Note: the +8 comes from the width of the left column of vertices 
-               printColoured("red", "Too many to print\n");
-               continue;
-            }
-            printf("%s\n", connections);
-            free(connections);
-         }
+         showAdjacencyList(g);
          break;
       case ADJACENCY_MATRIX:
          printHeader("Adjacency Matrix");
-         int cellSpacing = getCellSpacing(g -> nV, g -> edges);
-         int horizontalBorderWidth = (cellSpacing + 1) * (g -> nV) + 1;
-         if (horizontalBorderWidth + 3 >= getTermWidth()) {   // Note: the +3 comes from the left column of row numbers
-            printColoured("red", "The matrix is too large to be printed here. Try resizing the window\n");
-            return;
-         }
-         printf("\n     ");
-         // Printing upper row of column numbers
-         for (v = 0; v < g -> nV; v++) printColoured("yellow", "%-*d ", cellSpacing, v);
-         printf("\n");
-         // Printing upper matrix border
-         printf("   %s", BOX_EDGE_CHAR_TOP_LEFT);
-         for (v = 0; v < (cellSpacing + 1) * (g -> nV) + 1; v++) printf("%s", BOX_EDGE_CHAR_HORIZONTAL);
-         printf("%s\n", BOX_EDGE_CHAR_TOP_RIGHT);
-         for (v = 0; v < g -> nV; v++) {
-            printColoured("yellow", "%-2d ", v);
-            printf("%s ", BOX_EDGE_CHAR_VERTICAL);
-            for (w = 0; w < g -> nV; w++) {
-               if (adjacent(g, v, w)) printColoured("green", "%-*d ", cellSpacing, 1);
-               else printColoured("purple", "%-*d ", cellSpacing, 0);
-            }
-            printf("%s\n", BOX_EDGE_CHAR_VERTICAL);
-         }
-         // Printing lower matrix border
-         printf("   %s", BOX_EDGE_CHAR_BOTTOM_LEFT);
-         for (v = 0; v < (cellSpacing + 1) * (g -> nV) + 1; v++) printf("%s", BOX_EDGE_CHAR_HORIZONTAL);
-         printf("%s\n", BOX_EDGE_CHAR_BOTTOM_RIGHT);
+         showAdjacencyMatrix(g);
          break;
    }
    printf("\nSummary: the graph has %d vertices and %d edges\n", g -> nV, g -> nE);

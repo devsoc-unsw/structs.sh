@@ -55,6 +55,8 @@ bool adjacent(Graph g, Vertex v, Vertex w);
  *   2. ADJACENCY_LIST
  */
 void showGraph(Graph, int option);
+static void showAdjacencyMatrix(Graph g);
+static void showAdjacencyList(Graph g);
 
 /**
  * INSERT: insert <v1>-<v2>

@@ -5,7 +5,6 @@
 #include <string.h>
 #include "graph.h"
 #include "graph-algos.h"
-#include "floyd-warshall.h"
 #include "../util/menu-interface.h"
 #include "../util/display/display.h"
 #include "../util/utilities/processing.h"
@@ -116,8 +115,8 @@ Graph processCommand(Graph g, char *command) {
         } else {
 			printf(
 				hasCycle(g) ? 
-				" ➤ A cycle exists in the graph!" : 
-				" ➤ No cycle exists in the graph!"
+				" ➤ A cycle exists in the graph!\n" : 
+				" ➤ No cycle exists in the graph!\n"
 			);
         }
     } else if (strcmp(commandName, "path") == 0) {

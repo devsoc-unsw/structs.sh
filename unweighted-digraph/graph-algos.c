@@ -165,6 +165,58 @@ static bool hamiltonPathCheck(Graph g, Vertex v, Vertex w, int d, bool *visited)
     return false;
 }
 
+void transitiveClosure(Graph g) {
+    int tcMatrix[g -> nV][g -> nV]; 
+    // First copy over the adjacency matrix values into tcMatrix
+    for (int i = 0; i < g -> nV; i++) {
+        for (int j = 0; j < g -> nV; j++) {
+            tcMatrix[i][j] = g -> edges[i][j];
+        }
+    }
+
+    // For every vertex i, j, k, if a path j to i exists and if a path i to k 
+    // exists, then by transitivity we can say j has a possible path to k
+    for (int i = 0; i < g -> nV; i++) {
+        for (int j = 0; j < g -> nV; j++) {
+            for (int k = 0; k < g -> nV; k++) {
+                if (tcMatrix[j][i] && tcMatrix[i][k]) {
+                    tcMatrix[j][k] = 1;
+                }
+            }
+        }
+    }
+
+    // Showing the transitive closure matrix
+    printf("Showing the transitive closure matrix\n");
+    int cellSpacing = getCellSpacing(g -> nV, g -> edges);
+    int horizontalBorderWidth = (cellSpacing + 1) * (g -> nV) + 1;
+    if (horizontalBorderWidth + 3 >= getTermWidth()) {   // Note: the +3 comes from the left column of row numbers
+        printColoured("red", "The matrix is too large to be printed here. Try resizing the window\n");
+        return;
+    }
+    printf("\n     ");
+    // Printing upper row of column numbers
+    for (Vertex v = 0; v < g -> nV; v++) printColoured("yellow", "%-*d ", cellSpacing, v);
+    printf("\n");
+    // Printing upper matrix border
+    printf("   %s", BOX_EDGE_CHAR_TOP_LEFT);
+    for (Vertex v = 0; v < (cellSpacing + 1) * (g -> nV) + 1; v++) printf("%s", BOX_EDGE_CHAR_HORIZONTAL);
+    printf("%s\n", BOX_EDGE_CHAR_TOP_RIGHT);
+    for (Vertex v = 0; v < g -> nV; v++) {
+        printColoured("yellow", "%-2d ", v);
+        printf("%s ", BOX_EDGE_CHAR_VERTICAL);
+        for (Vertex w = 0; w < g -> nV; w++) {
+            if (tcMatrix[v][w]) printColoured("green", "%-*d ", cellSpacing, 1);
+            else printColoured("purple", "%-*d ", cellSpacing, 0);
+        }
+        printf("%s\n", BOX_EDGE_CHAR_VERTICAL);
+    }
+    // Printing lower matrix border
+    printf("   %s", BOX_EDGE_CHAR_BOTTOM_LEFT);
+    for (Vertex v = 0; v < (cellSpacing + 1) * (g -> nV) + 1; v++) printf("%s", BOX_EDGE_CHAR_HORIZONTAL);
+    printf("%s\n", BOX_EDGE_CHAR_BOTTOM_RIGHT);
+}
+
 // ===== Other Helper Functions =====
 /**
  * Returns a boolean array that keeps track of whether or not
@@ -258,4 +310,3 @@ static void traversalTracer(Graph g, Vertex currVertex, bool *visited, int inden
         }
     }
 }
-
