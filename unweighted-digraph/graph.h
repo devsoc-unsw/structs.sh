@@ -92,6 +92,4 @@ int getCellSpacing(int numVertices, int **adjMatrix);
 char *getConnectionsString(Graph g, Vertex src);
 
 
-void showHamilton(Graph g, Vertex src, Vertex dest);
-
 #endif

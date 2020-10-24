@@ -27,7 +27,7 @@ void dropStack(Stack s) {
 }
 
 // insert char on top of stack
-void StackPush(Stack s, Item it) {
+void stackPush(Stack s, Item it) {
 	assert(s->top < MAXITEMS-1);
 	s->top++;
 	int i = s->top;
@@ -35,7 +35,7 @@ void StackPush(Stack s, Item it) {
 }
 
 // remove char from top of stack
-Item  StackPop(Stack s) {
+Item stackPop(Stack s) {
 	assert(s->top > -1);
 	int i = s->top;
 	Item it = s->item[i];
@@ -44,7 +44,7 @@ Item  StackPop(Stack s) {
 }
 
 // check whether stack is empty
-int StackIsEmpty(Stack s) {
+int stackIsEmpty(Stack s) {
 	return (s->top < 0);
 }
 

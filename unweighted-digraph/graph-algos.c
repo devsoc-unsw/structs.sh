@@ -142,29 +142,6 @@ static void setComponent(Graph g, Vertex curr, int id, int *vertexIDs) {
     } 
 }
 
-/**
- * Returns true if there exists a Hamiltonian path between the
- * src and dest vertex in the given graph 
- */
-bool hasHamiltonPath(Graph g, Vertex src, Vertex dest) {
-    bool *visited = newVisitedArray(g);
-    bool res = hamiltonPathCheck(g, src, dest, g -> nV - 1, visited);
-    free(visited);
-    return res;
-}
-
-static bool hamiltonPathCheck(Graph g, Vertex v, Vertex w, int d, bool *visited) {
-    if (v == w) return (d == 0) ? true : false;
-    visited[v] = true;
-    for (int t = 0; t < g -> nV; t++) {
-        if (adjacent(g, v, t) && visited[t] == false) {
-            if (hamiltonPathCheck(g, t, w, d - 1, visited)) return true;
-        }
-    }
-    visited[v] = false;
-    return false;
-}
-
 void transitiveClosure(Graph g) {
     int tcMatrix[g -> nV][g -> nV]; 
     // First copy over the adjacency matrix values into tcMatrix
@@ -217,6 +194,67 @@ void transitiveClosure(Graph g) {
     printf("%s\n", BOX_EDGE_CHAR_BOTTOM_RIGHT);
 }
 
+bool showHamiltonPath(Graph g, Vertex src, Vertex dest) {
+    bool *visited = newVisitedArray(g);
+    Vertex *pred = newPredArray(g);
+    visited[src] = true;
+    if (traceHamiltonPath(g, src, dest, g -> nV - 1, visited, pred)) {
+        tracePred(pred, dest);
+        return true;
+    } else {
+        printColoured("red", " ➤ No Hamiltonian path from %d to %d\n", src, dest);
+        return false;
+    }
+}
+
+bool showHamiltonCircuit(Graph g) {
+    bool circuitFound = false;
+    for (Vertex src = 0; src < g -> nV; src++) {
+        // printf("Trying to find a circuit starting on %d\n", src);
+        for (Vertex neighbour = 0; neighbour < g -> nV; neighbour++) {
+            if (adjacent(g, src, neighbour)) {
+                // printf("    Trying path %d to %d\n", neighbour, src);
+                // Check if there exists a Hamiltonian path from each neighbour to source
+                bool *visited = newVisitedArray(g);
+                Vertex *pred = newPredArray(g);
+                pred[neighbour] = src;
+                visited[neighbour] = true;
+                if (traceHamiltonPath(g, neighbour, src, g -> nV - 1, visited, pred)) {
+                    printColoured("green", " ➤ ");
+                    traceCircuit(pred, src);
+                    circuitFound = true;
+                } 
+            }
+        }
+    }
+    return circuitFound;
+}
+
+static bool traceHamiltonPath(Graph g, Vertex src, Vertex dest, int distanceRemaining, bool *visited, Vertex *pred) {
+    if (distanceRemaining <= 0 && src == dest) return true;
+    for (Vertex neighbour = 0; neighbour < g -> nV; neighbour++) {
+        if (adjacent(g, src, neighbour) && !visited[neighbour]) {
+            // Pursue this unvisited neighbour
+            pred[neighbour] = src;
+            visited[neighbour] = true;
+            if (traceHamiltonPath(g, neighbour, dest, distanceRemaining - 1, visited, pred)) {
+                // If this next hop succeded, then stop tracing 
+                return true;
+            } else {
+                // This next hop did not lead to a valid Hamiltonian path. Unmark this neighbour as visited
+                // and keep pursuing further paths
+                pred[neighbour] = -1;
+                visited[neighbour] = false;
+            }
+        }
+    }
+    return false;
+}
+
+void traceEulerPath() {
+
+}
+
 // ===== Other Helper Functions =====
 /**
  * Returns a boolean array that keeps track of whether or not
@@ -254,19 +292,34 @@ void showVisited(Graph g, bool *visited) {
     printf("\n");
 }
 
-/**
- * Given a graph and the visited array, prints the nodes
- * that have been visited
- */ 
 void tracePred(Vertex *pred, Vertex dest) {
-    printf("Pred  :");
-    int i = dest;
-    printf("%d", i);
-    while (pred[i] != -1) {
-        printf(" <- %d", pred[i]);
+    Stack printStack = newStack();
+    stackPush(printStack, dest);
+    Vertex i = dest;
+    while (pred[i] != -1 ) {
+        stackPush(printStack, pred[i]);
         i = pred[i];
     }
-    printf("Done\n");
+    printf("Path: %d", stackPop(printStack));
+    while (!stackIsEmpty(printStack)) {
+        printf(" → %d", stackPop(printStack));
+    }
+    printf("\n");
+}
+
+void traceCircuit(Vertex *pred, Vertex src) {
+    Stack printStack = newStack();
+    stackPush(printStack, src);
+    Vertex i = src;
+    while (pred[i] != src) {
+        stackPush(printStack, pred[i]);
+        i = pred[i];
+    }
+    printf("Circuit: %d", src);
+    while (!stackIsEmpty(printStack)) {
+        printf(" → %d", stackPop(printStack));
+    }
+    printf("\n");
 }
 
 // ===== Traversal Tracer =====

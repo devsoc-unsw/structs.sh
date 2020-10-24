@@ -12,13 +12,13 @@ Stack newStack();
 void dropStack(Stack);
 
 // insert a char on top of stack
-void StackPush(Stack,Item);
+void stackPush(Stack,Item);
 
 // remove char from top of stack
-Item  StackPop(Stack);
+Item stackPop(Stack);
 
 // check whether stack is empty
-int StackIsEmpty(Stack);
+int stackIsEmpty(Stack);
 
 // display contents of stack
 void showStack(Stack);
