@@ -71,6 +71,21 @@ bool showHamiltonCircuit(Graph g);
  */
 static bool traceHamiltonPath(Graph g, Vertex src, Vertex dest, int distanceRemaining, bool *visited, Vertex *pred);
 
+/**
+ * 
+ */
+bool showEulerPath(Graph g, Vertex src, Vertex dest);
+
+/**
+ * 
+ */
+bool showEulerCircuit(Graph g);
+
+/**
+ * 
+ */
+static bool traceEulerPath(Graph g, Vertex src, Vertex dest, bool *visited, Vertex *pred);
+
 // ===== Helper Functions =====
 
 /**

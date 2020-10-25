@@ -251,9 +251,44 @@ static bool traceHamiltonPath(Graph g, Vertex src, Vertex dest, int distanceRema
     return false;
 }
 
-void traceEulerPath() {
-
+bool showEulerPath(Graph g, Vertex src, Vertex dest) {
+    bool *visited = newVisitedArray(g);
+    Vertex *pred = newPredArray(g);
+    visited[src] = true;
+    if (traceEulerPath(g, src, dest, g -> nV - 1, visited, pred)) {
+        tracePred(pred, dest);
+        return true;
+    } else {
+        printColoured("red", " ➤ No Eulerian path from %d to %d\n", src, dest);
+        return false;
+    }
 }
+
+bool showEulerCircuit(Graph g) {
+    bool circuitFound = false;
+    for (Vertex src = 0; src < g -> nV; src++) {
+        for (Vertex neighbour = 0; neighbour < g -> nV; neighbour++) {
+            if (adjacent(g, src, neighbour)) {
+                // TODO:
+            }
+        }
+    }
+    return circuitFound;
+}
+
+static bool traceEulerPath(Graph g, Vertex src, Vertex dest, int distanceRemaining, bool *visited, Vertex *pred) {
+    if (distanceRemaining <= 0 && src == dest) return true;
+    for (Vertex neighbour = 0; neighbour < g -> nV; neighbour++) {
+        if (adjacent(g, src, neighbour) && !visited[neighbour]) {
+            // Pursue this unvisited neighbour
+            // TODO: An euler path will always start on an odd degree vertex and end on 
+            // an odd degree vertex. There must be exactly 2 vertices with odd degree
+            // TODO: Check if hamiltonian path/tour stuff work with non-connected graphs (they should)  
+        }
+    }
+    return false;
+}
+
 
 // ===== Other Helper Functions =====
 /**
