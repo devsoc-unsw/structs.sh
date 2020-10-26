@@ -202,7 +202,6 @@ bool showHamiltonPath(Graph g, Vertex src, Vertex dest) {
         tracePred(pred, dest);
         return true;
     } else {
-        printColoured("red", " ➤ No Hamiltonian path from %d to %d\n", src, dest);
         return false;
     }
 }
@@ -210,10 +209,8 @@ bool showHamiltonPath(Graph g, Vertex src, Vertex dest) {
 bool showHamiltonCircuit(Graph g) {
     bool circuitFound = false;
     for (Vertex src = 0; src < g -> nV; src++) {
-        // printf("Trying to find a circuit starting on %d\n", src);
         for (Vertex neighbour = 0; neighbour < g -> nV; neighbour++) {
             if (adjacent(g, src, neighbour)) {
-                // printf("    Trying path %d to %d\n", neighbour, src);
                 // Check if there exists a Hamiltonian path from each neighbour to source
                 bool *visited = newVisitedArray(g);
                 Vertex *pred = newPredArray(g);
@@ -252,38 +249,70 @@ static bool traceHamiltonPath(Graph g, Vertex src, Vertex dest, int distanceRema
 }
 
 bool showEulerPath(Graph g, Vertex src, Vertex dest) {
+    // Theorem: src and dest must both be of odd degree and all other vertices must
+    // be of even degree for an Euler path exist
+    if (degree(g, src) % 2 == 0 || degree(g, dest) == 0) {
+        printColoured("red", "%d and %d must both have odd degrees for an Euler path to exist\n", src, dest);
+        return false;
+    }
+    for (Vertex v = 0; v < g -> nV; v++) {
+        if (v != src && v != dest && degree(g, v) % 2 != 0) {
+            printColoured("red", "All vertices other than %d and %d must be of even degree for an Euler path to exist\n", src, dest);
+            return false;
+        }
+    }
     bool *visited = newVisitedArray(g);
     Vertex *pred = newPredArray(g);
     visited[src] = true;
-    if (traceEulerPath(g, src, dest, g -> nV - 1, visited, pred)) {
-        tracePred(pred, dest);
+    Stack pathStack = newStack();
+    stackPush(pathStack, src);
+    if (traceEulerPath(g, src, dest, g -> nE, visited, pathStack)) {
+        printPath(pathStack);
         return true;
     } else {
-        printColoured("red", " ➤ No Eulerian path from %d to %d\n", src, dest);
         return false;
     }
 }
 
 bool showEulerCircuit(Graph g) {
+    // Theorem: all vertices must be of even degree for an Euler path exist
+    for (Vertex src = 0; src < g -> nV; src++) {
+        if (degree(g, src) % 2 != 0) {
+            printColoured("red", "All vertices must be of even degree for an Euler circuit to exist\n");
+            return false;
+        }
+    }
     bool circuitFound = false;
     for (Vertex src = 0; src < g -> nV; src++) {
-        for (Vertex neighbour = 0; neighbour < g -> nV; neighbour++) {
-            if (adjacent(g, src, neighbour)) {
-                // TODO:
-            }
+        bool *visited = newVisitedArray(g);
+        Stack pathStack = newStack();
+        visited[src] = true;
+        stackPush(pathStack, src);
+        if (traceEulerPath(g, src, src, g -> nE, visited, pathStack)) {
+            circuitFound = true;
+            printColoured("green", " ➤ ");
+            printPath(pathStack);
         }
     }
     return circuitFound;
 }
 
-static bool traceEulerPath(Graph g, Vertex src, Vertex dest, int distanceRemaining, bool *visited, Vertex *pred) {
-    if (distanceRemaining <= 0 && src == dest) return true;
+static bool traceEulerPath(Graph g, Vertex src, Vertex dest, int edgesRemaining, bool *visited, Stack pathStack) {
+    if (edgesRemaining <= 0 && src == dest) return true;
     for (Vertex neighbour = 0; neighbour < g -> nV; neighbour++) {
-        if (adjacent(g, src, neighbour) && !visited[neighbour]) {
-            // Pursue this unvisited neighbour
-            // TODO: An euler path will always start on an odd degree vertex and end on 
-            // an odd degree vertex. There must be exactly 2 vertices with odd degree
-            // TODO: Check if hamiltonian path/tour stuff work with non-connected graphs (they should)  
+        if (adjacent(g, src, neighbour)) {
+            stackPush(pathStack, neighbour);
+            // Remove the edge
+            Edge outEdge = removeEdge(g, makeEdge(g, src, neighbour));
+            if (traceEulerPath(g, neighbour, dest, edgesRemaining - 1, visited, pathStack)) {
+                // Add the edge back in
+                insertEdge(g, outEdge);
+                return true;
+            } else {
+                stackPop(pathStack);
+                // Add the edge back in
+                insertEdge(g, outEdge);
+            }
         }
     }
     return false;

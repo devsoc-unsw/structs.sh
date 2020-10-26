@@ -17,7 +17,6 @@
 
 #define max(a, b) (a > b) ? a : b
 
-
 int validV(Graph g, Vertex v) {
    return g != NULL && v >= 0 && v < g -> nV;
 }
@@ -27,6 +26,10 @@ Edge makeEdge(Graph g, Vertex v, Vertex w) {
    e.v = v; 
    e.w = w;
    return e;
+}
+
+Edge getEdge(Graph g, Vertex v, Vertex w) {
+   return makeEdge(g, v, w);
 }
 
 bool edgeIsValid(Graph g, Edge e) {
@@ -55,8 +58,8 @@ Graph newRandomGraph(int nV, int sparsityFactor) {
    Graph g = newGraph(nV);
    for (int v = 0; v < nV; v++) {
       for (int w = v + 1; w < nV; w++) {
-         if (rand() % sparsityFactor == 0) insertE(g, makeEdge(g, v, w));
-         if (rand() % sparsityFactor == 0) insertE(g, makeEdge(g, w, v));
+         if (rand() % sparsityFactor == 0) insertEdge(g, makeEdge(g, v, w));
+         if (rand() % sparsityFactor == 0) insertEdge(g, makeEdge(g, w, v));
       }
    }
    return g;
@@ -66,11 +69,11 @@ bool adjacent(Graph g, Vertex v, Vertex w) {
    if (validV(g, v) && validV(g, w)) {
       return (g -> edges[v][w] != 0);
    } else {
-
+      return false;
    }
 }
 
-void insertE(Graph g, Edge e) {
+void insertEdge(Graph g, Edge e) {
    assert(g != NULL);
    if (!edgeIsValid(g, e)) return;
    if (g -> edges[e.v][e.w]) {
@@ -81,15 +84,49 @@ void insertE(Graph g, Edge e) {
    g -> nE++;
 }
 
-void removeE(Graph g, Edge e) {
+Edge removeEdge(Graph g, Edge e) {
    assert(g != NULL);
-   if (!edgeIsValid(g, e)) return;
+   if (!edgeIsValid(g, e)) return e;
    if (!(g -> edges[e.v][e.w])) {
       printColoured("red", "Edge doesn't exist: %d - %d\n", e.v, e.w);
-      return;
+      return e;
    }
+   int oldWeight = g -> edges[e.v][e.w];
    g -> edges[e.v][e.w] = 0;
    g -> nE--;
+   return e;
+}
+
+int degreeOut(Graph g, Vertex src) {
+   int degree = 0;
+   for (Vertex v = 0; v < g -> nV; v++) {
+      if (adjacent(g, src, v)) {
+         degree++;
+      }
+   }
+   return degree;
+}
+
+int degreeIn(Graph g, Vertex src) {
+   int degree = 0;
+   for (Vertex v = 0; v < g -> nV; v++) {
+      if (adjacent(g, v, src)) {
+         degree++;
+      }
+   }
+   return degree;
+}
+
+int degree(Graph g, Vertex v) {
+   return degreeIn(g, v) + degreeOut(g, v);
+}
+
+int showDegree(Graph g, Vertex v) {
+   int in = degreeIn(g, v), out = degreeOut(g, v);
+   printf(" ➤ In degree:    %d\n", in);
+   printf(" ➤ Out degree:   %d\n", out);
+   printf(" ➤ Total degree: %d\n", in + out);
+   return in + out;
 }
 
 void dropGraph(Graph g) {

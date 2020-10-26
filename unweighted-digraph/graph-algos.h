@@ -1,6 +1,8 @@
 #ifndef GRAPH_ALGOS
 #define GRAPH_ALGOS
 
+#include "stack/Stack.h"
+
 // ===== Traversals =====
 
 /**
@@ -84,7 +86,7 @@ bool showEulerCircuit(Graph g);
 /**
  * 
  */
-static bool traceEulerPath(Graph g, Vertex src, Vertex dest, bool *visited, Vertex *pred);
+static bool traceEulerPath(Graph g, Vertex src, Vertex dest, int edgesRemaining, bool *visited, Stack pathStack);
 
 // ===== Helper Functions =====
 

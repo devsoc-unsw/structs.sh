@@ -15,6 +15,11 @@ char **tokenise(char *command);
 void freeTokens(char **tokens);
 
 /**
+ * Normalises the given string by converting all characters to lowercase
+ */
+void normaliseToken(char *token);
+
+/**
  * Given an array of tokens, returns the number of tokens
  */
 int getNumTokens(char **tokens);

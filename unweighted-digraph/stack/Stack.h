@@ -18,9 +18,12 @@ void stackPush(Stack,Item);
 Item stackPop(Stack);
 
 // check whether stack is empty
-int stackIsEmpty(Stack);
+bool stackIsEmpty(Stack);
 
 // display contents of stack
 void showStack(Stack);
+
+// Print the stack of vertices
+void printPath(Stack s);
 
 #endif

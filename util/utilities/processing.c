@@ -31,6 +31,7 @@ char **tokenise(char *command) {
         char *token = strndup(command, tokenLen);
         assert(token != NULL);
         command += tokenLen;
+        normaliseToken(token);
         tokens[numTokens] = token;
         numTokens++;
     }
@@ -47,6 +48,13 @@ void freeTokens(char **tokens) {
         free(tokens[i]);
     }
     free(tokens);
+}
+
+void normaliseToken(char *token) {
+    while (*token != '\0') {
+        *token = tolower(*token);
+        token++;
+    }
 }
 
 int getNumTokens(char **tokens) {
@@ -140,3 +148,4 @@ int *tokeniseEdges(char *vertexPairs, int numVertices) {
     populatePairs(tokens, pairs, i);
     return pairs;
 }
+

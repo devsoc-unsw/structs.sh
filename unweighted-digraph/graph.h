@@ -19,13 +19,18 @@ typedef struct { Vertex v; Vertex w; } Edge;
 /**
  * Checks vertex is valid within the given graph
  */
-int validV(Graph, Vertex);
+int validV(Graph g, Vertex v);
 
 /**
  * Creates an edge object between two vertices. Assumes that
  * the vertices are valid
  */
-Edge makeEdge(Graph, Vertex, Vertex);
+Edge makeEdge(Graph g, Vertex v1, Vertex v2);
+
+/**
+ * Gets the edge object representing the connection between v and w
+ */
+Edge getEdge(Graph g, Vertex v, Vertex w);
 
 /**
  * Initialises and returns a new graph structure with the given
@@ -63,20 +68,33 @@ static void showAdjacencyList(Graph g);
  * Inserts the given edge into the graph. Rejects invalid edges.
  * Updates the internal representation of the graph
  */
-void insertE(Graph, Edge);
+void insertEdge(Graph g, Edge e);
 
 /**
  * REMOVE: remove <v1>-<v2>
  * Removes the given edge from the graph. Rejects invalid edges.
- * Updates the internal representation of the graph
+ * Updates the internal representation of the graph.
+ * Returns the removed edge
  */
-void removeE(Graph, Edge);
+Edge removeEdge(Graph g, Edge e);
+
+/**
+ * DEGREE: degree <v>
+ * Shows the degree of the vertex v, including the incoming and outgoing
+ * degree
+ */
+int showDegree(Graph g, Vertex v);
+
+// Related functions
+int degree(Graph g, Vertex v);
+int degreeIn(Graph g, Vertex src);
+int degreeOut(Graph g, Vertex src);
 
 /**
  * CLEAR: clear
  * Frees memory associated with the graph structure
  */
-void dropGraph(Graph);
+void dropGraph(Graph g);
 
 // Utilities:
 /**

@@ -66,7 +66,7 @@ Graph processCommand(Graph g, char *command) {
                 for (int j = 0; j < (vertexCount - 1) * 2; j += 2) {
                     Edge edge = makeEdge(g, vertexPairs[j], vertexPairs[j + 1]);
                     printf(" ➤ Inserting edge: %d - %d\n", vertexPairs[j], vertexPairs[j + 1]);
-                    insertE(g, edge);
+                    insertEdge(g, edge);
                 }
                 free(vertexPairs);
             }
@@ -86,11 +86,19 @@ Graph processCommand(Graph g, char *command) {
                 for (int j = 0; j < (vertexCount - 1) * 2; j += 2) {
                     Edge edge = makeEdge(g, vertexPairs[j], vertexPairs[j + 1]);
                     printf(" ➤ Removing edge: %d - %d\n", vertexPairs[j], vertexPairs[j + 1]);
-                    removeE(g, edge);
+                    removeEdge(g, edge);
                 }
                 free(vertexPairs);
             }
             showGraph(g, ADJACENCY_MATRIX);
+        }
+    } else if (strcmp(commandName, "degree") == 0) {
+		// Format: degree <v>
+        if (numArgs != 2 || !isNumeric(tokens[1])) {
+            printInvalidCommand("degree command format: degree <v>\n");
+        } else {
+            int vertex = atoi(tokens[1]);
+			showDegree(g, vertex);
         }
     } else if (strcmp(commandName, "dfs") == 0) {
 		// Format: dfs <vertex>
@@ -158,12 +166,44 @@ Graph processCommand(Graph g, char *command) {
                     int src = atoi(tokens[1]);
                     int dest = atoi(tokens[2]);
                     if (showHamiltonPath(g, src, dest)) {
-                        printf(" ➤ Hamiltonian path exists between %d and %d\n", src, dest);
+                        printColoured("green", " ➤ Hamiltonian path exists between %d and %d\n", src, dest);
                     } else {
-                        printf(" ➤ No Hamiltonian path exists between %d and %d\n", src, dest);
+                        printColoured("red", " ➤ No Hamiltonian path exists between %d and %d\n", src, dest);
                     }
                 }
                 break;
+            default:
+                printInvalidCommand("Hamiltonian circuit command format: hamilton circuit\n");
+                printInvalidCommand("Hamiltonian path command format: hamilton <v1> <v2>\n");
+        }
+    } else if (strcmp(commandName, "euler") == 0) {
+		// Format: Euler <v1> <v2>
+        switch (numArgs) {
+            case 2:
+                if (strcmp(tokens[1], "circuit") != 0) {
+                    printInvalidCommand("Euler command format: euler circuit\n");
+                } else {
+                    if (!showEulerCircuit(g)) {
+                        printColoured("red", "No Eulerian circuits found\n");
+                    }
+                }
+                break;
+            case 3:
+                if (!isNumeric(tokens[1]) || !isNumeric(tokens[2])) {
+                    printInvalidCommand("Euler command format: euler <v1> <v2>\n");
+                } else {
+                    int src = atoi(tokens[1]);
+                    int dest = atoi(tokens[2]);
+                    if (showEulerPath(g, src, dest)) {
+                        printColoured("green", " ➤ Eulerian path exists between %d and %d\n", src, dest);
+                    } else {
+                        printColoured("red", " ➤ No Eulerian path exists between %d and %d\n", src, dest);
+                    }
+                }
+                break;
+            default:
+                printInvalidCommand("Euler circuit command format: euler circuit\n");
+                printInvalidCommand("Euler path command format: euler <v1> <v2>\n");
         }
     } else if (strcmp(commandName, "closure") == 0) {
 		// Format: closure
@@ -249,7 +289,7 @@ int main(int argc, char *argv[]) {
 			if (sscanf(line,"%d %d",&v1,&v2) != 2)
 				fprintf(stderr, "Invalid edge (%d, %d)\n", v1, v2);
 			else
-				insertE(graph, makeEdge(graph,v1,v2));
+				insertEdge(graph, makeEdge(graph,v1,v2));
 		}
 		fclose(in);
 	}
