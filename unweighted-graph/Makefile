@@ -1,20 +1,20 @@
 CC=gcc
 CFLAGS= -g
-OBJS=main.o Graph.o graph-algos.o floyd-warshall.o queue/Queue.o stack/Stack.o priority-queue/PQueue.o linked-list/List.o ../util/colours.o
+OBJS=main.o graph.o graph-algos.o ../graph-helpers/queue/Queue.o ../graph-helpers/stack/Stack.o ../graph-helpers/priority-queue/PQueue.o ../graph-helpers/linked-list/List.o ../util/menu-interface.o ../util/display/display.o ../util/utilities/processing.o
 
 testGraph : $(OBJS)
 	$(CC) -o testGraph $(OBJS)
 
-colours.o: ../util/colours.c ../util/colours.h
-main.o : main.c Graph.h
-
+processing.o: ../util/utilities/processing.c ../util/utilities/processing.h
+display.o: ../util/display/display.c ../util/display/display.h
+menu-interface.o: ../util/menu-interface.c ../util/menu-interface.h
+main.o : main.c graph.h
 graph-algos.o:    graph-algos.c graph-algos.h
-floyd-warshall.o: floyd-warshall.c floyd-warshall.h
-Graph.o  : Graph.c Graph.h queue/Queue.h stack/Stack.h linked-list/List.h
-Queue.o  : queue/Queue.c queue/Queue.h queue/Item.h
-Stack.o  : stack/Stack.c stack/Stack.h queue/Item.h
-PQueue.o : priority-queue/PQueue.c priority-queue/PQueue.h priority-queue/Item.h
-List.o   : linked-list/List.c linked-list/List.h linked-list/Item.h
+graph.o  : graph.c graph.h ../graph-helpers/queue/Queue.h ../graph-helpers/stack/Stack.h ../graph-helpers/linked-list/List.h
+Queue.o  : ../graph-helpers/queue/Queue.c ../graph-helpers/queue/Queue.h ../graph-helpers/queue/Item.h
+Stack.o  : ../graph-helpers/stack/Stack.c ../graph-helpers/stack/Stack.h ../graph-helpers/queue/Item.h
+PQueue.o : ../graph-helpers/priority-queue/PQueue.c ../graph-helpers/priority-queue/PQueue.h ../graph-helpers/priority-queue/Item.h
+List.o   : ../graph-helpers/linked-list/List.c ../graph-helpers/linked-list/List.h ../graph-helpers/linked-list/Item.h
 
 clean :
 	rm -f testGraph $(OBJS) core *.dSYM

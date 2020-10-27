@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include <assert.h>
 #include "Item.h"
 #include "PQueue.h"
@@ -11,12 +12,11 @@ typedef struct PQueueNode {
 } PQueueNode;
 
 typedef struct PQueueRep {
-	PQueueNode *head;  // ptr to first node
+	PQueueNode *head;  
 } PQueueRep;
 
-// create new empty PQueue
-PQueue newPQueue()
-{
+
+PQueue newPQueue() {
 	PQueue q;
 	q = malloc(sizeof(PQueueRep));
 	assert(q != NULL);
@@ -24,28 +24,21 @@ PQueue newPQueue()
 	return q;
 }
 
-// free memory used by PQueue
-void dropPQueue(PQueue Q)
-{
+void dropPQueue(PQueue Q) {
 	PQueueNode *curr, *next;
 	assert(Q != NULL);
-	// free list nodes
 	curr = Q->head;
 	while (curr != NULL) {
 		next = curr->next;
 		free(curr);
 		curr = next;
 	}
-	// free queue rep
 	free(Q);
 }
 
-// display as 3 > 5 > 4 > ...
-void showPQueue(PQueue Q)
-{
+void showPQueue(PQueue Q) {
 	PQueueNode *curr;
 	assert(Q != NULL);
-	// free list nodes
 	curr = Q->head;
 	while (curr != NULL) {
 		printf("%d:",curr->weight);
@@ -57,9 +50,7 @@ void showPQueue(PQueue Q)
 	printf("\n");
 }
 
-// add item in weight order (max first)
-void PQueueJoin(PQueue Q, Item it, int weight)
-{
+void PQueueJoin(PQueue Q, Item it, int weight) {
 	assert(Q != NULL);
 	PQueueNode *new = malloc(sizeof(PQueueNode));
 	assert(new != NULL);
@@ -83,9 +74,7 @@ void PQueueJoin(PQueue Q, Item it, int weight)
 	}
 }
 
-// remove item from front of PQueue
-Item PQueueLeave(PQueue Q)
-{
+Item PQueueLeave(PQueue Q) {
 	assert(Q != NULL);
 	assert(Q->head != NULL);
 	Item it = ItemCopy(Q->head->value);
@@ -95,9 +84,7 @@ Item PQueueLeave(PQueue Q)
 	return it;
 }
 
-// check for no items
-int PQueueIsEmpty(PQueue Q)
-{
+bool PQueueIsEmpty(PQueue Q) {
 	return (Q->head == NULL);
 }
 

@@ -3,9 +3,9 @@
 #include <stdbool.h>
 #include "graph.h"
 #include "graph-algos.h"
-#include "queue/Queue.h"
-#include "stack/Stack.h"
-#include "linked-list/List.h"
+#include "../graph-helpers/queue/Queue.h"
+#include "../graph-helpers/stack/Stack.h"
+#include "../graph-helpers/linked-list/List.h"
 #include "../util/display/display.h"
 
 // ========== Depth-First Search ==========
@@ -142,6 +142,9 @@ static void setComponent(Graph g, Vertex curr, int id, int *vertexIDs) {
     } 
 }
 
+/**
+ * Floyd-Warshall algorithm for computing the transitive closure matrix
+ */
 void transitiveClosure(Graph g) {
     int tcMatrix[g -> nV][g -> nV]; 
     // First copy over the adjacency matrix values into tcMatrix
@@ -193,6 +196,8 @@ void transitiveClosure(Graph g) {
     for (Vertex v = 0; v < (cellSpacing + 1) * (g -> nV) + 1; v++) printf("%s", BOX_EDGE_CHAR_HORIZONTAL);
     printf("%s\n", BOX_EDGE_CHAR_BOTTOM_RIGHT);
 }
+
+// ===== Hamilton/Euler Paths/Circuits =====
 
 bool showHamiltonPath(Graph g, Vertex src, Vertex dest) {
     bool *visited = newVisitedArray(g);
@@ -272,6 +277,7 @@ bool showEulerPath(Graph g, Vertex src, Vertex dest) {
     } else {
         return false;
     }
+    dropStack(pathStack);
 }
 
 bool showEulerCircuit(Graph g) {
@@ -293,6 +299,7 @@ bool showEulerCircuit(Graph g) {
             printColoured("green", " ➤ ");
             printPath(pathStack);
         }
+        dropStack(pathStack);
     }
     return circuitFound;
 }
@@ -369,6 +376,7 @@ void tracePred(Vertex *pred, Vertex dest) {
         printf(" → %d", stackPop(printStack));
     }
     printf("\n");
+    dropStack(printStack);
 }
 
 void traceCircuit(Vertex *pred, Vertex src) {
@@ -384,6 +392,7 @@ void traceCircuit(Vertex *pred, Vertex src) {
         printf(" → %d", stackPop(printStack));
     }
     printf("\n");
+    dropStack(printStack);
 }
 
 // ===== Traversal Tracer =====
@@ -435,7 +444,6 @@ static void traversalTracer(Graph g, Vertex currVertex, bool *visited, int inden
     printColoured("green", "%-2d\n", currVertex);
     visited[currVertex] = true;
     int numPathsFromStart = numNextHops(g, currVertex, visited);
-    // printf("Num paths from start for %d : %d\n", currVertex, numPathsFromStart);
     for (Vertex w = 0; w < g -> nV; w++) {
         if (adjacent(g, currVertex, w) && !visited[w]) {
             bool hasUnder = false;

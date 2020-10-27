@@ -7,6 +7,7 @@
 #include "graph-algos.h"
 #include "../graph-helpers/queue/Queue.h"
 #include "../graph-helpers/stack/Stack.h"
+#include "../graph-helpers/linked-list/List.h"
 #include "../util/display/display.h"
 #include "../util/utilities/processing.h"
 
@@ -79,7 +80,9 @@ void insertEdge(Graph g, Edge e) {
       printColoured("red", "Edge already exists: %d - %d\n", e.v, e.w);
       return;
    }
+   // Adding bidirectionality:
    g -> edges[e.v][e.w] = 1;
+   g -> edges[e.w][e.v] = 1;
    g -> nE++;
 }
 
@@ -91,22 +94,14 @@ Edge removeEdge(Graph g, Edge e) {
       return e;
    }
    int oldWeight = g -> edges[e.v][e.w];
+   // Removing bidirectionality:
    g -> edges[e.v][e.w] = 0;
+   g -> edges[e.w][e.v] = 0;
    g -> nE--;
    return e;
 }
 
-int degreeOut(Graph g, Vertex src) {
-   int degree = 0;
-   for (Vertex v = 0; v < g -> nV; v++) {
-      if (adjacent(g, src, v)) {
-         degree++;
-      }
-   }
-   return degree;
-}
-
-int degreeIn(Graph g, Vertex src) {
+int degree(Graph g, Vertex src) {
    int degree = 0;
    for (Vertex v = 0; v < g -> nV; v++) {
       if (adjacent(g, v, src)) {
@@ -116,16 +111,10 @@ int degreeIn(Graph g, Vertex src) {
    return degree;
 }
 
-int degree(Graph g, Vertex v) {
-   return degreeIn(g, v) + degreeOut(g, v);
-}
-
 int showDegree(Graph g, Vertex v) {
-   int in = degreeIn(g, v), out = degreeOut(g, v);
-   printf(" ➤ In degree:    %d\n", in);
-   printf(" ➤ Out degree:   %d\n", out);
-   printf(" ➤ Total degree: %d\n", in + out);
-   return in + out;
+   int totalDegree = degree(g, v);
+   printf(" ➤ Total degree: %d\n", totalDegree);
+   return totalDegree;
 }
 
 void dropGraph(Graph g) {

@@ -10,17 +10,11 @@ typedef struct ListNode {
 } ListNode;
 
 typedef struct ListRep {
-	ListNode *first;  // ptr to first node
-	ListNode *last;   // ptr to last node
+	ListNode *first; 
+	ListNode *last;   
 } ListRep;
 
-#define eq(a,b) ItemEQ(a,b)
-#define gt(a,b) ItemGT(a,b)
-#define key(a)  ItemKey(a)
-
-// create new empty list
-List newList()
-{
+List newList() {
 	List L;
 	L = malloc(sizeof(ListRep));
 	assert(L != NULL);
@@ -29,9 +23,7 @@ List newList()
 	return L;
 }
 
-// free memory used by list
-void dropList(List L)
-{
+void dropList(List L) {
 	assert(L != NULL);
 	ListNode *next;
 	while (L->first != NULL) {
@@ -44,8 +36,7 @@ void dropList(List L)
 }
 
 // display as [1,2,3,4...]
-void showList(List L)
-{
+void showList(List L) {
 	assert(L != NULL);
 	ListNode *curr = L->first;
 	printf("[");
@@ -60,15 +51,14 @@ void showList(List L)
 
 // add item into list
 // no check for duplicates
-void ListInsert(List L, Item it)
-{
+void ListInsert(List L, Item it) {
 	assert(L != NULL);
 	ListNode *prev, *curr;
 	prev = NULL; curr = L->first;
 	while (curr != NULL) {
-		if (eq(key(it),key(curr->value)))
+		if (ItemEQ(ItemKey(it),ItemKey(curr->value)))
 			return; // already in list
-		if (gt(key(curr->value),key(it)))
+		if (ItemGT(ItemKey(curr->value),ItemKey(it)))
             break;
 		prev = curr;
 		curr = curr->next;
@@ -97,13 +87,12 @@ void ListInsert(List L, Item it)
 
 // remove item(s)
 // assumes no duplicates
-void ListDelete(List L, Key k)
-{
+void ListDelete(List L, Key k) {
 	assert(L != NULL);
 	ListNode *prev, *curr;
 	prev = NULL; curr = L->first;
 	while (curr != NULL) {
-		if (eq(k,key(curr->value)))
+		if (ItemEQ(k,ItemKey(curr->value)))
 			break;
 		prev = curr;
 		curr = curr->next;
@@ -123,13 +112,11 @@ void ListDelete(List L, Key k)
 	}
 }
 
-// return item with key
-Item *ListSearch(List L, Key k)
-{
+Item *ListSearch(List L, Key k) {
 	assert(L != NULL);
 	ListNode *curr = L->first;
 	while (curr != NULL) {
-		if (eq(k,key(curr->value)))
+		if (ItemEQ(k,ItemKey(curr->value)))
 			return &(curr->value);
 		else
 			curr = curr->next;
@@ -137,9 +124,7 @@ Item *ListSearch(List L, Key k)
 	return NULL; // key not found
 }
 
-// # items in list
-int ListLength(List L)
-{
+int ListLength(List L) {
 	int n = 0;
 	ListNode *curr = L->first; 
 	while (curr != NULL) {

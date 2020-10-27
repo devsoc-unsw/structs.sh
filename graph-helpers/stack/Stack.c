@@ -5,48 +5,43 @@
 #include "Stack.h"
 #include "Item.h"
 
-#define MAXITEMS 500
+#define MAXITEMS 500 
 
 typedef struct StackRep {
 	char item[MAXITEMS];
 	int  top;
 } StackRep;
 
-// set up empty stack
 Stack newStack() {
 	Stack s;
 	s = malloc(sizeof(StackRep));
 	assert(s != NULL);
-	s->top = -1;
+	s -> top = -1;
 	return s;
 }
 
-// remove unwanted stack
 void dropStack(Stack s) {
 	assert(s != NULL);
 	free(s);
 }
 
-// insert char on top of stack
 void stackPush(Stack s, Item it) {
-	assert(s->top < MAXITEMS-1);
-	s->top++;
-	int i = s->top;
-	s->item[i] = it;
+	assert(s -> top < MAXITEMS-1);
+	s -> top++;
+	int i = s -> top;
+	s -> item[i] = it;
 }
 
-// remove char from top of stack
 Item stackPop(Stack s) {
-	assert(s->top > -1);
-	int i = s->top;
-	Item it = s->item[i];
-	s->top--;
+	assert(s -> top > -1);
+	int i = s -> top;
+	Item it = s -> item[i];
+	s -> top--;
 	return it;
 }
 
-// check whether stack is empty
 bool stackIsEmpty(Stack s) {
-	return (s->top < 0);
+	return (s -> top < 0);
 }
 
 static void reverseRecursive(Stack s, int leftTip, int rightTip) {
@@ -62,10 +57,9 @@ void stackReverse(Stack s) {
 	reverseRecursive(s, 0, s -> top);
 }
 
-// display contents of stack
 void showStack(Stack s) {
 	for (int i = 0; i <= s->top; i++) {
-		ItemShow(s->item[i]);
+		ItemShow(s -> item[i]);
 		printf(" ← ");
 	}
 	printf("Top\n");

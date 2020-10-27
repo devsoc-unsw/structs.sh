@@ -1,7 +1,7 @@
 #ifndef GRAPH_ALGOS
 #define GRAPH_ALGOS
 
-#include "stack/Stack.h"
+#include "../graph-helpers/stack/Stack.h"
 
 // ===== Traversals =====
 
