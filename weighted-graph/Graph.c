@@ -70,19 +70,17 @@ void  insertE(Graph g, Edge e) {
    assert(validV(g, e.v) && validV(g, e.w));
    if (g -> edges[e.v][e.w]) return;
    g -> edges[e.v][e.w] = e.weight;
-   g -> edges[e.w][e.v] = e.weight;
    g -> nE++;
 }
 
 /** 
  * Deletes the given edge from the graph
  */
-void  removeE(Graph g, Edge e) {
+void removeE(Graph g, Edge e) {
    assert(g != NULL);
    assert(validV(g, e.v) && validV(g, e.w));
    if (!g -> edges[e.v][e.w]) return;
    g -> edges[e.v][e.w] = 0;
-   g -> edges[e.w][e.v] = 0;
    g -> nE--;
 }
 

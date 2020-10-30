@@ -5,26 +5,12 @@
 #include "Graph.h"
 #include "graph-algos.h"
 #include "dijkstra.h"
-#include "queue/Queue.h"
-#include "stack/Stack.h"
-#include "linked-list/List.h"
-#include "priority-queue/PQueue.h"
-#include "../util/colours.h"
+#include "../graph-helpers/queue/Queue.h"
+#include "../graph-helpers/stack/Stack.h"
+#include "../graph-helpers/priority-queue/PQueue.h"
+
 #define NO_PRED -1
 
-// ========== Dijkstra's Algorithm ==========
-/**
- * Dijkstra's algorithm for determining the single source spanning tree
- * of the input graph from the starting vertex
- * 
- * High-level steps:
- *   1. Look at every neighbour of the vertices we currently have in vSet
- *   2. Find the neighbour vertex with the lowest cost to get to and 
- *      include it in our set of vertices
- *   3. Look at all the unincluded neighbours of the new vertex, and
- *      update the dist array if we've found a BETTER path to those neighbours
- *   4. Repeat 1-3 until all vertices have been included in vSet
- */
 void dijkstra(Graph g, Vertex src) {
     bool vSet[g -> nV]; 
     int dist[g -> nV];  
@@ -55,7 +41,6 @@ void dijkstra(Graph g, Vertex src) {
             }
         }
     }
-
     showShortestPaths(g, src, dist, pred);
 }
 
@@ -87,7 +72,7 @@ void showPathTrace(Vertex src, Vertex dest, int *pred) {
     }
     printf("%d", src);
     while (!stackIsEmpty(path)) {
-        printf(" ⮕ %d", stackPop(path));
+        printf(" → %d", stackPop(path));
     }
     printf("\n");
 }
@@ -98,8 +83,12 @@ void showPathTrace(Vertex src, Vertex dest, int *pred) {
  */
 int showShortestPaths(Graph g, int src, int *dist, int *pred) {
     for (Vertex v = 0; v < g -> nV; v++) {
-        printf("Shortest distance to %d is %d\n", v, dist[v]);
-        printf("    Path: ");
-        showPathTrace(src, v, pred);
+        if (dist[v] != INT_MAX) {
+            printColoured("green", " ➤ Shortest distance from %d to %d: %d\n", src, v, dist[v]);
+            printf("        ");
+            showPathTrace(src, v, pred);
+        } else {
+            printColoured("red", " ➤ No path exists from %d to %d\n", src, v);
+        }
     }
 }
