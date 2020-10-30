@@ -86,24 +86,33 @@ static bool dfsFindCycle(Graph g, Vertex curr, Vertex pred, bool *visited) {
     return false;
 }
 
-/**
- * Given a graph and a start and end vertex, determines if the end vertex
- * is reachable from the start. Ie. does a path exist between start and end? 
- */
-bool isReachable(Graph g, Vertex src, Vertex dest) {
+bool pathTrace(Graph g, Vertex src, Vertex dest) {
     bool *visited = newVisitedArray(g);
-    bool result = checkReachable(g, src, dest, visited);
+    Vertex *pred = newPredArray(g);
+    bool result = checkReachable(g, src, dest, visited, pred);
+    tracePred(pred, dest);
     free(visited);
     return result;
 }
 
-static bool checkReachable(Graph g, Vertex src, Vertex dest, bool *visited) {
+bool isReachable(Graph g, Vertex src, Vertex dest) {
+    bool *visited = newVisitedArray(g);
+    Vertex *pred = newPredArray(g);
+    bool result = checkReachable(g, src, dest, visited, pred);
+    free(visited);
+    return result;
+}
+
+static bool checkReachable(Graph g, Vertex src, Vertex dest, bool *visited, Vertex *pred) {
     if (src == dest) return true;
     visited[src] = true;
     for (Vertex neighbour = 0; neighbour < g -> nV; neighbour++) {
         if (adjacent(g, src, neighbour) && !visited[neighbour]) {
-            if (checkReachable(g, neighbour, dest, visited)) {
+            pred[neighbour] = src;
+            if (checkReachable(g, neighbour, dest, visited, pred)) {
                 return true;
+            } else {
+                pred[neighbour] = -1;
             }
         }
     }

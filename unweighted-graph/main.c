@@ -68,6 +68,7 @@ Graph processCommand(Graph g, char *command) {
                     printf(" ➤ Inserting edge: %d - %d\n", vertexPairs[j], vertexPairs[j + 1]);
                     insertEdge(g, edge);
                 }
+                free(currPair);
                 free(vertexPairs);
             }
             showGraph(g, ADJACENCY_MATRIX);
@@ -88,6 +89,7 @@ Graph processCommand(Graph g, char *command) {
                     printf(" ➤ Removing edge: %d - %d\n", vertexPairs[j], vertexPairs[j + 1]);
                     removeEdge(g, edge);
                 }
+                free(currPair);
                 free(vertexPairs);
             }
             showGraph(g, ADJACENCY_MATRIX);
@@ -135,7 +137,8 @@ Graph processCommand(Graph g, char *command) {
             int v1 = atoi(tokens[1]);
             int v2 = atoi(tokens[2]);
 			if (isReachable(g, v1, v2)) {
-				printf(" ➤ A path exists between %d and %d\n", v1, v2);
+                printf(" ➤ A path exists between %d and %d\n", v1, v2);
+				pathTrace(g, v1, v2);
 			} else {
 				printf(" ➤ No path exists between %d and %d\n", v1, v2);
 			}

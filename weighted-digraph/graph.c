@@ -7,12 +7,11 @@
 #include "graph-algos.h"
 #include "../graph-helpers/queue/Queue.h"
 #include "../graph-helpers/stack/Stack.h"
-#include "../graph-helpers/linked-list/List.h"
 #include "../util/display/display.h"
 #include "../util/utilities/processing.h"
 
 #define MAX_VERTICES              50
-#define MAX_SEGMENT_LENGTH        12
+#define MAX_SEGMENT_LENGTH        32
 #define MAX_CONNECTION_STRING_LEN MAX_VERTICES * MAX_SEGMENT_LENGTH
 
 #define max(a, b) (a > b) ? a : b
@@ -21,20 +20,21 @@ int validV(Graph g, Vertex v) {
    return g != NULL && v >= 0 && v < g -> nV;
 }
 
-Edge makeEdge(Graph g, Vertex v, Vertex w) {
+Edge makeEdge(Graph g, Vertex v, Vertex w, int weight) {
    Edge e; 
    e.v = v; 
    e.w = w;
+   e.weight = weight;
    return e;
 }
 
 Edge getEdge(Graph g, Vertex v, Vertex w) {
-   return makeEdge(g, v, w);
+   return makeEdge(g, v, w, g -> edges[v][w]);
 }
 
 bool edgeIsValid(Graph g, Edge e) {
    if (!(validV(g, e.v) && validV(g, e.w))) {
-      printColoured("red", "Invalid edge: %d - %d\n", e.v, e.w);
+      printColoured("red", "Invalid edge: %d - %d (%d)\n", e.v, e.w, e.weight);
       return false;
    }
    return true;
@@ -50,7 +50,9 @@ Graph newGraph(int nV) {
    }
    Graph g = malloc(sizeof(GraphRep));
    assert(g != NULL);
-   g -> nV = nV;  g -> nE = 0;  g -> edges = e;
+   g -> nV = nV;  
+   g -> nE = 0;  
+   g -> edges = e;
    return g;
 }
 
@@ -58,8 +60,8 @@ Graph newRandomGraph(int nV, int sparsityFactor) {
    Graph g = newGraph(nV);
    for (int v = 0; v < nV; v++) {
       for (int w = v + 1; w < nV; w++) {
-         if (rand() % sparsityFactor == 0) insertEdge(g, makeEdge(g, v, w));
-         if (rand() % sparsityFactor == 0) insertEdge(g, makeEdge(g, w, v));
+         if (rand() % sparsityFactor == 0) insertEdge(g, makeEdge(g, v, w, rand() % MAX_WEIGHT));
+         if (rand() % sparsityFactor == 0) insertEdge(g, makeEdge(g, w, v, rand() % MAX_WEIGHT));
       }
    }
    return g;
@@ -73,6 +75,10 @@ bool adjacent(Graph g, Vertex v, Vertex w) {
    }
 }
 
+int getWeight(Graph g, Vertex v, Vertex w) {
+   return g -> edges[v][w];
+}
+
 void insertEdge(Graph g, Edge e) {
    assert(g != NULL);
    if (!edgeIsValid(g, e)) return;
@@ -80,9 +86,7 @@ void insertEdge(Graph g, Edge e) {
       printColoured("red", "Edge already exists: %d - %d\n", e.v, e.w);
       return;
    }
-   // Adding bidirectionality:
-   g -> edges[e.v][e.w] = 1;
-   g -> edges[e.w][e.v] = 1;
+   g -> edges[e.v][e.w] = e.weight;
    g -> nE++;
 }
 
@@ -94,14 +98,22 @@ Edge removeEdge(Graph g, Edge e) {
       return e;
    }
    int oldWeight = g -> edges[e.v][e.w];
-   // Removing bidirectionality:
    g -> edges[e.v][e.w] = 0;
-   g -> edges[e.w][e.v] = 0;
    g -> nE--;
    return e;
 }
 
-int degree(Graph g, Vertex src) {
+int degreeOut(Graph g, Vertex src) {
+   int degree = 0;
+   for (Vertex v = 0; v < g -> nV; v++) {
+      if (adjacent(g, src, v)) {
+         degree++;
+      }
+   }
+   return degree;
+}
+
+int degreeIn(Graph g, Vertex src) {
    int degree = 0;
    for (Vertex v = 0; v < g -> nV; v++) {
       if (adjacent(g, v, src)) {
@@ -111,10 +123,16 @@ int degree(Graph g, Vertex src) {
    return degree;
 }
 
+int degree(Graph g, Vertex v) {
+   return degreeIn(g, v) + degreeOut(g, v);
+}
+
 int showDegree(Graph g, Vertex v) {
-   int totalDegree = degree(g, v);
-   printf(" ➤ Total degree: %d\n", totalDegree);
-   return totalDegree;
+   int in = degreeIn(g, v), out = degreeOut(g, v);
+   printf(" ➤ In degree:    %d\n", in);
+   printf(" ➤ Out degree:   %d\n", out);
+   printf(" ➤ Total degree: %d\n", in + out);
+   return in + out;
 }
 
 void dropGraph(Graph g) {
@@ -160,7 +178,7 @@ static void showAdjacencyMatrix(Graph g) {
       printColoured("yellow", "%-2d ", v);
       printf("%s ", BOX_EDGE_CHAR_VERTICAL);
       for (Vertex w = 0; w < g -> nV; w++) {
-         if (adjacent(g, v, w)) printColoured("green", "%-*d ", cellSpacing, 1);
+         if (adjacent(g, v, w)) printColoured("green", "%-*d ", cellSpacing, getWeight(g, v, w));
          else printColoured("purple", "%-*d ", cellSpacing, 0);
       }
       printf("%s\n", BOX_EDGE_CHAR_VERTICAL);
@@ -205,11 +223,11 @@ char *getConnectionsString(Graph g, Vertex src) {
       if (adjacent(g, src, i)) {
          char segment[MAX_SEGMENT_LENGTH];
          if (firstConn) {
-            sprintf(segment, " %d", i);
+            sprintf(segment, " %d (%d)", i, getWeight(g, src, i));
             strcat(connectionString, segment);
             firstConn = false;
          } else {
-            sprintf(segment, " - %d", i);
+            sprintf(segment, " - %d (%d)", i, getWeight(g, src, i));
             strcat(connectionString, segment);
          }
       }

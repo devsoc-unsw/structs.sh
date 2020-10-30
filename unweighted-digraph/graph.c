@@ -201,7 +201,7 @@ int getCellSpacing(int numVertices, int **adjMatrix) {
    int cellSpacing = 0;
    for (int row = 0; row < numVertices; row++) {
       for (int col = 0; col < numVertices; col++) {
-         cellSpacing = max(adjMatrix[row][col], cellSpacing);
+         cellSpacing = max(getNumDigits(adjMatrix[row][col]), cellSpacing);
       }
    }
    cellSpacing = max(getNumDigits(numVertices), cellSpacing);
@@ -210,12 +210,13 @@ int getCellSpacing(int numVertices, int **adjMatrix) {
 
 char *getConnectionsString(Graph g, Vertex src) {
    char *connectionString = malloc(sizeof(char) * MAX_CONNECTION_STRING_LEN);
+   strcpy(connectionString, "");
    bool firstConn = true;
    for (Vertex i = 0; i < g -> nV; i++) {
       if (adjacent(g, src, i)) {
          char segment[MAX_SEGMENT_LENGTH];
          if (firstConn) {
-            sprintf(segment, "%d", i);
+            sprintf(segment, " %d", i);
             strcat(connectionString, segment);
             firstConn = false;
          } else {

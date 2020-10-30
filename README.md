@@ -1,7 +1,10 @@
 # Data Structures and Algorithms &#128187;
+
+
+
 A collection of implementations of classic data structures and their algorithms in C for COMP2521. 
 
-View the web terminal interface for all the interactive programs <a href="http://www.data-structures.xyz">here</a>. Use incognito mode to prevent any chrome extensions from interfering with the formatting. Avoid resizing the window.
+This repository contains the backend code for the web terminal interface <strong><a href="https://www.data-structures.xyz">here</a></strong>. Use incognito mode to prevent any chrome extensions from interfering with the formatting. Avoid resizing the window.
 
 View my notes and practice material for this course <a href="https://tymotex.github.io/DataStructures/">here</a>.
 

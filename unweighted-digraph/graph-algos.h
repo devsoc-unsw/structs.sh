@@ -31,12 +31,15 @@ static bool dfsFindCycle(Graph g, Vertex curr, Vertex pred, bool *visited);
 
 /**
  * PATH: path <v1> <v2>
- * Checks whether a path exists between the two vertices
+ * Checks whether a path exists between the two vertices using DFS.
+ * 
+ * pathTrace prints output while isReachable doesn't.
  */
+bool pathTrace(Graph g, Vertex src, Vertex dest);
 bool isReachable(Graph g, Vertex src, Vertex dest);
 
-// Helper function for isReachable
-static bool checkReachable(Graph g, Vertex src, Vertex dest, bool *visited);
+// Helper function for pathTrace and isReachable
+static bool checkReachable(Graph g, Vertex src, Vertex dest, bool *visited, Vertex *pred);
 
 /**
  * CONNECTED: connected
