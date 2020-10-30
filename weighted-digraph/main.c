@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <ctype.h>
 #include <string.h>
+#include <signal.h>
 #include "graph.h"
 #include "graph-algos.h"
 #include "../util/menu-interface.h"
@@ -154,61 +155,69 @@ Graph processCommand(Graph g, char *command) {
         }
     } else if (strcmp(commandName, "hamilton") == 0) {
 		// Format: hamilton <v1> <v2>
-        switch (numArgs) {
-            case 2:
-                if (strcmp(tokens[1], "circuit") != 0) {
-                    printInvalidCommand("Hamilton command format: hamilton circuit\n");
-                } else {
-                    if (!showHamiltonCircuit(g)) {
-                        printColoured("red", "No Hamiltonian circuits found\n");
-                    }
-                }
-                break;
-            case 3:
-                if (!isNumeric(tokens[1]) || !isNumeric(tokens[2])) {
-                    printInvalidCommand("Hamilton command format: hamilton <v1> <v2>\n");
-                } else {
-                    int src = atoi(tokens[1]);
-                    int dest = atoi(tokens[2]);
-                    if (showHamiltonPath(g, src, dest)) {
-                        printColoured("green", " ➤ Hamiltonian path exists between %d and %d\n", src, dest);
+        if (g -> nV >= 10) {
+            printf("This runs an O(n!) algorithm. This is gonna take years, sorry. Try a graph with fewer than 10 vertices\n");
+        } else {
+            switch (numArgs) {
+                case 2:
+                    if (strcmp(tokens[1], "circuit") != 0) {
+                        printInvalidCommand("Hamilton command format: hamilton circuit\n");
                     } else {
-                        printColoured("red", " ➤ No Hamiltonian path exists between %d and %d\n", src, dest);
+                        if (!showHamiltonCircuit(g)) {
+                            printColoured("red", "No Hamiltonian circuits found\n");
+                        }
                     }
-                }
-                break;
-            default:
-                printInvalidCommand("Hamiltonian circuit command format: hamilton circuit\n");
-                printInvalidCommand("Hamiltonian path command format: hamilton <v1> <v2>\n");
+                    break;
+                case 3:
+                    if (!isNumeric(tokens[1]) || !isNumeric(tokens[2])) {
+                        printInvalidCommand("Hamilton command format: hamilton <v1> <v2>\n");
+                    } else {
+                        int src = atoi(tokens[1]);
+                        int dest = atoi(tokens[2]);
+                        if (showHamiltonPath(g, src, dest)) {
+                            printColoured("green", " ➤ Hamiltonian path exists between %d and %d\n", src, dest);
+                        } else {
+                            printColoured("red", " ➤ No Hamiltonian path exists between %d and %d\n", src, dest);
+                        }
+                    }
+                    break;
+                default:
+                    printInvalidCommand("Hamiltonian circuit command format: hamilton circuit\n");
+                    printInvalidCommand("Hamiltonian path command format: hamilton <v1> <v2>\n");
+            }
         }
     } else if (strcmp(commandName, "euler") == 0) {
 		// Format: Euler <v1> <v2>
-        switch (numArgs) {
-            case 2:
-                if (strcmp(tokens[1], "circuit") != 0) {
-                    printInvalidCommand("Euler command format: euler circuit\n");
-                } else {
-                    if (!showEulerCircuit(g)) {
-                        printColoured("red", "No Eulerian circuits found\n");
-                    }
-                }
-                break;
-            case 3:
-                if (!isNumeric(tokens[1]) || !isNumeric(tokens[2])) {
-                    printInvalidCommand("Euler command format: euler <v1> <v2>\n");
-                } else {
-                    int src = atoi(tokens[1]);
-                    int dest = atoi(tokens[2]);
-                    if (showEulerPath(g, src, dest)) {
-                        printColoured("green", " ➤ Eulerian path exists between %d and %d\n", src, dest);
+        if (g -> nV >= 10) {
+            printf("This runs an O(n!) algorithm. This is gonna take years, sorry. Try a graph with fewer than 10 vertices\n");
+        } else {
+            switch (numArgs) {
+                case 2:
+                    if (strcmp(tokens[1], "circuit") != 0) {
+                        printInvalidCommand("Euler command format: euler circuit\n");
                     } else {
-                        printColoured("red", " ➤ No Eulerian path exists between %d and %d\n", src, dest);
+                        if (!showEulerCircuit(g)) {
+                            printColoured("red", "No Eulerian circuits found\n");
+                        }
                     }
-                }
-                break;
-            default:
-                printInvalidCommand("Euler circuit command format: euler circuit\n");
-                printInvalidCommand("Euler path command format: euler <v1> <v2>\n");
+                    break;
+                case 3:
+                    if (!isNumeric(tokens[1]) || !isNumeric(tokens[2])) {
+                        printInvalidCommand("Euler command format: euler <v1> <v2>\n");
+                    } else {
+                        int src = atoi(tokens[1]);
+                        int dest = atoi(tokens[2]);
+                        if (showEulerPath(g, src, dest)) {
+                            printColoured("green", " ➤ Eulerian path exists between %d and %d\n", src, dest);
+                        } else {
+                            printColoured("red", " ➤ No Eulerian path exists between %d and %d\n", src, dest);
+                        }
+                    }
+                    break;
+                default:
+                    printInvalidCommand("Euler circuit command format: euler circuit\n");
+                    printInvalidCommand("Euler path command format: euler <v1> <v2>\n");
+            }
         }
     } else if (strcmp(commandName, "closure") == 0) {
 		// Format: closure
@@ -263,7 +272,13 @@ Graph processCommand(Graph g, char *command) {
     return g;
 }
 
+static void interruptHandler(int placeholder) {
+    printf("Killing connection. Bye!\n");
+    exit(1);
+}
+
 int main(int argc, char *argv[]) {
+    signal(SIGINT, interruptHandler);
 	Graph graph = NULL;
 	int N = 0; 
 	char *edgeFile = NULL;
