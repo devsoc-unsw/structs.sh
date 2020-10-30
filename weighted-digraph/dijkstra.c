@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <limits.h>
-#include "Graph.h"
+#include "graph.h"
 #include "graph-algos.h"
 #include "dijkstra.h"
 #include "../graph-helpers/queue/Queue.h"
