@@ -5,106 +5,180 @@
 #include <time.h>
 #include "sort.h"
 #include "../heap/heap.h"
-#include "../util/colours.h"
+#include "../util/menu-interface.h"
+#include "../util/display/display.h"
+#include "../util/utilities/processing.h"
 
 #define MAX_NUMS 50000
 #define MAX_LINE 256
+#define MAX_COMMAND_SIZE 64
 
 #define SELECTION_SORT "selectionsort"
 #define INSERTION_SORT "insertionsort"
-#define BUBBLE_SORT "bubblesort"
-#define SHELL_SORT "shellsort"
-#define QUICK_SORT "quicksort"
-#define MERGE_SORT "mergesort"
-#define HEAP_SORT "heapsort"
-#define RUN_ALL "runall"
+#define BUBBLE_SORT    "bubblesort"
+#define SHELL_SORT     "shellsort"
+#define QUICK_SORT     "quicksort"
+#define MERGE_SORT     "mergesort"
+#define HEAP_SORT      "heapsort"
+#define RUN_ALL        "runall"
 
-/**
- * Prints prompt for the next line of user input
- */
-void printPrompt() {
-	printSuccess("\n ===> Enter Command: ");
-}
-
-
-/**
- * Prints the commands available in interactive mode
- */
-void printCommands() {
-	char *helpLog = "|===== Commands =====|\n"
-                    " ===>  help                 - show available commands\n"
-                    " ===>  selectionsort        - executes selection sort\n"
-                    " ===>  insertionsort        - executes insertion sort\n"
-                    " ===>  bubblesort           - executes bubble sort\n"
-                    " ===>  shellsort            - executes shellsort\n"
-                    " ===>  quicksort            - executes quicksort\n"
-                    " ===>  mergesort            - executes mergesort\n"
-                    " ===>  heapsort             - executes heapsort\n"
-                    " ===>  runall               - executes all sorting algorithms\n"
-                    " ===>  exit                 - quit program\n"
-                    "|====================|\n";
-    printf("%s", helpLog);
-}
+#define NO_TIME -1.0
+#define NO_TIME_THRESHOLD 0.0
 
 /**
  * Given the original array, its size and a command string, determines
  * which function to call. Returns the time spent by that function
  */
-double processCommand(int *a, int size, char *command) {
+double processCommand(int *a, int size, char *command, bool suppressOutput) {
+    char **tokens = tokenise(command);
+    char *commandName = tokens[0];
+    int numArgs = getNumTokens(tokens);
+    char *token = commandName;
+
+    // Cloning the unsorted array
     int *copy = malloc(sizeof(int) * size);
-    for (int i = 0; i < size; i++) {
-        copy[i] = a[i];
-    }
+    for (int i = 0; i < size; i++) copy[i] = a[i];
+
+    // Starting the timer
     clock_t begin = clock();
-
-    if (strcmp(command, "help") == 0) { 
-        printCommands();
-        free(copy);
-        return 0;
-    } else if (strcmp(command, SELECTION_SORT) == 0) {
-        selectionSort(copy, 0, size);
-    } else if (strcmp(command, INSERTION_SORT) == 0) {
-        insertionSort(copy, 0, size);
-    } else if (strcmp(command, BUBBLE_SORT) == 0) {
-        bubbleSort(copy, 0, size);
-    } else if (strcmp(command, SHELL_SORT) == 0) {
-        shellSort(copy, 0, size);
-    } else if (strcmp(command, QUICK_SORT) == 0) {
-        quicksort(copy, 0, size);
-    } else if (strcmp(command, MERGE_SORT) == 0) {
-        mergesort(copy, 0, size - 1);
-    } else if (strcmp(command, HEAP_SORT) == 0) {
-        heapsort(copy, 0, size);
-    } else if (strcmp(command, "runall") == 0) {
+    clock_t end = 0;
+    double timeSpent = 0;
+    
+    if (numArgs <= 0) {
+    } else if (!commandName) {
+        printInvalidCommand("Enter a valid command\n");
+    } else if (strcmp(commandName, "help") == 0) { 
+        // Format: help
+        if (numArgs != 1) {
+            printInvalidCommand("Help command format: help\n");
+        } else {
+            printCommands();
+            timeSpent = NO_TIME;
+        }
+    } else if (strcmp(commandName, SELECTION_SORT) == 0) {
+        // Format: selectionsort
+        if (numArgs != 1) {
+            printInvalidCommand("Selection sort command format: selectionsort\n");
+        } else {
+            selectionSort(copy, 0, size);
+            if (!suppressOutput) {
+                printColoured("blue", "Sorted array: ");
+                showArray(copy, size);
+            }
+            end = clock();
+            timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+        }
+    } else if (strcmp(commandName, INSERTION_SORT) == 0) {
+        // Format: insertionsort
+        if (numArgs != 1) {
+            printInvalidCommand("Insertion sort command format: insertionsort\n");
+        } else {
+            insertionSort(copy, 0, size);
+            if (!suppressOutput) {
+                printColoured("blue", "Sorted array: ");
+                showArray(copy, size);
+            }
+            end = clock();
+            timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+        }
+    } else if (strcmp(commandName, BUBBLE_SORT) == 0) {
+        // Format: bubblesort
+        if (numArgs != 1) {
+            printInvalidCommand("Bubble sort command format: bubblesort\n");
+        } else {
+            bubbleSort(copy, 0, size);
+            if (!suppressOutput) {
+                printColoured("blue", "Sorted array: ");
+                showArray(copy, size);
+            }
+            end = clock();
+            timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+        }
+    } else if (strcmp(commandName, SHELL_SORT) == 0) {
+        // Format: shellsort
+        if (numArgs != 1) {
+            printInvalidCommand("Shell sort command format: shellsort\n");
+        } else {
+            shellSort(copy, 0, size);
+            if (!suppressOutput) {
+                printColoured("blue", "Sorted array: ");
+                showArray(copy, size);
+            }
+            end = clock();
+            timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+        }
+    } else if (strcmp(commandName, QUICK_SORT) == 0) {
+        // Format: quicksort
+        if (numArgs != 1) {
+            printInvalidCommand("Quicksort command format: quicksort\n");
+        } else {
+            quicksort(copy, 0, size);
+            if (!suppressOutput) {
+                printColoured("blue", "Sorted array: ");
+                showArray(copy, size);
+            }
+            end = clock();
+            timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+        }
+    } else if (strcmp(commandName, MERGE_SORT) == 0) {
+        // Format: mergesort
+        if (numArgs != 1) {
+            printInvalidCommand("Merge sort command format: mergesort\n");
+        } else {
+            mergesort(copy, 0, size - 1);
+            if (!suppressOutput) {
+                printColoured("blue", "Sorted array: ");
+                showArray(copy, size);
+            }
+            end = clock();
+            timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+        }
+    } else if (strcmp(commandName, HEAP_SORT) == 0) {
+        // Format: heapsort
+        if (numArgs != 1) {
+            printInvalidCommand("Heap sort command format: heapsort\n");
+        } else {
+            heapsort(copy, 0, size);
+            if (!suppressOutput) {
+                printColoured("blue", "Sorted array: ");
+                showArray(copy, size);
+            }
+            end = clock();
+            timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+        }
+    } else if (strcmp(commandName, "runall") == 0) {
         // Recursively processing each sort command
-        double totalTimeSpent = 0;
-        double selectionSortTime = processCommand(copy, size, SELECTION_SORT);
-        double insertionSortTime = processCommand(copy, size, INSERTION_SORT);
-        double bubbleSortTime = processCommand(copy, size, BUBBLE_SORT);
-        double shellSortTime = processCommand(copy, size, SHELL_SORT);
-        double quickSortTime = processCommand(copy, size, QUICK_SORT);
-        double mergeSortTime = processCommand(copy, size, MERGE_SORT);
-        double heapSortTime = processCommand(copy, size, HEAP_SORT);
-        printf("Selection sort: %lf seconds\n", selectionSortTime);
-        printf("Insertion sort: %lf seconds\n", insertionSortTime);
-        printf("Bubble sort   : %lf seconds\n", bubbleSortTime);
-        printf("Shell sort    : %lf seconds\n", shellSortTime);
-        printf("Quick sort    : %lf seconds\n", quickSortTime);
-        printf("Merge sort    : %lf seconds\n", mergeSortTime);
-        printf("Heap sort     : %lf seconds\n", heapSortTime);
-        totalTimeSpent += selectionSortTime + insertionSortTime + bubbleSortTime + shellSortTime + quickSortTime + mergeSortTime + heapSortTime;
-        return totalTimeSpent;
-    } else if (strcmp(command, "exit") == 0) {
-        printf(" -> Exiting program :)\n");  
-        exit(0);
+        double selectionSortTime = processCommand(copy, size, SELECTION_SORT, true);
+        double insertionSortTime = processCommand(copy, size, INSERTION_SORT, true);
+        double bubbleSortTime = processCommand(copy, size, BUBBLE_SORT, true);
+        double shellSortTime = processCommand(copy, size, SHELL_SORT, true);
+        double quickSortTime = processCommand(copy, size, QUICK_SORT, true);
+        double mergeSortTime = processCommand(copy, size, MERGE_SORT, true);
+        double heapSortTime = processCommand(copy, size, HEAP_SORT, true);
+        printf(" ➤ Selection sort : %lf seconds\n", selectionSortTime);
+        printf(" ➤ Insertion sort : %lf seconds\n", insertionSortTime);
+        printf(" ➤ Bubble sort    : %lf seconds\n", bubbleSortTime);
+        printf(" ➤ Shell sort     : %lf seconds\n", shellSortTime);
+        printf(" ➤ Quick sort     : %lf seconds\n", quickSortTime);
+        printf(" ➤ Merge sort     : %lf seconds\n", mergeSortTime);
+        printf(" ➤ Heap sort      : %lf seconds\n", heapSortTime);
+        timeSpent += selectionSortTime + insertionSortTime + 
+            bubbleSortTime + shellSortTime + quickSortTime + 
+            mergeSortTime + heapSortTime;
+    } else if (strcmp(commandName, "exit") == 0) {
+        // Format: exit
+        if (numArgs != 1) {
+            printInvalidCommand("Exit command format: exit\n");
+        } else {
+            free(copy);
+			freeTokens(tokens);
+            returnToMenu();
+        }
     } else {
-        printFailure(" -> Enter a valid command\n");
-        free(copy);
-        return 0;
+        printInvalidCommand("Unknown command: %s\n", commandName);
     }
 
-    clock_t end = clock();
-    double timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+    freeTokens(tokens);
     free(copy);
     return timeSpent;
 }
@@ -147,24 +221,21 @@ int main(int argc, char *argv[]) {
     }
     
     printCommands();
+    printHorizontalRule();
     if (!suppressOutput) {
-        printPrimary("Original array: ");
+        printColoured("blue", "Original array: ");
         showArray(a, size);
     }
+    char *command = malloc(sizeof(char) * MAX_COMMAND_SIZE);
+
 	while (1) {
-		printPrompt();
-		fgets(line, MAX_LINE, stdin);
-        printWarning(" You entered: ");
-        printPrimary(line);
-        // Strips trailing newline character and whitespace
-        strtok(line, "\n");
-        strtok(line, " ");
-        double timeSpent = processCommand(a, size, line);
-        if (!suppressOutput) {
-            printPrimary("Sorted array: ");
-            showArray(a, size);
+		printPrompt("Enter command");
+		command = fgets(command, MAX_LINE, stdin);
+        // Ignore processing empty strings
+        if (notEmpty(command)) {
+            double timeSpent = processCommand(a, size, command, suppressOutput);
+            if (!(timeSpent < NO_TIME_THRESHOLD)) printColoured("green", "Took: %lf seconds to compute\n", timeSpent);
         }
-        printf("Took: %lf seconds\n", timeSpent);
     }
 	return 0;
 }

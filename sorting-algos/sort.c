@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include "sort.h"
 #include "../heap/heap.h"
+#include "../util/display/display.h"
 
 /**
  * ===== Selection Sort =====
@@ -228,7 +229,10 @@ void heapsort(int *a, int lo, int hi) {
  */
 bool isSorted(int a[], int lo, int hi) {
     for (int i = lo; i < hi; i++) {
-        if (!(a[i] < a[i + 1])) return false;
+        if (!(a[i] < a[i + 1])) {
+            printf("UNSORTED PAIR %d, %d\n", a[i], a[i+1]);
+            return false;
+        }
     }
     return true;
 }
@@ -243,11 +247,17 @@ void swap(int *a, int i, int j) {
 }
 
 /**
- * Prints the array's elements
+ * Prints the array's elements. If there are more than 100 elements, then only print
+ * the first 50 and last 50 elements.
  */
 void showArray(int *a, int size) {
-    for (int i = 0; i < size; i++) {
-        printf("%d ", a[i]);
+    if (size > 100) {
+        printColoured("red", "More than 100 numbers. Showing first 50 and last 50 numbers\n");
+        for (int i = 0; i < 50; i++) printf("%d ", a[i]);
+        printf("... ");
+        for (int i = size - 50; i < size; i++) printf("%d ", a[i]);
+    } else {
+        for (int i = 0; i < size; i++) printf("%d ", a[i]);
     }
     printf("\n");
 }
