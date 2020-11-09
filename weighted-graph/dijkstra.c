@@ -2,14 +2,12 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <limits.h>
-#include "Graph.h"
+#include "graph.h"
 #include "graph-algos.h"
 #include "dijkstra.h"
-#include "queue/Queue.h"
-#include "stack/Stack.h"
-#include "linked-list/List.h"
-#include "priority-queue/PQueue.h"
-#include "../util/colours.h"
+#include "../graph-helpers/queue/Queue.h"
+#include "../graph-helpers/stack/Stack.h"
+#include "../graph-helpers/priority-queue/PQueue.h"
 
 #define NO_PRED   -1
 #define NO_VERTEX -1
@@ -89,7 +87,7 @@ void showPathTrace(Vertex src, Vertex dest, int *pred) {
     }
     printf("%d", src);
     while (!stackIsEmpty(path)) {
-        printf(" ⮕ %d", stackPop(path));
+        printf(" → %d", stackPop(path));
     }
     printf("\n");
 }
@@ -100,8 +98,12 @@ void showPathTrace(Vertex src, Vertex dest, int *pred) {
  */
 int showShortestPaths(Graph g, int src, int *dist, int *pred) {
     for (Vertex v = 0; v < g -> nV; v++) {
-        printf("Shortest distance to %d is %d\n", v, dist[v]);
-        printf("    Path: ");
-        showPathTrace(src, v, pred);
+        if (dist[v] != INT_MAX) {
+            printColoured("green", " ➤ Shortest distance from %d to %d: %d\n", src, v, dist[v]);
+            printf("        ");
+            showPathTrace(src, v, pred);
+        } else {
+            printColoured("red", " ➤ No path exists from %d to %d\n", src, v);
+        }
     }
 }

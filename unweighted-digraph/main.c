@@ -3,9 +3,9 @@
 #include <stdbool.h>
 #include <ctype.h>
 #include <string.h>
-#include "Graph.h"
+#include <signal.h>
+#include "graph.h"
 #include "graph-algos.h"
-#include "floyd-warshall.h"
 #include "../util/menu-interface.h"
 #include "../util/display/display.h"
 #include "../util/utilities/processing.h"
@@ -37,92 +37,222 @@ Graph processCommand(Graph g, char *command) {
             printInvalidCommand("Help command format: help\n");
         } else {
             printCommands();
+            printHorizontalRule();
         }
     } else if (strcmp(commandName, "matrix") == 0) {
 		// Format: matrix
         if (numArgs != 1) {
-            printInvalidCommand("Help command format: help\n");
+            printInvalidCommand("Matrix command format: matrix\n");
         } else {
-			show(g, ADJACENCY_MATRIX);
+			showGraph(g, ADJACENCY_MATRIX);
         }
     } else if (strcmp(commandName, "list") == 0) {
 		// Format: list
         if (numArgs != 1) {
-            printInvalidCommand("Help command format: help\n");
+            printInvalidCommand("List command format: list\n");
         } else {
-			show(g, ADJACENCY_LIST);
+			showGraph(g, ADJACENCY_LIST);
         }
     } else if (strcmp(commandName, "insert") == 0) {
-		// Format: insert <v1> <v2>
-        if (numArgs != 3 || !isNumeric(tokens[1]) || !isNumeric(tokens[2])) {
-            printInvalidCommand("Help command format: help\n");
+		// Format: insert <v1>-<v2>
+        if (numArgs < 2) {
+            printInvalidCommand("Insert command format: insert <v1>-<v2>\n");
         } else {
-            int v1 = atoi(tokens[1]);
-            int v2 = atoi(tokens[2]);
-			insertE(g, makeEdge(g, v1, v2));
+            for (int i = 1; i < numArgs; i++) {
+                char *currPair = malloc(sizeof(char) * (strlen(tokens[i]) + 1));
+                strcpy(currPair, tokens[i]);
+                int *vertexPairs = tokeniseEdges(currPair, g -> nV);
+                int vertexCount = countVertices(currPair);
+                if (!vertexPairs) break;
+                for (int j = 0; j < (vertexCount - 1) * 2; j += 2) {
+                    Edge edge = makeEdge(g, vertexPairs[j], vertexPairs[j + 1]);
+                    printf(" ➤ Inserting edge: %d - %d\n", vertexPairs[j], vertexPairs[j + 1]);
+                    insertEdge(g, edge);
+                }
+                free(currPair);
+                free(vertexPairs);
+            }
+            showGraph(g, ADJACENCY_MATRIX);
         }
     } else if (strcmp(commandName, "remove") == 0) {
-        // Format: remove <v1> <v2>
-        if (numArgs != 3 || !isNumeric(tokens[1]) || !isNumeric(tokens[2])) {
-            printInvalidCommand("Help command format: help\n");
+        // Format: remove <v1>-<v2>
+        if (numArgs < 2) {
+            printInvalidCommand("Remove command format: remove <v1>-<v2>\n");
         } else {
-            int v1 = atoi(tokens[1]);
-            int v2 = atoi(tokens[2]);
-			removeE(g, makeEdge(g, v1, v2));
+            for (int i = 1; i < numArgs; i++) {
+                char *currPair = malloc(sizeof(char) * (strlen(tokens[i]) + 1));
+                strcpy(currPair, tokens[i]);
+                int *vertexPairs = tokeniseEdges(currPair, g -> nV);
+                int vertexCount = countVertices(currPair);
+                if (!vertexPairs) break;
+                for (int j = 0; j < (vertexCount - 1) * 2; j += 2) {
+                    Edge edge = makeEdge(g, vertexPairs[j], vertexPairs[j + 1]);
+                    printf(" ➤ Removing edge: %d - %d\n", vertexPairs[j], vertexPairs[j + 1]);
+                    removeEdge(g, edge);
+                }
+                free(currPair);
+                free(vertexPairs);
+            }
+            showGraph(g, ADJACENCY_MATRIX);
         }
-    } else if (strcmp(commandName, "depth") == 0) {
-		// Format: depth <vertex>
+    } else if (strcmp(commandName, "degree") == 0) {
+		// Format: degree <v>
         if (numArgs != 2 || !isNumeric(tokens[1])) {
-            printInvalidCommand("Help command format: help\n");
+            printInvalidCommand("degree command format: degree <v>\n");
         } else {
             int vertex = atoi(tokens[1]);
-			DFSIterative(g, vertex);
+			showDegree(g, vertex);
         }
-    } else if (strcmp(commandName, "breadth") == 0) {
-		// Format: breadth <vertex>
+    } else if (strcmp(commandName, "dfs") == 0) {
+		// Format: dfs <vertex>
         if (numArgs != 2 || !isNumeric(tokens[1])) {
-            printInvalidCommand("Help command format: help\n");
+            printInvalidCommand("dfs command format: dfs <vertex>\n");
+        } else {
+            int vertex = atoi(tokens[1]);
+			dfs(g, vertex);
+        }
+    } else if (strcmp(commandName, "bfs") == 0) {
+		// Format: bfs <vertex>
+        if (numArgs != 2 || !isNumeric(tokens[1])) {
+            printInvalidCommand("BFS command format: bfs <vertex>\n");
         } else {
             int startingVertex = atoi(tokens[1]);
-			BFS(g, startingVertex);
+			bfs(g, startingVertex);
         }
     } else if (strcmp(commandName, "cycle") == 0) {
-		// Format: hasCycle
+		// Format: cycle
         if (numArgs != 1) {
-            printInvalidCommand("Help command format: help\n");
+            printInvalidCommand("Cycle command format: cycle\n");
         } else {
 			printf(
 				hasCycle(g) ? 
-				" ➤ A cycle exists in the graph!" : 
-				" ➤ No cycle exists in the graph!"
+				" ➤ A cycle exists in the graph!\n" : 
+				" ➤ No cycle exists in the graph!\n"
 			);
         }
-    } else if (strcmp(commandName, "showConnected") == 0) {
-		// Format: hasCycle
+    } else if (strcmp(commandName, "path") == 0) {
+		// Format: path <v1> <v2>
+        if (numArgs != 3 || !isNumeric(tokens[1]) || !isNumeric(tokens[2])) {
+            printInvalidCommand("Path command format: path <v1> <v2>\n");
+        } else {
+            int v1 = atoi(tokens[1]);
+            int v2 = atoi(tokens[2]);
+			if (isReachable(g, v1, v2)) {
+                printf(" ➤ A path exists between %d and %d\n", v1, v2);
+				pathTrace(g, v1, v2);
+			} else {
+				printf(" ➤ No path exists between %d and %d\n", v1, v2);
+			}
+        }
+    } else if (strcmp(commandName, "connected") == 0) {
+		// Format: connected
         if (numArgs != 1) {
-            printInvalidCommand("Help command format: help\n");
+            printInvalidCommand("Connected command format: connected\n");
         } else {
 			showConnectedComponents(g);
         }
     } else if (strcmp(commandName, "hamilton") == 0) {
 		// Format: hamilton <v1> <v2>
-        if (numArgs != 2 || !isNumeric(tokens[1])) {
-            printInvalidCommand("Help command format: help\n");
+        if (g -> nV >= 10) {
+            printf("This runs an O(n!) algorithm. This is gonna take years, sorry. Try a graph with fewer than 10 vertices\n");
         } else {
-            int v1 = atoi(tokens[1]);
-            int v2 = atoi(tokens[2]);
-			if (hasHamiltonPath(g, v1, v2)) {
-				printf(" ➤ Hamiltonian path exists between %d and %d\n", v1, v2);
-			} else {
-				printf(" ➤ No Hamiltonian path exists between %d and %d\n", v1, v2);
-			}
+            switch (numArgs) {
+                case 2:
+                    if (strcmp(tokens[1], "circuit") != 0) {
+                        printInvalidCommand("Hamilton command format: hamilton circuit\n");
+                    } else {
+                        if (!showHamiltonCircuit(g)) {
+                            printColoured("red", "No Hamiltonian circuits found\n");
+                        }
+                    }
+                    break;
+                case 3:
+                    if (!isNumeric(tokens[1]) || !isNumeric(tokens[2])) {
+                        printInvalidCommand("Hamilton command format: hamilton <v1> <v2>\n");
+                    } else {
+                        int src = atoi(tokens[1]);
+                        int dest = atoi(tokens[2]);
+                        if (showHamiltonPath(g, src, dest)) {
+                            printColoured("green", " ➤ Hamiltonian path exists between %d and %d\n", src, dest);
+                        } else {
+                            printColoured("red", " ➤ No Hamiltonian path exists between %d and %d\n", src, dest);
+                        }
+                    }
+                    break;
+                default:
+                    printInvalidCommand("Hamiltonian circuit command format: hamilton circuit\n");
+                    printInvalidCommand("Hamiltonian path command format: hamilton <v1> <v2>\n");
+            }
         }
-    } else if (strcmp(commandName, "transitiveClosure") == 0) {
-		// Format: transitiveClosure
+    } else if (strcmp(commandName, "euler") == 0) {
+		// Format: Euler <v1> <v2>
+        if (g -> nV >= 10) {
+            printf("This runs an O(n!) algorithm. This is gonna take years, sorry. Try a graph with fewer than 10 vertices\n");
+        } else {
+            switch (numArgs) {
+                case 2:
+                    if (strcmp(tokens[1], "circuit") != 0) {
+                        printInvalidCommand("Euler command format: euler circuit\n");
+                    } else {
+                        if (!showEulerCircuit(g)) {
+                            printColoured("red", "No Eulerian circuits found\n");
+                        }
+                    }
+                    break;
+                case 3:
+                    if (!isNumeric(tokens[1]) || !isNumeric(tokens[2])) {
+                        printInvalidCommand("Euler command format: euler <v1> <v2>\n");
+                    } else {
+                        int src = atoi(tokens[1]);
+                        int dest = atoi(tokens[2]);
+                        if (showEulerPath(g, src, dest)) {
+                            printColoured("green", " ➤ Eulerian path exists between %d and %d\n", src, dest);
+                        } else {
+                            printColoured("red", " ➤ No Eulerian path exists between %d and %d\n", src, dest);
+                        }
+                    }
+                    break;
+                default:
+                    printInvalidCommand("Euler circuit command format: euler circuit\n");
+                    printInvalidCommand("Euler path command format: euler <v1> <v2>\n");
+            }
+        }
+    } else if (strcmp(commandName, "closure") == 0) {
+		// Format: closure
         if (numArgs != 1) {
-            printInvalidCommand("Help command format: help\n");
+            printInvalidCommand("Closure command format: closure\n");
         } else {
 			transitiveClosure(g);
+        }
+    } else if (strcmp(commandName, "randomise") == 0) {
+		// Format: randomise dense|sparse
+        if (numArgs != 2) {
+            printInvalidCommand("Randomise command format: randomise dense|sparse\n");
+        } else {
+            int numVertices = g -> nV;
+            if (strcmp(tokens[1], "dense") == 0) {
+                printf(" ➤ Initialising dense graph\n");
+                dropGraph(g);
+                g = newRandomGraph(numVertices, 2);
+                showGraph(g, ADJACENCY_MATRIX);
+            } else if (strcmp(tokens[1], "sparse") == 0) {
+                printf(" ➤ Initialising sparse graph\n");
+                dropGraph(g);
+                g = newRandomGraph(numVertices, 5);
+                showGraph(g, ADJACENCY_MATRIX);
+            } else {
+                printInvalidCommand("Randomise command format: randomise dense|sparse\n");
+            }
+        }
+    } else if (strcmp(commandName, "clear") == 0) {
+		// Format: clear
+        if (numArgs != 1) {
+            printInvalidCommand("Clear command format: clear\n");
+        } else {
+            int numVertices = g -> nV;
+			dropGraph(g);
+            g = newGraph(numVertices);
+            printf(" ➤ Cleared graph\n");
         }
     } else if (strcmp(commandName, "exit") == 0) {
 		// Format: exit
@@ -140,7 +270,13 @@ Graph processCommand(Graph g, char *command) {
     return g;
 }
 
+static void interruptHandler(int placeholder) {
+    printf("Killing connection. Bye!\n");
+    exit(1);
+}
+
 int main(int argc, char *argv[]) {
+    signal(SIGINT, interruptHandler);
 	Graph graph = NULL;
 	int N = 0; 
 	char *edgeFile = NULL;
@@ -169,14 +305,15 @@ int main(int argc, char *argv[]) {
 		// Rest of the lines in the file contains edges v1-v2
 		while (fgets(line,MAX_LINE,in) != NULL) {
 			if (sscanf(line,"%d %d",&v1,&v2) != 2)
-				fprintf(stderr,"Bad edge (%d, %d)\n", v1, v2);
+				fprintf(stderr, "Invalid edge (%d, %d)\n", v1, v2);
 			else
-				insertE(graph, makeEdge(graph,v1,v2));
+				insertEdge(graph, makeEdge(graph,v1,v2));
 		}
 		fclose(in);
 	}
 
 	printCommands();
+    printHorizontalRule();
 	while (1) {
         printPrompt("Enter command");
 		fgets(line, MAX_LINE, stdin);

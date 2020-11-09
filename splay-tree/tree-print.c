@@ -204,7 +204,7 @@ void printLevel(AsciiNode *asciiNode, int x, int level)  {
                 printf(" ");
             }
             printNext += i;
-            printColoured("purple", "/");
+            printColoured("purple", "╱");
             printNext++;
         }
         if (asciiNode -> right != NULL) {
@@ -212,7 +212,7 @@ void printLevel(AsciiNode *asciiNode, int x, int level)  {
                 printf(" ");
             }
             printNext += i;
-            printColoured("purple", "\\");
+            printColoured("purple", "╲");
             printNext++;
         }
     } 

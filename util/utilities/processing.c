@@ -7,6 +7,7 @@
 #include <libgen.h>
 #include <unistd.h>
 #include "processing.h"
+#include "../display/display.h"
 
 #define WORD_SEPARATORS " \t\r\n"
 #define SPECIAL_CHARS   "!|<>"
@@ -25,15 +26,12 @@ char **tokenise(char *command) {
         }
         size_t tokenLen = strcspn(command, WORD_SEPARATORS);
         size_t tokenLenNoSpecials = strcspn(command, SPECIAL_CHARS);
-        if (tokenLenNoSpecials == 0) {
-            tokenLenNoSpecials = 1;
-        }
-        if (tokenLenNoSpecials < tokenLen) {
-            tokenLen = tokenLenNoSpecials;
-        }
+        if (tokenLenNoSpecials == 0) tokenLenNoSpecials = 1;
+        if (tokenLenNoSpecials < tokenLen) tokenLen = tokenLenNoSpecials;
         char *token = strndup(command, tokenLen);
         assert(token != NULL);
         command += tokenLen;
+        normaliseToken(token);
         tokens[numTokens] = token;
         numTokens++;
     }
@@ -50,6 +48,13 @@ void freeTokens(char **tokens) {
         free(tokens[i]);
     }
     free(tokens);
+}
+
+void normaliseToken(char *token) {
+    while (*token != '\0') {
+        *token = tolower(*token);
+        token++;
+    }
 }
 
 int getNumTokens(char **tokens) {
@@ -90,3 +95,57 @@ int getNumDigits(int num) {
     }
     return digits;
 }
+
+/**
+ * Given a seed int array, an array to populate and the size of the seed array,
+ * adds vertex pairs into the array to populate. Assumes it has enough allocated
+ * memory
+ */
+static void populatePairs(int *seed, int *doubled, int size) {
+    if (size <= 1) return;
+    doubled[0] = seed[0];
+    doubled[1] = seed[1];
+    doubled += 2;
+    seed++;
+    populatePairs(seed, doubled, size - 1);
+}
+
+int countVertices(char *vertexPairs) {
+    int length = (strlen(vertexPairs) + 1);
+    char *vertexString = malloc(sizeof(char) * length);
+    char *currToken = malloc(sizeof(char) * length);
+    strcpy(vertexString, vertexPairs);
+    strcpy(currToken, strtok(vertexString, "-"));
+    int i = 0;
+    while(currToken != NULL) {
+        i++;
+        currToken = strtok(NULL, "-");
+    }
+    return i;    
+}
+
+int *tokeniseEdges(char *vertexPairs, int numVertices) {
+    int length = (strlen(vertexPairs) + 1);
+    char *vertexString = malloc(sizeof(char) * length);
+    strcpy(vertexString, vertexPairs);
+    int i = 0;
+    int *tokens = malloc(sizeof(int) * numVertices);
+    char *currToken = malloc(sizeof(char) * length);
+    strcpy(currToken, strtok(vertexString, "-"));
+    while(currToken != NULL) {
+        if (!isNumeric(currToken)) {
+            printColoured("red", "%s is not numeric\n", currToken);
+            return NULL;
+        }
+        tokens[i++] = atoi(currToken);
+        currToken = strtok(NULL, "-");
+    }    
+    if (i <= 1) {
+        printColoured("red", "Invalid edges\n");
+        return NULL;
+    }
+    int *pairs = malloc(sizeof(int) * (i - 1) * 2); 
+    populatePairs(tokens, pairs, i);
+    return pairs;
+}
+
