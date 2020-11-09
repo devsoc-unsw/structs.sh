@@ -84,9 +84,10 @@ void bubbleSort(int *a, int lo, int hi) {
 /**
  * ===== Shell Sort =====
  * 1. Pick the first h-value - this will be the interval size
- * 2. For each element which is h positions away from each other, use insertion sort on those elements.
- *    Do this for every possible group of elements that are h positions away (so shift 1 index forward).
- *    Best to see an animation on this: https://www.cs.usfca.edu/~galles/visualization/ComparisonSort.html
+ * 2. For every element which is h positions away from each other, use insertion sort on those elements.
+ *    Do this for every possible group of elements that are h positions away (so shift 1 index forward
+ *    once you are done with the current group of elements).
+ *     -> Best to just see an animation on this: https://www.cs.usfca.edu/~galles/visualization/ComparisonSort.html
  * 3. Repeat step 2 for every h value. The last value should be h = 1, where we're just doing regular
  *    insertion sort
  * 
@@ -129,6 +130,11 @@ void quicksort(int *a, int lo, int hi) {
     quicksort(a, pivotIndex + 1, hi);
 }
 
+/**
+ * Selects a pivot element in the given array and returns its index.
+ * Puts all values LESS    than the pivot on the LEFT  of the pivot.
+ * Puts all values GREATER than the pivot on the RIGHT of the pivot
+ */
 static int partition(int *a, int lo, int hi) {
     // Just picking the first element as the pivot
     int pivot = a[lo];
@@ -136,10 +142,13 @@ static int partition(int *a, int lo, int hi) {
     int rightIndex = hi;
 
     while (1) {
+        // Moving the leftIndex scanner forward until we reach a value greater than the pivot
         for (; leftIndex <= hi; leftIndex++)
             if (a[leftIndex] > pivot) break;
+        // Moving the rightIndex scanner backward until we reach a value less than the pivot
         for (; rightIndex >= lo + 1; rightIndex--)
             if (a[rightIndex] < pivot) break;
+        // Partitioning is done when the left scanner and right scanners cross over
         if (leftIndex >= rightIndex) break;
         swap(a, leftIndex, rightIndex);
     }
@@ -165,6 +174,10 @@ void mergesort(int *a, int lo, int hi) {
     merge(a, lo, midpoint, hi);
 }
 
+/**
+ * Merging the array values lo to mid and mid to hi into a single sorted 
+ * array.  
+ */
 static void merge(int *a, int lo, int mid, int hi) {
     int *tmp = malloc(sizeof(int) * (hi - lo + 1));
     int i = lo;
