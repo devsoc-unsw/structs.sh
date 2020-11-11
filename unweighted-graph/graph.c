@@ -58,8 +58,8 @@ Graph newRandomGraph(int nV, int sparsityFactor) {
    Graph g = newGraph(nV);
    for (int v = 0; v < nV; v++) {
       for (int w = v + 1; w < nV; w++) {
-         if (rand() % sparsityFactor == 0) insertEdge(g, makeEdge(g, v, w));
-         if (rand() % sparsityFactor == 0) insertEdge(g, makeEdge(g, w, v));
+         if (rand() % sparsityFactor == 0 && !adjacent(g, v, w)) insertEdge(g, makeEdge(g, v, w));
+         if (rand() % sparsityFactor == 0 && !adjacent(g, v, w)) insertEdge(g, makeEdge(g, w, v));
       }
    }
    return g;
