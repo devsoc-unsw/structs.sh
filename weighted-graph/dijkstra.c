@@ -9,33 +9,47 @@
 #include "../graph-helpers/stack/Stack.h"
 #include "../graph-helpers/priority-queue/PQueue.h"
 
-#define NO_PRED -1
+#define NO_PRED   -1
+#define NO_VERTEX -1
 
+// ========== Dijkstra's Algorithm ==========
+/**
+ * Dijkstra's algorithm for determining the single source spanning tree
+ * of the input graph from the starting vertex
+ * 
+ * High-level steps:
+ *   1. Look at every neighbour of the vertices we currently have in included
+ *   2. Find the neighbour vertex with the lowest cost to get to and 
+ *      include it in our set of vertices
+ *   3. Look at all the unincluded neighbours of the new vertex, and
+ *      update the dist array if we've found a BETTER path to those neighbours
+ *   4. Repeat 1-3 until all vertices have been included in included
+ */
 void dijkstra(Graph g, Vertex src) {
-    bool vSet[g -> nV]; 
+    bool included[g -> nV]; 
     int dist[g -> nV];  
     int pred[g -> nV];
     // Initialising all 3 arrays
     for (int i = 0; i < g -> nV; i++) {
+        included[i] = false;
         dist[i] = INT_MAX;
-        vSet[i] = false;
         pred[i] = NO_PRED;   // NO_PRED is #defined as -1
     }
     // The distance to itself is 0
     dist[src] = 0;
  
-    for (int count = 0; count < g -> nV - 1; count++) {
-        // Pick the minimum distance vertex from the set of vertices not yet processed
-        int u = getLowestCostVertex(g, dist, vSet);
+    for (int count = 0; count < g->nV - 1; count++) {
+        // Pick the minimum distance vertex from the set of vertices NOT YET included
+        int u = getLowestCostVertex(g, dist, included);
         // Mark the chosen vertex as included
-        vSet[u] = true;
-        for (int v = 0; v < g -> nV; v++) {
+        included[u] = true;
+        for (int v = 0; v < g->nV; v++) {
             // Look at all the unincluded neighbours of the newly included vertex 
-            if (!vSet[v] && adjacent(g, u, v)) {
+            if (!included[v] && adjacent(g, u, v)) {
                 // Update dist[v] if the total weight of the path, dist[u] + weight of u-v, 
                 // is smaller than value of dist[v] we currently have
-                if (dist[u] != INT_MAX && dist[u]+g -> edges[u][v] < dist[v]) {
-                    dist[v] = dist[u] + g -> edges[u][v];
+                if (dist[u] != INT_MAX && dist[u] + g->edges[u][v] < dist[v]) {
+                    dist[v] = dist[u] + g->edges[u][v];
                     pred[v] = u;
                 }
             }
@@ -45,14 +59,15 @@ void dijkstra(Graph g, Vertex src) {
 }
 
 /**
- * Finds the next best candidate edge going out from each vSet 
+ * Finds the next best candidate edge going out from each included 
  * vertex
  */
-Vertex getLowestCostVertex(Graph g, int *dist, bool *vSet) {
+Vertex getLowestCostVertex(Graph g, int *dist, bool *included) {
     // Initialize min value
-    int min = INT_MAX, min_index;
+    int min = INT_MAX; 
+    int min_index = NO_VERTEX;
     for (int v = 0; v < g -> nV; v++) {
-        if (vSet[v] == false && dist[v] <= min) {
+        if (included[v] == false && dist[v] < min) {
             min = dist[v];
             min_index = v;
         }

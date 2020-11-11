@@ -20,8 +20,10 @@ TreeNode *insertSplay(TreeNode *root, int insertValue) {
 
     if (insertValue < root -> value) {
         root -> left = insertSplay(root -> left, insertValue); 
+        root = rotateRight(root);
     } else if (insertValue > root -> value) {
         root -> right = insertSplay(root -> right, insertValue);
+        root = rotateLeft(root);
     } else {
         printf("Value %d already exists in the tree\n", insertValue);
         return root;

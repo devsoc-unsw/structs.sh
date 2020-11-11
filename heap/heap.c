@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <stdbool.h>
 #include "heap.h"
-#include "../queue/queue.h"
+#include "queue/queue.h"
 
 #define EMPTY -1
 

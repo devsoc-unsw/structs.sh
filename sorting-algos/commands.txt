@@ -1,0 +1,10 @@
+help                 - show available commands
+selectionsort        - executes selection sort
+insertionsort        - executes insertion sort
+bubblesort           - executes bubble sort
+shellsort            - executes shellsort
+quicksort            - executes quicksort
+mergesort            - executes mergesort
+heapsort             - executes heapsort
+runall               - executes all sorting algorithms
+exit                 - quit program
