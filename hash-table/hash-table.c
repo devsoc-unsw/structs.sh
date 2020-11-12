@@ -4,11 +4,11 @@
 #include <string.h>
 #include <stdint.h>
 #include "hash-table.h"
-#include "../util/colours.h"
+#include "../util/display/display.h"
 
 #define DELETED (uintptr_t) 0xFFFFFFFFFFFFFFFFUL
 
-// =====
+// Key and Item operations
 
 Key getKey(Item item) {
     return item -> zid;
@@ -30,7 +30,7 @@ bool equals(Key firstKey, Key secondKey) {
 }
 
 void showItem(Item item) {
-    printf("%s — %s\n", item -> zid, item -> name);
+    printf("\"%s\" — \"%s\"\n", item -> zid, item -> name);
 }
 
 void freeItem(Item item) {
@@ -41,7 +41,7 @@ void freeItem(Item item) {
     }
 }
 
-// =====
+// Hash table operations
 
 int hash(Key key, int size) {
     int h = 0;
@@ -61,10 +61,7 @@ HashTable newHashTable(int size) {
     return hashTable;
 }
 
-/**
- * 
- */
-void insert(HashTable hashTable, Item newItem) {
+void insertIntoHashTable(HashTable hashTable, Item newItem) {
     if (hashTable -> numItems >= hashTable -> numSlots) {
         printf("Hash table is full, can't probe for available slots to insert\n");
         return;
@@ -72,34 +69,30 @@ void insert(HashTable hashTable, Item newItem) {
     // Get the key of the new item so that we can generate an index into the hash table
     Key key = getKey(newItem);
     int hashIndex = hash(getKey(newItem), hashTable -> numSlots);
-    printf("Calculated hash value: hash(\"%s\", %d) = %d\n", newItem -> zid, hashTable -> numSlots, hashIndex);
     // Linear probing until an available position
     for (int i = 0; i < hashTable -> numSlots; i++) {
         // Empty position found
         if (hashTable -> items[hashIndex] == NULL) break;
         if (equals(key, getKey(hashTable -> items[hashIndex]))) {
-            printf("Item with key %s has already been inserted\n", key);
+            printColoured("red", " ➤ Item with key %s has already been inserted\n", key);
             return;
         }
-        printf(" ⟶ Index %d is taken. Probing for the next available index\n", hashIndex);
+        printColoured("cyan", " ➤ Index %d is taken. Probing for the next available index\n", hashIndex);
         hashIndex = (hashIndex + 1) % hashTable -> numSlots;
     }
     hashTable -> items[hashIndex] = newItem;
     hashTable -> numItems++;
-    printf("Inserted %s - %s into index %d of the hash table\n", newItem -> zid, newItem -> name, hashIndex);
+    printColoured("green", " ➤ Inserted \"%s\" at index %d\n", newItem -> name, hashIndex);
 }
 
-/**
- * 
- */
 void printHashTable(HashTable hashTable) {
     for (int i = 0; i < hashTable -> numSlots; i++) {
         Item curr = hashTable -> items[i];
-        printf("%3d. ", i);
+        printColoured("green", "%3d. ", i);
         if (curr == NULL) {
-            printSecondary("NO ITEM\n");
+            printColoured("cyan", "___\n");
         } else if (curr == DELETED) {
-            printFailure("DELETED\n");
+            printColoured("red", "DELETED\n");
         } else {
             showItem(curr);
         }
@@ -118,25 +111,29 @@ Item get(HashTable hashTable, Key key) {
     return NULL;
 }
 
-void delete(HashTable hashTable, Key key) {
+void deleteFromHashTable(HashTable hashTable, Key key) {
     int hashIndex = hash(key, hashTable -> numSlots);
     Item curr = NULL;
     for (int i = 0; i < hashTable -> numSlots; i++) {
         Item curr = hashTable -> items[hashIndex];
         // Target item doesn't exist in the hash table
-        if (curr == NULL) return;
+        if (curr == NULL) {
+            printColoured("red", " ➤ Item with key \"%s\" doesn't exist\n", key);  
+            return;
+        }
         if (equals(key, getKey(curr))) break;
         hashIndex = (hashIndex + 1) % hashTable -> numSlots;
     }
     freeItem(curr);
     hashTable -> items[hashIndex] = DELETED;
     hashTable -> numItems--;
+    printColoured("cyan", " ➤ Deleted item with key \"%s\" from the hash table\n", key);  
 }
 
 void dropHashTable(HashTable hashTable) {
     for (int i = 0; i < hashTable -> numSlots; i++) {
         Item curr = hashTable -> items[i];
-        if (curr != NULL) {
+        if (curr != NULL && curr != DELETED) {
             freeItem(curr);
         } 
     }

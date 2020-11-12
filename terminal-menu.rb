@@ -60,7 +60,15 @@ begin
     when "Heap"
         heapTypes = ["Max heap", "Min heap"]
         selectedHeapType = prompt.select("1. Select max/min heap".yellow, heapTypes)
-        numSlots = prompt.ask("2. How many indices (1-100)?".yellow, default: "10")
+        numSlots = prompt.ask("2. How many indices to set for the heap (1-100): ".yellow, default: "10")
+        while (!is_num(numSlots) or (numSlots.to_i > 50 or numSlots.to_i < 1)) do
+            if (!is_num(numSlots)) then
+                puts "%s isn't an integer. Try again".red % numSlots
+            elsif (numSlots.to_i > 50 or numSlots.to_i < 1) then
+                puts "%s not in correct range. Try again".red % numSlots
+            end
+            numSlots = prompt.ask("2. How many indices to set for the heap (1-100): ".yellow, default: "10")
+        end
         case selectedHeapType    
         when "Max heap"
             system("heap/testHeap --max #{numSlots}")
@@ -68,7 +76,16 @@ begin
             system("heap/testHeap --min #{numSlots}")
         end
     when "Hash Table"
-        system("hash-table/testHash")
+        numSlots = prompt.ask("1. How many indices to set for the hash table (1-100): ".yellow, default: "10")
+        while (!is_num(numSlots) or (numSlots.to_i > 50 or numSlots.to_i < 1)) do
+            if (!is_num(numSlots)) then
+                puts "%s isn't an integer. Try again".red % numSlots
+            elsif (numSlots.to_i > 50 or numSlots.to_i < 1) then
+                puts "%s not in correct range. Try again".red % numSlots
+            end
+            numSlots = prompt.ask("1. How many indices to set for the hash table (1-100): ".yellow, default: "10")
+        end
+        system("hash-table/testHash #{numSlots}")
     when "Sorting Algorithms Timing"
         system("sorting-algos/testSort")
     when "Exit"
