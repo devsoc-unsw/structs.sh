@@ -143,16 +143,25 @@ static int partition(int *a, int lo, int hi) {
 
     while (1) {
         // Moving the leftIndex scanner forward until we reach a value greater than the pivot
-        for (; leftIndex <= hi; leftIndex++)
+        while (leftIndex <= hi) {
             if (a[leftIndex] > pivot) break;
+            leftIndex++;
+        }
         // Moving the rightIndex scanner backward until we reach a value less than the pivot
-        for (; rightIndex >= lo + 1; rightIndex--)
+        while (rightIndex >= lo + 1) {
             if (a[rightIndex] < pivot) break;
-        // Partitioning is done when the left scanner and right scanners cross over
+            rightIndex--;
+        }
+        // Partitioning is finished when the left scanner and right scanners cross over
         if (leftIndex >= rightIndex) break;
+
+        // Swap the values where the left scanner and right scanner stopped
         swap(a, leftIndex, rightIndex);
     }
+    // Swap the pivot with where the right scanner stopped
     swap(a, rightIndex, lo);
+
+    // Return the index of where the pivot 'landed'
     return rightIndex;
 }
 
