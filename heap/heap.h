@@ -5,6 +5,8 @@
 #include <limits.h>
 
 #define EMPTY -INT_MAX
+#define MAX_HEAP 1
+#define MIN_HEAP 2
 
 typedef int Item;
 
@@ -25,13 +27,13 @@ Heap newHeap(int size);
  * Given a heap, inserts a new item into that heap into the correct
  * position.
  */
-void insertHeap(Heap heap, Item newItem);
+void insertHeap(Heap heap, Item newItem, int heapType);
 
 /**
  * Given a heap, returns the root and reorganises the heap to preserve
  * its top-down ordering
  */
-Item popHeap(Heap heap);
+Item popHeap(Heap heap, int heapType);
 
 /**
  * Prints the heap in level-order
@@ -56,13 +58,13 @@ void dropHeap(Heap heap);
  * Given an array of items and a target index, moves the target index up
  * into the correct position in the array
  */
-void bubbleUp(Item *items, int currIndex);
+void bubbleUp(Item *items, int currIndex, int heapType);
 
 /**
  * Given an array of items and a target index, moves the target index down
  * into the correct position in the array
  */
-void bubbleDown(Item *a, int i, int N);
+void bubbleDown(Item *a, int N, int heapType);
 
 // ===== Static Helper Functions =====
 /**

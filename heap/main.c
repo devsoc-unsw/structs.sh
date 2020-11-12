@@ -14,7 +14,7 @@
  * Prints command line usage info
  */
 void printUsagePrompt(char *argv[]) {
-	fprintf(stderr, "Usage: %s <num vertices>|<filename>\n", argv[0]);
+	fprintf(stderr, "Usage: %s --min|--max <num vertices>|<filename>\n", argv[0]);
 	exit(1);
 }
 
@@ -22,7 +22,7 @@ void printUsagePrompt(char *argv[]) {
  * Given the heap and the command string, extracts arguments from the command
  * and calls the relevant function.
  */
-Heap processCommand(Heap heap, char *command) {
+Heap processCommand(Heap heap, char *command, int heapType) {
 	char **tokens = tokenise(command);
     char *commandName = tokens[0];
     int numArgs = getNumTokens(tokens);
@@ -56,7 +56,7 @@ Heap processCommand(Heap heap, char *command) {
                 if (!isNumeric(tokens[i + 1])) {
                     printColoured("red", "%s is not numeric. Skipping\n", tokens[i + 1]);
                 } else {
-                    insertHeap(heap, atoi(tokens[i + 1]));
+                    insertHeap(heap, atoi(tokens[i + 1]), heapType);
                 }
             }
         }
@@ -65,7 +65,7 @@ Heap processCommand(Heap heap, char *command) {
         if (numArgs != 1) {
             printInvalidCommand("Pop command format: pop\n");
         } else {
-            Item poppedValue = popHeap(heap);
+            Item poppedValue = popHeap(heap, heapType);
             if (poppedValue == EMPTY) {
                 printColoured("red", " ➤ No elements remaining in the heap\n");
             } else {
@@ -78,7 +78,24 @@ Heap processCommand(Heap heap, char *command) {
             printInvalidCommand("Clear command format: clear\n");
         } else {
             while (!heapIsEmpty(heap)) {
-                popHeap(heap);
+                popHeap(heap, heapType);
+            }
+        }
+    } else if (strcmp(commandName, "popall") == 0) {
+		// Format: popall
+        if (numArgs != 1) {
+            printInvalidCommand("Popall command format: popall\n");
+        } else {
+            if (heapIsEmpty(heap)) printColoured("red", " ➤ Heap is empty. Nothing to pop\n");
+            else {
+                printColoured("green", " ➤ Values in order of descending priority: ");
+                Item poppedValue = popHeap(heap, heapType);
+                printf("%d", poppedValue);
+                while (!heapIsEmpty(heap)) {
+                    Item poppedValue = popHeap(heap, heapType);
+                    if (poppedValue != EMPTY) printf(", %d", poppedValue);
+                }
+                printf("\n");
             }
         }
     } else if (strcmp(commandName, "exit") == 0) {
@@ -99,13 +116,33 @@ Heap processCommand(Heap heap, char *command) {
 
 int main(int argc, char *argv[]) {
     int size = DEFAULT_NUM_SLOTS;
-    if (argc > 1) {
-        size = atoi(argv[1]);
+    if (argc < 2) {
+        printf("Insufficient arguments\n");
+        printUsagePrompt(argv);
+    }
+
+    int heapType = MAX_HEAP;
+    if (strcmp(argv[1], "--max") == 0) {
+        heapType = MAX_HEAP;
+    } else if (strcmp(argv[1], "--min") == 0) {
+        heapType = MIN_HEAP;
+    } else {
+        printf("Invalid heap type specified\n");
+        printUsagePrompt(argv);
+    }
+
+    if (argc == 3) {
+        if (!isNumeric(argv[2])) printUsagePrompt(argv);
+        size = atoi(argv[2]);
         if (size > MAX_SLOTS) {
             printColoured("red", "Size %d is too large, sorry. Try %d and below\n", size, MAX_SLOTS);
             exit(1);
+        } else if (size < 0) {
+            printColoured("red", "Size %d can't be negative\n", size, MAX_SLOTS);
+            exit(1);
         }
-    }
+    } else {
+    } 
 
     printCommands();
     printHorizontalRule();
@@ -116,7 +153,7 @@ int main(int argc, char *argv[]) {
 		fgets(line, MAX_LINE, stdin);
 		// Ignore processing empty strings
         if (notEmpty(line)) {
-            heap = processCommand(heap, line);
+            heap = processCommand(heap, line, heapType);
         }
     }
 	dropHeap(heap);

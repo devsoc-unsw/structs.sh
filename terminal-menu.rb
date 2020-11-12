@@ -60,11 +60,12 @@ begin
     when "Heap"
         heapTypes = ["Max heap", "Min heap"]
         selectedHeapType = prompt.select("1. Select max/min heap".yellow, heapTypes)
+        numSlots = prompt.ask("2. How many indices (1-100)?".yellow, default: "10")
         case selectedHeapType    
         when "Max heap"
-            system("heap/testMaxHeap")
+            system("heap/testHeap --max #{numSlots}")
         when "Min heap"
-            system("heap/testMinHeap")
+            system("heap/testHeap --min #{numSlots}")
         end
     when "Hash Table"
         system("hash-table/testHash")

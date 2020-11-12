@@ -18,17 +18,18 @@ Heap newHeap(int size) {
     return heap;
 }
 
-void insertHeap(Heap heap, Item newItem) {
+void insertHeap(Heap heap, Item newItem, int heapType) {
     if (heap -> numItems >= heap -> numSlots) {
-        printf("The heap is full!");
+        printColoured("red", "The heap is full! Dropping %d\n", newItem);
+    } else {
+        heap -> numItems++;
+        int nextPosition = heap -> numItems;
+        heap -> items[nextPosition] = newItem;
+        bubbleUp(heap -> items, heap -> numItems, heapType);
     }
-    heap -> numItems++;
-    int nextPosition = heap -> numItems;
-    heap -> items[nextPosition] = newItem;
-    bubbleUp(heap -> items, heap -> numItems);
 }
 
-Item popHeap(Heap heap) {
+Item popHeap(Heap heap, int heapType) {
     if (heap -> numItems <= 0) {
         return EMPTY;
     } 
@@ -43,7 +44,7 @@ Item popHeap(Heap heap) {
         // Replacing the root with the right-most node at the last level of the heap tree
         heap -> items[1] = lastElement;
         // Bubble the new root down to the correct position to restore the top-down ordering of the heap
-        bubbleDown(heap -> items, 1, heap -> numItems);
+        bubbleDown(heap -> items, heap -> numItems, heapType);
     }
     heap -> numItems--;
     return root;
@@ -86,24 +87,55 @@ void dropHeap(Heap heap) {
     free(heap);
 }
 
-void bubbleUp(Item *items, int i) {
-    while (i > 1 && items[i / 2] < items[i]) {
-        // Bubble the current node to take the place of their parent
-        swapPositions(items, i, i / 2);
-        i = i / 2;
+void bubbleUp(Item *items, int i, int heapType) {
+    switch (heapType) {
+        case MAX_HEAP:
+            while (i > 1 && items[i / 2] < items[i]) {
+                // Bubble the current node to take the place of their parent
+                swapPositions(items, i, i / 2);
+                i = i / 2;
+            }
+            break;
+        case MIN_HEAP:
+            while (i > 1 && items[i / 2] > items[i]) {
+                swapPositions(items, i, i / 2);
+                i = i / 2;
+            }
+            break;
+        default:
+            break;
     }
 }
 
-void bubbleDown(Item *a, int i, int N) {
-    while (i * 2 <= N) {
-        int j = 2 * i;
-        // Choose either the left or right child, depending on who has the larger value
-        if (j < N && a[j] < a[j + 1]) j++;
-        if (!(a[i] < a[j])) break;
-        // Swap positions to proceed one level down the heap tree
-        swapPositions(a, i, j);
-        i = j;
+void bubbleDown(Item *a, int N, int heapType) {
+    int i = 1;
+    switch (heapType) {
+        case MAX_HEAP:
+            while (i * 2 <= N) {
+                int j = 2 * i;
+                // Choose either the left or right child, depending on who has the larger value
+                if (j < N && a[j + 1] != EMPTY && a[j] < a[j + 1]) j++;
+                if (!(a[i] < a[j]) || a[j] == EMPTY) break;
+                // Swap positions to proceed one level down the heap tree
+                swapPositions(a, i, j);
+                i = j;
+            }
+            break;
+        case MIN_HEAP:
+            while (i * 2 <= N) {
+                int j = 2 * i;
+                // Choose either the left or right child, depending on who has the smaller value
+                if (j < N && a[j + 1] != EMPTY && a[j + 1] < a[j]) j++;
+                if (!(a[i] > a[j]) || a[j] == EMPTY) break;
+                // Swap positions to proceed one level down the heap tree
+                swapPositions(a, i, j);
+                i = j;
+            }
+            break;
+        default:
+            break;
     }
+    
 }
 
 static void swapPositions(Item *items, int a, int b) {
