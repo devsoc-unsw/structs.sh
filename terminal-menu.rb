@@ -9,7 +9,7 @@ def is_num(num_given)
 end
 
 begin
-  choices = ["Linked List", "Trees", "Graphs", "Exit".red]
+  choices = ["Linked List", "Trees", "Graphs", "Sorting Algorithms Timing", "Exit".red]
     choices.map { |choice| choice.blue }
     selection = prompt.select("Select a data structure: (see the implementations here: https://github.com/Tymotex/DataStructures)".yellow, choices)
     puts "Starting: %s\n".red % [selection]
@@ -57,6 +57,8 @@ begin
                 system("weighted-digraph/testGraph %d" % numVertices)
             end
         end
+    when "Sorting Algorithms Timing"
+        system("sorting-algos/testSort")
     when "Exit"
         puts "Bye!"
     end

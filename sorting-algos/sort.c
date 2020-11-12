@@ -275,4 +275,10 @@ void showArray(int *a, int size) {
     printf("\n");
 }
 
-
+void reverseSorted(int *a, int size) {
+    for (int i = 0; i < size / 2; i++) {
+        int tmp = a[i];
+        a[i] = a[size - 1 - i];
+        a[size - 1 - i] = tmp;
+    }
+}

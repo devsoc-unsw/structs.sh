@@ -69,10 +69,11 @@ bool notEmpty(char *str) {
 }
 
 bool isNumeric(char *str) {
-    for (int i = 0; i < strlen(str); i++)
+    for (int i = 0; i < strlen(str); i++) {
         if (!isdigit(str[i])) {
             return false;
         }
+    }
     return true;
 }
 

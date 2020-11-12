@@ -118,4 +118,9 @@ bool isSorted(int a[], int lo, int hi);
  */
 void swap(int *a, int i, int j);
 
+/**
+ * Given a SORTED array, reverses its values.
+ */
+void reverseSorted(int *array, int size);
+
 #endif
