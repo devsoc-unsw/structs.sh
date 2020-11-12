@@ -236,11 +236,11 @@ void heapsort(int *a, int lo, int hi) {
     // Building the heap by feeding in the unsorted values one by one
     Heap heap = newHeap(size);
     for (int i = lo; i < hi; i++) {
-        insert(heap, a[i]);
+        insertHeap(heap, a[i], MAX_HEAP);
     }
     // Repeatedly popping the root of the heap gives you elements in sorted order
     for (int i = hi - 1; i >= lo; i--) {
-        a[i] = pop(heap);
+        a[i] = popHeap(heap, MAX_HEAP);
     }
 }
 
@@ -284,4 +284,10 @@ void showArray(int *a, int size) {
     printf("\n");
 }
 
-
+void reverseSorted(int *a, int size) {
+    for (int i = 0; i < size / 2; i++) {
+        int tmp = a[i];
+        a[i] = a[size - 1 - i];
+        a[size - 1 - i] = tmp;
+    }
+}

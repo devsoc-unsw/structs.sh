@@ -1,0 +1,8 @@
+help                  - show available commands
+show                  - shows the hash table
+hash <key>            - runs the hash function on the given key
+insert <key> value    - inserts a new entry into the hash table
+get <key>             - fetches the entry with the specified key
+delete <key>          - deletes the entry with the specified key
+clear                 - clears the hash table's contents    
+exit                  - quit program

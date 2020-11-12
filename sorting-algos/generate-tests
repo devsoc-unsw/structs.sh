@@ -1,4 +1,4 @@
-#!/usr/local/bin/sh
+#!/bin/sh
 
 testDir="tests"
 
@@ -7,7 +7,7 @@ NC='\033[0m'
 
 printb() {
     local myVar="$1"
-    echo -e "${BLUE}$myVar${NC}"
+    echo "${BLUE}$myVar${NC}"
 }
 
 printUsage() {
@@ -22,6 +22,7 @@ numRandomFiles=3
 while test $# -gt 0; do   # $# is argc
     case "$1" in
         -h|--help)
+            printUsage
             exit 0
             ;;
         -n)

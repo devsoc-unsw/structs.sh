@@ -9,7 +9,7 @@ def is_num(num_given)
 end
 
 begin
-  choices = ["Linked List", "Trees", "Graphs", "Exit".red]
+  choices = ["Linked List", "Trees", "Graphs", "Heap", "Hash Table", "Sorting Algorithms Timing", "Exit".red]
     choices.map { |choice| choice.blue }
     selection = prompt.select("Select a data structure: (see the implementations here: https://github.com/Tymotex/DataStructures)".yellow, choices)
     puts "Starting: %s\n".red % [selection]
@@ -57,6 +57,37 @@ begin
                 system("weighted-digraph/testGraph %d" % numVertices)
             end
         end
+    when "Heap"
+        heapTypes = ["Max heap", "Min heap"]
+        selectedHeapType = prompt.select("1. Select max/min heap".yellow, heapTypes)
+        numSlots = prompt.ask("2. How many indices to set for the heap (1-100): ".yellow, default: "10")
+        while (!is_num(numSlots) or (numSlots.to_i > 50 or numSlots.to_i < 1)) do
+            if (!is_num(numSlots)) then
+                puts "%s isn't an integer. Try again".red % numSlots
+            elsif (numSlots.to_i > 50 or numSlots.to_i < 1) then
+                puts "%s not in correct range. Try again".red % numSlots
+            end
+            numSlots = prompt.ask("2. How many indices to set for the heap (1-100): ".yellow, default: "10")
+        end
+        case selectedHeapType    
+        when "Max heap"
+            system("heap/testHeap --max #{numSlots}")
+        when "Min heap"
+            system("heap/testHeap --min #{numSlots}")
+        end
+    when "Hash Table"
+        numSlots = prompt.ask("1. How many indices to set for the hash table (1-100): ".yellow, default: "10")
+        while (!is_num(numSlots) or (numSlots.to_i > 50 or numSlots.to_i < 1)) do
+            if (!is_num(numSlots)) then
+                puts "%s isn't an integer. Try again".red % numSlots
+            elsif (numSlots.to_i > 50 or numSlots.to_i < 1) then
+                puts "%s not in correct range. Try again".red % numSlots
+            end
+            numSlots = prompt.ask("1. How many indices to set for the hash table (1-100): ".yellow, default: "10")
+        end
+        system("hash-table/testHash #{numSlots}")
+    when "Sorting Algorithms Timing"
+        system("sorting-algos/testSort")
     when "Exit"
         puts "Bye!"
     end
