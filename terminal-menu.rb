@@ -9,7 +9,7 @@ def is_num(num_given)
 end
 
 begin
-  choices = ["Linked List", "Trees", "Graphs", "Sorting Algorithms Timing", "Exit".red]
+  choices = ["Linked List", "Trees", "Graphs", "Heap", "Hash Table", "Sorting Algorithms Timing", "Exit".red]
     choices.map { |choice| choice.blue }
     selection = prompt.select("Select a data structure: (see the implementations here: https://github.com/Tymotex/DataStructures)".yellow, choices)
     puts "Starting: %s\n".red % [selection]
@@ -57,6 +57,17 @@ begin
                 system("weighted-digraph/testGraph %d" % numVertices)
             end
         end
+    when "Heap"
+        heapTypes = ["Max heap", "Min heap"]
+        selectedHeapType = prompt.select("1. Select max/min heap".yellow, heapTypes)
+        case selectedHeapType    
+        when "Max heap"
+            system("heap/testMaxHeap")
+        when "Min heap"
+            system("heap/testMinHeap")
+        end
+    when "Hash Table"
+        system("hash-table/testHash")
     when "Sorting Algorithms Timing"
         system("sorting-algos/testSort")
     when "Exit"
