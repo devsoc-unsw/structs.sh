@@ -448,7 +448,7 @@ static void traversalTracer(Graph g, Vertex currVertex, bool *visited, int inden
     if (currIndentLevel == 1) {
         if (levelConnector[indentLevel - currIndentLevel]) printColoured("purple", "┣");
         else printColoured("purple", "┗");
-        printColoured("purple", "━━━");
+        printColoured("purple", "---");
     }
     printColoured("green", "%-2d\n", currVertex);
     visited[currVertex] = true;
