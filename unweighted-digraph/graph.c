@@ -53,12 +53,19 @@ Graph newGraph(int nV) {
    return g;
 }
 
-Graph newRandomGraph(int nV, int sparsityFactor) {
+Graph newRandomGraph(int nV, int densityFactor) {
    Graph g = newGraph(nV);
+   double spawnProbability = densityFactor / 100.0;
    for (int v = 0; v < nV; v++) {
       for (int w = v + 1; w < nV; w++) {
-         if (rand() % sparsityFactor == 0 && !adjacent(g, v, w)) insertEdge(g, makeEdge(g, v, w));
-         if (rand() % sparsityFactor == 0 && !adjacent(g, v, w)) insertEdge(g, makeEdge(g, w, v));
+         // Generate a floating point in range 0 to 1
+         double randomVal = (double) rand() / RAND_MAX;
+         if (randomVal <= spawnProbability && !adjacent(g, v, w)) 
+            insertEdge(g, makeEdge(g, v, w));
+         // Reroll to add bidirectional edge
+         randomVal = (double) rand() / RAND_MAX;
+         if (randomVal <= spawnProbability && !adjacent(g, w, v)) 
+            insertEdge(g, makeEdge(g, w, v));
       }
    }
    return g;

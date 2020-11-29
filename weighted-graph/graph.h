@@ -51,7 +51,7 @@ Graph newGraph(int nV);
  * random edges between edges. 
  * Sparsity factor determines how sparse the graph connections are
  */
-Graph newRandomGraph(int nV, int sparsityFactor);  
+Graph newRandomGraph(int nV, int densityFactor, int maxWeight);  
 
 /**
  * Determines whether 2 vertices are adjacent to each other

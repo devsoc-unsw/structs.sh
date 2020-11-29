@@ -8,6 +8,7 @@
 #include "../graph-helpers/queue/Queue.h"
 #include "../graph-helpers/stack/Stack.h"
 #include "../graph-helpers/priority-queue/PQueue.h"
+#include "../util/display/display.h"
 
 #define NO_PRED   -1
 #define NO_VERTEX -1

@@ -14,6 +14,6 @@ hamilton circuit        - determines whether a Hamiltonian circuit exists
 euler <v1> <v2>         - determines the Euler path from v1 to v2, if it exists
 euler circuit           - determines whether an Euler circuit exists
 closure                 - runs the Floyd-Warshall algorithm and displays the transitive closure matrix
-randomise dense|sparse  - randomly inserts edges into the graph
+randomise <density>     - randomly inserts edges into the graph. Eg. randomise 50 populates the graph with 50% density 
 clear                   - resets the graph
 exit                    - quit program
