@@ -91,17 +91,17 @@ TreeNode *processCommand(TreeNode *root, char *command) {
         } else {
             printTreeState(root);
         }
-    } else if (strcmp(commandName, "showBalance") == 0) {
-        // Format: showBalance
+    } else if (strcmp(commandName, "balance") == 0) {
+        // Format: balance
         if (numArgs != 1) {
-            printInvalidCommand("Show balance command format: showBalance\n");
+            printInvalidCommand("Show balance command format: balance\n");
         } else {
             printTreeBalances(root);
         }
-    } else if (strcmp(commandName, "showHeights") == 0) {
-        // Format: showHeights
+    } else if (strcmp(commandName, "heights") == 0) {
+        // Format: heights
         if (numArgs != 1) {
-            printInvalidCommand("Show heights command format: showHeights\n");
+            printInvalidCommand("Show heights command format: heights\n");
         } else {
             printTreeHeights(root);
         }

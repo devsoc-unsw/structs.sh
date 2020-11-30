@@ -186,8 +186,8 @@ Graph processCommand(Graph g, char *command) {
         }
     } else if (strcmp(commandName, "euler") == 0) {
 		// Format: Euler <v1> <v2>
-        if (g -> nV >= 10) {
-            printf("This runs an O(n!) algorithm. This is gonna take years, sorry. Try a graph with fewer than 10 vertices\n");
+        if (g -> nV > 10) {
+            printf("This runs an O(n!) algorithm. This is gonna take years, sorry. Try a graph with 10 or fewer vertices\n");
         } else {
             switch (numArgs) {
                 case 2:

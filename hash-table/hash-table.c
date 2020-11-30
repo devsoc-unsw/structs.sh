@@ -73,7 +73,7 @@ void insertIntoHashTable(HashTable hashTable, Item newItem) {
     for (int i = 0; i < hashTable -> numSlots; i++) {
         // Empty position found
         if (hashTable -> items[hashIndex] == NULL) break;
-        if (equals(key, getKey(hashTable -> items[hashIndex]))) {
+        if (hashTable -> items[hashIndex] != DELETED && equals(key, getKey(hashTable -> items[hashIndex]))) {
             printColoured("red", " ➤ Item with key %s has already been inserted\n", key);
             return;
         }
