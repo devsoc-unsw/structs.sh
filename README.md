@@ -24,19 +24,19 @@ View my notes and practice material for this course <a href="https://tymotex.git
 2. `./util/scripts/make_recurse.sh` - recursively runs `make` on all subdirectories. This automatically compiles all the data structures
 3. `ruby terminal-menu.rb` - starts the selection menu where all the interactive visualisers can be accessed
 4. Optional alternative to 3 for command line usage:
-    - *Linked Lists*:
+    - __*Linked Lists*:__
       1. `cd linked-list/iterative-version` or `cd linked-list/recursive-version`
       2. `./testLinkedList <space separated integers>` - initially constructs a linked list from the supplied sequence of integers. Eg. `./testLinkedList 42 10 4 20`
-    - *Binary Search Tree*:
+    - __*Binary Search Tree*:__
       1. `cd binary-tree`
       2. `./testTree <space separated integers>` - initially constructs a tree from the supplied sequence of integers. Eg. `./testTree 6 3 10 1 4 8 12 7 9`
-    - *AVL Tree*:
+    - __*AVL Tree*:__
       1. `cd avl-tree`
       2. `./testTree <space separated integers>` - initially constructs an AVLtree from the supplied sequence of integers. Eg. `./testTree 1 2 3 4 5 6 7`
-    - *Splay Tree*:
+    - __*Splay Tree*:__
       1. `cd splay-tree`
       2. `./testTree <space separated integers>` - initially constructs a splay tree from the supplied sequence of integers. Eg. `./testTree 5 3 8 7 4`
-    - *Graphs*:
+    - __*Graphs*:__
       - Unweighted
         - Undirected
           1. `cd unweighted-graph`
@@ -51,19 +51,19 @@ View my notes and practice material for this course <a href="https://tymotex.git
         - Directed
           1. `cd weighted-digraph`
           2. `./testGraph <num vertices>|<input file>` - creates an empty graph with the specified number of vertices OR constructs a graph with edges specified in an input file. Eg. `./testGraph 10` or `./testGraph tests/1.in`
-    - *Hash Table:*
+    - __*Hash Table:*__
       1. `cd hash-table`
       2. `./testHash <size>` - creates an empty hash table with the specified size (otherwise defaults to 10 slots). Eg. `./testHash 12`
-    - *Heap:*
+    - __*Heap:*__
       1. `cd heap`
       2. `./testHeap <size>` - creates an empty hash table with the specified size (otherwise defaults to 10 slots). Eg. `./testHeap 12`
-    - *Sorting Algorithms:*
+    - __*Sorting Algorithms:*__
       1. `cd sorting-algos`
       2. Optional: generate sequences using: `./generate-tests -n <num random files> <list of sizes>`. Eg. `./generate-tests -n 5 10 100 1000`
       3. `./testSort <filename>` - takes in a file containing a sequence of numbers. Eg. `./testSort tests/random100_1` or `./testSort --silent tests/random_100_1`
 
 #### Web Deployment:
-Instructions for deploying the web-based version:
+Instructions for testing/deploying the web-based version:
 1. `sh startup.sh` - runs the terminal sharing web service. Access at `localhost:8080`
 2. `sh stop.sh` - kills the web terminal server process
 
@@ -136,7 +136,7 @@ Interactive weighted directed/undirected graph builder written in C. Implements 
 #### Digraph:
 <p float="left">
   <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/showcase/weighted-digraph-1.png" width="100%" />
-  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/showcase/weighted-digraph-2.png" width="100%" />
+  <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/showcase/weighted-digraph-2.png" width="42%" />
 </p>
 
 #### Undirected Graph:
