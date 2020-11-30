@@ -7,7 +7,6 @@ show_downloads: true
 # COMP2521 - Data Structures and Algorithms
 
 You may find the notes [here](https://www.notion.so/tymz/COMP2521-Data-Structures-and-Algorithms-708288ca10b541e5b21bd26a1179f52b) have better formatting. 
-Link to practice material [here](./practice-material/index.md).
 
 # Week 1: Algorithm Analysis
 
