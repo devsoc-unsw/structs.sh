@@ -271,9 +271,7 @@ TreeNode *delete(TreeNode *root, int targetValue) {
         else {
             TreeNode *minNode = getMinNode(root -> right);
             root -> value = minNode -> value;
-            free(minNode);
-            printf("Why is %d still here\n", minNode -> value);
-            // root -> right = delete(root -> right, minNode -> value);
+            root -> right = delete(root -> right, minNode -> value);
         }
     }
     return root;

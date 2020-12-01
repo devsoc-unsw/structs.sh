@@ -11,7 +11,6 @@
 
 #define MAX_COMMAND_SIZE    64
 #define MAX_LINE            256
-#define COMMANDS_HEADER     "Linked List Commands"
 #define COMMANDS_FILE       "commands.txt"
 
 /**
@@ -120,6 +119,15 @@ Node *processCommand(Node *head, char *command) {
         if (numArgs != 1) {
             printInvalidCommand("Show command format: show\n");
         } else {
+            printListState(head);
+        }
+    } else if (strcmp(commandName, "clear") == 0) {
+        // Format: clear
+        if (numArgs != 1) {
+            printInvalidCommand("Clear command format: clear\n");
+        } else {
+            freeList(head);
+            head = NULL;
             printListState(head);
         }
     } else if (strcmp(commandName, "exit") == 0) {

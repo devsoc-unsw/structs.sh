@@ -20,6 +20,9 @@ int getTreeHeight(TreeNode *root);                        // height
 TreeNode *deleteAVL(TreeNode *root, int targetValue);     // delete
 void freeTree(TreeNode *root);                            // clear
 
+// Note: command 'balance' and 'heights' just tweak existing commands
+// in tree-print.c 
+
 // Helper functions                    
 void adjustHeight(TreeNode *root);
 TreeNode *rebalanceAVL(TreeNode *root);

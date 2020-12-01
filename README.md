@@ -72,6 +72,8 @@ Instructions for testing/deploying the web-based version:
 ## Interactive Linked List
 An interactive linked list builder written in C. Supports standard operations (iteratively and recursively) such as insertion, deletion, searching, sorting and reversing. 
 
+Implementation for each command is viewable in `linked-list.c` and `linked-list.h` in the `linked-list/iterative-version` and `linked-list/recursive-version` directories.
+
 ### Example Usage:
 <p float="left">
   <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/showcase/linked-list-1.png" width="100%" />
@@ -82,6 +84,8 @@ An interactive linked list builder written in C. Supports standard operations (i
 ## Interactive Binary Search Tree
 
 An interactive binary search tree builder written in C. Supports standard operations such as insertion, deletion, rotation, and in-order, pre-order, post-order and level-order printing.
+
+Implementation for each command is viewable in `tree.c` and `tree.h` in the `binary-tree` directory.
 
 ### Example Usage:
 <p float="left">
@@ -94,6 +98,8 @@ An interactive binary search tree builder written in C. Supports standard operat
 ## Interactive AVL Tree
 An interactive AVL tree builder written in C. Supports AVL insertion, AVL deletion and commands to print the height of each node and the height balance of each node.
 
+Implementation for each command is viewable in `tree.c` and `tree.h` in the `avl-tree` directory.
+
 ### Example Usage:
 <p float="left">
   <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/showcase/avl-tree-1.png" width="100%" />
@@ -105,6 +111,8 @@ An interactive AVL tree builder written in C. Supports AVL insertion, AVL deleti
 ## Interactive Splay Tree
 An interactive splay tree builder written in C. Splay trees differ from regular BSTs in that searching and inserting a value involves bringing the target/inserted node to the root. 
 
+Implementation for each command is viewable in `tree.c` and `tree.h` in the `splay-tree` directory.
+
 ### Example Usage:
 <p float="left">
   <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/showcase/splay-tree-1.png" width="100%" />
@@ -114,6 +122,8 @@ An interactive splay tree builder written in C. Splay trees differ from regular 
 
 ## Interactive Unweighted Graphs
 Interactive unweighted directed/undirected graph builder written in C.
+
+Implementation for each command is viewable in `graph.c`, `graph.h`, `graph-algos.c` and `graph-algos.h` in the `unweighted-graph` and `unweighted-digraph` directories.
 
 ### Example Usage:
 #### Digraph:
@@ -132,6 +142,8 @@ Interactive unweighted directed/undirected graph builder written in C.
 ## Interactive Weighted Graphs
 Interactive weighted directed/undirected graph builder written in C. Implements Dijkstra's algorithm for determining a single source spanning tree.
 
+Implementation for each command is viewable in `graph.c`, `graph.h`, `graph-algos.c`, `graph-algos.h`, `dijkstra.c` and `dijkstra.h` in the `weighted-graph` and `weighted-digraph` directories.
+
 ### Example Usage:
 #### Digraph:
 <p float="left">
@@ -149,6 +161,8 @@ Interactive weighted directed/undirected graph builder written in C. Implements 
 ## Interactive Hash Table (Lookup Table)
 Interactive hash table written in C for storing key-value pairs.
 
+Implementation for each command is viewable in `hash-table.c` and `hash-table.h` in the `hash-table` directory.
+
 ### Example Usage:
 <p float="left">
   <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/showcase/hash-1.png" width="100%" />
@@ -158,6 +172,8 @@ Interactive hash table written in C for storing key-value pairs.
 
 ## Interactive Heap
 Interactive max heap table written in C.
+
+Implementation for each command is viewable in `heap.c` and `heap.h` in the `heap` directory.
 
 ### Example Usage:
 <p float="left">
@@ -169,11 +185,9 @@ Interactive max heap table written in C.
 ## Interactive Sorting Algorithms
 A collection of classic sort algorithms written in C. Timing data is shown for each sort algorithm used.
 
-
-
+Implementation for each command is viewable in `sort.c` and `sort.h` in the `sorting-algos` directory.
 
 ### Example Usage:
 <p float="left">
   <img src="https://raw.githubusercontent.com/Tymotex/DataStructures/master/Images/showcase/sort-1.png" width="100%" />
 </p>
-

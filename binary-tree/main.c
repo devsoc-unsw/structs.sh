@@ -4,9 +4,9 @@
 #include <stdbool.h>
 #include "tree-print.h"
 #include "tree.h"
-#include "../../util/menu-interface.h"
-#include "../../util/display/display.h"
-#include "../../util/utilities/processing.h"
+#include "../util/menu-interface.h"
+#include "../util/display/display.h"
+#include "../util/utilities/processing.h"
 
 #define MAX_COMMAND_SIZE 64
 
@@ -161,14 +161,14 @@ TreeNode *processCommand(TreeNode *root, char *command) {
         if (numArgs != 1) {
             printInvalidCommand("Count command format: count\n");
         } else {
-            printf(" ➤ Number of nodes in this tree: %d\n", count(root));
+            printf(" ➤ Number of nodes in this tree: %d\n", getNumNodes(root));
         }
     } else if (strcmp(commandName, "height") == 0) {
         // Format: height
         if (numArgs != 1) {
             printInvalidCommand("Height command format: height\n");
         } else {
-            printf(" ➤ Height of the tree is: %d\n", height(root));
+            printf(" ➤ Height of the tree is: %d\n", getTreeHeight(root));
         }
     } else if (strcmp(commandName, "depth") == 0) {
         // Format: depth <node>
@@ -176,7 +176,12 @@ TreeNode *processCommand(TreeNode *root, char *command) {
             printInvalidCommand("Depth command format: depth <node>\n");
         } else {
             int val = atoi(tokens[1]);
-            printf(" ➤ Depth of node %d in tree: %d\n", val, getNodeDepth(root, val));
+            int depth = getNodeDepth(root, val);
+            if (depth == -1) {
+                printColoured("red", " ➤ Node %d doesn't exist in the tree\n", val);
+            } else {
+                printColoured("cyan", " ➤ Depth of node %d in tree: %d\n", val, depth);
+            }
         }
     } else if (strcmp(commandName, "clear") == 0) {
         // Format: clear
@@ -200,12 +205,13 @@ TreeNode *processCommand(TreeNode *root, char *command) {
             printInvalidCommand("Exit command format: exit\n");
         } else {
             freeTree(root);
-            free(commandName);
+			freeTokens(tokens);
             returnToMenu();
         }
     } else {
         printInvalidCommand("Unknown command\n");
     }
+    freeTokens(tokens);
     return root;
 }
 

@@ -6,13 +6,6 @@
 #include "linked-list.h"
 #include "../../util/display/display.h"
 
-struct node {
-    int val;
-    struct node *next;
-};
-
-// ===== Inserting Nodes =====
-// Iteratively insert a node into a linked list
 Node *insert(Node *head, int value, int insertionIndex) {
     // Separately dealing with the case where we want to insert at the very front of the list:
     if (insertionIndex == 0) {
@@ -36,8 +29,6 @@ Node *insert(Node *head, int value, int insertionIndex) {
     }
 }
 
-// ===== Deleting Nodes =====
-// Iteratively delete a node with the given target value from the list
 Node *delete(Node *head, int targetValue) {
     Node *curr = head;
     Node *prev = NULL;
@@ -59,8 +50,6 @@ Node *delete(Node *head, int targetValue) {
     return head;
 }
 
-// ===== Determine Length =====
-// Iteratively count the nodes in a linked list
 int getLength(Node *head) {
     int count = 0;
     Node *curr = head;
@@ -71,9 +60,6 @@ int getLength(Node *head) {
     return count;
 }
 
-// ===== Search List =====
-// Iteratively search for a value in the list. Returns true if the value exists,
-// false otherwise
 bool search(Node *head, int targetValue) {
     Node *curr = head;
     while (curr != NULL) {
@@ -83,8 +69,6 @@ bool search(Node *head, int targetValue) {
     return false;
 }
 
-// ===== Reverse List =====
-// Iteratively reverse the list
 Node *reverse(Node *head) {
     Node *curr = head;
     Node *prevNode = NULL;
@@ -97,8 +81,6 @@ Node *reverse(Node *head) {
     return prevNode;
 }
 
-// ===== Sorting List =====
-// Iteratively sort the list
 Node *sortList(Node *head) {
     Node *newHead = NULL;
     int size = getLength(head);
@@ -117,8 +99,6 @@ Node *sortList(Node *head) {
     return newHead;
 }
 
-// ===== Free List =====
-// Iteratively free the nodes of the list
 void freeList(Node *head) {
     Node *curr = head;
     while (curr != NULL) {
@@ -128,8 +108,6 @@ void freeList(Node *head) {
     }
 }
 
-// ===== Traverse List =====
-// Iteratively traverse and print the list
 void traverseAndPrint(Node *head) {
     if (head == NULL) {
         printColoured("red", "(empty list)\n");
@@ -144,8 +122,6 @@ void traverseAndPrint(Node *head) {
     // Prints the ╳ unicode character
     printColoured("red", " %lc\n", (wint_t)0x2573);
 }
-
-// ===== Others Functions =====
 
 Node *append(Node *head, int newValue) {
     int size = getLength(head);

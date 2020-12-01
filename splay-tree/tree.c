@@ -229,6 +229,7 @@ TreeNode *deleteStandard(TreeNode *root, int targetValue) {
         root -> left = deleteStandard(root -> left, targetValue);
     } else if (targetValue > root -> value) { // value is in the right sub tree.
         root -> right = deleteStandard(root -> right, targetValue);
+
     } else {
         // Case 1: 0 children - Easiest case. Just delete and return
         if (root -> left == NULL && root -> right == NULL) {
@@ -254,6 +255,7 @@ TreeNode *deleteStandard(TreeNode *root, int targetValue) {
             root -> right = deleteStandard(root -> right, minNode -> value);
         }
     }
+    return root;
 }
 
 /**
