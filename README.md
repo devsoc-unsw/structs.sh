@@ -17,13 +17,17 @@ View my notes <a href="https://tymotex.github.io/DataStructures/">here</a>!
 - [Interactive Heap](#interactive-heap)
 - [Sorting Algorithms Benchmarker](#interactive-sort)
 
-## Setup Instructions
+## Web Terminal Setup Instructions
 
-### Setup Instructions:
+<img src="https://github.com/Tymotex/timz.dev/blob/master/public/project-images/tactile-ds-showcase.gif?raw=true"></img>
+
+### SetupI
 1. `git clone https://github.com/Tymotex/DataStructures.git && cd DataStructures` - downloads this repository and changes directory to the project root directory
-2. `./util/scripts/make_recurse.sh` - recursively runs `make` on all subdirectories. This automatically compiles all the data structures
-3. `ruby terminal-menu.rb` - starts the selection menu where all the interactive visualisers can be accessed
-4. Optional alternative to 3 for command line usage:
+2. <a href="https://computingforgeeks.com/how-to-share-your-linux-terminal-in-web-browser-with-gotty/">Install GoTTy</a>
+3. Run `bundle install` in the root directory to install Ruby dependencies. See the <a href="https://bundler.io/">ruby bundler</a>
+4. `./util/scripts/make_recurse.sh` - recursively runs `make` on all subdirectories. This automatically compiles all the data structures
+5. `ruby terminal-menu.rb` - starts the selection menu where all the interactive visualisers can be accessed
+6. Optional alternative to 3 for command line usage:
     - __*Linked Lists*:__
       1. `cd linked-list/iterative-version` or `cd linked-list/recursive-version`
       2. `./testLinkedList <space separated integers>` - initially constructs a linked list from the supplied sequence of integers. Eg. `./testLinkedList 42 10 4 20`
