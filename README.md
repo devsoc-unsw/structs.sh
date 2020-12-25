@@ -17,11 +17,11 @@ View my notes <a href="https://tymotex.github.io/DataStructures/">here</a>!
 - [Interactive Heap](#interactive-heap)
 - [Sorting Algorithms Benchmarker](#interactive-sort)
 
-## Web Terminal Setup Instructions
+## Setup Instructions
 
 <img src="https://github.com/Tymotex/timz.dev/blob/master/public/project-images/tactile-ds-showcase.gif?raw=true"></img>
 
-### SetupI
+### Setup:
 1. `git clone https://github.com/Tymotex/DataStructures.git && cd DataStructures` - downloads this repository and changes directory to the project root directory
 2. <a href="https://computingforgeeks.com/how-to-share-your-linux-terminal-in-web-browser-with-gotty/">Install GoTTy</a>
 3. Run `bundle install` in the root directory to install Ruby dependencies. See the <a href="https://bundler.io/">ruby bundler</a>
