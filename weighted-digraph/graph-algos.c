@@ -38,20 +38,20 @@ static void dfsRecursive(Graph g, Vertex currVertex, bool *visited) {
  * Breadth-first search. Uses a queue
  */
 void bfs(Graph g, Vertex v) {
-    showTraversalTrace(g, v);
-    printf("Traversal order (from left to right, layer by layer in the above stacktrace):\n");
+    printf("Traversal order:\n");
     bool *visited = newVisitedArray(g);
     Queue q = newQueue();
     QueueJoin(q, v);
+    visited[v] = true;
     while (!QueueIsEmpty(q)) {
         Vertex x = QueueLeave(q);
-        if (visited[x] != false) continue;
         if (x != v) printf(" → ");
         printf("%-2d", x);
-        visited[x] = true;
         for (Vertex y = 0; y < g -> nV; y++) {
-            if (!adjacent(g, x, y)) continue;
-            if (visited[y] == false) QueueJoin(q, y);
+            if (adjacent(g, x, y) && !visited[y]) {
+                visited[y] = true;
+                QueueJoin(q, y);
+            }
         }
     }
     printf("\n");

@@ -17,9 +17,16 @@ View my notes <a href="https://tymotex.github.io/DataStructures/">here</a>!
 - [Interactive Heap](#interactive-heap)
 - [Sorting Algorithms Benchmarker](#interactive-sort)
 
-## Setup Instructions
+## Demo
+
+Watch a video demo <strong><a href="https://www.youtube.com/watch?v=iSJL-9pe-PY">here</a></strong>.
+
+[![TactileDS demo video](https://img.youtube.com/vi/iSJL-9pe-PY/0.jpg)](https://www.youtube.com/watch?v=iSJL-9pe-PY)
 
 <img src="https://github.com/Tymotex/timz.dev/blob/master/public/project-images/tactile-ds-showcase.gif?raw=true"></img>
+
+## Setup Instructions
+
 
 ### Setup:
 1. `git clone https://github.com/Tymotex/DataStructures.git && cd DataStructures` - downloads this repository and changes directory to the project root directory
