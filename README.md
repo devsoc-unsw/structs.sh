@@ -27,14 +27,14 @@ Watch a video demo <strong><a href="https://www.youtube.com/watch?v=iSJL-9pe-PY"
 
 ## Setup Instructions
 
+---
 
-### Setup:
-1. `git clone https://github.com/Tymotex/DataStructures.git && cd DataStructures` - downloads this repository and changes directory to the project root directory
-2. <a href="https://computingforgeeks.com/how-to-share-your-linux-terminal-in-web-browser-with-gotty/">Install GoTTy</a>
-3. Run `bundle install` in the root directory to install Ruby dependencies. See the <a href="https://bundler.io/">ruby bundler</a>
-4. `./util/scripts/make_recurse.sh` - recursively runs `make` on all subdirectories. This automatically compiles all the data structures
-5. `ruby terminal-menu.rb` - starts the selection menu where all the interactive visualisers can be accessed
-6. Optional alternative to 3 for command line usage:
+<h3 style="color:blueviolet">SIMPLE SETUP FOR COMP2521:</h3>
+
+When connected to CSE servers, just copy and paste these commands onto the terminal and hit enter after pasting each one:
+1. `git clone https://github.com/Tymotex/DataStructures.git && cd DataStructures`
+2. `./util/scripts/make_recurse.sh`
+3. You now have access to all the interactive data structures. The commands to run each of them are:
     - __*Linked Lists*:__
       1. `cd linked-list/iterative-version` or `cd linked-list/recursive-version`
       2. `./testLinkedList <space separated integers>` - initially constructs a linked list from the supplied sequence of integers. Eg. `./testLinkedList 42 10 4 20`
@@ -72,6 +72,15 @@ Watch a video demo <strong><a href="https://www.youtube.com/watch?v=iSJL-9pe-PY"
       1. `cd sorting-algos`
       2. Optional: generate sequences using: `./generate-tests -n <num random files> <list of sizes>`. Eg. `./generate-tests -n 5 10 100 1000`
       3. `./testSort <filename>` - takes in a file containing a sequence of numbers. Eg. `./testSort tests/random100_1` or `./testSort --silent tests/random_100_1`
+
+---
+
+### Setup for Development:
+1. `git clone https://github.com/Tymotex/DataStructures.git && cd DataStructures` - downloads this repository and changes directory to the project root directory
+2. <a href="https://computingforgeeks.com/how-to-share-your-linux-terminal-in-web-browser-with-gotty/">Install GoTTy</a>
+3. Run `bundle install` in the root directory to install Ruby dependencies. See the <a href="https://bundler.io/">ruby bundler</a>
+4. `./util/scripts/make_recurse.sh` - recursively runs `make` on all subdirectories. This automatically compiles all the data structures
+5. `ruby terminal-menu.rb` - starts the selection menu where all the interactive visualisers can be accessed
 
 #### Web Deployment:
 Instructions for testing/deploying the web-based version:
