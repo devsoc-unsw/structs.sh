@@ -64,7 +64,7 @@ void transitiveClosure(Graph g);
 bool showHamiltonPath(Graph g, Vertex src, Vertex dest);
 
 /**
- * HAMILTON: hamilton circuit
+ * HAMILTON CIRCUIT: hamilton circuit
  * Shows a Hamiltonian circuit, if it exists. Returns true/false depending
  * on whether a Hamiltonian circuit exists
  */

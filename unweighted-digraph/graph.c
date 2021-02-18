@@ -16,43 +16,12 @@
 
 #define max(a, b) (a > b) ? a : b
 
-int validV(Graph g, Vertex v) {
-   return g != NULL && v >= 0 && v < g -> nV;
-}
-
-Edge makeEdge(Graph g, Vertex v, Vertex w) {
-   Edge e; 
-   e.v = v; 
-   e.w = w;
-   return e;
-}
-
-Edge getEdge(Graph g, Vertex v, Vertex w) {
-   return makeEdge(g, v, w);
-}
-
-bool edgeIsValid(Graph g, Edge e) {
-   if (!(validV(g, e.v) && validV(g, e.w))) {
-      printColoured("red", "Invalid edge: %d - %d\n", e.v, e.w);
-      return false;
-   }
-   return true;
-}
-
-Graph newGraph(int nV) {
-   assert(nV > 0);
-   int **e = malloc(nV * sizeof(int *));
-   assert(e != NULL);
-   for (int i = 0; i < nV; i++) {
-      e[i] = calloc(nV, sizeof(int));
-      assert(e[i] != NULL);
-   }
-   Graph g = malloc(sizeof(GraphRep));
-   assert(g != NULL);
-   g -> nV = nV;  g -> nE = 0;  g -> edges = e;
-   return g;
-}
-
+/**
+ * RANDOMISE: randomise dense|sparse
+ * Initialises and returns a new graph structure populated with
+ * random edges between edges. 
+ * Sparsity factor determines how sparse the graph connections are
+ */
 Graph newRandomGraph(int nV, int densityFactor) {
    Graph g = newGraph(nV);
    double spawnProbability = densityFactor / 100.0;
@@ -71,78 +40,14 @@ Graph newRandomGraph(int nV, int densityFactor) {
    return g;
 }
 
-bool adjacent(Graph g, Vertex v, Vertex w) {
-   if (validV(g, v) && validV(g, w)) {
-      return (g -> edges[v][w] != 0);
-   } else {
-      return false;
-   }
-}
-
-void insertEdge(Graph g, Edge e) {
-   assert(g != NULL);
-   if (!edgeIsValid(g, e)) return;
-   if (g -> edges[e.v][e.w]) {
-      printColoured("red", "Edge already exists: %d - %d\n", e.v, e.w);
-      return;
-   }
-   g -> edges[e.v][e.w] = 1;
-   g -> nE++;
-}
-
-Edge removeEdge(Graph g, Edge e) {
-   assert(g != NULL);
-   if (!edgeIsValid(g, e)) return e;
-   if (!(g -> edges[e.v][e.w])) {
-      printColoured("red", "Edge doesn't exist: %d - %d\n", e.v, e.w);
-      return e;
-   }
-   int oldWeight = g -> edges[e.v][e.w];
-   g -> edges[e.v][e.w] = 0;
-   g -> nE--;
-   return e;
-}
-
-int degreeOut(Graph g, Vertex src) {
-   int degree = 0;
-   for (Vertex v = 0; v < g -> nV; v++) {
-      if (adjacent(g, src, v)) {
-         degree++;
-      }
-   }
-   return degree;
-}
-
-int degreeIn(Graph g, Vertex src) {
-   int degree = 0;
-   for (Vertex v = 0; v < g -> nV; v++) {
-      if (adjacent(g, v, src)) {
-         degree++;
-      }
-   }
-   return degree;
-}
-
-int degree(Graph g, Vertex v) {
-   return degreeIn(g, v) + degreeOut(g, v);
-}
-
-int showDegree(Graph g, Vertex v) {
-   int in = degreeIn(g, v), out = degreeOut(g, v);
-   printf(" ➤ In degree:    %d\n", in);
-   printf(" ➤ Out degree:   %d\n", out);
-   printf(" ➤ Total degree: %d\n", in + out);
-   return in + out;
-}
-
-void dropGraph(Graph g) {
-   assert(g != NULL);
-   for (int i = 0; i < g -> nV; i++)
-      free(g -> edges[i]);
-   free(g -> edges);
-   free(g);
-}
-
+/**
+ * MATRIX:  matrix
+ * LIST:    list
+ * Shows the internal representation of the graph with the following 
+ * options:
+ *   1. ADJACENCY_MATRIX
+ *   2. ADJACENCY_LIST
+ */
 void showGraph(Graph g, int option) {
    assert(g != NULL);
    switch (option) {
@@ -204,6 +109,160 @@ static void showAdjacencyList(Graph g) {
    }
 }
 
+/**
+ * INSERT: insert <v1>-<v2>
+ * Inserts the given edge into the graph. Rejects invalid edges.
+ * Updates the internal representation of the graph
+ */
+void insertEdge(Graph g, Edge e) {
+   assert(g != NULL);
+   if (!edgeIsValid(g, e)) return;
+   if (g -> edges[e.v][e.w]) {
+      printColoured("red", "Edge already exists: %d - %d\n", e.v, e.w);
+      return;
+   }
+   g -> edges[e.v][e.w] = 1;
+   g -> nE++;
+}
+
+/**
+ * REMOVE: remove <v1>-<v2>
+ * Removes the given edge from the graph. Rejects invalid edges.
+ * Updates the internal representation of the graph.
+ * Returns the removed edge
+ */
+Edge removeEdge(Graph g, Edge e) {
+   assert(g != NULL);
+   if (!edgeIsValid(g, e)) return e;
+   if (!(g -> edges[e.v][e.w])) {
+      printColoured("red", "Edge doesn't exist: %d - %d\n", e.v, e.w);
+      return e;
+   }
+   int oldWeight = g -> edges[e.v][e.w];
+   g -> edges[e.v][e.w] = 0;
+   g -> nE--;
+   return e;
+}
+
+/**
+ * DEGREE: degree <v>
+ * Shows the degree of the vertex v, including the incoming and outgoing
+ * degree
+ */
+int showDegree(Graph g, Vertex v) {
+   int in = degreeIn(g, v), out = degreeOut(g, v);
+   printf(" ➤ In degree:    %d\n", in);
+   printf(" ➤ Out degree:   %d\n", out);
+   printf(" ➤ Total degree: %d\n", in + out);
+   return in + out;
+}
+
+int degree(Graph g, Vertex v) {
+   return degreeIn(g, v) + degreeOut(g, v);
+}
+
+int degreeOut(Graph g, Vertex src) {
+   int degree = 0;
+   for (Vertex v = 0; v < g -> nV; v++) {
+      if (adjacent(g, src, v)) {
+         degree++;
+      }
+   }
+   return degree;
+}
+
+int degreeIn(Graph g, Vertex src) {
+   int degree = 0;
+   for (Vertex v = 0; v < g -> nV; v++) {
+      if (adjacent(g, v, src)) {
+         degree++;
+      }
+   }
+   return degree;
+}
+
+/**
+ * CLEAR: clear
+ * Frees memory associated with the graph structure
+ */
+void dropGraph(Graph g) {
+   assert(g != NULL);
+   for (int i = 0; i < g -> nV; i++)
+      free(g -> edges[i]);
+   free(g -> edges);
+   free(g);
+}
+
+// ===== House Keeping Functions ======
+
+/**
+ * Checks vertex is valid within the given graph
+ */
+int validV(Graph g, Vertex v) {
+   return g != NULL && v >= 0 && v < g -> nV;
+}
+
+bool edgeIsValid(Graph g, Edge e) {
+   if (!(validV(g, e.v) && validV(g, e.w))) {
+      printColoured("red", "Invalid edge: %d - %d\n", e.v, e.w);
+      return false;
+   }
+   return true;
+}
+
+/**
+ * Creates an edge object between two vertices. Assumes that
+ * the vertices are valid
+ */
+Edge makeEdge(Graph g, Vertex v, Vertex w) {
+   Edge e; 
+   e.v = v; 
+   e.w = w;
+   return e;
+}
+
+/**
+ * Gets the edge object representing the connection between v and w
+ */
+Edge getEdge(Graph g, Vertex v, Vertex w) {
+   return makeEdge(g, v, w);
+}
+
+/**
+ * Initialises and returns a new graph structure with the given
+ * number of vertices
+ */
+Graph newGraph(int nV) {
+   assert(nV > 0);
+   int **e = malloc(nV * sizeof(int *));
+   assert(e != NULL);
+   for (int i = 0; i < nV; i++) {
+      e[i] = calloc(nV, sizeof(int));
+      assert(e[i] != NULL);
+   }
+   Graph g = malloc(sizeof(GraphRep));
+   assert(g != NULL);
+   g -> nV = nV;  g -> nE = 0;  g -> edges = e;
+   return g;
+}
+
+/**
+ * Determines whether 2 vertices are adjacent to each other
+ */
+bool adjacent(Graph g, Vertex v, Vertex w) {
+   if (validV(g, v) && validV(g, w)) {
+      return (g -> edges[v][w] != 0);
+   } else {
+      return false;
+   }
+}
+
+// ===== Utilities =====
+
+/**
+ * Gets the fattest possible cell spacing based on the maximum number
+ * of digits in the adjacency matrix weights or the number of vertices
+ */
 int getCellSpacing(int numVertices, int **adjMatrix) {
    int cellSpacing = 0;
    for (int row = 0; row < numVertices; row++) {
@@ -215,6 +274,10 @@ int getCellSpacing(int numVertices, int **adjMatrix) {
    return cellSpacing;
 }
 
+/**
+ * Gets a formatted string of connections from a src vertex. Eg.
+ * 2 -> 5 -> 10 -> 13
+ */
 char *getConnectionsString(Graph g, Vertex src) {
    char *connectionString = malloc(sizeof(char) * MAX_CONNECTION_STRING_LEN);
    strcpy(connectionString, "");

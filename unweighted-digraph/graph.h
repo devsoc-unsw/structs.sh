@@ -17,39 +17,12 @@ typedef unsigned int Vertex;
 typedef struct { Vertex v; Vertex w; } Edge;
 
 /**
- * Checks vertex is valid within the given graph
- */
-int validV(Graph g, Vertex v);
-
-/**
- * Creates an edge object between two vertices. Assumes that
- * the vertices are valid
- */
-Edge makeEdge(Graph g, Vertex v1, Vertex v2);
-
-/**
- * Gets the edge object representing the connection between v and w
- */
-Edge getEdge(Graph g, Vertex v, Vertex w);
-
-/**
- * Initialises and returns a new graph structure with the given
- * number of vertices
- */
-Graph newGraph(int nV);
-
-/**
  * RANDOMISE: randomise dense|sparse
  * Initialises and returns a new graph structure populated with
  * random edges between edges. 
  * Sparsity factor determines how sparse the graph connections are
  */
 Graph newRandomGraph(int nV, int densityFactor);  
-
-/**
- * Determines whether 2 vertices are adjacent to each other
- */
-bool adjacent(Graph g, Vertex v, Vertex w);
 
 /**
  * MATRIX:  matrix
@@ -96,7 +69,43 @@ int degreeOut(Graph g, Vertex src);
  */
 void dropGraph(Graph g);
 
-// Utilities:
+
+// ===== House Keeping Functions =====
+
+/**
+ * Checks vertex is valid within the given graph
+ */
+int validV(Graph g, Vertex v);
+
+/**
+ * Checks whether the given edge encodes a valid connection between the two vertices 
+ * for the given graph
+ */
+bool edgeIsValid(Graph g, Edge e);
+
+/**
+ * Creates an edge object between two vertices. Assumes that
+ * the vertices are valid
+ */
+Edge makeEdge(Graph g, Vertex v1, Vertex v2);
+
+/**
+ * Gets the edge object representing the connection between v and w
+ */
+Edge getEdge(Graph g, Vertex v, Vertex w);
+
+/**
+ * Initialises and returns a new graph structure with the given
+ * number of vertices
+ */
+Graph newGraph(int nV);
+
+/**
+ * Determines whether 2 vertices are adjacent to each other
+ */
+bool adjacent(Graph g, Vertex v, Vertex w);
+
+// ===== Utilities =====
 /**
  * Gets the fattest possible cell spacing based on the maximum number
  * of digits in the adjacency matrix weights or the number of vertices
@@ -108,6 +117,5 @@ int getCellSpacing(int numVertices, int **adjMatrix);
  * 2 -> 5 -> 10 -> 13
  */
 char *getConnectionsString(Graph g, Vertex src);
-
 
 #endif

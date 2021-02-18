@@ -10,8 +10,7 @@ struct treeNode {
 };
 typedef struct treeNode TreeNode;
 
-// Main operations
-TreeNode *newNode(int value);                             // COMMANDS:
+// Main operations                                        // COMMANDS:
 TreeNode *insert(TreeNode *root, int value);              // insert <nodes>
 void printInOrder(TreeNode *root);                        // inorder
 void printPreOrder(TreeNode *root);                       // preorder
@@ -28,6 +27,7 @@ TreeNode *delete(TreeNode *root, int targetValue);        // delete <nodes>
 void freeTree(TreeNode *root);                            // clear
 
 // Helper functions
+TreeNode *newNode(int value);                             
 TreeNode *getMinNode(TreeNode *root);                     
 static int max(int a, int b);
 

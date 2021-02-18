@@ -21,18 +21,6 @@ typedef struct HashTableRep *HashTable;
 // ===== Hash Table Operations =====
 
 /**
- * Mallocates and initialises a new empty hash table
- */
-HashTable newHashTable(int size);
-
-/**
- * HASH: hash <key>
- * Hash function that maps a given key string to an index into the hash table.
- * Output of the hash function depends on the size of the hash table
- */
-int hash(Key key, int size);
-
-/**
  * INSERT: insert <key> value
  * Inserts a new item into the hashtable 
  */
@@ -63,6 +51,19 @@ void deleteFromHashTable(HashTable hashTable, Key key);
  */
 void dropHashTable(HashTable hashTable);
 
+// ===== Hash Table Helpers =====
+
+/**
+ * Mallocates and initialises a new empty hash table
+ */
+HashTable newHashTable(int size);
+
+/**
+ * HASH: hash <key>
+ * Hash function that maps a given key string to an index into the hash table.
+ * Output of the hash function depends on the size of the hash table
+ */
+int hash(Key key, int size);
 
 // ===== Key and Item Operations =====
 
@@ -85,5 +86,10 @@ bool equals(Key firstKey, Key secondKey);
  * Displays the contents of the item
  */
 void showItem(Item item);
+
+/**
+ * Given the item, frees its associated memory
+ */
+void freeItem(Item item);
 
 #endif

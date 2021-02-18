@@ -15,6 +15,8 @@
 
 // ========== Dijkstra's Algorithm ==========
 /**
+ * DIJKSTRA: dijkstra <vertex>
+ * 
  * Dijkstra's algorithm for determining the single source spanning tree
  * of the input graph from the starting vertex
  * 
@@ -58,6 +60,8 @@ void dijkstra(Graph g, Vertex src) {
     }
     showShortestPaths(g, src, dist, pred);
 }
+
+// ===== Dijkstra helpers =====
 
 /**
  * Finds the next best candidate edge going out from each included 

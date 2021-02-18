@@ -8,18 +8,7 @@
 #define MAX_TREE_SIZE 64
 
 /**
- * Given a value, mallocs and returns a new tree node initialised with the
- * supplied value.
- */
-TreeNode *newNode(int value) {
-    TreeNode *newTreeNode = malloc(sizeof(TreeNode));
-    newTreeNode -> value = value;
-    newTreeNode -> left = NULL;
-    newTreeNode -> right = NULL;
-    return newTreeNode;
-}
-
-/**
+ * INSERT: insert <nodes>
  * Given a tree and a value, inserts that value inside the tree
  * and returns the tree with the value inserted
  */
@@ -44,6 +33,7 @@ TreeNode *insert(TreeNode *root, int value) {
 }
 
 /**
+ * INORDER: inorder
  * Inorder printing: left, root, right
  */
 void printInOrder(TreeNode *root) {
@@ -57,6 +47,7 @@ void printInOrder(TreeNode *root) {
 }
 
 /**
+ * PREORDER: preorder
  * Preorder printing: root, left, right
  */
 void printPreOrder(TreeNode *root) {
@@ -70,6 +61,7 @@ void printPreOrder(TreeNode *root) {
 }
 
 /**
+ * POSTORDER: postorder
  * Postorder printing: left, right, root
  */
 void printPostOrder(TreeNode *root) {
@@ -83,6 +75,7 @@ void printPostOrder(TreeNode *root) {
 }
 
 /**
+ * LEVELORDER: levelorder
  * Levelorder printing prints level-by-level using the recursive
  * printGivenLevel function. This could also be done iteratively
  * with the help of a queue but recursion is nicer
@@ -97,6 +90,7 @@ void printLevelOrder(TreeNode *root) {
 }
 
 /**
+ * LEVEL: level <num>
  * Given the tree and the target level, prints the nodes on that level
  */
 void printGivenLevel(TreeNode *root, int level) { 
@@ -109,6 +103,7 @@ void printGivenLevel(TreeNode *root, int level) {
 } 
 
 /**
+ * EXISTS: exists <num>
  * Given a tree and a target value, returns true if that target value
  * exists in the tree, otherwise returns false
  */
@@ -128,6 +123,7 @@ bool existsInTree(TreeNode *root, int targetValue) {
 }
 
 /**
+ * COUNT: count
  * Given a tree, counts the number of nodes in the tree and returns it.
  */
 int getNumNodes(TreeNode *root) {
@@ -135,6 +131,7 @@ int getNumNodes(TreeNode *root) {
 }
 
 /**
+ * HEIGHT: height
  * Given a tree, computes and returns the height of that tree
  */
 int getTreeHeight(TreeNode *root) {
@@ -142,6 +139,7 @@ int getTreeHeight(TreeNode *root) {
 }
 
 /**
+ * DEPTH: depth <node>
  * Given a tree and a target value, finds the node with that target value
  * and returns the level it was found in. 
  * A tree with a single level is considered to have a height of 1. 
@@ -162,6 +160,7 @@ int getNodeDepth(TreeNode *root, int targetValue) {
 }
 
 /**
+ * LEFT: left <node>
  * Executes a left rotation on the node with the given target value.
  * Returns the resultant tree.
  */
@@ -196,6 +195,7 @@ TreeNode *leftRotate(TreeNode *root, int targetValue) {
 }
 
 /**
+ * RIGHT: right <node>
  * Executes a right rotation on the node with the given target value.
  * Returns the resultant tree.
  */
@@ -230,6 +230,7 @@ TreeNode *rightRotate(TreeNode *root, int targetValue) {
 }
 
 /**
+ * DELETE: delete <nodes>
  * Given a tree and a target value, finds the node containing that
  * target value and deletes it from the tree, if it exists. All 4
  * cases are handled as follows:
@@ -278,19 +279,7 @@ TreeNode *delete(TreeNode *root, int targetValue) {
 }
 
 /**
- * Given a tree, returns the node with the minimal value. This 
- * is just going to be the leftmost node.
- */
-TreeNode *getMinNode(TreeNode *root) {
-    if (root == NULL) {
-        return NULL;
-    } else if (root -> left == NULL) {
-        return root;
-    }
-    return getMinNode(root -> left);
-}
-
-/**
+ * CLEAR: clear
  * Given a tree, recursively frees every node.
  */
 void freeTree(TreeNode *root) {
@@ -303,6 +292,31 @@ void freeTree(TreeNode *root) {
 }
 
 // ===== Private Helper Functions =====
+
+/**
+ * Given a value, mallocs and returns a new tree node initialised with the
+ * supplied value.
+ */
+TreeNode *newNode(int value) {
+    TreeNode *newTreeNode = malloc(sizeof(TreeNode));
+    newTreeNode -> value = value;
+    newTreeNode -> left = NULL;
+    newTreeNode -> right = NULL;
+    return newTreeNode;
+}
+
+/**
+ * Given a tree, returns the node with the minimal value. This 
+ * is just going to be the leftmost node.
+ */
+TreeNode *getMinNode(TreeNode *root) {
+    if (root == NULL) {
+        return NULL;
+    } else if (root -> left == NULL) {
+        return root;
+    }
+    return getMinNode(root -> left);
+}
 
 /**
  * Given two numbers a and b, returns the one that's larger.

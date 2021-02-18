@@ -10,20 +10,11 @@
 #define LOCAL_STATE_HEADER     "Performing Localised Tree Fix"
 #define LOCAL_IMBALANCE_HEADER "Detected Imbalance"
 
-/**
- * Given a value, mallocs and returns a new tree node initialised with the
- * supplied value.
- */
-TreeNode *newNode(int value) {
-    TreeNode *newTreeNode = malloc(sizeof(TreeNode));
-    newTreeNode -> value = value;
-    newTreeNode -> height = 1;
-    newTreeNode -> left = NULL;
-    newTreeNode -> right = NULL;
-    return newTreeNode;
-}
+// Note: commands BALANCE and HEIGHTS just tweak existing commands
+// in tree-print.c 
 
 /**
+ * INSERT: insert <values>
  * Given an AVL tree and a value, creates a new node with that
  * value and inserts it into the tree, doing rebalances if 
  * necessary.  
@@ -58,71 +49,7 @@ TreeNode *insertAVL(TreeNode *root, int value) {
 }
 
 /**
- * Rebalancing a height-imbalanced node in an AVL tree.
- * 
- * Height imbalances in AVL trees occur in 4 cases:
- *   Case 1. Left-left case   - perform right rotation on current node
- *   Case 2. Left-right case  - perform left rotation on left child, 
- *                              then right rotation on current node
- *   Case 3. Right-left case  - perform right rotation on right child, 
- *                              then left rotation on current node
- *   Case 4. Right-right case - perform left rotation on current node
- */
-TreeNode *rebalanceAVL(TreeNode *root) {
-    int lh = getHeight(root -> left);
-    int rh = getHeight(root -> right);
-    if (lh - rh > 1) {
-        // Left subtree has 2 more levels than the right subtree. Need to do a right rotation
-        printf(" ➤ Imbalance found: left subtree of %d is taller than the right subtree by 2 levels\n", root -> value);
-        printCurrTreeState(root, LOCAL_IMBALANCE_HEADER);
-        TreeNode *leftChild = root -> left;
-        int leftLeftHeight = getHeight(leftChild -> left);
-        int leftRightHeight = getHeight(leftChild -> right);
-        if (leftRightHeight > leftLeftHeight) {
-            // Need to do a left rotation on leftChild first
-            printf(" ➤ Doing left rotation on node containing %d\n", leftChild -> value);
-            root -> left = leftRotate(leftChild, leftChild -> value);
-            printCurrTreeState(root, LOCAL_STATE_HEADER);
-        }
-        printf(" ➤ Doing right rotation on node containing %d\n", root -> value);
-        root = rightRotate(root, root -> value);
-        printCurrTreeState(root, LOCAL_STATE_HEADER);
-    }
-    if (rh - lh > 1) {
-        // Right subtree has 2 more levels than the left subtree. Need to do a left rotation
-        printf(" ➤ Imbalance found: right subtree of %d is taller than the left subtree by 2 levels\n", root -> value);
-        printCurrTreeState(root, LOCAL_IMBALANCE_HEADER);
-        TreeNode *rightChild = root -> right;
-        int rightLeftHeight = getHeight(rightChild -> left);
-        int rightRightHeight = getHeight(rightChild -> right);
-        if (rightLeftHeight > rightRightHeight) {
-            // Need to do a right rotation on rightChild first
-            printf(" ➤ Doing right rotation on node containing %d\n", rightChild -> value);
-            root -> right = rightRotate(rightChild, rightChild -> value);
-            printCurrTreeState(root, LOCAL_STATE_HEADER);
-        }
-        printf(" ➤ Doing left rotation on node containing %d\n", root -> value);
-        root = leftRotate(root, root -> value);
-        printCurrTreeState(root, LOCAL_STATE_HEADER);
-    }
-    return root;
-}
-
-/**
- * Given a node in a tree, correctly sets its height field. 
- */
-void adjustHeight(TreeNode *root) {
-    root -> height = 1 + maxHeight(root -> left, root -> right);
-}
-
-/**
- * Given a tree, computes and returns the height of that tree
- */
-int getTreeHeight(TreeNode *root) {
-    return (root == NULL) ? 0 : 1 + max(getTreeHeight(root -> left), getTreeHeight(root -> right));
-}
-
-/**
+ * LEFT: left <node>
  * Executes a left rotation on the node with the given target value.
  * Returns the resultant tree.
  */
@@ -159,6 +86,7 @@ TreeNode *leftRotate(TreeNode *root, int targetValue) {
 }
 
 /**
+ * RIGHT: right <node>
  * Executes a right rotation on the node with the given target value.
  * Returns the resultant tree.
  */
@@ -195,6 +123,15 @@ TreeNode *rightRotate(TreeNode *root, int targetValue) {
 }
 
 /**
+ * HEIGHT: height
+ * Given a tree, computes and returns the height of that tree
+ */
+int getTreeHeight(TreeNode *root) {
+    return (root == NULL) ? 0 : 1 + max(getTreeHeight(root -> left), getTreeHeight(root -> right));
+}
+
+/**
+ * DELETE: delete <values>
  * AVL deletion works by first performing a standard BST deletion,
  * then adjusting the height of the current node, then rebalancing
  * the current node if it is height-imbalanced.
@@ -256,6 +193,7 @@ TreeNode *deleteAVL(TreeNode *root, int targetValue) {
 }
 
 /**
+ * CLEAR: clear
  * Given a tree, recursively frees every node.
  */
 void freeTree(TreeNode *root) {
@@ -268,6 +206,78 @@ void freeTree(TreeNode *root) {
 }
 
 // ===== Private Helper Functions =====
+
+/**
+ * Given a value, mallocs and returns a new tree node initialised with the
+ * supplied value.
+ */
+TreeNode *newNode(int value) {
+    TreeNode *newTreeNode = malloc(sizeof(TreeNode));
+    newTreeNode -> value = value;
+    newTreeNode -> height = 1;
+    newTreeNode -> left = NULL;
+    newTreeNode -> right = NULL;
+    return newTreeNode;
+}
+
+/**
+ * Given a node in a tree, correctly sets its height field. 
+ */
+void adjustHeight(TreeNode *root) {
+    root -> height = 1 + maxHeight(root -> left, root -> right);
+}
+
+/**
+ * Rebalancing a height-imbalanced node in an AVL tree.
+ * 
+ * Height imbalances in AVL trees occur in 4 cases:
+ *   Case 1. Left-left case   - perform right rotation on current node
+ *   Case 2. Left-right case  - perform left rotation on left child, 
+ *                              then right rotation on current node
+ *   Case 3. Right-left case  - perform right rotation on right child, 
+ *                              then left rotation on current node
+ *   Case 4. Right-right case - perform left rotation on current node
+ */
+TreeNode *rebalanceAVL(TreeNode *root) {
+    int lh = getHeight(root -> left);
+    int rh = getHeight(root -> right);
+    if (lh - rh > 1) {
+        // Left subtree has 2 more levels than the right subtree. Need to do a right rotation
+        printf(" ➤ Imbalance found: left subtree of %d is taller than the right subtree by 2 levels\n", root -> value);
+        printCurrTreeState(root, LOCAL_IMBALANCE_HEADER);
+        TreeNode *leftChild = root -> left;
+        int leftLeftHeight = getHeight(leftChild -> left);
+        int leftRightHeight = getHeight(leftChild -> right);
+        if (leftRightHeight > leftLeftHeight) {
+            // Need to do a left rotation on leftChild first
+            printf(" ➤ Doing left rotation on node containing %d\n", leftChild -> value);
+            root -> left = leftRotate(leftChild, leftChild -> value);
+            printCurrTreeState(root, LOCAL_STATE_HEADER);
+        }
+        printf(" ➤ Doing right rotation on node containing %d\n", root -> value);
+        root = rightRotate(root, root -> value);
+        printCurrTreeState(root, LOCAL_STATE_HEADER);
+    }
+    if (rh - lh > 1) {
+        // Right subtree has 2 more levels than the left subtree. Need to do a left rotation
+        printf(" ➤ Imbalance found: right subtree of %d is taller than the left subtree by 2 levels\n", root -> value);
+        printCurrTreeState(root, LOCAL_IMBALANCE_HEADER);
+        TreeNode *rightChild = root -> right;
+        int rightLeftHeight = getHeight(rightChild -> left);
+        int rightRightHeight = getHeight(rightChild -> right);
+        if (rightLeftHeight > rightRightHeight) {
+            // Need to do a right rotation on rightChild first
+            printf(" ➤ Doing right rotation on node containing %d\n", rightChild -> value);
+            root -> right = rightRotate(rightChild, rightChild -> value);
+            printCurrTreeState(root, LOCAL_STATE_HEADER);
+        }
+        printf(" ➤ Doing left rotation on node containing %d\n", root -> value);
+        root = leftRotate(root, root -> value);
+        printCurrTreeState(root, LOCAL_STATE_HEADER);
+    }
+    return root;
+}
+
 /**
  * Given a tree, returns the node with the minimal value. This 
  * is just going to be the leftmost node.

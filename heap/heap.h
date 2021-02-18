@@ -19,11 +19,6 @@ struct HeapRep {
 typedef struct HeapRep *Heap;
 
 /**
- * Create a new heap with the specified number of slots
- */
-Heap newHeap(int size);
-
-/**
  * INSERT: insert <d>
  * Given a heap, inserts a new item into that heap into the correct
  * position.
@@ -51,8 +46,12 @@ void dropHeap(Heap heap);
 
 // Note: the 'popall' command has no implementation. It's just a repeated call to popHeap
 
-
 // ===== Other Helper Functions =====
+
+/**
+ * Create a new heap with the specified number of slots
+ */
+Heap newHeap(int size);
 
 /**
  * Returns true/false depending on whether the heap is empty or not

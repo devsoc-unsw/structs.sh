@@ -24,44 +24,12 @@ typedef struct {
 } Edge;
 
 /**
- * Checks vertex is valid within the given graph
- */
-int validV(Graph g, Vertex v);
-
-/**
- * Creates an edge object between two vertices. Assumes that
- * the vertices are valid
- */
-Edge makeEdge(Graph g, Vertex v, Vertex w, int weight);
-
-/**
- * Gets the edge object representing the connection between v and w
- */
-Edge getEdge(Graph g, Vertex v, Vertex w);
-
-/**
- * Initialises and returns a new graph structure with the given
- * number of vertices
- */
-Graph newGraph(int nV);
-
-/**
  * RANDOMISE: randomise dense|sparse
  * Initialises and returns a new graph structure populated with
  * random edges between edges. 
  * Sparsity factor determines how sparse the graph connections are
  */
 Graph newRandomGraph(int nV, int densityFactor, int maxWeight);  
-
-/**
- * Determines whether 2 vertices are adjacent to each other
- */
-bool adjacent(Graph g, Vertex v, Vertex w);
-
-/**
- * Returns the weight of the edge from v to w
- */
-int getWeight(Graph g, Vertex v, Vertex w);
 
 /**
  * MATRIX:  matrix
@@ -108,7 +76,41 @@ int degreeOut(Graph g, Vertex src);
  */
 void dropGraph(Graph g);
 
-// Utilities:
+// ===== House Keeping Functions =====
+
+/**
+ * Checks vertex is valid within the given graph
+ */
+int validV(Graph g, Vertex v);
+
+/**
+ * Creates an edge object between two vertices. Assumes that
+ * the vertices are valid
+ */
+Edge makeEdge(Graph g, Vertex v, Vertex w, int weight);
+
+/**
+ * Gets the edge object representing the connection between v and w
+ */
+Edge getEdge(Graph g, Vertex v, Vertex w);
+
+/**
+ * Initialises and returns a new graph structure with the given
+ * number of vertices
+ */
+Graph newGraph(int nV);
+
+/**
+ * Determines whether 2 vertices are adjacent to each other
+ */
+bool adjacent(Graph g, Vertex v, Vertex w);
+
+/**
+ * Returns the weight of the edge from v to w
+ */
+int getWeight(Graph g, Vertex v, Vertex w);
+
+// ===== Utilities =====
 /**
  * Gets the fattest possible cell spacing based on the maximum number
  * of digits in the adjacency matrix weights or the number of vertices

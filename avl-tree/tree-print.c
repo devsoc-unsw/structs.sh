@@ -9,7 +9,8 @@
 #define MAX_HEIGHT 1000
 #define INFINITY (1<<20)
 
-// ===== Globals =====
+// |===== Globals =====|
+
 int lprofile[MAX_HEIGHT];
 int rprofile[MAX_HEIGHT];
 // Adjust gap between left and right nodes
@@ -19,20 +20,19 @@ int gap = 3;
  * This is the x coordinate of the next char printed
  */
 int printNext;  
-// ===================    
+
+// |===================|    
 
 struct asciiNode {
     AsciiNode *left;
     AsciiNode *right;
-    int        edgeLength;    // Length of the edge from this asciiNode to its children
+    int        edgeLength;     // Length of the edge from this asciiNode to its children
     int        height;      
     int        lablen;
     int        parent_dir;     // -1=I am left, 0=I am root, 1=right   
     char       label[11];      // Max supported unit32 in dec, 10 digits max
 };
 typedef struct asciiNode AsciiNode;
-
-// ===================
 
 int MIN (int X, int Y) {
     return ((X) < (Y)) ? (X) : (Y);
@@ -41,8 +41,6 @@ int MIN (int X, int Y) {
 int MAX (int X, int Y) {
     return ((X) > (Y)) ? (X) : (Y);
 }
-
-// ===================
 
 /**
  * Recursively build the ascii tree. See wrapper function
