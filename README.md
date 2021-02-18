@@ -83,7 +83,7 @@ When connected to CSE servers, just copy and paste these commands onto the termi
 
 1. `git clone https://github.com/Tymotex/DataStructures.git && cd DataStructures` - downloads this repository and changes directory to the project root directory
 2. <a href="https://computingforgeeks.com/how-to-share-your-linux-terminal-in-web-browser-with-gotty/">Install GoTTy</a>
-3. Run `bundle install` in the root directory to install Ruby dependencies. See the <a href="https://bundler.io/">ruby bundler</a>
+3. Run `bundle install` in the root directory to install Ruby dependencies. See the <a href="https://bundler.io/">ruby bundler</a>. This project uses Ruby v2.7.0
 4. `./util/scripts/make_recurse.sh` - recursively runs `make` on all subdirectories. This automatically compiles all the data structures
 5. `ruby terminal-menu.rb` - starts the selection menu where all the interactive visualisers can be accessed
 
@@ -91,8 +91,8 @@ When connected to CSE servers, just copy and paste these commands onto the termi
 
 Instructions for testing/deploying the web-based version:
 
-1. `sh startup.sh` - runs the terminal sharing web service. Access at `localhost:8080`
-2. `sh stop.sh` - kills the web terminal server process
+1. `sh server.sh --start` - runs the terminal sharing web service. Access at `localhost:8080`. Use `nohup sh server.sh &` to start the server as a background process
+2. `sh server.sh --stop` - kills the web terminal server process
 
 <a name="interactive-linked-list">
 

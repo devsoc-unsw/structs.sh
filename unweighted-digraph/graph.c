@@ -202,6 +202,10 @@ int validV(Graph g, Vertex v) {
    return g != NULL && v >= 0 && v < g -> nV;
 }
 
+/**
+ * Checks whether the given edge encodes a valid connection between the two vertices 
+ * for the given graph
+ */
 bool edgeIsValid(Graph g, Edge e) {
    if (!(validV(g, e.v) && validV(g, e.w))) {
       printColoured("red", "Invalid edge: %d - %d\n", e.v, e.w);

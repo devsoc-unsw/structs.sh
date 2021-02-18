@@ -28,6 +28,13 @@ typedef struct {
  */
 int validV(Graph g, Vertex v);
 
+
+/**
+ * Checks whether the given edge encodes a valid connection between the two vertices 
+ * for the given graph
+ */
+bool edgeIsValid(Graph g, Edge e);
+
 /**
  * Creates an edge object between two vertices. Assumes that
  * the vertices are valid
