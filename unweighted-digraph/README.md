@@ -1,4 +1,4 @@
-# Undirected Unweighted Graph:
+# Unweighted Digraph:
 
 In the `tests`, directory
 

@@ -1,4 +1,4 @@
-# Undirected Unweighted Graph:
+# Weighted Graph:
 
 In the `tests`, directory
 
