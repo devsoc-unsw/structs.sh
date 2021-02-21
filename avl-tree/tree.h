@@ -11,16 +11,19 @@ struct treeNode {
 };
 typedef struct treeNode TreeNode;
 
-// Main operations
-TreeNode *newNode(int value);                             // COMMANDS:
-TreeNode *insertAVL(TreeNode *root, int value);           // insert
+// Main operations:                                       // COMMANDS:
+TreeNode *insertAVL(TreeNode *root, int value);           // insert <values>
 TreeNode *leftRotate(TreeNode *root, int targetValue);    // left
 TreeNode *rightRotate(TreeNode *root, int targetValue);   // right
 int getTreeHeight(TreeNode *root);                        // height
 TreeNode *deleteAVL(TreeNode *root, int targetValue);     // delete
 void freeTree(TreeNode *root);                            // clear
 
+// Note: command 'balance' and 'heights' just tweak existing commands
+// in tree-print.c 
+
 // Helper functions                    
+TreeNode *newNode(int value);                             
 void adjustHeight(TreeNode *root);
 TreeNode *rebalanceAVL(TreeNode *root);
 TreeNode *getMinNode(TreeNode *root); 

@@ -8,12 +8,15 @@
 #include "../graph-helpers/queue/Queue.h"
 #include "../graph-helpers/stack/Stack.h"
 #include "../graph-helpers/priority-queue/PQueue.h"
+#include "../util/display/display.h"
 
 #define NO_PRED   -1
 #define NO_VERTEX -1
 
 // ========== Dijkstra's Algorithm ==========
 /**
+ * DIJKSTRA: dijkstra <vertex>
+ * 
  * Dijkstra's algorithm for determining the single source spanning tree
  * of the input graph from the starting vertex
  * 
@@ -57,6 +60,8 @@ void dijkstra(Graph g, Vertex src) {
     }
     showShortestPaths(g, src, dist, pred);
 }
+
+// ===== Dijkstra helpers =====
 
 /**
  * Finds the next best candidate edge going out from each included 

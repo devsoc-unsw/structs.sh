@@ -77,21 +77,24 @@ bool showHamiltonCircuit(Graph g);
 static bool traceHamiltonPath(Graph g, Vertex src, Vertex dest, int distanceRemaining, bool *visited, Vertex *pred);
 
 /**
- * 
+ * EULER: euler <v1> <v2>
+ * Determines if there exists an Euler path between v1 and v2
  */
 bool showEulerPath(Graph g, Vertex src, Vertex dest);
 
 /**
- * 
+ * EULER CIRCUIT: euler circuit 
+ * Determines whether an Euler circuit exists in the graph
  */
 bool showEulerCircuit(Graph g);
 
 /**
- * 
+ * Traces the Euler path between src and dest, if it exists. This is a helper function for the
+ * showEulerPath and showEulerCircuit functions
  */
 static bool traceEulerPath(Graph g, Vertex src, Vertex dest, int edgesRemaining, bool *visited, Stack pathStack);
 
-// ===== Helper Functions =====
+// ===== Other Helper Functions =====
 
 /**
  * Mallocates a bool array for tracking whether each node of the graph

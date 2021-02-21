@@ -7,4 +7,5 @@ length                   - computes the length of the list
 reverse                  - reverses the current list
 sort                     - sorts the list in ascending order
 show                     - shows the list
+clear                    - deletes all values form the list
 exit                     - quit program

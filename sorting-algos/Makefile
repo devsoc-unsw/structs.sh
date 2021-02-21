@@ -1,5 +1,5 @@
-testSort: main.o sort.o colours.o heap.o menu-interface.o display.o processing.o
-	gcc  -o testSort main.o sort.o colours.o heap.o menu-interface.o display.o processing.o
+testSort: main.o sort.o heap.o ../util/menu-interface.o ../util/display/display.o ../util/utilities/processing.o
+	gcc  -o testSort main.o sort.o heap.o ../util/menu-interface.o ../util/display/display.o ../util/utilities/processing.o
 
 # Note that gcc's -c option compiles and creates the .o file
 main.o: main.c
@@ -10,9 +10,6 @@ sort.o: sort.c
 
 heap.o: ../heap/heap.c ../heap/heap.h
 	gcc -c ../heap/heap.c
-
-colours.o: ../util/colours.c ../util/colours.h
-	gcc -c ../util/colours.c
 
 processing.o: ../util/utilities/processing.c ../util/utilities/processing.h
 	gcc -c ../util/utilities/processing.c

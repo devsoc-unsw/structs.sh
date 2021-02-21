@@ -28,6 +28,13 @@ typedef struct {
  */
 int validV(Graph g, Vertex v);
 
+
+/**
+ * Checks whether the given edge encodes a valid connection between the two vertices 
+ * for the given graph
+ */
+bool edgeIsValid(Graph g, Edge e);
+
 /**
  * Creates an edge object between two vertices. Assumes that
  * the vertices are valid
@@ -51,7 +58,7 @@ Graph newGraph(int nV);
  * random edges between edges. 
  * Sparsity factor determines how sparse the graph connections are
  */
-Graph newRandomGraph(int nV, int sparsityFactor);  
+Graph newRandomGraph(int nV, int densityFactor, int maxWeight);  
 
 /**
  * Determines whether 2 vertices are adjacent to each other

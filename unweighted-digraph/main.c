@@ -153,8 +153,8 @@ Graph processCommand(Graph g, char *command) {
         }
     } else if (strcmp(commandName, "hamilton") == 0) {
 		// Format: hamilton <v1> <v2>
-        if (g -> nV >= 10) {
-            printf("This runs an O(n!) algorithm. This is gonna take years, sorry. Try a graph with fewer than 10 vertices\n");
+        if (g -> nV > 10) {
+            printf("This runs an O(n!) algorithm. This is gonna take years, sorry. Try a graph with 10 or fewer vertices\n");
         } else {
             switch (numArgs) {
                 case 2:
@@ -186,8 +186,8 @@ Graph processCommand(Graph g, char *command) {
         }
     } else if (strcmp(commandName, "euler") == 0) {
 		// Format: Euler <v1> <v2>
-        if (g -> nV >= 10) {
-            printf("This runs an O(n!) algorithm. This is gonna take years, sorry. Try a graph with fewer than 10 vertices\n");
+        if (g -> nV > 10) {
+            printf("This runs an O(n!) algorithm. This is gonna take years, sorry. Try a graph with 10 or fewer vertices\n");
         } else {
             switch (numArgs) {
                 case 2:
@@ -225,23 +225,19 @@ Graph processCommand(Graph g, char *command) {
 			transitiveClosure(g);
         }
     } else if (strcmp(commandName, "randomise") == 0) {
-		// Format: randomise dense|sparse
-        if (numArgs != 2) {
-            printInvalidCommand("Randomise command format: randomise dense|sparse\n");
+		// Format: randomise <density>
+        if (numArgs != 2 || !isNumeric(tokens[1])) {
+            printInvalidCommand("Randomise command format: randomise <density>\n");
         } else {
             int numVertices = g -> nV;
-            if (strcmp(tokens[1], "dense") == 0) {
-                printf(" ➤ Initialising dense graph\n");
+            int density = atoi(tokens[1]);
+            if (density < 0 || density > 100) {
+                printInvalidCommand("density factor must be between 0 and 100\n");
+            } else { 
+                printf(" ➤ Initialising randomised graph\n");
                 dropGraph(g);
-                g = newRandomGraph(numVertices, 2);
+                g = newRandomGraph(numVertices, density);
                 showGraph(g, ADJACENCY_MATRIX);
-            } else if (strcmp(tokens[1], "sparse") == 0) {
-                printf(" ➤ Initialising sparse graph\n");
-                dropGraph(g);
-                g = newRandomGraph(numVertices, 5);
-                showGraph(g, ADJACENCY_MATRIX);
-            } else {
-                printInvalidCommand("Randomise command format: randomise dense|sparse\n");
             }
         }
     } else if (strcmp(commandName, "clear") == 0) {

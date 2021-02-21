@@ -1,9 +1,9 @@
-testTree: testTree.o tree.o tree-print.o menu-interface.o display.o processing.o
-	gcc  -o testTree testTree.o tree.o tree-print.o menu-interface.o display.o processing.o
+testTree: main.o tree.o tree-print.o ../util/menu-interface.o ../util/display/display.o ../util/utilities/processing.o
+	gcc  -o testTree main.o tree.o tree-print.o ../util/menu-interface.o ../util/display/display.o ../util/utilities/processing.o
 
 # Note that gcc's -c option compiles and creates the .o file
-testTree.o: testTree.c
-	gcc -c testTree.c     
+main.o: main.c
+	gcc -c main.c     
 
 tree.o: tree.c tree.h
 	gcc -c tree.c

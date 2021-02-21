@@ -314,7 +314,7 @@ int main(int argc, char *argv[]) {
     printCommands();
     printHorizontalRule();
     if (!suppressOutput) {
-        printColoured("blue", "Original array: ");
+        printColoured("blue", "Current array: ");
         showArray(array, size);
     }
     char *command = malloc(sizeof(char) * MAX_COMMAND_SIZE);

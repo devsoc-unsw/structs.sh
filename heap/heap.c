@@ -6,18 +6,13 @@
 #include "queue/queue.h"
 #include "../util/display/display.h"
 
-Heap newHeap(int size) {
-    Heap heap = malloc(sizeof(struct HeapRep));
-    // mallocate (size + 1) array slots since we index into the items array 
-    // from indices 1 to numItems, not 0 to numItems-1
-    Item *items = malloc(sizeof(Item) * (size + 1));
-    for (int i = 0; i <= size; i++) items[i] = EMPTY;
-    heap -> items = items;
-    heap -> numItems = 0;
-    heap -> numSlots = size;
-    return heap;
-}
+// ===== Heap Operations =====
 
+/**
+ * INSERT: insert <d>
+ * Given a heap, inserts a new item into that heap into the correct
+ * position.
+ */
 void insertHeap(Heap heap, Item newItem, int heapType) {
     if (heap -> numItems >= heap -> numSlots) {
         printColoured("red", "The heap is full! Dropping %d\n", newItem);
@@ -29,6 +24,11 @@ void insertHeap(Heap heap, Item newItem, int heapType) {
     }
 }
 
+/**
+ * POP: pop
+ * Given a heap, returns the root and reorganises the heap to preserve
+ * its top-down ordering
+ */
 Item popHeap(Heap heap, int heapType) {
     if (heap -> numItems <= 0) {
         return EMPTY;
@@ -50,6 +50,11 @@ Item popHeap(Heap heap, int heapType) {
     return root;
 }
 
+/**
+ * POP: pop
+ * Given a heap, returns the root and reorganises the heap to preserve
+ * its top-down ordering
+ */
 void printHeap(Heap heap) {
     for (int i = 0; i <= heap -> numSlots; i++) {
         if (heap -> items[i] != EMPTY) {
@@ -78,15 +83,48 @@ void printHeap(Heap heap) {
     printColoured("cyan", "Number of items: %d\n", heap -> numItems);
 }
 
-bool heapIsEmpty(Heap heap) {
-    return (heap -> numItems <= 0);
-}
-
+/**
+ * CLEAR: clear
+ * Frees the memory associated with the heap
+ */
 void dropHeap(Heap heap) {
     free(heap -> items);
     free(heap);
 }
 
+// Note: the 'popall' command has no implementation. It's just a repeated call to popHeap
+
+// ===== Other Helper Functions =====
+
+/**
+ * Create a new heap with the specified number of slots
+ */
+Heap newHeap(int size) {
+    Heap heap = malloc(sizeof(struct HeapRep));
+    // mallocate (size + 1) array slots since we index into the items array 
+    // from indices 1 to numItems, not 0 to numItems-1
+    Item *items = malloc(sizeof(Item) * (size + 1));
+    for (int i = 0; i <= size; i++) items[i] = EMPTY;
+    heap -> items = items;
+    heap -> numItems = 0;
+    heap -> numSlots = size;
+    return heap;
+}
+
+/**
+ * Returns true/false depending on whether the heap is empty or not
+ */
+bool heapIsEmpty(Heap heap) {
+    return (heap -> numItems <= 0);
+}
+
+// Bubble up and bubble down helper functions. These for restoring the
+// heap to correct order after insertion and deletion respectively
+
+/**
+ * Given an array of items and a target index, moves the target index up
+ * into the correct position in the array
+ */
 void bubbleUp(Item *items, int i, int heapType) {
     switch (heapType) {
         case MAX_HEAP:
@@ -107,6 +145,10 @@ void bubbleUp(Item *items, int i, int heapType) {
     }
 }
 
+/**
+ * Given an array of items and a target index, moves the target index down
+ * into the correct position in the array
+ */
 void bubbleDown(Item *a, int N, int heapType) {
     int i = 1;
     switch (heapType) {
@@ -138,6 +180,10 @@ void bubbleDown(Item *a, int N, int heapType) {
     
 }
 
+/**
+ * Given an array of items, swaps the position of the element at index
+ * a and the element at index b.
+ */
 static void swapPositions(Item *items, int a, int b) {
     Item tmp = items[a];
     items[a] = items[b];
