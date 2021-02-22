@@ -4,55 +4,29 @@
 #include <locale.h>
 #include <limits.h>
 #include "linked-list.h"
+#include "../../../util/display/display.h"
+
+/*
+    This is the struct definition:
+
+    struct node {
+        int val;
+        struct node *next;
+    };
+    typedef struct node Node;
+*/
 
 
-
-// Question 1: 
-// Write a function to compute the length of a linked list iteratively
-// and recursively
-
-struct node {
-    int val;
-    struct node *next;
-};
-
-// Iterative version
-int length(Node *head) {
-    printf("Not implemented yet!\n");
-    return 42;
+/**
+ * Question 1: 
+ *     Write both an iterative AND recursive function to compute 
+ *     and return the length of a linked list.
+ */
+int getLength(Node *head) {
+    return -42;
 }
 
 
-// Recursive version
-// int length(Node *head) {
-//     printf("Not implemented yet!\n");
-//     return 42;
-// }
-
-
-
-
-
-
-
-
-
-
-// Question 3:
-// Write a function that checks whether a list is in increasing order
-// iteratively and recursively
-
-
-bool isSorted() {
-    printf("Not implemented yet!\n");
-    return false;
-}
-
-
-// bool isSorted() {
-//     printf("Not implemented yet!\n");
-//     return false;
-// }
 
 
 
@@ -75,8 +49,13 @@ bool isSorted() {
 
 
 
-// ===== Inserting Nodes =====
-// Iteratively insert a node into a linked list
+
+
+
+
+
+// IGNORE EVERYTHING BELOW!
+
 Node *insert(Node *head, int value, int insertionIndex) {
     // Separately dealing with the case where we want to insert at the very front of the list:
     if (insertionIndex == 0) {
@@ -100,8 +79,10 @@ Node *insert(Node *head, int value, int insertionIndex) {
     }
 }
 
-// ===== Deleting Nodes =====
-// Iteratively delete a node with the given target value from the list
+/**
+ * DELETE: delete <num>
+ * Iteratively delete a node with the given target value from the list
+ */
 Node *delete(Node *head, int targetValue) {
     Node *curr = head;
     Node *prev = NULL;
@@ -119,11 +100,16 @@ Node *delete(Node *head, int targetValue) {
         prev = curr;
         curr = curr -> next;
     }
+    printColoured("red", " ➤ %d wasn't found\n", targetValue);
+    return head;
 }
 
-// ===== Search List =====
-// Iteratively search for a value in the list. Returns true if the value exists,
-// false otherwise
+
+/**
+ * SEARCH: search <num>
+ * Iteratively search for a value in the list. Returns true if the value exists,
+ * false otherwise
+ */
 bool search(Node *head, int targetValue) {
     Node *curr = head;
     while (curr != NULL) {
@@ -133,8 +119,10 @@ bool search(Node *head, int targetValue) {
     return false;
 }
 
-// ===== Reverse List =====
-// Iteratively reverse the list
+/**
+ * REVERSE: reverse
+ * Iteratively reverse the list
+ */
 Node *reverse(Node *head) {
     Node *curr = head;
     Node *prevNode = NULL;
@@ -147,11 +135,13 @@ Node *reverse(Node *head) {
     return prevNode;
 }
 
-// ===== Sorting List =====
-// Iteratively sort the list
+/**
+ * SORT: sort
+ * Iteratively sort the list
+ */
 Node *sortList(Node *head) {
     Node *newHead = NULL;
-    int size = length(head);
+    int size = getLength(head);
     for (int i = 0; i < size; i++) {
         int min = INT_MAX;
         Node *curr = head;
@@ -167,8 +157,10 @@ Node *sortList(Node *head) {
     return newHead;
 }
 
-// ===== Free List =====
-// Iteratively free the nodes of the list
+/**
+ * CLEAR: clear
+ * Wipes the values from the list
+ */
 void freeList(Node *head) {
     Node *curr = head;
     while (curr != NULL) {
@@ -178,9 +170,15 @@ void freeList(Node *head) {
     }
 }
 
-// ===== Traverse List =====
-// Iteratively traverse and print the list
+/**
+ * SHOW: show
+ * Displays the current linked list 
+ */
 void traverseAndPrint(Node *head) {
+    if (head == NULL) {
+        printColoured("red", "(empty list)\n");
+        return;
+    } 
     setlocale(LC_CTYPE, "");
     while (head != NULL) {
         // Prints the → unicode character
@@ -188,13 +186,15 @@ void traverseAndPrint(Node *head) {
         head = head -> next;
     }
     // Prints the ╳ unicode character
-    printf("%lc\n", (wint_t)0x2573);
+    printColoured("red", " %lc\n", (wint_t)0x2573);
 }
 
-// ===== Others Functions =====
-
+/**
+ * APPEND: append <num>
+ * Inserts the node with the given value at the end of the list
+ */
 Node *append(Node *head, int newValue) {
-    int size = length(head);
+    int size = getLength(head);
     if (head == NULL) {
         head = insert(head, newValue, 0);
     } else {

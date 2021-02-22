@@ -1,0 +1,2 @@
+help                     - show commands available
+length                   - computes the length of the list

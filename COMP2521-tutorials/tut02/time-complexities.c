@@ -1,11 +1,11 @@
 
-// Assume that printf is a constant time operation!
+// Assume that printf is a constant time operation, so O(1)
 
 // Q1. What's the time-complexity?
 // Answer: 
 int someFunction(int n) {
     for (int i = 0; i < n; i++) { 
-        printf("Hello world\n");   
+        printf("Hello world\n");  
     }
 }
 
