@@ -5,55 +5,55 @@
 // Answer: 
 int someFunction(int n) {
     for (int i = 0; i < n; i++) { 
-        printf("Hello world\n");  
+        printf("Hello world\n");      
     }
 }
 
 // Q2. What's the time-complexity?
-// Answer: 
+// Answer:
 int someFunction(int n) {
     for (int i = 0; i < n; i += 2) {
-        printf("Hello world\n");   
+        printf("Hello world\n");      
     }
 }
 
 // Q3. What's the time-complexity?
-// Answer: 
+// Answer:
 int someFunction(int n) {
+    for (int i = 0; i < n; i += 2) {
+        printf("Hello world\n");     
+    }
     for (int i = 0; i < n; i += 2) {
         printf("Hello world\n");    
     }
     for (int i = 0; i < n; i += 2) {
-        printf("Hello world\n");   
-    }
-    for (int i = 0; i < n; i += 2) {
-        printf("Hello world\n");     
+        printf("Hello world\n");       
     } 
 }
 
 // Q4. What's the time-complexity?
-// Answer: 
+// Answer:
 int someFunction(int n) {
     for (int i = 0; i < n; i++) {
-        printf("Hello world\n");  
+        printf("Hello world\n");   
     }
     for (int i = 0; i < n; i++) {
-        printf("Hello world\n");  
+        printf("Hello world\n");   
     }
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
             for (int k = 0; k < n; k++) {
-                printf("Hello world\n");  
+                printf("Hello world\n");    
             }
         }
     }
 }
 
 // Q5. What's the time-complexity?
-// Answer:
+// Answer: 
 int someFunction(int n) {
     for (int i = 0; i < 10000000000000000000000000000000; i++) {
-        printf("Hello world\n"); 
+        printf("Hello world\n");  
     }
 }
 

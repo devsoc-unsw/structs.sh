@@ -20,7 +20,7 @@ void printList(Node *head) {
 
 // Recursive version
 void printList(Node *head) {
-    if (head == NULL) {     
+    if (head == NULL) {                // This is the 'base condition' 
         return;
     } else {
         printf("%d\n", head -> value);
@@ -28,4 +28,10 @@ void printList(Node *head) {
     }
 }
 
+/*
+    1 → 3 → 5 → NULL
+    |
+    |
+    head
+*/
 

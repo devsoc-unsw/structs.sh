@@ -44,16 +44,6 @@ int getLength(Node *head) {
 
 
 
-
-
-
-
-
-
-
-
-
-
 // IGNORE EVERYTHING BELOW!
 
 Node *insert(Node *head, int value, int insertionIndex) {
