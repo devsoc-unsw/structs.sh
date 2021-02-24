@@ -8,11 +8,11 @@ makefiles=$(find $targetDirectory | egrep 'Makefile$')
 cwd=$(pwd)
 for makefile in $makefiles; do
     makeDir=$(echo $makefile | sed 's/\/Makefile$//g')
-    echo "Running 'make $makeArg' in $makeDir"
+    echo "Running 'make $makeArg' in: $makeDir"
     cd $cwd/$makeDir
     if make $makeArg > /dev/null 2> /dev/null; then
-        echo "---> Succeeded"
+        echo " → Succeeded"
     else 
-        echo "---> Failed"
+        echo " → Failed"
     fi
 done
