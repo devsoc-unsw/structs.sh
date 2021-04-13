@@ -18,3 +18,9 @@ deprecated
 .vscode/
 practice-material/
 *.out
+
+node_modules
+package-lock.json
+build/
+.eslintcache
+
