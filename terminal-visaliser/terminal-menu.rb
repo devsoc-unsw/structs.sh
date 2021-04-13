@@ -21,7 +21,7 @@ begin
         selectedTree = prompt.select("Select tree type:".yellow, treeFlavours) 
         case selectedTree
         when "Standard Binary Search Tree"
-            system("binary-tree/testTree")
+            system("#{Dir.pwd}/binary-tree/testTree")
         when "AVL Tree"
             system("avl-tree/testTree")
         when "Splay Tree"
