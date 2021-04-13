@@ -19,7 +19,7 @@ import {
     Container
 } from "reactstrap";
 
-const Layout = ({ Header, children }) => {
+const Layout = ({ children }) => {
 
     React.useEffect(() => {
         document.body.classList.toggle("index-page");
@@ -33,11 +33,8 @@ const Layout = ({ Header, children }) => {
         <>
             <IndexNavbar />
             <div className="wrapper">
-                <Header />
                 <div className="main">
-                    <Container className={styles.contentContainer}> 
-                        {children}
-                    </Container>
+                    {children}
                 </div>
             <Footer />
             </div>
