@@ -20,20 +20,12 @@ import { Link } from "react-router-dom";
 // reactstrap components
 import {
   Button,
-  Collapse,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
-  NavbarBrand,
-  Navbar,
+  Col, Collapse,
+  Container, DropdownItem, DropdownMenu, DropdownToggle,
+  Nav, Navbar, NavbarBrand,
   NavItem,
-  NavLink,
-  Nav,
-  Container,
-  Row,
-  Col,
-  UncontrolledTooltip,
+  Row, UncontrolledDropdown,
+  UncontrolledTooltip
 } from "reactstrap";
 
 export default function IndexNavbar() {
@@ -68,11 +60,6 @@ export default function IndexNavbar() {
   };
   const onCollapseExited = () => {
     setCollapseOut("");
-  };
-  const scrollToDownload = () => {
-    document
-      .getElementById("download-section")
-      .scrollIntoView({ behavior: "smooth" });
   };
   return (
     <Navbar className={"fixed-top " + color} color-on-scroll="100" expand="lg">

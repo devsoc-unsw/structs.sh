@@ -1,7 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Layout from 'layout/Layout';
 import PageHeader from 'components/PageHeader/PageHeader';
+import Layout from 'layout/Layout';
+import React from 'react';
 import {
     Container
 } from 'reactstrap';

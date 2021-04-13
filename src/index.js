@@ -15,19 +15,19 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
+import "assets/css/nucleo-icons.css";
+import "assets/demo/demo.css";
+import "assets/scss/blk-design-system-react.scss?v=1.2.0";
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-
-import "assets/css/nucleo-icons.css";
-import "assets/scss/blk-design-system-react.scss?v=1.2.0";
-import "assets/demo/demo.css";
-
-import LandingPage from "views/examples/LandingPage.js";
-import RegisterPage from "views/examples/RegisterPage.js";
-import ProfilePage from "views/examples/ProfilePage.js";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import ComponentsPage from "views/examples/ComponentsPage";
+import LandingPage from "views/examples/LandingPage.js";
+import ProfilePage from "views/examples/ProfilePage.js";
+import RegisterPage from "views/examples/RegisterPage.js";
 import HomePage from "views/HomePage.js";
+
+
 
 ReactDOM.render(
   <BrowserRouter>
