@@ -1,18 +1,15 @@
 {
-  "name": "blk-design-system-react",
-  "version": "1.2.0",
-  "description": "React version of BLK Design System by Creative Tim",
+  "name": "structs",
+  "version": "1.0.0",
+  "description": "An interactive data structure and algorithm visualiser",
   "main": "index.js",
-  "author": "Creative Tim",
+  "author": "CSESoc",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/creativetimofficial/blk-design-system-react.git"
+    "url": "git+https://github.com/csesoc/Structs.sh.git"
   },
-  "bugs": {
-    "url": "https://github.com/creativetimofficial/blk-design-system-react/issues"
-  },
-  "homepage": "https://demos.creative-tim.com/blk-design-system-react/#/",
+  "homepage": ".",
   "keywords": [
     "react",
     "reactjs",
