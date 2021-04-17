@@ -1,5 +1,5 @@
-import Footer from "components/Footer/Footer.js";
-import IndexNavbar from "components/Navbars/IndexNavbar.js";
+import Footer from "components/Footer/Footer.jsx";
+import IndexNavbar from "components/Navbars/IndexNavbar.jsx";
 import React from 'react';
 
 const Layout = ({ children }) => {

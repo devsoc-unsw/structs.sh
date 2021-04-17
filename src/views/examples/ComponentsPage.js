@@ -18,9 +18,9 @@
 import React from "react";
 
 // core components
-import IndexNavbar from "components/Navbars/IndexNavbar.js";
-import PageHeader from "components/PageHeader/PageHeader.js";
-import Footer from "components/Footer/Footer.js";
+import IndexNavbar from "components/Navbars/IndexNavbar.jsx";
+import PageHeader from "components/PageHeader/PageHeader.jsx";
+import Footer from "components/Footer/Footer.jsx";
 
 // sections for this page/view
 import Basics from "views/example-sections/Basics.js";
