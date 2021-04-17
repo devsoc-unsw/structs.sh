@@ -13,9 +13,6 @@ const HomePage = () => {
                 <h1>Linked List</h1>
                 <LinkedList />
             </PageHeader>
-            <Container>
-                Pariatur aliqua exercitation esse consequat aliqua cupidatat officia in ex et quis tempor. Nostrud tempor eiusmod ad ad mollit consequat Lorem do nisi minim pariatur. Amet quis amet consectetur mollit. Culpa non esse do ipsum dolore et magna qui dolor non.
-            </Container>
         </Layout>
     )
 };
