@@ -1,0 +1,19 @@
+help                 - show available commands
+matrix               - shows matrix representation
+list                 - shows matrix representation
+insert <v1>-<v2>     - inserts edges v1 to v2. Eg. insert 1-2-3 4-5
+remove <v1>-<v2>     - removes edges v1 to v2. Eg. remove 1-2-3 4-5
+degree <v>           - shows the degree of the vertex v
+dfs <v1>             - performs depth first search starting on v1
+bfs <v1>             - performs breadth first search starting on v1
+cycle                - determines whether a cycle exists in the graph
+path <v1> <v2>       - determines whether a path exists between v1 and v2
+connected            - shows all the connected subgraphs in the whole graph
+hamilton <v1> <v2>   - determines the Hamilton path from v1 to v2, if it exists
+hamilton circuit     - determines whether a Hamiltonian circuit exists
+euler <v1> <v2>      - determines the Euler path from v1 to v2, if it exists
+euler circuit        - determines whether an Euler circuit exists
+closure              - runs the Floyd-Warshall algorithm and displays the transitive closure matrix
+randomise <density>  - randomly inserts edges into the graph. Eg. randomise 50 populates the graph with 50% density 
+clear                - resets the graph
+exit                 - quit program

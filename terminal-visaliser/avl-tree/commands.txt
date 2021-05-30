@@ -1,0 +1,9 @@
+help               - show commands available
+insert <nodes>     - inserts the given nodes with the AVL insertion algorithm
+delete <nodes>     - deletes the specified nodes
+height             - determines the height of the tree
+show               - shows the current tree state
+balance            - shows the balance of all nodes in the tree (left height - right height)
+heights            - shows the heights of all nodes in the tree
+clear              - deletes the entire tree
+exit               - quit program

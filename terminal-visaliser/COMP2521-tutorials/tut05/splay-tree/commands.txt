@@ -1,0 +1,9 @@
+help              - show commands available
+left <node>       - perform a left rotation on node with value <node>
+right <node>      - perform a right rotation on node with value <node>
+insert <nodes>    - inserts the given nodes with the splay insertion algorithm
+delete <nodes>    - deletes the specified nodes
+search <node>     - searches for the node with value <node>
+show              - shows the current tree state
+clear             - deletes the entire tree
+exit              - quit program

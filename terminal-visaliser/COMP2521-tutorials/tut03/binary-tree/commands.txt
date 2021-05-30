@@ -1,0 +1,9 @@
+help             - show commands available
+left <node>      - perform a left rotation on node with value <node>
+right <node>     - perform a right rotation on node with value <node>
+insert <nodes>   - inserts the given values as nodes
+count            - prints the number of nodes in the tree
+height           - prints the height of the tree
+show             - shows the current tree state
+clear            - deletes the entire tree
+exit             - quit program

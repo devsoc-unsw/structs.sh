@@ -1,0 +1,15 @@
+help                         - show available commands
+input <integers>             - set the input array using a list of space separated integers. Eg. input 4 5 1 7 3 6 9
+randomised <size> <maxValue> - sets the input array to be a random sequence with specified size
+reversed <size> <maxValue>   - sets the input array to be a random reverse sorted sequence with specified size
+sorted <size> <maxValue>     - sets the input array to be a random sorted sequence with specified size
+show                         - shows the current input array
+selectionsort                - executes selection sort
+insertionsort                - executes insertion sort
+bubblesort                   - executes bubble sort
+shellsort                    - executes shellsort
+quicksort                    - executes quicksort
+mergesort                    - executes mergesort
+heapsort                     - executes heapsort
+runall                       - executes all sorting algorithms
+exit                         - quit program

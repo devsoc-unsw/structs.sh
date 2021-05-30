@@ -1,0 +1,11 @@
+help                     - show commands available
+insert <num> <position>  - inserts a number at the specified position (index starts at 0)
+append <num>             - appends the given number
+delete <num>             - deletes the given number
+search <num>             - searches for the given number
+length                   - computes the length of the list
+reverse                  - reverses the current list
+sort                     - sorts the list in ascending order
+show                     - shows the list
+clear                    - deletes all values form the list
+exit                     - quit program
