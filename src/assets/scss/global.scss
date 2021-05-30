@@ -1,0 +1,118 @@
+/*!
+
+=========================================================
+* BLK Design System React - v1.2.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/styles
+* Copyright 2020 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://github.com/creativetimofficial/styles/blob/main/LICENSE.md)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+*/
+
+$asset-base-path: '../../../../assets' !default;
+
+// Core
+
+@import 'styles/custom/functions';
+@import '~bootstrap/scss/functions';
+
+@import 'styles/custom/variables';
+@import '~bootstrap/scss/variables';
+
+@import 'styles/custom/mixins';
+@import '~bootstrap/scss/mixins';
+
+// Bootstrap components
+
+@import '~bootstrap/scss/root';
+@import '~bootstrap/scss/reboot';
+@import '~bootstrap/scss/type';
+@import '~bootstrap/scss/images';
+@import '~bootstrap/scss/code';
+@import '~bootstrap/scss/grid';
+@import '~bootstrap/scss/tables';
+@import '~bootstrap/scss/forms';
+@import '~bootstrap/scss/buttons';
+@import '~bootstrap/scss/transitions';
+@import '~bootstrap/scss/dropdown';
+@import '~bootstrap/scss/button-group';
+@import '~bootstrap/scss/input-group';
+@import '~bootstrap/scss/custom-forms';
+@import '~bootstrap/scss/nav';
+@import '~bootstrap/scss/navbar';
+@import '~bootstrap/scss/card';
+@import '~bootstrap/scss/breadcrumb';
+@import '~bootstrap/scss/pagination';
+@import '~bootstrap/scss/badge';
+@import '~bootstrap/scss/jumbotron';
+@import '~bootstrap/scss/alert';
+@import '~bootstrap/scss/progress';
+@import '~bootstrap/scss/media';
+@import '~bootstrap/scss/list-group';
+@import '~bootstrap/scss/close';
+@import '~bootstrap/scss/modal';
+@import '~bootstrap/scss/tooltip';
+@import '~bootstrap/scss/popover';
+@import '~bootstrap/scss/carousel';
+@import '~bootstrap/scss/utilities';
+@import '~bootstrap/scss/print';
+
+// Custom components
+
+@import 'styles/custom/alerts.scss';
+@import 'styles/custom/buttons.scss';
+@import 'styles/custom/dropdown.scss';
+@import 'styles/custom/footer.scss';
+@import 'styles/custom/forms.scss';
+@import 'styles/custom/images.scss';
+@import 'styles/custom/modal.scss';
+@import 'styles/custom/navbar.scss';
+@import 'styles/custom/type.scss';
+@import 'styles/custom/icons.scss';
+@import 'styles/custom/tables';
+@import 'styles/custom/checkboxes-radio';
+@import 'styles/custom/fixed-plugin';
+@import 'styles/custom/pagination.scss';
+@import 'styles/custom/misc.scss';
+@import 'styles/custom/rtl.scss';
+@import 'styles/custom/input-group.scss';
+@import 'styles/custom/example-pages.scss';
+@import 'styles/custom/progress.scss';
+@import 'styles/custom/badge.scss';
+@import 'styles/custom/pills.scss';
+@import 'styles/custom/tabs.scss';
+@import 'styles/custom/info-areas.scss';
+
+// Sections
+@import 'styles/custom/sections.scss';
+
+// Vendor / Plugins
+
+@import 'styles/custom/vendor/plugin-perfect-scrollbar.scss';
+@import 'styles/custom/vendor/plugin-animate-bootstrap-notify.scss';
+@import 'styles/custom/vendor/plugin-bootstrap-switch.scss';
+@import 'styles/custom/vendor/plugin-nouislider.scss';
+@import 'styles/custom/vendor/plugin-datetimepicker.scss';
+
+// Cards
+
+@import 'styles/custom/card';
+@import 'styles/custom/cards/card-chart';
+@import 'styles/custom/cards/card-map';
+@import 'styles/custom/cards/card-user';
+@import 'styles/custom/cards/card-task';
+@import 'styles/custom/cards/card-plain';
+@import 'styles/custom/cards/card-register';
+@import 'styles/custom/cards/card-stats';
+@import 'styles/custom/cards/card-chart';
+
+// React Differences
+
+@import 'styles/react/react-differences';
