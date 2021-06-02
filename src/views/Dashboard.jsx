@@ -1,5 +1,6 @@
 import React from 'react';
 import Pane from 'components/Panes/Pane';
+import Tabs from 'components/Panes/Tabs';
 
 const Dashboard = ({ match }) => {
     // Extract route parameters
@@ -13,7 +14,10 @@ const Dashboard = ({ match }) => {
                     <div>Visualiser here</div>
                     <div>Terminal here</div>
                 </Pane>
-                <div>{topic}</div>
+                <div>
+                    {topic}
+                    <Tabs />
+                </div>
             </Pane>
         </div>
     );
