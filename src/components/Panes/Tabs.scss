@@ -1,0 +1,39 @@
+.Tab {
+  background-color: grey;
+  border-width: 0.5px 0px 0px 0px;
+  border-color: black;
+  border-radius: 5px 5px 5px 5px;
+  color: black;
+  font-weight: 1000;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 12px;
+
+  &:hover {
+    background-color: lightgray;
+  }
+
+  &selected {
+    background-color: green;
+  }
+}
+
+.Tab-Selected {
+  background-color: whitesmoke;
+  border-width: 0.5px 0px 0.5px 0px;
+  border-color: black;
+  border-radius: 5px 5px 5px 5px;
+  color: black;
+  font-weight: 1000;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 12px;
+  box-shadow: inset 0.5px 0.5px 0.5px 0.5px;
+}
+
+.Tab-Group {
+  background-color: grey;
+  padding: 0px 5px 0px 5px;
+}

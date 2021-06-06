@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Grid, Button } from '@material-ui/core';
 
+import './Tabs.scss';
+
 export default function Tabs(props) {
   const tabs = ["Info", "Pseudocode", "Videos"]
   const [Tab, setTab] = useState(0);
@@ -8,11 +10,11 @@ export default function Tabs(props) {
   return (
     <div>
         <Grid container>
-            <Grid item container direction="row" spacing={2}>
+            <Grid item container direction="row" spacing={0} className='Tab-Group'>
                 {tabs.map((x, idx)=>(
                   <Grid item>
-                    <button type="button" onClick={()=>setTab(idx)}>{x}</button>
-                    <Button onClick={()=>setTab(idx)}>{x}</Button>
+                    <button type="button" onClick={()=>setTab(idx)} selected className={Tab===idx ? 'Tab-Selected' : 'Tab'}>{x}</button>
+                    {/* <Button onClick={()=>setTab(idx)}>{x}</Button> */}
                   </Grid>
                 ))}
             </Grid>
