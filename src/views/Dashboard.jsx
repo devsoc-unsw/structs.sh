@@ -1,5 +1,10 @@
 import React from 'react';
 import Pane from 'components/Panes/Pane';
+import LinkedList from 'components/Visualisation/LinkedList/LinkedList';
+import { Lesson } from 'components/Lesson';
+import { Terminal } from 'components/Terminal';
+
+import styles from './Dashboard.module.scss';
 
 const Dashboard = ({ match }) => {
     // Extract route parameters
@@ -7,13 +12,13 @@ const Dashboard = ({ match }) => {
     const topic = params.topic;
 
     return (
-        <div>
+        <div className={styles.container}>
             <Pane orientation="vertical" minSize={'50%'}>
                 <Pane orientation="horizontal" minSize={'50%'}>
-                    <div>Visualiser here</div>
-                    <div>Terminal here</div>
+                    <LinkedList>Visualiser here</LinkedList>
+                    <Terminal>Terminal here</Terminal>
                 </Pane>
-                <div>{topic}</div>
+                <Lesson topic={topic}></Lesson>
             </Pane>
         </div>
     );

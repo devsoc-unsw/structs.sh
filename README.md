@@ -231,9 +231,9 @@ How this works:
 ├── README.md
 ├── public
 └── src
-    ├── index.js         # → Where the frontend routing is handled
+    ├── index.tsx
     ├── assets           # → Contains public assets such as images and CSS/SCSS.
-    │                    #   Changing fundamental styles would be done here (most likely)
+    │                    #   Changing global styles would be done here (most likely)
     ├── components       # → Where all our components are stored. Make new directories for your components here
     │   ├── Footer
     │   ├── Navbars          # → Top navigation bar
@@ -245,6 +245,6 @@ How this works:
     |
     └── views                      # → Where our page components are stored.
         ├── HomePage.js            # → Structs.sh homepage
-        ├── Visualiser.js          # → The visualiser page. This is where the action happens for ds/algo visualisation
+        ├── Dashboard.js           # → The visualisation and main content page
         # ...more pages would go here
 ```
