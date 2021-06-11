@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter, Route, Switch, useLocation } from 'react-router-dom';
 
 // Root React component
 import App from './App';
@@ -11,7 +12,10 @@ import 'assets/scss/global.scss';
 
 ReactDOM.render(
     <React.StrictMode>
+
+<BrowserRouter>
         <App />
+</BrowserRouter>
     </React.StrictMode>,
     document.getElementById('root')
 );

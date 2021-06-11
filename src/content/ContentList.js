@@ -4,15 +4,21 @@
 const topics = {
     'linked-list': {
         title: 'Linked Lists',
-        description: 'A sequence of nodes',
+        description: 'In computer science, a linked list is a linear collection of data elements whose order is not given by their physical placement in memory. Instead, each element points to the next. It is a data structure consisting of a collection of nodes which together represent a sequence.',
         videos: ['qHIflU8C0WY'],
     },
     'binary-search-tree': {
         title: 'Binary Search Trees',
         description:
-            'A binary search tree is a data structure that quickly allows us to maintain a sorted list of numbers. ee is node where the ',
+            "In computer science, a binary search tree, also called an ordered or sorted binary tree, is a rooted binary tree whose internal nodes each store a key greater than all the keys in the node's left subtree and less than those in its right subtree.",
         videos: ['DCIbWxmFq-M'],
     },
+    'graph': {
+        title: 'Graph',
+        description:
+            'As used in graph theory, the term graph does not refer to data charts, such as line graphs or bar graphs. Instead, it refers to a set of vertices (that is, points or nodes) and of edges (or lines) that connect the vertices. When any two vertices are joined by more than one edge, the graph is called a multigraph.',
+        videos: ['S2BehYAB_hY'],
+    }
 };
 
 const getLessonContent = async (lesson) => {

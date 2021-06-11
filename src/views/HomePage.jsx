@@ -15,6 +15,9 @@ const HomePage = (props) => {
                 <Link to="/visualiser/binary-search-tree">
                     <Button>Binary Search Trees</Button>
                 </Link>
+                <Link to="/visualiser/graph">
+                    <Button>Graph</Button>
+                </Link>
             </PageHeader>
             <Container>
                 Pariatur aliqua exercitation esse consequat aliqua cupidatat officia in ex et quis
