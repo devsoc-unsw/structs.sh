@@ -10,6 +10,7 @@ const Lesson = ({ topic }) => {
         <div>
             {lessonContent && (
                 <div className={styles.lessonContainer}>
+                    <h2>{lessonContent.title}</h2>
                     {lessonContent.description}
                     {lessonContent.videos.map((v) => (
                         <EmbeddedVideoPlayer videoID={v} />

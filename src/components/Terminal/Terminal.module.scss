@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono&display=swap');
+
+$terminalBackgroundColour: rgb(24, 24, 24);
+
+.terminalContainer {
+    background-color: $terminalBackgroundColour;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    color: white;
+
+    font-family: 'Ubuntu Mono', monospace !important;
+
+    .username {
+        color: rgb(122, 170, 49);
+    }
+
+    .prompt {
+        color: rgb(89, 92, 240);
+    }
+
+    .typeInput {
+        font-family: 'Ubuntu Mono', monospace !important;
+        background-color: $terminalBackgroundColour;
+        border: none;
+        outline: none;
+        color: white;
+        caret-color: transparent;
+    }
+}

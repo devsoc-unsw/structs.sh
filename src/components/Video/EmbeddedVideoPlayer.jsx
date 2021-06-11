@@ -5,7 +5,7 @@ import YouTube from 'react-youtube';
 const EmbeddedVideoPlayer = ({ videoID }) => {
     const opts = {
         // height: '390',
-        // width: '640',
+        width: '100%',
         playerVars: {
             // https://developers.google.com/youtube/player_parameters
             autoplay: 1,
