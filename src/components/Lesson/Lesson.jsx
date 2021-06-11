@@ -9,16 +9,20 @@ const Lesson = ({ topic }) => {
     getLessonContent(topic).then(setLessonContent).catch(console.log);
     return (
         <div>
-            {lessonContent && (
-                <div className={styles.lessonContainer}>
-                    <h2>{lessonContent.title}</h2>
-                    {lessonContent.description}
-                    {lessonContent.videos.map((v) => (
-                        <EmbeddedVideoPlayer videoID={v} />
-                    ))}
-                    <Gist />
-                </div>
-            )}
+            <div className={styles.lessonContainer}>
+                {lessonContent ? (
+                    <>
+                        <h2>{lessonContent.title}</h2>
+                        {lessonContent.description}
+                        {lessonContent.videos.map((v) => (
+                            <EmbeddedVideoPlayer videoID={v} />
+                        ))}
+                        <Gist />
+                    </>
+                ) : (
+                    <div>Can't find anything for '{topic}'</div>
+                )}
+            </div>
         </div>
     );
 };

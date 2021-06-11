@@ -10,7 +10,10 @@ const HomePage = (props) => {
             <PageHeader>
                 <h1>Structs.sh</h1>
                 <Link to="/visualiser/linked-list">
-                    <Button>[Temporary] Linked list visualiser</Button>
+                    <Button>Linked Lists</Button>
+                </Link>
+                <Link to="/visualiser/binary-search-tree">
+                    <Button>Binary Search Trees</Button>
                 </Link>
             </PageHeader>
             <Container>
