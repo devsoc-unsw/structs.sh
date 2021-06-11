@@ -4,12 +4,12 @@
 const topics = {
     'linked-list': {
         description: 'A sequence of nodes',
-        videos: ['https://www.youtube.com/watch?v=qHIflU8C0WY'],
+        videos: ['qHIflU8C0WY'],
     },
     'binary-search-tree': {
         description:
             'A binary search tree is a data structure that quickly allows us to maintain a sorted list of numbers. ee is node where the ',
-        videos: ['https://www.youtube.com/watch?v=DCIbWxmFq-M'],
+        videos: ['DCIbWxmFq-M'],
     },
 };
 

@@ -1,10 +1,23 @@
 import React, { useState } from 'react';
 import { getLessonContent } from 'content';
+import styles from './Lesson.module.scss';
+import { EmbeddedVideoPlayer } from 'components/Video';
 
-const Lesson = ({ lesson }) => {
+const Lesson = ({ topic }) => {
     const [lessonContent, setLessonContent] = useState(null);
-    getLessonContent(lesson).then(setLessonContent).catch(console.log);
-    return <div>Lesson here!!!</div>;
+    getLessonContent(topic).then(setLessonContent).catch(console.log);
+    return (
+        <div>
+            {lessonContent && (
+                <div className={styles.lessonContainer}>
+                    {lessonContent.description}
+                    {lessonContent.videos.map((v) => (
+                        <EmbeddedVideoPlayer videoID={v} />
+                    ))}
+                </div>
+            )}
+        </div>
+    );
 };
 
 export default Lesson;
