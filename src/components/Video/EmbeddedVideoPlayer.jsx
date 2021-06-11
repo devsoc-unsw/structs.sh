@@ -12,7 +12,12 @@ const EmbeddedVideoPlayer = ({ videoID }) => {
         },
     };
 
-    return <YouTube videoId={videoID} opts={opts} />;
+    const onReady = (event) => {
+        // access to player in all event handlers via event.target
+        event.target.pauseVideo();
+    };
+
+    return <YouTube videoId={videoID} opts={opts} onReady={onReady} />;
 };
 
 export default EmbeddedVideoPlayer;
