@@ -9,6 +9,7 @@ const HomePage = (props) => {
         <Layout>
             <PageHeader>
                 <h1>Structs.sh</h1>
+                <h3>[Temporary buttons]</h3>
                 <Link to="/visualiser/linked-list">
                     <Button>Linked Lists</Button>
                 </Link>
@@ -18,6 +19,15 @@ const HomePage = (props) => {
                 <Link to="/visualiser/graph">
                     <Button>Graph</Button>
                 </Link>
+                <Link to="/about">
+                    <Button>About Us</Button>
+                </Link>
+                <Link to="/feedback">
+                    <Button>Feedback</Button>
+                </Link>
+                <a href="/visualiser.html">
+                    <Button>Vanilla JS Visualiser Test</Button>
+                </a>
             </PageHeader>
             <Container>
                 Pariatur aliqua exercitation esse consequat aliqua cupidatat officia in ex et quis
