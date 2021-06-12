@@ -19,6 +19,9 @@ const HomePage = (props) => {
                 <Link to="/visualiser/graph">
                     <Button>Graph</Button>
                 </Link>
+                <Link to="/visualiser/sorting">
+                    <Button>Sorting</Button>
+                </Link>
                 <Link to="/about">
                     <Button>About Us</Button>
                 </Link>

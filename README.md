@@ -9,11 +9,11 @@ An interactive data structure and algorithm visualiser.
 -   [Setup Instructions](#setup-instructions)
     -   [Development](#development)
     -   [Production](#production)
+-   [Project Directory Structure](#project-directory-structure)
+-   [Documentation](#documentation)
 -   [Guidelines](#guidelines)
 -   [Git Contribution Guidelines](#git-contribution-guidelines)
 -   [Style Guidelines and Practices](#style-guidelines-and-practices)
--   [Documentation](#documentation)
--   [Project Directory Structure](#project-directory-structure)
 
 ---
 
@@ -21,21 +21,80 @@ An interactive data structure and algorithm visualiser.
 
 ### Development
 
-#### Pre-requisites:
-
--   Install the latest version of `npm` and `node`
-
 #### Steps:
 
-1. `git clone https://github.com/csesoc/Structs.sh.git && cd Structs.sh`
+Note: this is using Node v14.17.0.
+
+1. `git clone https://github.com/csesoc/Structs.sh.git && cd Structs.sh/client`
 2. `npm install`
-3. `npm start`
+3. `cd ../server`
+4. `npm install`
+
+Running the frontend development server:
+
+1. From the project directory: `sh structs.sh --frontend`
+
+Running the backend server:
+
+1. From the project directory: `sh structs.sh --backend`
 
 ### Production
 
-We'll figure it out later.
+We'll figure it out later. 😵
 
 ---
+
+## Project Directory Structure
+
+```bash
+.
+│
+├── structs.sh     # → Script for starting up the application
+│
+├── client/
+│       │
+│       ├── README.md
+│       ├── public
+│       │   ├── index.html       # → The base html file that React renders all elements into
+│       │   ├── visualiser.html  # → Temporary html file for experimenting with vanilla JS visualiser implementation
+│       │   └── visualiser.js
+│       │
+│       └── src
+│           ├── index.tsx
+│           ├── assets           # → Contains public assets such as images and CSS/SCSS.
+│           │                    #   Changing global styles would be done here (most likely)
+│           ├── components       # → Where all our components are stored. Make new directories for your components here
+│           │   ├── Footer
+│           │   ├── Navbars          # → Top navigation bar
+│           │   ├── PageHeader       # → The animated background you see that takes up 100% of the viewport
+│           |   |
+│           |   # ...more of our components here
+│           |
+│           ├── content          # → The 'API' for fetching lesson content to be displayed
+│           |
+│           ├── layout           # → Components defining page structure
+│           |
+│           └── views                      # → Where our page components are stored.
+│               ├── HomePage.js            # → Structs.sh homepage
+│               ├── Dashboard.js           # → The visualisation and main content page
+│               # ...more pages would go here
+│
+└── server/
+        │
+        ├── dist
+        │   ├── index.js
+        │   └── index.js.map
+        ├── package.json
+        ├── package-lock.json
+        └── src
+            └── index.ts
+
+```
+
+## Documentation
+
+-   <a href="https://demos.creative-tim.com/blk-design-system-react/#/documentation/overview">Documentation</a> for UI components from the base template
+-   <a href="https://compclub.atlassian.net/wiki/spaces/Projects/pages/1645936641/Structs.sh">Confluence</a> team wiki
 
 ## Guidelines:
 
@@ -210,41 +269,3 @@ How this works:
 
 </p>
 </details>
-
----
-
-## Documentation
-
--   <a href="https://demos.creative-tim.com/blk-design-system-react/#/documentation/overview">Documentation</a> for UI components from the base template
--   <a href="https://compclub.atlassian.net/wiki/spaces/Projects/pages/1645936641/Structs.sh">Confluence</a> team wiki - this is where we pool all our knowledge about technologies (React, TypeScript, etc.) as well as project organisation stuff
--   <a href="https://reactstrap.github.io/">Reactstrap</a> - bootstrap components for React. Look up basic UI components like `Button`, `Grid` from here rather than reinvent the wheel
--   D3
-    -   <a href="https://github.com/d3/d3/wiki">D3</a> official docs (D3 for vanilla JS)
-    -   <a href="https://github.com/react-d3-library/react-d3-library/wiki">React-D3</a> docs (D3 for React)
-
----
-
-## Project Directory Structure
-
-```bash
-.
-├── README.md
-├── public
-└── src
-    ├── index.tsx
-    ├── assets           # → Contains public assets such as images and CSS/SCSS.
-    │                    #   Changing global styles would be done here (most likely)
-    ├── components       # → Where all our components are stored. Make new directories for your components here
-    │   ├── Footer
-    │   ├── Navbars          # → Top navigation bar
-    │   ├── PageHeader       # → The animated background you see that takes up 100% of the viewport
-    |   └── Visualisation    # → Where all our visualiser graphics components are
-    |       └── LinkedList       # → Linked list graphic elements
-    |           └── ...
-    |   # ...more of our components here
-    |
-    └── views                      # → Where our page components are stored.
-        ├── HomePage.js            # → Structs.sh homepage
-        ├── Dashboard.js           # → The visualisation and main content page
-        # ...more pages would go here
-```

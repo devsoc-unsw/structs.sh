@@ -1,3 +1,5 @@
+$topNavSize: 48px;
+
 .container {
     position: static;
     width: 100vw;
@@ -5,5 +7,10 @@
     background-color: rgb(255, 255, 255);
     * {
         color: black;
+    }
+
+    .verticalPane {
+        bottom: 0;
+        height: calc(100% - $topNavSize);
     }
 }
