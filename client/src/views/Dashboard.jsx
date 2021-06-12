@@ -5,6 +5,7 @@ import { Lesson } from 'components/Lesson';
 import { Terminal } from 'components/Terminal';
 import { motion } from 'framer-motion';
 import styles from './Dashboard.module.scss';
+import images from 'assets/img';
 
 const containerVariants = {
     hidden: {
@@ -33,6 +34,7 @@ const Dashboard = ({ match }) => {
             animate="visible"
             exit="exit"
         >
+            <img src={images.logo} width={48} height={48} />
             <Pane orientation="vertical" minSize={'50%'} topGutterSize={48}>
                 <Pane orientation="horizontal" minSize={'50%'}>
                     <LinkedList>Visualiser here</LinkedList>
