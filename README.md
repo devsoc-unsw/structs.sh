@@ -1,6 +1,6 @@
 # Structs.sh 💻
 
-An interactive data structure and algorithm visualiser.
+An interactive data structure and algorithm visualiser and educational platform for computer science.
 
 ---
 
