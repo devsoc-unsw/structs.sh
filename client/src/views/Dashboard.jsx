@@ -1,6 +1,6 @@
 import React from 'react';
 import Pane from 'components/Panes/Pane';
-import LinkedList from 'components/Visualisation/LinkedList/LinkedList';
+import { LinkedList } from 'components/Visualisation/LinkedList';
 import { Lesson } from 'components/Lesson';
 import { Terminal } from 'components/Terminal';
 import { motion } from 'framer-motion';
