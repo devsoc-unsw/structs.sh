@@ -4,7 +4,7 @@ import { LinkedList } from 'components/Visualisation/LinkedList';
 import { Lesson } from 'components/Lesson';
 import { Terminal } from 'components/Terminal';
 import { motion } from 'framer-motion';
-import { Tabs } from 'components/Tabs/Tabs';
+import Tabs from 'components/Tabs/Tabs';
 import styles from './Dashboard.module.scss';
 import images from 'assets/img';
 
