@@ -16,7 +16,7 @@ const Dashboard = ({ match }) => {
                 </Pane>
                 <div>
                     {topic}
-                    <Tabs />
+                    <Tabs topic={topic}/>
                 </div>
             </Pane>
         </div>
