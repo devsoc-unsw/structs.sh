@@ -4,6 +4,7 @@ import { LinkedList } from 'components/Visualisation/LinkedList';
 import { Lesson } from 'components/Lesson';
 import { Terminal } from 'components/Terminal';
 import { motion } from 'framer-motion';
+import Tabs from 'components/Tabs/Tabs';
 import styles from './Dashboard.module.scss';
 import images from 'assets/img';
 
@@ -40,7 +41,7 @@ const Dashboard = ({ match }) => {
                     <LinkedList>Visualiser here</LinkedList>
                     <Terminal>Terminal here</Terminal>
                 </Pane>
-                <Lesson topic={topic}></Lesson>
+                <Tabs topic={topic}></Tabs>
             </Pane>
         </motion.div>
     );
