@@ -417,6 +417,8 @@ class LinkedList extends React.Component {
                             offset
                         );
                         break;
+                    default:
+                        break;
                 }
             });
         }
@@ -704,7 +706,7 @@ class LinkedList extends React.Component {
                     <button name="delete">delete</button>
                 </form>
                 <div className="visualiser">
-                    <svg className="visualiser-svg" overflow="auto">
+                    <svg className="visualiser-svg" overflow="auto" style={{ width: '100%' }}>
                         <g className="nodes" transform="translate(0, 20)"></g>
                         <g className="pointers" transform="translate(0, 20)"></g>
                     </svg>
