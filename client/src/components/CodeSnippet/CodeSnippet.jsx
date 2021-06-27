@@ -7,6 +7,17 @@ const CodeSnippet = () => {
     const [languageDemo, changeDemo] = useState(sample['python']);
     const [lineNumbers, toggleLineNumbers] = useState(true);
 
+    const [highlighted, setHighlighted] = useState('1');
+
+    const step = () => {
+        const nextLine = parseInt(highlighted) + 1;
+        if (nextLine > 30) {
+            setHighlighted('1');
+        } else {
+            setHighlighted(nextLine.toString());
+        }
+    };
+
     return (
         <div className="container mx-auto p-4">
             <TopBar
@@ -34,9 +45,11 @@ const CodeSnippet = () => {
                     showLineNumbers={lineNumbers}
                     theme={dracula}
                     wrapLines={true}
+                    highlight={highlighted}
                     codeBlock
                 />
                 <br />
+                <button onClick={step}>Highlight Next Line</button>
                 {/* <CopyBlock
           language="go"
           text={`v := Vertex{X: 1, Y: 2}`}
