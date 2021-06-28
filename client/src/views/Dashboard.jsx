@@ -1,12 +1,12 @@
 import React from 'react';
 import Pane from 'components/Panes/Pane';
 import { LinkedList } from 'components/Visualisation/LinkedList';
-import { Lesson } from 'components/Lesson';
 import { Terminal } from 'components/Terminal';
 import { motion } from 'framer-motion';
 import Tabs from 'components/Tabs/Tabs';
 import styles from './Dashboard.module.scss';
-import images from 'assets/img';
+import TopNavbar from '../components/Navbars/TopNavbar'
+import GUIMode from '../components/GUIMode/guiMode'
 
 const containerVariants = {
     hidden: {
@@ -27,6 +27,8 @@ const Dashboard = ({ match }) => {
     const { params } = match;
     const topic = params.topic;
 
+    const [switchMode, setSwitchMode] = React.useState(false);
+
     return (
         <motion.div
             className={styles.container}
@@ -35,11 +37,16 @@ const Dashboard = ({ match }) => {
             animate="visible"
             exit="exit"
         >
-            <img src={images.logo} width={48} height={48} />
+            <TopNavbar showMenu />
             <Pane orientation="vertical" minSize={'50%'} topGutterSize={48}>
                 <Pane orientation="horizontal" minSize={'50%'}>
                     <LinkedList>Visualiser here</LinkedList>
-                    <Terminal>Terminal here</Terminal>
+                    {switchMode || (
+                            <GUIMode switchMode={switchMode} setSwitchMode={setSwitchMode} />
+                        )}
+                        {switchMode && (
+                            <Terminal switchMode={switchMode} setSwitchMode={setSwitchMode} />
+                        )}
                 </Pane>
                 <Tabs topic={topic}></Tabs>
             </Pane>
