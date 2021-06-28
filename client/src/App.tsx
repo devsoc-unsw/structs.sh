@@ -13,7 +13,7 @@ const App = () => {
         <AnimatePresence>
             <Switch location={location}>
                 {/* Visualiser routes */}
-                <Route exact path="/visualiser/:topic" render={Dashboard} />
+                <Route exact path="/visualiser/:topic" component={Dashboard} />
                 <Route exact path="/" render={HomePage} />
                 {/* About us page */}
                 <Route exact path="/about" render={AboutUs} />
