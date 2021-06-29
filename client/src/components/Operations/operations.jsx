@@ -7,6 +7,7 @@ import { Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import OpDetails from './opDetails';
 import { link, lastLink } from './utils';
+import { getLessonContent, getTopicOps } from 'content';
 
 const useStyles = makeStyles({
     opItem: {
@@ -21,19 +22,34 @@ const useStyles = makeStyles({
     },
 });
 
-const ops = ['Insert', 'Delete'];
 
-const ListOp = ({structType}) => {
-    const [showOp, setShowInsert] = React.useState({ Insert: false, Delete: false });
+const Operations = ({ topic }) => {
+
+    const [ops, setOps] = React.useState([])
+    const [title, setTitle] = React.useState('')
+
+    // toggle collaps
+    var opShowList = {};
+    for (const op in ops) {
+        opShowList[op]=false
+    }
+    const [showOp, setShowOp] = React.useState(opShowList)
+
+    React.useEffect(async () => {
+        setOps(await getTopicOps(topic))
+        const lesson = await getLessonContent(topic)
+        setTitle(lesson.title)
+    })
 
     const handleClick = (op) => {
-        setShowInsert({ ...showOp, [op]: !showOp[op] });
+        setShowOp({ ...showOp, [op]: !showOp[op] });
     };
 
     const classes = useStyles();
+
     return (
         <div className="operation-list">
-            <Typography className={classes.opType}>{structType}</Typography>
+            <Typography className={classes.opType}>{title}</Typography>
             <List>
                 {ops.map((op, idx) => {
                     const isLast = idx === ops.length - 1;
@@ -57,8 +73,8 @@ const ListOp = ({structType}) => {
     );
 };
 
-ListOp.propTypes = {
-    structType: PropTypes.string
+Operations.propTypes = {
+    topic: PropTypes.string,
 };
 
-export default ListOp
+export default Operations
