@@ -1,1 +1,1 @@
-export { default as getLessonContent } from './ContentList';
+export { getLessonContent, getMatchedLessons, getTopicOps } from './ContentList';
