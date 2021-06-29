@@ -100,7 +100,7 @@ const OpDetails = ({ op, isLast, showOp }) => {
 OpDetails.propTypes = {
     op: PropTypes.string,
     isLast: PropTypes.bool,
-    showOp: PropTypes.func
+    showOp: PropTypes.object
 }
 
 export default OpDetails
