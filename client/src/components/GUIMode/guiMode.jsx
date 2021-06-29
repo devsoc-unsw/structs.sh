@@ -1,31 +1,23 @@
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
-import ListOp from '../Operations/listOp';
-import TreeOp from '../Operations/treeOp';
+import Operations from '../Operations/operations';
 import ModeSwitch from './modeSwitch';
+import {useParams} from "react-router-dom";
 
-const operations = (struct) => {
-    switch (struct) {
-        case 'Linked-List':
-            return <ListOp structType='Linked-List'/>;
-        case 'Tree':
-            return <TreeOp />;
-        default:
-            break;
-    }
-};
+const GUIMode = ({ switchMode, setSwitchMode }) => {
+    const { topic } = useParams();
 
-export const GUIControl = ({ switchMode, setSwitchMode }) => {
     return (
         <div>
             <ModeSwitch switchMode={switchMode} setSwitchMode={setSwitchMode}/>
-            {operations('Linked-List')}
+            <Operations topic={topic}/>
         </div>
     );
 };
 
-GUIControl.propTypes = {
+GUIMode.propTypes = {
     switchMode: PropTypes.bool,
     setSwitchMode: PropTypes.func,
 };
 
-export default GUIControl;
+export default GUIMode
