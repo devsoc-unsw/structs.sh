@@ -43,7 +43,7 @@ const TopNavbar = ({ showMenu }) => {
                         <>
                             <MenuIcon className="navbar-toggle-sidebar" onClick={toggleSidebar} />
                             <Drawer open={showSidebar} onClose={toggleSidebar}>
-                                <Sidebar />
+                                <Sidebar setShowSidebar={setShowSidebar}/>
                             </Drawer>
                         </>
                     )}
