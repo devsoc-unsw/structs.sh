@@ -1,0 +1,35 @@
+.structure-list {
+    width: 300px;
+    height: 100vh;
+    background-color: #5383c0;
+}
+
+.struct-item {
+    font-size: 20px;
+}
+
+.struct-logo {
+    height: 40px;
+    width: 40px;
+    margin-right: 0px;
+}
+
+.operation-list * {
+    color: black;
+    font-size: 18px;
+}
+
+#op-item {
+    padding-top: 20px;
+    padding-bottom: 0px;
+}
+.op-text {
+    padding-top: 0px;
+}
+
+.struct-filter {
+    height: 30px;
+    width: 30px;
+    margin-left: 240px;
+    margin-top: 5px;
+}
