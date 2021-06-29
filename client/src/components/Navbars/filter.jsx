@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -6,7 +7,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import Button from '@material-ui/core/Button';
-
+import { getMatchedLessons } from 'content/ContentList';
 
 const useStyles = makeStyles({
     root: {
@@ -15,19 +16,19 @@ const useStyles = makeStyles({
     },
     filterType: {
         color: 'black',
-
     }
 });
 
-const Filter = () => {
-    const [value, setValue] = React.useState('');
+const Filter = ({setTopics}) => {
+    const [course, setCourse] = React.useState('');
 
     const handleChange = (event) => {
-        setValue(event.target.value);
+        setCourse(event.target.value);
     };
 
-    const handleFilter = () => {
-        
+    const handleFilter = async () => {
+        const reg = new RegExp(`${course}`)
+        setTopics(await getMatchedLessons(reg))
     }
     const classes = useStyles();
 
@@ -51,19 +52,24 @@ const Filter = () => {
                 <RadioGroup
                     aria-label="course-code"
                     name="course code"
-                    value={value}
+                    value={course}
                     onChange={handleChange}
                     row
                 >
                     <FormControlLabel value="comp1511" control={<Radio />} label="COMP1511" />
-                    <FormControlLabel value="comp1521" control={<Radio />} label="COMP1521" />
+                    <FormControlLabel value="comp2521" control={<Radio />} label="COMP2521" />
                 </RadioGroup>
-                <Button variant="contained" color="primary" onClick={handleFilter}>
+                <Button variant="contained" color="primary" onClick={e => handleFilter(e)}>
                     Filter
                 </Button>
             </FormControl>
         </div>
     );
 };
+
+Filter.propTypes = {
+    setTopics: PropTypes.func
+}
+
 
 export default Filter;
