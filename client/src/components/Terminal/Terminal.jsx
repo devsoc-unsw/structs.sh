@@ -6,7 +6,7 @@ import ModeSwitch from 'components/GUIMode/modeSwitch';
 
 // Pretty cool demo: https://codepen.io/spkml/pen/dgBqRm
 
-const Terminal = ({ switchMode, setSwitchMode }) => {
+const Terminal = ({ switchMode, setSwitchMode, executeCommand }) => {
     const [debugOutput, setDebugOutput] = useState('');
 
     const processCommand = (line) => {
@@ -19,7 +19,8 @@ const Terminal = ({ switchMode, setSwitchMode }) => {
             Args:\t\t${args}\n
         `);
 
-        //
+        // Determine which command is to be run
+        executeCommand(command, args);
     };
 
     return (

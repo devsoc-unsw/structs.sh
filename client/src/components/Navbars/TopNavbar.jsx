@@ -33,7 +33,7 @@ const TopNavbar = ({ showMenu }) => {
     };
 
     return (
-        <Navbar className={'fixed-top ' + color} color-on-scroll="100" expand="lg">
+        <Navbar className={`fixed-top ${color} ${styles.navbar}`} color-on-scroll="100" expand="lg">
             <Container>
                 <div className="navbar-translate">
                     {showMenu && (

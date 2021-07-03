@@ -4,6 +4,9 @@ import Node from './Node';
 // import * as d3 from 'd3';
 import anime from 'animejs';
 
+let appendNode = null;
+let deleteNode = null;
+
 // Convert to a functional component
 class LinkedList extends React.Component {
     componentDidMount() {
@@ -21,12 +24,12 @@ class LinkedList extends React.Component {
         let animation = null;
 
         createDefaultList();
-        addFormListeners();
+        // addFormListeners();
 
         // animation functions
         // drivers for appending and deleting
         function animateAppend(data) {
-            appendNodeSVG(appendInput.value, false);
+            appendNodeSVG(data, false);
             if (nodes.length > 1) appendPointerSVG(false);
             const animationSequence = generateAppendSequence();
             createAnimation(animationSequence);
@@ -651,12 +654,12 @@ class LinkedList extends React.Component {
             e.target.value = e.target.value.replace(/[\D]+/g, '');
         }
 
-        function addFormListeners() {
-            appendInput.addEventListener('input', handleInput);
-            deleteInput.addEventListener('input', handleInput);
-            appendButton.addEventListener('click', handleAppend);
-            deleteButton.addEventListener('click', handleDelete);
-        }
+        // function addFormListeners() {
+        //     appendInput.addEventListener('input', handleInput);
+        //     deleteInput.addEventListener('input', handleInput);
+        //     appendButton.addEventListener('click', handleAppend);
+        //     deleteButton.addEventListener('click', handleDelete);
+        // }
 
         // adds some default values to the linked list
         function createDefaultList() {
@@ -674,6 +677,7 @@ class LinkedList extends React.Component {
                 animation.seek(999999999999);
                 animation = null;
             }
+            alert(e.target.value);
             if (!appendInput.value) {
                 return;
             }
@@ -694,17 +698,14 @@ class LinkedList extends React.Component {
             }
             deleteInput.value = '';
         }
+
+        appendNode = animateAppend.bind(this);
+        deleteNode = handleDelete.bind(this);
     }
 
     render() {
         return (
             <div className={styles.container}>
-                <form className="visualiser-form">
-                    <input name="append" placeholder="number to append" />
-                    <button name="append">append</button>
-                    <input name="delete" placeholder="position to delete" />
-                    <button name="delete">delete</button>
-                </form>
                 <div className="visualiser">
                     <svg className="visualiser-svg" overflow="auto" style={{ width: '100%' }}>
                         <g className="nodes" transform="translate(0, 20)"></g>
@@ -717,3 +718,4 @@ class LinkedList extends React.Component {
 }
 
 export default LinkedList;
+export { appendNode, deleteNode };
