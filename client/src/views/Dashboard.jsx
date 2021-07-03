@@ -1,5 +1,5 @@
 import React from 'react';
-import Pane from 'components/Panes/Pane';
+import { Pane } from 'components/Panes';
 import { LinkedList } from 'components/Visualisation/LinkedList';
 import { Terminal } from 'components/Terminal';
 import { motion } from 'framer-motion';
