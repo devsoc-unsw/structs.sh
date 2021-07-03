@@ -4,6 +4,8 @@ import styles from './Terminal.module.scss';
 import Prompt from './Prompt';
 import ModeSwitch from 'components/GUIMode/modeSwitch';
 
+// Pretty cool demo: https://codepen.io/spkml/pen/dgBqRm
+
 const Terminal = ({ switchMode, setSwitchMode }) => {
     const [debugOutput, setDebugOutput] = useState('');
 
