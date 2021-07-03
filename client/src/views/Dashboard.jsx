@@ -5,8 +5,9 @@ import { Terminal } from 'components/Terminal';
 import { motion } from 'framer-motion';
 import Tabs from 'components/Tabs/Tabs';
 import styles from './Dashboard.module.scss';
-import TopNavbar from '../components/Navbars/TopNavbar'
-import GUIMode from '../components/GUIMode/guiMode'
+import TopNavbar from '../components/Navbars/TopNavbar';
+import GUIMode from '../components/GUIMode/guiMode';
+import Helmet from 'react-helmet';
 
 const containerVariants = {
     hidden: {
@@ -37,16 +38,19 @@ const Dashboard = ({ match }) => {
             animate="visible"
             exit="exit"
         >
+            <Helmet>
+                <title>Structs.sh — {topic}</title>
+            </Helmet>
             <TopNavbar showMenu />
             <Pane orientation="vertical" minSize={'50%'} topGutterSize={48}>
                 <Pane orientation="horizontal" minSize={'50%'}>
                     <LinkedList>Visualiser here</LinkedList>
                     {switchMode || (
-                            <GUIMode switchMode={switchMode} setSwitchMode={setSwitchMode} />
-                        )}
-                        {switchMode && (
-                            <Terminal switchMode={switchMode} setSwitchMode={setSwitchMode} />
-                        )}
+                        <GUIMode switchMode={switchMode} setSwitchMode={setSwitchMode} />
+                    )}
+                    {switchMode && (
+                        <Terminal switchMode={switchMode} setSwitchMode={setSwitchMode} />
+                    )}
                 </Pane>
                 <Tabs topic={topic}></Tabs>
             </Pane>

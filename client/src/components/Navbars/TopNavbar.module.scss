@@ -1,0 +1,17 @@
+.hamburger {
+    cursor: pointer;
+}
+
+.brandContainer {
+    display: inline-block;
+    margin: 0;
+
+    a {
+        margin: 0 !important;
+    }
+
+    .brandName {
+        color: rgb(255, 255, 255);
+        font-family: 'Ubuntu Mono', monospace !important;
+    }
+}
