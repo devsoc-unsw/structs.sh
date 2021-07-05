@@ -18,28 +18,26 @@ const useStyles = makeStyles({
     opType: {
         fontSize: '20px',
         paddingLeft: '15px',
-        paddingTop: '35px'
+        paddingTop: '35px',
     },
 });
 
-
-const Operations = ({ topic }) => {
-
-    const [ops, setOps] = React.useState([])
-    const [title, setTitle] = React.useState('')
+const Operations = ({ topic, executeCommand }) => {
+    const [ops, setOps] = React.useState([]);
+    const [title, setTitle] = React.useState('');
 
     // toggle collaps
     var opShowList = {};
     for (const op in ops) {
-        opShowList[op]=false
+        opShowList[op.command] = false;
     }
-    const [showOp, setShowOp] = React.useState(opShowList)
+    const [showOp, setShowOp] = React.useState(opShowList);
 
     React.useEffect(async () => {
-        setOps(await getTopicOps(topic))
-        const lesson = await getLessonContent(topic)
-        setTitle(lesson.title)
-    })
+        setOps(await getTopicOps(topic));
+        const lesson = await getLessonContent(topic);
+        setTitle(lesson.title);
+    });
 
     const handleClick = (op) => {
         setShowOp({ ...showOp, [op]: !showOp[op] });
@@ -58,13 +56,20 @@ const Operations = ({ topic }) => {
                             <ListItem
                                 button
                                 className={classes.opItem}
-                                onClick={() => handleClick(op)}
+                                onClick={() => handleClick(op.command)}
                             >
                                 <ListItemIcon>{isLast ? lastLink : link}</ListItemIcon>
-                                <span>{op}</span>
-                                {showOp[op] ? <ExpandLess /> : <ExpandMore />}
+                                <span>{op.command}</span>
+                                {showOp[op.command] ? <ExpandLess /> : <ExpandMore />}
                             </ListItem>
-                            {<OpDetails op={op} isLast={isLast} showOp={showOp}/>}
+                            {
+                                <OpDetails
+                                    op={op}
+                                    isLast={isLast}
+                                    showOp={showOp}
+                                    executeCommand={executeCommand}
+                                />
+                            }
                         </div>
                     );
                 })}
@@ -77,4 +82,4 @@ Operations.propTypes = {
     topic: PropTypes.string,
 };
 
-export default Operations
+export default Operations;

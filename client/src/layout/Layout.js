@@ -31,12 +31,10 @@ const Layout = ({ children }) => {
             <IndexNavbar />
             <div className="wrapper">
                 <div className="main">{children}</div>
-                <Footer />
+                {/* <Footer /> */}
             </div>
         </motion.div>
     );
 };
-
-Layout.propTypes = {};
 
 export default Layout;

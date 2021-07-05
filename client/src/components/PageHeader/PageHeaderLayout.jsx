@@ -6,7 +6,7 @@ import { Container } from 'reactstrap';
 
 export default function PageHeader({ children }) {
     return (
-        <div className="page-header header-filter" style={{ backgroundColor: '#4d18b8' }}>
+        <div className="page-header header-filter" style={{ backgroundColor: 'rgb(38, 2, 111)' }}>
             <div className="squares square1" />
             <div className="squares square2" />
             <div className="squares square3" />

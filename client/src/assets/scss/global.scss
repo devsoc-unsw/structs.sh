@@ -18,6 +18,8 @@
 
 $asset-base-path: '../../../../assets' !default;
 
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono&display=swap');
+
 // Core
 
 @import 'styles/custom/functions';
@@ -117,3 +119,7 @@ $asset-base-path: '../../../../assets' !default;
 // React Differences
 
 @import 'styles/react/react-differences';
+
+body {
+    background-color: black;
+}

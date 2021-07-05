@@ -1,6 +1,6 @@
 import React from 'react';
 import SplitPane from 'react-split-pane';
-import './Pane.scss';
+import './SplitPane.scss';
 
 interface Props {
     children: any;
@@ -15,9 +15,23 @@ const Pane: React.FC<Props> = ({ children, orientation, minSize, topGutterSize =
         bottom: '0',
     };
     return (
-        <SplitPane split={orientation} minSize={minSize} style={heightAdjustment}>
-            {children}
-        </SplitPane>
+        <>
+            <SplitPane
+                className="split-pane"
+                split={orientation}
+                minSize={minSize}
+                style={heightAdjustment}
+            >
+                {children}
+            </SplitPane>
+            <span
+                style={{
+                    position: 'absolute',
+                }}
+            >
+                Collapsible
+            </span>
+        </>
     );
 };
 

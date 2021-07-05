@@ -1,10 +1,10 @@
-import PropTypes from 'prop-types';
-import { Collapse } from '@material-ui/core';
+import { Collapse, List, ListItem, ListItemIcon } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
-import { List, ListItem, ListItemIcon } from '@material-ui/core';
-import {link, lastLink} from './utils'
+import TextField from '@material-ui/core/TextField';
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
+import { lastLink, link } from './utils';
 
 // in case to change the lable color in the future
 // const labelStyle = {
@@ -49,11 +49,24 @@ const useStyles = makeStyles({
     },
 });
 
-const OpDetails = ({ op, isLast, showOp }) => {
+const OpDetails = ({ op, isLast, showOp, executeCommand }) => {
     const classes = useStyles();
+    const [args, setArguments] = useState([]);
+
+    const handleSetArguments = (e, index) => {
+        const newArgs = [...args];
+        newArgs[index] = e.target.value;
+        setArguments(newArgs);
+    };
+    console.log(op);
 
     return (
-        <Collapse in={showOp[op]} timeout="auto" unmountOnExit className={classes.opListContainer}>
+        <Collapse
+            in={showOp[op.command]}
+            timeout="auto"
+            unmountOnExit
+            className={classes.opListContainer}
+        >
             {!isLast && (
                 <svg width="10" height="166" className={classes.longLink}>
                     <line
@@ -68,28 +81,27 @@ const OpDetails = ({ op, isLast, showOp }) => {
                 </svg>
             )}
             <List className={isLast ? `${classes.opList} ${classes.last}` : classes.opList}>
-                <ListItem>
-                    <ListItemIcon>{link}</ListItemIcon>
-                    <TextField
-                        label="index"
-                        //InputLabelProps={labelStyle}
-                        //InputProps={{ classes: { notchedOutline: classes.outline } }}
-                        variant="outlined"
-                    />
-                </ListItem>
-                <ListItem>
-                    <ListItemIcon>{link}</ListItemIcon>
-                    <TextField
-                        label="value"
-                        // InputLabelProps={labelStyle}
-                        //InputProps={{ classes: { notchedOutline: classes.outline } }}
-                        variant="outlined"
-                    />
-                </ListItem>
+                {op.args.map((eachArg, i) => (
+                    <ListItem key={i}>
+                        <ListItemIcon>{link}</ListItemIcon>
+                        <TextField
+                            label={eachArg}
+                            //InputLabelProps={labelStyle}
+                            //InputProps={{ classes: { notchedOutline: classes.outline } }}
+                            variant="outlined"
+                            onChange={(e) => handleSetArguments(e, i)}
+                        />
+                    </ListItem>
+                ))}
                 <ListItem>
                     <ListItemIcon>{lastLink}</ListItemIcon>
                     <Button className={classes.opBtn} variant="contained" color="primary">
-                        <div className={classes.btnText}>Go</div>
+                        <div
+                            className={classes.btnText}
+                            onClick={() => executeCommand(op.command, ...args)}
+                        >
+                            Go
+                        </div>
                     </Button>
                 </ListItem>
             </List>
@@ -100,7 +112,7 @@ const OpDetails = ({ op, isLast, showOp }) => {
 OpDetails.propTypes = {
     op: PropTypes.string,
     isLast: PropTypes.bool,
-    showOp: PropTypes.object
-}
+    showOp: PropTypes.object,
+};
 
-export default OpDetails
+export default OpDetails;

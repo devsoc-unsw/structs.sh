@@ -40,10 +40,21 @@ const HomePage = (props) => {
     return (
         <Layout>
             <PageHeader>
-                {/* carousel */}
-                <CustomCarousel items={cards} />
-                <>
-                    {/* <h1>Structs.sh</h1>
+                <div className={styles.headerContent}>
+                    <h1 className={styles.title}>
+                        <strong>Welcome to Structs.sh</strong>
+                    </h1>
+                    <p className={styles.description}>
+                        An interactive learning platform designed for UNSW CSE students
+                    </p>
+                    <div className={styles.searchbarContainer}>
+                        <Searchbar className={styles.searchbar} />
+                    </div>
+                    {/* carousel */}
+                    <CustomCarousel items={cards} />
+                </div>
+                {/* <>
+                    <h1>Structs.sh</h1>
                 <h3>[Temporary buttons]</h3>
                 <Link to="/visualiser/linked-list">
                     <Button>Linked Lists</Button>
@@ -65,13 +76,11 @@ const HomePage = (props) => {
                 </Link>
                 <a href="/visualiser.html">
                     <Button>Vanilla JS Visualiser Test</Button>
-                </a> */}
-                </>
+                </a>
+                </> */}
             </PageHeader>
         </Layout>
     );
 };
-
-HomePage.propTypes = {};
 
 export default HomePage;

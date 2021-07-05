@@ -2,15 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // reactstrap components
-import {
-    Container,
-    Navbar,
-    NavbarBrand
-} from 'reactstrap';
+import { Container, Navbar, NavbarBrand } from 'reactstrap';
 import MenuIcon from '@material-ui/icons/Menu';
 import Sidebar from './sidebar';
 import { Drawer } from '@material-ui/core';
 import logo from 'assets/img/logo.png';
+import styles from './TopNavbar.module.scss';
 
 const TopNavbar = ({ showMenu }) => {
     const [color, setColor] = React.useState('navbar-transparent');
@@ -32,27 +29,32 @@ const TopNavbar = ({ showMenu }) => {
     };
 
     const toggleSidebar = () => {
-        setShowSidebar(!showSidebar)
-    }
+        setShowSidebar(!showSidebar);
+    };
 
     return (
-        <Navbar className={'fixed-top ' + color} color-on-scroll="100" expand="lg">
+        <Navbar className={`fixed-top ${color} ${styles.navbar}`} color-on-scroll="100" expand="lg">
             <Container>
                 <div className="navbar-translate">
                     {showMenu && (
                         <>
-                            <MenuIcon className="navbar-toggle-sidebar" onClick={toggleSidebar} />
+                            <MenuIcon
+                                className={`navbar-toggle-sidebar ${styles.hamburger}`}
+                                onClick={toggleSidebar}
+                            />
                             <Drawer open={showSidebar} onClose={toggleSidebar}>
-                                <Sidebar setShowSidebar={setShowSidebar}/>
+                                <Sidebar setShowSidebar={setShowSidebar} />
                             </Drawer>
                         </>
                     )}
                     <div id="structs-logo">
                         <img src={logo} alt="logo" />
                     </div>
-                    <NavbarBrand to="/" tag={Link}>
-                        <span>Structs.sh </span>
-                    </NavbarBrand>
+                    <div className={styles.brandContainer}>
+                        <NavbarBrand to="/" tag={Link}>
+                            <span className={styles.brandName}>Structs.sh </span>
+                        </NavbarBrand>
+                    </div>
                 </div>
             </Container>
         </Navbar>
@@ -61,5 +63,5 @@ const TopNavbar = ({ showMenu }) => {
 
 TopNavbar.propTypes = {
     showMenu: PropTypes.bool,
-}
+};
 export default TopNavbar;

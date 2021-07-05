@@ -1,8 +1,11 @@
+$backgroundColour: rgb(25, 24, 63);
+
 .navbar {
-    padding: $navbar-padding-x;
+    // padding: $navbar-padding-x;
     width: $full-width;
     z-index: 1050;
-    background: $primary;
+    background: $backgroundColour !important;
+    padding-bottom: 3px;
 
     .photo {
         display: inline-block;
@@ -56,7 +59,7 @@
     }
 
     &.navbar-transparent {
-        background: $transparent-bg !important;
+        // background: $transparent-bg !important;
         padding-top: 3px;
     }
 
@@ -108,7 +111,11 @@
     }
 
     &.bg-info {
-        background-color: $info !important;
+        background-color: lighten($color: $backgroundColour, $amount: 10%) !important;
+        #structs-logo {
+            width: 45px;
+            transition-duration: 0.5s;
+        }
     }
 
     &.bg-success {
@@ -142,7 +149,7 @@
     }
     #structs-logo {
         display: inline-block;
-        height: 42px;
+        height: 100%;
         width: 42px;
         margin-left: 40%;
         margin-right: 10px;
