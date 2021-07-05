@@ -11,52 +11,14 @@ import { Link } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
+        maxWidth: '700px',
         paddingLeft: theme.spacing(2),
         paddingRight: theme.spacing(2),
-        margin: '0 auto',
-        '& .ant-carousel': {
-            '& .slick-list': {
-                minHeight: '300px',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-            },
-            '& .slick-list .slick-slide': {
-                zIndex: 998,
-                pointerEvents: 'auto',
-            },
-            '& .slick-active.slick-current': {
-                zIndex: 999,
-            },
-            '& .slick-dots li': {
-                // margin: '0 4px',
-            },
-            '& .slick-dots li.slick-active': {
-                width: '18px',
-            },
-            '& .slick-dots li button': {
-                background: '#000',
-                opacity: '0.2',
-            },
-            '& .slick-dots li.slick-active button': {
-                opacity: '1',
-                background: theme.palette.secondary.main,
-            },
-            '& .slick-arrow': {
-                color: '#000',
-                opacity: 0.5,
-                width: 'unset',
-                height: 'unset',
-                padding: theme.spacing(1),
-                '&:hover': {
-                    opacity: 0.7,
-                    background: 'rgba(0,0,0,0.2)',
-                },
-            },
-        },
+        margin: theme.spacing(4, 'auto', 0),
+        position: "relative",
     },
     btn: {
+        color: 'rgba(255,255,255,0.5) !important',
         '&:hover': {
             color: `${theme.palette.secondary.main} !important`,
             opacity: 1,
@@ -68,12 +30,15 @@ const useStyles = makeStyles((theme) => ({
     },
     media: {
         maxWidth: '100%',
-        height: '300px',
+        maxHeight: '280px',
     },
     overlay: {
         position: 'absolute',
-        top: 0,
-        left: 0,
+        top: theme.spacing(1),
+        left: theme.spacing(1),
+    },
+    title: {
+        color: "white",
     },
 }));
 
@@ -99,7 +64,7 @@ const LinkCard = ({ item }) => {
             <CardMedia className={classes.media} component="img" src={item.image} title={item.title} />
           </CardActionArea>
           <CardContent className={classes.overlay}>
-            <Typography gutterBottom component="h2" variant="h4">
+            <Typography className={classes.title} gutterBottom component="h2" variant="h4">
               {item.title}
             </Typography>
           </CardContent>
@@ -113,11 +78,11 @@ const LinkCard = ({ item }) => {
 const CustomCarousel = ({ items }) => {
     const classes = useStyles();
     const settings = {
-        autoplay: true,
+        // autoplay: true,
         autoplaySpeed: 4000,
         lazyLoad: true,
         accessibility: true,
-        draggable: true,
+        // draggable: true,
         focusOnSelect: true,
         pauseOnDotsHover: true,
         pauseOnHover: true,
@@ -125,8 +90,8 @@ const CustomCarousel = ({ items }) => {
         infinite: true,
         speed: 400,
         arrows: true,
-        nextArrow: <NextArrow fontSize="large" customClassName={classes.btn} />,
-        prevArrow: <PrevArrow fontSize="large" customClassName={classes.btn} />,
+        nextArrow: <NextArrow fontSize="large"disableRipple customClassName={classes.btn} />,
+        prevArrow: <PrevArrow fontSize="large"disableRipple customClassName={classes.btn} />,
     };
 
     return (
