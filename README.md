@@ -1,6 +1,8 @@
 # Structs.sh 💻
 
-An interactive data structure and algorithm visualiser and educational platform for computer science.
+An interactive data structure and algorithm visualiser and educational platform for computer science students.
+
+<strong><a href="https://structs.netlify.app/">View the deployed demo here</a></strong>.
 
 ---
 
@@ -37,10 +39,6 @@ Running the frontend development server:
 Running the backend server:
 
 1. From the project directory: `sh structs.sh --backend`
-
-### Production
-
-We'll figure it out later. 😵
 
 ---
 
@@ -93,8 +91,7 @@ We'll figure it out later. 😵
 
 ## Documentation
 
--   <a href="https://demos.creative-tim.com/blk-design-system-react/#/documentation/overview">Documentation</a> for UI components from the base template
--   <a href="https://compclub.atlassian.net/wiki/spaces/Projects/pages/1645936641/Structs.sh">Confluence</a> team wiki
+-   <a href="https://demos.creative-tim.com/blk-design-system-react/#/documentation/overview">Documentation</a> for UI components from the frontend base template
 
 ## Guidelines:
 
