@@ -32,13 +32,15 @@ const Dashboard = ({ match }) => {
     const [terminalMode, setTerminalMode] = useState(true);
 
     const executeCommand = (command, args) => {
-        alert(`Executing ${command} with args: ${args}`);
         switch (command) {
             case 'append':
                 appendNode(args[0]);
                 break;
             case 'delete':
+                deleteNode(args[0]);
                 break;
+            default:
+                return `Invalid command: ${command}`;
         }
     };
 

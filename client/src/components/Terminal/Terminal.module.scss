@@ -6,6 +6,7 @@ $textFontSize: 14px;
     width: 100%;
     height: 100%;
     padding: 10px;
+    padding-top: 20px;
     color: white;
 
     .terminalLine {
@@ -29,10 +30,11 @@ $textFontSize: 14px;
             font-family: 'Ubuntu Mono', monospace !important;
             background-color: $terminalBackgroundColour;
             border: none;
+            border: 1px solid white; // Temporary
             outline: none;
             width: 200px;
             color: white;
-            caret-color: transparent;
+            caret-color: white;
         }
 
         .caret {

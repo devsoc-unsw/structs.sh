@@ -17,6 +17,8 @@ const Prompt = ({ username, path, processCommand }) => {
             case 13:
                 // Processing command on enter press
                 processCommand(currContent);
+                // Clear the input field
+                typeInput.current.value = '';
                 break;
         }
     };
@@ -33,7 +35,7 @@ const Prompt = ({ username, path, processCommand }) => {
                 type="text"
                 onKeyPress={handleKeyPress}
             />
-            <Caret />
+            {/* <Caret /> */}
         </div>
     );
 };

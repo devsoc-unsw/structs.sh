@@ -47,9 +47,11 @@ const TopNavbar = ({ showMenu }) => {
                             </Drawer>
                         </>
                     )}
-                    <div id="structs-logo">
-                        <img src={logo} alt="logo" />
-                    </div>
+                    <Link to="/">
+                        <div id="structs-logo">
+                            <img src={logo} alt="logo" />
+                        </div>
+                    </Link>
                     <div className={styles.brandContainer}>
                         <NavbarBrand to="/" tag={Link}>
                             <span className={styles.brandName}>Structs.sh </span>

@@ -700,7 +700,7 @@ class LinkedList extends React.Component {
         }
 
         appendNode = animateAppend.bind(this);
-        deleteNode = handleDelete.bind(this);
+        deleteNode = animateDelete.bind(this);
     }
 
     render() {

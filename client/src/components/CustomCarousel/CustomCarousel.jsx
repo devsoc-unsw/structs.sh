@@ -43,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
         position: 'absolute',
         top: theme.spacing(4),
         width: '100%',
+        pointerEvents: 'none',
     },
     title: {
         color: 'white',
