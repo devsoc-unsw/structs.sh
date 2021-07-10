@@ -24,13 +24,14 @@ const containerVariants = {
         transition: { ease: 'easeInOut' },
     },
 };
+let appendNode = () => console.log('Not set');
+let deleteNode = () => console.log('Not set');
+console.log('STARTING');
 
 const Dashboard = ({ match }) => {
     // Extract route parameters
     const { params } = match;
     const topic = params.topic;
-    let appendNode = () => console.log('Not set');
-    let deleteNode = () => console.log('Not set');
 
     const [terminalMode, setTerminalMode] = useState(true);
 
