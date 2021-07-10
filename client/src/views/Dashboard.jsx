@@ -3,12 +3,13 @@ import Tabs from 'components/Tabs/Tabs';
 import { Terminal } from 'components/Terminal';
 import { LinkedList } from 'components/Visualisation/LinkedList';
 import { motion } from 'framer-motion';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Helmet from 'react-helmet';
 import TopNavbar from 'components/Navbars/TopNavbar';
 import styles from './Dashboard.module.scss';
 import GUIMode from 'components/GUIMode/guiMode';
-import { appendNode, deleteNode } from 'components/Visualisation/LinkedList/LinkedListJoanna';
+// import { appendNode, deleteNode } from 'components/Visualisation/LinkedList/LinkedListJoanna';
+import LinkedListAnimation from 'components/Animation/LinkedList/linkedListAnimation';
 
 const containerVariants = {
     hidden: {
@@ -28,21 +29,29 @@ const Dashboard = ({ match }) => {
     // Extract route parameters
     const { params } = match;
     const topic = params.topic;
+    let appendNode = () => console.log('Not set');
+    let deleteNode = () => console.log('Not set');
 
     const [terminalMode, setTerminalMode] = useState(true);
 
     const executeCommand = (command, args) => {
         switch (command) {
             case 'append':
-                appendNode(args[0]);
+                appendNode(parseInt(args[0]));
                 break;
             case 'delete':
-                deleteNode(args[0]);
+                deleteNode(parseInt(args[0]));
                 break;
             default:
                 return `Invalid command: ${command}`;
         }
     };
+
+    useEffect(() => {
+        const list = new LinkedListAnimation();
+        appendNode = list.animateAppend.bind(list);
+        deleteNode = list.animateDelete.bind(list);
+    }, []);
 
     return (
         <motion.div
@@ -61,7 +70,19 @@ const Dashboard = ({ match }) => {
             <TopNavbar showMenu />
             <Pane orientation="vertical" minSize={'50%'} topGutterSize={48}>
                 <Pane orientation="horizontal" minSize={'50%'}>
-                    <LinkedList>Visualiser here</LinkedList>
+                    {/* <LinkedList /> */}
+                    <header classname="App-header">
+                        <div className="visualiser">
+                            <svg
+                                className="visualiser-svg"
+                                overflow="auto"
+                                style={{ width: '100%' }}
+                            >
+                                <g className="nodes" transform="translate(0, 20)" />
+                                <g className="pointers" transform="translate(0, 20)" />
+                            </svg>
+                        </div>
+                    </header>
                     {terminalMode ? (
                         <Terminal
                             switchMode={terminalMode}
