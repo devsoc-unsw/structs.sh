@@ -4,11 +4,11 @@ import LinkedListAnimation from './Animation/LinkedList/linkedListAnimation';
 function App() {
 
   // Setting up the list animation instance with default values
-  const defaultListValues = [2, 3, 4, 5];
   const [list, setList] = useState();
   const nodesGroupRef = useRef();
   const pointersGroupRef = useRef();
   useEffect(() => {
+    const defaultListValues = [2, 3, 4, 5];
     const newList = new LinkedListAnimation(defaultListValues ,nodesGroupRef.current, pointersGroupRef.current)
     setList(newList);
   }, []);
@@ -38,7 +38,7 @@ function App() {
           <input name="index" placeholder="position to delete" value={indexDeleted} onChange={e => setIndexDeleted(e.target.value)} />
           <button type="submit" name="delete">delete </button>
         </form>
-        <div">
+        <div className="visualiser">
           <svg className="visualiser-svg" overflow="auto" style={{ width: '100%' }}>
             <g ref={nodesGroupRef} className="nodes" transform="translate(0, 20)"/>
             <g ref={pointersGroupRef} className="pointers" transform="translate(0, 20)" />
