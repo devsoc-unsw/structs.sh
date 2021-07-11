@@ -28,8 +28,8 @@ function App() {
   }
 
   return (
-    <div classname="App">
-      <header classname="App-header">
+    <div className="App">
+      <header className="App-header">
         <form className="list-append-form" onSubmit={handleAppend}>
           <input name="value" placeholder="number to append" value={valueAppended} onChange={e => setValueAppended(e.target.value)}/>
           <button type="submit" name="append">append</button>
