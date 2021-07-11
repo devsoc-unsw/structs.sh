@@ -4,11 +4,11 @@ import LinkedListAnimation from './Animation/LinkedList/linkedListAnimation';
 function App() {
 
   // Setting up the list animation instance with default values
-  const defaultListValues = [2, 3, 4, 5];
   const [list, setList] = useState();
   const nodesGroupRef = useRef();
   const pointersGroupRef = useRef();
   useEffect(() => {
+    const defaultListValues = [2, 3, 4, 5];
     const newList = new LinkedListAnimation(defaultListValues ,nodesGroupRef.current, pointersGroupRef.current)
     setList(newList);
   }, []);
