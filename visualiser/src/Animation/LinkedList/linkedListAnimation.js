@@ -36,7 +36,7 @@ class LinkedListAnimation extends Animation {
         appendNodeSVG(this.listData, data, false);
         if (this.listData.nodes.length > 1) appendPointerSVG(this.listData, false);
         const animationSequence = generateAppendSequence(this.listData);
-        createAnimation(this.listData, animationSequence);
+        this.timeline = createAnimation(this.listData, animationSequence);
     }
 
     /**
@@ -45,7 +45,7 @@ class LinkedListAnimation extends Animation {
      */
     animateDelete = (position) => {
         const animationSequence = generateDeleteSequence(this.listData, position);
-        createAnimation(this.listData, animationSequence);
+        this.timeline = createAnimation(this.listData, animationSequence);
         this.listData.nodes.splice(position, 1);
         this.listData.pointers.splice(0, 1);
     }

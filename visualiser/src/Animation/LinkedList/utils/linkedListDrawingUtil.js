@@ -1,4 +1,3 @@
-
 // svg manipulation functions
 // positions and appends a pointer to the visualiser
 export function appendPointerSVG(list, visible) {

@@ -27,6 +27,22 @@ function App() {
     list && list.animateDelete(parseInt(indexDeleted));
   }
 
+  const handlePlay = () => {
+    list && list.playAnimation();
+  }
+
+  const handlePause = () => {
+    list && list.pauseAnimation();
+  }
+
+  const handleRestart = () => {
+    list && list.restartAnimation();
+  }
+
+  const handleFinish = () => {
+    list && list.finishAnimation();
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -44,6 +60,10 @@ function App() {
             <g ref={pointersGroupRef} className="pointers" transform="translate(0, 20)" />
           </svg>
         </div>
+        <button onClick={handlePlay}>play</button>
+        <button onClick={handlePause}>pause</button>
+        <button onClick={handleRestart}>restart</button>
+        <button onClick={handleFinish}>finish</button>
       </header >
     </div >
   );
