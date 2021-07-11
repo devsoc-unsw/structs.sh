@@ -38,7 +38,7 @@ function App() {
           <input name="index" placeholder="position to delete" value={indexDeleted} onChange={e => setIndexDeleted(e.target.value)} />
           <button type="submit" name="delete">delete </button>
         </form>
-        <div className="visualiser">
+        <div">
           <svg className="visualiser-svg" overflow="auto" style={{ width: '100%' }}>
             <g ref={nodesGroupRef} className="nodes" transform="translate(0, 20)"/>
             <g ref={pointersGroupRef} className="pointers" transform="translate(0, 20)" />

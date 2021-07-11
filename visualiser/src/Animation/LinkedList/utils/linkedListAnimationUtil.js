@@ -1,4 +1,3 @@
-
 // creates animation instructions for appending
 export function generateAppendSequence(list) {
     const { pointers } = list;
