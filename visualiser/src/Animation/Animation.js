@@ -3,17 +3,20 @@ class Animation {
         this.timeline = null;
     }
 
-    getAnimation() {
-        return this.timeline;
+    get timeline() {
+        return this._timeline;
+    }
+
+    set timeline(newTimeline) {
+        this._timeline = newTimeline;
     }
 
     playAnimation() {
         this.timeline.play();
     }
 
-
     pauseAnimation() {
-        this.timeline.play();
+        this.timeline.pause();
     }
 
     restartAnimation() {

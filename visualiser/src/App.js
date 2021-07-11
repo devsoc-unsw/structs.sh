@@ -9,8 +9,7 @@ function App() {
   const pointersGroupRef = useRef();
   useEffect(() => {
     const defaultListValues = [2, 3, 4, 5];
-    const newList = new LinkedListAnimation(defaultListValues ,nodesGroupRef.current, pointersGroupRef.current)
-    setList(newList);
+      setList(new LinkedListAnimation(defaultListValues ,nodesGroupRef.current, pointersGroupRef.current));
   }, []);
 
   // Managing user input from the forms
@@ -19,53 +18,59 @@ function App() {
 
   const handleAppend = (e) => {
     e.preventDefault();
-    list && list.animateAppend(parseInt(valueAppended));
+    list.animateAppend(parseInt(valueAppended));
   }
 
   const handleDelete = (e) => {
     e.preventDefault();
-    list && list.animateDelete(parseInt(indexDeleted));
+    list.animateDelete(parseInt(indexDeleted));
   }
 
   const handlePlay = () => {
-    list && list.playAnimation();
+    list.playAnimation();
   }
 
   const handlePause = () => {
-    list && list.pauseAnimation();
+    list.pauseAnimation();
   }
 
   const handleRestart = () => {
-    list && list.restartAnimation();
+    list.restartAnimation();
   }
 
   const handleFinish = () => {
-    list && list.finishAnimation();
+    list.finishAnimation();
   }
 
   return (
     <div className="App">
-      <header className="App-header">
-        <form className="list-append-form" onSubmit={handleAppend}>
-          <input name="value" placeholder="number to append" value={valueAppended} onChange={e => setValueAppended(e.target.value)}/>
-          <button type="submit" name="append">append</button>
-        </form>
-        <form className="list-delete-form" onSubmit={handleDelete}>
-          <input name="index" placeholder="position to delete" value={indexDeleted} onChange={e => setIndexDeleted(e.target.value)} />
-          <button type="submit" name="delete">delete </button>
-        </form>
-        <div className="visualiser">
-          <svg className="visualiser-svg" overflow="auto" style={{ width: '100%' }}>
-            <g ref={nodesGroupRef} className="nodes" transform="translate(0, 20)"/>
-            <g ref={pointersGroupRef} className="pointers" transform="translate(0, 20)" />
-          </svg>
+      {list &&
+        <div className="formGroup">
+          <form className="list-append-form" onSubmit={handleAppend}>
+            <input name="value" placeholder="number to append" value={valueAppended} onChange={e => setValueAppended(e.target.value)}/>
+            <button type="submit" name="append">append</button>
+          </form>
+          <form className="list-delete-form" onSubmit={handleDelete}>
+            <input name="index" placeholder="position to delete" value={indexDeleted} onChange={e => setIndexDeleted(e.target.value)} />
+            <button type="submit" name="delete">delete </button>
+          </form>
         </div>
-        <button onClick={handlePlay}>play</button>
-        <button onClick={handlePause}>pause</button>
-        <button onClick={handleRestart}>restart</button>
-        <button onClick={handleFinish}>finish</button>
-      </header >
-    </div >
+      }
+      <div className="visualiser">
+        <svg className="visualiser-svg" overflow="auto" style={{ width: '100%' }}>
+          <g ref={nodesGroupRef} className="nodes" transform="translate(0, 20)"/>
+          <g ref={pointersGroupRef} className="pointers" transform="translate(0, 20)" />
+        </svg>
+      </div>
+      {list &&
+        <div className="controler">
+          <button onClick={handlePlay}>play</button>
+          <button onClick={handlePause}>pause</button>
+          <button onClick={handleRestart}>restart</button>
+          <button onClick={handleFinish}>finish</button>
+        </div>
+      }
+    </div>
   );
 }
 
