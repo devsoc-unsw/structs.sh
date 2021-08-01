@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Grid } from '@material-ui/core';
 import './Tabs.scss';
 import { Videos, AdditionalResources, Lesson, Code } from 'components/Tabs';
-import { QuizContainer } from 'components/Quiz'
+import { Quiz } from 'components/Quiz'
 import { QuizDisplay, QuizEdit } from 'components/Quiz-Editable'
 
 var quizData = [];
@@ -20,7 +20,7 @@ function TabSelector(props) {
   switch (props.tab) {
     case "Lesson": return (<Lesson {...props} />);
     case "Additional Resources": return (<div><AdditionalResources /></div>);
-    case "Quiz": return (<div><QuizContainer /></div>);
+    case "Quiz": return (<div><Quiz /></div>);
     case "Quiz2": return (<div><QuizDisplay  getData={getQuizData} saveData={saveQuizData}/></div>);
     case "Quiz-Editor": return (<div><QuizEdit getData={getQuizData} saveData={saveQuizData}/></div>);
     case "Code": return (<div><Code /></div>);
