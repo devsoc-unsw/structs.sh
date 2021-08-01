@@ -1,4 +1,3 @@
-
 // creates animation instructions for appending
 export function generateAppendSequence(list) {
     const { pointers } = list;
@@ -164,6 +163,7 @@ export function generateDeleteSequence(list, position) {
             duration: 1000,
             delay: 500,
         })
+        
         // shorten pointer while shifting everything after deleted node to the left
         animationSequence.push({
             action: 'shorten',

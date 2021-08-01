@@ -1,7 +1,5 @@
 import { getArcD, getFlatArcD, getArcTipTransform, convertToLongPointer, getLongPointerTailLength, getLongPointerTipTransform, getTransformValue, getOffsetDistance, convertToArc, getShortPointerLength, getPointerTipHeight } from './linkedListDrawingUtil';
-
-
-import anime from 'animejs/lib/anime.es';
+import anime from 'animejs';
 
 // generates an animation timeline based on animation instructions
 // stored in global variable
@@ -152,6 +150,8 @@ export function createAnimation(list, animationSequence) {
                     easing: 'linear'
                 }, offset);
                 break;
+            default:
+                alert("unkown instruction");
         }
     })
     return animation;

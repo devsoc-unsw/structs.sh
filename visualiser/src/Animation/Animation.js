@@ -1,10 +1,30 @@
 class Animation {
     constructor() {
-        this.animation = null;
+        this.timeline = null;
     }
 
-    getAnimation() {
-        return this.animation;
+    get timeline() {
+        return this._timeline;
+    }
+
+    set timeline(newTimeline) {
+        this._timeline = newTimeline;
+    }
+
+    playAnimation() {
+        this.timeline.play();
+    }
+
+    pauseAnimation() {
+        this.timeline.pause();
+    }
+
+    restartAnimation() {
+        this.timeline.restart();
+    }
+
+    finishAnimation() {
+        this.timeline.seek(this.timeline.duration);
     }
 }
 
