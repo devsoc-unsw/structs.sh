@@ -3,12 +3,26 @@ import { Grid } from '@material-ui/core';
 import './Tabs.scss';
 import { Videos, AdditionalResources, Lesson, Code } from 'components/Tabs';
 import { QuizContainer } from 'components/Quiz'
+import { QuizDisplay, QuizEdit } from 'components/Quiz-Editable'
+
+var quizData = [];
+
+function saveQuizData(data) {
+  console.log(data);
+  quizData = data;
+}
+
+function getQuizData() {
+  return quizData;
+}
 
 function TabSelector(props) {
   switch (props.tab) {
     case "Lesson": return (<Lesson {...props} />);
     case "Additional Resources": return (<div><AdditionalResources /></div>);
     case "Quiz": return (<div><QuizContainer /></div>);
+    case "Quiz2": return (<div><QuizDisplay  getData={getQuizData} saveData={saveQuizData}/></div>);
+    case "Quiz-Editor": return (<div><QuizEdit getData={getQuizData} saveData={saveQuizData}/></div>);
     case "Code": return (<div><Code /></div>);
     case "Videos": return (<Videos />);
     default: return (<div>"Tab not made"</div>);
@@ -16,7 +30,7 @@ function TabSelector(props) {
 }
 
 export default function Tabs(props) {
-  const tabs = ["Lesson", "Additional Resources", "Quiz", "Code", "Videos"]
+  const tabs = ["Lesson", "Additional Resources", "Quiz", "Quiz2", "Code", "Videos", "Quiz-Editor"]
   const [Tab, setTab] = useState(0);
 
   return (

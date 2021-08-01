@@ -27,6 +27,7 @@
     "react-gist": "^1.2.2",
     "react-helmet": "^6.1.0",
     "react-quiz-component": "^0.3.8",
+    "react-quizzes": "^0.3.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "react-split-pane": "^0.1.92",
