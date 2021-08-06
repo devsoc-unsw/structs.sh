@@ -34,7 +34,7 @@ function DisplayCode(props) {
     return (<></>);
   } else {
     return (
-      <SyntaxHighlighter language="javascript" style={docco} showLineNumbers={true} wrapLines={true}>
+      <SyntaxHighlighter language="c" style={docco} showLineNumbers={true} wrapLines={true}>
         {codeString}
       </SyntaxHighlighter>
     );
@@ -47,7 +47,7 @@ const OpenResponseQuestion = (props) => {
   return (
   <div>
     <Card raised className="card-spacing">
-      <h1><strong>{props.info.question}</strong></h1>
+      <h2><strong>{props.info.question}</strong></h2>
       <DisplayCode code = {props.info.code}/>
       <br />
       <TextField multiline fullWidth disabled={submitted} rows={3} maxRows={8} variant="outlined" label="Enter response"/>

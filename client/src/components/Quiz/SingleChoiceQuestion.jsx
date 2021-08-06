@@ -8,8 +8,6 @@ import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 import './Quiz.scss';
 
-// https://prismjs.com/
-
 function CheckCorrect(props) {
   if (props.submitted && props.info.correctAnswer.includes(parseInt(props.selectedAnswer))) {
     return(<>
@@ -38,7 +36,7 @@ function DisplayCode(props) {
   let codeString = "";
   props.code.map((line, idx)=>{
     if (idx === 0) {codeString = "";}
-    if (idx === props.info.code.length - 1) {
+    if (idx === props.code.length - 1) {
       codeString += line;
     } else {
       codeString += line + '\n';
@@ -49,7 +47,7 @@ function DisplayCode(props) {
     return (<></>);
   } else {
     return (
-      <SyntaxHighlighter language="javascript" style={docco} showLineNumbers={true} wrapLines={true}>
+      <SyntaxHighlighter language="c" style={docco} showLineNumbers={true} wrapLines={true}>
         {codeString}
       </SyntaxHighlighter>
     );
@@ -72,18 +70,8 @@ const SingleChoiceQuestion = (props) => {
   return (
   <div>
     <Card raised className="card-spacing">
-      <h1><strong>{props.info.question}</strong></h1>
-      {props.info.code.map((line, idx)=>{
-        if (idx === 0) {codeString = "";}
-        if (idx === props.info.code.length - 1) {
-          codeString += line;
-        } else {
-          codeString += line + '\n';
-        }
-      })}
-      <SyntaxHighlighter language="javascript" style={docco} showLineNumbers={true} wrapLines={true}>
-        {codeString}
-      </SyntaxHighlighter>
+      <h2><strong>{props.info.question}</strong></h2>
+      <DisplayCode code = {props.info.code}/>
       <br />
       <FormControl>
         <FormLabel>Choose one</FormLabel>
