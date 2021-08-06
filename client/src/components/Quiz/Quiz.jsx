@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid, Button } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 
 import SingleChoiceQuestion from './SingleChoiceQuestion'
 import MultiChoiceQuestion from './MultiChoiceQuestion'
@@ -28,7 +28,6 @@ function ChooseQuestionType(props) {
 
 const Quiz = (props) => {
   const [answered, setAnswered] = useState({});
-  const [submitted, setSubmitted] = useState(false);
 
   return (
   <div className="spacing">
@@ -42,19 +41,12 @@ const Quiz = (props) => {
             info={info}
             responses={answered}
             setResponse={setAnswered}
-            submitted={submitted}
           />
         </Grid>
       );
       })}
     </Grid>
     <br />
-    <Button
-      variant="contained"
-      color="primary"
-      onClick={()=>setSubmitted(true)}
-      className="button-spacing"
-    >Submit</Button>
   </div>
   );
 };

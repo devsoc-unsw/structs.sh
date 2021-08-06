@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
-import { Card, TextField, Grid } from '@material-ui/core';
+import { Card, TextField, Button } from '@material-ui/core';
 import ErrorIcon from '@material-ui/icons/Error';
 import { yellow } from '@material-ui/core/colors';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import './Quiz.scss';
 
 function CheckCorrect(props) {
   if (props.submitted) {
     return(<>
+      <br />
       <ErrorIcon style={{ color: yellow[800] }} />
-      {/* <br /> <br /> */}
-      <Grid container spacing={1} alignItems="center">
-        <Grid item className="centering"><ErrorIcon style={{ color: yellow[800] }} className="centering" /></Grid>
-        <Grid item><h4><i>{props.info.answerMessage}</i></h4></Grid>
-      </Grid>
+      <h4><i>{props.info.answerMessage}</i></h4>
       <h4><i>{props.info.explanation}</i></h4>
     </>);
   } else {
@@ -20,18 +19,47 @@ function CheckCorrect(props) {
   }
 }
 
+function DisplayCode(props) {
+  let codeString = "";
+  props.code.map((line, idx)=>{
+    if (idx === 0) {codeString = "";}
+    if (idx === props.info.code.length - 1) {
+      codeString += line;
+    } else {
+      codeString += line + '\n';
+    }
+  })
+
+  if (codeString === "") {
+    return (<></>);
+  } else {
+    return (
+      <SyntaxHighlighter language="javascript" style={docco} showLineNumbers={true} wrapLines={true}>
+        {codeString}
+      </SyntaxHighlighter>
+    );
+  }
+}
+
 const OpenResponseQuestion = (props) => {
+  const [submitted, setSubmitted] = useState(false);
+
   return (
   <div>
     <Card raised className="card-spacing">
       <h1><strong>{props.info.question}</strong></h1>
-      {props.info.code.map((line)=>{ return (
-          <pre className='No-spacing'><code>{line}</code></pre>
-      )})}
+      <DisplayCode code = {props.info.code}/>
       <br />
-      <TextField multiline fullWidth disabled={props.submitted} rows={3} maxRows={8} variant="outlined" label="Enter response"/>
-      
-      <CheckCorrect submitted={props.submitted} info={props.info}/>
+      <TextField multiline fullWidth disabled={submitted} rows={3} maxRows={8} variant="outlined" label="Enter response"/>
+      <br />
+      <CheckCorrect submitted={submitted} info={props.info}/>
+      <br />
+      <Button
+        variant="contained"
+        color={"primary"}
+        onClick={()=>setSubmitted(true)}
+        className="button-spacing"
+      >Check</Button>
     </Card>
   </div>
   );

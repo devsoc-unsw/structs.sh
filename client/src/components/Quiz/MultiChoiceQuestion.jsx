@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Card, Checkbox, RadioGroup, FormControlLabel, FormControl, FormLabel, Grid } from '@material-ui/core';
+import { Card, Checkbox, RadioGroup, FormControlLabel, FormControl, FormLabel, Grid, Button } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
 import { red, green } from '@material-ui/core/colors';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import './Quiz.scss';
 
 function CheckCorrect(props) {
@@ -19,10 +21,6 @@ function CheckCorrect(props) {
     return(<>
       <CheckCircleIcon style={{ color: green[500] }} />
       <br /> <br />
-      <Grid container spacing={1} alignItems="center">
-        <Grid item><CheckCircleIcon style={{ color: green[500] }} /></Grid>
-        <Grid item><h4>{props.info.correctAnswerMessage}</h4></Grid>
-      </Grid>
       <i>
         <h4>{props.info.correctAnswerMessage}</h4>
         <h4><i></i>{props.info.explanation}</h4>
@@ -32,10 +30,6 @@ function CheckCorrect(props) {
     return (<>
       <CancelIcon style={{ color: red[500] }} />
       <br /> <br />
-      <Grid container spacing={1} alignItems="center">
-        <Grid item><CheckCircleIcon style={{ color: green[500] }} /></Grid>
-        <Grid item><h4>{props.info.incorrectAnswerMessage}</h4></Grid>
-      </Grid>
       <i>
         <h4>{props.info.incorrectAnswerMessage}</h4>
         <h4>{props.info.explanation}</h4>
@@ -46,14 +40,38 @@ function CheckCorrect(props) {
   }
 }
 
+function DisplayCode(props) {
+  let codeString = "";
+  props.code.map((line, idx)=>{
+    if (idx === 0) {codeString = "";}
+    if (idx === props.info.code.length - 1) {
+      codeString += line;
+    } else {
+      codeString += line + '\n';
+    }
+  })
+
+  if (codeString === "") {
+    return (<></>);
+  } else {
+    return (
+      <SyntaxHighlighter language="javascript" style={docco} showLineNumbers={true} wrapLines={true}>
+        {codeString}
+      </SyntaxHighlighter>
+    );
+  }
+}
+
 const MultiChoiceQuestion = (props) => {
-  const [value, setValue] = React.useState([]);
+  const [value, setValue] = useState([]);
+  const [submitted, setSubmitted] = useState(false);
+  let codeString = "";
 
   const handleChange = (event) => {
     console.log(event.target.id);
     console.log(event.target.checked);
 
-    if (props.submitted===false) {
+    if (submitted===false) {
       if (event.target.checked) {
         if (value.includes(event.target.id)) return;
         let newResponses = value;
@@ -73,19 +91,34 @@ const MultiChoiceQuestion = (props) => {
   <div>
     <Card raised className="card-spacing">
       <h1><strong>{props.info.question}</strong></h1>
-      {props.info.code.map((line)=>{ return (
-          <pre className='No-spacing'><code>{line}</code></pre>
-      )})}
+      {props.info.code.map((line, idx)=>{
+        if (idx === 0) {codeString = "";}
+        if (idx === props.info.code.length - 1) {
+          codeString += line;
+        } else {
+          codeString += line + '\n';
+        }
+      })}
+      <SyntaxHighlighter language="javascript" style={docco} showLineNumbers={true} wrapLines={true}>
+        {codeString}
+      </SyntaxHighlighter>
       <br />
       <FormControl>
         <FormLabel>Choose multiple</FormLabel>
         <RadioGroup value={value}>
             {props.info.answers.map((answer, idx)=>{return (
-              <FormControlLabel value={(idx+1).toString()} disabled={props.submitted} control={<Checkbox id={(idx+1).toString()} onChange={handleChange}/>} label={answer} />
+              <FormControlLabel value={(idx+1).toString()} disabled={submitted} control={<Checkbox id={(idx+1).toString()} onChange={handleChange}/>} label={answer} />
             );})}
         </RadioGroup>
       </FormControl>
-      <CheckCorrect submitted={props.submitted} selectedAnswers={value} info={props.info}/>
+      <CheckCorrect submitted={submitted} selectedAnswers={value} info={props.info}/>
+      <br />
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={()=>setSubmitted(true)}
+        className="button-spacing"
+      >Check</Button>
     </Card>
   </div>
   );
