@@ -10,6 +10,7 @@ import styles from './Dashboard.module.scss';
 import GUIMode from 'components/GUIMode/guiMode';
 // import { appendNode, deleteNode } from 'components/Visualisation/LinkedList/LinkedListJoanna';
 import LinkedListAnimation from 'components/Animation/LinkedList/linkedListAnimation';
+import Controls from 'components/Controls/Controls';
 
 const containerVariants = {
     hidden: {
@@ -83,6 +84,7 @@ const Dashboard = ({ match }) => {
                                 <g className="pointers" transform="translate(0, 20)" />
                             </svg>
                         </div>
+                        <Controls />
                     </header>
                     {terminalMode ? (
                         <Terminal
