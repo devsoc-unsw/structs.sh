@@ -1,9 +1,12 @@
 .root {
-    bottom: 7px;
-    position: absolute;
     display: flex;
     width: 80%;
-    margin-left: 7.5%;
+    position: absolute;
+    max-width: 500px;
+    left: 50%;
+    bottom: -20px;
+    margin: 0 auto;
+    transform: translate(-50%, -50%);
 }
 
 .root svg {
@@ -18,26 +21,21 @@
 }
 
 .progressBar {
-    height: 40px;
-    width: 60%;
-    margin-top: 20px;
+    height: 20px;
+    width: 50%;
+    margin-top: 21px;
     margin-left: 10px;
-    border: 3px solid transparent;
-    padding: 2px;
-    border-image-source: url(../../assets/img/progressBar.png);
-    border-image-slice: 90;
-    border-image-width: 40px;
+    background: #fff;
+    border: 3px ridge black;
+    border-radius: 12px;
+    display: flex;
+    justify-content: flex-start;
 }
 
 .progress {
-    height: 35%;
-    max-width: 90%;
+    height: 100%;
+    max-width: 100%;
     border-radius: 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 10px;
-    margin-left: 5%;
     background-color: black;
     fill: white;
     background-size: 55px 55px;
