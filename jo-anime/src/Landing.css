@@ -1,25 +1,28 @@
 #current {
     opacity: 0;
     position: absolute;
-    top: 370px;
+    top: 51%;
 }
 
 #canvas {
-    width: 600px;
-    height: 600px;
+    width: 95vw;
+    height: 95vh;
+    background-color: #ffe4da;
+}
+
+.input {
+    display: flex;
+    place-items: center;
 }
 
 
 .node {
-    width: 50px;
-    height: 50px;
-    top: 100px;
+    top: 10%;
+    left: 45%;
     position: absolute;
-    background-color: brown;
-    left: 420px;
-    opacity: 0; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
+    opacity: 0;
+}
+
+.path {
+    opacity: 0;
 }
