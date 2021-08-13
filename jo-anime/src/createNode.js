@@ -81,8 +81,8 @@ function createNode(input) {
     canvas.appendChild(newNode);
     return {
         id,
-        nodeTarget,
-        pathTarget
+        nodeTarget: "#" + nodeTarget,
+        pathTarget: "#" + pathTarget
     }
 }
 

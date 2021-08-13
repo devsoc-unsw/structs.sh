@@ -7,7 +7,6 @@ function resetAnimation() {
         translateX: 0,
         duration: 10
     })
-    console.log("resest!")
 }
 
 export {resetAnimation}

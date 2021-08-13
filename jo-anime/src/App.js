@@ -33,6 +33,18 @@ function App() {
             </path>
           </svg>
         </div>
+        <div id="prev">
+          <svg width="50" height="50" > 
+            <path 
+              d="M21 48V2M21 2L2 19.8367M21 2L38 19.8367" 
+              strokeWidth="3" 
+              stroke="blue"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+            </path>
+          </svg>
+        </div>
       </div>
     </div>
   );

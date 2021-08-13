@@ -8,6 +8,11 @@ async function runSequence(sequence) {
     })
     for (const seq of sequence) {
         timeline.add(seq)
+        if ('backlog' in seq) {
+            timeline.add({
+                complete: seq.backlog.play()
+            })
+        }
     }
     return timeline
 }
