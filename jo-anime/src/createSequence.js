@@ -1,4 +1,3 @@
-import anime from "animejs"
 
 const CURRENT = "#current"
 const PREV = "#prev"
@@ -97,19 +96,26 @@ function createSequence(input, type) {
             opacity: 0
         })
         // Arrow should morph back the same time linked list is shifted
-        const playLater = anime({
+        // const playLater = anime({
+        //     targets: prevNode.pathTarget,
+        //     d: [
+        //         {value: MORPHED},
+        //         {value: ARROW}
+        //     ],
+        //     easing: "spring(1, 80, 10, 0)",
+        //     autoplay: false
+        // })
+        timeline.push({
             targets: prevNode.pathTarget,
             d: [
                 {value: MORPHED},
                 {value: ARROW}
             ],
             easing: "spring(1, 80, 10, 0)",
-            autoplay: false
         })
         timeline.push({
             targets: shiftedNodes.map(n => n.nodeTarget),
             translateX: "-=100",
-            backlog: playLater
         })
         //Prev fades away
         timeline.push({
