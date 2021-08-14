@@ -1,15 +1,14 @@
+// import { appendNode, deleteNode } from 'components/Visualisation/LinkedList/LinkedListJoanna';
+import LinkedListAnimation from 'components/Animation/LinkedList/linkedListAnimation';
+import GUIMode from 'components/GUIMode/guiMode';
+import TopNavbar from 'components/Navbars/TopNavbar';
 import { Pane } from 'components/Panes';
 import Tabs from 'components/Tabs/Tabs';
 import { Terminal } from 'components/Terminal';
-import { LinkedList } from 'components/Visualisation/LinkedList';
 import { motion } from 'framer-motion';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Helmet from 'react-helmet';
-import TopNavbar from 'components/Navbars/TopNavbar';
 import styles from './Dashboard.module.scss';
-import GUIMode from 'components/GUIMode/guiMode';
-// import { appendNode, deleteNode } from 'components/Visualisation/LinkedList/LinkedListJoanna';
-import LinkedListAnimation from 'components/Animation/LinkedList/linkedListAnimation';
 
 const containerVariants = {
     hidden: {
@@ -67,7 +66,7 @@ const Dashboard = ({ match }) => {
             </Helmet>
 
             {/* For some reason, getting rid of this ruins the pane spacing. It can't be a div or a span... */}
-            <img width={48} height={48} />
+            <img width={48} height={48} alt="empty space" />
             <TopNavbar showMenu />
             <Pane orientation="vertical" minSize={'50%'} topGutterSize={48}>
                 <Pane orientation="horizontal" minSize={'50%'}>

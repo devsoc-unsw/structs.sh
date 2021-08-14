@@ -1,7 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { EmbeddedVideoPlayer } from 'components/Video';
 import { Paper } from '@material-ui/core';
+import { EmbeddedVideoPlayer } from 'components/Video';
+import React from 'react';
 import styles from './Videos.module.scss';
 
 const VideoTab = () => {
@@ -22,7 +21,5 @@ const VideoTab = () => {
         </div>
     );
 };
-
-VideoTab.propTypes = {};
 
 export default VideoTab;

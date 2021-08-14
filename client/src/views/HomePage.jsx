@@ -1,16 +1,14 @@
 import PageHeader from 'components/PageHeader/PageHeaderLayout.jsx';
+import { Searchbar } from 'components/Search';
 import Layout from 'layout/Layout';
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Button, Container } from 'reactstrap';
-import styles from './HomePage.module.scss';
-import { Searchbar } from 'components/Search';
-// import { Button, Container } from 'reactstrap';
-import CustomCarousel from '../components/CustomCarousel/CustomCarousel';
 import card1 from '../assets/img/card1.jpg';
 import card2 from '../assets/img/card2.jpg';
 import card3 from '../assets/img/card3.jpg';
 import card4 from '../assets/img/card4.jpg';
+// import { Button, Container } from 'reactstrap';
+import CustomCarousel from '../components/CustomCarousel/CustomCarousel';
+import styles from './HomePage.module.scss';
 
 // TEST DATA
 const cards = [

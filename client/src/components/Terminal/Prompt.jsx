@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import styles from './Terminal.module.scss';
-import Caret from './Caret';
 
 const Prompt = ({ username, path, processCommand }) => {
     const typeInput = useRef(null);
@@ -20,6 +19,7 @@ const Prompt = ({ username, path, processCommand }) => {
                 // Clear the input field
                 typeInput.current.value = '';
                 break;
+            default:
         }
     };
 
