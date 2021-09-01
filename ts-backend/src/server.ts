@@ -11,7 +11,7 @@ import cors from 'cors';
 dotenv.config();
 
 /**
- * Connect to mongoDB client for GalacticEd
+ * Connect to mongoDB client
  */
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
@@ -27,37 +27,21 @@ db.on(
   )
 );
 
-/**
- * Initialise the app
- */
 const app = express();
 
 /**
- * Add allowlist for the frontend
+ * CORS
  */
 app.use((req, res, next) => {
   /**
    * Website you wish to allow to connect
    */
-  res.setHeader(
-    'Access-Control-Allow-Origin',
-    'http://localhost:3000; https://platform-azure.vercel.app/'
-  );
+  res.setHeader('Access-Control-Allow-Origin', '*');
   next();
 });
 
 app.use(cors());
 app.options('*', cors());
-
-/**
- * Setup JWT authentication for protected routes
- */
-app.use(
-  '/',
-  jwt({ secret: 'test', algorithms: ['HS256'] }).unless({
-    path: ['/health-check', '/login', '/graphiql', '/graphql'],
-  })
-);
 
 /**
  * Add body parsing and urlencoded from deprecated bodyParser
@@ -71,12 +55,10 @@ app.use(express.urlencoded({ extended: true }));
 const appRoutes = router;
 app.use(appRoutes);
 
-// Error handler
 app.use((err, req, res, next) => {
   res.status(err.status || 500).send(err);
 });
 
-// Start the server
 app.listen(process.env.PORT, () => {
-  console.log(`GalacticEd Backend running on port ${process.env.PORT} 🚀`);
+  console.log(` ➤ Structs.sh listening at port: ${process.env.PORT} 🚀`);
 });

@@ -1,4 +1,4 @@
-# Sourced from https://github.com/microsoft/TypeScript-Node-Starter/blob/master/.gitignore
+yarn.lock
 package-lock.json
 
 lib-cov

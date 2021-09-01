@@ -8,14 +8,10 @@
     "moduleResolution": "node",
     "outDir": "dist",
     "esModuleInterop": true,
-    // "types": [
-    //   "jest",
-    //   "node"
-    // ],
-    "baseUrl": "./"
+    "baseUrl": "."
   },
   "include": [
-    "**/*.ts"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",

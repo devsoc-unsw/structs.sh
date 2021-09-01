@@ -1,8 +1,7 @@
 import { Router } from 'express';
-import graphqlRouter from './graphql';
 import healthRouter from './health';
-import userRouter from './user';
+import authRouter from './auth';
 
 export const router = Router();
 
-router.use('/', graphqlRouter, healthRouter, userRouter);
+router.use('/', healthRouter, authRouter);
