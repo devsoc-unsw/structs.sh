@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "es2017",
+      "DOM"
+    ],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "esModuleInterop": true,
+    // "types": [
+    //   "jest",
+    //   "node"
+    // ],
+    "baseUrl": "./"
+  },
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
+}

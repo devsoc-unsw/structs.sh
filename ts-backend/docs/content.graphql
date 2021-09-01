@@ -1,0 +1,30 @@
+# Gets all the questions within a given lesson
+query GetLessonQuestions {
+  getLessonQuestions(
+    id: "610e5e13fa709ae86a3689fb - example lesson ID. Put a real one here"
+  ) {
+    data {
+      row
+      column
+      width
+      height
+      componentName
+      data
+    }
+    correctMessage
+  }
+}
+
+# Get all courses and their lessons together
+query {
+  getCoursesWithLessons {
+    course {
+      courseName
+      description
+    }
+    lessons {
+      title
+      description
+    }
+  }
+}

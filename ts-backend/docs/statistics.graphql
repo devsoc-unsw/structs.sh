@@ -1,0 +1,35 @@
+# Creating a lesson statistic
+mutation PushLessonStats {
+  createLessonStatistics(
+    lessonStatistics: {
+      sessionId: "test-session"
+      lessonId: "test-lesson"
+      childId: "test-child"
+      questionStatistics: [{ timeTaken: 2, numIncorrect: 3 }]
+    }
+  ) {
+    lessonId
+    sessionId
+    childId
+    totalTime
+    timeCreated
+    proficiency
+    questionStatistics {
+      score
+    }
+  }
+}
+
+# Fetching all the stats for a lesson a child has perfomed in
+query GetLessonStats {
+  getLessonStats(childId: "test-child", lessonId: "test-lesson") {
+    lessonId
+    sessionId
+    totalTime
+    proficiency
+    questionStatistics {
+      numIncorrect
+      timeTaken
+    }
+  }
+}
