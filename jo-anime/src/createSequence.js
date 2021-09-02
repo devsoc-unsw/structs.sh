@@ -111,7 +111,6 @@ function createSequence(input, type) {
                 {value: MORPHED},
                 {value: ARROW}
             ],
-            easing: "spring(1, 80, 10, 0)",
         })
         timeline.push({
             targets: shiftedNodes.map(n => n.nodeTarget),

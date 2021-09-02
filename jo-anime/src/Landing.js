@@ -51,6 +51,7 @@ const initialise = () => {
         animationHistory.push(timeline)
     }
 
+
     // function deleteNode(node) {
     //     const child = document.querySelector(`#node-${node.key}`)
     //     canvas.removeChild(child);
