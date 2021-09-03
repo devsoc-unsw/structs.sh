@@ -1,0 +1,35 @@
+#current {
+    opacity: 0;
+    position: absolute;
+    top: 51%;
+}
+
+#prev {
+    opacity: 0;
+    position: absolute;
+    top: 51%;
+}
+
+#canvas {
+    width: 95vw;
+    height: 95vh;
+    background-color: #ffe4da;
+}
+
+.input {
+    display: flex;
+    place-items: center;
+}
+
+
+.node {
+    top: 10%;
+    left: 45%;
+    position: fixed;
+    opacity: 0;
+}
+
+.path {
+    opacity: 0;
+    fill: none;
+}
