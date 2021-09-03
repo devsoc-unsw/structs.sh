@@ -1,12 +1,14 @@
+
 # Structs.sh 💻
+<img src="./images/logo.png" style="width: 100px; display: block; margin: 0 auto;" />
 
-An interactive data structure and algorithm visualiser and educational platform for computer science students.
+Structs.sh is an interactive data structure and algorithm visualiser and educational platform for computer science students.
 
-<strong><a href="https://structs.netlify.app/">View the deployed demo here</a></strong>.
+<strong><a href="https://structs.netlify.app/">Visit Structs.sh</a></strong>.
 
 ---
 
-## Table of contents
+# Table of contents
 
 -   [Setup Instructions](#setup-instructions)
     -   [Development](#development)
@@ -19,85 +21,166 @@ An interactive data structure and algorithm visualiser and educational platform 
 
 ---
 
-## Setup Instructions
+## Setup Instructions (Development)
+Note: this is using **node.js v14.17.0**.
 
-### Development
+```bash
+# Clone the repo
+git clone https://github.com/csesoc/Structs.sh.git
+```
 
-#### Steps:
+### Automatic Setup [Experimental]
+This may only work on Linux environments.
+```bash
+# After cloning the repo, run the following in the root directory
+sh structs.sh --setup
+```
+Follow the prompts and everything should be ready to go.
 
-Note: this is using Node v14.17.0.
+### Manual Setup
 
-1. `git clone https://github.com/csesoc/Structs.sh.git && cd Structs.sh/client`
-2. `npm install`
-3. `cd ../server`
-4. `npm install`
+```bash
+# After cloning the repo, run the following in the root directory
+npm --prefix ./install ./client install
+npm --prefix ./install ./server install
+```
 
-Running the frontend development server:
+## Running Structs.sh
+From the root directory, you can use the Structs.sh CLI tool:
+```bash
+sh structs.sh --frontend     # Starts the frontend development server on port 3000
+sh structs.sh --backend      # Starts the backend development server on port 8080
+```
 
-1. From the project directory: `sh structs.sh --frontend`
+Alternatively, you may run the npm start script from the `client` and `server` directories.
+```bash
+# In the `client/` directory:
+npm start
 
-Running the backend server:
-
-1. From the project directory: `sh structs.sh --backend`
+# In the `server/` directory:
+npm start
+```
 
 ---
 
-## Project Directory Structure
+# Documentation
 
+## Client & Server Directory Structure
+Below is a view of the project's directory hierarchy with succinct annotations. 
 ```bash
 .
 │
-├── structs.sh     # → Script for starting up the application
+├── structs.sh     # → Shell script for setting up and starting up the Structs.sh
 │
 ├── client/
 │       │
-│       ├── README.md
-│       ├── public
-│       │   ├── index.html       # → The base html file that React renders all elements into
-│       │   ├── visualiser.html  # → Temporary html file for experimenting with vanilla JS visualiser implementation
-│       │   └── visualiser.js
-│       │
 │       └── src
 │           ├── index.tsx
-│           ├── assets           # → Contains public assets such as images and CSS/SCSS.
-│           │                    #   Changing global styles would be done here (most likely)
+│           ├── assets           # → Contains public assets such as images and CSS/SCSS. Most global style rules exist here
 │           ├── components       # → Where all our components are stored. Make new directories for your components here
-│           │   ├── Footer
-│           │   ├── Navbars          # → Top navigation bar
-│           │   ├── PageHeader       # → The animated background you see that takes up 100% of the viewport
-│           |   |
-│           |   # ...more of our components here
-│           |
-│           ├── content          # → The 'API' for fetching lesson content to be displayed
-│           |
+│           ├── content          # → Contains helpers for fetching lesson content
 │           ├── layout           # → Components defining page structure
-│           |
 │           └── views                      # → Where our page components are stored.
 │               ├── HomePage.js            # → Structs.sh homepage
 │               ├── Dashboard.js           # → The visualisation and main content page
-│               # ...more pages would go here
+│               # ... more pages would go here
 │
 └── server/
-        │
-        ├── dist
-        │   ├── index.js
-        │   └── index.js.map
-        ├── package.json
-        ├── package-lock.json
-        └── src
-            └── index.ts
-
+    │
+    ├── src
+    │   ├── database-helpers     # → The files in here contain helper functions for reading/writing to the database 
+    │   │   └── user.ts
+    │   ├── routes               # → Where all our API endpoints and handlers live
+    │   │   ├── auth.ts
+    │   │   # ... more routes
+    │   ├── schemas              # → Contains all the files that define what our MongoDB collections look like
+    │   │   ├── user
+    │   │   │   └── user.ts      # → Eg. this file makes the 'users' collection and defines what fields a user document should have 
+    │   │   # ... more schema definitions
+    │   ├── server.ts            # → This is the entry point. Config and server startup happesn here
+    │   ├── typedefs             # Backend type definitions are kept here
+    │   │   ├── user
+    │   │   │   └── User.ts
+    │   │   # ... more type definitions
+    │   └── utils                # → Global helper functions
+    │       └── index.ts
+    └── tests                    # → Our unit tests
+        └── sample.test.js
 ```
 
-## Documentation
+## Visualiser Project Directory
+```bash
+    TODO
+```
 
--   <a href="https://demos.creative-tim.com/blk-design-system-react/#/documentation/overview">Documentation</a> for UI components from the frontend base template
+## Structs.sh API Documentation
 
-## Guidelines:
+### Authentication
 
-### Git Contribution Guidelines
+<table>
+    <tbody>
+        <tr>
+            <th>Endpoint</th>
+            <th>Parameters</th>
+            <th>Response</th>
+            <th>Description</th>
+            <th>Exceptions</th>
+        </tr>
+        <tr>
+            <td>
+                <pre>POST /api/auth/register</pre>
+            </td>
+            <td>
+                <ul>
+                    <li>
+                        username
+                    </li>
+                    <li>
+                        email
+                    </li>
+                    <li>
+                        password
+                    </li>
+                </ul>
+            </td>
+            <td>
+                <pre>TODO: Nothing for now?</pre>
+            </td>
+            <td>
+                Registers a new user for Structs.sh.
+            </td>
+            <td>
+                TODO: think of some. Eg. emails must be of valid format
+            </td>
+        </tr>
+    </tbody>
+</table>
 
--   1 branch per feature
+
+### Lessons
+
+
+### Quizzes
+
+
+# Guidelines
+
+## Getting Started With Backend Development
+TODO
+
+## Getting Started with the Visualiser 
+TODO
+
+---
+
+## Good Collaborative Coding Practices
+
+### Git Guideline
+
+<details>
+    <summary>Git contribution guidelines</summary>
+
+-   Have one branch per feature. Name the branch according to the name convention `<initials>/<feature-name>`, for example, `JS/dashboard` for John Smith
 -   Commit frequently with short and meaningful messages
 -   When ready to merge into master, first merge master into your branch and deal with conflicts on YOUR branch
 -   Open a pull request merging your branch into master
@@ -105,10 +188,11 @@ Running the backend server:
     2. Set the base repo to be `csesoc/Structs.sh`
     3. Set the branch you want to merge into master
     4. Click `Create pull request`. You'll be prompted to add a description afterwards
-    5. Once the pull request is opened, someone else must approve it (GitHub doesn't even let you approve it yourself)
-    6. Once approved, it'll be merged into master and then you'll see your updates on https://structs.netlify.app/
+    5. Once the pull request is opened, someone else must approve it
+    6. Once approved, it'll be merged into master!
+</details>
 
-### Style Guidelines and Practices
+### Style Guidelines 
 
 Based on <a href="https://github.com/airbnb/javascript/tree/master/react">Airbnb's official React style guide</a>.
 

@@ -1,9 +1,0 @@
-# Gets the course activity distribution for a child
-query GetCourseActivityDistribution {
-  getCourseActivityDistribution(childId: "", daysAgo: 20) {
-    course {
-      _id
-    }
-    value
-  }
-}
