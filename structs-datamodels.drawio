@@ -1,1 +1,49 @@
-<mxfile host="app.diagrams.net" modified="2021-09-03T10:46:27.144Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36" etag="PCXDa8ORXGFXpT21_gf5" version="14.9.7" type="github"><diagram id="R2lEEEUBdFMjLlhIrx00" name="Page-1">7Vttb5s6GP01SHcfVoEJSfuxYckmLbmr2m77eOWCA9YIRsZ526+fDTaEOGlhd2m8JlLUwMMTg59zfGyfJpbrz9cfKcziKQlRYgE7XFvuBwsABwCXv4nIpowMbgZlIKI4lEl14AH/RDJoy+gChyhvJDJCEoazZjAgaYoC1ohBSsmqmTYjSfOuGYyQFngIYKJHv+OQxWX02rPr+CeEo1jd2bHllTlUyTKQxzAkq0YIrdmYpEw+4h2ic5iilPErU0h/IGp5o5gx0dNbC4z5ayayryJCogTBDOdXAZnzcJDzlPEMznEiyrzV0FA2xG/njizXp4Sw8mi+9lEisFIwlM80PnC1qgMV7bb4gP9+uZn8sFn6aeV+Y9NpdDd4ei9bWcJkIesra8M2quAo5PWXp/xWmG3uUQIZJumovjJEaXgr0OVJo/ufiJJHMoUp7/wwZ5Cy+hpJZfoY88dzPzgqRZ7b/FzvmnzOnCxogJ7pD+hJSkIaIfZMYl8CHjbYJiv3EZE5YnTDE1Y1xyomxdv8UkFaFGXZZCmUTIqqBqt73BFcEEsOTLcn21HDUlFSNVF2XX5qG+adhno7DfV3GypLozXED7Y6XocKFnVhFHhjlHJbMsoZGEapnt1kgnP9u5TqNxsCtveqlNIZ9YWGiOYar7iiZ+KQwaeCQQUJ5BTmChbwSYlBnHL9LVkSkCSBWY6L9DIS4yScwA1ZMNWQOhvO8BqF9+UMJnI5/ya8sVxSTMwFitXiMkxwlPLjgFNO3HFIUc6fZQJzJjMOknKJKEPrZ1mksPF2QFbDfYtlwNvHMtc+TKgGgl3hcl8WAAUU7zrDMLnnCwWYRgVmTUhEXUNKskc1+kQgE0RDdLRE5VRdFJ8PdZ8kRCCbloJQpBWd84b8xbvr21ee5fEH8Pm5U5/zl0inzCdpzijEBRyIA7VCAqwhI5m8T4Jm6jGoLKY4fiKM8Zn/EKzP0vplrCW2bktoj4ZsT0P27nMXbAnv6ywpVDvGYYjSckiKdSKs8d4D5d76VzXfBWN3ILbEw22NxxYA7mvW39PqT4QQ/sc/5APr1i5V+98vj+Lv18nEqpa6JsGjdLHMHeYZDHAaTcpP9nfw846B39o6OJ7Aa+LZP2el3L8q+zNK2T+1Ug40ZMefnS7gvtJYbAlAvzUAp5LGa63gwSLnfS7VEeyRRuOweFEX/zhYpujgzUUHj6ODN6fWQeUa/ia0ZqngTevyn0oFHd3PK1eIIWSIx+XbWchge7RMkUFH3zk/xDibF6J18To0rwNct5S343kdjr4lPqOpq8Pm2mm/OzPF7XD07fZbsjsq6ho8nekb5FwK4sXz6AqiMbOcvjc+I8nssNzsLpkntz0cfRv+V/seFVcN1kh981yZwmdle3TAyhQpBP9vd3yRQoOdD6BvxQ0cfC3rXxHVXB1U5d23VjxD96MDYsaooW5/+NLDv9gf1tZXOzp/1cM+GmQX+6PlcPz77A/wtu0PYL79AXT746V/ap6T99EBQWOmuIv3cSy9PLn3AXTvw8DB2Lb+5hsfQDc+KnVM4Vys9IMY0n88+93ZLPpNskD4af3jlvKr4PUvktzRLw==</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2021-09-03T11:11:28.028Z" agent="5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36" etag="dmYT9ke1VKx257CZv2aJ" version="14.9.7" type="github">
+  <diagram id="R2lEEEUBdFMjLlhIrx00" name="Page-1">
+    <mxGraphModel dx="1833" dy="1010" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0" extFonts="Permanent Marker^https://fonts.googleapis.com/css?family=Permanent+Marker">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="pDtJqAfcPCYP6tU8S-Co-5" value="&lt;b&gt;&lt;font style=&quot;font-size: 32px ; background-color: rgb(255 , 235 , 235)&quot;&gt;&lt;u&gt;Structs.sh Data Models&lt;/u&gt;&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="20" y="40" width="370" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="pDtJqAfcPCYP6tU8S-Co-45" value="Lesson" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;fontFamily=Helvetica;fillColor=#dae8fc;strokeColor=#6c8ebf;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="80" y="140" width="270" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="pDtJqAfcPCYP6tU8S-Co-46" value="&lt;b&gt;rawMarkdown&lt;/b&gt; (&lt;u&gt;string&lt;/u&gt;)&lt;br&gt;&lt;span style=&quot;white-space: pre&quot;&gt;	&lt;/span&gt;The raw markdown source code used to&amp;nbsp;&lt;br&gt;&lt;span style=&quot;white-space: pre&quot;&gt;	&lt;/span&gt;display the content in this lesson.&lt;br&gt;&lt;br&gt;&lt;b&gt;creatorId&lt;/b&gt; (&lt;u&gt;string&lt;/u&gt;)&lt;br&gt;&lt;span style=&quot;white-space: pre&quot;&gt;	&lt;/span&gt;The ID of the user who created this lesson.&lt;br&gt;&lt;br&gt;&lt;b&gt;quizIds &lt;/b&gt;(&lt;span style=&quot;background-color: rgb(31 , 255 , 46)&quot;&gt;Quiz&lt;/span&gt;[ ])&lt;br&gt;&lt;span style=&quot;white-space: pre&quot;&gt;&lt;span style=&quot;white-space: pre&quot;&gt;	&lt;/span&gt;An ordered array of quiz objects.&lt;br&gt;&lt;span style=&quot;white-space: pre&quot;&gt;	&lt;/span&gt;These are used to construct quiz questions&lt;br/&gt;&lt;span style=&quot;white-space: pre&quot;&gt;	&lt;/span&gt;in the frontend.&lt;br&gt;&lt;/span&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;fontStyle=0;html=1;" vertex="1" parent="pDtJqAfcPCYP6tU8S-Co-45">
+          <mxGeometry y="30" width="270" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="pDtJqAfcPCYP6tU8S-Co-47" value="User" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;fontFamily=Helvetica;fillColor=#dae8fc;strokeColor=#6c8ebf;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-340" y="195" width="260" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="pDtJqAfcPCYP6tU8S-Co-48" value="&lt;b&gt;email&lt;/b&gt; &lt;u&gt;(string)&lt;/u&gt;&lt;br&gt;&lt;span style=&quot;white-space: pre&quot;&gt;	&lt;/span&gt;The email address associated with this &lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;user&#39;s account&lt;br&gt;&lt;br&gt;&lt;b&gt;password&lt;/b&gt; &lt;u&gt;(string)&lt;/u&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp;&amp;nbsp;The encrypted/hashed password for this &lt;br&gt;&amp;nbsp; &amp;nbsp; account." style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;fontStyle=0;html=1;" vertex="1" parent="pDtJqAfcPCYP6tU8S-Co-47">
+          <mxGeometry y="30" width="260" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="pDtJqAfcPCYP6tU8S-Co-49" value="Quiz" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;fontFamily=Helvetica;fillColor=#dae8fc;strokeColor=#6c8ebf;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="530" y="195" width="260" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="pDtJqAfcPCYP6tU8S-Co-50" value="email (string)&#xa;    The email address associated with this &#xa;    user&#39;s account&#xa;&#xa;creatorId (string)&#xa;    The encrypted/hashed password for this &#xa;    account." style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;fontStyle=0" vertex="1" parent="pDtJqAfcPCYP6tU8S-Co-49">
+          <mxGeometry y="30" width="260" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="pDtJqAfcPCYP6tU8S-Co-52" value="&lt;font color=&quot;#8c8c8c&quot; style=&quot;font-size: 8px&quot;&gt;Note: this arrow indicates that &#39;a &lt;br&gt;lesson &lt;u&gt;has 0 or many&lt;/u&gt;&amp;nbsp;quizzes&#39;.&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="375" y="245" width="130" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="pDtJqAfcPCYP6tU8S-Co-54" value="" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERzeroToMany;endFill=1;fontFamily=Helvetica;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="pDtJqAfcPCYP6tU8S-Co-46" target="pDtJqAfcPCYP6tU8S-Co-50">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="410" y="410" as="sourcePoint" />
+            <mxPoint x="510" y="310" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pDtJqAfcPCYP6tU8S-Co-56" value="&lt;font color=&quot;#8c8c8c&quot; style=&quot;font-size: 8px&quot;&gt;Note: this arrow indicates that a user&amp;nbsp;&lt;br&gt;may be the author of 0 or more lessons&lt;br&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fontFamily=Helvetica;" vertex="1" parent="1">
+          <mxGeometry x="-80" y="240" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="pDtJqAfcPCYP6tU8S-Co-57" value="" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERzeroToMany;endFill=1;fontFamily=Helvetica;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="pDtJqAfcPCYP6tU8S-Co-48" target="pDtJqAfcPCYP6tU8S-Co-46">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="-140" y="399.9999999999999" as="sourcePoint" />
+            <mxPoint x="40" y="399.9999999999999" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
