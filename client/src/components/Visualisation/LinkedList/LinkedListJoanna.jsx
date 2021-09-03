@@ -1,8 +1,7 @@
-import React from 'react';
-import styles from './LinkedList.module.scss';
-import Node from './Node';
 // import * as d3 from 'd3';
 import anime from 'animejs';
+import React from 'react';
+import styles from './LinkedList.module.scss';
 
 let appendNode = null;
 let deleteNode = null;

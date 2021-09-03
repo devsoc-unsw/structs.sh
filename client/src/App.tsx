@@ -6,6 +6,7 @@ import Page404 from 'views/Page404';
 import AboutUs from 'views/AboutUs';
 import Feedback from 'views/Feedback';
 import { AnimatePresence } from 'framer-motion';
+import ContentCreator from 'views/ContentCreator';
 import './App.css'
 
 const App = () => {
@@ -20,6 +21,9 @@ const App = () => {
                 <Route exact path="/about" render={AboutUs} />
                 {/* Feedback and feature request page */}
                 <Route exact path="/feedback" render={Feedback} />
+                {/* Markdown editor for textual lesson creation */}
+                <Route path="/creator/lesson/new" render={ContentCreator} />
+                <Route path="/creator/lesson/edit" render={ContentCreator} />
                 {/* 404 page */}
                 <Route component={Page404} />
             </Switch>

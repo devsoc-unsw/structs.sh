@@ -1,7 +1,6 @@
-import Footer from 'components/Footer/Footer.jsx';
 import IndexNavbar from 'components/Navbars/TopNavbar.jsx';
-import React from 'react';
 import { motion } from 'framer-motion';
+import React from 'react';
 
 const containerVariants = {
     hidden: {

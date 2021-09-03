@@ -2,6 +2,8 @@ import { getLessonContent } from 'content';
 import React, { useState } from 'react';
 import styles from './Lesson.module.scss';
 import renderMarkdown from './markdown-util';
+import { Link } from 'react-router-dom';
+import { EditButton, NewContentButton } from 'components/Buttons';
 // import sampleMD from './sample.md';
 
 const Lesson = ({ topic }) => {
@@ -12,6 +14,12 @@ const Lesson = ({ topic }) => {
             <div className={styles.lessonContainer}>
                 {lessonContent ? (
                     <>
+                        <Link to="/creator/lesson/edit">
+                            <EditButton />
+                        </Link>
+                        <Link to="/creator/lesson/new">
+                            <NewContentButton />
+                        </Link>
                         <div
                             dangerouslySetInnerHTML={{
                                 __html: renderMarkdown(`# Linked Lists Demystified

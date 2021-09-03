@@ -1,15 +1,14 @@
+// import { appendNode, deleteNode } from 'components/Visualisation/LinkedList/LinkedListJoanna';
+import LinkedListAnimation from 'components/Animation/LinkedList/linkedListAnimation';
+import GUIMode from 'components/GUIMode/guiMode';
+import TopNavbar from 'components/Navbars/TopNavbar';
 import { Pane } from 'components/Panes';
 import Tabs from 'components/Tabs/Tabs';
 import { Terminal } from 'components/Terminal';
-import { LinkedList } from 'components/Visualisation/LinkedList';
 import { motion } from 'framer-motion';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import Helmet from 'react-helmet';
-import TopNavbar from 'components/Navbars/TopNavbar';
 import styles from './Dashboard.module.scss';
-import GUIMode from 'components/GUIMode/guiMode';
-// import { appendNode, deleteNode } from 'components/Visualisation/LinkedList/LinkedListJoanna';
-import LinkedListAnimation from 'components/Animation/LinkedList/linkedListAnimation';
 import Controls from 'components/Controls/Controls';
 import ModeSwitch from 'components/GUIMode/modeSwitch';
 
