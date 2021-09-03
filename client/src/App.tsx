@@ -6,6 +6,7 @@ import Page404 from 'views/Page404';
 import AboutUs from 'views/AboutUs';
 import Feedback from 'views/Feedback';
 import { AnimatePresence } from 'framer-motion';
+import './App.css'
 
 const App = () => {
     const location = useLocation();
