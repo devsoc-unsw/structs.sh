@@ -1,0 +1,131 @@
+# ========== Queries ==========
+# Fetching all sessions
+query GetAllSessions {
+  getAllSessions {
+    lessonIds
+    childId
+  }
+}
+
+# Getting the current session and its lessons for the child
+query GetChildCurrentSession {
+  getCurrentSessionForChild(childId: "611ba05f9b59ab0f937b8ebc") {
+    lessons {
+      _id
+      title
+      description
+      level
+      instruction
+      duration
+      courseId
+    }
+    activeLessonId
+  }
+}
+
+# Getting all the sessions ever prescribed for the child
+query GetChildSessions {
+  getAllSessionsForChild(childId: "ENTER CHILD ID HERE") {
+    lessonIds
+    activeLessonId
+  }
+}
+
+# ========== Mutations ==========
+# Explicitly arranging a therapy session
+mutation CreateSession {
+  createSession(
+    session: {
+      lessonIds: ["lesson-1", "lesson-2"]
+      childId: "ENTER CHILD ID HERE"
+      duration: 100
+    }
+  ) {
+    _id
+  }
+}
+
+# Updating session properties
+mutation UpdateSessionProperties {
+  updateSessionProperties(
+    session: {
+      _id: "ENTER SESSION ID HERE"
+      lessonIds: ["lesson-1", "lesson-2", "lesson-3", "lesson-4"]
+      activeLessonId: "lesson-2"
+      endTime: 123123123
+      duration: 200
+    }
+  ) {
+    _id
+  }
+}
+
+# Updating session progress
+mutation UpdateSessionProgress {
+  updateSessionProgress(
+    session: {
+      _id: "ENTER SESSION ID HERE"
+      activeLessonId: "lesson-2"
+      endTime: 234234234
+      completed: false
+    }
+  ) {
+    _id
+  }
+}
+
+# Sets what the current session should be for a child
+mutation SetChildCurrentSession {
+  setChildCurrentSession(
+    childId: "ENTER CHILD ID HERE"
+    sessionId: "ENTER SESSION ID HERE"
+  ) {
+    _id
+  }
+}
+
+# Progresses the child to the next session. Should be
+# invoked on successful completion of the current session
+mutation ProgressChildToNextSession {
+  progressChildToNextSession(childId: "ENTER CHILD ID HERE")
+}
+
+# Deleting session
+mutation DeleteSession {
+  deleteSession(
+    childId: "ENTER CHILD ID HERE"
+    sessionId: "ENTER SESSION ID HERE"
+  ) {
+    _id
+  }
+}
+
+# Called to start the session. This should be done only when the first question of the
+# first lesson is started for the first time, otherwise nothing is affected
+mutation StartSession($sessionId: String) {
+  startSession(sessionId: $sessionId) {
+    _id
+    lessonIds
+    childId
+    activeLessonId
+    startTime
+    endTime
+    duration
+    completed
+  }
+}
+
+# After starting a session, this can be called to progress the active lesson to the next one,
+# if it exists
+mutation ProgressToNextLesson($sessionId: String) {
+  progressToNextLesson(sessionId: $sessionId) {
+    _id
+    lessonIds
+    childId
+    activeLessonId
+    startTime
+    endTime
+    duration
+    completed
+  }
+}
