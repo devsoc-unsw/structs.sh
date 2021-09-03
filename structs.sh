@@ -9,14 +9,23 @@ YELLOW='\033[1;33m'
 GREEN='\033[0;32m'
 RESET='\033[0m' 
 
+showHelp() {
+    helpLog="Usage: $0 [--frontend | --backend | --setup]"
+    echo "${YELLOW}$helpLog${RESET}"
+    echo "\t./structs.sh --setup\t\tInstalls all dependencies"
+    echo "\t./structs.sh --frontend\t\tStarts the client development server"
+    echo "\t./structs.sh --backend\t\tStarts the Structs.sh API development server"
+}
+
+if test $# -eq 0; then
+    showHelp
+    exit 1
+fi
+
 while test $# -gt 0; do
     case "$1" in
         -h|--help)
-            helpLog="Usage: $0 [--frontend | --backend | --setup]"
-            echo "${YELLOW}$helpLog${RESET}"
-            echo "\t./structs.sh --setup\t\tInstalls all dependencies"
-            echo "\t./structs.sh --frontend\t\tStarts the client development server"
-            echo "\t./structs.sh --backend\t\tStarts the Structs.sh API development server"
+            showHelp 
             exit 0
             ;;
         --setup)
