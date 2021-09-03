@@ -3,7 +3,7 @@ import Tabs from 'components/Tabs/Tabs';
 import { Terminal } from 'components/Terminal';
 import { LinkedList } from 'components/Visualisation/LinkedList';
 import { motion } from 'framer-motion';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Helmet from 'react-helmet';
 import TopNavbar from 'components/Navbars/TopNavbar';
 import styles from './Dashboard.module.scss';
@@ -11,6 +11,7 @@ import GUIMode from 'components/GUIMode/guiMode';
 // import { appendNode, deleteNode } from 'components/Visualisation/LinkedList/LinkedListJoanna';
 import LinkedListAnimation from 'components/Animation/LinkedList/linkedListAnimation';
 import Controls from 'components/Controls/Controls';
+import ModeSwitch from 'components/GUIMode/modeSwitch';
 
 const containerVariants = {
     hidden: {
@@ -55,6 +56,10 @@ const Dashboard = ({ match }) => {
         deleteNode = list.animateDelete.bind(list);
     }, []);
 
+    const handleModeSwitch = () => {
+        setTerminalMode(!terminalMode)
+    }
+
     return (
         <motion.div
             className={styles.container}
@@ -86,19 +91,18 @@ const Dashboard = ({ match }) => {
                         </div>
                         <Controls />
                     </header>
-                    {terminalMode ? (
-                        <Terminal
+                    <div className={styles.interactor}>
+                        <ModeSwitch
+                            onClick={handleModeSwitch}
                             switchMode={terminalMode}
                             setSwitchMode={setTerminalMode}
-                            executeCommand={executeCommand}
                         />
-                    ) : (
-                        <GUIMode
-                            switchMode={terminalMode}
-                            setSwitchMode={setTerminalMode}
-                            executeCommand={executeCommand}
-                        />
-                    )}
+                        {terminalMode ? (
+                            <Terminal executeCommand={executeCommand} />
+                        ) : (
+                            <GUIMode executeCommand={executeCommand} />
+                        )}
+                    </div>
                 </Pane>
                 <Tabs topic={topic}></Tabs>
             </Pane>
