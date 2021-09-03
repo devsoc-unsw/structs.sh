@@ -1,5 +1,0 @@
-help                     - show commands available
-insert <nodes>           - inserts the given nodes with the AVL insertion algorithm
-printHeightDiff          - shows the balance of all nodes in the tree (left height - right height)
-isHeightBalanced         - shows the heights of all nodes in the tree
-exit                     - quit program

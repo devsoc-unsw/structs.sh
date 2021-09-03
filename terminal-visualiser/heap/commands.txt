@@ -1,7 +1,0 @@
-help         - show available commands
-show         - shows the heap
-insert <d>   - inserts a new integer into the heap
-pop          - pops the value at the top of the heap (the highest priority element)
-popall       - pops all values in the heap, giving a sequence sorted in priority
-clear        - removes all items from the heap
-exit         - quit program
