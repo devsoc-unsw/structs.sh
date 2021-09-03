@@ -30,6 +30,7 @@ const CollapsiblePane = (props) => {
             resizerOptions={{
                 grabberSize: '3rem',
             }}
+            minSizes={150.9}
         >
             {props.children}
         </SplitPane>
