@@ -7,6 +7,7 @@ import AboutUs from 'views/AboutUs';
 import Feedback from 'views/Feedback';
 import { AnimatePresence } from 'framer-motion';
 import ContentCreator from 'views/ContentCreator';
+import './App.css'
 
 const App = () => {
     const location = useLocation();

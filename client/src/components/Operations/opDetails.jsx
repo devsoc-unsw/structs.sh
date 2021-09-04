@@ -58,7 +58,6 @@ const OpDetails = ({ op, isLast, showOp, executeCommand }) => {
         newArgs[index] = e.target.value;
         setArguments(newArgs);
     };
-    console.log(op);
 
     return (
         <Collapse
@@ -110,7 +109,7 @@ const OpDetails = ({ op, isLast, showOp, executeCommand }) => {
 };
 
 OpDetails.propTypes = {
-    op: PropTypes.string,
+    op: PropTypes.object,
     isLast: PropTypes.bool,
     showOp: PropTypes.object,
 };

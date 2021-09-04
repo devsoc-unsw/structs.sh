@@ -9,6 +9,10 @@ $textFontSize: 14px;
     padding-top: 20px;
     color: white;
 
+    // avoid console from overflow
+    // display: flex;
+    // flex-direction: column;
+
     .terminalLine {
         font-family: 'Ubuntu Mono', monospace !important;
         font-size: $textFontSize !important;
@@ -63,5 +67,39 @@ $textFontSize: 14px;
     .output {
         width: 100%;
         color: rgb(217, 255, 0);
+        margin-bottom: 0px;
+        margin-left: 1px;
+    }
+
+    .manual {
+        // make manual distinctive to error msg
+        color: white !important;
     }
 }
+
+.manualContainer {
+    display: flex;
+    flex-direction: column;
+    height: 80%;
+    padding-left: 1px;
+    .info {
+        flex: 6;
+        color: white;
+    }
+
+    .searchBar {
+        font-size: 16px;
+        flex: 1;
+        border: none;
+        background: transparent;
+        color: white;
+        outline: none;
+        max-height: 25px;
+        position: absolute;
+        bottom: 5px;
+    }
+    .command {
+        color:rgb(122, 170, 49),
+    }
+}
+

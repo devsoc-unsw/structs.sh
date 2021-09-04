@@ -1,46 +1,102 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react';
 import styles from './Terminal.module.scss';
-import Prompt from './Prompt';
-import ModeSwitch from 'components/GUIMode/modeSwitch';
+import Console from 'react-console-emulator';
+import ManualPage from './ManualPage'
+import Typist from 'react-typist';
 
 // Pretty cool demo: https://codepen.io/spkml/pen/dgBqRm
+const console = {
+    container: {
+        minHeight: '80%',
+        maxHeight: '80%',
+        paddingTop: '0px',
+        backgroundColor: '#181818',
+        width:'100%'
+    },
+    prompt: {
+        color: 'orange',
+    },
+    content: {
+        padding: '1px',
+    },
+};
 
-const Terminal = ({ switchMode, setSwitchMode, executeCommand }) => {
-    const [debugOutput, setDebugOutput] = useState('');
+const usage = (command) => {
+    switch (command) {
+        case 'append':
+            return 'usage: append <number>';
+        case 'delete':
+            return 'usage: delete <number>';
+    }
+}
 
-    const processCommand = (line) => {
-        const tokens = line.split(/\s+/);
-        // Command is always the first token
-        const command = tokens[0];
-        const args = tokens.slice(1);
 
-        // Determine which command is to be run
-        const response = executeCommand(command, args);
 
-        setDebugOutput(`
-            Running command:\t${command}\n
-            Args:\t\t${args}\n
-            Message:\t\t${response}\n
-        `);
+const Terminal = ({ executeCommand }) => {
+    const [showMan, setShowMan] = useState(false) 
+
+    const processCommand = (command, arg) => {
+        if (arg && parseFloat(arg)) {
+            executeCommand(command, arg);
+        } else {
+            return usage(command)
+        }
+    };
+
+    const commands = {
+        append: {
+            usage: 'append <number>',
+            fn: (arg) => {
+                return processCommand('append', arg)
+            },
+        },
+        delete: {
+            usage: 'delete <number>',
+            fn: (arg) => {
+                return processCommand('delete', arg)
+            }
+        },
+        man: {
+            fn: () => {
+                // avoid updating react state on unmounted component
+                setTimeout(() => {
+                    setShowMan(true);
+                }, 10);
+            }
+        }
     };
 
     return (
         <div className={styles.terminalContainer}>
-            <pre className={styles.output}>
-                {/* TODO: get rid of this */}
-                Try typing: <strong>append 2</strong>
-            </pre>
-            <ModeSwitch switchMode={switchMode} setSwitchMode={setSwitchMode} />
-            <Prompt username={'username'} path={'~'} processCommand={processCommand}></Prompt>
-            <pre className={styles.output}>Debug output: {debugOutput}</pre>
+            <div className={styles.output}>
+                {showMan ? (
+                    <div>
+                        <Typist cursor={{ hideWhenDone: true }} avgTypingDelay={30}>
+                            Type :q + Enter to exit
+                        </Typist>
+                    </div>
+                ) : (
+                    <Typist cursor={{ hideWhenDone: true }} avgTypingDelay={30}>
+                        Type "man" for more commands
+                    </Typist>
+                )}
+            </div>
+            {showMan ? (
+                <ManualPage setShowMan={setShowMan} />
+            ) : (
+                <Console
+                    style={console.container}
+                    promptLabel={'username@Structs.sh:~$'}
+                    commands={commands}
+                    promptLabelStyle={console.prompt}
+                    contentStyle={console.content}
+                    messageStyle={{ color: 'red' }}
+                    autoFocus
+                    // other props: contentStyle, inputAreaStyle, inputStyle, inputTextStyle
+                />
+            )}
         </div>
     );
-};
-
-Terminal.propTypes = {
-    switchMode: PropTypes.bool,
-    setSwitchMode: PropTypes.func,
 };
 
 export default Terminal;
