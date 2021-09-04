@@ -20,6 +20,7 @@ Structs.sh is an interactive data structure and algorithm visualiser and educati
     - [Client & Server Directory Structure](#client-and-server-directory-structure)
     - [Visualiser Project Directory Structure](#visualiser-project-directory-structure)
     - [Structs.sh API Docs](#structs-api-documentation)
+    - [Backend Data Model](#data-model)
 -   [Guidelines](#guidelines)
     - [Getting Started With Backend Development](#getting-started-with-backend-development)
     - [Getting Started With the Visualiser](#getting-started-with-the-visualiser)
@@ -371,7 +372,7 @@ Familiarise yourself with the [backend project directory structure](#client-and-
 ### How was the database set up and connected to our backend?
 
 A free-tier instance of MongoDB was created on MongoDB Atlas following their <a href="https://docs.atlas.mongodb.com/tutorial/create-new-cluster/">official guide</a>. The server already has the database connection set up - there should be nothing additional you have to do for now. This is done in `server.ts` using the MongoDB connection URI environment variable in `.env`. Usually this string is protected and hidden (because this string contains admin credentials which allows anyone with this string to connect to the database instance and drop everything). For development however, it's more convenient to keep it exposed in our repo.
-> Note: the way the database is hooked up to our backend server here is very similar to how you would do it for other DBMSs. If you wanted to set up PostgreSQL, for example, you would spin up a PostgreSQL server somewhere (either locally or on cloud platform), get a connection URI string, put it in your environment variables file, then configure the server to connect using that URI.
+> Note: the way the database is hooked up to our backend server here is very similar to how you would do it for other DBMSs. If you wanted to set up PostgreSQL, for example, you would spin up a PostgreSQL server somewhere (either locally or on a cloud platform), get a connection URI string, put it in your environment variables file, then configure the server to connect using that URI.
 
 ### How are we reading/writing to the database?
 
@@ -392,10 +393,11 @@ If you want to implement some endpoints for creating and retrieving `lesson` obj
 2. Register the router exported from the new `lesson.ts` routes file to the app in the `routes/index.ts` file. This tells Express to use your endpoints and handlers
 3. To implement your endpoints, you may need to define a new database collection. To do this, add a new file in `schemas`, following the other files in that directory as a reference. Setting up Mongoose schemas will automatically result in a new database collection being created  
 4. To do read/write operations, add a new file to `database-helpers` and follow the other files there as a reference. 
+    - <a href="https://mongoosejs.com/docs/api/model.html">Documentation for the database operations you can use on your schemas</a> 
     - Note: You may be working with new types. You can add new interface declarations in `typedefs`. TypeScript is optional so only do this if it helps you and others
 5. Implement the endpoints, using functions exported from the files in `database-helper`.
 
-To check if your endpoints do what you think they do, <a href="https://learning.postman.com/docs/getting-started/introduction/">setting up and using Postman</a> is a great option. Remember to set the HTTP header field 'Content-Type: application/json'.
+To check if your endpoints do what you think they do, <a href="https://learning.postman.com/docs/getting-started/introduction/">setting up and using Postman</a> is a great option. Remember to set the HTTP header field `Content-Type: application/json`.
 
 To check if the database operations actually affected the database, you can use the web interface for our MongoDB instance <a href="https://cloud.mongodb.com/v2/61220bca0457b11254eb8d4f#clusters">here</a>. A nicer alternative to the web interface is their official desktop GUI application, <a href="https://www.mongodb.com/products/compass">MongoDB Compass</a>.
 
