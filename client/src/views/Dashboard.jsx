@@ -9,6 +9,8 @@ import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import Helmet from 'react-helmet';
 import styles from './Dashboard.module.scss';
+import Controls from 'components/Controls/Controls';
+import ModeSwitch from 'components/GUIMode/modeSwitch';
 
 const containerVariants = {
     hidden: {
@@ -53,6 +55,10 @@ const Dashboard = ({ match }) => {
         deleteNode = list.animateDelete.bind(list);
     }, []);
 
+    const handleModeSwitch = () => {
+        setTerminalMode(!terminalMode)
+    }
+
     return (
         <motion.div
             className={styles.container}
@@ -68,8 +74,8 @@ const Dashboard = ({ match }) => {
             {/* For some reason, getting rid of this ruins the pane spacing. It can't be a div or a span... */}
             <img width={48} height={48} />
             <TopNavbar showMenu />
-            <Pane orientation="vertical" minSize={'50%'} topGutterSize={48}>
-                <Pane orientation="horizontal" minSize={'50%'}>
+            <Pane orientation="vertical" minSize={340} topGutterSize={48} >
+                <Pane orientation="horizontal" minSize={150.9}>
                     {/* <LinkedList /> */}
                     <header classname="App-header">
                         <div className="visualiser">
@@ -82,20 +88,20 @@ const Dashboard = ({ match }) => {
                                 <g className="pointers" transform="translate(0, 20)" />
                             </svg>
                         </div>
+                        <Controls />
                     </header>
-                    {terminalMode ? (
-                        <Terminal
+                    <div className={styles.interactor}>
+                        <ModeSwitch
+                            onClick={handleModeSwitch}
                             switchMode={terminalMode}
                             setSwitchMode={setTerminalMode}
-                            executeCommand={executeCommand}
                         />
-                    ) : (
-                        <GUIMode
-                            switchMode={terminalMode}
-                            setSwitchMode={setTerminalMode}
-                            executeCommand={executeCommand}
-                        />
-                    )}
+                        {terminalMode ? (
+                            <Terminal executeCommand={executeCommand} />
+                        ) : (
+                            <GUIMode executeCommand={executeCommand} />
+                        )}
+                    </div>
                 </Pane>
                 <Tabs topic={topic}></Tabs>
             </Pane>

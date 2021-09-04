@@ -2,11 +2,11 @@ import React from 'react';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import PropTypes from 'prop-types';
-
+import styles from './ModeSwitch.module.scss'
 const ModeSwitch = ({ switchMode, setSwitchMode }) => {
     return (
         <>
-            <div className="switch pull-right">
+            <div className={`switch pull-right ${styles.switch}`}>
                 <FormControlLabel
                     control={
                         <Switch
