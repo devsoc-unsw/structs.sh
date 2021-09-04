@@ -4,7 +4,7 @@
     <a href=""><img src="./images/logo.png" width="100px" /></a>
 </p>
 <p align="center">
-    <strong><a href="https://structs.netlify.app/">Visit Structs.sh</a></strong>. 
+    <strong><a href="https://structs.netlify.app/">Visit Structs.sh</a> | <a href="https://www.figma.com/file/zFFuYLSSdc4TnQafDWgKP1/Structs.sh-Interface-Prototype?node-id=401%3A5">Figma Prototype</a></strong>. 
 </p>
 
 
