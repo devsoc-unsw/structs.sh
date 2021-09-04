@@ -17,7 +17,7 @@ Structs.sh is an interactive data structure and algorithm visualiser and educati
 -   [Setup Instructions (Development)](#setup-instructions)
 -   [Running Structs.sh](#running-structs)
 -   [Documentation](#documentation)
-    - [Client & Server Directory Structure](#)
+    - [Client & Server Directory Structure](#client-and-server-directory-structure)
     - [Visualiser Project Directory Structure](#visualiser-project-directory-structure)
     - [Structs.sh API Docs](#structs-api-documentation)
 -   [Guidelines](#guidelines)
@@ -72,7 +72,7 @@ npm start
 
 # Documentation
 
-## Client & Server Directory Structure
+## Client and Server Directory Structure
 Below is a view of the project's directory hierarchy with succinct annotations. 
 ```bash
 .
@@ -360,11 +360,48 @@ Structs.sh features a RESTful API for content management, supporting the retriev
 
 ## Getting Started With Backend Development
 
+The Structs.sh backend server is written in Node.js with TypeScript, using Express as a server framework and a cloud instance of MongoDB on MongoDB's official cloud platform, <a href="https://www.mongodb.com/cloud/atlas">MongoDB Atlas</a>. 
+> Note: if you've done COMP1531, it's helpful to think of Express as the Node.js version of Flask. Both aim to be a very lightweight server framework, and you tend to work with both of them in very similar ways.
 
+Familiarise yourself with the [backend project directory structure](#client-and-server-directory-structure).
+
+- The `.env` file in `server` contains some important environment variables such as the MongoDB connection URI and the server port number. Without the MongoDB connection URI, the server cannot connect to the database and so all reading/writing operations will fail.
+- <a href="https://expressjs.com/">Express.js</a> is an <strong><a href="https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/Introduction#is_express_opinionated">unopinionated</a></strong> server framework.
+
+### How was the database set up and connected to our backend?
+
+A free-tier instance of MongoDB was created on MongoDB Atlas following their <a href="https://docs.atlas.mongodb.com/tutorial/create-new-cluster/">official guide</a>. The server already has the database connection set up - there should be nothing additional you have to do for now. This is done in `server.ts` using the MongoDB connection URI environment variable in `.env`. Usually this string is protected and hidden (because this string contains admin credentials which allows anyone with this string to connect to the database instance and drop everything). For development however, it's more convenient to keep it exposed in our repo.
+> Note: the way the database is hooked up to our backend server here is very similar to how you would do it for other DBMSs. If you wanted to set up PostgreSQL, for example, you would spin up a PostgreSQL server somewhere (either locally or on cloud platform), get a connection URI string, put it in your environment variables file, then configure the server to connect using that URI.
+
+### How are we reading/writing to the database?
+
+There exists an official <a href="https://docs.mongodb.com/drivers/node/current/">MongoDB Node.js driver</a> which allows Node.js applications to connect to MongoDB and read/write to collections. There are also different drivers for different programming languages.
+
+A common standard, however, is to use an <a href="https://en.wikipedia.org/wiki/Object%E2%80%93relational_mapping">ORM</a> library rather than directly use this driver. For Structs.sh, we're using <a href="https://mongoosejs.com/docs/">Mongoose</a>, which is the most popular and well-documented library for interfacing with MongoDB. Like the database drivers, there exists different ORM libraries for different programming languages. If this were a Python + Flask project, for example, we would consider using <a href="https://pymongo.readthedocs.io/en/stable/">PyMongo</a>.
+
+To understand why using ORM is often preferable compared to directly using the official driver, <a href="https://stackoverflow.com/questions/448684/why-should-you-use-an-orm">read this</a>. Another great reason to use an ORM library is that it enables the application programmer to write endpoints that affect the database without having in-depth database knowledge.  
+
+### How does MongoDB differ from other DBMSs like PostgreSQL?  [TODO]
+
+MongoDB is a NoSQL database management system (and the most popular one of that category).
+
+### How to implement API endpoints
+
+If you want to implement some endpoints for creating and retrieving `lesson` objects, then you would do the follow (roughly):
+1. Add a new file to the `routes` directory, eg. `lesson.ts`. Follow the other files in `routes` as a reference
+2. Register the router exported from the new `lesson.ts` routes file to the app in the `routes/index.ts` file. This tells Express to use your endpoints and handlers
+3. To implement your endpoints, you may need to define a new database collection. To do this, add a new file in `schemas`, following the other files in that directory as a reference. Setting up Mongoose schemas will automatically result in a new database collection being created  
+4. To do read/write operations, add a new file to `database-helpers` and follow the other files there as a reference. 
+    - Note: You may be working with new types. You can add new interface declarations in `typedefs`. TypeScript is optional so only do this if it helps you and others
+5. Implement the endpoints, using functions exported from the files in `database-helper`.
+
+To check if your endpoints do what you think they do, <a href="https://learning.postman.com/docs/getting-started/introduction/">setting up and using Postman</a> is a great option. Remember to set the HTTP header field 'Content-Type: application/json'.
+
+To check if the database operations actually affected the database, you can use the web interface for our MongoDB instance <a href="https://cloud.mongodb.com/v2/61220bca0457b11254eb8d4f#clusters">here</a>. A nicer alternative to the web interface is their official desktop GUI application, <a href="https://www.mongodb.com/products/compass">MongoDB Compass</a>.
 
 ## Getting Started with the Visualiser 
 
-Familiarise yourself with the [visualiser project directory structure](#visualiser-project-directory-structure). One important idea about the way this project is structured is that it is basically a standard React codebase, **except** the visualiser's source code in `visualiser-scripts` is totally standalone from the React codebase. The reasons for structuring it this way are:  
+Familiarise yourself with the [visualiser's project directory structure](#visualiser-project-directory-structure). One important idea about the way this project is structured is that it is basically a standard React codebase, **except** the visualiser's source code in `visualiser-scripts` is totally standalone from the React codebase. The reasons for structuring it this way are:  
 - To ensure that whatever we build can be readily migrated into our primary React frontend codebase. 
     - Keeping the visualiser source code free from React means we won't be being forced into programming in the paradigm encouraged by the framework (eg. React encourages writing [declarative code](https://stackoverflow.com/questions/33655534/difference-between-declarative-and-imperative-in-react-js), meaning that imperative animation code can't be written without frequent use of hooks - which quickly becomes unmaintainable).
 - To take advantage of the toolchain set up by `create-react-app`. This means we can easily access a great development environment that we're all used to, including features like hot-reloading and modern JavaScript syntax (eg. `import`/`export`, `class`, `async`/`await`, etc.).
