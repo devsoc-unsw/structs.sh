@@ -40,6 +40,11 @@ while test $# -gt 0; do
             else
                 echo "${RED} ➤ Something went wrong with setting up the server dependencies"
             fi
+            if npm --silent --prefix ./visualiser-new install; then
+                echo "${GREEN} ➤ Installed all visualiser developement dependencies!${RESET}"
+            else
+                echo "${RED} ➤ Something went wrong with setting up the server dependencies"
+            fi
             exit 0
             ;;
         --frontend)

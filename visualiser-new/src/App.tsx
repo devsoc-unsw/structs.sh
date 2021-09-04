@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import initialise from './Landing';
-import './Landing.css';
+import initialiseVisualiser from './visualiser-scripts/controller';
+import './styles/visualiser.css';
 
-function App() {
+const App = () => {
   useEffect(() => {
-    initialise()
+    initialiseVisualiser()
   }, []);
 
   return (

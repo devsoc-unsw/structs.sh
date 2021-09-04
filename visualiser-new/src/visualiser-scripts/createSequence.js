@@ -12,10 +12,9 @@ const ARROW = "M53 74.6504C75.05 74.6504 76.4 74.6504 98 74.6504M98 74.6504L87.5
 // }
 
 function createSequence(input, type) {
-
     const timeline = []
     if (type === 'append') {
-        const {newNode, nodes} = input
+        const { newNode, nodes } = input
         // newNode appears
         timeline.push({
             targets: newNode.nodeTarget,
@@ -58,7 +57,7 @@ function createSequence(input, type) {
 
     }
     else if (type === 'deleteByIndex') {
-        const {index, deletedNode, shiftedNodes, prevNode} = input
+        const { index, deletedNode, shiftedNodes, prevNode } = input
         // Current and Prev appears
         timeline.push({
             targets: [CURRENT, PREV],
@@ -85,8 +84,8 @@ function createSequence(input, type) {
             timeline.push({
                 targets: prevNode.pathTarget,
                 d: [
-                    {value: ARROW},
-                    {value: MORPHED}
+                    { value: ARROW },
+                    { value: MORPHED }
                 ]
             })
         }
@@ -108,15 +107,15 @@ function createSequence(input, type) {
         timeline.push({
             targets: prevNode.pathTarget,
             d: [
-                {value: MORPHED},
-                {value: ARROW}
+                { value: MORPHED },
+                { value: ARROW }
             ],
         })
         timeline.push({
             targets: shiftedNodes.map(n => n.nodeTarget),
             translateX: "-=100",
         })
-        //Prev fades away
+        // Prev fades away
         timeline.push({
             targets: PREV,
             opacity: 0
@@ -126,8 +125,6 @@ function createSequence(input, type) {
             targets: [CURRENT, PREV],
             translateX: 0
         })
-
-
     }
 
     return timeline

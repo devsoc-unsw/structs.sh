@@ -1,7 +1,10 @@
 import anime from 'animejs'
 
-
-async function runSequence(sequence) {
+/**
+ * Given an array of animation objects, 'plays' each of them sequentially and returns
+ * the anime timeline instance.
+ */
+function runSequence(sequence) {
     const timeline = anime.timeline({
         duration: 250,
         easing: 'easeOutExpo'

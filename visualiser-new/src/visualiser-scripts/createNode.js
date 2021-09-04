@@ -1,23 +1,30 @@
+import { v4 as getUuid } from 'uuid';
+
 // Given an input value, returns a node structure and places a 
 // HTML node element into the DOM
-let id = 0
 const SVG = "http://www.w3.org/2000/svg"
 
 const PATH = "M53 74.6504C75.05 74.6504 76.4 74.6504 98 74.6504M98 74.6504L87.5 64M98 74.6504L87.5 87"
 
-// Could use something more proper, eg Uuid?
 function genid() {
-    id += 1;
-    return id;
+    return getUuid();
 }
 
-// helper function which sets multiple attributes at once
+/**
+ * Helper function which sets multiple attributes at once
+ */
 function setAttributes(elements, attributes) {
-    for(const key in attributes) {
+    for (const key in attributes) {
         elements.setAttribute(key, attributes[key])
     }
 }
 
+/**
+ * Spawns a new node with the given value onto the visualiser canvas.
+ * Returns an object containing the ID for the node, as well as the CSS
+ * selectors for quickly fetching a DOM reference to the node and arrow.
+ * TODO: each step of node creation could be taken out into a separate helper function
+ */
 function createNode(input) {
     const canvas = document.querySelector("#canvas")
     const id = genid();
@@ -26,36 +33,36 @@ function createNode(input) {
     const newNode = document.createElementNS(SVG, "svg")
     const nodeTarget = `node-${id}`
     const nodeAttributes = {
-        "width" : "200",
-        "height" : "100",
+        "width": "200",
+        "height": "100",
         "viewBox": "0 0 200 100",
-        "id" : nodeTarget,
-        "class" : "node"
-
+        "id": nodeTarget,
+        "class": "node"
     }
     setAttributes(newNode, nodeAttributes)
 
-    // Node which is represented as an svg, we can change this to whatever svg we like
+    // Drawing the node SVG
     const nodeShape = document.createElementNS(SVG, 'rect')
     const shapeAttributes = {
-        "x" : "1.5",
-        "y" : "51.5",
-        "width" : "47",
-        "height" : "47",
-        "rx" : "13.5",
-        "stroke" : "black",
-        "stroke-width" : "3",
-        "fill" : "white"
+        "x": "1.5",
+        "y": "51.5",
+        "width": "47",
+        "height": "47",
+        "rx": "13.5",
+        "stroke": "black",
+        "stroke-width": "3",
+        "fill": "white"
     }
     setAttributes(nodeShape, shapeAttributes)
 
-    // Create text that will go into SVG
+    // Attached the text svg element to the drawn node
     const nodeValue = document.createElementNS(SVG, 'text')
-    // Some issues relating to centering the text in the nodes, should find a better...
+
+    // TODO: Some issues relating to centering the text in the nodes, should find a better...
     const textAttributes = {
-        "font-size" : "16",
+        "font-size": "16",
         "x": "8%",
-        "y" : "80%"
+        "y": "80%"
     }
     setAttributes(nodeValue, textAttributes)
     nodeValue.innerHTML = input
@@ -64,13 +71,13 @@ function createNode(input) {
     const newPath = document.createElementNS(SVG, 'path')
     const pathTarget = `path-${id}`
     const pathAttributes = {
-        "d" : PATH,
-        "id" : pathTarget,
-        "stroke-width" : "3",
-        "stroke" : "black",
-        "stroke-linecap" : "round",
-        "stroke-linejoin" : "round",
-        "class" : "path"
+        "d": PATH,
+        "id": pathTarget,
+        "stroke-width": "3",
+        "stroke": "black",
+        "stroke-linecap": "round",
+        "stroke-linejoin": "round",
+        "class": "path"
     }
     setAttributes(newPath, pathAttributes)
 
@@ -79,6 +86,7 @@ function createNode(input) {
     newNode.appendChild(nodeValue);
     newNode.appendChild(newPath)
     canvas.appendChild(newNode);
+
     return {
         id,
         nodeTarget: "#" + nodeTarget,
