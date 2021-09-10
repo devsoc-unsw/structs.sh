@@ -16,6 +16,7 @@ import runSequence from './runSequence'
 const initialise = () => {
     const nodes = []
     const animationHistory = []
+    let timeline = null;
     // Node Structure:
     // {
     //     id: Number,
@@ -26,7 +27,9 @@ const initialise = () => {
     // Binding event handles to the append and delete buttons
     const handleClick = (e) => {
         e.preventDefault();
-
+        if (timeline !== null) {
+            timeline.seek(timeline.duration)
+        }
         // Extract the text input's number value
         const input = document.querySelector("#appendValue").value;
 
@@ -40,28 +43,30 @@ const initialise = () => {
         const sequence = createSequence({ newNode, nodes }, 'append');
 
         // Playing the animation
-        const timeline = runSequence(sequence)
+        timeline = runSequence(sequence)
         animationHistory.push(timeline)
     }
 
     const handleDeleteClick = (e) => {
         e.preventDefault();
-        const index = document.querySelector("#appendValue").value;
-
+        const index = parseInt(document.querySelector("#appendValue").value);
+        if (timeline !== null) {
+            timeline.seek(timeline.duration)
+        }
         // Finds the nodes that need to be shifted, 
         const shiftedNodes = nodes.slice(index);
         const deletedNode = shiftedNodes.shift();
 
         // Deleted node at index input
-        nodes.splice(index, 1)
         let prevNode = nodes[index]
         if (index !== 0) {
             prevNode = nodes[index - 1]
         }
-        const sequence = createSequence({ index, deletedNode, shiftedNodes, prevNode }, "deleteByIndex")
+        const sequence = createSequence({ index, deletedNode, shiftedNodes, prevNode, nodes }, "deleteByIndex")
         console.log(sequence)
+        nodes.splice(index, 1)
 
-        const timeline = runSequence(sequence)
+        timeline = runSequence(sequence)
         animationHistory.push(timeline)
     }
 

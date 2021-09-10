@@ -57,12 +57,13 @@ function createNode(input) {
 
     // Attached the text svg element to the drawn node
     const nodeValue = document.createElementNS(SVG, 'text')
-
     // TODO: Some issues relating to centering the text in the nodes, should find a better...
     const textAttributes = {
         "font-size": "16",
-        "x": "8%",
-        "y": "80%"
+        "x": "25",
+        "y": "75",
+        "dominant-baseline": "middle",
+        "text-anchor": "middle"
     }
     setAttributes(nodeValue, textAttributes)
     nodeValue.innerHTML = input

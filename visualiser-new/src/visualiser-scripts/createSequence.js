@@ -60,14 +60,14 @@ function createSequence(input, type) {
 
     }
     else if (type === 'deleteByIndex') {
-        const { index, deletedNode, shiftedNodes, prevNode } = input
+        const { index, deletedNode, shiftedNodes, prevNode, nodes } = input
         // Current and Prev appears
         timeline.push({
             targets: [CURRENT, PREV],
             opacity: 1
         })
         // Curr and Prev loop until it reaches the index
-        if (index !== 0) {
+        if (index > 0) {
             timeline.push({
                 targets: CURRENT,
                 translateX: 100
@@ -84,19 +84,23 @@ function createSequence(input, type) {
                 })
             }
             // Morph the arrow into bendy arrow
-            timeline.push({
-                targets: prevNode.pathTarget,
-                d: [
-                    { value: ARROW },
-                    { value: MORPHED }
-                ]
-            })
+            if (index === nodes.length - 1) {
+                timeline.push({
+                    targets: prevNode.pathTarget,
+                    opacity: 0
+                })
+            } else {
+                timeline.push({
+                    targets: prevNode.pathTarget,
+                    d: [
+                        { value: ARROW },
+                        { value: MORPHED }
+                    ]
+                })
+            }
         }
-        // Vanish the current arrow and the node together
-        timeline.push({
-            targets: [deletedNode.nodeTarget, CURRENT],
-            opacity: 0
-        })
+        // the current arrow and the node vanish together
+
         // Arrow should morph back the same time linked list is shifted
         // const playLater = anime({
         //     targets: prevNode.pathTarget,
@@ -107,21 +111,30 @@ function createSequence(input, type) {
         //     easing: "spring(1, 80, 10, 0)",
         //     autoplay: false
         // })
+
         timeline.push({
-            targets: prevNode.pathTarget,
-            d: [
-                { value: MORPHED },
-                { value: ARROW }
-            ],
+            targets: deletedNode.nodeTarget,
+            opacity: 0
         })
+        // current and prev fades away
+        timeline.push({
+            targets: [PREV, CURRENT],
+            opacity: 0
+        })
+        if (index > 0) {
+            timeline.push({
+                targets: prevNode.pathTarget,
+                d: [
+                    { value: MORPHED },
+                    { value: ARROW }
+                ],
+            })
+        }
         timeline.push({
             targets: shiftedNodes.map(n => n.nodeTarget),
             translateX: "-=100",
-        })
-        // Prev fades away
-        timeline.push({
-            targets: PREV,
-            opacity: 0
+            // hardcoded offset to make the nodes shift back at the same time as the pointer straightening.
+            offset: "-=500"
         })
         // Current and Prev go back to beginning
         timeline.push({

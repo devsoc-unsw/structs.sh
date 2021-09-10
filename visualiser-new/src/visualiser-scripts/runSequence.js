@@ -10,7 +10,11 @@ function runSequence(sequence) {
         easing: 'easeOutExpo'
     })
     for (const seq of sequence) {
-        timeline.add(seq)
+        if ('offset' in seq) {
+            timeline.add(seq, seq.offset);
+        } else {
+            timeline.add(seq)
+        }
         if ('backlog' in seq) {
             timeline.add({
                 complete: seq.backlog.play()
