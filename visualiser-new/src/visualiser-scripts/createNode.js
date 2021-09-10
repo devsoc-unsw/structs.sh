@@ -94,5 +94,4 @@ function createNode(input) {
     }
 }
 
-
 export default createNode;

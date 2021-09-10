@@ -6,7 +6,7 @@ import anime from 'animejs'
  */
 function runSequence(sequence) {
     const timeline = anime.timeline({
-        duration: 250,
+        duration: 1000,
         easing: 'easeOutExpo'
     })
     for (const seq of sequence) {

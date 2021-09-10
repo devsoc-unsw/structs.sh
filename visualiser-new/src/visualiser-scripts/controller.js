@@ -16,7 +16,6 @@ import runSequence from './runSequence'
 const initialise = () => {
     const nodes = []
     const animationHistory = []
-
     // Node Structure:
     // {
     //     id: Number,
@@ -36,7 +35,7 @@ const initialise = () => {
 
         // Logic of action reflects the javascript implementation
         nodes.push(newNode);
-
+        console.log(nodes);
         // Generating the steps of the animation
         const sequence = createSequence({ newNode, nodes }, 'append');
 
