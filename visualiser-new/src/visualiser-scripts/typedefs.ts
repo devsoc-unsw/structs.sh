@@ -23,9 +23,6 @@ export interface Animation {
      */
     targets: string | string[];
 
-    // Backlog
-    backlog?: any; // TODO: This should not be any
-
     /**
      * Further CSS properties that Anime will recognise.
      *  → Eg. 'opacity: 1' or 'top: 37%'

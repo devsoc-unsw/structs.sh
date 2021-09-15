@@ -28,7 +28,7 @@ const initialise = (): void => {
         const sequence: Animation[] = createSequence({ newNode, nodes }, 'append');
 
         // Playing the animation
-        const timeline = runSequence(sequence);
+        const timeline: AnimeTimelineInstance = runSequence(sequence);
         animationHistory.push(timeline);
     };
 
