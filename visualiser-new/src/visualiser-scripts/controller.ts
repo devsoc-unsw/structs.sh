@@ -1,45 +1,40 @@
-// TODO: Controller tasks:
-//   1. Add some basic buttons for play/pause, step forward/backward, etc. in App.tsx (we'll eventually use Rachel's styled controller menu when we develop this prototype more)
-//   2. Add event handlers for play/pause, step forward/backward, etc. in controller.js
-//   3. Implement play/pause event handlers
-//   4. (Try) Implement step forward and backward
-//   5. (Try) Implement reverse
-// Feel free to develop this however you think is best! Add more files, break down the `initialise` function, etc.
-
+import { AnimeTimelineInstance } from 'animejs';
 import createNode from './createNode';
 import createSequence from './createSequence';
 import runSequence from './runSequence';
+import { Node, Animation } from './typedefs';
 
 /**
  * Initialises the visualiser and binds event handlers to the controller UI.
  */
 const initialise = (): void => {
-    const nodes = [];
-    const animationHistory = [];
+    const nodes: Node[] = [];
+    const animationHistory: AnimeTimelineInstance[] = [];
 
     // Binding event handlers to the append and delete buttons
-    const handleClick = (e) => {
+    const handleClick: EventListener = (e: Event) => {
         e.preventDefault();
 
         // Extract the text input's number value
         const htmlInput = document.querySelector('#appendValue') as HTMLInputElement;
-        const input = htmlInput.value;
+        const input: number = Number(htmlInput.value);
 
         const newNode = createNode(input);
 
         // Logic of action reflects the javascript implementation
         nodes.push(newNode);
-        console.log(nodes);
+
         // Generating the steps of the animation
-        const sequence = createSequence({ newNode, nodes }, 'append');
+        const sequence: Animation[] = createSequence({ newNode, nodes }, 'append');
 
         // Playing the animation
         const timeline = runSequence(sequence);
         animationHistory.push(timeline);
     };
 
-    const handleDeleteClick = (e) => {
+    const handleDeleteClick: EventListener = (e: Event) => {
         e.preventDefault();
+
         // TODO: The delete operation is taking the value from the input field with id #appendValue. This may be confusing
         const htmlInput = document.querySelector('#appendValue') as HTMLInputElement;
         const index: number = Number(htmlInput.value);
@@ -54,11 +49,10 @@ const initialise = (): void => {
         if (index !== 0) {
             prevNode = nodes[index - 1];
         }
-        const sequence = createSequence(
+        const sequence: Animation[] = createSequence(
             { index, deletedNode, shiftedNodes, prevNode },
             'deleteByIndex'
         );
-        console.log(sequence);
 
         const timeline = runSequence(sequence);
         animationHistory.push(timeline);

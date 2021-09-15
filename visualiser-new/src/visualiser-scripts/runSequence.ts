@@ -1,23 +1,24 @@
-import anime from 'animejs'
+import anime from 'animejs';
+import { Animation } from './typedefs';
 
 /**
  * Given an array of animation objects, 'plays' each of them sequentially and returns
  * the anime timeline instance.
  */
-function runSequence(sequence) {
+const runSequence = (sequence: Animation[]) => {
     const timeline = anime.timeline({
         duration: 1000,
-        easing: 'easeOutExpo'
-    })
+        easing: 'easeOutExpo',
+    });
     for (const seq of sequence) {
-        timeline.add(seq)
+        timeline.add(seq);
         if ('backlog' in seq) {
             timeline.add({
-                complete: seq.backlog.play()
-            })
+                complete: seq.backlog.play(),
+            });
         }
     }
-    return timeline
-}
+    return timeline;
+};
 
-export default runSequence
+export default runSequence;
