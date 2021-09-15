@@ -25,6 +25,12 @@ const App = () => {
         <div className="col-auto">
           <button id="pauseButton" type="submit" className="btn btn-primary mb-3">Pause</button>
         </div>
+        <div className="col-auto">
+          <button id="previousSequenceButton" type="submit" className="btn btn-primary mb-3">Step Backwards</button>
+        </div>
+        <div className="col-auto">
+          <button id="nextSequenceButton" type="submit" className="btn btn-primary mb-3">Step Forwards</button>
+        </div>
       </form>
       <div className="container" id="canvas">
         <div id="current">
