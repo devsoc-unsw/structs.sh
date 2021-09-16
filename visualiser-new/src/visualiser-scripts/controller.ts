@@ -14,7 +14,7 @@ const initialise = (): void => {
     const animationController = new AnimationController();
 
     // Binding event handlers to the append and delete buttons
-    const handleClick: EventListener = (e: Event) => {
+    const handleAppendClick: EventListener = (e: Event) => {
         e.preventDefault();
 
         // Extract the text input's number value
