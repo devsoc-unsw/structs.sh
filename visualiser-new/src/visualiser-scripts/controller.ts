@@ -3,6 +3,7 @@ import createNode from './createNode';
 import createSequence from './createSequence';
 import runSequence from './runSequence';
 import { Node, Animation } from './typedefs';
+import AnimationController from './genericController';
 
 /**
  * Initialises the visualiser and binds event handlers to the controller UI.
@@ -10,6 +11,7 @@ import { Node, Animation } from './typedefs';
 const initialise = (): void => {
     const nodes: Node[] = [];
     const animationHistory: AnimeTimelineInstance[] = [];
+    const animationController = new AnimationController();
 
     // Binding event handlers to the append and delete buttons
     const handleClick: EventListener = (e: Event) => {
@@ -58,12 +60,26 @@ const initialise = (): void => {
         animationHistory.push(timeline);
     };
 
-    // Grabbing references to form buttons and attaching event handlers to them
-    const button = document.querySelector('#appendButton');
-    const deleteButton = document.querySelector('#deleteButton');
+    const handlePlayClick: EventListener = (e: Event) => {
+        e.preventDefault();
+        animationController.play();
+    };
 
-    button.addEventListener('click', handleClick);
+    const handlePauseClick: EventListener = (e: Event) => {
+        e.preventDefault();
+        animationController.pause();
+    };
+
+    // Grabbing references to form buttons and attaching event handlers to them
+    const appendButton = document.querySelector('#appendButton');
+    const deleteButton = document.querySelector('#deleteButton');
+    const playButton = document.querySelector('#playButton');
+    const pauseButton = document.querySelector('#pauseButton');
+
+    appendButton.addEventListener('click', handleAppendClick);
     deleteButton.addEventListener('click', handleDeleteClick);
+    playButton.addEventListener('click', handlePlayClick);
+    pauseButton.addEventListener('click', handlePauseClick);
 };
 
 export default initialise;
