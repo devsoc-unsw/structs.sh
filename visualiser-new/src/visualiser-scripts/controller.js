@@ -9,6 +9,7 @@
 import createNode from './createNode'
 import createSequence from './createSequence'
 import runSequence from './runSequence'
+import AnimationController from './genericController'
 
 /**
  * Initialises the visualiser and binds event handlers to the controller UI.
@@ -16,6 +17,8 @@ import runSequence from './runSequence'
 const initialise = () => {
     const nodes = []
     const animationHistory = []
+    const animationController = new AnimationController()
+
     // Node Structure:
     // {
     //     id: Number,
@@ -24,7 +27,7 @@ const initialise = () => {
     // }
 
     // Binding event handles to the append and delete buttons
-    const handleClick = (e) => {
+    const handleAppendClick = (e) => {
         e.preventDefault();
 
         // Extract the text input's number value
@@ -40,8 +43,7 @@ const initialise = () => {
         const sequence = createSequence({ newNode, nodes }, 'append');
 
         // Playing the animation
-        const timeline = runSequence(sequence)
-        animationHistory.push(timeline)
+        animationController.runSequeuce(sequence)
     }
 
     const handleDeleteClick = (e) => {
@@ -61,16 +63,30 @@ const initialise = () => {
         const sequence = createSequence({ index, deletedNode, shiftedNodes, prevNode }, "deleteByIndex")
         console.log(sequence)
 
-        const timeline = runSequence(sequence)
-        animationHistory.push(timeline)
+        // Playing the animation
+        animationController.runSequeuce(sequence)
+    }
+
+    const handlePlayClick = (e) => {
+        e.preventDefault()
+        animationController.play()
+    }
+
+    const handlePauseClick = (e) => {
+        e.preventDefault()
+        animationController.pause()
     }
 
     // Grabbing references to form buttons and attaching event handlers to them
-    const button = document.querySelector("#appendButton")
+    const appendButton = document.querySelector("#appendButton")
     const deleteButton = document.querySelector("#deleteButton")
+    const playButton = document.querySelector("#playButton")
+    const pauseButton = document.querySelector("#pauseButton")
 
-    button.addEventListener('click', handleClick)
+    appendButton.addEventListener('click', handleAppendClick)
     deleteButton.addEventListener('click', handleDeleteClick)
+    playButton.addEventListener('click', handlePlayClick)
+    pauseButton.addEventListener('click', handlePauseClick)
 
 }
 

@@ -19,6 +19,18 @@ const App = () => {
         <div className="col-auto">
           <button id="deleteButton" type="submit" className="btn btn-danger mb-3">Delete Node!</button>
         </div>
+        <div className="col-auto">
+          <button id="playButton" type="submit" className="btn btn-primary mb-3">Play</button>
+        </div>
+        <div className="col-auto">
+          <button id="pauseButton" type="submit" className="btn btn-primary mb-3">Pause</button>
+        </div>
+        <div className="col-auto">
+          <button id="previousSequenceButton" type="submit" className="btn btn-primary mb-3">Step Backwards</button>
+        </div>
+        <div className="col-auto">
+          <button id="nextSequenceButton" type="submit" className="btn btn-primary mb-3">Step Forwards</button>
+        </div>
       </form>
       <div className="container" id="canvas">
         <div id="current">
