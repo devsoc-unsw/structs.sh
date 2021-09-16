@@ -13,40 +13,43 @@ const ARROW = "M53 74.6504C75.05 74.6504 76.4 74.6504 98 74.6504M98 74.6504L87.5
 
 function createSequence(input, type) {
     const timeline = []
+
     if (type === 'append') {
         const { newNode, nodes } = input
         // newNode appears
         timeline.push({
             targets: newNode.nodeTarget,
-            opacity: 1
+            top: '37%',
+            left: (nodes.length - 1) * 100,
+            opacity: 1,
+            duration: 0,
         })
         // Current pointer appears
-        timeline.push({
-            targets: CURRENT,
-            opacity: 1
-        })
-        // Current pointer moves into position
-        for (const node in nodes) {
+        if (nodes.length > 1) {
             timeline.push({
                 targets: CURRENT,
-                translateX: node * 100
+                opacity: 1
+            })
+        }
+        // Current pointer moves into position
+        for (let i = 0; i < nodes.length - 1; i++) {
+            timeline.push({
+                targets: CURRENT,
+                translateX: i * 100
             })
         }
         // newNode goes to position above current
-        timeline.push({
-            targets: newNode.nodeTarget,
-            top: '37%',
-            left: (nodes.length - 1) * 100
-        })
+        // Arrow path appears
+        if (nodes.length > 1) {
+            timeline.push({
+                targets: nodes[nodes.length - 2].pathTarget,
+                opacity: 1
+            })
+        }
         // Current pointer disapears
         timeline.push({
             targets: CURRENT,
             opacity: 0
-        })
-        // Arrow path appears
-        timeline.push({
-            targets: newNode.pathTarget,
-            opacity: 1
         })
         // Current arrow goes back to beginning
         timeline.push({

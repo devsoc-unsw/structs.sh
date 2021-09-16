@@ -38,7 +38,7 @@ const initialise = () => {
 
         // Logic of action reflects the javascript implementation
         nodes.push(newNode);
-
+        console.log(nodes);
         // Generating the steps of the animation
         const sequence = createSequence({ newNode, nodes }, 'append');
 
