@@ -1,16 +1,13 @@
-import { AnimeTimelineInstance } from 'animejs';
 import createNode from './createNode';
 import createSequence from './createSequence';
-import runSequence from './runSequence';
-import { Node, Animation } from './typedefs';
 import AnimationController from './genericController';
+import { Animation, Node } from './typedefs';
 
 /**
  * Initialises the visualiser and binds event handlers to the controller UI.
  */
 const initialise = (): void => {
     const nodes: Node[] = [];
-    const animationHistory: AnimeTimelineInstance[] = [];
     const animationController = new AnimationController();
 
     // Binding event handlers to the append and delete buttons
@@ -30,8 +27,7 @@ const initialise = (): void => {
         const sequence: Animation[] = createSequence({ newNode, nodes }, 'append');
 
         // Playing the animation
-        const timeline: AnimeTimelineInstance = runSequence(sequence);
-        animationHistory.push(timeline);
+        animationController.runSequeuce(sequence);
     };
 
     const handleDeleteClick: EventListener = (e: Event) => {
@@ -56,8 +52,7 @@ const initialise = (): void => {
             'deleteByIndex'
         );
 
-        const timeline = runSequence(sequence);
-        animationHistory.push(timeline);
+        animationController.runSequeuce(sequence);
     };
 
     const handlePlayClick: EventListener = (e: Event) => {

@@ -22,12 +22,14 @@ class AnimationController {
     }
 
     public pause(): void {
+        console.log(this.currentTimeline);
         this.currentTimeline.pause();
     }
 
     // this function runs a sequence of animations sequentially
     // when stepSequence = false or pauses the timeline after each animation finishes
     public runSequeuce(sequence: Animation[]): void {
+        console.log(this);
         this.currentTimeline = anime.timeline({
             duration: 700,
             easing: 'easeOutExpo',
