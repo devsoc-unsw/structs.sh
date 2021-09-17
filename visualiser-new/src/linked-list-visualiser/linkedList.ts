@@ -1,6 +1,6 @@
 import createNode from './createNode';
 import createSequence from './createSequence';
-import AnimationController from './genericController';
+import AnimationController from '../controller/genericController';
 import { Animation, Node } from './typedefs';
 
 /**
@@ -28,7 +28,7 @@ const initialise = (): void => {
         const sequence: Animation[] = createSequence({ newNode, nodes }, 'append');
 
         // Playing the animation
-        animationController.runSequence(sequence);
+        animationController.runSequeuce(sequence, slider);
     };
 
     const handleDeleteClick: EventListener = (e: Event) => {
@@ -54,7 +54,7 @@ const initialise = (): void => {
             'deleteByIndex'
         );
         nodes.splice(index, 1);
-        animationController.runSequence(sequence);
+        animationController.runSequeuce(sequence, slider);
     };
 
     const handlePlayClick: EventListener = (e: Event) => {
@@ -67,16 +67,21 @@ const initialise = (): void => {
         animationController.pause();
     };
 
+    const handleSliderChange: EventListener = (e: Event) => {
+        animationController.seek(parseInt(slider.value));
+    };
     // Grabbing references to form buttons and attaching event handlers to them
     const appendButton = document.querySelector('#appendButton');
     const deleteButton = document.querySelector('#deleteButton');
     const playButton = document.querySelector('#playButton');
     const pauseButton = document.querySelector('#pauseButton');
+    const slider = document.querySelector('#timeline-slider') as HTMLInputElement;
 
     appendButton.addEventListener('click', handleAppendClick);
     deleteButton.addEventListener('click', handleDeleteClick);
     playButton.addEventListener('click', handlePlayClick);
     pauseButton.addEventListener('click', handlePauseClick);
+    slider.addEventListener('input', handleSliderChange);
 };
 
 export default initialise;
