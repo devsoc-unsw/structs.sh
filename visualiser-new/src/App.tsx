@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import initialiseVisualiser from './visualiser-scripts/controller';
+import initialiseVisualiser from './linked-list-visualiser/linkedList';
 import './styles/visualiser.css';
 
 const App = () => {
@@ -30,6 +30,9 @@ const App = () => {
         </div>
         <div className="col-auto">
           <button id="nextSequenceButton" type="submit" className="btn btn-primary mb-3">Step Forwards</button>
+        </div>
+        <div className="col">
+            <input type="range" id="timeline-slider" name="volume" min="0" max="100" /> 
         </div>
       </form>
       <div className="container" id="canvas">
