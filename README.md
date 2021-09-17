@@ -9,6 +9,9 @@
 
 Structs.sh is an interactive data structure and algorithm visualiser and educational platform for computer science students.
 
+
+
+
 ---
 
 # Table of contents
@@ -363,7 +366,7 @@ Structs.sh features a RESTful API for content management, supporting the retriev
 
 ### Data Model
 
-![Data model](./docs/structs-datamodels.drawio.png)
+<div style="width: 640px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:640px; height:480px" src="https://lucid.app/documents/embeddedchart/9b70bc3b-ac94-49dc-a52b-6efa93639534" id="yLpa9YunnZ9P"></iframe></div>
 
 # Guidelines
 
