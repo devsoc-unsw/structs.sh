@@ -1,10 +1,13 @@
 import { Router } from 'express';
 import { QuizMongoService } from '../database-helpers/quiz';
 import consola from 'consola';
-import { createQualifiedName } from 'typescript';
 
 const quizRouter = Router();
 const quizService = new QuizMongoService();
+
+interface GetQuizInput {
+    lessonId: string,
+}
 
 interface CreateQuizInput {
     lessonId: string,
@@ -14,7 +17,7 @@ interface CreateQuizInput {
 }
 
 /*
- * Create a new quiz and adds it to a particular lesson
+ * Fetches a list of all the quizzes for a lesson
 
  * Params
     - lessonId
@@ -22,36 +25,41 @@ interface CreateQuizInput {
     - List of quizzes for a lesson
  * Excaptions
     - lessonId doesn't correspond to an existing lesson
-
-
-
- * Method
-    - Search for lesson by lessonId
-    - If lesson doesn't exist raise exception
  */
-/*
 quizRouter.post('/api/lessons/quiz', async (request, response) => {
     try {
-        const { question_type, question, answer } = request.body as CreateQuizInput;
-        console.log(`Question to create : ${question} of type : ${question_type} with answer : ${answer}`);
+        const { lessonId } = request.body as GetQuizInput;
+        console.log(`Get quiz questions for lesson : ${lessonId}`);
         console.log(request.body);
+
+        // Retrieve lesson/check lesson exists
+
+        // Get list of quiz ids (from lesson)
+        const lesson = [];
+
+        // Get quizzes
+        let questions = [];
+        for (var el in lesson.quizIds) {
+            const collectedQuiz = await quizService.getQuizById(el);
+            questions.push(collectedQuiz);
+        }
         
-        consola.error(`Failed to create quiz`);
-        response.status(401).json({
-            status: 401,
-            statusText: 'Code not implemented yet',
+        consola.success(`Successfully got quiz for lesson: ${lessonId}`);
+        response.status(200).json({
+            status: 200,
+            statusText: 'Successfully got quiz for lesson',
+            data: questions,
         });
         
     } catch (err) {
-        // Failure to create quiz
-        consola.error(`Failed to create quiz`);
+        // Failure to get quiz questions
+        consola.error(`Failed to get quiz`);
         response.status(401).json({
             status: 401,
-            statusText: 'Code not implemented yet, caught error',
+            statusText: 'Invalid input',
         });
     }
 });
-*/
 
 /*
  * Create a new quiz and adds it to a particular lesson
@@ -66,13 +74,6 @@ quizRouter.post('/api/lessons/quiz', async (request, response) => {
  * Excaptions
     - lessonId doesn't correspond to an existing lesson
     - questionType must be one of the strings: 'mc' (multiple choice) or 'qa' (question-answer format)
-
-
-
- * Method
-    - Search for lesson by lessonId
-    - If lesson doesn't exist raise exception
-    - ...
  */
 quizRouter.post('/api/lessons/quiz', async (request, response) => {
     try {
