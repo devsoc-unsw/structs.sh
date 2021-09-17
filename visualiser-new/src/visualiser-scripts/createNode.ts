@@ -1,33 +1,22 @@
-import { v4 as getUuid } from 'uuid';
+import { Node } from './typedefs';
+import { setAttributes, genId } from './utils';
 
-// Given an input value, returns a node structure and places a 
+// Given an input value, returns a node structure and places a
 // HTML node element into the DOM
-const SVG = "http://www.w3.org/2000/svg"
+const SVG = 'http://www.w3.org/2000/svg';
 
-const PATH = "M53 74.6504C75.05 74.6504 76.4 74.6504 98 74.6504M98 74.6504L87.5 64M98 74.6504L87.5 87"
+const PATH =
+    'M53 74.6504C75.05 74.6504 76.4 74.6504 98 74.6504M98 74.6504L87.5 64M98 74.6504L87.5 87';
 
-function genid() {
-    return getUuid();
-}
-
-/**
- * Helper function which sets multiple attributes at once
- */
-function setAttributes(elements, attributes) {
-    for (const key in attributes) {
-        elements.setAttribute(key, attributes[key])
-    }
-}
-
-/**
- * Spawns a new node with the given value onto the visualiser canvas.
- * Returns an object containing the ID for the node, as well as the CSS
- * selectors for quickly fetching a DOM reference to the node and arrow.
- * TODO: each step of node creation could be taken out into a separate helper function
- */
-function createNode(input) {
-    const canvas = document.querySelector("#canvas")
-    const id = genid();
+// /**
+//  * Spawns a new node with the given value onto the visualiser canvas.
+//  * Returns an object containing the ID for the node, as well as the CSS
+//  * selectors for quickly fetching a DOM reference to the node and arrow.
+//  * TODO: each step of node creation could be taken out into a separate helper function
+//  */
+const createNode = (input: number): Node => {
+    const canvas = document.querySelector("#canvas");
+    const id = genId();
 
     // Create SVG node
     const newNode = document.createElementNS(SVG, "svg")
@@ -66,7 +55,7 @@ function createNode(input) {
         "text-anchor": "middle"
     }
     setAttributes(nodeValue, textAttributes)
-    nodeValue.innerHTML = input
+    nodeValue.innerHTML = input.toString(); 
 
     // Create Arrow Path that will go into SVG
     const newPath = document.createElementNS(SVG, 'path')
