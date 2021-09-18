@@ -7,6 +7,7 @@ export class LessonMongoService {
             const createLessonResponse = (await LessonModel.create({
                 rawMarkdown: rawMarkdown,
                 creatorId: creatorId,
+                quizs: []
             })) as Lesson;
             return createLessonResponse;
         } catch (err) {
