@@ -76,7 +76,7 @@ lessonRouter.get('/api/lessons/:id', async (req, res) => {
     }
 })
 
-lessonRouter.get('/api/lessons/myLesson/:creatorId', async (req, res) => {
+lessonRouter.get('/api/lessons/myLessons/:creatorId', async (req, res) => {
     try {
         const { creatorId } = req.params
 
