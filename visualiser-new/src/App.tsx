@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import initialiseVisualiser from './linked-list-visualiser/linkedList';
 import './styles/visualiser.css';
-
+import prev from './assets/prev.svg';
+import curr from './assets/curr.svg';
 const App = () => {
   useEffect(() => {
     initialiseVisualiser()
@@ -18,6 +19,9 @@ const App = () => {
         </div>
         <div className="col-auto">
           <button id="deleteButton" type="submit" className="btn btn-danger mb-3">Delete Node!</button>
+        </div>
+        <div className="col-auto">
+          <button id="searchButton" type="submit" className="btn btn-danger mb-3">Search by Value!</button>
         </div>
         <div className="col-auto">
           <button id="playButton" type="submit" className="btn btn-primary mb-3">Play</button>
@@ -37,28 +41,10 @@ const App = () => {
       </form>
       <div className="container" id="canvas">
         <div id="current">
-          <svg width="50" height="50" > 
-            <path 
-              d="M21 48V2M21 2L2 19.8367M21 2L38 19.8367" 
-              strokeWidth="3" 
-              stroke="red"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-            </path>
-          </svg>
+          <img src={curr}/>
         </div>
         <div id="prev">
-          <svg width="50" height="50" > 
-            <path 
-              d="M21 48V2M21 2L2 19.8367M21 2L38 19.8367" 
-              strokeWidth="3" 
-              stroke="blue"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-            </path>
-          </svg>
+          <img src={prev}/>
         </div>
       </div>
     </div>

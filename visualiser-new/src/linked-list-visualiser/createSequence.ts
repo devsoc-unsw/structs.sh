@@ -5,15 +5,10 @@ import {
     DeleteNodeInput,
     LinkedListOperation,
 } from './typedefs';
+import {RIGHT_ARROW_PATH, UP_ARROW_PATH, DOWN_RIGHT_ARROW_PATH, UP_RIGHT_ARROW_PATH, BENT_ARROW_PATH} from './svgPaths';
 
 const CURRENT = '#current';
 const PREV = '#prev';
-
-const MORPHED =
-    'M52 48C103.5 15.5 147.5 13.5 198 47.9999M198 47.9999L196.5 28.5M198 47.9999L176.5 48';
-const ARROW =
-    'M53 74.6504C75.05 74.6504 76.4 74.6504 98 74.6504M98 74.6504L87.5 64M98 74.6504L87.5 87';
-
 
 const createSequence = (input: CreateSequenceInput, type: LinkedListOperation): Animation[] => {
     if (type === 'append') {
@@ -22,6 +17,7 @@ const createSequence = (input: CreateSequenceInput, type: LinkedListOperation): 
         return createDeleteSequence(input as DeleteNodeInput);
     }
 }
+
 const createAppendSequence = (input: AppendNodeInput): Animation[] => {
     const timeline: Animation[] = [];
     const { newNode, nodes } = input as AppendNodeInput;
@@ -29,7 +25,6 @@ const createAppendSequence = (input: AppendNodeInput): Animation[] => {
     // newNode appears
     timeline.push({
         targets: newNode.nodeTarget,
-        top: '37%',
         left: (nodes.length - 1) * 100,
         opacity: 1,
         duration: 0,
@@ -105,8 +100,8 @@ const createDeleteSequence = (input: DeleteNodeInput): Animation[] => {
             timeline.push({
                 targets: prevNode.pathTarget,
                 d: [
-                    { value: ARROW },
-                    { value: MORPHED }
+                    { value: RIGHT_ARROW_PATH },
+                    { value: BENT_ARROW_PATH }
                 ]
             })
         }
@@ -125,8 +120,8 @@ const createDeleteSequence = (input: DeleteNodeInput): Animation[] => {
         timeline.push({
             targets: prevNode.pathTarget,
             d: [
-                { value: MORPHED },
-                { value: ARROW }
+                { value: BENT_ARROW_PATH },
+                { value: RIGHT_ARROW_PATH }
             ],
         })
     }

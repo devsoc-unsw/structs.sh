@@ -50,6 +50,10 @@ const initialise = (): void => {
         animationController.runSequeuce(sequence, slider);
     };
 
+    const handleSearchClick: EventListener = (e: Event) => {
+
+    };
+
     const handlePlayClick: EventListener = (e: Event) => {
         e.preventDefault();
         animationController.play();
@@ -66,12 +70,14 @@ const initialise = (): void => {
     // Grabbing references to form buttons and attaching event handlers to them
     const appendButton = document.querySelector('#appendButton');
     const deleteButton = document.querySelector('#deleteButton');
+    const searchButton = document.querySelector('#searchButton');
     const playButton = document.querySelector('#playButton');
     const pauseButton = document.querySelector('#pauseButton');
     const slider = document.querySelector('#timeline-slider') as HTMLInputElement;
 
     appendButton.addEventListener('click', handleAppendClick);
     deleteButton.addEventListener('click', handleDeleteClick);
+    searchButton.addEventListener('click', handleSearchClick);
     playButton.addEventListener('click', handlePlayClick);
     pauseButton.addEventListener('click', handlePauseClick);
     slider.addEventListener('input', handleSliderChange);

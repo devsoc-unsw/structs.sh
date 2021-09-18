@@ -1,19 +1,16 @@
 import { Node } from './typedefs';
 import { setAttributes, genId } from './utils';
-
+import { RIGHT_ARROW_PATH } from './svgPaths';
 // Given an input value, returns a node structure and places a
 // HTML node element into the DOM
 const SVG = 'http://www.w3.org/2000/svg';
 
-const PATH =
-    'M53 74.6504C75.05 74.6504 76.4 74.6504 98 74.6504M98 74.6504L87.5 64M98 74.6504L87.5 87';
-
-// /**
-//  * Spawns a new node with the given value onto the visualiser canvas.
-//  * Returns an object containing the ID for the node, as well as the CSS
-//  * selectors for quickly fetching a DOM reference to the node and arrow.
-//  * TODO: each step of node creation could be taken out into a separate helper function
-//  */
+/**
+ * Spawns a new node with the given value onto the visualiser canvas.
+ * Returns an object containing the ID for the node, as well as the CSS
+ * selectors for quickly fetching a DOM reference to the node and arrow.
+ * TODO: each step of node creation could be taken out into a separate helper function
+ */
 const createNode = (input: number): Node => {
     const canvas = document.querySelector("#canvas");
     const id = genId();
@@ -23,8 +20,8 @@ const createNode = (input: number): Node => {
     const nodeTarget = `node-${id}`
     const nodeAttributes = {
         "width": "200",
-        "height": "100",
-        "viewBox": "0 0 200 100",
+        "height": "120",
+        "viewBox": "0 0 200 120",
         "id": nodeTarget,
         "class": "node"
     }
@@ -34,7 +31,7 @@ const createNode = (input: number): Node => {
     const nodeShape = document.createElementNS(SVG, 'rect')
     const shapeAttributes = {
         "x": "1.5",
-        "y": "51.5",
+        "y": "37.5",
         "width": "47",
         "height": "47",
         "rx": "13.5",
@@ -48,9 +45,11 @@ const createNode = (input: number): Node => {
     const nodeValue = document.createElementNS(SVG, 'text')
     // TODO: Some issues relating to centering the text in the nodes, should find a better...
     const textAttributes = {
-        "font-size": "16",
+        "font-size": "25",
+        "font-family": "Courier",
+        "font-weight": "bold",
         "x": "25",
-        "y": "75",
+        "y": "61",
         "dominant-baseline": "middle",
         "text-anchor": "middle"
     }
@@ -61,7 +60,7 @@ const createNode = (input: number): Node => {
     const newPath = document.createElementNS(SVG, 'path')
     const pathTarget = `path-${id}`
     const pathAttributes = {
-        "d": PATH,
+        "d": RIGHT_ARROW_PATH,
         "id": pathTarget,
         "stroke-width": "3",
         "stroke": "black",
