@@ -1,6 +1,6 @@
 import createNode from './createNode';
 import createSequence from './createSequence';
-import AnimationController from '../controller/genericController';
+import LinkedListController from '../controller/linkedListController';
 import { Animation, Node } from './typedefs';
 
 /**
@@ -8,7 +8,7 @@ import { Animation, Node } from './typedefs';
  */
 const initialise = (): void => {
     const nodes: Node[] = [];
-    const animationController = new AnimationController();
+    const animationController = new LinkedListController();
 
     // Binding event handlers to the append and delete buttons
     const handleAppendClick: EventListener = (e: Event) => {
