@@ -14,12 +14,14 @@ class AnimationController {
     private timelineHistory: AnimeTimelineInstance[] = [];
     private timelineIndex: number = 0;
 
+    public getCurrentTimeline(): AnimeTimelineInstance {
+        return this.currentTimeline;
+    }
     public play(): void {
         this.currentTimeline.play();
     }
 
     public pause(): void {
-        console.log(this.currentTimeline);
         this.currentTimeline.pause();
     }
 
@@ -40,7 +42,11 @@ class AnimationController {
         });
 
         for (const seq of sequence) {
-            this.currentTimeline.add(seq);
+            if ('offset' in seq) {
+                this.currentTimeline.add(seq, seq.offset);
+            } else {
+                this.currentTimeline.add(seq);
+            }
         }
 
         this.timelineHistory.push(this.currentTimeline);

@@ -13,8 +13,8 @@ const initialise = (): void => {
     // Binding event handlers to the append and delete buttons
     const handleAppendClick: EventListener = (e: Event) => {
         e.preventDefault();
-        animationController.seek(100);
-
+        const currentTimeline = animationController.getCurrentTimeline();
+        currentTimeline.seek(currentTimeline.duration);
         // Extract the text input's number value
         const htmlInput = document.querySelector('#appendValue') as HTMLInputElement;
         const input: number = Number(htmlInput.value);
@@ -33,6 +33,8 @@ const initialise = (): void => {
 
     const handleDeleteClick: EventListener = (e: Event) => {
         e.preventDefault();
+        const currentTimeline = animationController.getCurrentTimeline();
+        currentTimeline.seek(currentTimeline.duration);
 
         // TODO: The delete operation is taking the value from the input field with id #appendValue. This may be confusing
         const htmlInput = document.querySelector('#appendValue') as HTMLInputElement;
@@ -43,16 +45,15 @@ const initialise = (): void => {
         const deletedNode = shiftedNodes.shift();
 
         // Deleted node at index input
-        nodes.splice(index, 1);
         let prevNode = nodes[index];
         if (index !== 0) {
             prevNode = nodes[index - 1];
         }
         const sequence: Animation[] = createSequence(
-            { index, deletedNode, shiftedNodes, prevNode },
+            { index, deletedNode, shiftedNodes, prevNode, nodes },
             'deleteByIndex'
         );
-
+        nodes.splice(index, 1);
         animationController.runSequeuce(sequence, slider);
     };
 

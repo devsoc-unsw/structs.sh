@@ -8,12 +8,16 @@ import { Animation } from './typedefs';
 const runSequence = (sequence: Animation[]): AnimeTimelineInstance => {
     const timeline = anime.timeline({
         duration: 1000,
-        easing: 'easeOutExpo',
-    });
+        easing: 'easeOutExpo'
+    })
     for (const seq of sequence) {
-        timeline.add(seq);
+        if ('offset' in seq) {
+            timeline.add(seq, seq.offset);
+        } else {
+            timeline.add(seq)
+        }
     }
-    return timeline;
-};
+    return timeline
+}
 
-export default runSequence;
+export default runSequence
