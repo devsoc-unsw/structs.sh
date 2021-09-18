@@ -11,7 +11,7 @@ const App = () => {
     <div className="container">
       <form className="row g-3">
         <div className="col-auto">
-          <input id="appendValue" type="text" className="form-control" />
+          <input id="inputValue" type="text" className="form-control" />
         </div>
         <div className="col-auto">
           <button id="appendButton" type="submit" className="btn btn-primary mb-3">Add Node!</button>

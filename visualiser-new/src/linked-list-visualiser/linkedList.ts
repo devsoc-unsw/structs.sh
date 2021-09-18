@@ -1,6 +1,6 @@
 import createNode from './createNode';
 import createSequence from './createSequence';
-import AnimationController from '../controller/genericController';
+import LinkedListController from '../controller/linkedListController';
 import { Animation, Node } from './typedefs';
 
 /**
@@ -8,18 +8,14 @@ import { Animation, Node } from './typedefs';
  */
 const initialise = (): void => {
     const nodes: Node[] = [];
-    const animationController = new AnimationController();
+    const animationController = new LinkedListController();
 
     // Binding event handlers to the append and delete buttons
     const handleAppendClick: EventListener = (e: Event) => {
         e.preventDefault();
-        const currentTimeline = animationController.getCurrentTimeline();
-        currentTimeline.seek(currentTimeline.duration);
-        // Extract the text input's number value
-        const htmlInput = document.querySelector('#appendValue') as HTMLInputElement;
-        const input: number = Number(htmlInput.value);
+        animationController.finish();
 
-        const newNode = createNode(input);
+        const newNode = createNode(animationController.inputValue);
 
         // Logic of action reflects the javascript implementation
         nodes.push(newNode);
@@ -33,12 +29,9 @@ const initialise = (): void => {
 
     const handleDeleteClick: EventListener = (e: Event) => {
         e.preventDefault();
-        const currentTimeline = animationController.getCurrentTimeline();
-        currentTimeline.seek(currentTimeline.duration);
+        animationController.finish();
 
-        // TODO: The delete operation is taking the value from the input field with id #appendValue. This may be confusing
-        const htmlInput = document.querySelector('#appendValue') as HTMLInputElement;
-        const index: number = Number(htmlInput.value);
+        const index: number = animationController.inputValue;
 
         // Finds the nodes that need to be shifted,
         const shiftedNodes = nodes.slice(index);
