@@ -2,7 +2,6 @@
  * Type definitions used by the visualiser
  */
 
-import { AnimeTimelineInstance } from 'animejs';
 
 export interface Node {
     // Base ID used to form the nodeTarget and pathTarget
@@ -61,4 +60,7 @@ export interface DeleteNodeInput {
 
     // The node prior to the one that is to be deleted, if it exists
     prevNode: Node;
+
+    // The list of nodes currently on the DOM
+    nodes: Node[];
 }

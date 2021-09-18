@@ -1,5 +1,5 @@
 import anime, { AnimeTimelineInstance } from 'animejs';
-import { Animation } from './typedefs';
+import { Animation } from '../linked-list-visualiser/typedefs';
 
 // controls todo:
 // [x] play/pause
@@ -12,35 +12,41 @@ import { Animation } from './typedefs';
 class AnimationController {
     private currentTimeline: AnimeTimelineInstance = anime.timeline();
     private timelineHistory: AnimeTimelineInstance[] = [];
-    private stepMode: boolean = false;
     private timelineIndex: number = 0;
 
-    public constructor() {}
-
+    public getCurrentTimeline(): AnimeTimelineInstance {
+        return this.currentTimeline;
+    }
     public play(): void {
         this.currentTimeline.play();
     }
 
     public pause(): void {
-        console.log(this.currentTimeline);
         this.currentTimeline.pause();
+    }
+
+    public seek(position: number): void {
+        this.currentTimeline.seek(this.currentTimeline.duration * (position / 100))
     }
 
     // this function runs a sequence of animations sequentially
     // when stepSequence = false or pauses the timeline after each animation finishes
-    public runSequeuce(sequence: Animation[]): void {
+    public runSequeuce(sequence: Animation[], slider: HTMLInputElement): void {
         console.log(this);
         this.currentTimeline = anime.timeline({
             duration: 700,
             easing: 'easeOutExpo',
+            update: function(anim) {
+                slider.value = String(anim.progress);
+              }
         });
 
         for (const seq of sequence) {
-            console.log(seq);
-            if (this.stepMode) {
-                seq.complete = this.currentTimeline.pause;
+            if ('offset' in seq) {
+                this.currentTimeline.add(seq, seq.offset);
+            } else {
+                this.currentTimeline.add(seq);
             }
-            this.currentTimeline.add(seq);
         }
 
         this.timelineHistory.push(this.currentTimeline);
