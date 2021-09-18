@@ -10,9 +10,17 @@ import { Animation } from '../linked-list-visualiser/typedefs';
 // eventually this file should be placed in a folder common for all data structures,
 // not just for the linked list
 class AnimationController {
+    private _inputElement: HTMLInputElement;
+    constructor() {
+        this._inputElement = document.querySelector('#inputValue');
+    }
     private currentTimeline: AnimeTimelineInstance = anime.timeline();
     private timelineHistory: AnimeTimelineInstance[] = [];
     private timelineIndex: number = 0;
+
+    public get inputValue() {
+        return Number(this._inputElement.value);
+    }
 
     public getCurrentTimeline(): AnimeTimelineInstance {
         return this.currentTimeline;
@@ -29,6 +37,10 @@ class AnimationController {
         this.currentTimeline.seek(this.currentTimeline.duration * (position / 100))
     }
 
+    // Finish playing the timeline
+    public finish(): void {
+        this.currentTimeline.seek(this.currentTimeline.duration);
+    }
     // this function runs a sequence of animations sequentially
     // when stepSequence = false or pauses the timeline after each animation finishes
     public runSequeuce(sequence: Animation[], slider: HTMLInputElement): void {
