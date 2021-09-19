@@ -16,18 +16,30 @@ Structs.sh is an interactive data structure and algorithm visualiser and educati
 
 # Table of contents
 
--   [Setup Instructions (Development)](#setup-instructions)
--   [Running Structs.sh](#running-structs)
--   [Documentation](#documentation)
-    -   [Client & Server Directory Structure](#client-and-server-directory-structure)
-    -   [Visualiser Project Directory Structure](#visualiser-project-directory-structure)
-    -   [Structs.sh API Docs](#structs-api-documentation)
-    -   [Backend Data Model](#data-model)
--   [Guidelines](#guidelines)
-    -   [Getting Started With Backend Development](#getting-started-with-backend-development)
-    -   [Getting Started With the Visualiser](#getting-started-with-the-visualiser)
--   [Git Contribution Guidelines](#git-contribution-guidelines)
--   [Style Guidelines and Practices](#style-guidelines-and-practices)
+- [Structs.sh 💻](#structssh-)
+- [Table of contents](#table-of-contents)
+  - [Setup Instructions](#setup-instructions)
+    - [Automatic Setup [Experimental]](#automatic-setup-experimental)
+    - [Manual Setup](#manual-setup)
+  - [Running Structs](#running-structs)
+- [Documentation](#documentation)
+  - [Client and Server Directory Structure](#client-and-server-directory-structure)
+  - [Visualiser Project Directory Structure](#visualiser-project-directory-structure)
+  - [Structs API Documentation](#structs-api-documentation)
+    - [Authentication](#authentication)
+    - [Lessons](#lessons)
+    - [Quizzes](#quizzes)
+    - [Data Model](#data-model)
+- [Guidelines](#guidelines)
+  - [Getting Started With Backend Development](#getting-started-with-backend-development)
+    - [How was the database set up and connected to our backend?](#how-was-the-database-set-up-and-connected-to-our-backend)
+    - [How are we reading/writing to the database?](#how-are-we-readingwriting-to-the-database)
+    - [How does MongoDB differ from other DBMSs like PostgreSQL? [TODO]](#how-does-mongodb-differ-from-other-dbmss-like-postgresql-todo)
+    - [How to implement API endpoints](#how-to-implement-api-endpoints)
+  - [Getting Started with the Visualiser](#getting-started-with-the-visualiser)
+  - [Good Collaborative Coding Practices](#good-collaborative-coding-practices)
+    - [Git Guideline](#git-guideline)
+    - [Style Guidelines](#style-guidelines)
 
 ---
 
@@ -297,6 +309,27 @@ Structs.sh features a RESTful API for content management, supporting the retriev
             <td>
                 <ul>
                     <li><strong>rawMarkdown</strong> is longer than 10000 characters</li>
+                    <li><strong>creatorId</strong> doesn't correspond to an existing user</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <pre>GET /api/lessons/myLessons/:creatorId</pre>
+            </td>
+            <td>
+                <ul>
+                    <li>creatorId</li>
+                </ul>
+            </td>
+            <td>
+                List of <strong>lessons</strong> created by the user
+            </td>
+            <td>
+                Fetches a list of all the lessons created by the given user 
+            </td>
+            <td>
+                <ul>
                     <li><strong>creatorId</strong> doesn't correspond to an existing user</li>
                 </ul>
             </td>
