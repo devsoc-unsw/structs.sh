@@ -31,12 +31,6 @@ const createNode = (input: number): Node => {
     nodeValue.innerHTML = input.toString(); 
     setAttributes(newPath, pathAttributes)
 
-    // Create Arrow Path that will go into SVG
-    const nodeTarget = `node-${id}`
-    const pathTarget = `path-${id}`
-    newNode.setAttribute("id", nodeTarget);
-    newPath.setAttribute("id", pathTarget);
-
     // Attach all the elements together
     newNode.appendChild(nodeShape);
     newNode.appendChild(nodeValue);
@@ -44,9 +38,8 @@ const createNode = (input: number): Node => {
     canvas.appendChild(newNode);
 
     return {
-        id,
-        nodeTarget: "#" + nodeTarget,
-        pathTarget: "#" + pathTarget
+        nodeTarget: newNode,
+        pathTarget: newPath 
     }
 }
 
