@@ -5,7 +5,7 @@ import {
     DeleteNodeInput,
     LinkedListOperation,
 } from './typedefs';
-import {RIGHT_ARROW_PATH, UP_ARROW_PATH, DOWN_RIGHT_ARROW_PATH, UP_RIGHT_ARROW_PATH, BENT_ARROW_PATH} from './svgPaths';
+import {RIGHT_ARROW_PATH, UP_ARROW_PATH, DOWN_RIGHT_ARROW_PATH, UP_RIGHT_ARROW_PATH, BENT_ARROW_PATH} from './svgAttributes';
 
 const CURRENT = '#current';
 const PREV = '#prev';
