@@ -5,7 +5,7 @@ import {
     DeleteNodeInput,
     LinkedListOperation,
 } from './typedefs';
-import {RIGHT_ARROW_PATH, UP_ARROW_PATH, DOWN_RIGHT_ARROW_PATH, UP_RIGHT_ARROW_PATH, BENT_ARROW_PATH} from './svgAttributes';
+import {RIGHT_ARROW_PATH, UP_ARROW_PATH, DOWN_RIGHT_ARROW_PATH, UP_RIGHT_ARROW_PATH, BENT_ARROW_PATH, nodePathWidth} from './svgAttributes';
 
 const CURRENT = '#current';
 const PREV = '#prev';
@@ -25,7 +25,7 @@ const createAppendSequence = (input: AppendNodeInput): Animation[] => {
     // newNode appears
     timeline.push({
         targets: newNode.nodeTarget,
-        left: (nodes.length - 1) * 100,
+        left: (nodes.length - 1) * nodePathWidth,
         opacity: 1,
         duration: 0,
     })
@@ -40,7 +40,7 @@ const createAppendSequence = (input: AppendNodeInput): Animation[] => {
     for (let i = 0; i < nodes.length - 1; i++) {
         timeline.push({
             targets: CURRENT,
-            translateX: i * 100
+            translateX: i * nodePathWidth 
         })
     }
     // newNode goes to position above current
@@ -77,17 +77,17 @@ const createDeleteSequence = (input: DeleteNodeInput): Animation[] => {
     if (index > 0) {
         timeline.push({
             targets: CURRENT,
-            translateX: 100
+            translateX: nodePathWidth
         })
         console.log(index)
         for (let i = 1; i < index; i++) {
             timeline.push({
                 targets: PREV,
-                translateX: '+=100'
+                translateX: `+=${nodePathWidth}`
             })
             timeline.push({
                 targets: CURRENT,
-                translateX: '+=100'
+                translateX: `+=${nodePathWidth}`
             })
         }
         // Morph the arrow into bendy arrow
@@ -127,7 +127,7 @@ const createDeleteSequence = (input: DeleteNodeInput): Animation[] => {
     }
     timeline.push({
         targets: shiftedNodes.map(n => n.nodeTarget),
-        translateX: "-=100",
+        translateX: `-=${nodePathWidth}`,
         // hardcoded offset to make the nodes shift back at the same time as the pointer straightening.
         offset: "-=350"
     })

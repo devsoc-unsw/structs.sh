@@ -3,7 +3,7 @@ const svgHeight = 120;
 const strokeWidth = 3;
 const nodeWidth = 47;
 const nodeHeight = 47;
-
+export const nodePathWidth = 100;
 export const topOffset = (svgHeight + strokeWidth + nodeHeight) / 2
 export const RIGHT_ARROW_PATH = 'M52 59.9399C74.54 59.9398 75.92 59.9398 98 59.9398M98 59.9398L93 54M98 59.9398L93 66';
 export const UP_ARROW_PATH = 'M24.4349 33C24.4348 17.81 24.4348 16.88 24.4348 2M24.4348 2L18 5.36957M24.4348 2L31 5.36957';
