@@ -3,6 +3,8 @@ import initialiseVisualiser from './linked-list-visualiser/linkedList';
 import './styles/visualiser.css';
 import prev from './assets/prev.svg';
 import curr from './assets/curr.svg';
+import { topOffset } from './linked-list-visualiser/svgAttributes';
+
 const App = () => {
   useEffect(() => {
     initialiseVisualiser()
@@ -40,11 +42,11 @@ const App = () => {
         </div>
       </form>
       <div className="container" id="canvas">
-        <div id="current">
-          <img src={curr}/>
+        <div id="current" style={{top: `${topOffset}px`}}>
+          <img src={curr} alt="curr arrow"/>
         </div>
-        <div id="prev">
-          <img src={prev}/>
+        <div id="prev" style={{top: `${topOffset}px`}}>
+          <img src={prev} alt="prev arrow"/>
         </div>
       </div>
     </div>
