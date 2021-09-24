@@ -1,19 +1,16 @@
-#current {
-    opacity: 0;
-    position: absolute;
-    top: 51%;
-}
-
+#current,
 #prev {
     opacity: 0;
     position: absolute;
-    top: 51%;
+}
+#prev {
+    left: 0px;
 }
 
 #canvas {
     width: 95vw;
     height: 95vh;
-    background-color: #ffe4da;
+    position: relative;
 }
 
 .input {
@@ -23,9 +20,8 @@
 
 
 .node {
-    top: 10%;
     left: 45%;
-    position: fixed;
+    position: absolute;
     opacity: 0;
 }
 

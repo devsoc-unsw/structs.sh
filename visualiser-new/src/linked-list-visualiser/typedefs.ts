@@ -4,14 +4,11 @@
 
 
 export interface Node {
-    // Base ID used to form the nodeTarget and pathTarget
-    id: string;
-
     // CSS selector for the node DOM element
-    nodeTarget: string;
+    nodeTarget: SVGSVGElement;
 
     // CSS selector for the arrow DOM element
-    pathTarget: string;
+    pathTarget: SVGPathElement;
 }
 
 export interface Animation {
@@ -20,7 +17,7 @@ export interface Animation {
      *  → Eg. '#my-id' will apply the animations to the DOM element with the id 'my-id'
      *  → Docs: https://animejs.com/documentation/#cssSelector
      */
-    targets: string | string[];
+    targets: string | SVGSVGElement | SVGPathElement | (string | SVGSVGElement | SVGPathElement)[];
 
     /**
      * Further CSS properties that Anime will recognise.
