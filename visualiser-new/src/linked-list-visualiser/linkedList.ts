@@ -64,8 +64,13 @@ const initialise = (): void => {
         animationController.pause();
     };
 
+    const handleSelectPrevious: EventListener = (e: Event) => {
+        e.preventDefault();
+        animationController.gotoPrevious();
+    }
+
     const handleSliderChange: EventListener = (e: Event) => {
-        animationController.seek(parseInt(slider.value));
+        animationController.seekPercent(parseInt(slider.value));
     };
     // Grabbing references to form buttons and attaching event handlers to them
     const appendButton = document.querySelector('#appendButton');
@@ -73,6 +78,7 @@ const initialise = (): void => {
     const searchButton = document.querySelector('#searchButton');
     const playButton = document.querySelector('#playButton');
     const pauseButton = document.querySelector('#pauseButton');
+    const previousButton = document.querySelector('#previousSequenceButton');
     const slider = document.querySelector('#timeline-slider') as HTMLInputElement;
 
     appendButton.addEventListener('click', handleAppendClick);
@@ -80,6 +86,7 @@ const initialise = (): void => {
     searchButton.addEventListener('click', handleSearchClick);
     playButton.addEventListener('click', handlePlayClick);
     pauseButton.addEventListener('click', handlePauseClick);
+    previousButton.addEventListener('click', handleSelectPrevious);
     slider.addEventListener('input', handleSliderChange);
 };
 

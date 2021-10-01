@@ -25,7 +25,7 @@ class AnimationController {
         this.currentTimeline.pause();
     }
 
-    public seek(position: number): void {
+    public seekPercent(position: number): void {
         this.currentTimeline.seek(this.currentTimeline.duration * (position / 100))
     }
 
@@ -61,6 +61,17 @@ class AnimationController {
         if (this.timelineIndex === this.timelineHistory.length - 1) {
             console.log('cant run next sequence');
         }
+    }
+
+    // clicking on step backwards while animation is palying causes 2 animations to run and break
+    // Solutions: disable step back button
+    // Or: play around with anime.remove()ç
+    public gotoPrevious(): void {
+        this.currentTimeline = this.timelineHistory[this.timelineIndex - 1];
+        this.seekPercent(0);
+        this.timelineIndex--;
+        this.currentTimeline = this.timelineHistory[this.timelineIndex - 1];
+        this.seekPercent(0);
     }
 }
 
