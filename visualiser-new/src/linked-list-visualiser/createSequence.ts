@@ -22,12 +22,17 @@ const createAppendSequence = (input: AppendNodeInput): Animation[] => {
     const timeline: Animation[] = [];
     const { newNode, nodes } = input as AppendNodeInput;
 
-    // newNode appears
+    // newNode goes into position
     timeline.push({
         targets: newNode.nodeTarget,
         left: (nodes.length - 1) * nodePathWidth,
-        opacity: 1,
         duration: 0,
+    })
+    // newNode appears
+    timeline.push({
+        targets: newNode.nodeTarget,
+        opacity: 1,
+        duration: 500,
     })
     // Current pointer appears
     if (nodes.length > 1) {
