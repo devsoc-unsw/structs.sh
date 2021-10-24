@@ -1,5 +1,5 @@
 import { Node } from './typedefs';
-import { setAttributes, genId } from './utils';
+import { setAttributes } from './utils';
 import { nodeAttributes, shapeAttributes, textAttributes, pathAttributes } from './svgAttributes';
 
 // Given an input value, returns a node structure and places a
@@ -13,33 +13,34 @@ const SVG = 'http://www.w3.org/2000/svg';
  * TODO: each step of node creation could be taken out into a separate helper function
  */
 const createNode = (input: number): Node => {
-    const canvas = document.querySelector("#canvas");
-    const id = genId();
-
     // Create SVG node
     const newNode = document.createElementNS(SVG, "svg")
+    // Node Box + Value group
+    const nodeBox = document.createElementNS(SVG, "g");
     // Box for node
     const nodeShape = document.createElementNS(SVG, 'rect')
     // Text inside node
     const nodeValue = document.createElementNS(SVG, 'text')
     // Pointer for node
-    const newPath = document.createElementNS(SVG, 'path')
+    const newPointer = document.createElementNS(SVG, 'path')
 
     setAttributes(newNode, nodeAttributes)
     setAttributes(nodeShape, shapeAttributes);
-    setAttributes(nodeValue, textAttributes)
+    setAttributes(nodeValue, textAttributes);
     nodeValue.innerHTML = input.toString(); 
-    setAttributes(newPath, pathAttributes)
+    setAttributes(newPointer, pathAttributes)
 
     // Attach all the elements together
-    newNode.appendChild(nodeShape);
-    newNode.appendChild(nodeValue);
-    newNode.appendChild(newPath)
-    canvas.appendChild(newNode);
+    nodeBox.appendChild(nodeShape);
+    nodeBox.appendChild(nodeValue);
+    newNode.appendChild(nodeBox);
+    newNode.appendChild(newPointer);
 
     return {
+        value: input,
+        nodeBoxTarget: nodeBox,
         nodeTarget: newNode,
-        pathTarget: newPath 
+        pointerTarget: newPointer 
     }
 }
 

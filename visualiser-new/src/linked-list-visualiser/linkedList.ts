@@ -1,86 +1,133 @@
+import { Node } from './typedefs';
+import {
+    CURRENT,
+    PREV
+} from './svgAttributes';
+import AnimationInstructions from './animationInstructions';
 import createNode from './createNode';
-import createSequence from './createSequence';
-import LinkedListController from '../controller/linkedListController';
-import { Animation, Node } from './typedefs';
+import { createFunctionDeclaration } from 'typescript';
 
-/**
- * Initialises the visualiser and binds event handlers to the controller UI.
- */
-const initialise = (): void => {
-    const nodes: Node[] = [];
-    const animationController = new LinkedListController();
+export class LinkedListNode {
+    node: Node;
+    next: LinkedListNode;
+    constructor(node: Node) {
+        this.node = node;
+        this.next = null;
+    }
+}
 
-    // Binding event handlers to the append and delete buttons
-    const handleAppendClick: EventListener = (e: Event) => {
-        e.preventDefault();
-        animationController.finish();
+export default class LinkedList {
+    head: LinkedListNode;
+    length: number;
+    constructor() {
+        this.head = null;
+        this.length = 0;
+    }
 
-        const newNode = createNode(animationController.inputValue);
+    append(input: number) {
+        this.length++;
+        const instructions = new AnimationInstructions();
+        // Create new node
+        const newNode = createNode(input);
+        const newLinkedListNode = new LinkedListNode(newNode);
+        instructions.createNewNode(this.length, newNode);
 
-        // Logic of action reflects the javascript implementation
-        nodes.push(newNode);
-
-        // Generating the steps of the animation
-        const sequence: Animation[] = createSequence({ newNode, nodes }, 'append');
-
-        // Playing the animation
-        animationController.runSequeuce(sequence, slider);
-    };
-
-    const handleDeleteClick: EventListener = (e: Event) => {
-        e.preventDefault();
-        animationController.finish();
-
-        const index: number = animationController.inputValue;
-
-        // Finds the nodes that need to be shifted,
-        const shiftedNodes = nodes.slice(index);
-        const deletedNode = shiftedNodes.shift();
-
-        // Deleted node at index input
-        let prevNode = nodes[index];
-        if (index !== 0) {
-            prevNode = nodes[index - 1];
+        // Account for case when list is empty
+        if (this.head === null) {
+            this.head = newLinkedListNode;
+            return instructions.getTimeline();
         }
-        const sequence: Animation[] = createSequence(
-            { index, deletedNode, shiftedNodes, prevNode, nodes },
-            'deleteByIndex'
-        );
-        nodes.splice(index, 1);
-        animationController.runSequeuce(sequence, slider);
-    };
+        
+        // Initialise curr
+        let curr = this.head;
+        instructions.initialisePointer(CURRENT);
+        
+        // Traverse to last node
+        while (curr.next !== null) {
+            curr = curr.next;
+            instructions.moveToNext(CURRENT);
+        }
+        
+        // Link last node to new node
+        curr.next = newLinkedListNode;
+        instructions.linkLastToNew(curr);
 
-    const handleSearchClick: EventListener = (e: Event) => {
+        // Reset positions
+        instructions.resetPointers();
+        return instructions.getTimeline();
+    }
 
-    };
+    delete(index: number) {
+        if (index < 0 || index > this.length - 1) return [];
+        this.length--;
+        const instructions = new AnimationInstructions();
+        let curr = this.head;
+        instructions.initialisePointer(CURRENT);
+        let prev = null;
+        for (let i = 0; i < index; i++) {
+            prev = curr;
+            if (prev === this.head) {
+                instructions.initialisePointer(PREV);
+            } else {
+                instructions.moveToNext(PREV);
+            }
+            curr = curr.next;
+            instructions.moveToNext(CURRENT);
+        }
+        if (prev !== null) {
+            prev.next = curr.next;
+            if (prev.next === null) {
+                instructions.setPointerToNull(prev)
+            } else {
+                instructions.morphPointer(prev);
+            }
+        }
+        instructions.deleteNode(curr);
+        instructions.resetDelete(prev, curr);
+        return instructions.getTimeline();
+    }
 
-    const handlePlayClick: EventListener = (e: Event) => {
-        e.preventDefault();
-        animationController.play();
-    };
+    search(value: number) {
+        if (this.head === null) {
+            return [];
+        }
+        const instructions = new AnimationInstructions();
+        let curr = this.head;
+        instructions.initialisePointer(CURRENT);
+        while (curr !== null && curr.node.value !== value) {
+            curr = curr.next;
+            if (curr !== null) {
+                instructions.moveToNext(CURRENT);
+            }
+        }
+        if (curr !== null) {
+            instructions.indicateFound(curr);
+        }
+        instructions.resetPointers();
+        return instructions.getTimeline();
+    }
 
-    const handlePauseClick: EventListener = (e: Event) => {
-        e.preventDefault();
-        animationController.pause();
-    };
-
-    const handleSliderChange: EventListener = (e: Event) => {
-        animationController.seek(parseInt(slider.value));
-    };
-    // Grabbing references to form buttons and attaching event handlers to them
-    const appendButton = document.querySelector('#appendButton');
-    const deleteButton = document.querySelector('#deleteButton');
-    const searchButton = document.querySelector('#searchButton');
-    const playButton = document.querySelector('#playButton');
-    const pauseButton = document.querySelector('#pauseButton');
-    const slider = document.querySelector('#timeline-slider') as HTMLInputElement;
-
-    appendButton.addEventListener('click', handleAppendClick);
-    deleteButton.addEventListener('click', handleDeleteClick);
-    searchButton.addEventListener('click', handleSearchClick);
-    playButton.addEventListener('click', handlePlayClick);
-    pauseButton.addEventListener('click', handlePauseClick);
-    slider.addEventListener('input', handleSliderChange);
-};
-
-export default initialise;
+    insert(value: number, index: number) {
+        if (index > this.length - 1) {
+            return this.append(value);
+        }
+        this.length++;
+        const instructions: AnimationInstructions = new AnimationInstructions();
+        const newNode = createNode(value);
+        const newLinkedListNode = new LinkedListNode(newNode);
+        instructions.createNodeAt(index, newNode);
+        let curr = this.head;
+        instructions.initialisePointer(CURRENT);
+        for (let i = 0; i < index; i++) {
+            curr = curr.next;
+            instructions.moveToNext(CURRENT);
+        }
+        newLinkedListNode.next = curr.next;
+        instructions.insertedNodePointToNext(newNode); 
+        curr.next = newLinkedListNode;
+        instructions.pointToInsertedNode(curr.node)
+        
+        instructions.resetList(this);
+        return instructions.getTimeline();
+    }
+}

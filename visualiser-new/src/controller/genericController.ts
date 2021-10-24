@@ -35,7 +35,7 @@ class AnimationController {
     }
     // this function runs a sequence of animations sequentially
     // when stepSequence = false or pauses the timeline after each animation finishes
-    public runSequeuce(sequence: Animation[], slider: HTMLInputElement): void {
+    public runSequence(sequence: Animation[], slider: HTMLInputElement): void {
         console.log(this);
         this.currentTimeline = anime.timeline({
             duration: 700,

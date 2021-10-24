@@ -7,7 +7,7 @@ import { Animation } from './typedefs';
  */
 const runSequence = (sequence: Animation[]): AnimeTimelineInstance => {
     const timeline = anime.timeline({
-        duration: 1000,
+        duration: 700,
         easing: 'easeOutExpo'
     })
     for (const seq of sequence) {

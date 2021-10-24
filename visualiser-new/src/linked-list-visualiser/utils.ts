@@ -29,3 +29,16 @@ export const setAttributes = (elements, attributes) => {
 export const genId = (): string => {
     return String(getUuid());
 };
+
+/* -------------------------------------------------------------------------- */
+/*                     Animation Instruction Helpers                          */
+/* -------------------------------------------------------------------------- */
+
+// export const animateCreateNode = (timeline: Animation[]) => {
+//     timeline.push({
+//         targets: newNode.nodeTarget,
+//         left: nodes.length * nodePathWidth,
+//         opacity: 1,
+//         duration: 0
+//     });
+// }
