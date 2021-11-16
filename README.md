@@ -4,42 +4,59 @@
     <a href=""><img src="./images/StructsBanner.png" height="150px" /></a>
 </p>
 <p align="center">
-    <strong><a href="https://structs.netlify.app/">Visit Structs.sh</a> | <a href="https://www.figma.com/file/zFFuYLSSdc4TnQafDWgKP1/Structs.sh-Interface-Prototype?node-id=401%3A5">Figma Prototype</a></strong>. 
+    <strong><a href="https://structs.netlify.app/">Visit Structs.sh</a> | <a href="https://www.figma.com/file/zFFuYLSSdc4TnQafDWgKP1/Structs.sh-Interface-Prototype?node-id=401%3A5">Figma Prototype</a></strong> | <strong><a href="https://app.diagrams.net/#Hcsesoc%2FStructs.sh%2Fmaster%2Fstructs-datamodels.drawio">Data Model</a></strong>. 
 </p>
 
 Structs.sh is an interactive data structure and algorithm visualiser and educational platform for computer science students.
 
+### Features:
 
+-   Interactive visualiser for foundational data structures and algorithms
+    -   Controllable through a sleek terminal interface and form GUI
+    -   Animation is syncrhonised with the line-by-line execution of real code
+-   Integrated lessons
+    -   Textual explanations, documented source code in multiple languages and embedded videos are provided alongside the visualiser to help bridge the gap between high-level theory and the real implementation
+    -   Quiz/assessment system
+-   Content management API
+    -   Authorised content creators can introduce or update existing lesson material, quizzes, source code and more
 
+### Why Use Structs.sh?
+
+The value of Structs.sh as a teaching tool and educational resource. [TODO]
+
+-   Struct.sh is a community-oriented tool. With its content management system, ... [TODO]
+
+### Architecture
+
+Structs.sh was built using the TypeScript <a href="https://www.mongodb.com/mern-stack">MERN Stack</a> which consists of MongoDB, Express, React and Node.js.
+[TODO]
 
 ---
 
 # Table of contents
 
-- [Structs.sh 💻](#structssh-)
-- [Table of contents](#table-of-contents)
-  - [Setup Instructions](#setup-instructions)
-    - [Automatic Setup [Experimental]](#automatic-setup-experimental)
-    - [Manual Setup](#manual-setup)
-  - [Running Structs](#running-structs)
-- [Documentation](#documentation)
-  - [Client and Server Directory Structure](#client-and-server-directory-structure)
-  - [Visualiser Project Directory Structure](#visualiser-project-directory-structure)
-  - [Structs API Documentation](#structs-api-documentation)
-    - [Authentication](#authentication)
-    - [Lessons](#lessons)
-    - [Quizzes](#quizzes)
-    - [Data Model](#data-model)
-- [Guidelines](#guidelines)
-  - [Getting Started With Backend Development](#getting-started-with-backend-development)
-    - [How was the database set up and connected to our backend?](#how-was-the-database-set-up-and-connected-to-our-backend)
-    - [How are we reading/writing to the database?](#how-are-we-readingwriting-to-the-database)
-    - [How does MongoDB differ from other DBMSs like PostgreSQL? [TODO]](#how-does-mongodb-differ-from-other-dbmss-like-postgresql-todo)
-    - [How to implement API endpoints](#how-to-implement-api-endpoints)
-  - [Getting Started with the Visualiser](#getting-started-with-the-visualiser)
-  - [Good Collaborative Coding Practices](#good-collaborative-coding-practices)
-    - [Git Guideline](#git-guideline)
-    - [Style Guidelines](#style-guidelines)
+-   [Setup Instructions](#setup-instructions)
+    -   [Automatic Setup [Experimental]](#automatic-setup-experimental)
+    -   [Manual Setup](#manual-setup)
+-   [Running Structs.sh](#running-structs)
+-   [Documentation](#documentation)
+    -   [Client and Server Directory Structure](#client-and-server-directory-structure)
+    -   [Visualiser Project Directory Structure](#visualiser-project-directory-structure)
+    -   [Structs API Documentation](#structs-api-documentation)
+        -   [Authentication](#authentication)
+        -   [Lessons](#lessons)
+        -   [Quizzes](#quizzes)
+        -   [Data Model](#data-model)
+-   [Guidelines](#guidelines)
+    -   [Getting Started With Backend Development](#getting-started-with-backend-development)
+        -   [How was the database set up and connected to our backend?](#how-was-the-database-set-up-and-connected-to-our-backend)
+        -   [How are we reading/writing to the database?](#how-are-we-readingwriting-to-the-database)
+        -   [How does MongoDB differ from other DBMSs like PostgreSQL? [TODO]](#how-does-mongodb-differ-from-other-dbmss-like-postgresql-todo)
+        -   [How to implement API endpoints](#how-to-implement-api-endpoints)
+    -   [Getting Started with the Visualiser](#getting-started-with-the-visualiser)
+    -   [Good Collaborative Coding Practices](#good-collaborative-coding-practices)
+        -   [Git Guideline](#git-guideline)
+        -   [Style Guidelines](#style-guidelines)
 
 ---
 
@@ -52,7 +69,7 @@ Note: this is using **node.js v14.17.0**.
 git clone https://github.com/csesoc/Structs.sh.git
 ```
 
-### Automatic Setup [Experimental]
+<!-- ### Automatic Setup [Experimental]
 
 This may only work on Linux environments.
 
@@ -61,7 +78,7 @@ This may only work on Linux environments.
 sh structs.sh --setup
 ```
 
-Follow the prompts and everything should be ready to go.
+Follow the prompts and everything should be ready to go. -->
 
 ### Manual Setup
 
@@ -399,7 +416,11 @@ Structs.sh features a RESTful API for content management, supporting the retriev
 
 ### Data Model
 
-<div style="width: 640px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:640px; height:480px" src="https://lucid.app/documents/embeddedchart/9b70bc3b-ac94-49dc-a52b-6efa93639534" id="yLpa9YunnZ9P"></iframe></div>
+![Data model](./docs/structs-datamodels.drawio.png)
+
+> Note: This diagram was created using <a href="https://draw.io/">draw.io</a>. To add or update data models, go <a href="https://app.diagrams.net/#Hcsesoc%2FStructs.sh%2Fmaster%2Fstructs-datamodels.drawio">here</a> to modify the file `structs-datamodels.drawio` in this repository. To update the image below, just save the file (which will automatically create and push a commit) and then export a PNG file to replace `docs/structs-datamodels.drawio.png` in this repository.
+
+> Note: VSCode has a great extension for an <a href="https://marketplace.visualstudio.com/items?itemName=hediet.vscode-drawio">integrated draw.io client</a>
 
 # Guidelines
 
