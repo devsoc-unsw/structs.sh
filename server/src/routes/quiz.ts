@@ -4,18 +4,18 @@ import { LessonMongoService } from '../database-helpers/lesson';
 import consola from 'consola';
 
 const quizRouter = Router();
-const quizService = new QuizMongoService();
+const quizzeservice = new QuizMongoService();
 const lessonService = new LessonMongoService();
 
 interface GetQuizInput {
-    lessonId: string,
+    lessonId: string;
 }
 
 interface CreateQuizInput {
-    lessonId: string,
-    questionType: string,
-    question: string,
-    answer: string,
+    lessonId: string;
+    questionType: string;
+    question: string;
+    answer: string;
 }
 
 /*
@@ -50,18 +50,17 @@ quizRouter.get('/api/lessons/quiz', async (request, response) => {
 
         // Get quizzes
         let questions = [];
-        for (var el in lesson.quizs) {
-            const collectedQuiz = await quizService.getQuizById(el);
+        for (var el in lesson.quizzes) {
+            const collectedQuiz = await quizzeservice.getQuizById(el);
             questions.push(collectedQuiz);
         }
-        
+
         consola.success(`Successfully got quiz for lesson: ${lessonId}`);
         response.status(200).json({
             status: 200,
             statusText: 'Successfully got quiz for lesson',
             data: questions,
         });
-        
     } catch (err) {
         // Failure to get quiz questions
         consola.error(`Failed to get quiz`);
@@ -88,8 +87,11 @@ quizRouter.get('/api/lessons/quiz', async (request, response) => {
  */
 quizRouter.post('/api/lessons/quiz', async (request, response) => {
     try {
-        const { lessonId, questionType, question, answer } = request.body as CreateQuizInput;
-        console.log(`Question to create : ${question} of type : ${questionType} with answer : ${answer}`);
+        const { lessonId, questionType, question, answer } =
+            request.body as CreateQuizInput;
+        console.log(
+            `Question to create : ${question} of type : ${questionType} with answer : ${answer}`
+        );
         console.log(request.body);
 
         // Retrieve lesson/check lesson exists
@@ -104,36 +106,41 @@ quizRouter.post('/api/lessons/quiz', async (request, response) => {
         }
 
         // Check if valid questionType
-        if (!["mc", "qa"].includes(questionType)) {
+        if (!['mc', 'qa'].includes(questionType)) {
             consola.error(`Failed to create quiz`);
             response.status(401).json({
                 status: 401,
-                statusText: 'Invalid question type: must be one of the strings: \'mc\' (multiple choice) or \'qa\' (question-answer format)',
+                statusText:
+                    "Invalid question type: must be one of the strings: 'mc' (multiple choice) or 'qa' (question-answer format)",
             });
             return;
         }
 
         // Create a quiz question in database
-        const createdQuiz = await quizService.createQuiz(questionType, question, answer);
+        const createdQuiz = await quizzeservice.createQuiz(
+            questionType,
+            question,
+            answer
+        );
         console.log(`Created quiz with id ${createdQuiz._id}`);
-
 
         // Add quiz question to database based on id
         //......................................................................................................
         const lesson = await lessonService.getLessonById(lessonId);
-        let quizzes = lesson.quizs
+        let quizzes = lesson.quizzes;
         quizzes.push(createdQuiz._id);
 
-        const newLesson = await lessonService.updateLessonById(lessonId, quizzes);
-        
-        
+        const newLesson = await lessonService.updateLessonById(
+            lessonId,
+            quizzes
+        );
+
         consola.success(`Successfully created quiz: ${question}`);
         response.status(200).json({
             status: 200,
             statusText: 'Successfully created quiz',
             data: newLesson,
         });
-        
     } catch (err) {
         // Failure to create quiz
         consola.error(`Failed to create quiz`);

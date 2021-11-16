@@ -4,6 +4,8 @@ import { router } from './routes';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import swaggerJsDoc, { Options } from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
 
 /**
  * Configure process environment to the .env file
@@ -14,30 +16,27 @@ dotenv.config();
  * Connect to mongoDB client
  */
 mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
 });
 
 const db = mongoose.connection;
 db.on(
-  'error',
-  console.error.bind(
-    console,
-    'An error occurred while connecting to MongoDB 😭: '
-  )
+    'error',
+    console.error.bind(
+        console,
+        'An error occurred while connecting to MongoDB 😭: '
+    )
 );
 
 const app = express();
 
 /**
- * CORS
+ * Allow CORS requests
  */
 app.use((req, res, next) => {
-  /**
-   * Website you wish to allow to connect
-   */
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  next();
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    next();
 });
 
 app.use(cors());
@@ -56,9 +55,48 @@ const appRoutes = router;
 app.use(appRoutes);
 
 app.use((err, req, res, next) => {
-  res.status(err.status || 500).send(err);
+    res.status(err.status || 500).send(err);
 });
 
+/**
+ * Swagger documentation generator.
+ *   See: https://www.npmjs.com/package/swagger-ui-express
+ *        https://www.npmjs.com/package/swagger-jsdoc
+ * The OpenAPI Specification defines a standard interface to REST APIs.
+ */
+
+const swaggerOptions: Options = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'Structs.sh Content Management API',
+            version: '1.0.0',
+            description:
+                'Endpoints for managing users and learning resources on Structs.sh.',
+            license: {
+                name: 'MIT',
+                url: 'https://spdx.org/licenses/MIT.html',
+            },
+        },
+    },
+    // Tells Swagger which endpoints to source documentation from
+    apis: [`${__dirname}/routes/*.ts`, `${__dirname}/schemas/*.ts`],
+};
+
+const opt = {
+    // Customising the theme of the Swagger documentation pages
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'Structs API Docs',
+};
+
+const specs = swaggerJsDoc(swaggerOptions);
+
+// Serve the documentation on the root URL
+app.use('/', swaggerUi.serve, swaggerUi.setup(specs, opt));
+
+/**
+ * Starting the server
+ */
 app.listen(process.env.PORT, () => {
-  console.log(` ➤ Structs.sh listening at port: ${process.env.PORT} 🚀`);
+    console.log(` ➤ Structs.sh listening at port: ${process.env.PORT} 🚀`);
 });

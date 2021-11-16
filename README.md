@@ -1,3 +1,13 @@
+# TODO: Move this away to the right place in the README:
+
+## API Documentation
+
+The documentation for the Structs.sh API was set up with <a href="https://www.npmjs.com/package/swagger-jsdoc">swagger-jsdoc</a> and <a href="https://www.npmjs.com/package/swagger-ui-express">swagger-ui-express</a>.
+
+> Note: `swagger-jsdoc` generates an <a href="https://swagger.io/specification/">OpenAPI</a> spec from the <a href="https://jsdoc.app/">JSDoc</a> documentation written for each endpoint. The package `swagger-ui-express` serves the documentation which can be accessed by a route you define (eg. `/api-docs`). It takes in the output of `swagger-jsdoc` to achieve this.
+
+> Developer Note: follow the YAML structure <a href="https://swagger.io/docs/specification/basic-structure/">here</a> for documenting endpoints in a way that can be used by Swagger.
+
 # Structs.sh 💻
 
 <p align="center">

@@ -7,5 +7,6 @@ export interface Lesson extends mongoose.Document {
     _id: string;
     rawMarkdown: string;
     creatorId: string;
-    quizs: string[];
+    quizzes: string[];
+    topicId: string;
 }
