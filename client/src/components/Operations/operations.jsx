@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { List, ListItem, ListItemIcon } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
-import { Typography } from '@material-ui/core';
+import { List, ListItem, ListItemIcon } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import { Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import OpDetails from './opDetails';
 import { link, lastLink } from './utils';

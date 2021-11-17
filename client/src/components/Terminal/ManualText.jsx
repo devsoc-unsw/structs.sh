@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 import styles from './Terminal.module.scss';
 
 const Manual = ({ manual }) => {
@@ -14,7 +14,10 @@ const Manual = ({ manual }) => {
                 className={styles.command}
                 dangerouslySetInnerHTML={createMarkup(manual.command)}
             />
-            <Typography variant="body2" dangerouslySetInnerHTML={createMarkup(`${manual.description}`)} />
+            <Typography
+                variant="body2"
+                dangerouslySetInnerHTML={createMarkup(`${manual.description}`)}
+            />
         </>
     );
 };

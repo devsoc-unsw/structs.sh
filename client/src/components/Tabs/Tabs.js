@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import './Tabs.scss';
 import { Videos, AdditionalResources, Lesson, Code } from 'components/Tabs';
 import { Quiz } from 'components/Quiz'

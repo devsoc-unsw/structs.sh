@@ -2,9 +2,9 @@
 // import { Link } from 'react-router-dom';
 // import PropTypes from 'prop-types';
 // import { Container, Navbar, NavbarBrand } from 'reactstrap';
-// import MenuIcon from '@material-ui/icons/Menu';
+// import MenuIcon from '@mui/icons-material/Menu';
 // import Sidebar from './sidebar';
-// import { Drawer } from '@material-ui/core';
+// import { Drawer } from '@mui/material';
 // import logo from 'assets/img/logo.png';
 // import styles from './TopNavbar.module.scss';
 

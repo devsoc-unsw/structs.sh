@@ -6,10 +6,10 @@ import {
     FormControlLabel,
     FormLabel,
     RadioGroup,
-} from '@material-ui/core';
-import { green, red } from '@material-ui/core/colors';
-import CancelIcon from '@material-ui/icons/Cancel';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+} from '@mui/material';
+import { green, red } from '@mui/material/colors';
+import CancelIcon from '@mui/icons-material/Cancel';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import React, { useState } from 'react';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';

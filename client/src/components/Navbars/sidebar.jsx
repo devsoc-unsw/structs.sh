@@ -1,9 +1,9 @@
-import { IconButton, List, ListItem, ListItemIcon } from '@material-ui/core';
-import Collapse from '@material-ui/core/Collapse';
+import { IconButton, List, ListItem, ListItemIcon } from '@mui/material';
+import Collapse from '@mui/material/Collapse';
 import React from 'react';
 import logo from '../../assets/img/linked-list.svg';
 import filter from 'assets/img/filter.svg';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 import Filter from './filter';
 import { getMatchedLessons } from 'content';
 import { Redirect } from 'react-router-dom';

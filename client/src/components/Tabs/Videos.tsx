@@ -1,4 +1,4 @@
-import { Paper } from '@material-ui/core';
+import { Paper } from '@mui/material';
 import { EmbeddedVideoPlayer } from 'components/Video';
 import React from 'react';
 import styles from './Videos.module.scss';

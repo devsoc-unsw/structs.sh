@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Card, TextField, Button } from '@material-ui/core';
-import ErrorIcon from '@material-ui/icons/Error';
-import { yellow } from '@material-ui/core/colors';
+import { Card, TextField, Button } from '@mui/material';
+import ErrorIcon from '@mui/icons-material/Error';
+import { yellow } from '@mui/material/colors';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import './Quiz.scss';

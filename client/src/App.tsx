@@ -7,7 +7,7 @@ import AboutUs from 'views/AboutUs';
 import Feedback from 'views/Feedback';
 import { AnimatePresence } from 'framer-motion';
 import ContentManagementDashboard from 'views/ContentManagementDashboard';
-import './App.css';
+import './App.scss';
 
 const App = () => {
     const location = useLocation();
