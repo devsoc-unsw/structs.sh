@@ -71,7 +71,7 @@ const Dashboard = ({ match }) => {
             </Helmet>
 
             {/* For some reason, getting rid of this ruins the pane spacing. It can't be a div or a span... */}
-            <img width={48} height={48} />
+            <img width={48} height={48} alt={'Structs logo'} />
             <TopNavbar showMenu />
             <Pane orientation="vertical" minSize={340} topGutterSize={48}>
                 <Pane orientation="horizontal" minSize={150.9}>

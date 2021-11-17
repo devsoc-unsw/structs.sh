@@ -1,12 +1,18 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import { ApiConstants } from 'constants/api';
-import cogoToast from 'cogo-toast';
 import { Notification } from 'utils/Notification';
 
 const ContentManagementDashboard = () => {
     useEffect(() => {
-        Notification.success('Ass');
+        axios
+            .get(`${ApiConstants.URL}/api/lessons`)
+            .then((res) => {
+                Notification.success('Successfully fetched lessons');
+            })
+            .catch((err) => {
+                Notification.error('Something went wrong');
+            });
     }, []);
 
     return (

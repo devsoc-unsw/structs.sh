@@ -1,4 +1,4 @@
-export default {
+const sourceCode = {
   c: `#include <stdio.h>
 #include <stdlib.h>
 
@@ -98,3 +98,5 @@ var noun: string = "World";
 console.log(exclamation + noun);
 `
 };
+
+export default sourceCode;

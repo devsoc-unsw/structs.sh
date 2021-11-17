@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { List, ListItem, ListItemIcon } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import ExpandLess from '@material-ui/icons/ExpandLess';
@@ -33,11 +33,20 @@ const Operations = ({ topic, executeCommand }) => {
     }
     const [showOp, setShowOp] = React.useState(opShowList);
 
-    React.useEffect(async () => {
-        setOps(await getTopicOps(topic));
-        const lesson = await getLessonContent(topic);
-        setTitle(lesson.title);
-    });
+    useEffect(() => {
+        getTopicOps(topic)
+            .then(setOps)
+            .catch((err) => {
+                console.log(err);
+            });
+        getLessonContent(topic)
+            .then((lesson) => {
+                setTitle(lesson.title);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, [topic, setOps, setTitle]);
 
     const handleClick = (op) => {
         setShowOp({ ...showOp, [op]: !showOp[op] });

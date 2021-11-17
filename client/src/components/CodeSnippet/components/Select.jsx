@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function (props) {
+export default function Select(props) {
     return (
         <div className="inline-block relative w-64 mb-2">
             <select

@@ -152,6 +152,7 @@ export function createAnimation(list, animationSequence) {
                     easing: 'linear'
                 }, offset);
                 break;
+            default:
         }
     })
     return animation;
