@@ -262,26 +262,48 @@ lessonRouter.get('/api/lessons/:id', async (req, res) => {
  *                              statusText:
  *                                  type: string
  */
-lessonRouter.get('/api/lessons/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const lessonData = await lessonService.getLessonById(id);
-        if (!lessonData) {
-            res.status(404).json({
-                statusText: `No lesson with the ID '${id}' exists`,
-            });
-        } else {
-            res.status(200).json({
-                statusText: 'Lesson successfully fetched',
-                lesson: lessonData,
-            });
-        }
-    } catch (err) {
-        consola.error('Failed to fetch the lesson. Reason: ', err);
-        res.status(400).json({
-            statusText: `Fail to fetch the lesson. Reason: ${err.message}`,
-        });
-    }
+lessonRouter.put('/api/lessons/:id', async (req, res) => {
+    throw new Error('Unimplemented');
+});
+
+/**
+ * @swagger
+ * /api/lessons/{id}:
+ *  delete:
+ *      summary: Delete an existing lesson (TODO!)
+ *      description: Deletes an existing lesson and all its associated quizzes.
+ *      tags:
+ *          - Lessons
+ *      parameters:
+ *          - name: id
+ *            in: path
+ *            required: true
+ *            description: ID of the lesson to edit
+ *            schema:
+ *                type: string
+ *      responses:
+ *          '200':
+ *              description: Lesson successfully deleted
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              statusText:
+ *                                  type: string
+ *          '404':
+ *              description: No lesson with the given ID exists.
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              statusText:
+ *                                  type: string
+ */
+lessonRouter.delete('/api/lessons/:id', async (req, res) => {
+    throw new Error('Unimplemented');
+    // Note: needs to go through each quiz ID in lesson.quizzes and call a method like QuizService.deleteById(quizId) on each quizId
 });
 
 export default lessonRouter;

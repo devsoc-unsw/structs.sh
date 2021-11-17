@@ -1,6 +1,5 @@
 import { SplitPane } from 'react-collapse-pane';
 import styles from './CollapsiblePane.module.scss';
-import { Button } from 'reactstrap';
 
 const resizerCss = {
     width: '1px',

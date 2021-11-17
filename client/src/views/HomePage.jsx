@@ -7,7 +7,6 @@ import card2 from '../assets/img/card2.jpg';
 import card3 from '../assets/img/card3.jpg';
 import card4 from '../assets/img/card4.jpg';
 // import { Button, Container } from 'reactstrap';
-import CustomCarousel from '../components/CustomCarousel/CustomCarousel';
 import styles from './HomePage.module.scss';
 
 // TEST DATA
@@ -49,33 +48,8 @@ const HomePage = (props) => {
                         <Searchbar className={styles.searchbar} />
                     </div>
                     {/* carousel */}
-                    <CustomCarousel items={cards} />
+                    {/* <CustomCarousel items={cards} /> */}
                 </div>
-                {/* <>
-                    <h1>Structs.sh</h1>
-                <h3>[Temporary buttons]</h3>
-                <Link to="/visualiser/linked-list">
-                    <Button>Linked Lists</Button>
-                </Link>
-                <Link to="/visualiser/binary-search-tree">
-                    <Button>Binary Search Trees</Button>
-                </Link>
-                <Link to="/visualiser/graph">
-                    <Button>Graph</Button>
-                </Link>
-                <Link to="/visualiser/sorting">
-                    <Button>Sorting</Button>
-                </Link>
-                <Link to="/about">
-                    <Button>About Us</Button>
-                </Link>
-                <Link to="/feedback">
-                    <Button>Feedback</Button>
-                </Link>
-                <a href="/visualiser.html">
-                    <Button>Vanilla JS Visualiser Test</Button>
-                </a>
-                </> */}
             </PageHeader>
         </Layout>
     );

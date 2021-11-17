@@ -27,7 +27,6 @@ const containerVariants = {
 };
 let appendNode = () => console.log('Not set');
 let deleteNode = () => console.log('Not set');
-console.log('STARTING');
 
 const Dashboard = ({ match }) => {
     // Extract route parameters
@@ -56,8 +55,8 @@ const Dashboard = ({ match }) => {
     }, []);
 
     const handleModeSwitch = () => {
-        setTerminalMode(!terminalMode)
-    }
+        setTerminalMode(!terminalMode);
+    };
 
     return (
         <motion.div
@@ -74,7 +73,7 @@ const Dashboard = ({ match }) => {
             {/* For some reason, getting rid of this ruins the pane spacing. It can't be a div or a span... */}
             <img width={48} height={48} />
             <TopNavbar showMenu />
-            <Pane orientation="vertical" minSize={340} topGutterSize={48} >
+            <Pane orientation="vertical" minSize={340} topGutterSize={48}>
                 <Pane orientation="horizontal" minSize={150.9}>
                     {/* <LinkedList /> */}
                     <header classname="App-header">

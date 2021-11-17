@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 /**
- * Structs.sh user model
+ * Structs.sh Quiz model
  */
 export interface Quiz extends mongoose.Document {
     _id: string;

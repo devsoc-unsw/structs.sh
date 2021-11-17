@@ -1,13 +1,3 @@
-# TODO: Move this away to the right place in the README:
-
-## API Documentation
-
-The documentation for the Structs.sh API was set up with <a href="https://www.npmjs.com/package/swagger-jsdoc">swagger-jsdoc</a> and <a href="https://www.npmjs.com/package/swagger-ui-express">swagger-ui-express</a>.
-
-> Note: `swagger-jsdoc` generates an <a href="https://swagger.io/specification/">OpenAPI</a> spec from the <a href="https://jsdoc.app/">JSDoc</a> documentation written for each endpoint. The package `swagger-ui-express` serves the documentation which can be accessed by a route you define (eg. `/api-docs`). It takes in the output of `swagger-jsdoc` to achieve this.
-
-> Developer Note: follow the YAML structure <a href="https://swagger.io/docs/specification/basic-structure/">here</a> for documenting endpoints in a way that can be used by Swagger.
-
 # Structs.sh 💻
 
 <p align="center">
@@ -188,17 +178,28 @@ visualiser-new/
 	        └── utils.js
 ```
 
-## Structs API Documentation
+## Structs API
 
-Structs.sh features a RESTful API for content management, supporting the retrieval, creation, updating and deletion of lessons and quizzes.
+Structs.sh features a RESTful API for content management, supporting the retrieval, creation, updating and deletion of lessons and quizzes as well as the management of users.
+
+When you start up the server on port 8080 for example, you'll see the API documentation being served at `http://localhost:8080/` which should look like this:
+
+![swagger docs snippet](./docs/swagger-docs-snippet.png)
+
+The documentation for the Structs.sh API was set up with <a href="https://www.npmjs.com/package/swagger-jsdoc">swagger-jsdoc</a> and <a href="https://www.npmjs.com/package/swagger-ui-express">swagger-ui-express</a>.
+
+> Note: `swagger-jsdoc` generates an <a href="https://swagger.io/specification/">OpenAPI</a> spec from the <a href="https://jsdoc.app/">JSDoc</a> documentation written for each endpoint. The package `swagger-ui-express` serves the documentation which can be accessed by a route you define (eg. `/api-docs`). It takes in the output of `swagger-jsdoc` to achieve this.
+
+> Developer Note: follow the YAML structure <a href="https://swagger.io/docs/specification/basic-structure/">here</a> for documenting endpoints in a way that can be used by Swagger.
 
 <details>
-    <summary>RESTful API conventions</summary>
+    <summary>REST API conventions</summary>
     <img src="./docs/RESTful-API-conventions.png" />
 </details>
 
-### Authentication
-
+<details>
+    <summary>Old API documentation</summary>
+    Authentication
 <table>
     <tbody>
         <tr>
@@ -267,9 +268,7 @@ Structs.sh features a RESTful API for content management, supporting the retriev
         </tr>
     </tbody>
 </table>
-
-### Lessons
-
+    Lessons
 <table>
     <tbody>
         <tr>
@@ -363,9 +362,7 @@ Structs.sh features a RESTful API for content management, supporting the retriev
         </tr>
     </tbody>
 </table>
-
-### Quizzes
-
+Quizzes
 <table>
     <tbody>
         <tr>
@@ -423,14 +420,15 @@ Structs.sh features a RESTful API for content management, supporting the retriev
         </tr>
     </tbody>
 </table>
+</details>
 
 ### Data Model
 
 ![Data model](./docs/structs-datamodels.drawio.png)
 
-> Note: This diagram was created using <a href="https://draw.io/">draw.io</a>. To add or update data models, go <a href="https://app.diagrams.net/#Hcsesoc%2FStructs.sh%2Fmaster%2Fstructs-datamodels.drawio">here</a> to modify the file `structs-datamodels.drawio` in this repository. To update the image below, just save the file (which will automatically create and push a commit) and then export a PNG file to replace `docs/structs-datamodels.drawio.png` in this repository.
+> Note: This diagram was created and is currently maintained with <a href="https://draw.io/">draw.io</a>. To add or update data models, go <a href="https://app.diagrams.net/#Hcsesoc%2FStructs.sh%2Fmaster%2Fstructs-datamodels.drawio">here</a> to modify the file `structs-datamodels.drawio` in this repository. To update the image below, just save the file (which will automatically create and push a commit) and then export a PNG file to replace `docs/structs-datamodels.drawio.png` in this repository.
 
-> Note: VSCode has a great extension for an <a href="https://marketplace.visualstudio.com/items?itemName=hediet.vscode-drawio">integrated draw.io client</a>
+> Note: as a better alternate, VSCode has a great extension for an <a href="https://marketplace.visualstudio.com/items?itemName=hediet.vscode-drawio">integrated draw.io client</a> that lets you view and edit .drawio files in the editor.
 
 # Guidelines
 

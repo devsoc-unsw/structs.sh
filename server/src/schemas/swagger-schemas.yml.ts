@@ -43,14 +43,12 @@
  *          properties:
  *              title:
  *                  type: string
- *                  description: Name of the topic, eg. 'Linked Lists'.
  *              description:
  *                  type: string
- *                  description: Description of the topic, eg. 'a linear collection of data elements'.
  *              courses:
  *                  type: array
- *                  items: string
- *                  description: The courses that this topic belongs to, eg. ["COMP1511", "COMP2521"]
+ *                  items:
+ *                      type: string
  */
 
 /* --------------------------------- Lesson --------------------------------- */

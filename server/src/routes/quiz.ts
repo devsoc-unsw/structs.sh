@@ -194,4 +194,92 @@ quizRouter.post('/api/lessons/quiz', async (request, response) => {
     }
 });
 
+/**
+ * @swagger
+ * /api/lessons/quiz:
+ *  put:
+ *      summary:  Edit an existing quiz (TODO!)
+ *      description: Edits an existing quiz.
+ *      tags:
+ *          - Quiz
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          quizId:
+ *                              type: string
+ *                          questionType:
+ *                              type: string
+ *                          question:
+ *                              type: string
+ *                          answer:
+ *                              type: string
+ *      responses:
+ *          '200':
+ *               description: Succesfully edited quiz
+ *               content:
+ *                   application/json:
+ *                       schema:
+ *                           type: object
+ *                           properties:
+ *                               statusText:
+ *                                   type: string
+ *          '404':
+ *              description: Quiz with that ID doesn't exist
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              statusText:
+ *                                  type: string
+ */
+quizRouter.put('/api/lessons/quiz', async (request, response) => {
+    throw new Error('Unimplemented');
+});
+
+/**
+ * @swagger
+ * /api/lessons/quiz:
+ *  delete:
+ *      summary:  Delete an existing quiz (TODO!)
+ *      description: Deletes an existing quiz.
+ *      tags:
+ *          - Quiz
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          quizId:
+ *                              type: string
+ *      responses:
+ *          '200':
+ *               description: Succesfully deleted quiz
+ *               content:
+ *                   application/json:
+ *                       schema:
+ *                           type: object
+ *                           properties:
+ *                               statusText:
+ *                                   type: string
+ *          '404':
+ *              description: Quiz with that ID doesn't exist
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              statusText:
+ *                                  type: string
+ */
+quizRouter.delete('/api/lessons/quiz', async (request, response) => {
+    throw new Error('Unimplemented');
+});
+
 export default quizRouter;
