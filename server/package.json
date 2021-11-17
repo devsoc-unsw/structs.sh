@@ -1,7 +1,7 @@
 {
-  "name": "ts-backend",
+  "name": "structs-api",
   "version": "1.0.0",
-  "description": "Backend application for GalacticEd",
+  "description": "Backend application for Structs",
   "license": "MIT",
   "scripts": {
     "start": "nodemon src/server.ts",
