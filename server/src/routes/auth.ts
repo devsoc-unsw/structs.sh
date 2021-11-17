@@ -10,8 +10,30 @@ interface RegisterUserInput {
     password: string;
 }
 
-/*
- * Registers a new user
+/**
+ * @swagger
+ * /register:
+ *  post:
+ *      summary: Registers a new user (TODO!)
+ *      description: Registers a new user into the system with the given username, email and password.
+ *      tags:
+ *          - Authentication
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          username:
+ *                              type: string
+ *                              exmaple: John Shepherd
+ *                          email:
+ *                              type: string
+ *                              exmaple: john.shepherd@gmail.com
+ *                          password:
+ *                              type: string
+ *                              exmaple: iloveandrew
  */
 authRouter.post('/register', async (req, res) => {
     try {
@@ -43,6 +65,23 @@ authRouter.post('/register', async (req, res) => {
             statusText: 'Invalid username or password.',
         });
     }
+});
+
+/**
+ * TODO: Login endpoint here
+ *
+ * @swagger
+ * /login:
+ *  post:
+ *      summary: Log in an existing user (TODO!)
+ *      description: Logs in an existing user in the system with the given email/username and password.
+ *      tags:
+ *          - Authentication
+ *      requestBody:
+ *          required: true
+ */
+authRouter.post('/login', async (req, res) => {
+    throw new Error('Unimplemented');
 });
 
 export default authRouter;

@@ -6,4 +6,4 @@ import quizRouter from './quiz';
 
 export const router = Router();
 
-router.use('/', healthRouter, authRouter, quizRouter);
+router.use('/', healthRouter, authRouter, quizRouter, lessonRouter);

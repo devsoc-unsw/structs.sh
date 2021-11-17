@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { Quiz } from '../quiz/Quiz';
 
 /**
  * Structs.sh lesson model

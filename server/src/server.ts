@@ -69,10 +69,10 @@ const swaggerOptions: Options = {
     definition: {
         openapi: '3.0.0',
         info: {
-            title: 'Structs.sh Content Management API',
+            title: 'Structs.sh API',
             version: '1.0.0',
             description:
-                'Endpoints for managing users and learning resources on Structs.sh.',
+                'This is a set of auto-generated documentation for the Structs.sh API. This contains endpoints for managing users and learning resources on Structs.sh.',
             license: {
                 name: 'MIT',
                 url: 'https://spdx.org/licenses/MIT.html',

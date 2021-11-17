@@ -18,9 +18,9 @@ export class LessonMongoService {
         }
     }
 
-    public async getAllLessons(): Promise<[Lesson]> {
+    public async getAllLessons(): Promise<Lesson[]> {
         try {
-            const lessonList = (await LessonModel.find()) as [Lesson];
+            const lessonList = (await LessonModel.find()) as Lesson[];
             return lessonList;
         } catch (err) {
             throw new Error(err.message);
@@ -40,11 +40,11 @@ export class LessonMongoService {
         }
     }
 
-    public async getLessonByUserId(creatorId: string): Promise<[Lesson]> {
+    public async getLessonByUserId(creatorId: string): Promise<Lesson[]> {
         try {
             const lessons = (await LessonModel.find({
                 creatorId: creatorId,
-            })) as [Lesson];
+            })) as Lesson[];
             return lessons;
         } catch (err) {
             throw new Error(err.message);
