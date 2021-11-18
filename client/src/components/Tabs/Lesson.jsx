@@ -9,6 +9,7 @@ import { EditButton, NewContentButton } from 'components/Buttons';
 const Lesson = ({ topic }) => {
     const [lessonContent, setLessonContent] = useState(null);
     getLessonContent(topic).then(setLessonContent).catch(console.log);
+
     return (
         <div>
             <div className={styles.lessonContainer}>

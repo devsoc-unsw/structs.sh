@@ -4,7 +4,11 @@
     <a href=""><img src="./images/StructsBanner.png" height="150px" /></a>
 </p>
 <p align="center">
-    <strong><a href="https://structs.netlify.app/">Visit Structs.sh</a> | <a href="https://www.figma.com/file/zFFuYLSSdc4TnQafDWgKP1/Structs.sh-Interface-Prototype?node-id=401%3A5">Figma Prototype</a></strong> | <strong><a href="https://app.diagrams.net/#Hcsesoc%2FStructs.sh%2Fmaster%2Fstructs-datamodels.drawio">Data Model</a></strong>. 
+    <strong><a href="https://structs.netlify.app/">Visit Structs.sh</a></strong> | <strong><a href="https://structs-storybook.netlify.app/">Structs.sh UI Docs</a></strong>
+</p>
+<p align="center">
+    <strong><a href="https://www.figma.com/file/zFFuYLSSdc4TnQafDWgKP1/Structs.sh-Interface-Prototype?node-id=401%3A5">Figma Prototype</a>
+    </strong> | <strong><a href="https://app.diagrams.net/#Hcsesoc%2FStructs.sh%2Fmaster%2Fstructs-datamodels.drawio">Data Model</a></strong>
 </p>
 
 Structs.sh is an interactive data structure and algorithm visualiser and educational platform for computer science students.
@@ -20,16 +24,16 @@ Structs.sh is an interactive data structure and algorithm visualiser and educati
 -   Content management API
     -   Authorised content creators can introduce or update existing lesson material, quizzes, source code and more
 
-### Why Use Structs.sh?
+<!-- ### Why Use Structs.sh?
 
 The value of Structs.sh as a teaching tool and educational resource. [TODO]
 
--   Struct.sh is a community-oriented tool. With its content management system, ... [TODO]
+-   Struct.sh is a community-oriented tool. With its content management system, ... [TODO] -->
 
-### Architecture
+<!-- ### Architecture
 
 Structs.sh was built using the TypeScript <a href="https://www.mongodb.com/mern-stack">MERN Stack</a> which consists of MongoDB, Express, React and Node.js.
-[TODO]
+[TODO] -->
 
 ---
 
@@ -42,10 +46,8 @@ Structs.sh was built using the TypeScript <a href="https://www.mongodb.com/mern-
 -   [Documentation](#documentation)
     -   [Client and Server Directory Structure](#client-and-server-directory-structure)
     -   [Visualiser Project Directory Structure](#visualiser-project-directory-structure)
-    -   [Structs API Documentation](#structs-api-documentation)
-        -   [Authentication](#authentication)
-        -   [Lessons](#lessons)
-        -   [Quizzes](#quizzes)
+    -   [Structs UI Documentation](#structs-ui-docs)
+    -   [Structs API Documentation](#structs-api-docs)
         -   [Data Model](#data-model)
 -   [Guidelines](#guidelines)
     -   [Getting Started With Backend Development](#getting-started-with-backend-development)
@@ -178,7 +180,13 @@ visualiser-new/
 	        └── utils.js
 ```
 
-## Structs API
+## Structs UI Docs
+
+Structs.sh uses <a href="https://storybook.js.org/">Storybook</a> for generating documentation and interactive demos for the React components used on the web client.
+
+See the documentation at <a href="https://structs-storybook.netlify.app">structs-storybook.netlify.app</a>.
+
+## Structs API Docs
 
 Structs.sh features a RESTful API for content management, supporting the retrieval, creation, updating and deletion of lessons and quizzes as well as the management of users.
 
