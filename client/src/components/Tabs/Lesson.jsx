@@ -20,7 +20,15 @@ const Lesson = ({ topic }) => {
                         <Link to="/creator/lesson/new">
                             <NewContentButton />
                         </Link>
+                        <p style={{ fontFamily: 'AtlassianText' }}>
+                            Hello <strong>world</strong>
+                            <em> sample italic</em>
+                            <strong>
+                                <em>strong sample italic</em>
+                            </strong>
+                        </p>
                         <div
+                            style={{ fontFamily: 'AtlassianText' }}
                             dangerouslySetInnerHTML={{
                                 __html: renderMarkdown(`# Linked Lists Demystified
 

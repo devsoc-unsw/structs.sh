@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
-import Button from '@material-ui/core/Button';
+import { makeStyles } from '@mui/styles';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import Button from '@mui/material/Button';
 import { getMatchedLessons } from 'content/ContentList';
 
 const useStyles = makeStyles({
@@ -16,10 +16,10 @@ const useStyles = makeStyles({
     },
     filterType: {
         color: 'black',
-    }
+    },
 });
 
-const Filter = ({setTopics}) => {
+const Filter = ({ setTopics }) => {
     const [course, setCourse] = React.useState('');
 
     const handleChange = (event) => {
@@ -27,9 +27,9 @@ const Filter = ({setTopics}) => {
     };
 
     const handleFilter = async () => {
-        const reg = new RegExp(`${course}`)
-        setTopics(await getMatchedLessons(reg))
-    }
+        const reg = new RegExp(`${course}`);
+        setTopics(await getMatchedLessons(reg));
+    };
     const classes = useStyles();
 
     return (
@@ -59,7 +59,7 @@ const Filter = ({setTopics}) => {
                     <FormControlLabel value="comp1511" control={<Radio />} label="COMP1511" />
                     <FormControlLabel value="comp2521" control={<Radio />} label="COMP2521" />
                 </RadioGroup>
-                <Button variant="contained" color="primary" onClick={e => handleFilter(e)}>
+                <Button variant="contained" color="primary" onClick={(e) => handleFilter(e)}>
                     Filter
                 </Button>
             </FormControl>
@@ -68,8 +68,7 @@ const Filter = ({setTopics}) => {
 };
 
 Filter.propTypes = {
-    setTopics: PropTypes.func
-}
-
+    setTopics: PropTypes.func,
+};
 
 export default Filter;

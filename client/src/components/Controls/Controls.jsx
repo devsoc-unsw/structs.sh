@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Control.module.scss';
-import { IconButton } from '@material-ui/core';
+import { IconButton } from '@mui/material';
 import playIcon from 'assets/img/play.png';
 import pauseIcon from 'assets/img/pause.png';
 import replayIcon from 'assets/img/replay.png';
@@ -39,15 +39,15 @@ const Controls = () => {
         }, 5000);
 
         const interval = setInterval(() => {
-            setProgress(oldProgress => {
+            setProgress((oldProgress) => {
                 const newProgress = oldProgress + 10;
 
                 if (newProgress === 100) {
-                    clearInterval(interval)
+                    clearInterval(interval);
                 }
 
-                return newProgress
-            })
+                return newProgress;
+            });
         }, 1000);
     }, []);
 
@@ -57,12 +57,16 @@ const Controls = () => {
                 setProgress(progress + 10);
             }
         }, 100);
-
-    }
+    };
     return (
         <div className={styles.root}>
             <IconButton>
-                <img src={fastrewind} alt="fastrewind icon" className={styles.play} onClick={updateProgress}/>
+                <img
+                    src={fastrewind}
+                    alt="fastrewind icon"
+                    className={styles.play}
+                    onClick={updateProgress}
+                />
             </IconButton>
             {replay ? (
                 <IconButton>
@@ -95,7 +99,7 @@ const Controls = () => {
             <IconButton>
                 <img src={fastfoward} alt="fastfoward icon" className={styles.play} />
             </IconButton>
-            <ProgressBar progress={progress}/>
+            <ProgressBar progress={progress} />
         </div>
     );
 };

@@ -1,19 +1,19 @@
 import { useState } from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import './Tabs.scss';
 import { Videos, AdditionalResources, Lesson, Code } from 'components/Tabs';
 import { Quiz } from 'components/Quiz'
 
-var quizData = [];
+// var quizData = [];
 
-function saveQuizData(data) {
-  console.log(data);
-  quizData = data;
-}
+// function saveQuizData(data) {
+//   console.log(data);
+//   quizData = data;
+// }
 
-function getQuizData() {
-  return quizData;
-}
+// function getQuizData() {
+//   return quizData;
+// }
 
 function TabSelector(props) {
   switch (props.tab) {

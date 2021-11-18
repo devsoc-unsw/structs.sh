@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 const AdditionalResources = () => {
     return (
@@ -8,7 +7,5 @@ const AdditionalResources = () => {
         </div>
     );
 };
-
-AdditionalResources.propTypes = {};
 
 export default AdditionalResources;

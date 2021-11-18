@@ -6,7 +6,7 @@
     ],
     "module": "commonjs",
     "moduleResolution": "node",
-    "outDir": "dist",
+    "outDir": "build",
     "esModuleInterop": true,
     "baseUrl": "."
   },

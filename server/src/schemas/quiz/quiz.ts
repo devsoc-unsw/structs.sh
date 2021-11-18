@@ -1,3 +1,4 @@
+// Docs: https://mongoosejs.com/docs/schematypes.html
 import mongoose from 'mongoose';
 
 const quizMongoSchema = new mongoose.Schema({

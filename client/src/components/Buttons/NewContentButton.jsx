@@ -1,8 +1,8 @@
 import React from 'react';
-import { FaPlus } from 'react-icons/fa';
+import AddIcon from '@mui/icons-material/Add';
 
 const EditButton = () => {
-    return <FaPlus />;
+    return <AddIcon />;
 };
 
 export default EditButton;

@@ -69,6 +69,10 @@ $textFontSize: 14px;
         color: rgb(217, 255, 0);
         margin-bottom: 0px;
         margin-left: 1px;
+
+        .manualPrompt {
+            font-family: 'Ubuntu Mono', monospace !important;
+        }
     }
 
     .manual {
@@ -99,7 +103,6 @@ $textFontSize: 14px;
         bottom: 5px;
     }
     .command {
-        color:rgb(122, 170, 49),
+        color: rgb(122, 170, 49);
     }
 }
-

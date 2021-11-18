@@ -1,8 +1,8 @@
 import React from 'react';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 import PropTypes from 'prop-types';
-import styles from './ModeSwitch.module.scss'
+import styles from './ModeSwitch.module.scss';
 const ModeSwitch = ({ switchMode, setSwitchMode }) => {
     return (
         <>
@@ -12,7 +12,7 @@ const ModeSwitch = ({ switchMode, setSwitchMode }) => {
                         <Switch
                             color="secondary"
                             checked={!switchMode}
-                            onChange={e => setSwitchMode(!switchMode)}
+                            onChange={(e) => setSwitchMode(!switchMode)}
                             name="mode switch"
                         />
                     }
@@ -25,7 +25,7 @@ const ModeSwitch = ({ switchMode, setSwitchMode }) => {
 
 ModeSwitch.propTypes = {
     switchMode: PropTypes.bool,
-    setSwitchMode: PropTypes.func
+    setSwitchMode: PropTypes.func,
 };
 
 export default ModeSwitch;
