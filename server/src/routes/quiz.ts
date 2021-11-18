@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { QuizMongoService } from '../database-helpers/quiz';
 import { LessonMongoService } from '../database-helpers/lesson';
 import consola from 'consola';
-import { Lesson } from 'src/typedefs/Lesson/Lesson';
+import { Lesson } from 'src/typedefs/lesson/Lesson';
 import { Quiz } from 'src/typedefs/quiz/Quiz';
 
 const quizRouter = Router();
@@ -196,12 +196,19 @@ quizRouter.post('/api/lessons/quiz', async (request, response) => {
 
 /**
  * @swagger
- * /api/lessons/quiz:
+ * /api/lessons/quiz/{id}:
  *  put:
  *      summary:  Edit an existing quiz (TODO!)
  *      description: Edits an existing quiz.
  *      tags:
  *          - Quiz
+ *      parameters:
+ *          - name: id
+ *            in: path
+ *            required: true
+ *            description: ID of the quiz to edit
+ *            schema:
+ *                type: string
  *      requestBody:
  *          required: true
  *          content:
@@ -209,8 +216,6 @@ quizRouter.post('/api/lessons/quiz', async (request, response) => {
  *                  schema:
  *                      type: object
  *                      properties:
- *                          quizId:
- *                              type: string
  *                          questionType:
  *                              type: string
  *                          question:
@@ -237,27 +242,36 @@ quizRouter.post('/api/lessons/quiz', async (request, response) => {
  *                              statusText:
  *                                  type: string
  */
-quizRouter.put('/api/lessons/quiz', async (request, response) => {
+quizRouter.put('/api/lessons/quiz/:id', async (request, response) => {
     throw new Error('Unimplemented');
+
+    // try {
+    //     const id = req.params.id;
+    //     const { questionType, question, answer } = req.body;
+    //     ...
+    // } catch (err) {
+    //     consola.error('Failed. Reason: ', err);
+    //     res.status(400).json({
+    //         statusText: `Failed. Reason: ${err.message}`,
+    //     });
+    // }
 });
 
 /**
  * @swagger
- * /api/lessons/quiz:
+ * /api/lessons/quiz/{id}:
  *  delete:
  *      summary:  Delete an existing quiz (TODO!)
  *      description: Deletes an existing quiz.
  *      tags:
  *          - Quiz
- *      requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      type: object
- *                      properties:
- *                          quizId:
- *                              type: string
+ *      parameters:
+ *          - name: id
+ *            in: path
+ *            required: true
+ *            description: ID of the quiz to delete
+ *            schema:
+ *                type: string
  *      responses:
  *          '200':
  *               description: Succesfully deleted quiz
@@ -278,8 +292,18 @@ quizRouter.put('/api/lessons/quiz', async (request, response) => {
  *                              statusText:
  *                                  type: string
  */
-quizRouter.delete('/api/lessons/quiz', async (request, response) => {
+quizRouter.delete('/api/lessons/quiz/:id', async (request, response) => {
     throw new Error('Unimplemented');
+
+    // try {
+    //     const id = req.params.id;
+    //     ...
+    // } catch (err) {
+    //     consola.error('Failed. Reason: ', err);
+    //     res.status(400).json({
+    //         statusText: `Failed. Reason: ${err.message}`,
+    //     });
+    // }
 });
 
 export default quizRouter;

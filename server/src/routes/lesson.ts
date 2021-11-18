@@ -2,11 +2,14 @@ import { Router } from 'express';
 import { LessonMongoService } from '../database-helpers/lesson';
 import { UserModel } from '../schemas/user/user';
 import consola from 'consola';
+import { TopicModel } from '../schemas/topic/topic';
 
 const lessonRouter = Router();
 const lessonService = new LessonMongoService();
 
 interface CreateLessonInput {
+    topicId: string;
+    title: string;
     rawMarkdown: string;
     creatorId: string;
 }
@@ -73,7 +76,7 @@ lessonRouter.get('/api/lessons', async (req, res) => {
 
         res.status(200).json({
             statusText: 'All the lessons successfully fetched',
-            data: lessonList,
+            lessons: lessonList,
         });
     } catch (err) {
         consola.error('Failed to fetch all the lessons. Reason: ', err);
@@ -98,7 +101,9 @@ lessonRouter.get('/api/lessons', async (req, res) => {
  *                  schema:
  *                      type: object
  *                      properties:
- *                          topic:
+ *                          topicId:
+ *                              type: string
+ *                          title:
  *                              type: string
  *                          rawMarkdown:
  *                              type: string
@@ -128,33 +133,45 @@ lessonRouter.get('/api/lessons', async (req, res) => {
  */
 lessonRouter.post('/api/lessons', async (req, res) => {
     try {
-        const { rawMarkdown, creatorId } = req.body as CreateLessonInput;
+        const { topicId, title, rawMarkdown, creatorId } =
+            req.body as CreateLessonInput;
 
         if (rawMarkdown.length > 10000) {
-            throw new Error('Markdown cannot be longer than 10000 characters.');
+            return res.status(400).json({
+                statusText: 'Markdown cannot be longer than 10000 characters',
+            });
         }
 
-        try {
-            await UserModel.findById(creatorId);
-
-            const lessonData = await lessonService.createLesson(
-                rawMarkdown,
-                creatorId
-            );
-            consola.success('Lesson successfully created');
-            res.status(200).json({
-                statusText: 'Lesson successfully created.',
-                lesson: lessonData,
-            });
-        } catch {
-            res.status(400).json({
+        const user = await UserModel.findById(creatorId);
+        if (!user) {
+            return res.status(400).json({
                 statusText: `User with ID '${creatorId}' does not exist`,
             });
         }
+
+        const topic = await TopicModel.findById(topicId);
+        if (!topic) {
+            return res.status(400).json({
+                statusText: `Topic with ID '${topicId}' does not exist`,
+            });
+        }
+
+        const lessonData = await lessonService.createLesson(
+            topicId,
+            title,
+            rawMarkdown,
+            creatorId
+        );
+
+        consola.success('Lesson successfully created');
+        res.status(200).json({
+            statusText: 'Lesson successfully created.',
+            lesson: lessonData,
+        });
     } catch (err) {
         consola.error('Failed to create the content. Reason: ', err);
         res.status(500).json({
-            statusText: `Failed to create the content. ${err.message}`,
+            statusText: `Failed to create the content. Reason: ${err.message}`,
         });
     }
 });
@@ -233,6 +250,21 @@ lessonRouter.get('/api/lessons/:id', async (req, res) => {
  *            description: ID of the lesson to edit
  *            schema:
  *                type: string
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          topicId:
+ *                              type: string
+ *                          title:
+ *                              type: string
+ *                          rawMarkdown:
+ *                              type: string
+ *                          creatorId:
+ *                              type: string
  *      responses:
  *          '200':
  *              description: Lesson successfully edited
@@ -264,6 +296,16 @@ lessonRouter.get('/api/lessons/:id', async (req, res) => {
  */
 lessonRouter.put('/api/lessons/:id', async (req, res) => {
     throw new Error('Unimplemented');
+    // try {
+    //     const id = req.params.id;
+    //     const { topicId, title, rawMarkdown, creatorId } = req.body;
+    //     ...
+    // } catch (err) {
+    //     consola.error('Failed. Reason: ', err);
+    //     res.status(400).json({
+    //         statusText: `Failed. Reason: ${err.message}`,
+    //     });
+    // }
 });
 
 /**
@@ -278,7 +320,7 @@ lessonRouter.put('/api/lessons/:id', async (req, res) => {
  *          - name: id
  *            in: path
  *            required: true
- *            description: ID of the lesson to edit
+ *            description: ID of the lesson to delete
  *            schema:
  *                type: string
  *      responses:
@@ -304,6 +346,16 @@ lessonRouter.put('/api/lessons/:id', async (req, res) => {
 lessonRouter.delete('/api/lessons/:id', async (req, res) => {
     throw new Error('Unimplemented');
     // Note: needs to go through each quiz ID in lesson.quizzes and call a method like QuizService.deleteById(quizId) on each quizId
+
+    // try {
+    //     const id = req.params.id;
+    //     ...
+    // } catch (err) {
+    //     consola.error('Failed. Reason: ', err);
+    //     res.status(400).json({
+    //         statusText: `Failed. Reason: ${err.message}`,
+    //     });
+    // }
 });
 
 export default lessonRouter;

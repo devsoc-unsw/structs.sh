@@ -1,13 +1,17 @@
 import { LessonModel } from '../schemas/lesson/lesson';
-import { Lesson } from '../typedefs/Lesson/Lesson';
+import { Lesson } from '../typedefs/lesson/Lesson';
 
 export class LessonMongoService {
     public async createLesson(
+        topicId: string,
+        title: string,
         rawMarkdown: string,
         creatorId: string
     ): Promise<Lesson> {
         try {
             const createLessonResponse = (await LessonModel.create({
+                topicId: topicId,
+                title: title,
                 rawMarkdown: rawMarkdown,
                 creatorId: creatorId,
                 quizzes: [],
@@ -53,10 +57,10 @@ export class LessonMongoService {
 
     public async updateLessonById(
         lessonId: string,
-        quizes: string[]
+        quizzes: string[]
     ): Promise<Lesson> {
         try {
-            const update = { quizzes: quizes };
+            const update = { quizzes: quizzes };
             const returnData = (await LessonModel.findByIdAndUpdate(
                 lessonId,
                 update,
