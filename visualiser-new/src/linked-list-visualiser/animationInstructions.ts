@@ -12,6 +12,7 @@ import {
     PREV,
     CANVAS
 } from './svgAttributes';
+import { fastestDuration } from './animationAttributes';
 import LinkedList, { LinkedListNode } from './linkedList';
 
 
@@ -145,7 +146,7 @@ export default class AnimationInstructions {
             translateX: `-=${nodePathWidth}`,
             // hardcoded offset to make the nodes shift back at the 
             // same time as the pointer straightening.
-            offset: "-=350"
+            offset: "-=" + fastestDuration / 2
         })
 
     }
@@ -176,7 +177,7 @@ export default class AnimationInstructions {
         });
         this.timeline.push({
             targets: list.head.node.pointerTarget,
-            offset: '-=700',
+            offset: '-=' + fastestDuration,
             d: RIGHT_ARROW_PATH
         });
         let curr = list.head.next;
@@ -185,13 +186,13 @@ export default class AnimationInstructions {
             console.log(curr.node.value);
             this.timeline.push({
                 targets: curr.node.nodeTarget,
-                offset: '-=700',
+                offset: '-=' + fastestDuration,
                 top: 0,
                 left: index * nodePathWidth
             });
             this.timeline.push({
                 targets: curr.node.pointerTarget,
-                offset: '-=700',
+                offset: '-=' + fastestDuration,
                 d: RIGHT_ARROW_PATH
             });
             index++;

@@ -42,7 +42,12 @@ const App = () => {
           <button id="nextSequenceButton" type="submit" className="btn btn-primary mb-3">Step Forwards</button>
         </div>
         <div className="col">
+            Timeline
             <input type="range" id="timeline-slider" name="volume" min="0" max="100" /> 
+        </div>
+        <div className="col">
+            Speed
+            <input type="range" id="speed-slider" name="volume" min="0" max="1" step="0.01" defaultValue="0.5"/> 
         </div>
       </form>
       <div className="container" id="canvas">

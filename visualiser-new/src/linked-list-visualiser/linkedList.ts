@@ -5,7 +5,7 @@ import {
 } from './svgAttributes';
 import AnimationInstructions from './animationInstructions';
 import createNode from './createNode';
-import { createFunctionDeclaration } from 'typescript';
+import { fastestDuration } from './animationAttributes';
 
 export class LinkedListNode {
     node: Node;

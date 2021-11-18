@@ -2,6 +2,7 @@ import createNode from './createNode';
 import LinkedListController from '../controller/linkedListController';
 import { Animation, Node } from './typedefs';
 import LinkedList from './linkedList';
+import { Z_BEST_SPEED } from 'zlib';
 
 /**
  * Initialises the visualiser and binds event handlers to the controller UI.
@@ -67,6 +68,17 @@ const initialiser = (): void => {
     const handleSliderChange: EventListener = (e: Event) => {
         animationController.seek(parseInt(slider.value));
     };
+
+    const handleSpeedChange: EventListener = (e: Event) => {
+        animationController.freeze();
+        animationController.setSpeed(parseFloat(speedSlider.value));
+    };
+
+    const handleSpeedChangeComplete: EventListener = (e: Event) => {
+        console.log("Done");
+        if (!animationController.isPaused) animationController.play();
+    };
+
     // Grabbing references to form buttons and attaching event handlers to them
     const appendButton = document.querySelector('#appendButton');
     const deleteButton = document.querySelector('#deleteButton');
@@ -75,6 +87,7 @@ const initialiser = (): void => {
     const pauseButton = document.querySelector('#pauseButton');
     const insertButton = document.querySelector('#insertButton');
     const slider = document.querySelector('#timeline-slider') as HTMLInputElement;
+    const speedSlider = document.querySelector('#speed-slider') as HTMLInputElement;
 
     appendButton.addEventListener('click', handleAppendClick);
     deleteButton.addEventListener('click', handleDeleteClick);
@@ -83,6 +96,8 @@ const initialiser = (): void => {
     playButton.addEventListener('click', handlePlayClick);
     pauseButton.addEventListener('click', handlePauseClick);
     slider.addEventListener('input', handleSliderChange);
+    speedSlider.addEventListener('input', handleSpeedChange);
+    speedSlider.addEventListener('change', handleSpeedChangeComplete);
 };
 
 export default initialiser;

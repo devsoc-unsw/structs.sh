@@ -1,6 +1,6 @@
 import anime, { AnimeTimelineInstance } from 'animejs';
 import { Animation } from '../linked-list-visualiser/typedefs';
-
+import { fastestDuration } from '../linked-list-visualiser/animationAttributes';
 // controls todo:
 // [x] play/pause
 // [ ] step to the next or previous timestamp in the current timeline
@@ -13,16 +13,24 @@ class AnimationController {
     private currentTimeline: AnimeTimelineInstance = anime.timeline();
     private timelineHistory: AnimeTimelineInstance[] = [];
     private timelineIndex: number = 0;
+    private _isPaused: boolean = false;
 
     public getCurrentTimeline(): AnimeTimelineInstance {
         return this.currentTimeline;
     }
     public play(): void {
+        this._isPaused = false;
         this.currentTimeline.play();
     }
 
     public pause(): void {
+        this._isPaused = true;
         this.currentTimeline.pause();
+    }
+
+    
+    public get isPaused(): boolean {
+        return this._isPaused;
     }
 
     public seek(position: number): void {
@@ -38,7 +46,7 @@ class AnimationController {
     public runSequence(sequence: Animation[], slider: HTMLInputElement): void {
         console.log(this);
         this.currentTimeline = anime.timeline({
-            duration: 700,
+            duration: fastestDuration,
             easing: 'easeOutExpo',
             update: function(anim) {
                 slider.value = String(anim.progress);
@@ -62,6 +70,15 @@ class AnimationController {
             console.log('cant run next sequence');
         }
     }
+
+    public setSpeed(speed: number): void {
+        anime.speed = speed;
+    }
+
+    public freeze(): void {
+        this.currentTimeline.pause();
+    }
+    
 }
 
 export default AnimationController;
