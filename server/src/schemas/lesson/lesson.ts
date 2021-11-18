@@ -2,6 +2,8 @@
 import mongoose from 'mongoose';
 
 const lessonMongoSchema = new mongoose.Schema({
+    topicId: String,
+    title: String,
     rawMarkdown: String,
     creatorId: String,
     quizzes: [String],

@@ -1,5 +1,5 @@
-import { TopicModel } from '../schemas/topic/topic.ts';
-import { Topic } from '../typedefs/topic/Topic.ts';
+import { TopicModel } from '../schemas/topic/topic';
+import { Topic } from '../typedefs/topic/Topic';
 
 export class TopicMongoService {
     public async createTopic(
@@ -37,6 +37,15 @@ export class TopicMongoService {
             if (reg.exec(err)) {
                 throw new Error('Lesson requested does not exist.');
             }
+            throw new Error(err.message);
+        }
+    }
+
+    public async getTopicByTitle(title: string): Promise<Topic> {
+        try {
+            const topic = (await TopicModel.findOne({ title: title })) as Topic;
+            return topic;
+        } catch (err) {
             throw new Error(err.message);
         }
     }

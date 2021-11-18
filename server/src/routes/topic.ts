@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import consola from 'consola';
-import { TopicMongoService } from 'src/database-helpers/topic';
+import { TopicMongoService } from '../database-helpers/topic';
 import { Topic } from 'src/typedefs/topic/Topic';
-import { TopicModel } from 'src/schemas/topic/topic';
+import { TopicModel } from '../schemas/topic/topic';
 
 const topicRouter = Router();
 const topicService = new TopicMongoService();
@@ -64,7 +64,7 @@ topicRouter.get('/api/topics', async (_, response) => {
  * @swagger
  * /api/topics:
  *  post:
- *      summary: Creates a topic 
+ *      summary: Creates a topic
  *      description: Creates a new topic
  *      tags:
  *          - Topics
@@ -80,7 +80,9 @@ topicRouter.get('/api/topics', async (_, response) => {
  *                          description:
  *                              type: string
  *                          courses:
- *                              type: string[]
+ *                              type: array
+ *                              items:
+ *                                  type: string
  *      responses:
  *          '200':
  *              description: successfully created new topic
@@ -103,19 +105,32 @@ topicRouter.get('/api/topics', async (_, response) => {
  */
 topicRouter.post('/api/topics', async (request, response) => {
     try {
-        const { title, description, courses } = request.body as CreateTopicInput;
-        const topic: Topic = await topicService.createTopic(title, description, courses);
-        
+        const { title, description, courses } =
+            request.body as CreateTopicInput;
+
+        const existingTopic = await topicService.getTopicByTitle(title);
+        if (existingTopic) {
+            return response.status(400).json({
+                statusText: `A topic with title '${title}' already exists`,
+            });
+        }
+
+        const topic: Topic = await topicService.createTopic(
+            title,
+            description,
+            courses
+        );
+
         consola.success('Lesson successfully created');
         return response.status(200).json({
             statusText: 'Successfully created new topic',
-            topic: topic
-        })
-    } catch(err) {
-        consola.error("Failed to create topic. Reason: ", err);
+            topic: topic,
+        });
+    } catch (err) {
+        consola.error('Failed to create topic. Reason: ', err);
         response.status(500).json({
-            statusText: `Failed to create topic. Reason: ${err.message}`;
-        })
+            statusText: `Failed to create topic. Reason: ${err.message}`,
+        });
     }
 });
 
