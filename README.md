@@ -13,7 +13,7 @@
 
 Structs.sh is an interactive data structure and algorithm visualiser and educational platform for computer science students.
 
-### Features:
+<!-- ### Features:
 
 -   Interactive visualiser for foundational data structures and algorithms
     -   Controllable through a sleek terminal interface and form GUI
@@ -22,7 +22,7 @@ Structs.sh is an interactive data structure and algorithm visualiser and educati
     -   Textual explanations, documented source code in multiple languages and embedded videos are provided alongside the visualiser to help bridge the gap between high-level theory and the real implementation
     -   Quiz/assessment system
 -   Content management API
-    -   Authorised content creators can introduce or update existing lesson material, quizzes, source code and more
+    -   Authorised content creators can introduce or update existing lesson material, quizzes, source code and more -->
 
 <!-- ### Why Use Structs.sh?
 
@@ -192,7 +192,9 @@ Structs.sh features a RESTful API for content management, supporting the retriev
 
 When you start up the server on port 8080 for example, you'll see the API documentation being served at `http://localhost:8080/` which should look like this:
 
-![swagger docs snippet](./docs/swagger-docs-snippet.png)
+<p style="text-align: center;">
+    <img src="./docs/swagger-docs-snippet.png" width="50%">
+</p>
 
 The documentation for the Structs.sh API was set up with <a href="https://www.npmjs.com/package/swagger-jsdoc">swagger-jsdoc</a> and <a href="https://www.npmjs.com/package/swagger-ui-express">swagger-ui-express</a>.
 
@@ -432,7 +434,9 @@ Quizzes
 
 ### Data Model
 
-![Data model](./docs/structs-datamodels.drawio.png)
+<p style="text-align: center;">
+    <img src="./docs/structs-datamodels.drawio.png" width="75%" />
+</p>
 
 > Note: This diagram was created and is currently maintained with <a href="https://draw.io/">draw.io</a>. To add or update data models, go <a href="https://app.diagrams.net/#Hcsesoc%2FStructs.sh%2Fmaster%2Fstructs-datamodels.drawio">here</a> to modify the file `structs-datamodels.drawio` in this repository. To update the image below, just save the file (which will automatically create and push a commit) and then export a PNG file to replace `docs/structs-datamodels.drawio.png` in this repository.
 
