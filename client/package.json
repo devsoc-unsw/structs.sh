@@ -89,6 +89,7 @@
         "@testing-library/dom": "^8.11.1",
         "@types/react-router-dom": "^5.1.7",
         "cypress": "^9.1.0",
+        "react-cookie": "^4.1.1",
         "ts-node": "^10.4.0"
     },
     "resolutions": {
