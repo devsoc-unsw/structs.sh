@@ -4,3 +4,4 @@ package-lock.json
 build-storybook
 storybook-static
 build
+.jest-test-results.json

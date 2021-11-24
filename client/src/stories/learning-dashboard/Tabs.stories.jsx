@@ -1,7 +1,6 @@
 import Tabs from '../../components/Tabs/Tabs';
 
 export default {
-    // Can create directories on storybook like this:
     title: 'Learning Dashboard/Tabs',
     component: Tabs,
     argTypes: {},

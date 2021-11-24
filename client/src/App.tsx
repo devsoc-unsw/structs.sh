@@ -12,21 +12,29 @@ import './App.scss';
 const App = () => {
     const location = useLocation();
     return (
-        <AnimatePresence>
-            <Switch location={location}>
-                {/* Visualiser routes */}
-                <Route exact path="/visualiser/:topic" component={Dashboard} />
-                <Route exact path="/" render={HomePage} />
-                {/* About us page */}
-                <Route exact path="/about" render={AboutUs} />
-                {/* Feedback and feature request page */}
-                <Route exact path="/feedback" render={Feedback} />
-                {/* Content management dashboard */}
-                <Route exact path="/content" component={ContentManagementDashboard} />
-                {/* 404 page */}
-                <Route component={Page404} />
-            </Switch>
-        </AnimatePresence>
+        <>
+            <AnimatePresence>
+                <Switch location={location}>
+                    {/* Homepage */}
+                    <Route exact path="/" render={HomePage} />
+
+                    {/* Visualiser routes */}
+                    <Route exact path="/visualiser/:topic" component={Dashboard} />
+
+                    {/* About us page */}
+                    <Route exact path="/about" render={AboutUs} />
+
+                    {/* Feedback and feature request page */}
+                    <Route exact path="/feedback" render={Feedback} />
+
+                    {/* Content management dashboard */}
+                    <Route exact path="/content" component={ContentManagementDashboard} />
+
+                    {/* 404 page */}
+                    <Route component={Page404} />
+                </Switch>
+            </AnimatePresence>
+        </>
     );
 };
 
