@@ -13,7 +13,8 @@ import { darkTheme, lightTheme } from './structsThemes';
 import { useCookies } from 'react-cookie';
 
 export const ThemeMutationContext = createContext({
-    toggleDarkMode: () => alert('ASS'),
+    toggleDarkMode: () => console.log('Dark mode toggling is not ready yet'),
+    isDarkMode: false,
 });
 
 const DARK_MODE_ON = 'dark-mode-on';
@@ -41,6 +42,7 @@ const App = () => {
                 <ThemeMutationContext.Provider
                     value={{
                         toggleDarkMode: toggleDarkMode,
+                        isDarkMode: cookies[DARK_MODE_ON] === 'true',
                     }}
                 >
                     <Switch location={location}>

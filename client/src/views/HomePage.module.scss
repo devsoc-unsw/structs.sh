@@ -2,15 +2,19 @@
     width: 100vw;
 
     .headerContent {
+        position: absolute;
+        display: block;
+        width: 100%;
+        margin: 0 auto;
+        top: 25%;
         text-align: center;
 
         .title {
-            font-size: 400%;
+            font-size: 250%;
             margin-bottom: 20px;
         }
 
         .description {
-            font-size: 150%;
             width: 400px;
             display: block;
             margin: 0 auto;

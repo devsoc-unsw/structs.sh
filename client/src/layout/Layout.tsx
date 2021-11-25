@@ -1,6 +1,6 @@
 import { Box, Theme } from '@mui/material';
 import { useTheme } from '@mui/styles';
-import IndexNavbar from 'components/Navbars/TopNavbar';
+import TopNavbar from 'components/Navbars/TopNavbar';
 import { motion } from 'framer-motion';
 import React, { useEffect } from 'react';
 
@@ -10,7 +10,7 @@ const containerVariants = {
     },
     visible: {
         opacity: 1,
-        transition: { duration: 1.5 },
+        transition: { duration: 0.25 },
     },
     exit: {
         opacity: '-100vw',
@@ -31,11 +31,10 @@ const Layout = ({ children }) => {
 
     return (
         <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="exit">
-            <IndexNavbar />
-            <div className="wrapper">
-                <Box sx={{ backgroundColor: theme.palette.background.default }}>{children}</Box>
-                {/* <Footer /> */}
-            </div>
+            <TopNavbar />
+            <Box sx={{ backgroundColor: theme.palette.background.default, overflowX: 'hidden' }}>
+                {children}
+            </Box>
         </motion.div>
     );
 };

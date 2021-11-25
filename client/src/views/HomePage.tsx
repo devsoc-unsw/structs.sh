@@ -7,18 +7,18 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { useTheme } from '@mui/styles';
 import { ThemeMutationContext } from 'App';
+import { Footer } from 'components/Footer';
 
-const HomePage = (props) => {
+const HomePage = () => {
     const context = useContext(ThemeMutationContext);
 
     return (
         <Layout>
-            <SplashScreen stillDuration={2.5} disappearDuration={1.5} waitIntervalMinutes={1} />
+            <SplashScreen stillDuration={2.5} disappearDuration={1.5} waitIntervalMinutes={10} />
             <Box
                 className={styles.header}
                 sx={{
-                    height: 'calc(100vh - 64px)', // 64px is the default height of the MUI app bar
-                    marginTop: '64px',
+                    height: '100vh',
                 }}
             >
                 <Box className={styles.headerContent}>
@@ -29,12 +29,15 @@ const HomePage = (props) => {
                         An interactive learning platform for computer science, tailored to UNSW CSE
                         students.
                     </Typography>
-                    <p></p>
-                    <Button variant="contained" onClick={() => context.toggleDarkMode()}>
-                        Toggle Dark Mode
-                    </Button>
+                    <Box>
+                        <Typography color="textPrimary">(Carousel here)</Typography>
+                    </Box>
                 </Box>
             </Box>
+            <Box>
+                <Typography color="textPrimary">Features</Typography>
+            </Box>
+            <Footer />
         </Layout>
     );
 };
