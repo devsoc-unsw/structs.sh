@@ -1,6 +1,8 @@
-import IndexNavbar from 'components/Navbars/TopNavbar.jsx';
+import { Box, Theme } from '@mui/material';
+import { useTheme } from '@mui/styles';
+import IndexNavbar from 'components/Navbars/TopNavbar';
 import { motion } from 'framer-motion';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const containerVariants = {
     hidden: {
@@ -17,7 +19,9 @@ const containerVariants = {
 };
 
 const Layout = ({ children }) => {
-    React.useEffect(() => {
+    const theme: Theme = useTheme();
+
+    useEffect(() => {
         document.body.classList.toggle('index-page');
         // Specify how to clean up after this effect:
         return function cleanup() {
@@ -29,7 +33,7 @@ const Layout = ({ children }) => {
         <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="exit">
             <IndexNavbar />
             <div className="wrapper">
-                <div className="main">{children}</div>
+                <Box sx={{ backgroundColor: theme.palette.background.default }}>{children}</Box>
                 {/* <Footer /> */}
             </div>
         </motion.div>

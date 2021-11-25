@@ -2,8 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { CookiesProvider } from 'react-cookie';
-
-// Root React component
+import { ThemeProvider } from '@mui/material/styles';
 import App from './App';
 
 ReactDOM.render(

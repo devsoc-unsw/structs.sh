@@ -68,9 +68,27 @@
 // export default TopNavbar;
 
 import React from 'react';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+
+function appBarLabel(label: string) {
+    return (
+        <Toolbar>
+            <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+                <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+                {label}
+            </Typography>
+        </Toolbar>
+    );
+}
 
 const TopNavbar = () => {
-    return <div>Navbar here</div>;
+    return <AppBar>{appBarLabel('Structs.sh')}</AppBar>;
 };
 
 export default TopNavbar;

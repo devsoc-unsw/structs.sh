@@ -1,19 +1,19 @@
-.headerContent {
-    .title {
-        // color: white;
-        font-size: 400%;
-        margin-bottom: 20px;
-    }
+.header {
+    width: 100vw;
 
-    .description {
-        font-size: 150%;
-        opacity: 0.75;
-        width: 400px;
-        display: block;
-        margin: 0 auto;
-    }
+    .headerContent {
+        text-align: center;
 
-    .searchbarContainer {
-        margin: 15px;
+        .title {
+            font-size: 400%;
+            margin-bottom: 20px;
+        }
+
+        .description {
+            font-size: 150%;
+            width: 400px;
+            display: block;
+            margin: 0 auto;
+        }
     }
 }

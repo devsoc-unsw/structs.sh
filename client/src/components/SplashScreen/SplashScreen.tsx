@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import SplashScreenTitle from './SplashScreenTitle';
 import SplashScreenLogo from './SplashScreenLogo';
 import { useCookies } from 'react-cookie';
+import { formatDistance, fromUnixTime } from 'date-fns';
 
 interface Props {
     stillDuration?: number;
@@ -34,10 +35,8 @@ const SplashScreen: React.FC<Props> = ({
             setTimeout(() => {
                 setIsActive(false);
             }, (stillDuration + disappearDuration) * 1000);
-        } else {
-            setIsActive(false);
         }
-    }, [stillDuration, disappearDuration, waitIntervalMinutes, cookies, setCookie]);
+    }, [setCookie]);
 
     return isActive ? (
         <motion.div
