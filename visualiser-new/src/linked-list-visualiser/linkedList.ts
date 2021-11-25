@@ -2,6 +2,7 @@ import createNode from './createNode';
 import createSequence from './createSequence';
 import LinkedListController from '../controller/linkedListController';
 import { Animation, Node } from './typedefs';
+import anime from 'animejs';
 
 /**
  * Initialises the visualiser and binds event handlers to the controller UI.
@@ -69,6 +70,11 @@ const initialise = (): void => {
         animationController.gotoPrevious();
     }
 
+    const handleSelectNext: EventListener = (e: Event) => {
+        e.preventDefault();
+        animationController.gotoNext();
+    }
+
     const handleSliderChange: EventListener = (e: Event) => {
         animationController.seekPercent(parseInt(slider.value));
     };
@@ -79,6 +85,7 @@ const initialise = (): void => {
     const playButton = document.querySelector('#playButton');
     const pauseButton = document.querySelector('#pauseButton');
     const previousButton = document.querySelector('#previousSequenceButton');
+    const nextButton = document.querySelector('#nextSequenceButton');
     const slider = document.querySelector('#timeline-slider') as HTMLInputElement;
 
     appendButton.addEventListener('click', handleAppendClick);
@@ -87,6 +94,7 @@ const initialise = (): void => {
     playButton.addEventListener('click', handlePlayClick);
     pauseButton.addEventListener('click', handlePauseClick);
     previousButton.addEventListener('click', handleSelectPrevious);
+    nextButton.addEventListener('click', handleSelectNext);
     slider.addEventListener('input', handleSliderChange);
 };
 

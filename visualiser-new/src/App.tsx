@@ -32,10 +32,10 @@ const App = () => {
           <button id="pauseButton" type="submit" className="btn btn-primary mb-3">Pause</button>
         </div>
         <div className="col-auto">
-          <button id="previousSequenceButton" type="submit" className="btn btn-primary mb-3">Step Backwards</button>
+          <button id="previousSequenceButton" type="submit" className="btn btn-primary mb-3">Undo</button>
         </div>
         <div className="col-auto">
-          <button id="nextSequenceButton" type="submit" className="btn btn-primary mb-3">Step Forwards</button>
+          <button id="nextSequenceButton" type="submit" className="btn btn-primary mb-3">Redo</button>
         </div>
         <div className="col">
             <input type="range" id="timeline-slider" name="volume" min="0" max="100" /> 

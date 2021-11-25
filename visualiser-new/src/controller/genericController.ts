@@ -63,15 +63,23 @@ class AnimationController {
         }
     }
 
-    // clicking on step backwards while animation is palying causes 2 animations to run and break
-    // Solutions: disable step back button
-    // Or: play around with anime.remove()ç
     public gotoPrevious(): void {
+        this.currentTimeline.pause();
         this.currentTimeline = this.timelineHistory[this.timelineIndex - 1];
         this.seekPercent(0);
         this.timelineIndex--;
         this.currentTimeline = this.timelineHistory[this.timelineIndex - 1];
         this.seekPercent(0);
+    }
+
+    public gotoNext(): void {
+        if (this.timelineIndex === this.timelineHistory.length) return;
+        this.currentTimeline.pause();
+        this.currentTimeline = this.timelineHistory[this.timelineIndex - 1];
+        this.seekPercent(100);
+        this.timelineIndex++;
+        this.currentTimeline = this.timelineHistory[this.timelineIndex - 1];
+        this.seekPercent(100);
     }
 }
 
