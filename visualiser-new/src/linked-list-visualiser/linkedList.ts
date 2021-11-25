@@ -70,8 +70,11 @@ const initialise = (): void => {
     }
 
     const handleSliderChange: EventListener = (e: Event) => {
+        // the timeline can only be seeked when it's paused
+        animationController.pause();
         animationController.seekPercent(parseInt(slider.value));
     };
+
     // Grabbing references to form buttons and attaching event handlers to them
     const appendButton = document.querySelector('#appendButton');
     const deleteButton = document.querySelector('#deleteButton');

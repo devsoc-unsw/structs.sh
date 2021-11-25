@@ -17,6 +17,7 @@ class AnimationController {
     public getCurrentTimeline(): AnimeTimelineInstance {
         return this.currentTimeline;
     }
+
     public play(): void {
         this.currentTimeline.play();
     }
@@ -33,10 +34,11 @@ class AnimationController {
     public finish(): void {
         this.currentTimeline.seek(this.currentTimeline.duration);
     }
+
     // this function runs a sequence of animations sequentially
     // when stepSequence = false or pauses the timeline after each animation finishes
     public runSequeuce(sequence: Animation[], slider: HTMLInputElement): void {
-        console.log(this);
+        // console.log(this);
         this.currentTimeline = anime.timeline({
             duration: 700,
             easing: 'easeOutExpo',

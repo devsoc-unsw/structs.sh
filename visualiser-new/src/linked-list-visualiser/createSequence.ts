@@ -67,6 +67,7 @@ const createAppendSequence = (input: AppendNodeInput): Animation[] => {
         translateX: 0,
         duration: 10
     })
+
     return timeline;
 }
 
