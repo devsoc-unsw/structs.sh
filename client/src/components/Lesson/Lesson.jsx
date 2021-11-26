@@ -1,10 +1,8 @@
+import { Typography } from '@mui/material';
 import { getLessonContent } from 'content';
 import React, { useState } from 'react';
 import styles from './Lesson.module.scss';
 import renderMarkdown from './markdown-util';
-import { Link } from 'react-router-dom';
-import { EditButton, NewContentButton } from 'components/Buttons';
-import { Typography } from '@mui/material';
 // import sampleMD from './sample.md';
 
 const Lesson = ({ topic }) => {

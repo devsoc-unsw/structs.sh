@@ -1,18 +1,12 @@
 import LinkedListAnimation from 'components/Animation/LinkedList/linkedListAnimation';
-import GUIMode from 'components/VisualiserController/GUIMode/GuiMode';
-import TopNavbar from 'components/Navbars/TopNavbar';
 import { Pane } from 'components/Panes';
 import Tabs from 'components/Tabs/Tabs';
 import { Terminal } from 'components/Terminal';
-import { motion } from 'framer-motion';
-import React, { useEffect, useState } from 'react';
-import Helmet from 'react-helmet';
-import styles from './VisualiserDashboard.module.scss';
-import Controls from 'components/VisualiserController/Controls/Controls';
-import ModeSwitch from 'components/VisualiserController/GUIMode/ModeSwitch';
-import { useTheme } from '@mui/material';
-import { VisualiserDashboardLayout } from 'layout';
 import { VisualiserController } from 'components/VisualiserController';
+import GUIMode from 'components/VisualiserController/GUIMode/GuiMode';
+import { VisualiserDashboardLayout } from 'layout';
+import React, { useEffect, useState } from 'react';
+import styles from './VisualiserDashboard.module.scss';
 
 let appendNode = (_: number) => console.log('Not set');
 let deleteNode = (_: number) => console.log('Not set');
@@ -21,8 +15,6 @@ const Dashboard = ({ match }) => {
     // Extract route parameters
     const { params } = match;
     const topic = params.topic;
-
-    const theme = useTheme();
 
     const [terminalMode, setTerminalMode] = useState(true);
 
@@ -53,9 +45,9 @@ const Dashboard = ({ match }) => {
         };
     });
 
-    const handleModeSwitch = () => {
-        setTerminalMode(!terminalMode);
-    };
+    // const handleModeSwitch = () => {
+    //     setTerminalMode(!terminalMode);
+    // };
 
     return (
         <VisualiserDashboardLayout topic={topic}>

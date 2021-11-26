@@ -1,16 +1,16 @@
-import React, { createContext, useCallback, useEffect, useState } from 'react';
-import { Route, Switch, useLocation } from 'react-router-dom';
-import HomePage from 'views/HomePage';
-import VisualiserDashboard from 'views/VisualiserDashboard';
-import Page404 from 'views/Page404';
-import AboutUs from 'views/AboutUs';
-import Feedback from 'views/Feedback';
-import { AnimatePresence } from 'framer-motion';
-import ContentManagementDashboard from 'views/ContentManagementDashboard';
 import { Theme, ThemeProvider } from '@mui/material';
+import { AnimatePresence } from 'framer-motion';
+import React, { createContext, useCallback, useState } from 'react';
+import { useCookies } from 'react-cookie';
+import { Route, Switch, useLocation } from 'react-router-dom';
+import AboutUs from 'views/AboutUs';
+import ContentManagementDashboard from 'views/ContentManagementDashboard';
+import Feedback from 'views/Feedback';
+import HomePage from 'views/HomePage';
+import Page404 from 'views/Page404';
+import VisualiserDashboard from 'views/VisualiserDashboard';
 import './App.scss';
 import { darkTheme, lightTheme } from './structsThemes';
-import { useCookies } from 'react-cookie';
 
 export const ThemeMutationContext = createContext({
     toggleDarkMode: () => console.log('Dark mode toggling is not ready yet'),
@@ -33,7 +33,7 @@ const App = () => {
             setCurrTheme(darkTheme);
             setCookie(DARK_MODE_ON, 'true');
         }
-    }, [currTheme]);
+    }, [currTheme, setCookie]);
 
     const location = useLocation();
     return (

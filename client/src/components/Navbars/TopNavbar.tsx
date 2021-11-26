@@ -1,10 +1,9 @@
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import SunIcon from '@mui/icons-material/Brightness7';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import MenuIcon from '@mui/icons-material/Menu';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import MoonIcon from '@mui/icons-material/NightsStay';
-import { Button, Theme } from '@mui/material';
+import { Button } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -12,7 +11,6 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/styles';
 import { SxProps } from '@mui/system';
 import { ThemeMutationContext } from 'App';
 import bstIcon from 'assets/img/bst.png';
@@ -21,9 +19,9 @@ import logo from 'assets/img/logo.png';
 import { Modal } from 'components/Modal';
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import styles from './TopNavbar.module.scss';
 import Drawer from './Drawer';
 import SidebarContents from './SidebarContents';
+import styles from './TopNavbar.module.scss';
 
 interface Props {
     position?: 'fixed' | 'static';
@@ -32,11 +30,8 @@ interface Props {
 
 const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true }) => {
     const context = useContext(ThemeMutationContext);
-    const [showSidebar, setShowSidebar] = React.useState(false);
 
     const [hasScrolledDown, setHasScrolledDown] = useState<boolean>(false);
-
-    const theme: Theme = useTheme();
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [learnAnchorEl, setLearnAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -45,12 +40,6 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
     const isMenuOpen = Boolean(anchorEl);
     const isLearnMenuOpen = Boolean(learnAnchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-    /* ---------------------------- Sidebar Callbacks --------------------------- */
-
-    const toggleSidebar = () => {
-        setShowSidebar(!showSidebar);
-    };
 
     /* -------------------------- Page Scroll Callbacks ------------------------- */
 
@@ -156,7 +145,11 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
             <MenuItem className={styles.item}>
                 <Link to="/visualiser/linked-list">
                     <IconButton size="large" aria-haspopup="true" color="inherit">
-                        <img src={linkedListIcon} style={{ height: '40px', width: '100%' }} />
+                        <img
+                            src={linkedListIcon}
+                            style={{ height: '40px', width: '100%' }}
+                            alt="visualiser icon"
+                        />
                     </IconButton>
                     <span>Linked List</span>
                 </Link>
@@ -164,7 +157,11 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
             <MenuItem className={styles.item}>
                 <Link to="/visualiser/bst">
                     <IconButton size="large" aria-haspopup="true" color="inherit">
-                        <img src={bstIcon} style={{ height: '40px', width: '100%' }} />
+                        <img
+                            src={bstIcon}
+                            style={{ height: '40px', width: '100%' }}
+                            alt="visualiser icon"
+                        />
                     </IconButton>
                     <span>Binary Search Tree</span>
                 </Link>
@@ -175,13 +172,13 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
     /* --------------------------------- Topnav --------------------------------- */
 
     const hasScrolledDownStyle: SxProps = {
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        backgroundColor: 'rgba(0, 0, 0, 0.85)',
         backdropFilter: 'blur(7px)',
     };
 
     const atTopStyle: SxProps = {
         boxShadow: 'none',
-        backgroundColor: 'rgba(0, 0, 0, 0.65)',
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',
         backdropFilter: 'blur(3px)',
     };
 

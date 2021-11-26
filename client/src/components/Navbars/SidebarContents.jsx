@@ -1,6 +1,6 @@
 import { Box, IconButton, List, ListItem, ListItemIcon } from '@mui/material';
 import Collapse from '@mui/material/Collapse';
-import React from 'react';
+import React, { useEffect } from 'react';
 import logo from '../../assets/img/linked-list.svg';
 import filter from 'assets/img/filter.svg';
 import { makeStyles, useTheme } from '@mui/styles';
@@ -24,8 +24,8 @@ const SidebarContents = ({ setShowSidebar }) => {
 
     const theme = useTheme();
 
-    React.useEffect(async () => {
-        setTopics(await getMatchedLessons(/.*/));
+    useEffect(() => {
+        getMatchedLessons(/.*/).then(setTopics);
     }, []);
 
     if (changeTopic) {

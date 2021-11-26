@@ -1,9 +1,9 @@
-import React from 'react';
+import { Typography } from '@mui/material';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import PropTypes from 'prop-types';
+import React from 'react';
 import styles from '../VisualiserController.module.scss';
-import { Box, Typography, useTheme } from '@mui/material';
 
 const ModeSwitch = ({ switchMode, setSwitchMode }) => {
     return (

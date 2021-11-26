@@ -1,8 +1,7 @@
-import React, { ComponentType, FC } from 'react';
-import { styled, Box } from '@mui/system';
 import ModalUnstyled from '@mui/base/ModalUnstyled';
-import Typography from '@mui/material/Typography';
 import Fade from '@mui/material/Fade';
+import { Box, styled } from '@mui/system';
+import React, { ComponentType, FC } from 'react';
 
 const StyledModal = styled(ModalUnstyled)`
     position: fixed;

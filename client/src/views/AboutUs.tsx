@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Divider, Typography } from '@mui/material';
 import { HomepageLayout } from 'layout';
 import React, { FC } from 'react';
 import Container from '@mui/material/Container';
@@ -20,9 +20,10 @@ const About: FC<Props> = () => {
                     </Typography>
                     <Typography color="textPrimary" variant="body1" className={styles.text}>
                         <strong>Structs.sh</strong> was a project developed by passionate computer
-                        science and engineering students at UNSW.
+                        science and engineering students at UNSW. [Note: elaborate on the ideation
+                        and development]
                     </Typography>
-                    <hr />
+                    <Divider />
                     <Typography color="textPrimary" variant="h4" className={styles.text}>
                         The 2021 Team
                     </Typography>

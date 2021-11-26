@@ -1,11 +1,10 @@
 /** @jsxImportSource @emotion/react */
-import React, { useEffect, useState } from 'react';
-import styles from './SplashScreen.module.scss';
 import { motion } from 'framer-motion';
-import SplashScreenTitle from './SplashScreenTitle';
-import SplashScreenLogo from './SplashScreenLogo';
+import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
-import { formatDistance, fromUnixTime } from 'date-fns';
+import styles from './SplashScreen.module.scss';
+import SplashScreenLogo from './SplashScreenLogo';
+import SplashScreenTitle from './SplashScreenTitle';
 
 interface Props {
     stillDuration?: number;
@@ -36,7 +35,7 @@ const SplashScreen: React.FC<Props> = ({
                 setIsActive(false);
             }, (stillDuration + disappearDuration) * 1000);
         }
-    }, [setCookie]);
+    }, [setCookie, cookies, disappearDuration, stillDuration, waitIntervalMinutes]);
 
     return isActive ? (
         <motion.div

@@ -1,6 +1,5 @@
 import { ThemeOptions } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
-import { deepmerge } from '@mui/utils';
 
 const baseOptions: ThemeOptions = {
     typography: {

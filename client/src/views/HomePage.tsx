@@ -1,15 +1,15 @@
-import { HomepageLayout } from 'layout';
-import React, { useContext } from 'react';
-import styles from './HomePage.module.scss';
-import { SplashScreen } from 'components/SplashScreen';
-import { Theme, Typography } from '@mui/material';
+import { Container, Theme, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import { useTheme } from '@mui/styles';
-import { ThemeMutationContext } from 'App';
 import { Footer } from 'components/Footer';
+import { SplashScreen } from 'components/SplashScreen';
+import { HomepageLayout } from 'layout';
+import React from 'react';
+import styles from './HomePage.module.scss';
 
 const HomePage = () => {
+    const theme: Theme = useTheme();
+
     return (
         <HomepageLayout>
             <SplashScreen stillDuration={2.5} disappearDuration={1.5} waitIntervalMinutes={10} />
@@ -32,8 +32,12 @@ const HomePage = () => {
                     </Box>
                 </Box>
             </Box>
-            <Box>
-                <Typography color="textPrimary">Features</Typography>
+            <Box sx={{ background: theme.palette.background.paper }} className={styles.features}>
+                <Container maxWidth="md">
+                    <Typography color="textPrimary" variant="h4">
+                        Features
+                    </Typography>
+                </Container>
             </Box>
             <Footer />
         </HomepageLayout>

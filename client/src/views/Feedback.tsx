@@ -25,6 +25,7 @@ const Feedback = (props) => {
                 <br />
                 <iframe
                     src="https://docs.google.com/forms/d/e/1FAIpQLScg9AuvsDcrgjzNX3D10l2r09UhQS0WaGiyX3OvyRn4BlwBSQ/viewform?embedded=true"
+                    title="Structs.sh feedback form"
                     frameBorder={0}
                     marginHeight={0}
                     marginWidth={0}
