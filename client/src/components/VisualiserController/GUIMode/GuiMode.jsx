@@ -1,4 +1,4 @@
-import Operations from '../Operations/operations';
+import Operations from 'components/Operations/operations';
 import { useParams } from 'react-router-dom';
 
 const GUIMode = ({ executeCommand }) => {

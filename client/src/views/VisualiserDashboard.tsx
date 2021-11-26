@@ -1,5 +1,5 @@
 import LinkedListAnimation from 'components/Animation/LinkedList/linkedListAnimation';
-import GUIMode from 'components/GUIMode/GuiMode';
+import GUIMode from 'components/VisualiserController/GUIMode/GuiMode';
 import TopNavbar from 'components/Navbars/TopNavbar';
 import { Pane } from 'components/Panes';
 import Tabs from 'components/Tabs/Tabs';
@@ -8,24 +8,12 @@ import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import Helmet from 'react-helmet';
 import styles from './VisualiserDashboard.module.scss';
-import Controls from 'components/Controls/Controls';
-import ModeSwitch from 'components/GUIMode/ModeSwitch';
+import Controls from 'components/VisualiserController/Controls/Controls';
+import ModeSwitch from 'components/VisualiserController/GUIMode/ModeSwitch';
 import { useTheme } from '@mui/material';
 import { VisualiserDashboardLayout } from 'layout';
+import { VisualiserController } from 'components/VisualiserController';
 
-const containerVariants = {
-    hidden: {
-        opacity: 0,
-    },
-    visible: {
-        opacity: 1,
-        transition: { duration: 1.5 },
-    },
-    exit: {
-        opacity: '-100vw',
-        transition: { ease: 'easeInOut' },
-    },
-};
 let appendNode = (_: number) => console.log('Not set');
 let deleteNode = (_: number) => console.log('Not set');
 
@@ -87,13 +75,11 @@ const Dashboard = ({ match }) => {
                                 <g className="pointers" transform="translate(0, 20)" />
                             </svg>
                         </div>
-                        <Controls />
                     </header>
                     <div className={styles.interactor}>
-                        <ModeSwitch
-                            // onClick={handleModeSwitch}
-                            switchMode={terminalMode}
-                            setSwitchMode={setTerminalMode}
+                        <VisualiserController
+                            terminalMode={terminalMode}
+                            setTerminalMode={setTerminalMode}
                         />
                         {terminalMode ? (
                             <Terminal executeCommand={executeCommand} />

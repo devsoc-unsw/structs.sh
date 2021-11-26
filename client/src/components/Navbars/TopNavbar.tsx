@@ -1,31 +1,29 @@
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import SunIcon from '@mui/icons-material/Brightness7';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import MailIcon from '@mui/icons-material/Mail';
 import MenuIcon from '@mui/icons-material/Menu';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import { Button } from '@mui/material';
+import MoonIcon from '@mui/icons-material/NightsStay';
+import { Button, Theme } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
-import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import InputBase from '@mui/material/InputBase';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { alpha, styled } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import logo from 'assets/img/logo.png';
-import linkedListIcon from 'assets/img/linked-list.png';
-import bstIcon from 'assets/img/bst.png';
-import styles from './TopNavbar.module.scss';
-import { Link } from 'react-router-dom';
-import SunIcon from '@mui/icons-material/Brightness7';
-import MoonIcon from '@mui/icons-material/NightsStay';
-import React, { FC, useContext, useEffect, useState } from 'react';
+import { useTheme } from '@mui/styles';
 import { SxProps } from '@mui/system';
 import { ThemeMutationContext } from 'App';
+import bstIcon from 'assets/img/bst.png';
+import linkedListIcon from 'assets/img/linked-list.png';
+import logo from 'assets/img/logo.png';
 import { Modal } from 'components/Modal';
+import React, { FC, useContext, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import styles from './TopNavbar.module.scss';
+import Drawer from './Drawer';
+import SidebarContents from './SidebarContents';
 
 interface Props {
     position?: 'fixed' | 'static';
@@ -34,8 +32,11 @@ interface Props {
 
 const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true }) => {
     const context = useContext(ThemeMutationContext);
+    const [showSidebar, setShowSidebar] = React.useState(false);
 
     const [hasScrolledDown, setHasScrolledDown] = useState<boolean>(false);
+
+    const theme: Theme = useTheme();
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [learnAnchorEl, setLearnAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -44,6 +45,12 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
     const isMenuOpen = Boolean(anchorEl);
     const isLearnMenuOpen = Boolean(learnAnchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+    /* ---------------------------- Sidebar Callbacks --------------------------- */
+
+    const toggleSidebar = () => {
+        setShowSidebar(!showSidebar);
+    };
 
     /* -------------------------- Page Scroll Callbacks ------------------------- */
 
@@ -194,16 +201,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
                 }}
             >
                 <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        sx={{ mr: 2 }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-
+                    <Drawer Contents={(props) => <SidebarContents {...props} />} />
                     <Box>
                         <Button
                             color="info"
@@ -236,6 +234,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
                             </Typography>
                         </Link>
                     </Box>
+
                     <IconButton
                         className={styles.darkModeButton}
                         onClick={() => context.toggleDarkMode()}

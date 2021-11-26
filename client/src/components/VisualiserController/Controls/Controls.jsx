@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './Control.module.scss';
 import { IconButton } from '@mui/material';
 import playIcon from 'assets/img/play.png';
@@ -33,7 +33,7 @@ const Controls = () => {
     //   newColor[target] = { color: 'red' };
     //   setColor(newColor);
     // }
-    React.useEffect(() => {
+    useEffect(() => {
         setTimeout(() => {
             setReplay(true);
         }, 5000);

@@ -1,12 +1,12 @@
-import { IconButton, List, ListItem, ListItemIcon } from '@mui/material';
+import { Box, IconButton, List, ListItem, ListItemIcon } from '@mui/material';
 import Collapse from '@mui/material/Collapse';
 import React from 'react';
 import logo from '../../assets/img/linked-list.svg';
 import filter from 'assets/img/filter.svg';
-import { makeStyles } from '@mui/styles';
-import Filter from './filter';
+import { makeStyles, useTheme } from '@mui/styles';
+import Filter from './Filter';
 import { getMatchedLessons } from 'content';
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 const useStyles = makeStyles({
@@ -16,11 +16,13 @@ const useStyles = makeStyles({
     },
 });
 
-const Sidebar = ({ setShowSidebar }) => {
+const SidebarContents = ({ setShowSidebar }) => {
     const [topics, setTopics] = React.useState([]);
     const [showFilter, setShowFilter] = React.useState(false);
     const [changeTopic, setChangeTopic] = React.useState('');
     const classes = useStyles();
+
+    const theme = useTheme();
 
     React.useEffect(async () => {
         setTopics(await getMatchedLessons(/.*/));
@@ -42,9 +44,13 @@ const Sidebar = ({ setShowSidebar }) => {
     };
 
     return (
-        <div className="structure-list">
-            <IconButton className={classes.strucFilter} onClick={(e) => setShowFilter(!showFilter)}>
-                <img src={filter} alt="filter icon" />
+        <Box sx={{ background: theme.palette.background.paper, height: '100%' }}>
+            <IconButton
+                size="small"
+                className={classes.strucFilter}
+                onClick={(e) => setShowFilter(!showFilter)}
+            >
+                <img src={filter} alt="filter icon" style={{ height: '32px', width: 'auto' }} />
             </IconButton>
             <Collapse in={showFilter} timeout="auto" unmountOnExit>
                 <Filter setTopics={setTopics} />
@@ -61,12 +67,22 @@ const Sidebar = ({ setShowSidebar }) => {
                     );
                 })}
             </List>
-        </div>
+            <Box>
+                <Link to="/about" onClick={() => setShowSidebar(false)}>
+                    About Page
+                </Link>
+            </Box>
+            <Box>
+                <Link to="/feedback" onClick={() => setShowSidebar(false)}>
+                    Feedback & Feature Request
+                </Link>
+            </Box>
+        </Box>
     );
 };
 
-Sidebar.propTypes = {
+SidebarContents.propTypes = {
     setShowSidebar: PropTypes.func,
 };
 
-export default Sidebar;
+export default SidebarContents;

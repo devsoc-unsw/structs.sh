@@ -30,7 +30,7 @@ const Tabs: FC<Props> = ({
                         </Grid>
                     ))}
                 </Grid>
-                <Grid item style={{ margin: '0px 10px 0px 10px', width: '100%' }}>
+                <Grid item style={{ margin: '24px 12px 16px 12px', width: '100%' }}>
                     <TabRenderer topic={topic} tab={tabs[tabIndex]} />
                 </Grid>
             </Grid>
