@@ -1,2 +1,1 @@
-// export { default as Pane } from './SplitPane';
-export { default as Pane } from './CollapsiblePane.jsx';
+export { default as Pane } from './CollapsiblePane';

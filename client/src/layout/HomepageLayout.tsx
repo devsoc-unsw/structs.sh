@@ -10,7 +10,7 @@ const containerVariants = {
     },
     visible: {
         opacity: 1,
-        transition: { duration: 0.25 },
+        transition: { duration: 1 },
     },
     exit: {
         opacity: '-100vw',
@@ -31,7 +31,7 @@ const Layout = ({ children }) => {
 
     return (
         <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="exit">
-            <TopNavbar />
+            <TopNavbar position={'fixed'} enableOnScrollEffect />
             <Box sx={{ backgroundColor: theme.palette.background.default, overflowX: 'hidden' }}>
                 {children}
             </Box>

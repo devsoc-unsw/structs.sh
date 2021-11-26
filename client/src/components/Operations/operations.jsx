@@ -6,8 +6,9 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import OpDetails from './opDetails';
-import { link, lastLink } from './utils';
+import { Link, LastLink } from './Links';
 import { getLessonContent, getTopicOps } from 'content';
+import { useTheme } from '@mui/styles';
 
 const useStyles = makeStyles({
     opItem: {
@@ -25,6 +26,9 @@ const useStyles = makeStyles({
 const Operations = ({ topic, executeCommand }) => {
     const [ops, setOps] = React.useState([]);
     const [title, setTitle] = React.useState('');
+
+    const theme = useTheme();
+    const textPrimaryColour = theme.palette.text.primary;
 
     // toggle collaps
     var opShowList = {};
@@ -56,7 +60,9 @@ const Operations = ({ topic, executeCommand }) => {
 
     return (
         <div className="operation-list">
-            <Typography className={classes.opType}>{title}</Typography>
+            <Typography className={classes.opType} color="textPrimary">
+                {title}
+            </Typography>
             <List>
                 {ops.map((op, idx) => {
                     const isLast = idx === ops.length - 1;
@@ -67,9 +73,17 @@ const Operations = ({ topic, executeCommand }) => {
                                 className={classes.opItem}
                                 onClick={() => handleClick(op.command)}
                             >
-                                <ListItemIcon>{isLast ? lastLink : link}</ListItemIcon>
-                                <span>{op.command}</span>
-                                {showOp[op.command] ? <ExpandLess /> : <ExpandMore />}
+                                <ListItemIcon>
+                                    {isLast ? (
+                                        <LastLink colour={textPrimaryColour} />
+                                    ) : (
+                                        <Link colour={textPrimaryColour} />
+                                    )}
+                                </ListItemIcon>
+                                <Typography color="textPrimary">{op.command}</Typography>
+                                <Typography color="textPrimary">
+                                    {showOp[op.command] ? <ExpandLess /> : <ExpandMore />}
+                                </Typography>
                             </ListItem>
                             {
                                 <OpDetails

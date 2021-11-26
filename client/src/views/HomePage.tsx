@@ -1,4 +1,4 @@
-import Layout from 'layout/Layout';
+import { HomepageLayout } from 'layout';
 import React, { useContext } from 'react';
 import styles from './HomePage.module.scss';
 import { SplashScreen } from 'components/SplashScreen';
@@ -10,10 +10,8 @@ import { ThemeMutationContext } from 'App';
 import { Footer } from 'components/Footer';
 
 const HomePage = () => {
-    const context = useContext(ThemeMutationContext);
-
     return (
-        <Layout>
+        <HomepageLayout>
             <SplashScreen stillDuration={2.5} disappearDuration={1.5} waitIntervalMinutes={10} />
             <Box
                 className={styles.header}
@@ -38,7 +36,7 @@ const HomePage = () => {
                 <Typography color="textPrimary">Features</Typography>
             </Box>
             <Footer />
-        </Layout>
+        </HomepageLayout>
     );
 };
 

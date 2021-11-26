@@ -4,7 +4,8 @@ import { makeStyles } from '@mui/styles';
 import TextField from '@mui/material/TextField';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { lastLink, link } from './utils';
+import { LastLink, Link } from './Links';
+import { useTheme } from '@mui/styles';
 
 // in case to change the lable color in the future
 // const labelStyle = {
@@ -53,6 +54,9 @@ const OpDetails = ({ op, isLast, showOp, executeCommand }) => {
     const classes = useStyles();
     const [args, setArguments] = useState([]);
 
+    const theme = useTheme();
+    const textPrimaryColour = theme.palette.text.primary;
+
     const handleSetArguments = (e, index) => {
         const newArgs = [...args];
         newArgs[index] = e.target.value;
@@ -73,7 +77,7 @@ const OpDetails = ({ op, isLast, showOp, executeCommand }) => {
                         y1="1"
                         x2="5"
                         y2="166"
-                        stroke="black"
+                        stroke={textPrimaryColour}
                         stroke-dasharray="50 4"
                         strokeWidth="2"
                     />
@@ -82,7 +86,9 @@ const OpDetails = ({ op, isLast, showOp, executeCommand }) => {
             <List className={isLast ? `${classes.opList} ${classes.last}` : classes.opList}>
                 {op.args.map((eachArg, i) => (
                     <ListItem key={i}>
-                        <ListItemIcon>{link}</ListItemIcon>
+                        <ListItemIcon>
+                            <Link colour={textPrimaryColour} />
+                        </ListItemIcon>
                         <TextField
                             label={eachArg}
                             //InputLabelProps={labelStyle}
@@ -93,7 +99,9 @@ const OpDetails = ({ op, isLast, showOp, executeCommand }) => {
                     </ListItem>
                 ))}
                 <ListItem>
-                    <ListItemIcon>{lastLink}</ListItemIcon>
+                    <ListItemIcon>
+                        <LastLink colour={textPrimaryColour} />
+                    </ListItemIcon>
                     <Button className={classes.opBtn} variant="contained" color="primary">
                         <div
                             className={classes.btnText}

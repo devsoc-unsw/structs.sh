@@ -4,6 +4,7 @@ import styles from './Lesson.module.scss';
 import renderMarkdown from './markdown-util';
 import { Link } from 'react-router-dom';
 import { EditButton, NewContentButton } from 'components/Buttons';
+import { Typography } from '@mui/material';
 // import sampleMD from './sample.md';
 
 const Lesson = ({ topic }) => {
@@ -15,23 +16,11 @@ const Lesson = ({ topic }) => {
             <div className={styles.lessonContainer}>
                 {lessonContent ? (
                     <>
-                        <Link to="/creator/lesson/edit">
-                            <EditButton />
-                        </Link>
-                        <Link to="/creator/lesson/new">
-                            <NewContentButton />
-                        </Link>
-                        <p style={{ fontFamily: 'AtlassianText' }}>
-                            Hello <strong>world</strong>
-                            <em> sample italic</em>
-                            <strong>
-                                <em>strong sample italic</em>
-                            </strong>
-                        </p>
-                        <div
-                            style={{ fontFamily: 'AtlassianText' }}
-                            dangerouslySetInnerHTML={{
-                                __html: renderMarkdown(`# Linked Lists Demystified
+                        <Typography color="textPrimary">
+                            <div
+                                style={{ fontFamily: 'AtlassianText' }}
+                                dangerouslySetInnerHTML={{
+                                    __html: renderMarkdown(`# Linked Lists Demystified
 
 If we really want to understand the basics of linked lists, it’s important that we talk about what type of data structure they are.
 
@@ -64,8 +53,9 @@ By now, we can already begin to see some major differences between arrays and li
 
 
 `),
-                            }}
-                        />
+                                }}
+                            />
+                        </Typography>
                         {/* <Typography variant="h3" component="h3" style={{ color: 'black' }}>
                             {lessonContent.title}
                         </Typography>

@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useEffect, useState } from 'react';
 import { Route, Switch, useLocation } from 'react-router-dom';
 import HomePage from 'views/HomePage';
-import Dashboard from 'views/Dashboard';
+import VisualiserDashboard from 'views/VisualiserDashboard';
 import Page404 from 'views/Page404';
 import AboutUs from 'views/AboutUs';
 import Feedback from 'views/Feedback';
@@ -50,7 +50,7 @@ const App = () => {
                         <Route exact path="/" component={HomePage} />
 
                         {/* Visualiser routes */}
-                        <Route exact path="/visualiser/:topic" component={Dashboard} />
+                        <Route exact path="/visualiser/:topic" component={VisualiserDashboard} />
 
                         {/* About us page */}
                         <Route exact path="/about" component={AboutUs} />

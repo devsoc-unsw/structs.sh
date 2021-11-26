@@ -22,12 +22,17 @@ import styles from './TopNavbar.module.scss';
 import { Link } from 'react-router-dom';
 import SunIcon from '@mui/icons-material/Brightness7';
 import MoonIcon from '@mui/icons-material/NightsStay';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { SxProps } from '@mui/system';
 import { ThemeMutationContext } from 'App';
 import { Modal } from 'components/Modal';
 
-export default function TopNavbar() {
+interface Props {
+    position?: 'fixed' | 'static';
+    enableOnScrollEffect?: boolean;
+}
+
+const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true }) => {
     const context = useContext(ThemeMutationContext);
 
     const [hasScrolledDown, setHasScrolledDown] = useState<boolean>(false);
@@ -173,12 +178,19 @@ export default function TopNavbar() {
         backdropFilter: 'blur(3px)',
     };
 
+    const appliedStyle = enableOnScrollEffect
+        ? hasScrolledDown
+            ? hasScrolledDownStyle
+            : atTopStyle
+        : hasScrolledDownStyle;
+
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar
+                position={position}
                 sx={{
                     transition: '0.5s all ease-in-out',
-                    ...(hasScrolledDown ? hasScrolledDownStyle : atTopStyle),
+                    ...appliedStyle,
                 }}
             >
                 <Toolbar>
@@ -280,4 +292,6 @@ export default function TopNavbar() {
             {renderMenu}
         </Box>
     );
-}
+};
+
+export default TopNavbar;

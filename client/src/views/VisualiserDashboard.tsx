@@ -1,6 +1,5 @@
-// import { appendNode, deleteNode } from 'components/Visualisation/LinkedList/LinkedListJoanna';
 import LinkedListAnimation from 'components/Animation/LinkedList/linkedListAnimation';
-import GUIMode from 'components/GUIMode/guiMode';
+import GUIMode from 'components/GUIMode/GuiMode';
 import TopNavbar from 'components/Navbars/TopNavbar';
 import { Pane } from 'components/Panes';
 import Tabs from 'components/Tabs/Tabs';
@@ -8,9 +7,11 @@ import { Terminal } from 'components/Terminal';
 import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import Helmet from 'react-helmet';
-import styles from './Dashboard.module.scss';
+import styles from './VisualiserDashboard.module.scss';
 import Controls from 'components/Controls/Controls';
-import ModeSwitch from 'components/GUIMode/modeSwitch';
+import ModeSwitch from 'components/GUIMode/ModeSwitch';
+import { useTheme } from '@mui/material';
+import { VisualiserDashboardLayout } from 'layout';
 
 const containerVariants = {
     hidden: {
@@ -25,23 +26,25 @@ const containerVariants = {
         transition: { ease: 'easeInOut' },
     },
 };
-let appendNode = () => console.log('Not set');
-let deleteNode = () => console.log('Not set');
+let appendNode = (_: number) => console.log('Not set');
+let deleteNode = (_: number) => console.log('Not set');
 
 const Dashboard = ({ match }) => {
     // Extract route parameters
     const { params } = match;
     const topic = params.topic;
 
+    const theme = useTheme();
+
     const [terminalMode, setTerminalMode] = useState(true);
 
     const executeCommand = (command, args) => {
         switch (command) {
             case 'append':
-                appendNode(parseInt(args[0]));
+                appendNode(Number(args[0]));
                 break;
             case 'delete':
-                deleteNode(parseInt(args[0]));
+                deleteNode(Number(args[0]));
                 break;
             default:
                 return `Invalid command: ${command}`;
@@ -54,29 +57,26 @@ const Dashboard = ({ match }) => {
         deleteNode = list.animateDelete.bind(list);
     }, []);
 
+    // Note: this is a hacky way of removing scrolling outside of the panes
+    useEffect(() => {
+        document.querySelector('html').style.overflow = 'hidden';
+        return () => {
+            document.querySelector('html').style.overflow = 'auto';
+        };
+    });
+
     const handleModeSwitch = () => {
         setTerminalMode(!terminalMode);
     };
 
     return (
-        <motion.div
-            className={styles.container}
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-        >
-            <Helmet>
-                <title>Structs.sh — {topic}</title>
-            </Helmet>
-
-            {/* For some reason, getting rid of this ruins the pane spacing. It can't be a div or a span... */}
-            <img width={48} height={48} alt={'Structs logo'} />
-            <TopNavbar showMenu />
-            <Pane orientation="vertical" minSize={340} topGutterSize={48}>
+        <VisualiserDashboardLayout topic={topic}>
+            <Pane orientation="vertical" minSize={340} topGutterSize={64}>
                 <Pane orientation="horizontal" minSize={150.9}>
-                    {/* <LinkedList /> */}
-                    <header classname="App-header">
+                    <header
+                        className="App-header"
+                        style={{ height: '100%', background: 'rgba(225, 225, 225)' }}
+                    >
                         <div className="visualiser">
                             <svg
                                 className="visualiser-svg"
@@ -91,7 +91,7 @@ const Dashboard = ({ match }) => {
                     </header>
                     <div className={styles.interactor}>
                         <ModeSwitch
-                            onClick={handleModeSwitch}
+                            // onClick={handleModeSwitch}
                             switchMode={terminalMode}
                             setSwitchMode={setTerminalMode}
                         />
@@ -104,7 +104,7 @@ const Dashboard = ({ match }) => {
                 </Pane>
                 <Tabs topic={topic}></Tabs>
             </Pane>
-        </motion.div>
+        </VisualiserDashboardLayout>
     );
 };
 
