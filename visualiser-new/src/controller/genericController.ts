@@ -17,6 +17,7 @@ class AnimationController {
     public getCurrentTimeline(): AnimeTimelineInstance {
         return this.currentTimeline;
     }
+
     public play(): void {
         this.currentTimeline.play();
     }
@@ -33,10 +34,11 @@ class AnimationController {
     public finish(): void {
         this.currentTimeline.seek(this.currentTimeline.duration);
     }
+
     // this function runs a sequence of animations sequentially
     // when stepSequence = false or pauses the timeline after each animation finishes
     public runSequeuce(sequence: Animation[], slider: HTMLInputElement): void {
-        console.log(this);
+        // console.log(this);
         this.currentTimeline = anime.timeline({
             duration: 700,
             easing: 'easeOutExpo',
@@ -63,15 +65,23 @@ class AnimationController {
         }
     }
 
-    // clicking on step backwards while animation is palying causes 2 animations to run and break
-    // Solutions: disable step back button
-    // Or: play around with anime.remove()ç
     public gotoPrevious(): void {
+        this.currentTimeline.pause();
         this.currentTimeline = this.timelineHistory[this.timelineIndex - 1];
         this.seekPercent(0);
         this.timelineIndex--;
         this.currentTimeline = this.timelineHistory[this.timelineIndex - 1];
         this.seekPercent(0);
+    }
+
+    public gotoNext(): void {
+        if (this.timelineIndex === this.timelineHistory.length) return;
+        this.currentTimeline.pause();
+        this.currentTimeline = this.timelineHistory[this.timelineIndex - 1];
+        this.seekPercent(100);
+        this.timelineIndex++;
+        this.currentTimeline = this.timelineHistory[this.timelineIndex - 1];
+        this.seekPercent(100);
     }
 }
 
