@@ -6,8 +6,7 @@ import styles from './Terminal.module.scss';
 
 const console = {
     container: {
-        minHeight: '80%',
-        maxHeight: '80%',
+        height: 'calc(100% - 100px)',
         paddingTop: '0px',
         backgroundColor: '#181818',
         width: '100%',

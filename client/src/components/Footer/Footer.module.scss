@@ -1,0 +1,18 @@
+.footer {
+    height: 200px;
+    border-top: 1px solid black;
+
+    .columnContainer {
+        text-align: center;
+
+        .link {
+            text-decoration: none;
+            color: inherit;
+            transition: 0.125s all ease-in-out;
+
+            &:hover {
+                opacity: 0.6;
+            }
+        }
+    }
+}

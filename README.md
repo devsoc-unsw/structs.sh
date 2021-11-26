@@ -8,7 +8,7 @@
 </p>
 <p align="center">
     <strong><a href="https://www.figma.com/file/zFFuYLSSdc4TnQafDWgKP1/Structs.sh-Interface-Prototype?node-id=401%3A5">Figma Prototype</a>
-    </strong> | <strong><a href="https://app.diagrams.net/#Hcsesoc%2FStructs.sh%2Fmaster%2Fstructs-datamodels.drawio">Data Model</a></strong>
+    </strong> | <strong><a href="https://www.figma.com/file/KQcuxGJwz8I7trRlt69Vsy/Structs.sh-Brainstorming?node-id=0%3A1">FigJam</a></strong> |  <strong><a href="https://app.diagrams.net/#Hcsesoc%2FStructs.sh%2Fmaster%2Fstructs-datamodels.drawio">Data Model</a></strong>
 </p>
 
 Structs.sh is an interactive data structure and algorithm visualiser and educational platform for computer science students.
@@ -108,6 +108,24 @@ npm start
 # In the `server/` directory:
 npm start
 ```
+
+## Testing
+
+<details>
+    <summary>Frontend Unit Testing [TODO]</summary>
+
+</details>
+
+<details>
+    <summary>Frontend End-to-End Testing [TODO]</summary>
+    
+Cypress is an end-to-end testing framework that uses web browser automation.
+
+-   All .spec.tsx files will be picked up and run by Cypress
+-   All .test.tsx files will be picked up and run by Jest
+-   `yarn cypress open-ct` will
+
+</details>
 
 ---
 

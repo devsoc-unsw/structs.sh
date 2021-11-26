@@ -8,6 +8,7 @@ import axios from 'axios';
 import { ApiConstants } from 'constants/api';
 import React, { useEffect, useState } from 'react';
 import { Notification } from 'utils/Notification';
+import { MarkdownEditor } from 'components/MarkdownEditor';
 
 interface Lesson {
     topicId: string;
@@ -19,6 +20,7 @@ interface Lesson {
 
 const ContentManagementDashboard = () => {
     const [lessons, setLessons] = useState<Lesson[]>([]);
+    const [markdownValue, setMarkdownValue] = useState<string>('');
 
     useEffect(() => {
         axios
@@ -56,6 +58,23 @@ const ContentManagementDashboard = () => {
                         </CardActions>
                     </Card>
                 ))}
+            <div
+                style={{
+                    margin: 30,
+                    paddingTop: 20,
+                    paddingBottom: 20,
+                    borderTop: '1px solid black',
+                    borderBottom: '1px solid black',
+                }}
+            >
+                <MarkdownEditor
+                    markdownValue={markdownValue}
+                    setMarkdownValue={setMarkdownValue}
+                    readOnly={false}
+                />
+            </div>
+            <h3>Raw Markdown Code</h3>
+            <pre>{markdownValue}</pre>
         </div>
     );
 };
