@@ -45,15 +45,18 @@ type GetQuizzes = (lessonId: string) => Promise<Quiz[]>;
 type GetTopics = () => Promise<Topic[]>;
 type GetSourceCode = (topicId: string) => Promise<SourceCode[]>;
 
+export type TopicForm = Omit<Topic, '_id'>;
+export type SourceCodeForm = Omit<SourceCode, '_id'>;
+
 type CreateLesson = (lesson: Lesson) => Promise<Lesson>;
 type CreateQuiz = (lessonId: string, quiz: Quiz) => Promise<Quiz>;
-type CreateTopic = (topic: Topic) => Promise<Topic>;
-type CreateSourceCode = (sourceCode: SourceCode) => Promise<SourceCode>;
+type CreateTopic = (topic: TopicForm) => Promise<Topic>;
+type CreateSourceCode = (sourceCode: SourceCodeForm) => Promise<SourceCode>;
 
 type EditLesson = (lessonId: string, newLesson: Lesson) => Promise<Lesson>;
 type EditQuiz = (quizId: string, newQuiz: Quiz) => Promise<Quiz>;
-type EditTopic = (topicId: string, newTopic: Topic) => Promise<Topic>;
-type EditSourceCode = (sourceCodeId: string, newSourceCode: SourceCode) => Promise<SourceCode>;
+type EditTopic = (topicId: string, newTopic: TopicForm) => Promise<Topic>;
+type EditSourceCode = (sourceCodeId: string, newSourceCode: SourceCodeForm) => Promise<SourceCode>;
 
 export const getLessons: GetLessons = async (topicId: string) => {
     try {
@@ -133,7 +136,7 @@ export const createQuiz: CreateQuiz = async (lessonId: string, quiz: Quiz) => {
 };
 
 // TODO: Untested and unimplemented in backend
-export const createTopic: CreateTopic = async (topic: Topic) => {
+export const createTopic: CreateTopic = async (topic: TopicForm) => {
     try {
         const response = await axios.post(`${ApiConstants.URL}/api/topics`, topic, {
             headers: { 'Content-Type': 'application/json' },
@@ -146,12 +149,12 @@ export const createTopic: CreateTopic = async (topic: Topic) => {
 };
 
 // TODO: Untested and unimplemented in backend
-export const createSourceCode: CreateSourceCode = async (sourceCode: SourceCode) => {
+export const createSourceCode: CreateSourceCode = async (sourceCode: SourceCodeForm) => {
     try {
         const response = await axios.post(`${ApiConstants.URL}/api/source-code`, sourceCode, {
             headers: { 'Content-Type': 'application/json' },
         });
-        return response.data.topic as SourceCode;
+        return response.data.sourceCode as SourceCode;
     } catch (err) {
         const errMessage: string = err.response.data.statusText;
         throw errMessage;

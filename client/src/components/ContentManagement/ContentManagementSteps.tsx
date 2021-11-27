@@ -1,55 +1,52 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
-import Box from '@mui/material/Box';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import StepContent from '@mui/material/StepContent';
-import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import {
-    getLessons,
-    Lesson,
-    getTopics,
-    Topic,
-    getQuizzes,
-    Quiz,
-    getSourceCodes,
-    SourceCode,
-    createLesson,
-    createQuiz,
-    createTopic,
-    createSourceCode,
-} from 'utils/apiRequests';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import VideoIcon from '@mui/icons-material/Videocam';
 import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
     Avatar,
-    Container,
     Grid,
+    Link,
     List,
     ListItem,
     TextField,
 } from '@mui/material';
-import { Notification } from 'utils/Notification';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import { TagSelector } from 'components/Tags';
-import { CoursesSelector } from 'components/Autocomplete';
-import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
-import VideoIcon from '@mui/icons-material/Videocam';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Step from '@mui/material/Step';
+import StepContent from '@mui/material/StepContent';
+import StepLabel from '@mui/material/StepLabel';
+import Stepper from '@mui/material/Stepper';
+import Typography from '@mui/material/Typography';
+import { CoursesSelector } from 'components/Autocomplete';
+import { TagSelector } from 'components/Tags';
+import React, { FC, useCallback, useEffect, useState } from 'react';
+import {
+    createSourceCode,
+    createTopic,
+    editTopic,
+    getLessons,
+    getQuizzes,
+    getSourceCodes,
+    getTopics,
+    Lesson,
+    Quiz,
+    SourceCode,
+    SourceCodeForm,
+    Topic,
+    TopicForm,
+} from 'utils/apiRequests';
+import { Notification } from 'utils/Notification';
 
 interface Props {}
-
-type TopicForm = Omit<Topic, '_id'>;
 
 const emptyTopicForm: TopicForm = {
     title: '',
@@ -60,6 +57,12 @@ const emptyTopicForm: TopicForm = {
     sourceCodeIds: [],
 };
 
+const emptySourceCodeForm: SourceCodeForm = {
+    topicId: '',
+    title: '',
+    code: '',
+};
+
 const ContentManagementSteps: FC<Props> = () => {
     const [activeStep, setActiveStep] = React.useState(0);
 
@@ -68,6 +71,9 @@ const ContentManagementSteps: FC<Props> = () => {
     const [topicFormValues, setTopicFormValues] = useState<TopicForm>(emptyTopicForm);
 
     const [sourceCodes, setSourceCodes] = useState<SourceCode[]>([]);
+    const [sourceCodeFormValues, setSourceCodeFormValues] = useState<SourceCodeForm>(
+        emptySourceCodeForm
+    );
 
     const [lessons, setLessons] = useState<Lesson[]>([]);
     const [selectedLessonId, setLessonId] = useState<string>('');
@@ -129,7 +135,7 @@ const ContentManagementSteps: FC<Props> = () => {
     // Initially fetch all topics
     useEffect(() => {
         fetchTopics();
-    }, []);
+    }, [fetchTopics]);
 
     // When a topic is selected, then all its source code and child lessons should be fetched
     useEffect(() => {
@@ -156,13 +162,16 @@ const ContentManagementSteps: FC<Props> = () => {
             }
             setSelectedTopicId(topicId);
             setTopicFormValues(selectedTopic);
+            setSourceCodeFormValues({ ...sourceCodeFormValues, topicId: topicId });
+            setActiveStep(1);
         },
-        [topics]
+        [topics, sourceCodeFormValues]
     );
 
     const deselectTopic = useCallback(() => {
         setSelectedTopicId('');
         setTopicFormValues(emptyTopicForm);
+        setSourceCodes([]);
     }, []);
 
     // TODO: Remove this. It's just for debugging
@@ -171,6 +180,52 @@ const ContentManagementSteps: FC<Props> = () => {
     }, [topicFormValues]);
 
     /* ----------------------------- Form Callbacks ----------------------------- */
+
+    const handleCreateCodeSnippet = useCallback(() => {
+        createSourceCode(sourceCodeFormValues)
+            .then((sourceCode) => {
+                Notification.success('Created new source code snippet');
+                setSourceCodes([...sourceCodes, sourceCode]);
+            })
+            .catch((errMessage) => {
+                Notification.error(errMessage);
+            });
+    }, [sourceCodeFormValues, sourceCodes]);
+
+    const handleCreateTopic = useCallback(() => {
+        createTopic(topicFormValues)
+            .then((topic) => {
+                Notification.success('Created new topic');
+                setTopics([...topics, topic]);
+                setSelectedTopicId(topic._id);
+            })
+            .catch((errMessage) => {
+                console.log(errMessage);
+                Notification.error(errMessage);
+            });
+    }, [topicFormValues, topics]);
+
+    const handleUpdateTopic = useCallback(() => {
+        editTopic(selectedTopicId, topicFormValues)
+            .then((newTopic) => {
+                Notification.success('Updated topic');
+                setTopicFormValues(newTopic);
+                const topicIndex: number = topics.findIndex(
+                    (topic) => topic._id === selectedTopicId
+                );
+                if (topicIndex === -1) throw Error('Topics data inconsistency. Please report');
+                // Replace the old topic with the new one in the `topics` array to ensure that changes are reflected in the UI
+                setTopics(
+                    topics.map((topic, i) => {
+                        if (topic._id === selectedTopicId) {
+                            return newTopic;
+                        }
+                        return topic;
+                    })
+                );
+            })
+            .catch(Notification.error);
+    }, [topicFormValues, selectedTopicId, topics]);
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -191,7 +246,7 @@ const ContentManagementSteps: FC<Props> = () => {
                         </Typography>
                     </StepLabel>
                     <StepContent>
-                        <Typography>
+                        <Typography color="textPrimary">
                             Select a topic or data structure that you want to make new lessons for,
                             or whose lessons you wish to modify or delete. To create a new topic
                             entirely, don't select any of the topics below and click 'continue'
@@ -259,7 +314,9 @@ const ContentManagementSteps: FC<Props> = () => {
                         </Typography>
                     </StepLabel>
                     <StepContent>
-                        <Typography>Manage the topic and its videos and code.</Typography>
+                        <Typography color="textPrimary">
+                            Manage the topic and its videos and code.
+                        </Typography>
                         <Box sx={{ mb: 2 }}>
                             <Box sx={{ mt: 2 }}>
                                 {/* Title */}
@@ -344,6 +401,7 @@ const ContentManagementSteps: FC<Props> = () => {
                                                         <IconButton
                                                             edge="end"
                                                             aria-label="delete"
+                                                            color="error"
                                                             onClick={() =>
                                                                 Notification.info(
                                                                     'Not implemented yet'
@@ -359,11 +417,65 @@ const ContentManagementSteps: FC<Props> = () => {
                                                             <VideoIcon />
                                                         </Avatar>
                                                     </ListItemAvatar>
-                                                    <a href={videoUrl}>{videoUrl}</a>
+                                                    <Link href={videoUrl} color={'textPrimary'}>
+                                                        {videoUrl}
+                                                    </Link>
                                                 </ListItem>
                                             ))}
+                                        <Typography color="textPrimary">
+                                            Press Enter to add video URL
+                                        </Typography>
+                                        <TextField
+                                            label="Video URL"
+                                            placeholder="Eg. https://youtube.com/..."
+                                            onKeyDown={(e: any) => {
+                                                if (e.keyCode === 13) {
+                                                    setTopicFormValues({
+                                                        ...topicFormValues,
+                                                        videos: [
+                                                            ...topicFormValues.videos,
+                                                            String(e.target.value),
+                                                        ],
+                                                    });
+                                                }
+                                            }}
+                                        />
                                     </List>
                                 </Box>
+
+                                <br />
+
+                                {selectedTopicId ? (
+                                    <>
+                                        <Typography color="textPrimary">
+                                            ⚠️ You must click 'Submit' to create a new topic or save
+                                            changes before progressing!
+                                        </Typography>
+                                        <Button
+                                            variant="contained"
+                                            color="secondary"
+                                            sx={{ mt: 1, mr: 1, mb: 6 }}
+                                            onClick={() => handleUpdateTopic()}
+                                        >
+                                            Submit
+                                        </Button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Typography color="textPrimary">
+                                            ⚠️ You must click 'Create' to create a new topic or save
+                                            changes before progressing!
+                                        </Typography>
+                                        <Button
+                                            variant="contained"
+                                            color="secondary"
+                                            sx={{ mt: 1, mr: 1, mb: 6 }}
+                                            onClick={() => handleCreateTopic()}
+                                        >
+                                            Create
+                                        </Button>
+                                    </>
+                                )}
 
                                 {/* Source Code */}
                                 <Box sx={{ mb: 4 }}>
@@ -378,27 +490,52 @@ const ContentManagementSteps: FC<Props> = () => {
                                                     aria-controls="panel1a-content"
                                                     id="panel1a-header"
                                                 >
-                                                    <Typography>{sourceCode.title}</Typography>
+                                                    <Typography color="textPrimary">
+                                                        {sourceCode.title}
+                                                    </Typography>
                                                 </AccordionSummary>
                                                 <AccordionDetails>
                                                     <pre>{sourceCode.code}</pre>
                                                 </AccordionDetails>
                                             </Accordion>
                                         ))}
+                                    <Typography color="textPrimary">Add new snippet</Typography>
+                                    <Box sx={{ textAlign: 'center' }}>
+                                        <TextField
+                                            id="topic-source-code-title"
+                                            label="Title"
+                                            placeholder="Eg. Insertion Algorithm"
+                                            onChange={(e) =>
+                                                setSourceCodeFormValues({
+                                                    ...sourceCodeFormValues,
+                                                    title: String(e.target.value),
+                                                })
+                                            }
+                                        />
+                                        <TextField
+                                            id="topic-source-code-code"
+                                            label="Source Code"
+                                            placeholder="Placeholder"
+                                            multiline
+                                            variant="standard"
+                                            onChange={(e) =>
+                                                setSourceCodeFormValues({
+                                                    ...sourceCodeFormValues,
+                                                    code: String(e.target.value),
+                                                })
+                                            }
+                                            sx={{ width: '100%' }}
+                                        />
+                                        <br />
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={handleCreateCodeSnippet}
+                                        >
+                                            Submit Code
+                                        </Button>
+                                    </Box>
                                 </Box>
-
-                                <br />
-                                <Typography>
-                                    ⚠️ You must click 'Submit' to create a new topic or save changes
-                                    before progressing!
-                                </Typography>
-                                <Button
-                                    variant="contained"
-                                    color="secondary"
-                                    sx={{ mt: 1, mr: 1, mb: 6 }}
-                                >
-                                    Submit
-                                </Button>
                             </Box>
                             <div>
                                 <Button
@@ -429,7 +566,7 @@ const ContentManagementSteps: FC<Props> = () => {
                         </Typography>
                     </StepLabel>
                     <StepContent>
-                        <Typography>
+                        <Typography color="textPrimary">
                             Select one of the existing lessons or create a new one.
                         </Typography>
                         <Box sx={{ mb: 2 }}>
@@ -486,7 +623,9 @@ const ContentManagementSteps: FC<Props> = () => {
                         </Typography>
                     </StepLabel>
                     <StepContent>
-                        <Typography>Modify the lesson content and its quizzes.</Typography>
+                        <Typography color="textPrimary">
+                            Modify the lesson content and its quizzes.
+                        </Typography>
                         <Box sx={{ mb: 2 }}>
                             <div>CONTENT HERE</div>
                             <div>
