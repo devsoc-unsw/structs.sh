@@ -5,7 +5,7 @@ import Container from '@mui/material/Container';
 
 const Feedback = (props) => {
     return (
-        <HomepageLayout>
+        <HomepageLayout topNavPosition={'fixed'} enableOnScrollEffect={true}>
             <Box sx={{ marginTop: '80px', textAlign: 'center', height: 'calc(100vh - 80px)' }}>
                 <Container maxWidth="md">
                     <Typography color="textPrimary" variant="h3">

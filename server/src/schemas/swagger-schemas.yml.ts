@@ -49,6 +49,16 @@
  *                  type: array
  *                  items:
  *                      type: string
+ *              videos:
+ *                  type: array
+ *                  items:
+ *                      type: string
+ *              sourceCodeIds:
+ *                  type: array
+ *                  items:
+ *                      type: string
+ *              image:
+ *                  type: string
  */
 
 /* --------------------------------- Lesson --------------------------------- */
@@ -70,6 +80,9 @@
  *              topicId:
  *                  type: string
  *                  description: ID of the topic this lesson is for.
+ *              title:
+ *                  type: string
+ *                  description: Title of the lesson
  *              rawMarkdown:
  *                  type: string
  *                  description: The raw markdown source code used to display the content in this lesson.
@@ -103,4 +116,24 @@
  *              answer:
  *                  type: string
  *                  description: The stringified JSON for the quiz answers.
+ */
+
+/* ------------------------------- Source Code ------------------------------ */
+/**
+ * This is the schema definition for a Source Code object. This will appear in the auto-generated
+ * Swagger documentation and can be referenced in the documentation for endpoints with the path:
+ *     '#/components/schemas/SourceCode'
+ *
+ * @swagger
+ * components:
+ *  schemas:
+ *      SourceCode:
+ *          type: object
+ *          properties:
+ *              title:
+ *                  type: string
+ *              code:
+ *                  type: string
+ *              topicId:
+ *                  type: string
  */

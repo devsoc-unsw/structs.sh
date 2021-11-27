@@ -232,6 +232,8 @@ quizRouter.post('/api/lessons/quiz', async (request, response) => {
  *                           properties:
  *                               statusText:
  *                                   type: string
+ *                               quiz:
+ *                                   $ref: '#/components/schemas/Quiz'
  *          '404':
  *              description: Quiz with that ID doesn't exist
  *              content:
@@ -282,6 +284,8 @@ quizRouter.put('/api/lessons/quiz/:id', async (request, response) => {
  *                           properties:
  *                               statusText:
  *                                   type: string
+ *                               quiz:
+ *                                   $ref: '#/components/schemas/Quiz'
  *          '404':
  *              description: Quiz with that ID doesn't exist
  *              content:

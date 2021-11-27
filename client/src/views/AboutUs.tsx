@@ -9,7 +9,7 @@ interface Props {}
 
 const About: FC<Props> = () => {
     return (
-        <HomepageLayout>
+        <HomepageLayout topNavPosition="fixed" enableOnScrollEffect={false}>
             <Box sx={{ marginTop: '80px', textAlign: 'center', height: 'calc(100vh - 80px)' }}>
                 <Container maxWidth="md" className={styles.container}>
                     <Typography color="textPrimary" variant="h3" className={styles.text}>

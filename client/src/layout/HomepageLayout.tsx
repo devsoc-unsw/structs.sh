@@ -2,7 +2,7 @@ import { Box, Theme } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import TopNavbar from 'components/Navbars/TopNavbar';
 import { motion } from 'framer-motion';
-import React, { useEffect } from 'react';
+import React, { FC, useEffect } from 'react';
 
 const containerVariants = {
     hidden: {
@@ -18,7 +18,13 @@ const containerVariants = {
     },
 };
 
-const Layout = ({ children }) => {
+interface Props {
+    children?: React.ReactNode;
+    topNavPosition?: 'fixed' | 'static';
+    enableOnScrollEffect?: boolean;
+}
+
+const Layout: FC<Props> = ({ children, topNavPosition = 'fixed', enableOnScrollEffect = true }) => {
     const theme: Theme = useTheme();
 
     useEffect(() => {
@@ -31,7 +37,7 @@ const Layout = ({ children }) => {
 
     return (
         <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="exit">
-            <TopNavbar position={'fixed'} enableOnScrollEffect />
+            <TopNavbar position={topNavPosition} enableOnScrollEffect={enableOnScrollEffect} />
             <Box sx={{ backgroundColor: theme.palette.background.default, overflowX: 'hidden' }}>
                 {children}
             </Box>
