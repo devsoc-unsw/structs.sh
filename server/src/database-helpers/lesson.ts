@@ -57,10 +57,16 @@ export class LessonMongoService {
 
     public async updateLessonById(
         lessonId: string,
+        title: string,
+        rawMarkdown: string,
         quizzes: string[]
     ): Promise<Lesson> {
         try {
-            const update = { quizzes: quizzes };
+            const update = {
+                title: title,
+                rawMarkdown: rawMarkdown,
+                quizzes: quizzes,
+            };
             const returnData = (await LessonModel.findByIdAndUpdate(
                 lessonId,
                 update,

@@ -27,18 +27,23 @@ import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
 import { CoursesSelector } from 'components/Autocomplete';
+import { MarkdownEditor } from 'components/MarkdownEditor';
 import { TagSelector } from 'components/Tags';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import {
+    createLesson,
     createSourceCode,
     createTopic,
+    editLesson,
     editTopic,
     getLessons,
     getQuizzes,
     getSourceCodes,
     getTopics,
     Lesson,
+    LessonForm,
     Quiz,
+    QuizForm,
     SourceCode,
     SourceCodeForm,
     Topic,
@@ -63,6 +68,20 @@ const emptySourceCodeForm: SourceCodeForm = {
     code: '',
 };
 
+const emptyLessonForm: LessonForm = {
+    topicId: '',
+    title: '',
+    rawMarkdown: '',
+    creatorId: '612f3f9fe0a7433f52c3d815', // TODO: this is set to an admin user manually added to MongoDB. If that user is deleted, then this will break
+    quizzes: [],
+};
+
+const emptyQuizForm: QuizForm = {
+    questionType: '',
+    question: '',
+    answer: '',
+};
+
 const ContentManagementSteps: FC<Props> = () => {
     const [activeStep, setActiveStep] = React.useState(0);
 
@@ -76,12 +95,12 @@ const ContentManagementSteps: FC<Props> = () => {
     );
 
     const [lessons, setLessons] = useState<Lesson[]>([]);
-    const [selectedLessonId, setLessonId] = useState<string>('');
+    const [selectedLessonId, setSelectedLessonId] = useState<string>('');
+    const [lessonFormValues, setLessonFormValues] = useState<LessonForm>(emptyLessonForm);
+
     const [quizzes, setQuizzes] = useState<Quiz[]>([]);
-
-    const [markdownValue, setMarkdownValue] = useState<string>('');
-
-    const userId = '612f3f9fe0a7433f52c3d815'; // TODO: this is set to an admin user manually added to MongoDB. If that user is deleted, then this will break
+    const [selectedQuizId, setSelectedQuizId] = useState<string>('');
+    const [quizFormValues, setQuizFormValues] = useState<QuizForm>(emptyQuizForm);
 
     /* ------------------------------ Data Fetching ----------------------------- */
 
@@ -163,15 +182,54 @@ const ContentManagementSteps: FC<Props> = () => {
             setSelectedTopicId(topicId);
             setTopicFormValues(selectedTopic);
             setSourceCodeFormValues({ ...sourceCodeFormValues, topicId: topicId });
+            setLessonFormValues({ ...lessonFormValues, topicId: topicId });
             setActiveStep(1);
         },
-        [topics, sourceCodeFormValues]
+        [topics, sourceCodeFormValues, lessonFormValues]
     );
 
     const deselectTopic = useCallback(() => {
+        deselectLesson();
         setSelectedTopicId('');
         setTopicFormValues(emptyTopicForm);
+        setLessonFormValues(emptyLessonForm);
         setSourceCodes([]);
+    }, []);
+
+    const selectLesson = useCallback(
+        (lessonId: string) => {
+            const selectedLesson: Lesson = lessons.find((lesson) => lesson._id === lessonId);
+            if (!selectedLesson) {
+                return;
+            }
+            setSelectedLessonId(lessonId);
+            setLessonFormValues(selectedLesson);
+            setActiveStep(3);
+        },
+        [lessons]
+    );
+
+    const deselectLesson = useCallback(() => {
+        setSelectedLessonId('');
+        setLessonFormValues({
+            ...emptyLessonForm,
+            topicId: lessonFormValues.topicId,
+            creatorId: lessonFormValues.creatorId,
+        });
+    }, [lessonFormValues]);
+
+    const selectQuiz = useCallback((quizId: string) => {
+        const selectedQuiz: Quiz = quizzes.find((quiz) => quiz._id === quizId);
+        if (!selectedQuiz) {
+            return;
+        }
+        setSelectedQuizId(quizId);
+        setQuizFormValues(selectedQuiz);
+    }, []);
+
+    const deselectQuiz = useCallback(() => {
+        setSelectedQuizId('');
+        setQuizFormValues(emptyQuizForm);
     }, []);
 
     // TODO: Remove this. It's just for debugging
@@ -213,7 +271,7 @@ const ContentManagementSteps: FC<Props> = () => {
                 const topicIndex: number = topics.findIndex(
                     (topic) => topic._id === selectedTopicId
                 );
-                if (topicIndex === -1) throw Error('Topics data inconsistency. Please report');
+                if (topicIndex === -1) throw Error('Topics data inconsistent. Please report');
                 // Replace the old topic with the new one in the `topics` array to ensure that changes are reflected in the UI
                 setTopics(
                     topics.map((topic, i) => {
@@ -226,6 +284,37 @@ const ContentManagementSteps: FC<Props> = () => {
             })
             .catch(Notification.error);
     }, [topicFormValues, selectedTopicId, topics]);
+
+    const handleCreateLesson = useCallback(() => {
+        createLesson(lessonFormValues)
+            .then((lesson) => {
+                Notification.success('Created new lesson');
+                setLessons([...lessons, lesson]);
+                setSelectedLessonId(lesson._id);
+            })
+            .catch(Notification.error);
+    }, [lessonFormValues, lessons]);
+
+    const handleUpdateLesson = useCallback(() => {
+        editLesson(selectedLessonId, lessonFormValues)
+            .then((newLesson) => {
+                Notification.success('Updated lesson');
+                setLessonFormValues(newLesson);
+                const lessonIndex: number = lessons.findIndex(
+                    (lesson) => lesson._id === selectedLessonId
+                );
+                if (lessonIndex === -1) throw Error('Lessons data inconsistent. Please report');
+                setLessons(
+                    lessons.map((lesson, i) => {
+                        if (lesson._id === selectedLessonId) {
+                            return newLesson;
+                        }
+                        return lesson;
+                    })
+                );
+            })
+            .catch(Notification.error);
+    }, [lessonFormValues, lessons]);
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -309,8 +398,8 @@ const ContentManagementSteps: FC<Props> = () => {
                 {/* Step 2 */}
                 <Step>
                     <StepLabel>
-                        <Typography variant="body1" color="textSecondary">
-                            (Optional) Manage Topic
+                        <Typography variant="body1" color="textPrimary">
+                            Manage Topic
                         </Typography>
                     </StepLabel>
                     <StepContent>
@@ -544,7 +633,7 @@ const ContentManagementSteps: FC<Props> = () => {
                                     sx={{ mt: 1, mr: 1 }}
                                     endIcon={<ArrowDownwardIcon />}
                                 >
-                                    Skip
+                                    Continue
                                 </Button>
                                 <Button
                                     onClick={handleBack}
@@ -567,14 +656,25 @@ const ContentManagementSteps: FC<Props> = () => {
                     </StepLabel>
                     <StepContent>
                         <Typography color="textPrimary">
-                            Select one of the existing lessons or create a new one.
+                            Select one of the existing lessons or create a new one. Continue with no
+                            selection to create a new lesson.
                         </Typography>
                         <Box sx={{ mb: 2 }}>
                             <Grid container spacing={2}>
                                 {lessons &&
                                     lessons.map((lesson) => (
                                         <Grid item xs={12} sm={6} md={4} lg={3}>
-                                            <Card sx={{ maxWidth: 345 }}>
+                                            <Card
+                                                onClick={() => {
+                                                    selectedLessonId !== lesson._id
+                                                        ? selectLesson(lesson._id)
+                                                        : deselectLesson();
+                                                }}
+                                                sx={{
+                                                    background:
+                                                        selectedLessonId === lesson._id && 'yellow',
+                                                }}
+                                            >
                                                 <CardMedia
                                                     component="img"
                                                     height="140"
@@ -624,20 +724,57 @@ const ContentManagementSteps: FC<Props> = () => {
                     </StepLabel>
                     <StepContent>
                         <Typography color="textPrimary">
-                            Modify the lesson content and its quizzes.
+                            Modify or create lesson content and its quizzes.
                         </Typography>
                         <Box sx={{ mb: 2 }}>
-                            <div>CONTENT HERE</div>
+                            <Box>
+                                <TextField
+                                    sx={{ width: '100%' }}
+                                    label={'Title'}
+                                    id="lesson-title"
+                                    required
+                                    value={lessonFormValues.title}
+                                    onChange={(e) =>
+                                        setLessonFormValues({
+                                            ...lessonFormValues,
+                                            title: String(e.target.value),
+                                        })
+                                    }
+                                />
+                                <MarkdownEditor
+                                    markdownValue={lessonFormValues.rawMarkdown}
+                                    setMarkdownValue={(newMarkdown: string) =>
+                                        setLessonFormValues({
+                                            ...lessonFormValues,
+                                            rawMarkdown: newMarkdown,
+                                        })
+                                    }
+                                    readOnly={false}
+                                />
+                                <Button
+                                    color="secondary"
+                                    onClick={() =>
+                                        selectedLessonId
+                                            ? handleUpdateLesson()
+                                            : handleCreateLesson()
+                                    }
+                                    variant="contained"
+                                    sx={{ mt: 1, mr: 1 }}
+                                >
+                                    {selectedLessonId ? 'Update' : 'Create'}
+                                </Button>
+                            </Box>
                             <div>
                                 <Button
                                     onClick={handleBack}
                                     sx={{ mt: 1, mr: 1 }}
-                                    variant="outlined"
+                                    variant="contained"
                                     endIcon={<ArrowUpwardIcon />}
                                 >
                                     Back
                                 </Button>
                             </div>
+                            <pre>{JSON.stringify(lessonFormValues, null, 4)}</pre>
                         </Box>
                     </StepContent>
                 </Step>

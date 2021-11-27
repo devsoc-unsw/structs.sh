@@ -178,7 +178,12 @@ quizRouter.post('/api/lessons/quiz', async (request, response) => {
         let quizzes = lesson.quizzes;
         quizzes.push(createdQuiz._id);
 
-        await lessonService.updateLessonById(lessonId, quizzes);
+        await lessonService.updateLessonById(
+            lessonId,
+            lesson.title,
+            lesson.rawMarkdown,
+            quizzes
+        );
 
         consola.success(`Successfully created quiz: '${question}'`);
         response.status(200).json({

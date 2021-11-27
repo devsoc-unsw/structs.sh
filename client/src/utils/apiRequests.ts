@@ -11,12 +11,14 @@ export interface User {
 }
 
 export interface Quiz {
+    _id: string;
     questionType: string;
     question: string;
     answer: string;
 }
 
 export interface Lesson {
+    _id: string;
     topicId: string;
     title: string;
     rawMarkdown: string;
@@ -35,6 +37,7 @@ export interface Topic {
 }
 
 export interface SourceCode {
+    _id: string;
     topicId: string;
     title: string;
     code: string;
@@ -47,14 +50,16 @@ type GetSourceCode = (topicId: string) => Promise<SourceCode[]>;
 
 export type TopicForm = Omit<Topic, '_id'>;
 export type SourceCodeForm = Omit<SourceCode, '_id'>;
+export type LessonForm = Omit<Lesson, '_id'>;
+export type QuizForm = Omit<Quiz, '_id'>;
 
-type CreateLesson = (lesson: Lesson) => Promise<Lesson>;
-type CreateQuiz = (lessonId: string, quiz: Quiz) => Promise<Quiz>;
+type CreateLesson = (lesson: LessonForm) => Promise<Lesson>;
+type CreateQuiz = (lessonId: string, quiz: QuizForm) => Promise<Quiz>;
 type CreateTopic = (topic: TopicForm) => Promise<Topic>;
 type CreateSourceCode = (sourceCode: SourceCodeForm) => Promise<SourceCode>;
 
-type EditLesson = (lessonId: string, newLesson: Lesson) => Promise<Lesson>;
-type EditQuiz = (quizId: string, newQuiz: Quiz) => Promise<Quiz>;
+type EditLesson = (lessonId: string, newLesson: LessonForm) => Promise<Lesson>;
+type EditQuiz = (quizId: string, newQuiz: QuizForm) => Promise<Quiz>;
 type EditTopic = (topicId: string, newTopic: TopicForm) => Promise<Topic>;
 type EditSourceCode = (sourceCodeId: string, newSourceCode: SourceCodeForm) => Promise<SourceCode>;
 
@@ -103,7 +108,7 @@ export const getSourceCodes: GetSourceCode = async (topicId: string) => {
 };
 
 // TODO: Untested and unimplemented in backend
-export const createLesson: CreateLesson = async (lesson: Lesson) => {
+export const createLesson: CreateLesson = async (lesson: LessonForm) => {
     try {
         const response = await axios.post(`${ApiConstants.URL}/api/lessons`, lesson, {
             headers: { 'Content-Type': 'application/json' },
@@ -116,7 +121,7 @@ export const createLesson: CreateLesson = async (lesson: Lesson) => {
 };
 
 // TODO: Untested and unimplemented in backend
-export const createQuiz: CreateQuiz = async (lessonId: string, quiz: Quiz) => {
+export const createQuiz: CreateQuiz = async (lessonId: string, quiz: QuizForm) => {
     try {
         const response = await axios.post(
             `${ApiConstants.URL}/api/quiz`,
@@ -162,8 +167,11 @@ export const createSourceCode: CreateSourceCode = async (sourceCode: SourceCodeF
 };
 
 // TODO: Untested and unimplemented in backend
-export const editLesson: EditLesson = async (lessonId: string, newLesson: Lesson) => {
+export const editLesson: EditLesson = async (lessonId: string, newLesson: LessonForm) => {
     try {
+        if (!lessonId) {
+            throw new Error("Lesson ID mustn't be empty");
+        }
         const response = await axios.put(`${ApiConstants.URL}/api/lessons/${lessonId}`, newLesson, {
             headers: { 'Content-Type': 'application/json' },
         });
@@ -175,8 +183,11 @@ export const editLesson: EditLesson = async (lessonId: string, newLesson: Lesson
 };
 
 // TODO: Untested and unimplemented in backend
-export const editQuiz: EditQuiz = async (quizId: string, newQuiz: Quiz) => {
+export const editQuiz: EditQuiz = async (quizId: string, newQuiz: QuizForm) => {
     try {
+        if (!quizId) {
+            throw new Error("Quiz ID mustn't be empty");
+        }
         const response = await axios.put(`${ApiConstants.URL}/api/quiz/${quizId}`, newQuiz, {
             headers: { 'Content-Type': 'application/json' },
         });
@@ -188,8 +199,11 @@ export const editQuiz: EditQuiz = async (quizId: string, newQuiz: Quiz) => {
 };
 
 // TODO: Untested and unimplemented in backend
-export const editTopic: EditTopic = async (topicId: string, newTopic: Topic) => {
+export const editTopic: EditTopic = async (topicId: string, newTopic: TopicForm) => {
     try {
+        if (!topicId) {
+            throw new Error("Topic ID mustn't be empty");
+        }
         const response = await axios.put(`${ApiConstants.URL}/api/topics/${topicId}`, newTopic, {
             headers: { 'Content-Type': 'application/json' },
         });
@@ -203,7 +217,7 @@ export const editTopic: EditTopic = async (topicId: string, newTopic: Topic) => 
 // TODO: Untested and unimplemented in backend
 export const editSourceCode: EditSourceCode = async (
     sourceCodeId: string,
-    newSourceCode: SourceCode
+    newSourceCode: SourceCodeForm
 ) => {
     try {
         const response = await axios.put(
