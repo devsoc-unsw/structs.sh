@@ -8,10 +8,14 @@ import {
     AccordionDetails,
     AccordionSummary,
     Avatar,
+    FormControl,
     Grid,
+    InputLabel,
     Link,
     List,
     ListItem,
+    MenuItem,
+    Select,
     TextField,
 } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -77,9 +81,8 @@ const emptyLessonForm: LessonForm = {
 };
 
 const emptyQuizForm: QuizForm = {
-    questionType: '',
-    question: '',
-    answer: '',
+    type: '',
+    data: '',
 };
 
 const ContentManagementSteps: FC<Props> = () => {
@@ -751,6 +754,10 @@ const ContentManagementSteps: FC<Props> = () => {
                                     }
                                     readOnly={false}
                                 />
+                                <Typography color="textPrimary">
+                                    ⚠️ You must click 'Create' to create a new topic or 'Update' to
+                                    save changes before progressing!
+                                </Typography>
                                 <Button
                                     color="secondary"
                                     onClick={() =>
@@ -764,6 +771,85 @@ const ContentManagementSteps: FC<Props> = () => {
                                     {selectedLessonId ? 'Update' : 'Create'}
                                 </Button>
                             </Box>
+                            <br />
+                            <Box>
+                                <Typography variant="h5" color="textPrimary">
+                                    Manage Quizzes
+                                </Typography>
+                                {quizzes ? (
+                                    quizzes.map((quiz) => (
+                                        <Grid item>
+                                            <Card
+                                                onClick={() => {
+                                                    selectedQuizId !== quiz._id
+                                                        ? selectQuiz(quiz._id)
+                                                        : deselectQuiz();
+                                                }}
+                                                sx={{
+                                                    background:
+                                                        selectedQuizId === quiz._id && 'yellow',
+                                                }}
+                                            >
+                                                <CardContent>
+                                                    <Typography
+                                                        gutterBottom
+                                                        variant="h5"
+                                                        component="div"
+                                                    >
+                                                        {quiz.type}
+                                                    </Typography>
+                                                    <Typography variant="body1">
+                                                        {quiz.data}
+                                                    </Typography>
+                                                </CardContent>
+                                            </Card>
+                                        </Grid>
+                                    ))
+                                ) : (
+                                    <Typography variant="body1" color="textPrimary">
+                                        This lesson currently has no associated quizzes. Use the
+                                        form below to create one:
+                                    </Typography>
+                                )}
+                                {/* Quiz Builder */}
+                                {/* <Box sx={{ mt: 3 }}>
+                                    <FormControl fullWidth>
+                                        <InputLabel id="quiz-question-type">
+                                            Question Type
+                                        </InputLabel>
+                                        <Select
+                                            labelId="quiz-question-type"
+                                            label="Question Type"
+                                            value={quizFormValues.questionType}
+                                            onChange={(e) =>
+                                                setQuizFormValues({
+                                                    ...quizFormValues,
+                                                    questionType: String(e.target.value),
+                                                })
+                                            }
+                                        >
+                                            <MenuItem value={'mc'}>Multiple Choice</MenuItem>
+                                            <MenuItem value={'tf'}>True/False</MenuItem>
+                                            <MenuItem value={'qa'}>Question-Answer</MenuItem>
+                                        </Select>
+                                        <TextField
+                                            sx={{ mt: 2 }}
+                                            id="quiz-question"
+                                            label={'Question'}
+                                            value={quizFormValues.question}
+                                            placeholder="What is the meaning of life?"
+                                            multiline
+                                            onChange={(e) =>
+                                                setQuizFormValues({
+                                                    ...quizFormValues,
+                                                    question: String(e.target.value),
+                                                })
+                                            }
+                                        />
+                                    </FormControl>
+                                </Box> */}
+                            </Box>
+                            <br />
                             <div>
                                 <Button
                                     onClick={handleBack}
@@ -774,7 +860,8 @@ const ContentManagementSteps: FC<Props> = () => {
                                     Back
                                 </Button>
                             </div>
-                            <pre>{JSON.stringify(lessonFormValues, null, 4)}</pre>
+                            <pre>{JSON.stringify(quizFormValues, null, 4)}</pre>
+                            {/* <pre>{JSON.stringify(lessonFormValues, null, 4)}</pre> */}
                         </Box>
                     </StepContent>
                 </Step>

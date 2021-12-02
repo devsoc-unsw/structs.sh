@@ -10,13 +10,6 @@ export interface User {
     password: string;
 }
 
-export interface Quiz {
-    _id: string;
-    questionType: string;
-    question: string;
-    answer: string;
-}
-
 export interface Lesson {
     _id: string;
     topicId: string;
@@ -41,6 +34,40 @@ export interface SourceCode {
     topicId: string;
     title: string;
     code: string;
+}
+
+export interface Quiz {
+    _id: string;
+    type: string;
+    data: string; // This is a stringified object
+}
+
+interface MultipleChoiceQuizData {
+    question: string;
+    rawMarkdown: string;
+    choices: string[];
+    answers: string[];
+    correctMessage: string;
+    incorrectMessage: string;
+    explanation: string;
+}
+
+interface TrueFalseQuizData {
+    question: string;
+    rawMarkdown: string;
+    isTrue: boolean;
+    correctMessage: string;
+    incorrectMessage: string;
+    explanation: string;
+}
+
+interface QuestionAnswerQuizData {
+    question: string;
+    rawMarkdown: string;
+    answer: string;
+    correctMessage: string;
+    incorrectMessage: string;
+    explanation: string;
 }
 
 type GetLessons = (topicId: string) => Promise<Lesson[]>;
