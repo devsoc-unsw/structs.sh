@@ -67,6 +67,12 @@ const SidebarContents = ({ setShowSidebar }) => {
                     );
                 })}
             </List>
+            TODO: Style everything here
+            <Box>
+                <Link to="/" onClick={() => setShowSidebar(false)}>
+                    Home
+                </Link>
+            </Box>
             <Box>
                 <Link to="/about" onClick={() => setShowSidebar(false)}>
                     About Page

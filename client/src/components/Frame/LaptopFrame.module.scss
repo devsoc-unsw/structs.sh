@@ -1,0 +1,31 @@
+.computer {
+    opacity: 1;
+    z-index: 0;
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    width: auto;
+    height: 150px;
+    position: relative;
+    display: inline-block;
+    margin-top: 20px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+
+    .screen {
+        height: 77%;
+        width: 66%;
+        background: url(https://www.aber.ac.uk/en/news/archive/2020/08/alpaca-bach-haf2020-web.jpg);
+        background-size: cover;
+        position: absolute;
+        top: 7%;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    img {
+        height: 100%;
+        width: auto;
+        z-index: 1;
+    }
+}
