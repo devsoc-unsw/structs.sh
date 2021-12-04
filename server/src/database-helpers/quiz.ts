@@ -2,6 +2,7 @@ import { Quiz } from '../typedefs/quiz/Quiz';
 import {
     MultipleChoiceQuizModel,
     QuestionAnswerQuizModel,
+    QuizModel,
     TrueFalseQuizModel,
 } from '../schemas/quiz/quiz';
 import consola from 'consola';
@@ -62,9 +63,7 @@ export class QuizMongoService {
      */
     public async getQuizById(id: string): Promise<Quiz> {
         try {
-            const quizResponse = (await MultipleChoiceQuizModel.findById(
-                id
-            )) as Quiz;
+            const quizResponse = (await QuizModel.findById(id)) as Quiz;
             return quizResponse;
         } catch (err) {
             throw new Error(err.message);

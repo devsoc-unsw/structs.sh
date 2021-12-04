@@ -3,7 +3,7 @@ import SunIcon from '@mui/icons-material/Brightness7';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import MoonIcon from '@mui/icons-material/NightsStay';
-import { Button } from '@mui/material';
+import { Button, FormControl, TextField } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -17,11 +17,17 @@ import bstIcon from 'assets/img/bst.png';
 import linkedListIcon from 'assets/img/linked-list.png';
 import logo from 'assets/img/logo.png';
 import { Modal } from 'components/Modal';
+import { getTopicOps } from 'utils/content';
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { getTopics, Topic } from 'utils/apiRequests';
 import Drawer from './Drawer';
 import SidebarContents from './SidebarContents';
 import styles from './TopNavbar.module.scss';
+import { titleToUrl } from 'utils/url';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import GoogleIcon from '@mui/icons-material/Google';
+import { Notification } from 'utils/Notification';
 
 interface Props {
     position?: 'fixed' | 'static';
@@ -30,6 +36,8 @@ interface Props {
 
 const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true }) => {
     const context = useContext(ThemeMutationContext);
+
+    const [topics, setTopics] = useState<Topic[]>([]);
 
     const [hasScrolledDown, setHasScrolledDown] = useState<boolean>(false);
 
@@ -49,6 +57,14 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
             setHasScrolledDown(yOffsetPx <= 0 ? false : true);
         });
     }, [setHasScrolledDown]);
+
+    /* ------------------------------ Data Fetching ----------------------------- */
+
+    useEffect(() => {
+        getTopics()
+            .then((topics) => setTopics(topics))
+            .catch(() => console.log('TopNav: failed to get topics'));
+    }, []);
 
     /* --------------------------- Dropdown Callbacks --------------------------- */
 
@@ -141,30 +157,14 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
             onClose={handleLearnMenuClose}
             className={styles.visualiserMenu}
         >
-            <MenuItem className={styles.item}>
-                <Link to="/visualiser/linked-list">
-                    <IconButton size="large" aria-haspopup="true" color="inherit">
-                        <img
-                            src={linkedListIcon}
-                            style={{ height: '40px', width: '100%' }}
-                            alt="visualiser icon"
-                        />
-                    </IconButton>
-                    <span>Linked List</span>
-                </Link>
-            </MenuItem>
-            <MenuItem className={styles.item}>
-                <Link to="/visualiser/bst">
-                    <IconButton size="large" aria-haspopup="true" color="inherit">
-                        <img
-                            src={bstIcon}
-                            style={{ height: '40px', width: '100%' }}
-                            alt="visualiser icon"
-                        />
-                    </IconButton>
-                    <span>Binary Search Tree</span>
-                </Link>
-            </MenuItem>
+            {topics &&
+                topics.map((topic) => (
+                    <MenuItem className={styles.item}>
+                        <Link to={`/visualiser/${titleToUrl(topic.title)}`}>
+                            <span>{topic.title}</span>
+                        </Link>
+                    </MenuItem>
+                ))}
         </Menu>
     );
 
@@ -205,7 +205,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
                             endIcon={<KeyboardArrowDownIcon />}
                             sx={{ fontSize: '100%' }}
                         >
-                            <strong>Visualiser</strong>
+                            <strong>Topics</strong>
                         </Button>
                     </Box>
                     <Box sx={{ flexGrow: 1 }}>
@@ -249,7 +249,27 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
                             </Button>
                         )}
                     >
-                        Login
+                        <Typography color="textPrimary" variant="h4" sx={{ textAlign: 'center' }}>
+                            Login
+                        </Typography>
+                        <FormControl fullWidth>
+                            <TextField label="Email" sx={{ mt: 2 }} />
+                            <TextField label="Password" sx={{ mt: 2 }} />
+                        </FormControl>
+                        <Box sx={{ textAlign: 'center', mt: 2 }}>
+                            <FacebookIcon />
+                            <GoogleIcon />
+                        </Box>
+                        <Box sx={{ textAlign: 'center' }}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                sx={{ mt: 2 }}
+                                onClick={() => Notification.error('Unimplemented')}
+                            >
+                                Submit
+                            </Button>
+                        </Box>
                     </Modal>
                     <Modal
                         Button={() => (
@@ -258,7 +278,28 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
                             </Button>
                         )}
                     >
-                        Register
+                        <Typography color="textPrimary" variant="h4" sx={{ textAlign: 'center' }}>
+                            Register
+                        </Typography>
+                        <FormControl fullWidth>
+                            <TextField label="Email" sx={{ mt: 2 }} />
+                            <TextField label="Username" sx={{ mt: 2 }} />
+                            <TextField label="Password" sx={{ mt: 2 }} />
+                        </FormControl>
+                        <Box sx={{ textAlign: 'center', mt: 2 }}>
+                            <FacebookIcon />
+                            <GoogleIcon />
+                        </Box>
+                        <Box sx={{ textAlign: 'center' }}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                sx={{ mt: 2 }}
+                                onClick={() => Notification.error('Unimplemented')}
+                            >
+                                Submit
+                            </Button>
+                        </Box>
                     </Modal>
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                         <IconButton

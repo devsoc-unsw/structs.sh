@@ -16,7 +16,7 @@ const quizMongoSchema = new mongoose.Schema(
     options
 );
 
-const QuizModel = mongoose.model('quiz', quizMongoSchema);
+export const QuizModel = mongoose.model('quiz', quizMongoSchema);
 
 export const MultipleChoiceQuizModel = QuizModel.discriminator(
     'MultipleChoice',

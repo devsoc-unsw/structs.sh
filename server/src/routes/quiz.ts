@@ -69,15 +69,16 @@ quizRouter.get('/api/lessons/quiz', async (request, response) => {
             });
         }
 
-        console.log(lesson);
-
         // Fetching quizzes
         const quizFetchQueries: Promise<Quiz>[] = lesson.quizzes.map((quizId) =>
             quizzesService.getQuizById(quizId)
         );
         const quizzes: Quiz[] = await Promise.all(quizFetchQueries);
 
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
         consola.success(`Successfully fetched quizzes for lesson: ${lessonId}`);
+        console.log(quizzes);
         response.status(200).json({
             statusText: `Successfully fetched quizzes for lesson: ${lessonId}`,
             quizzes: quizzes,

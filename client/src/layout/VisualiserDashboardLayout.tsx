@@ -6,6 +6,7 @@ import TopNavbar from 'components/Navbars/TopNavbar';
 import { Theme } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import Box from '@mui/material/Box';
+import { Topic } from 'utils/apiRequests';
 
 const containerVariants = {
     hidden: {
@@ -23,7 +24,7 @@ const containerVariants = {
 
 interface Props {
     children: React.ReactNode;
-    topic: string;
+    topic: Topic;
 }
 
 const Dashboard: FC<Props> = ({ children, topic }) => {
@@ -38,7 +39,7 @@ const Dashboard: FC<Props> = ({ children, topic }) => {
             exit="exit"
         >
             <Helmet>
-                <title>Structs.sh — {topic}</title>
+                <title>{topic ? topic.title : 'Structs.sh'}</title>
             </Helmet>
             <TopNavbar position="static" enableOnScrollEffect={false} />
             <Box

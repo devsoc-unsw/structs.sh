@@ -1,6 +1,7 @@
 import { Box, Grid, Tab, Tabs, Theme, Typography } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import { FC, useState } from 'react';
+import { Topic } from 'utils/apiRequests';
 import TabRenderer from './TabRenderer';
 import './Tabs.scss';
 
@@ -31,7 +32,7 @@ function TabPanel(props: TabPanelProps) {
 }
 
 interface Props {
-    topic?: string;
+    topic: Topic;
     tabs?: string[];
 }
 

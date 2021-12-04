@@ -8,6 +8,7 @@ import {
     AccordionDetails,
     AccordionSummary,
     Avatar,
+    Divider,
     FormControl,
     Grid,
     InputLabel,
@@ -15,11 +16,15 @@ import {
     List,
     ListItem,
     MenuItem,
+    NativeSelect,
+    Pagination,
+    Paper,
     Select,
     TextField,
 } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import { BaseQuizForm, MCQuizForm, TFQuizForm, QAQuizForm } from './QuizForm';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -36,6 +41,7 @@ import { TagSelector } from 'components/Tags';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import {
     createLesson,
+    createQuiz,
     createSourceCode,
     createTopic,
     editLesson,
@@ -46,15 +52,19 @@ import {
     getTopics,
     Lesson,
     LessonForm,
+    MultipleChoiceQuizForm,
+    QuestionAnswerQuizForm,
     Quiz,
     QuizForm,
     SourceCode,
     SourceCodeForm,
     Topic,
     TopicForm,
+    TrueFalseQuizForm,
 } from 'utils/apiRequests';
 import { Notification } from 'utils/Notification';
 import styles from './ContentManagement.module.scss';
+import renderMarkdown from 'utils/markdown-util';
 
 interface Props {}
 
@@ -81,9 +91,40 @@ const emptyLessonForm: LessonForm = {
     quizzes: [],
 };
 
-const emptyQuizForm: QuizForm = {
+const emptyNewQuizForm: QuizForm = {
+    type: 'mc',
+    question: '',
+    description: '',
+    explanation: '',
+};
+
+const emptyMCQuizForm: MultipleChoiceQuizForm = {
     type: '',
-    data: '',
+    question: '',
+    description: '',
+    choices: [],
+    answers: [],
+    maxSelections: 1,
+    correctMessage: '',
+    incorrectMessage: '',
+    explanation: '',
+};
+
+const emptyTFQuizForm: TrueFalseQuizForm = {
+    type: '',
+    question: '',
+    description: '',
+    isTrue: true,
+    correctMessage: '',
+    incorrectMessage: '',
+    explanation: '',
+};
+
+const emptyQAQuizForm: QuestionAnswerQuizForm = {
+    type: '',
+    question: '',
+    description: '',
+    explanation: '',
 };
 
 const ContentManagementSteps: FC<Props> = () => {
@@ -104,7 +145,10 @@ const ContentManagementSteps: FC<Props> = () => {
 
     const [quizzes, setQuizzes] = useState<Quiz[]>([]);
     const [selectedQuizId, setSelectedQuizId] = useState<string>('');
-    const [quizFormValues, setQuizFormValues] = useState<QuizForm>(emptyQuizForm);
+    const [quizFormValues, setQuizFormValues] = useState<QuizForm>();
+    const [selectedQuizIndex, setSelectedQuizIndex] = useState<number>(-1);
+
+    const [newQuizFormValues, setNewQuizFormValues] = useState<QuizForm>(emptyNewQuizForm);
 
     /* ------------------------------ Data Fetching ----------------------------- */
 
@@ -135,7 +179,12 @@ const ContentManagementSteps: FC<Props> = () => {
         (lessonId: string) => {
             getQuizzes(lessonId)
                 .then((quizzes: Quiz[]) => {
+                    if (!quizzes) throw Error('Invalid quizzes were retrieved');
                     setQuizzes(quizzes);
+                    if (quizzes.length > 0) {
+                        setSelectedQuizIndex(0);
+                        setQuizFormValues(quizzes[0]);
+                    }
                 })
                 .catch((errMessage) => {
                     Notification.error(`Failed to load quizzes. Reason: ${errMessage}`);
@@ -214,32 +263,35 @@ const ContentManagementSteps: FC<Props> = () => {
     );
 
     const deselectLesson = useCallback(() => {
+        deselectQuiz();
         setSelectedLessonId('');
         setLessonFormValues({
             ...emptyLessonForm,
             topicId: lessonFormValues.topicId,
             creatorId: lessonFormValues.creatorId,
         });
+        setSelectedQuizIndex(-1);
     }, [lessonFormValues]);
 
-    const selectQuiz = useCallback((quizId: string) => {
-        const selectedQuiz: Quiz = quizzes.find((quiz) => quiz._id === quizId);
-        if (!selectedQuiz) {
-            return;
-        }
-        setSelectedQuizId(quizId);
-        setQuizFormValues(selectedQuiz);
-    }, []);
+    const selectQuiz = useCallback(
+        (quizId: string) => {
+            const selectedQuizIndex: number = quizzes.findIndex((quiz) => quiz._id === quizId);
+            if (selectedQuizIndex === -1) {
+                Notification.error(`Quiz doesn't seem to exist. ID: ${quizId}`);
+                return;
+            }
+            setSelectedQuizId(quizId);
+            setQuizFormValues(quizzes[selectedQuizIndex]);
+            setSelectedQuizIndex(selectedQuizIndex);
+        },
+        [quizzes, selectedQuizIndex, quizFormValues]
+    );
 
     const deselectQuiz = useCallback(() => {
         setSelectedQuizId('');
-        setQuizFormValues(emptyQuizForm);
+        setQuizFormValues(null);
+        setSelectedQuizIndex(-1);
     }, []);
-
-    // TODO: Remove this. It's just for debugging
-    useEffect(() => {
-        console.log(topicFormValues);
-    }, [topicFormValues]);
 
     /* ----------------------------- Form Callbacks ----------------------------- */
 
@@ -320,6 +372,20 @@ const ContentManagementSteps: FC<Props> = () => {
             .catch(Notification.error);
     }, [lessonFormValues, lessons]);
 
+    const handleCreateQuiz = useCallback(() => {
+        createQuiz(selectedLessonId, newQuizFormValues)
+            .then((newQuiz) => {
+                Notification.success('Created quiz');
+                setQuizzes([...quizzes, newQuiz]);
+                setNewQuizFormValues(emptyNewQuizForm);
+            })
+            .catch(Notification.error);
+    }, [newQuizFormValues]);
+
+    const handleUpdateQuiz = useCallback(() => {
+        Notification.error('Unimplemented');
+    }, [quizFormValues, quizzes]);
+
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
@@ -358,9 +424,12 @@ const ContentManagementSteps: FC<Props> = () => {
                                                 }}
                                                 className={styles.card}
                                                 sx={{
-                                                    background:
+                                                    transform:
                                                         selectedTopicId === topic._id &&
-                                                        'greenyellow',
+                                                        'scale(1.05)',
+                                                    boxShadow:
+                                                        selectedTopicId === topic._id &&
+                                                        'rgba(116, 47, 237, 0.25) 0px 0px 20px 10px, rgba(0, 0, 0, 0.6) 0px 0px 0px 1px',
                                                 }}
                                             >
                                                 <CardMedia
@@ -414,80 +483,96 @@ const ContentManagementSteps: FC<Props> = () => {
                         </Typography>
                         <Box sx={{ mb: 2 }}>
                             <Box sx={{ mt: 2 }}>
-                                {/* Title */}
-                                <TextField
-                                    required
-                                    sx={{ width: '100%', mb: 2 }}
-                                    id="topic-title"
-                                    label="Title"
-                                    placeholder="Eg. Linked Lists"
-                                    value={topicFormValues.title}
-                                    onChange={(e) => {
-                                        setTopicFormValues({
-                                            ...topicFormValues,
-                                            title: String(e.target.value),
-                                        });
-                                    }}
-                                />
-                                {/* Description */}
-                                <TextField
-                                    required
-                                    sx={{ width: '100%', mb: 2 }}
-                                    id="topic-description"
-                                    label="Description"
-                                    placeholder="Eg. A linear collection of elements"
-                                    value={topicFormValues.description}
-                                    onChange={(e) => {
-                                        setTopicFormValues({
-                                            ...topicFormValues,
-                                            description: String(e.target.value),
-                                        });
-                                    }}
-                                />
-                                {/* Image URL */}
-                                <TextField
-                                    required
-                                    sx={{ width: '100%', mb: 2 }}
-                                    id="topic-image"
-                                    label="Image URL"
-                                    placeholder="URL"
-                                    value={topicFormValues.image}
-                                    onChange={(e) => {
-                                        setTopicFormValues({
-                                            ...topicFormValues,
-                                            image: String(e.target.value),
-                                        });
-                                    }}
-                                />
-                                {/* Courses */}
-                                <Box sx={{ mb: 4 }}>
-                                    <Typography color="textPrimary" variant="h6">
-                                        UNSW courses that this topic belongs to:
+                                <Paper elevation={3} sx={{ margin: 3, padding: 3 }}>
+                                    <Typography
+                                        variant="h5"
+                                        color="textPrimary"
+                                        sx={{ textAlign: 'center' }}
+                                    >
+                                        Manage Topic
                                     </Typography>
-                                    <CoursesSelector
-                                        courses={topicFormValues.courses}
-                                        addValue={(newValue: string) =>
+                                    <Divider />
+                                    {/* Title */}
+                                    <TextField
+                                        required
+                                        sx={{ width: '100%', mb: 2, mt: 3 }}
+                                        id="topic-title"
+                                        label="Title"
+                                        placeholder="Eg. Linked Lists"
+                                        value={topicFormValues.title}
+                                        onChange={(e) => {
                                             setTopicFormValues({
                                                 ...topicFormValues,
-                                                courses: [...topicFormValues.courses, newValue],
-                                            })
-                                        }
+                                                title: String(e.target.value),
+                                            });
+                                        }}
                                     />
-                                    <TagSelector
-                                        selectedTags={topicFormValues.courses}
-                                        setSelectedTags={(tags) =>
+                                    {/* Description */}
+                                    <TextField
+                                        required
+                                        sx={{ width: '100%', mb: 2 }}
+                                        id="topic-description"
+                                        label="Description"
+                                        placeholder="Eg. A linear collection of elements"
+                                        value={topicFormValues.description}
+                                        onChange={(e) => {
                                             setTopicFormValues({
                                                 ...topicFormValues,
-                                                courses: tags,
-                                            })
-                                        }
+                                                description: String(e.target.value),
+                                            });
+                                        }}
                                     />
-                                </Box>
+                                    {/* Image URL */}
+                                    <TextField
+                                        required
+                                        sx={{ width: '100%', mb: 2 }}
+                                        id="topic-image"
+                                        label="Image URL"
+                                        placeholder="URL"
+                                        value={topicFormValues.image}
+                                        onChange={(e) => {
+                                            setTopicFormValues({
+                                                ...topicFormValues,
+                                                image: String(e.target.value),
+                                            });
+                                        }}
+                                    />
+                                    {/* Courses */}
+                                    <Box sx={{ mb: 4 }}>
+                                        <Typography color="textPrimary" variant="h6">
+                                            Courses:
+                                        </Typography>
+                                        <CoursesSelector
+                                            courses={topicFormValues.courses}
+                                            addValue={(newValue: string) =>
+                                                setTopicFormValues({
+                                                    ...topicFormValues,
+                                                    courses: [...topicFormValues.courses, newValue],
+                                                })
+                                            }
+                                        />
+                                        <TagSelector
+                                            selectedTags={topicFormValues.courses}
+                                            setSelectedTags={(tags) =>
+                                                setTopicFormValues({
+                                                    ...topicFormValues,
+                                                    courses: tags,
+                                                })
+                                            }
+                                        />
+                                    </Box>
+                                </Paper>
+
                                 {/* Videos */}
-                                <Box sx={{ mb: 4 }}>
-                                    <Typography color="textPrimary" variant="h6">
-                                        List of videos related to this topic:
+                                <Paper elevation={3} sx={{ margin: 3, padding: 3 }}>
+                                    <Typography
+                                        color="textPrimary"
+                                        variant="h6"
+                                        sx={{ textAlign: 'center' }}
+                                    >
+                                        Manage Videos
                                     </Typography>
+                                    <Divider />
                                     <List>
                                         {topicFormValues.videos &&
                                             topicFormValues.videos.map((videoUrl) => (
@@ -517,66 +602,78 @@ const ContentManagementSteps: FC<Props> = () => {
                                                     </Link>
                                                 </ListItem>
                                             ))}
-                                        <Typography color="textPrimary">
-                                            Press Enter to add video URL
-                                        </Typography>
-                                        <TextField
-                                            label="Video URL"
-                                            placeholder="Eg. https://youtube.com/..."
-                                            onKeyDown={(e: any) => {
-                                                if (e.keyCode === 13) {
-                                                    setTopicFormValues({
-                                                        ...topicFormValues,
-                                                        videos: [
-                                                            ...topicFormValues.videos,
-                                                            String(e.target.value),
-                                                        ],
-                                                    });
-                                                }
-                                            }}
-                                        />
+                                        <Divider />
+                                        <FormControl fullWidth sx={{ mt: 3 }}>
+                                            <Typography color="textPrimary">
+                                                Press Enter to add video URL:
+                                            </Typography>
+                                            <TextField
+                                                label="Video URL"
+                                                placeholder="Eg. https://youtube.com/..."
+                                                onKeyDown={(e: any) => {
+                                                    if (e.keyCode === 13) {
+                                                        setTopicFormValues({
+                                                            ...topicFormValues,
+                                                            videos: [
+                                                                ...topicFormValues.videos,
+                                                                String(e.target.value),
+                                                            ],
+                                                        });
+                                                        e.target.value = '';
+                                                    }
+                                                }}
+                                            />
+                                        </FormControl>
                                     </List>
+                                </Paper>
+
+                                <Box sx={{ textAlign: 'center' }}>
+                                    {selectedTopicId ? (
+                                        <>
+                                            <Typography color="textPrimary">
+                                                ⚠️ You <strong>must</strong> click 'Submit' to
+                                                create a new topic or save changes before
+                                                progressing!
+                                            </Typography>
+                                            <Button
+                                                variant="contained"
+                                                color="secondary"
+                                                sx={{ mt: 1, mr: 1, mb: 6 }}
+                                                onClick={() => handleUpdateTopic()}
+                                            >
+                                                Submit
+                                            </Button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Typography color="textPrimary">
+                                                ⚠️ You <strong>must</strong> click 'Create' to
+                                                create a new topic or save changes before
+                                                progressing!
+                                            </Typography>
+                                            <Button
+                                                variant="contained"
+                                                color="secondary"
+                                                sx={{ mt: 1, mr: 1, mb: 6 }}
+                                                onClick={() => handleCreateTopic()}
+                                            >
+                                                Create
+                                            </Button>
+                                        </>
+                                    )}
                                 </Box>
 
-                                <br />
-
-                                {selectedTopicId ? (
-                                    <>
-                                        <Typography color="textPrimary">
-                                            ⚠️ You must click 'Submit' to create a new topic or save
-                                            changes before progressing!
-                                        </Typography>
-                                        <Button
-                                            variant="contained"
-                                            color="secondary"
-                                            sx={{ mt: 1, mr: 1, mb: 6 }}
-                                            onClick={() => handleUpdateTopic()}
-                                        >
-                                            Submit
-                                        </Button>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Typography color="textPrimary">
-                                            ⚠️ You must click 'Create' to create a new topic or save
-                                            changes before progressing!
-                                        </Typography>
-                                        <Button
-                                            variant="contained"
-                                            color="secondary"
-                                            sx={{ mt: 1, mr: 1, mb: 6 }}
-                                            onClick={() => handleCreateTopic()}
-                                        >
-                                            Create
-                                        </Button>
-                                    </>
-                                )}
-
                                 {/* Source Code */}
-                                <Box sx={{ mb: 4 }}>
-                                    <Typography color="textPrimary" variant="h6">
-                                        Topic-related source code to display to students:
+                                <Paper elevation={3} sx={{ margin: 3, padding: 3 }}>
+                                    <Typography
+                                        color="textPrimary"
+                                        variant="h6"
+                                        sx={{ textAlign: 'center' }}
+                                    >
+                                        Manage Source Code
                                     </Typography>
+                                    <Divider sx={{ mb: 2 }} />
+
                                     {sourceCodes &&
                                         sourceCodes.map((sourceCode) => (
                                             <Accordion>
@@ -594,43 +691,54 @@ const ContentManagementSteps: FC<Props> = () => {
                                                 </AccordionDetails>
                                             </Accordion>
                                         ))}
-                                    <Typography color="textPrimary">Add new snippet</Typography>
+                                </Paper>
+                                <Paper elevation={3} sx={{ margin: 3, padding: 3 }}>
                                     <Box sx={{ textAlign: 'center' }}>
-                                        <TextField
-                                            id="topic-source-code-title"
-                                            label="Title"
-                                            placeholder="Eg. Insertion Algorithm"
-                                            onChange={(e) =>
-                                                setSourceCodeFormValues({
-                                                    ...sourceCodeFormValues,
-                                                    title: String(e.target.value),
-                                                })
-                                            }
-                                        />
-                                        <TextField
-                                            id="topic-source-code-code"
-                                            label="Source Code"
-                                            placeholder="Placeholder"
-                                            multiline
-                                            variant="standard"
-                                            onChange={(e) =>
-                                                setSourceCodeFormValues({
-                                                    ...sourceCodeFormValues,
-                                                    code: String(e.target.value),
-                                                })
-                                            }
-                                            sx={{ width: '100%' }}
-                                        />
-                                        <br />
+                                        <Typography
+                                            color="textPrimary"
+                                            variant="h6"
+                                            sx={{ textAlign: 'center' }}
+                                        >
+                                            Create Source Code Snippet
+                                        </Typography>
+                                        <Divider sx={{ mb: 2 }} />
+                                        <FormControl fullWidth>
+                                            <TextField
+                                                id="topic-source-code-title"
+                                                label="Title"
+                                                placeholder="Eg. Insertion Algorithm"
+                                                onChange={(e) =>
+                                                    setSourceCodeFormValues({
+                                                        ...sourceCodeFormValues,
+                                                        title: String(e.target.value),
+                                                    })
+                                                }
+                                            />
+                                            <TextField
+                                                id="topic-source-code-code"
+                                                label="Source Code"
+                                                placeholder="void insert(...) { ... }"
+                                                multiline
+                                                variant="standard"
+                                                onChange={(e) =>
+                                                    setSourceCodeFormValues({
+                                                        ...sourceCodeFormValues,
+                                                        code: String(e.target.value),
+                                                    })
+                                                }
+                                                sx={{ width: '100%' }}
+                                            />
+                                        </FormControl>
                                         <Button
                                             variant="contained"
                                             color="primary"
                                             onClick={handleCreateCodeSnippet}
+                                            sx={{ mt: 2 }}
                                         >
-                                            Submit Code
+                                            Submit
                                         </Button>
                                     </Box>
-                                </Box>
+                                </Paper>
                             </Box>
                             <div>
                                 <Button
@@ -666,7 +774,7 @@ const ContentManagementSteps: FC<Props> = () => {
                             selection to create a new lesson.
                         </Typography>
                         <Box sx={{ mb: 2 }}>
-                            <Grid container spacing={2}>
+                            <Grid container spacing={3} sx={{ mt: 2, mb: 2 }}>
                                 {lessons &&
                                     lessons.map((lesson) => (
                                         <Grid item xs={12} sm={6} md={4} lg={3}>
@@ -676,9 +784,14 @@ const ContentManagementSteps: FC<Props> = () => {
                                                         ? selectLesson(lesson._id)
                                                         : deselectLesson();
                                                 }}
+                                                className={styles.card}
                                                 sx={{
-                                                    background:
-                                                        selectedLessonId === lesson._id && 'yellow',
+                                                    transform:
+                                                        selectedLessonId === lesson._id &&
+                                                        'scale(1.05)',
+                                                    boxShadow:
+                                                        selectedLessonId === lesson._id &&
+                                                        'rgba(116, 47, 237, 0.25) 0px 0px 20px 10px, rgba(0, 0, 0, 0.6) 0px 0px 0px 1px',
                                                 }}
                                             >
                                                 <CardMedia
@@ -732,8 +845,8 @@ const ContentManagementSteps: FC<Props> = () => {
                         <Typography color="textPrimary">
                             Modify or create lesson content and its quizzes.
                         </Typography>
-                        <Box sx={{ mb: 2 }}>
-                            <Box>
+                        <Box>
+                            <Paper elevation={3} sx={{ padding: 3, margin: 3 }}>
                                 <TextField
                                     sx={{ width: '100%' }}
                                     label={'Title'}
@@ -747,110 +860,438 @@ const ContentManagementSteps: FC<Props> = () => {
                                         })
                                     }
                                 />
-                                <MarkdownEditor
-                                    markdownValue={lessonFormValues.rawMarkdown}
-                                    setMarkdownValue={(newMarkdown: string) =>
-                                        setLessonFormValues({
-                                            ...lessonFormValues,
-                                            rawMarkdown: newMarkdown,
-                                        })
-                                    }
-                                    readOnly={false}
-                                />
-                                <Typography color="textPrimary">
-                                    ⚠️ You must click 'Create' to create a new topic or 'Update' to
-                                    save changes before progressing!
-                                </Typography>
-                                <Button
-                                    color="secondary"
-                                    onClick={() =>
-                                        selectedLessonId
-                                            ? handleUpdateLesson()
-                                            : handleCreateLesson()
-                                    }
-                                    variant="contained"
-                                    sx={{ mt: 1, mr: 1 }}
-                                >
-                                    {selectedLessonId ? 'Update' : 'Create'}
-                                </Button>
-                            </Box>
+                                <Box sx={{ padding: 3 }}>
+                                    <Divider />
+                                    <MarkdownEditor
+                                        markdownValue={lessonFormValues.rawMarkdown}
+                                        setMarkdownValue={(newMarkdown: string) =>
+                                            setLessonFormValues({
+                                                ...lessonFormValues,
+                                                rawMarkdown: newMarkdown,
+                                            })
+                                        }
+                                        readOnly={false}
+                                    />
+                                    <Divider />
+                                </Box>
+                                <Box sx={{ textAlign: 'center' }}>
+                                    <Typography color="textPrimary">
+                                        ⚠️ You <strong>must</strong> click 'Create' to create a new
+                                        topic or 'Update' to save changes before progressing!
+                                    </Typography>
+                                    <Button
+                                        color="secondary"
+                                        onClick={() =>
+                                            selectedLessonId
+                                                ? handleUpdateLesson()
+                                                : handleCreateLesson()
+                                        }
+                                        variant="contained"
+                                        sx={{ mt: 1, mr: 1 }}
+                                    >
+                                        {selectedLessonId ? 'Update' : 'Create'}
+                                    </Button>
+                                </Box>
+                            </Paper>
                             <br />
                             <Box>
-                                <Typography variant="h5" color="textPrimary">
-                                    Manage Quizzes
-                                </Typography>
-                                {quizzes ? (
-                                    quizzes.map((quiz) => (
-                                        <Grid item>
-                                            <Card
-                                                onClick={() => {
-                                                    selectedQuizId !== quiz._id
-                                                        ? selectQuiz(quiz._id)
-                                                        : deselectQuiz();
-                                                }}
-                                                sx={{
-                                                    background:
-                                                        selectedQuizId === quiz._id && 'yellow',
-                                                }}
-                                            >
-                                                <CardContent>
-                                                    <Typography
-                                                        gutterBottom
-                                                        variant="h5"
-                                                        component="div"
-                                                    >
-                                                        {quiz.type}
-                                                    </Typography>
-                                                    <Typography variant="body1">
-                                                        {quiz.data}
-                                                    </Typography>
-                                                </CardContent>
-                                            </Card>
-                                        </Grid>
-                                    ))
-                                ) : (
-                                    <Typography variant="body1" color="textPrimary">
-                                        This lesson currently has no associated quizzes. Use the
-                                        form below to create one:
+                                <Box sx={{ textAlign: 'center' }}>
+                                    <Typography variant="h5" color="textPrimary">
+                                        Manage Quizzes
                                     </Typography>
+                                    <Pagination
+                                        sx={{ display: 'inline-block', margin: 2 }}
+                                        count={quizzes ? quizzes.length : 0}
+                                        color="primary"
+                                        page={selectedQuizIndex + 1}
+                                        onChange={(_, value) => {
+                                            selectQuiz(quizzes[value - 1]._id);
+                                        }}
+                                    />
+                                </Box>
+                                {/* Quiz Preview */}
+                                {quizFormValues && (
+                                    <Paper elevation={3} sx={{ margin: 3, padding: 3 }}>
+                                        <Typography gutterBottom variant="h5" component="div">
+                                            Quiz Question Preview:
+                                        </Typography>
+                                        {/* TODO: Render the current quiz component we have */}
+                                        <Typography variant="h6">
+                                            {quizFormValues.question}
+                                        </Typography>
+                                        <Typography variant="body1">
+                                            <div
+                                                dangerouslySetInnerHTML={{
+                                                    __html: renderMarkdown(
+                                                        quizFormValues.description
+                                                    ),
+                                                }}
+                                            />
+                                        </Typography>
+                                    </Paper>
                                 )}
-                                {/* Quiz Builder */}
-                                {/* <Box sx={{ mt: 3 }}>
-                                    <FormControl fullWidth>
-                                        <InputLabel id="quiz-question-type">
-                                            Question Type
-                                        </InputLabel>
-                                        <Select
-                                            labelId="quiz-question-type"
-                                            label="Question Type"
-                                            value={quizFormValues.questionType}
-                                            onChange={(e) =>
+
+                                {/* Quiz Question Update Form */}
+                                {quizFormValues && (
+                                    <Paper elevation={3} sx={{ margin: 3, padding: 4 }}>
+                                        <Typography
+                                            color="primary"
+                                            variant={'h5'}
+                                            sx={{ textAlign: 'center' }}
+                                        >
+                                            Update Quiz
+                                        </Typography>
+                                        <Divider />
+                                        <BaseQuizForm
+                                            question={quizFormValues.question}
+                                            description={quizFormValues.description}
+                                            handleChangeQuestion={(question) =>
                                                 setQuizFormValues({
                                                     ...quizFormValues,
-                                                    questionType: String(e.target.value),
+                                                    question: question,
                                                 })
                                             }
-                                        >
-                                            <MenuItem value={'mc'}>Multiple Choice</MenuItem>
-                                            <MenuItem value={'tf'}>True/False</MenuItem>
-                                            <MenuItem value={'qa'}>Question-Answer</MenuItem>
-                                        </Select>
-                                        <TextField
-                                            sx={{ mt: 2 }}
-                                            id="quiz-question"
-                                            label={'Question'}
-                                            value={quizFormValues.question}
-                                            placeholder="What is the meaning of life?"
-                                            multiline
-                                            onChange={(e) =>
+                                            handleChangeDescription={(description) =>
                                                 setQuizFormValues({
                                                     ...quizFormValues,
-                                                    question: String(e.target.value),
+                                                    description: description,
                                                 })
                                             }
                                         />
-                                    </FormControl>
-                                </Box> */}
+                                        {quizFormValues &&
+                                            (quizFormValues.type === 'mc' ? (
+                                                <>
+                                                    <MCQuizForm
+                                                        choices={
+                                                            (quizFormValues as MultipleChoiceQuizForm)
+                                                                .choices
+                                                        }
+                                                        handleChangeChoices={(newChoices) => {
+                                                            setQuizFormValues((oldForm) => ({
+                                                                ...oldForm,
+                                                                choices: newChoices,
+                                                            }));
+                                                        }}
+                                                        answers={
+                                                            (quizFormValues as MultipleChoiceQuizForm)
+                                                                .answers
+                                                        }
+                                                        handleChangeAnswers={(answers) =>
+                                                            setQuizFormValues((oldForm) => ({
+                                                                ...oldForm,
+                                                                answers: answers,
+                                                            }))
+                                                        }
+                                                        maxSelections={
+                                                            (quizFormValues as MultipleChoiceQuizForm)
+                                                                .maxSelections
+                                                        }
+                                                        handleChangeMaxSelections={(
+                                                            maxSelections
+                                                        ) =>
+                                                            setQuizFormValues((oldForm) => ({
+                                                                ...oldForm,
+                                                                maxSelections: maxSelections,
+                                                            }))
+                                                        }
+                                                        correctMessage={
+                                                            (quizFormValues as MultipleChoiceQuizForm)
+                                                                .correctMessage
+                                                        }
+                                                        handleChangeCorrectMessage={(
+                                                            correctMessage
+                                                        ) =>
+                                                            setQuizFormValues((oldForm) => ({
+                                                                ...oldForm,
+                                                                correctMessage: correctMessage,
+                                                            }))
+                                                        }
+                                                        incorrectMessage={
+                                                            (quizFormValues as MultipleChoiceQuizForm)
+                                                                .incorrectMessage
+                                                        }
+                                                        handleChangeIncorrectMessage={(
+                                                            incorrectMessage
+                                                        ) =>
+                                                            setQuizFormValues((oldForm) => ({
+                                                                ...oldForm,
+                                                                incorrectMessage: incorrectMessage,
+                                                            }))
+                                                        }
+                                                        explanation={
+                                                            (quizFormValues as MultipleChoiceQuizForm)
+                                                                .explanation
+                                                        }
+                                                        handleChangeExplanation={(explanation) =>
+                                                            setQuizFormValues((oldForm) => ({
+                                                                ...oldForm,
+                                                                explanation: explanation,
+                                                            }))
+                                                        }
+                                                    />
+                                                </>
+                                            ) : quizFormValues.type === 'tf' ? (
+                                                <TFQuizForm
+                                                    isTrue={
+                                                        (quizFormValues as TrueFalseQuizForm).isTrue
+                                                    }
+                                                    handleChangeIsTrue={(isTrue) =>
+                                                        setQuizFormValues((oldForm) => ({
+                                                            ...oldForm,
+                                                            isTrue: isTrue,
+                                                        }))
+                                                    }
+                                                    correctMessage={
+                                                        (quizFormValues as TrueFalseQuizForm)
+                                                            .correctMessage
+                                                    }
+                                                    handleChangeCorrectMessage={(correctMessage) =>
+                                                        setQuizFormValues((oldForm) => ({
+                                                            ...oldForm,
+                                                            correctMessage: correctMessage,
+                                                        }))
+                                                    }
+                                                    incorrectMessage={
+                                                        (quizFormValues as TrueFalseQuizForm)
+                                                            .incorrectMessage
+                                                    }
+                                                    handleChangeIncorrectMessage={(
+                                                        incorrectMessage
+                                                    ) =>
+                                                        setQuizFormValues((oldForm) => ({
+                                                            ...oldForm,
+                                                            incorrectMessage: incorrectMessage,
+                                                        }))
+                                                    }
+                                                    explanation={
+                                                        (quizFormValues as TrueFalseQuizForm)
+                                                            .explanation
+                                                    }
+                                                    handleChangeExplanation={(explanation) =>
+                                                        setQuizFormValues((oldForm) => ({
+                                                            ...oldForm,
+                                                            explanation: explanation,
+                                                        }))
+                                                    }
+                                                />
+                                            ) : quizFormValues.type === 'qa' ? (
+                                                <QAQuizForm
+                                                    explanation={
+                                                        (quizFormValues as QuestionAnswerQuizForm)
+                                                            .explanation
+                                                    }
+                                                    handleChangeExplanation={(explanation) =>
+                                                        setQuizFormValues((oldForm) => ({
+                                                            ...oldForm,
+                                                            explanation: explanation,
+                                                        }))
+                                                    }
+                                                />
+                                            ) : (
+                                                <>Invalid question type</>
+                                            ))}
+                                        <Button
+                                            variant="contained"
+                                            color="secondary"
+                                            sx={{ mt: 2 }}
+                                            onClick={handleUpdateQuiz}
+                                        >
+                                            Update
+                                        </Button>
+                                    </Paper>
+                                )}
+
+                                {/* Quiz Question Creation */}
+                                {newQuizFormValues && (
+                                    <Paper elevation={3} sx={{ margin: 3, padding: 4 }}>
+                                        <Typography variant={'h5'} sx={{ textAlign: 'center' }}>
+                                            Create Question
+                                        </Typography>
+                                        <Divider />
+                                        <FormControl fullWidth sx={{ mt: 2 }}>
+                                            <InputLabel id="quiz-question-type">
+                                                Question Type
+                                            </InputLabel>
+                                            <NativeSelect
+                                                inputProps={{
+                                                    id: 'quiz-question-type',
+                                                    value:
+                                                        newQuizFormValues && newQuizFormValues.type,
+                                                    defaultValue: newQuizFormValues
+                                                        ? newQuizFormValues.type
+                                                        : 'mc',
+                                                }}
+                                                onChange={(e) =>
+                                                    setNewQuizFormValues({
+                                                        ...newQuizFormValues,
+                                                        type: String(e.target.value),
+                                                    })
+                                                }
+                                            >
+                                                <option value={'mc'}>Multiple Choice</option>
+                                                <option value={'tf'}>True/False</option>
+                                                <option value={'qa'}>Question-Answer</option>
+                                            </NativeSelect>
+                                        </FormControl>
+                                        <BaseQuizForm
+                                            question={newQuizFormValues.question}
+                                            description={newQuizFormValues.description}
+                                            handleChangeQuestion={(question) =>
+                                                setNewQuizFormValues({
+                                                    ...newQuizFormValues,
+                                                    question: question,
+                                                })
+                                            }
+                                            handleChangeDescription={(description) =>
+                                                setNewQuizFormValues({
+                                                    ...newQuizFormValues,
+                                                    description: description,
+                                                })
+                                            }
+                                        />
+                                        {newQuizFormValues &&
+                                            (newQuizFormValues.type === 'mc' ? (
+                                                <>
+                                                    <MCQuizForm
+                                                        choices={
+                                                            (newQuizFormValues as MultipleChoiceQuizForm)
+                                                                .choices || []
+                                                        }
+                                                        handleChangeChoices={(newChoices) => {
+                                                            setNewQuizFormValues((oldForm) => ({
+                                                                ...oldForm,
+                                                                choices: newChoices,
+                                                            }));
+                                                        }}
+                                                        answers={
+                                                            (newQuizFormValues as MultipleChoiceQuizForm)
+                                                                .answers || []
+                                                        }
+                                                        handleChangeAnswers={(answers) =>
+                                                            setNewQuizFormValues((oldForm) => ({
+                                                                ...oldForm,
+                                                                answers: answers,
+                                                            }))
+                                                        }
+                                                        maxSelections={
+                                                            (newQuizFormValues as MultipleChoiceQuizForm)
+                                                                .maxSelections
+                                                        }
+                                                        handleChangeMaxSelections={(
+                                                            maxSelections
+                                                        ) =>
+                                                            setNewQuizFormValues((oldForm) => ({
+                                                                ...oldForm,
+                                                                maxSelections: maxSelections,
+                                                            }))
+                                                        }
+                                                        correctMessage={
+                                                            (newQuizFormValues as MultipleChoiceQuizForm)
+                                                                .correctMessage
+                                                        }
+                                                        handleChangeCorrectMessage={(
+                                                            correctMessage
+                                                        ) =>
+                                                            setNewQuizFormValues((oldForm) => ({
+                                                                ...oldForm,
+                                                                correctMessage: correctMessage,
+                                                            }))
+                                                        }
+                                                        incorrectMessage={
+                                                            (newQuizFormValues as MultipleChoiceQuizForm)
+                                                                .incorrectMessage
+                                                        }
+                                                        handleChangeIncorrectMessage={(
+                                                            incorrectMessage
+                                                        ) =>
+                                                            setNewQuizFormValues((oldForm) => ({
+                                                                ...oldForm,
+                                                                incorrectMessage: incorrectMessage,
+                                                            }))
+                                                        }
+                                                        explanation={
+                                                            (newQuizFormValues as MultipleChoiceQuizForm)
+                                                                .explanation
+                                                        }
+                                                        handleChangeExplanation={(explanation) =>
+                                                            setNewQuizFormValues((oldForm) => ({
+                                                                ...oldForm,
+                                                                explanation: explanation,
+                                                            }))
+                                                        }
+                                                    />
+                                                </>
+                                            ) : newQuizFormValues.type === 'tf' ? (
+                                                <TFQuizForm
+                                                    isTrue={
+                                                        (newQuizFormValues as TrueFalseQuizForm)
+                                                            .isTrue
+                                                    }
+                                                    handleChangeIsTrue={(isTrue) =>
+                                                        setNewQuizFormValues((oldForm) => ({
+                                                            ...oldForm,
+                                                            isTrue: isTrue,
+                                                        }))
+                                                    }
+                                                    correctMessage={
+                                                        (newQuizFormValues as TrueFalseQuizForm)
+                                                            .correctMessage
+                                                    }
+                                                    handleChangeCorrectMessage={(correctMessage) =>
+                                                        setNewQuizFormValues((oldForm) => ({
+                                                            ...oldForm,
+                                                            correctMessage: correctMessage,
+                                                        }))
+                                                    }
+                                                    incorrectMessage={
+                                                        (newQuizFormValues as TrueFalseQuizForm)
+                                                            .incorrectMessage
+                                                    }
+                                                    handleChangeIncorrectMessage={(
+                                                        incorrectMessage
+                                                    ) =>
+                                                        setNewQuizFormValues((oldForm) => ({
+                                                            ...oldForm,
+                                                            incorrectMessage: incorrectMessage,
+                                                        }))
+                                                    }
+                                                    explanation={
+                                                        (newQuizFormValues as TrueFalseQuizForm)
+                                                            .explanation
+                                                    }
+                                                    handleChangeExplanation={(explanation) =>
+                                                        setNewQuizFormValues((oldForm) => ({
+                                                            ...oldForm,
+                                                            explanation: explanation,
+                                                        }))
+                                                    }
+                                                />
+                                            ) : newQuizFormValues.type === 'qa' ? (
+                                                <QAQuizForm
+                                                    explanation={
+                                                        (newQuizFormValues as QuestionAnswerQuizForm)
+                                                            .explanation
+                                                    }
+                                                    handleChangeExplanation={(explanation) =>
+                                                        setNewQuizFormValues((oldForm) => ({
+                                                            ...oldForm,
+                                                            explanation: explanation,
+                                                        }))
+                                                    }
+                                                />
+                                            ) : (
+                                                <></>
+                                            ))}
+
+                                        <Button
+                                            color="secondary"
+                                            variant="contained"
+                                            onClick={handleCreateQuiz}
+                                        >
+                                            Create
+                                        </Button>
+                                    </Paper>
+                                )}
                             </Box>
                             <br />
                             <div>
@@ -863,7 +1304,8 @@ const ContentManagementSteps: FC<Props> = () => {
                                     Back
                                 </Button>
                             </div>
-                            <pre>{JSON.stringify(quizFormValues, null, 4)}</pre>
+                            {/* <pre>{JSON.stringify(newQuizFormValues, null, 4)}</pre> */}
+                            {/* <pre>{JSON.stringify(quizFormValues, null, 4)}</pre> */}
                             {/* <pre>{JSON.stringify(lessonFormValues, null, 4)}</pre> */}
                         </Box>
                     </StepContent>

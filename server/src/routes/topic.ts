@@ -22,6 +22,12 @@ interface CreateTopicInput {
  *  get:
  *      summary: Fetches topics
  *      description: Fetches all topics.
+ *      parameters:
+ *          - name: title
+ *            in: query
+ *            description: Fetch a topic by a title
+ *            schema:
+ *                type: string
  *      tags:
  *          - Topics
  *      responses:
@@ -48,13 +54,30 @@ interface CreateTopicInput {
  *                              statusText:
  *                                  type: string
  */
-topicRouter.get('/api/topics', async (_, response) => {
+topicRouter.get('/api/topics', async (request, response) => {
     try {
-        const topics: Topic[] = await topicService.getAllTopics();
-        return response.status(200).json({
-            statusText: `Successfully fetched all topics`,
-            topics: topics,
-        });
+        const { title } = request.query;
+
+        if (title) {
+            consola.info('Fetching topic by title');
+            const topic: Topic = await topicService.getTopicByTitle(
+                String(title)
+            );
+            if (!topic)
+                throw Error(`Couldn't find a topic with title: '${title}'`);
+            return response.status(200).json({
+                statusText: 'Successfully fetched topic',
+                topic: topic,
+            });
+        } else {
+            const topics: Topic[] = await topicService.getAllTopics();
+
+            consola.info('Fetching topics');
+            return response.status(200).json({
+                statusText: `Successfully fetched all topics`,
+                topics: topics,
+            });
+        }
     } catch (err) {
         consola.error(`Failed to fetch topics. Reason: `, err);
         response.status(500).json({

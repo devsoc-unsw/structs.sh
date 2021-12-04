@@ -1,6 +1,9 @@
 // TODO: good file to convert to typescript
 
-// TODO: might be better to migrate these to API calls to a backend server
+// TODO: requests to topics, lessons, etc. should be made in apiRequests.ts
+// TODO: what to do with ops? Maybe get rid of this file entirely, have a file utils/visualiser-ops that lets you get the ops for a visualiser
+// TODO: probably need a <VisualiserRenderer />  component, kind of like TabRenderer which is hardcoded to linked-list, binary-search-tree, etc.
+
 const topics = {
     'linked-list': {
         title: 'Linked Lists',
@@ -11,17 +14,17 @@ const topics = {
         ops: [
             {
                 command: 'append',
-                args: ['value']
+                args: ['value'],
             },
             {
                 command: 'delete',
-                args: ['index']
+                args: ['index'],
             },
             {
                 command: 'insert',
-                args: ['index', 'value']
-            }
-        ]
+                args: ['index', 'value'],
+            },
+        ],
     },
     'binary-search-tree': {
         title: 'Binary Search Trees',
@@ -32,12 +35,13 @@ const topics = {
         ops: [
             {
                 command: 'insert',
-                args: ['value']
-            }, {
+                args: ['value'],
+            },
+            {
                 command: 'delete',
-                args: ['value']
-            }
-        ]
+                args: ['value'],
+            },
+        ],
     },
     graph: {
         title: 'Graph',
@@ -48,12 +52,13 @@ const topics = {
         ops: [
             {
                 command: 'BFS',
-                args: ['source']
-            }, {
+                args: ['source'],
+            },
+            {
                 command: 'DFS',
-                args: ['source']
-            }
-        ]
+                args: ['source'],
+            },
+        ],
     },
     sorting: {
         title: 'Sorting',
@@ -61,7 +66,7 @@ const topics = {
             'In computer science, a sorting algorithm is an algorithm that puts elements of a list in a certain order.',
         videos: ['3mxp4JLGasE'],
         label: 'comp2521',
-        ops: ['insert', 'delete']
+        ops: ['insert', 'delete'],
     },
 };
 
@@ -78,12 +83,11 @@ export const getTopicOps = async (topic) => {
 };
 
 export const getMatchedLessons = async (course) => {
-    var matchedLessons = []
+    var matchedLessons = [];
     Object.keys(topics).forEach((lesson) => {
-
         if (course.test(topics[lesson].label)) {
-            matchedLessons.push({ topic: lesson, title: topics[lesson].title })
+            matchedLessons.push({ topic: lesson, title: topics[lesson].title });
         }
-    })
+    });
     return matchedLessons;
-}
+};

@@ -36,49 +36,52 @@ export interface SourceCode {
     code: string;
 }
 
-export interface Quiz {
+export type Quiz =
+    | Partial<MultipleChoiceQuiz>
+    | Partial<TrueFalseQuiz>
+    | Partial<QuestionAnswerQuiz>;
+
+interface BaseQuiz {
     _id: string;
     type: string;
-    data: string; // This is a stringified object
+    question: string;
+    description: string;
 }
 
-interface MultipleChoiceQuizData {
-    question: string;
-    rawMarkdown: string;
+interface MultipleChoiceQuiz extends BaseQuiz {
     choices: string[];
-    answers: string[];
+    answers: boolean[];
+    maxSelections: number;
     correctMessage: string;
     incorrectMessage: string;
     explanation: string;
 }
 
-interface TrueFalseQuizData {
-    question: string;
-    rawMarkdown: string;
+interface TrueFalseQuiz extends BaseQuiz {
     isTrue: boolean;
     correctMessage: string;
     incorrectMessage: string;
     explanation: string;
 }
 
-interface QuestionAnswerQuizData {
-    question: string;
-    rawMarkdown: string;
-    answer: string;
-    correctMessage: string;
-    incorrectMessage: string;
+interface QuestionAnswerQuiz extends BaseQuiz {
     explanation: string;
 }
 
 type GetLessons = (topicId: string) => Promise<Lesson[]>;
 type GetQuizzes = (lessonId: string) => Promise<Quiz[]>;
 type GetTopics = () => Promise<Topic[]>;
+type GetTopic = (title: string) => Promise<Topic>;
 type GetSourceCode = (topicId: string) => Promise<SourceCode[]>;
 
 export type TopicForm = Omit<Topic, '_id'>;
 export type SourceCodeForm = Omit<SourceCode, '_id'>;
 export type LessonForm = Omit<Lesson, '_id'>;
-export type QuizForm = Omit<Quiz, '_id'>;
+
+export type MultipleChoiceQuizForm = Omit<MultipleChoiceQuiz, '_id'>;
+export type TrueFalseQuizForm = Omit<TrueFalseQuiz, '_id'>;
+export type QuestionAnswerQuizForm = Omit<QuestionAnswerQuiz, '_id'>;
+export type QuizForm = Partial<MultipleChoiceQuiz | TrueFalseQuizForm | QuestionAnswerQuizForm>;
 
 type CreateLesson = (lesson: LessonForm) => Promise<Lesson>;
 type CreateQuiz = (lessonId: string, quiz: QuizForm) => Promise<Quiz>;
@@ -103,7 +106,9 @@ export const getLessons: GetLessons = async (topicId: string) => {
 
 export const getQuizzes: GetQuizzes = async (lessonId: string) => {
     try {
-        const response = await axios.get(`${ApiConstants.URL}/api/quiz?lessonId=${lessonId}`);
+        const response = await axios.get(
+            `${ApiConstants.URL}/api/lessons/quiz?lessonId=${lessonId}`
+        );
         const quizzes: Quiz[] = response.data.quizzes as Quiz[];
         return quizzes;
     } catch (err) {
@@ -117,6 +122,17 @@ export const getTopics: GetTopics = async () => {
         const response = await axios.get(`${ApiConstants.URL}/api/topics`);
         const topics: Topic[] = response.data.topics;
         return topics;
+    } catch (err) {
+        const errMessage: string = err.response.data.statusText;
+        throw errMessage;
+    }
+};
+
+export const getTopic: GetTopic = async (title: string) => {
+    try {
+        const response = await axios.get(`${ApiConstants.URL}/api/topics?title=${title}`);
+        const topic: Topic = response.data.topic;
+        return topic;
     } catch (err) {
         const errMessage: string = err.response.data.statusText;
         throw errMessage;
@@ -151,10 +167,10 @@ export const createLesson: CreateLesson = async (lesson: LessonForm) => {
 export const createQuiz: CreateQuiz = async (lessonId: string, quiz: QuizForm) => {
     try {
         const response = await axios.post(
-            `${ApiConstants.URL}/api/quiz`,
+            `${ApiConstants.URL}/api/lessons/quiz`,
             {
                 lessonId: lessonId,
-                ...quiz,
+                quizData: quiz,
             },
             {
                 headers: { 'Content-Type': 'application/json' },
@@ -215,9 +231,13 @@ export const editQuiz: EditQuiz = async (quizId: string, newQuiz: QuizForm) => {
         if (!quizId) {
             throw new Error("Quiz ID mustn't be empty");
         }
-        const response = await axios.put(`${ApiConstants.URL}/api/quiz/${quizId}`, newQuiz, {
-            headers: { 'Content-Type': 'application/json' },
-        });
+        const response = await axios.put(
+            `${ApiConstants.URL}/api/lessons/quiz/${quizId}`,
+            newQuiz,
+            {
+                headers: { 'Content-Type': 'application/json' },
+            }
+        );
         return response.data.quiz as Quiz;
     } catch (err) {
         const errMessage: string = err.response.data.statusText;

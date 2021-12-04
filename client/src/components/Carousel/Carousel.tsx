@@ -13,8 +13,10 @@ import { Typography } from '@mui/material';
 import TopicCard from './TopicCard';
 import { getTopics, Topic } from 'utils/apiRequests';
 import { Notification } from 'utils/Notification';
-import LinearProgress from '@mui/material/LinearProgress';
+import { LineLoader } from 'components/Loader';
 import './Carousel.scss';
+import { Link, useHistory } from 'react-router-dom';
+import { titleToUrl } from 'utils/url';
 
 interface Props {}
 
@@ -22,11 +24,20 @@ const Carousel: React.FC<Props> = () => {
     const [currImageIndex, setImageIndex] = useState<number>(0);
     const [topics, setTopics] = useState<Topic[]>([]);
 
+    const history = useHistory();
+    const [mouseMoved, setMouseMoved] = useState(false);
+
     const images = [bst, linkedList, structs, play];
 
     useEffect(() => {
         getTopics().then(setTopics).catch(Notification.error);
-    });
+    }, []);
+
+    const handleClick = (topic: Topic) => {
+        if (!mouseMoved) {
+            history.push(`/visualiser/${titleToUrl(topic.title)}`);
+        }
+    };
 
     return topics && topics.length > 0 ? (
         <Slider
@@ -40,6 +51,9 @@ const Carousel: React.FC<Props> = () => {
         >
             {topics.map((topic, i) => (
                 <div
+                    onMouseMove={() => setMouseMoved(true)}
+                    onMouseDown={() => setMouseMoved(false)}
+                    onMouseUp={() => handleClick(topic)}
                     key={i}
                     className={`slide ${i === currImageIndex && 'activeSlide'} ${
                         (Math.abs(i - currImageIndex) === 1 ||
@@ -53,16 +67,7 @@ const Carousel: React.FC<Props> = () => {
             ))}
         </Slider>
     ) : (
-        <LinearProgress
-            sx={{
-                width: '50%',
-                margin: '0 auto',
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translateX(-50%)',
-            }}
-        />
+        <LineLoader />
     );
 };
 

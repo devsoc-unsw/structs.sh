@@ -1,3 +1,4 @@
+import { Box, CircularProgress } from '@mui/material';
 import LinkedListAnimation from 'components/Animation/LinkedList/linkedListAnimation';
 import { Pane } from 'components/Panes';
 import Tabs from 'components/Tabs/Tabs';
@@ -6,15 +7,26 @@ import { VisualiserController } from 'components/VisualiserController';
 import GUIMode from 'components/VisualiserController/GUIMode/GuiMode';
 import { VisualiserDashboardLayout } from 'layout';
 import React, { useEffect, useState } from 'react';
+import { getTopic, Topic } from 'utils/apiRequests';
+import { urlToTitle } from 'utils/url';
 import styles from './VisualiserDashboard.module.scss';
+import { CircularLoader } from 'components/Loader';
 
 let appendNode = (_: number) => console.log('Not set');
 let deleteNode = (_: number) => console.log('Not set');
 
 const Dashboard = ({ match }) => {
+    const [topic, setTopic] = useState<Topic>();
+
     // Extract route parameters
     const { params } = match;
-    const topic = params.topic;
+    const topicTitleInUrl = params.topic;
+
+    useEffect(() => {
+        getTopic(urlToTitle(topicTitleInUrl))
+            .then((topic) => setTopic(topic))
+            .catch(() => console.log('VisualiserDashboard: Failed to get topic'));
+    }, [topicTitleInUrl]);
 
     const [terminalMode, setTerminalMode] = useState(true);
 
@@ -80,7 +92,7 @@ const Dashboard = ({ match }) => {
                         )}
                     </div>
                 </Pane>
-                <Tabs topic={topic}></Tabs>
+                {topic ? <Tabs topic={topic}></Tabs> : <CircularLoader />}
             </Pane>
         </VisualiserDashboardLayout>
     );

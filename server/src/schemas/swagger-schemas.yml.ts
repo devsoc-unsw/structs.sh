@@ -117,13 +117,13 @@
  *                  description: The maximum number of answers that can be picked. For most question this will be 1, for 'select all that apply' questions, then this will be the length of the available quizzes
  *              correctMessage:
  *                  type: string
- *                  description: Message to display when the quiz question is correctly answered.
+ *                  description: Markdown message to display when the quiz question is correctly answered.
  *              incorrectMessage:
  *                  type: string
- *                  description: Message to display when the quiz question is incorrectly answered.
+ *                  description: Markdown message to display when the quiz question is incorrectly answered.
  *              explanation:
  *                  type: string
- *                  description: Message to display when the quiz question has been attempted to give more context and explain the correct answer.
+ *                  description: Markdown message to display when the quiz question has been attempted to give more context and explain the correct answer.
  */
 /**
  * @swagger
@@ -146,13 +146,13 @@
  *                  description: Whether the answer is T or F.
  *              correctMessage:
  *                  type: string
- *                  description: Message to display when the quiz question is correctly answered.
+ *                  description: Markdown message to display when the quiz question is correctly answered.
  *              incorrectMessage:
  *                  type: string
- *                  description: Message to display when the quiz question is incorrectly answered.
+ *                  description: Markdown message to display when the quiz question is incorrectly answered.
  *              explanation:
  *                  type: string
- *                  description: Message to display when the quiz question has been attempted to give more context and explain the correct answer.
+ *                  description: Markdown message to display when the quiz question has been attempted to give more context and explain the correct answer.
  */
 /**
  * @swagger
@@ -172,7 +172,7 @@
  *                  description: Raw markdown source code for elaborating on the question or providing supplementary information. Eg. 'Consider the following code snippet...'
  *              explanation:
  *                  type: string
- *                  description: Message to display when the quiz question has been attempted to give more context and explain the correct answer.
+ *                  description: Markdown message to display when the quiz question has been attempted to give more context and explain the correct answer.
  */
 
 /* ------------------------------- Source Code ------------------------------ */

@@ -3,10 +3,11 @@ import { Quiz } from 'components/Quiz';
 import { Lesson, AdditionalResources } from 'components/Lesson';
 import { Videos } from 'components/Video';
 import React, { FC } from 'react';
+import { Topic } from 'utils/apiRequests';
 
 interface Props {
     tab: string;
-    topic?: string;
+    topic?: Topic;
 }
 
 const TabRenderer: FC<Props> = ({ tab, topic }) => {

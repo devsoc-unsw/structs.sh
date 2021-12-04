@@ -7,7 +7,7 @@ import { Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import OpDetails from './opDetails';
 import { Link, LastLink } from './Links';
-import { getLessonContent, getTopicOps } from 'content';
+import { getLessonContent, getTopicOps } from 'utils/content';
 import { useTheme } from '@mui/styles';
 
 const useStyles = makeStyles({
