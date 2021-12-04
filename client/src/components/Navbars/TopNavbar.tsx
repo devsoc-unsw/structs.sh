@@ -96,8 +96,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+            <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
         </Menu>
     );
 
@@ -224,7 +223,12 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
                                 noWrap
                                 component="div"
                                 sx={{
-                                    display: { xs: 'none', lg: 'inline-block', marginLeft: '10px' },
+                                    display: {
+                                        xs: 'none',
+                                        lg: 'inline-block',
+                                        marginLeft: '10px',
+                                        fontFamily: 'Ubuntu Mono',
+                                    },
                                 }}
                             >
                                 Structs.sh

@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="R2lEEEUBdFMjLlhIrx00" name="Page-1">
-        <mxGraphModel dx="2360" dy="2367" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0" extFonts="Permanent Marker^https://fonts.googleapis.com/css?family=Permanent+Marker">
+        <mxGraphModel dx="1621" dy="1747" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0" extFonts="Permanent Marker^https://fonts.googleapis.com/css?family=Permanent+Marker">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -19,19 +19,19 @@
                 <mxCell id="pDtJqAfcPCYP6tU8S-Co-48" value="&lt;b&gt;username &lt;/b&gt;(&lt;u&gt;string&lt;/u&gt;)&lt;br&gt;A unique public-facing name.&lt;br&gt;&lt;br&gt;&lt;b&gt;email&lt;/b&gt; &lt;u&gt;(string)&lt;/u&gt;&lt;br&gt;The email address associated with this &lt;br&gt;user's account.&lt;br&gt;&lt;br&gt;&lt;b&gt;password&lt;/b&gt; &lt;u&gt;(string)&lt;/u&gt;&lt;br&gt;The encrypted/hashed password for this &lt;br&gt;account." style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;fontStyle=0;html=1;" parent="pDtJqAfcPCYP6tU8S-Co-47" vertex="1">
                     <mxGeometry y="30" width="260" height="154" as="geometry"/>
                 </mxCell>
-                <mxCell id="19" style="edgeStyle=none;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;" edge="1" parent="1" source="pDtJqAfcPCYP6tU8S-Co-49" target="13">
+                <mxCell id="19" style="edgeStyle=none;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="pDtJqAfcPCYP6tU8S-Co-49" target="13" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="22" value="Is-a" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#4D4D4D;" vertex="1" connectable="0" parent="19">
+                <mxCell id="22" value="Is-a" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#4D4D4D;" parent="19" vertex="1" connectable="0">
                     <mxGeometry x="-0.237" y="-1" relative="1" as="geometry">
                         <mxPoint x="-21" y="-3" as="offset"/>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="pDtJqAfcPCYP6tU8S-Co-49" value="Quiz" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;fontFamily=Helvetica;fillColor=#dae8fc;strokeColor=#6c8ebf;whiteSpace=wrap;" parent="1" vertex="1">
-                    <mxGeometry x="410" y="444" width="260" height="212" as="geometry"/>
+                    <mxGeometry x="410" y="432" width="260" height="236" as="geometry"/>
                 </mxCell>
-                <mxCell id="pDtJqAfcPCYP6tU8S-Co-50" value="&lt;b&gt;type&amp;nbsp;&lt;/b&gt;(&lt;u&gt;string&lt;/u&gt;)&lt;br&gt;The type of the quiz. Eg. 'mc' for multiple&lt;br&gt;choice, 'qa' for question-answer&lt;br&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;b&gt;question:&amp;nbsp;&lt;/b&gt;string&lt;br&gt;A title for the question or the question itself.&lt;br&gt;Eg. 'what is a linked list?'&amp;nbsp;&lt;br&gt;&lt;br&gt;&lt;b&gt;rawMarkdown&lt;/b&gt;: string&lt;br&gt;For elaborating on the question or providing&lt;br&gt;supplementary information.&lt;br&gt;Eg. 'Consider the following code snippet...'&lt;br&gt;&lt;br&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;fontStyle=0;html=1;" parent="pDtJqAfcPCYP6tU8S-Co-49" vertex="1">
-                    <mxGeometry y="30" width="260" height="182" as="geometry"/>
+                <mxCell id="pDtJqAfcPCYP6tU8S-Co-50" value="&lt;b&gt;type&amp;nbsp;&lt;/b&gt;(&lt;u&gt;string&lt;/u&gt;)&lt;br&gt;The type of the quiz. Eg. 'mc' for multiple&lt;br&gt;choice, 'qa' for question-answer&lt;br&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;b&gt;question:&amp;nbsp;&lt;/b&gt;string&lt;br&gt;A title for the question or the question itself.&lt;br&gt;Eg. 'what is a linked list?'&amp;nbsp;&lt;br&gt;&lt;br&gt;&lt;b&gt;description&lt;/b&gt;: string&lt;br&gt;Raw markdown source code for elaborating on &lt;br&gt;the question or providing supplementary &lt;br&gt;information.&lt;br&gt;Eg. 'Consider the following code snippet...'&lt;br&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;fontStyle=0;html=1;" parent="pDtJqAfcPCYP6tU8S-Co-49" vertex="1">
+                    <mxGeometry y="30" width="260" height="206" as="geometry"/>
                 </mxCell>
                 <mxCell id="pDtJqAfcPCYP6tU8S-Co-54" value="" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERzeroToMany;endFill=1;fontFamily=Helvetica;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="pDtJqAfcPCYP6tU8S-Co-46" target="pDtJqAfcPCYP6tU8S-Co-50" edge="1">
                     <mxGeometry width="100" height="100" relative="1" as="geometry">
@@ -75,29 +75,29 @@
                     <mxGeometry y="30" width="260" height="390" as="geometry"/>
                 </mxCell>
                 <mxCell id="13" value="TrueFalseQuiz" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;fontFamily=Helvetica;fillColor=#dae8fc;strokeColor=#6c8ebf;whiteSpace=wrap;" parent="1" vertex="1">
-                    <mxGeometry x="410" y="140" width="260" height="250" as="geometry"/>
+                    <mxGeometry x="410" y="120" width="260" height="270" as="geometry"/>
                 </mxCell>
-                <mxCell id="14" value="&lt;b&gt;isTrue&lt;/b&gt;: string&lt;br&gt;&lt;br&gt;&lt;b&gt;correctMessage&lt;/b&gt;: string&lt;br&gt;Message to display when the quiz question&lt;br&gt;is correctly answered.&lt;br&gt;&lt;br&gt;&lt;b&gt;incorrectMessage&lt;/b&gt;: string&lt;br&gt;Message to display when the quiz question&lt;br&gt;is incorrectly answered.&lt;br&gt;&lt;br&gt;&lt;b&gt;explanation&lt;/b&gt;: string&lt;br&gt;Message to display when the quiz question&lt;br&gt;has been attempted to give more context&lt;br&gt;and explain the correct answer." style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;fontStyle=0;html=1;" parent="13" vertex="1">
-                    <mxGeometry y="30" width="260" height="220" as="geometry"/>
+                <mxCell id="14" value="&lt;b&gt;isTrue&lt;/b&gt;: boolean&lt;br&gt;Whether the answer is T or F.&lt;br&gt;&lt;br&gt;&lt;b&gt;correctMessage&lt;/b&gt;: string&lt;br&gt;Message to display when the quiz question&lt;br&gt;is correctly answered.&lt;br&gt;&lt;br&gt;&lt;b&gt;incorrectMessage&lt;/b&gt;: string&lt;br&gt;Message to display when the quiz question&lt;br&gt;is incorrectly answered.&lt;br&gt;&lt;br&gt;&lt;b&gt;explanation&lt;/b&gt;: string&lt;br&gt;Message to display when the quiz question&lt;br&gt;has been attempted to give more context&lt;br&gt;and explain the correct answer." style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;fontStyle=0;html=1;" parent="13" vertex="1">
+                    <mxGeometry y="30" width="260" height="240" as="geometry"/>
                 </mxCell>
-                <mxCell id="15" value="QuestionAnswerQuiz" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;fontFamily=Helvetica;fillColor=#dae8fc;strokeColor=#6c8ebf;whiteSpace=wrap;" vertex="1" parent="1">
-                    <mxGeometry x="410" y="700" width="260" height="140" as="geometry"/>
+                <mxCell id="15" value="QuestionAnswerQuiz" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;fontFamily=Helvetica;fillColor=#dae8fc;strokeColor=#6c8ebf;whiteSpace=wrap;" parent="1" vertex="1">
+                    <mxGeometry x="410" y="700" width="260" height="110" as="geometry"/>
                 </mxCell>
-                <mxCell id="16" value="&lt;b&gt;answer&lt;/b&gt;: string&lt;br&gt;&lt;br&gt;&lt;b&gt;explanation&lt;/b&gt;: string&lt;br&gt;Message to display when the quiz question&lt;br&gt;has been attempted to give more context&lt;br&gt;and explain the correct answer." style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;fontStyle=0;html=1;" vertex="1" parent="15">
-                    <mxGeometry y="30" width="260" height="110" as="geometry"/>
+                <mxCell id="16" value="&lt;b&gt;explanation&lt;/b&gt;: string&lt;br&gt;Message to display when the quiz question&lt;br&gt;has been attempted to give more context&lt;br&gt;and explain the correct answer." style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;fontStyle=0;html=1;" parent="15" vertex="1">
+                    <mxGeometry y="30" width="260" height="80" as="geometry"/>
                 </mxCell>
-                <mxCell id="20" style="edgeStyle=none;html=1;endArrow=none;endFill=0;" edge="1" parent="1" source="pDtJqAfcPCYP6tU8S-Co-50" target="11">
+                <mxCell id="20" style="edgeStyle=none;html=1;endArrow=none;endFill=0;" parent="1" source="pDtJqAfcPCYP6tU8S-Co-50" target="11" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="24" value="Is-a" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#4D4D4D;" vertex="1" connectable="0" parent="20">
+                <mxCell id="24" value="Is-a" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#4D4D4D;" parent="20" vertex="1" connectable="0">
                     <mxGeometry x="-0.2971" relative="1" as="geometry">
                         <mxPoint x="5" y="15" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="21" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;" edge="1" parent="1" source="pDtJqAfcPCYP6tU8S-Co-50" target="15">
+                <mxCell id="21" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;" parent="1" source="pDtJqAfcPCYP6tU8S-Co-50" target="15" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="25" value="Is-a" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#4D4D4D;" vertex="1" connectable="0" parent="21">
+                <mxCell id="25" value="Is-a" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#4D4D4D;" parent="21" vertex="1" connectable="0">
                     <mxGeometry x="-0.5909" y="-1" relative="1" as="geometry">
                         <mxPoint x="21" y="15" as="offset"/>
                     </mxGeometry>

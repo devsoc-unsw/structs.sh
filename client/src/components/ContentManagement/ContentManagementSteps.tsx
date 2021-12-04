@@ -54,6 +54,7 @@ import {
     TopicForm,
 } from 'utils/apiRequests';
 import { Notification } from 'utils/Notification';
+import styles from './ContentManagement.module.scss';
 
 interface Props {}
 
@@ -343,8 +344,8 @@ const ContentManagementSteps: FC<Props> = () => {
                             or whose lessons you wish to modify or delete. To create a new topic
                             entirely, don't select any of the topics below and click 'continue'
                         </Typography>
-                        <Box sx={{ mb: 2 }}>
-                            <Grid container spacing={2}>
+                        <Box sx={{ margin: 4 }}>
+                            <Grid container spacing={5}>
                                 {topics &&
                                     topics.length > 0 &&
                                     topics.map((topic) => (
@@ -355,9 +356,11 @@ const ContentManagementSteps: FC<Props> = () => {
                                                         ? selectTopic(topic._id)
                                                         : deselectTopic();
                                                 }}
+                                                className={styles.card}
                                                 sx={{
                                                     background:
-                                                        selectedTopicId === topic._id && 'yellow',
+                                                        selectedTopicId === topic._id &&
+                                                        'greenyellow',
                                                 }}
                                             >
                                                 <CardMedia
@@ -385,17 +388,17 @@ const ContentManagementSteps: FC<Props> = () => {
                                         </Grid>
                                     ))}
                             </Grid>
-                            <div>
-                                <Button
-                                    variant="contained"
-                                    onClick={handleNext}
-                                    sx={{ mt: 1, mr: 1 }}
-                                    endIcon={<ArrowDownwardIcon />}
-                                >
-                                    Continue
-                                </Button>
-                            </div>
                         </Box>
+                        <div>
+                            <Button
+                                variant="contained"
+                                onClick={handleNext}
+                                sx={{ mt: 1, mr: 1 }}
+                                endIcon={<ArrowDownwardIcon />}
+                            >
+                                Continue
+                            </Button>
+                        </div>
                     </StepContent>
                 </Step>
                 {/* Step 2 */}

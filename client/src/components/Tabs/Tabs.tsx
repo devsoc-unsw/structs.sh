@@ -65,15 +65,11 @@ const ContentTabs: FC<Props> = ({ topic, tabs = ['Lesson', 'Code', 'Videos'] }) 
                     ))}
                 </Tabs>
             </Box>
-            <TabPanel value={tabIndex} index={0}>
-                Item One
-            </TabPanel>
-            <TabPanel value={tabIndex} index={1}>
-                Item Two
-            </TabPanel>
-            <TabPanel value={tabIndex} index={2}>
-                Item Three
-            </TabPanel>
+            {tabs.map((tab, i) => (
+                <TabPanel value={tabIndex} index={i}>
+                    <TabRenderer topic={topic} tab={tab} />
+                </TabPanel>
+            ))}
         </Box>
         // <Grid container>
         //     <Grid item container className="Tab-Group" direction="row" spacing={0}>
@@ -90,7 +86,7 @@ const ContentTabs: FC<Props> = ({ topic, tabs = ['Lesson', 'Code', 'Videos'] }) 
         //         ))}
         //     </Grid>
         //     <Grid item style={{ margin: '24px 12px 16px 12px', width: '100%' }}>
-        //         <TabRenderer topic={topic} tab={tabs[tabIndex]} />
+        //
         //     </Grid>
         // </Grid>
     );
