@@ -3,6 +3,7 @@ import { LessonMongoService } from '../database-helpers/lesson';
 import { UserModel } from '../schemas/user/user';
 import consola from 'consola';
 import { TopicModel } from '../schemas/topic/topic';
+import { Lesson } from 'src/typedefs/lesson/Lesson';
 
 const lessonRouter = Router();
 const lessonService = new LessonMongoService();
@@ -41,9 +42,14 @@ interface CreateLessonInput {
  *              content:
  *                  application/json:
  *                      schema:
- *                          type: array
- *                          items:
- *                              $ref: '#/components/schemas/Lesson'
+ *                          type: object
+ *                          properties:
+ *                              statusText:
+ *                                  type: string
+ *                              lessons:
+ *                                  type: array
+ *                                  items:
+ *                                      $ref: '#/components/schemas/Lesson'
  *          '500':
  *              description: Structs.sh has failed to retrieve lessons
  *              content:
@@ -121,6 +127,15 @@ lessonRouter.get('/api/lessons', async (req, res) => {
  *                                  type: string
  *                              lesson:
  *                                  $ref: '#/components/schemas/Lesson'
+ *          '404':
+ *              description: No lesson with the given ID exists.
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              statusText:
+ *                                  type: string
  *          '400':
  *              description: Couldn't create lesson because fields were invalid or missing
  *              content:
@@ -151,10 +166,11 @@ lessonRouter.post('/api/lessons', async (req, res) => {
 
         const topic = await TopicModel.findById(topicId);
         if (!topic) {
-            return res.status(400).json({
+            return res.status(404).json({
                 statusText: `Topic with ID '${topicId}' does not exist`,
             });
         }
+        consola.info('HERE');
 
         const lessonData = await lessonService.createLesson(
             topicId,
@@ -169,9 +185,9 @@ lessonRouter.post('/api/lessons', async (req, res) => {
             lesson: lessonData,
         });
     } catch (err) {
-        consola.error('Failed to create the content. Reason: ', err);
+        consola.error('Failed to create lesson. Reason: ', err);
         res.status(500).json({
-            statusText: `Failed to create the content. Reason: ${err.message}`,
+            statusText: `Failed to create lesson. Reason: ${err.message}`,
         });
     }
 });
@@ -257,13 +273,11 @@ lessonRouter.get('/api/lessons/:id', async (req, res) => {
  *                  schema:
  *                      type: object
  *                      properties:
- *                          topicId:
- *                              type: string
  *                          title:
  *                              type: string
  *                          rawMarkdown:
  *                              type: string
- *                          creatorId:
+ *                          quizzes:
  *                              type: string
  *      responses:
  *          '200':
@@ -275,6 +289,8 @@ lessonRouter.get('/api/lessons/:id', async (req, res) => {
  *                          properties:
  *                              statusText:
  *                                  type: string
+ *                              lesson:
+ *                                  $ref: '#/components/schemas/Lesson'
  *          '404':
  *              description: No lesson with the given ID exists.
  *              content:
@@ -295,17 +311,35 @@ lessonRouter.get('/api/lessons/:id', async (req, res) => {
  *                                  type: string
  */
 lessonRouter.put('/api/lessons/:id', async (req, res) => {
-    throw new Error('Unimplemented');
-    // try {
-    //     const id = req.params.id;
-    //     const { topicId, title, rawMarkdown, creatorId } = req.body;
-    //     ...
-    // } catch (err) {
-    //     consola.error('Failed. Reason: ', err);
-    //     res.status(400).json({
-    //         statusText: `Failed. Reason: ${err.message}`,
-    //     });
-    // }
+    try {
+        const id = req.params.id as string;
+        const { title, rawMarkdown, quizzes } = req.body;
+
+        const lesson: Lesson = await lessonService.getLessonById(id);
+        if (!lesson) {
+            return res.status(404).json({
+                statusText: `Lesson with ID '${id}' doesn't exist`,
+            });
+        }
+
+        const editedLesson: Lesson = await lessonService.updateLessonById(
+            id,
+            title,
+            rawMarkdown,
+            quizzes
+        );
+
+        consola.success('Successsfully edited lesson');
+        return res.status(200).json({
+            statusText: 'Successfully edited topic',
+            lesson: editedLesson,
+        });
+    } catch (err) {
+        consola.error('Failed. Reason: ', err);
+        res.status(400).json({
+            statusText: `Failed. Reason: ${err.message}`,
+        });
+    }
 });
 
 /**
@@ -333,6 +367,8 @@ lessonRouter.put('/api/lessons/:id', async (req, res) => {
  *                          properties:
  *                              statusText:
  *                                  type: string
+ *                              lesson:
+ *                                  $ref: '#/components/schemas/Lesson'
  *          '404':
  *              description: No lesson with the given ID exists.
  *              content:

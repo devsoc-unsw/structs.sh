@@ -6,19 +6,18 @@ import { SplashScreen } from 'components/SplashScreen';
 import { HomepageLayout } from 'layout';
 import React from 'react';
 import styles from './HomePage.module.scss';
+import { ParticleHeader } from 'components/Particles';
+import { Carousel } from 'components/Carousel';
+import { Features } from 'components/Sections';
 
 const HomePage = () => {
     const theme: Theme = useTheme();
 
     return (
-        <HomepageLayout>
+        <HomepageLayout disableBackground>
             <SplashScreen stillDuration={2.5} disappearDuration={1.5} waitIntervalMinutes={10} />
-            <Box
-                className={styles.header}
-                sx={{
-                    height: '100vh',
-                }}
-            >
+            <ParticleHeader />
+            <Box className={styles.header}>
                 <Box className={styles.headerContent}>
                     <Typography color="textPrimary" className={styles.title}>
                         <strong>Welcome to Structs.sh</strong>
@@ -27,16 +26,21 @@ const HomePage = () => {
                         An interactive learning platform for computer science, tailored to UNSW CSE
                         students.
                     </Typography>
-                    <Box>
-                        <Typography color="textPrimary">(Carousel here)</Typography>
+                    <Box sx={{ width: '80%', margin: '0 auto', height: '600px' }}>
+                        <Carousel />
                     </Box>
                 </Box>
             </Box>
-            <Box sx={{ background: theme.palette.background.paper }} className={styles.features}>
+            <Box
+                sx={{
+                    background: theme.palette.background.paper,
+                    boxShadow:
+                        'rgba(0, 0, 0, 0.4) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px',
+                }}
+                className={styles.features}
+            >
                 <Container maxWidth="md">
-                    <Typography color="textPrimary" variant="h4">
-                        Features
-                    </Typography>
+                    <Features />
                 </Container>
             </Box>
             <Footer />

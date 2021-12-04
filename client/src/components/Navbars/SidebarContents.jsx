@@ -5,7 +5,7 @@ import logo from '../../assets/img/linked-list.svg';
 import filter from 'assets/img/filter.svg';
 import { makeStyles, useTheme } from '@mui/styles';
 import Filter from './Filter';
-import { getMatchedLessons } from 'content';
+import { getMatchedLessons } from 'utils/content';
 import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -67,6 +67,12 @@ const SidebarContents = ({ setShowSidebar }) => {
                     );
                 })}
             </List>
+            TODO: Style everything here
+            <Box>
+                <Link to="/" onClick={() => setShowSidebar(false)}>
+                    Home
+                </Link>
+            </Box>
             <Box>
                 <Link to="/about" onClick={() => setShowSidebar(false)}>
                     About Page

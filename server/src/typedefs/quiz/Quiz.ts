@@ -1,11 +1,19 @@
 import mongoose from 'mongoose';
+import { MultipleChoiceQuiz } from './MultipleChoice';
+import { QuestionAnswerQuiz } from './QuestionAnswerQuiz';
+import { TrueFalseQuiz } from './TrueFalseQuiz';
 
 /**
  * Structs.sh Quiz model
  */
-export interface Quiz extends mongoose.Document {
+export interface BaseQuiz extends mongoose.Document {
     _id: string;
-    question_type: string;
     question: string;
-    answer: string;
+    description: string;
+    type: string;
 }
+
+export type Quiz =
+    | Partial<MultipleChoiceQuiz>
+    | Partial<TrueFalseQuiz>
+    | Partial<QuestionAnswerQuiz>;

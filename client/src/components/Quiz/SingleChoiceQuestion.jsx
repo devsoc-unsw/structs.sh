@@ -68,16 +68,16 @@ function DisplayCode(props) {
     }
 }
 
-const SingleChoiceQuestion = (props) => {
+const SingleChoiceQuestion = ({ responses, info, setResponse }) => {
     const [value, setValue] = useState('');
     const [submitted, setSubmitted] = useState(false);
 
     const handleChange = (event) => {
         if (submitted === false) {
             setValue(event.target.value);
-            let newResponses = props.responses;
-            newResponses[props.info.questionNum] = event.target.value;
-            props.setResponse(newResponses);
+            let newResponses = responses;
+            newResponses[info.questionNum] = event.target.value;
+            setResponse(newResponses);
         }
     };
 
@@ -85,14 +85,14 @@ const SingleChoiceQuestion = (props) => {
         <div>
             <Card raised className="card-spacing">
                 <h2>
-                    <strong>{props.info.question}</strong>
+                    <strong>{info.question}</strong>
                 </h2>
-                <DisplayCode code={props.info.code} />
+                <DisplayCode code={info.code} />
                 <br />
                 <FormControl>
                     <FormLabel>Choose one</FormLabel>
                     <RadioGroup value={value} onChange={handleChange}>
-                        {props.info.answers.map((answer, idx) => {
+                        {info.answers.map((answer, idx) => {
                             return (
                                 <FormControlLabel
                                     value={(idx + 1).toString()}
@@ -104,7 +104,7 @@ const SingleChoiceQuestion = (props) => {
                         })}
                     </RadioGroup>
                 </FormControl>
-                <CheckCorrect submitted={submitted} selectedAnswer={value} info={props.info} />
+                <CheckCorrect submitted={submitted} selectedAnswer={value} info={info} />
                 <br />
                 <Button
                     variant="contained"

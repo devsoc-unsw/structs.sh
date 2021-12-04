@@ -9,7 +9,7 @@ import { Notification } from 'utils/Notification';
 
 interface Props {
     markdownValue: string;
-    setMarkdownValue?: Dispatch<SetStateAction<string>>;
+    setMarkdownValue?: (newMarkdown: string) => void;
     readOnly?: boolean;
 }
 

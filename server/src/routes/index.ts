@@ -4,6 +4,7 @@ import authRouter from './auth';
 import lessonRouter from './lesson';
 import quizRouter from './quiz';
 import topicRouter from './topic';
+import sourceCodeRouter from './source-code';
 
 export const router = Router();
 
@@ -13,5 +14,6 @@ router.use(
     authRouter,
     quizRouter,
     lessonRouter,
-    topicRouter
+    topicRouter,
+    sourceCodeRouter
 );

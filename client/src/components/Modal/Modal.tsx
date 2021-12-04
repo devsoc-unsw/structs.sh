@@ -2,6 +2,7 @@ import ModalUnstyled from '@mui/base/ModalUnstyled';
 import Fade from '@mui/material/Fade';
 import { Box, styled } from '@mui/system';
 import React, { ComponentType, FC } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
 
 const StyledModal = styled(ModalUnstyled)`
     position: fixed;
@@ -26,14 +27,7 @@ const Backdrop = styled('div')`
     -webkit-tap-highlight-color: transparent;
 `;
 
-const style = {
-    width: 400,
-    bgcolor: 'background.paper',
-    p: 2,
-    px: 4,
-    pb: 3,
-    outline: 'none',
-};
+const style = {};
 
 interface Props {
     children?: React.ReactNode;
@@ -46,7 +40,7 @@ const Modal: FC<Props> = ({ children, Button }) => {
     const handleClose = () => setOpen(false);
 
     return (
-        <div>
+        <Box>
             <span onClick={handleOpen}>
                 <Button />
             </span>
@@ -58,10 +52,31 @@ const Modal: FC<Props> = ({ children, Button }) => {
                 BackdropComponent={Backdrop}
             >
                 <Fade in={open}>
-                    <Box sx={style}>{children}</Box>
+                    <Box
+                        sx={{
+                            width: 400,
+                            bgcolor: 'background.paper',
+                            p: 2,
+                            px: 4,
+                            pb: 3,
+                            outline: 'none',
+                            position: 'relative',
+                        }}
+                    >
+                        <CloseIcon
+                            sx={{
+                                position: 'absolute',
+                                top: '10px',
+                                right: '10px',
+                                cursor: 'pointer',
+                            }}
+                            onClick={() => handleClose()}
+                        />
+                        {children}
+                    </Box>
                 </Fade>
             </StyledModal>
-        </div>
+        </Box>
     );
 };
 

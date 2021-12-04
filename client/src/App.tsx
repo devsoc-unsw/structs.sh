@@ -1,4 +1,5 @@
 import { Theme, ThemeProvider } from '@mui/material';
+import TopNavbar from 'components/Navbars/TopNavbar';
 import { AnimatePresence } from 'framer-motion';
 import React, { createContext, useCallback, useState } from 'react';
 import { useCookies } from 'react-cookie';
@@ -45,6 +46,7 @@ const App = () => {
                         isDarkMode: cookies[DARK_MODE_ON] === 'true',
                     }}
                 >
+                    <TopNavbar position={'fixed'} enableOnScrollEffect={true} />
                     <Switch location={location}>
                         {/* Homepage */}
                         <Route exact path="/" component={HomePage} />

@@ -1,24 +1,52 @@
-import { Typography } from '@mui/material';
-import { getLessonContent } from 'content';
-import React, { useState } from 'react';
+import { Link, Theme, Typography, useTheme } from '@mui/material';
+import { getLessonContent } from 'utils/content';
+import React, { FC, useState } from 'react';
 import styles from './Lesson.module.scss';
-import renderMarkdown from './markdown-util';
-// import sampleMD from './sample.md';
+import renderMarkdown from 'utils/markdown-util';
+import RightChevronIcon from '@mui/icons-material/NavigateNext';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import { Link as RouterLink } from 'react-router-dom';
+import Alert from '@mui/material/Alert';
+import { Topic } from 'utils/apiRequests';
 
-const Lesson = ({ topic }) => {
+interface Props {
+    topic: Topic;
+}
+
+const Lesson: FC<Props> = ({ topic }) => {
+    const theme: Theme = useTheme();
     const [lessonContent, setLessonContent] = useState(null);
-    getLessonContent(topic).then(setLessonContent).catch(console.log);
+    // getLessonContent(topic.title).then(setLessonContent).catch(console.log);
+
+    const breadcrumbs = [
+        <RouterLink to="/">
+            <Link underline="hover" key="1" color="textPrimary">
+                {topic.title}
+            </Link>
+        </RouterLink>,
+        <RouterLink to="/">
+            <Link underline="hover" key="2" color="inherit">
+                Core
+            </Link>
+        </RouterLink>,
+    ];
 
     return (
-        <div>
-            <div className={styles.lessonContainer}>
-                {lessonContent ? (
-                    <>
-                        <Typography color="textPrimary">
-                            <div
-                                style={{ fontFamily: 'AtlassianText' }}
-                                dangerouslySetInnerHTML={{
-                                    __html: renderMarkdown(`# Linked Lists Demystified
+        <div className={styles.lessonContainer}>
+            {lessonContent ? (
+                <>
+                    <p>UCLF</p>
+                    <Breadcrumbs
+                        separator={<RightChevronIcon fontSize="small" />}
+                        aria-label="breadcrumb"
+                    >
+                        {breadcrumbs}
+                    </Breadcrumbs>
+                    <Typography color="textPrimary">
+                        <div
+                            style={{ fontFamily: 'AtlassianText' }}
+                            dangerouslySetInnerHTML={{
+                                __html: renderMarkdown(`# Linked Lists Demystified
 
 If we really want to understand the basics of linked lists, it’s important that we talk about what type of data structure they are.
 
@@ -51,24 +79,15 @@ By now, we can already begin to see some major differences between arrays and li
 
 
 `),
-                                }}
-                            />
-                        </Typography>
-                        {/* <Typography variant="h3" component="h3" style={{ color: 'black' }}>
-                            {lessonContent.title}
-                        </Typography>
-                        <Typography variant="p" component="p" style={{ color: 'black' }}>
-                            {lessonContent.description}
-                        </Typography> */}
-                        {/* {lessonContent.videos.map((v) => (
-                            <EmbeddedVideoPlayer videoID={v} />
-                        ))}
-                        <Gist /> */}
-                    </>
-                ) : (
-                    <div>Can't find anything for '{topic}'</div>
-                )}
-            </div>
+                            }}
+                        />
+                    </Typography>
+                </>
+            ) : (
+                <Alert severity="error" sx={{ background: theme.palette.background.paper }}>
+                    Can't find anything for '{topic.title}'
+                </Alert>
+            )}
         </div>
     );
 };

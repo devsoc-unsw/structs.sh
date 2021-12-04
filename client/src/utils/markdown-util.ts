@@ -1,15 +1,11 @@
 import marked from 'marked';
 
-/**
- * Markdown renderer functions
- */
-
 // Strips the frontmatter from the given markdown string
-const bypassFrontmatter = markdownBody => {
+const bypassFrontmatter = (markdownBody: string): string => {
     return markdownBody ? markdownBody.replace(/^---$.*^---$/ms, '') : '';
 };
 
-const renderMarkdown = rawMarkdown => {
+const renderMarkdown = (rawMarkdown: string): string => {
     return marked(bypassFrontmatter(rawMarkdown));
 };
 

@@ -1,5 +1,6 @@
 .header {
     width: 100vw;
+    height: 100vh;
 
     .headerContent {
         position: absolute;
@@ -15,7 +16,7 @@
         }
 
         .description {
-            width: 400px;
+            max-width: 400px;
             display: block;
             margin: 0 auto;
         }

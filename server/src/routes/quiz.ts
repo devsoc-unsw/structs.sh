@@ -1,9 +1,9 @@
-import { Router } from 'express';
-import { QuizMongoService } from '../database-helpers/quiz';
-import { LessonMongoService } from '../database-helpers/lesson';
 import consola from 'consola';
+import { Router } from 'express';
 import { Lesson } from 'src/typedefs/lesson/Lesson';
 import { Quiz } from 'src/typedefs/quiz/Quiz';
+import { LessonMongoService } from '../database-helpers/lesson';
+import { QuizMongoService } from '../database-helpers/quiz';
 
 const quizRouter = Router();
 const quizzesService = new QuizMongoService();
@@ -11,9 +11,7 @@ const lessonService = new LessonMongoService();
 
 interface CreateQuizInput {
     lessonId: string;
-    questionType: string;
-    question: string;
-    answer: string;
+    quizData: Quiz;
 }
 
 /**
@@ -33,7 +31,7 @@ interface CreateQuizInput {
  *                type: string
  *      responses:
  *          '200':
- *              description: Succesfully fetched lesson's quizzes
+ *              description: Successfully fetched lesson's quizzes
  *              content:
  *                  application/json:
  *                     schema:
@@ -44,7 +42,10 @@ interface CreateQuizInput {
  *                             quizzes:
  *                                 type: array
  *                                 items:
- *                                     $ref: '#/components/schemas/Quiz'
+ *                                     oneOf:
+ *                                         - $ref: '#/components/schemas/MultipleChoiceQuiz'
+ *                                         - $ref: '#/components/schemas/TrueFalseQuiz'
+ *                                         - $ref: '#/components/schemas/QuestionAnswerQuiz'
  *          '404':
  *              description: Lesson with that ID doesn't exist
  *              content:
@@ -68,15 +69,16 @@ quizRouter.get('/api/lessons/quiz', async (request, response) => {
             });
         }
 
-        console.log(lesson);
-
         // Fetching quizzes
         const quizFetchQueries: Promise<Quiz>[] = lesson.quizzes.map((quizId) =>
             quizzesService.getQuizById(quizId)
         );
         const quizzes: Quiz[] = await Promise.all(quizFetchQueries);
 
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
         consola.success(`Successfully fetched quizzes for lesson: ${lessonId}`);
+        console.log(quizzes);
         response.status(200).json({
             statusText: `Successfully fetched quizzes for lesson: ${lessonId}`,
             quizzes: quizzes,
@@ -95,7 +97,7 @@ quizRouter.get('/api/lessons/quiz', async (request, response) => {
  * /api/lessons/quiz:
  *  post:
  *      summary: Creates a new quiz for a lesson
- *      description: "Creates a new quiz and attaches it to a lesson's existing set of quizzes. Note: valid `questionType` values currently include `mc` for multiple choice, `qa` for question-answer"
+ *      description: "Creates a new quiz and attaches it to a lesson's existing set of quizzes. Note: valid `type` values currently include `mc` for multiple choice, `tf` for true/false, `qa` for question-answer"
  *      tags:
  *          - Quiz
  *      requestBody:
@@ -107,15 +109,14 @@ quizRouter.get('/api/lessons/quiz', async (request, response) => {
  *                      properties:
  *                          lessonId:
  *                              type: string
- *                          questionType:
- *                              type: string
- *                          question:
- *                              type: string
- *                          answer:
- *                              type: string
+ *                          quizData:
+ *                              oneOf:
+ *                                  - $ref: '#/components/schemas/MultipleChoiceQuiz'
+ *                                  - $ref: '#/components/schemas/TrueFalseQuiz'
+ *                                  - $ref: '#/components/schemas/QuestionAnswerQuiz'
  *      responses:
  *          '200':
- *               description: Succesfully fetched lesson's quizzes
+ *               description: Successfully created quiz for lesson
  *               content:
  *                   application/json:
  *                       schema:
@@ -124,7 +125,10 @@ quizRouter.get('/api/lessons/quiz', async (request, response) => {
  *                               statusText:
  *                                   type: string
  *                               quiz:
- *                                   $ref: '#/components/schemas/Quiz'
+ *                                   oneOf:
+ *                                       - $ref: '#/components/schemas/MultipleChoiceQuiz'
+ *                                       - $ref: '#/components/schemas/TrueFalseQuiz'
+ *                                       - $ref: '#/components/schemas/QuestionAnswerQuiz'
  *
  *          '404':
  *              description: Lesson with that ID doesn't exist
@@ -138,49 +142,36 @@ quizRouter.get('/api/lessons/quiz', async (request, response) => {
  */
 quizRouter.post('/api/lessons/quiz', async (request, response) => {
     try {
-        const { lessonId, questionType, question, answer } =
-            request.body as CreateQuizInput;
-        consola.info(
-            `Creating a quiz for a lesson.\n\tQuestion:\t'${question}'\n\Type:\t'${questionType}'\n\tAnswer:\t'${answer}'`
-        );
+        const { lessonId, quizData } = request.body as CreateQuizInput;
+        const { type } = quizData;
 
-        // Retrieve lesson/check lesson exists
-        try {
-            await lessonService.getLessonById(lessonId);
-        } catch {
+        // Ensure that the lesson exists
+        const lesson: Lesson = await lessonService.getLessonById(lessonId);
+        if (!lesson) {
             consola.error(`Lesson with ID '${lessonId}' does not exist`);
             return response.status(404).json({
                 statusText: `Lesson with ID '${lessonId}' does not exist`,
             });
         }
 
-        // Check if valid questionType
-        if (!['mc', 'qa'].includes(questionType)) {
-            consola.error(
-                `Failed to create quiz. Invalid question type: ${questionType}`
-            );
-            return response.status(400).json({
-                statusText: `Invalid question type '${questionType}'`,
-            });
-        }
-
         // Create a quiz question in database
-        const createdQuiz = await quizzesService.createQuiz(
-            questionType,
-            question,
-            answer
-        );
-        consola.success(`Created quiz with ID: ${createdQuiz._id}`);
+        const createdQuiz = await quizzesService.createQuiz(quizData);
 
         // Add quiz question to database based on id
-        //......................................................................................................
-        const lesson = await lessonService.getLessonById(lessonId);
-        let quizzes = lesson.quizzes;
-        quizzes.push(createdQuiz._id);
+        let quizIds: string[] = lesson.quizzes || [];
+        quizIds.push(createdQuiz._id);
 
-        await lessonService.updateLessonById(lessonId, quizzes);
+        await lessonService.updateLessonById(
+            lessonId,
+            lesson.title,
+            lesson.rawMarkdown,
+            quizIds
+        );
 
-        consola.success(`Successfully created quiz: '${question}'`);
+        consola.success(
+            `Created quiz with ID: ${createdQuiz._id} on lesson ${lessonId}`
+        );
+
         response.status(200).json({
             statusText: 'Successfully created quiz',
             quiz: createdQuiz,
@@ -214,17 +205,13 @@ quizRouter.post('/api/lessons/quiz', async (request, response) => {
  *          content:
  *              application/json:
  *                  schema:
- *                      type: object
- *                      properties:
- *                          questionType:
- *                              type: string
- *                          question:
- *                              type: string
- *                          answer:
- *                              type: string
+ *                      oneOf:
+ *                          - $ref: '#/components/schemas/MultipleChoiceQuiz'
+ *                          - $ref: '#/components/schemas/TrueFalseQuiz'
+ *                          - $ref: '#/components/schemas/QuestionAnswerQuiz'
  *      responses:
  *          '200':
- *               description: Succesfully edited quiz
+ *               description: Successfully edited quiz
  *               content:
  *                   application/json:
  *                       schema:
@@ -232,6 +219,11 @@ quizRouter.post('/api/lessons/quiz', async (request, response) => {
  *                           properties:
  *                               statusText:
  *                                   type: string
+ *                               quiz:
+ *                                   oneOf:
+ *                                       - $ref: '#/components/schemas/MultipleChoiceQuiz'
+ *                                       - $ref: '#/components/schemas/TrueFalseQuiz'
+ *                                       - $ref: '#/components/schemas/QuestionAnswerQuiz'
  *          '404':
  *              description: Quiz with that ID doesn't exist
  *              content:
@@ -274,7 +266,7 @@ quizRouter.put('/api/lessons/quiz/:id', async (request, response) => {
  *                type: string
  *      responses:
  *          '200':
- *               description: Succesfully deleted quiz
+ *               description: Successfully deleted quiz
  *               content:
  *                   application/json:
  *                       schema:
@@ -282,6 +274,11 @@ quizRouter.put('/api/lessons/quiz/:id', async (request, response) => {
  *                           properties:
  *                               statusText:
  *                                   type: string
+ *                               quiz:
+ *                                   oneOf:
+ *                                       - $ref: '#/components/schemas/MultipleChoiceQuiz'
+ *                                       - $ref: '#/components/schemas/TrueFalseQuiz'
+ *                                       - $ref: '#/components/schemas/QuestionAnswerQuiz'
  *          '404':
  *              description: Quiz with that ID doesn't exist
  *              content:

@@ -11,6 +11,9 @@ interface CreateTopicInput {
     title: string;
     description: string;
     courses: string[];
+    image: string;
+    videos: string[];
+    sourceCodeIds: string[];
 }
 
 /**
@@ -19,6 +22,12 @@ interface CreateTopicInput {
  *  get:
  *      summary: Fetches topics
  *      description: Fetches all topics.
+ *      parameters:
+ *          - name: title
+ *            in: query
+ *            description: Fetch a topic by a title
+ *            schema:
+ *                type: string
  *      tags:
  *          - Topics
  *      responses:
@@ -45,13 +54,30 @@ interface CreateTopicInput {
  *                              statusText:
  *                                  type: string
  */
-topicRouter.get('/api/topics', async (_, response) => {
+topicRouter.get('/api/topics', async (request, response) => {
     try {
-        const topics: Topic[] = await topicService.getAllTopics();
-        return response.status(200).json({
-            statusText: `Successfully fetched all topics`,
-            topics: topics,
-        });
+        const { title } = request.query;
+
+        if (title) {
+            consola.info('Fetching topic by title');
+            const topic: Topic = await topicService.getTopicByTitle(
+                String(title)
+            );
+            if (!topic)
+                throw Error(`Couldn't find a topic with title: '${title}'`);
+            return response.status(200).json({
+                statusText: 'Successfully fetched topic',
+                topic: topic,
+            });
+        } else {
+            const topics: Topic[] = await topicService.getAllTopics();
+
+            consola.info('Fetching topics');
+            return response.status(200).json({
+                statusText: `Successfully fetched all topics`,
+                topics: topics,
+            });
+        }
     } catch (err) {
         consola.error(`Failed to fetch topics. Reason: `, err);
         response.status(500).json({
@@ -83,6 +109,16 @@ topicRouter.get('/api/topics', async (_, response) => {
  *                              type: array
  *                              items:
  *                                  type: string
+ *                          image:
+ *                              type: string
+ *                          videos:
+ *                              type: array
+ *                              items:
+ *                                  type: string
+ *                          sourceCodeIds:
+ *                              type: array
+ *                              items:
+ *                                  type: string
  *      responses:
  *          '200':
  *              description: successfully created new topic
@@ -93,6 +129,8 @@ topicRouter.get('/api/topics', async (_, response) => {
  *                         properties:
  *                             statustext:
  *                                 type: string
+ *                             topic:
+ *                                 $ref: '#/components/schemas/Topic'
  *          '400':
  *              description: Invalid arguments
  *              content:
@@ -105,7 +143,7 @@ topicRouter.get('/api/topics', async (_, response) => {
  */
 topicRouter.post('/api/topics', async (request, response) => {
     try {
-        const { title, description, courses } =
+        const { title, description, image, courses, videos, sourceCodeIds } =
             request.body as CreateTopicInput;
 
         const existingTopic = await topicService.getTopicByTitle(title);
@@ -118,7 +156,10 @@ topicRouter.post('/api/topics', async (request, response) => {
         const topic: Topic = await topicService.createTopic(
             title,
             description,
-            courses
+            courses,
+            image,
+            videos,
+            sourceCodeIds
         );
 
         consola.success('Lesson successfully created');
@@ -197,6 +238,38 @@ topicRouter.get('/api/topics/:id', async (req, res) => {
  *      description: Edits an existing topic
  *      tags:
  *          - Topics
+ *      parameters:
+ *          - name: id
+ *            in: path
+ *            required: true
+ *            description: ID of the topic to edit
+ *            schema:
+ *                type: string
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          title:
+ *                              type: string
+ *                          description:
+ *                              type: string
+ *                          courses:
+ *                              type: array
+ *                              items:
+ *                                  type: string
+ *                          videos:
+ *                              type: array
+ *                              items:
+ *                                  type: string
+ *                          sourceCodeIds:
+ *                              type: array
+ *                              items:
+ *                                  type: string
+ *                          image:
+ *                              type: string
  *      responses:
  *          '200':
  *              description: successfully created new topic
@@ -207,6 +280,17 @@ topicRouter.get('/api/topics/:id', async (req, res) => {
  *                         properties:
  *                             statustext:
  *                                 type: string
+ *                             topic:
+ *                                 $ref: '#/components/schemas/Topic'
+ *          '404':
+ *              description: No topic with the given ID exists.
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              statusText:
+ *                                  type: string
  *          '400':
  *              description: Invalid arguments
  *              content:
@@ -218,17 +302,39 @@ topicRouter.get('/api/topics/:id', async (req, res) => {
  *                                  type: string
  */
 topicRouter.put('/api/topics/:id', async (req, res) => {
-    throw new Error('Unimplemented');
+    try {
+        const id = req.params.id as string;
+        const { title, description, courses, videos, sourceCodeIds, image } =
+            req.body;
 
-    // try {
-    //     const { lessonId, topicId, title, rawMarkdown, creatorId } = req.body;
-    //     ...
-    // } catch (err) {
-    //     consola.error('Failed. Reason: ', err);
-    //     res.status(400).json({
-    //         statusText: `Failed. Reason: ${err.message}`,
-    //     });
-    // }
+        const topic: Topic = await topicService.getTopicById(id);
+        if (!topic) {
+            return res.status(404).json({
+                statusText: `Topic with id '${id}' doesn't exist`,
+            });
+        }
+
+        const editedTopic: Topic = await topicService.updateTopicById(
+            id,
+            title,
+            description,
+            courses,
+            image,
+            videos,
+            sourceCodeIds
+        );
+
+        consola.success('Successsfully edited topic');
+        return res.status(200).json({
+            statusText: 'Successfully edited topic',
+            topic: editedTopic,
+        });
+    } catch (err) {
+        consola.error('Failed. Reason: ', err);
+        res.status(400).json({
+            statusText: `Failed. Reason: ${err.message}`,
+        });
+    }
 });
 
 /**
@@ -249,6 +355,8 @@ topicRouter.put('/api/topics/:id', async (req, res) => {
  *                         properties:
  *                             statustext:
  *                                 type: string
+ *                             topic:
+ *                                 $ref: '#/components/schemas/Topic'
  *          '404':
  *              description: Couldn't find topic with that ID
  *              content:

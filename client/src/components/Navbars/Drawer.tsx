@@ -34,7 +34,11 @@ const Sidebar: FC<Props> = ({ Contents }) => {
 
     return (
         <Fragment>
-            <MenuIcon onClick={toggleDrawer(true)} className={`navbar-toggle-sidebar`} />
+            <MenuIcon
+                onClick={toggleDrawer(true)}
+                className={`navbar-toggle-sidebar`}
+                sx={{ cursor: 'pointer', marginRight: '10px' }}
+            />
             <Drawer open={sidebarOpen} onClose={toggleDrawer(false)}>
                 <Contents setShowSidebar={setSidebarOpen} />
             </Drawer>

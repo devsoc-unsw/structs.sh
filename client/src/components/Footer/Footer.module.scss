@@ -1,18 +1,44 @@
 .footer {
-    height: 200px;
-    border-top: 1px solid black;
+    height: 300px;
+    padding-top: 8px;
+    position: relative;
+
+    .brand {
+        margin: 16px auto;
+        display: flex;
+        justify-content: center;
+
+        .logo {
+            display: inline-flex;
+            margin-right: 10px;
+            height: 42px;
+        }
+
+        .brandTextContainer {
+            display: inline-flex;
+            text-align: left;
+        }
+    }
 
     .columnContainer {
         text-align: center;
 
         .link {
-            text-decoration: none;
+            // text-decoration: none;
+            text-decoration-color: rgba(144, 144, 144, 0.253);
             color: inherit;
             transition: 0.125s all ease-in-out;
 
-            &:hover {
-                opacity: 0.6;
-            }
+            // &:hover {
+            //     opacity: 0.6;
+            // }
         }
+    }
+
+    .bottomSection {
+        position: absolute;
+        bottom: 10px;
+        width: 100%;
+        text-align: center;
     }
 }
