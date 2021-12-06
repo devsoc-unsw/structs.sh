@@ -16,6 +16,10 @@ export interface Node {
 
     // the value of the node which is useful for when we do bst operations
     value: number;
+
+    // the x and y coordinate of the node (just used for basic drawing of a bst for now)
+    x: number;
+    y: number;
 }
 
 export interface Animation {

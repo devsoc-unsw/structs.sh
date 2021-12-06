@@ -23,18 +23,24 @@ const initialise = (): void => {
         const newNode: Node = createNode(input);
 
         bst.insert(newNode);
+
+        console.log(bst.root);
+        console.log(bst.nodes);
     }
 
-    handleInsertClick(5);
-    handleInsertClick(10);
-    handleInsertClick(1);
+    for (let i = 0; i < 150; i++) {
+        handleInsertClick(Math.floor(Math.random() * 100));
+    }
 
-    // anime({
-    //     targets: root.nodeTarget,
-    //     opacity: 1,
-    //     left: 700,
-    //     duration: 0,
-    // });
+    for (let i = 0; i < bst.nodes.length; i++) {
+        anime({
+            targets: bst.nodes[i].nodeTarget,
+            opacity: 1,
+            left: bst.nodes[i].x,
+            top: bst.nodes[i].y,
+            duration: 0,
+        });
+    }
 };
 
 export default initialise;

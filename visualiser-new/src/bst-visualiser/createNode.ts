@@ -42,7 +42,9 @@ const createNode = (input: number): Node => {
         pathTarget: null,
         left: null,
         right: null,
-        value: input
+        value: input,
+        x: 0,
+        y: 0
     }
 }
 
