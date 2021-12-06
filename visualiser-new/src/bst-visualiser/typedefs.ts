@@ -2,12 +2,20 @@
  * Type definitions used by the visualiser
  */
 
+
 export interface Node {
     // CSS selector for the node DOM element
     nodeTarget: SVGSVGElement;
 
     // CSS selector for the arrow DOM element
     pathTarget: SVGPathElement;
+
+    // reference to a left and right node
+    left: Node;
+    right: Node;
+
+    // the value of the node which is useful for when we do bst operations
+    value: number;
 }
 
 export interface Animation {
