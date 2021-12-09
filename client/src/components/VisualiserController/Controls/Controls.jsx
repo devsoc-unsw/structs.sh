@@ -1,14 +1,21 @@
 import React, { useEffect } from 'react';
 import styles from './Control.module.scss';
-import { IconButton } from '@mui/material';
+import { Box, IconButton, useTheme } from '@mui/material';
 import playIcon from 'assets/img/play.png';
 import pauseIcon from 'assets/img/pause.png';
 import replayIcon from 'assets/img/replay.png';
 import fastfoward from 'assets/img/fastforward.png';
 import fastrewind from 'assets/img/fastrewind.png';
 import ProgressBar from './ProgressBar';
+import Slider from '@mui/material/Slider';
+import ModeSwitch from '../GUIMode/ModeSwitch';
 
-const Controls = () => {
+import PlayIcon from '@mui/icons-material/PlayCircleOutline';
+import PauseIcon from '@mui/icons-material/PauseCircleOutline';
+import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+
+const Controls = ({ terminalMode, setTerminalMode }) => {
     const [play, setPlay] = React.useState(true);
     // const initColors = {
     //   rewind: { color: 'black' },
@@ -19,6 +26,7 @@ const Controls = () => {
     // const [color, setColor] = React.useState(initColors)
     const [replay, setReplay] = React.useState(false);
     const [progress, setProgress] = React.useState(0);
+    const theme = useTheme();
 
     const pauseAndPlay = () => {
         setPlay(!play);
@@ -61,45 +69,49 @@ const Controls = () => {
     return (
         <div className={styles.root}>
             <IconButton>
-                <img
+                {/* <img
                     src={fastrewind}
                     alt="fastrewind icon"
                     className={styles.play}
                     onClick={updateProgress}
-                />
+                /> */}
+                <SkipPreviousIcon sx={{ fill: theme.palette.text.primary }} />
             </IconButton>
-            {replay ? (
+            {play ? (
                 <IconButton>
-                    <img
-                        src={replayIcon}
-                        alt="replay icon"
-                        className={styles.play}
-                        onClick={playAndReplay}
-                    />
+                    {/* <img
+                        //     src={playIcon}
+                        //     alt="play icon"
+                        //     className={styles.play}
+                        //     onClick={pauseAndPlay}
+                        /> */}
+                    <PlayIcon sx={{ fill: theme.palette.text.primary }} />
                 </IconButton>
             ) : (
                 <IconButton>
-                    {play ? (
-                        <img
-                            src={playIcon}
-                            alt="play icon"
-                            className={styles.play}
-                            onClick={pauseAndPlay}
-                        />
-                    ) : (
-                        <img
-                            src={pauseIcon}
-                            alt="pause icon"
-                            className={styles.play}
-                            onClick={pauseAndPlay}
-                        />
-                    )}
+                    {/* <img
+                        src={pauseIcon}
+                        alt="pause icon"
+                        className={styles.play}
+                        onClick={pauseAndPlay}
+                    /> */}
+                    <PauseIcon sx={{ fill: theme.palette.text.primary }} />
                 </IconButton>
             )}
             <IconButton>
-                <img src={fastfoward} alt="fastfoward icon" className={styles.play} />
+                {/* <img src={fastfoward} alt="fastfoward icon" className={styles.play} /> */}
+                <SkipNextIcon sx={{ fill: theme.palette.text.primary }} />
             </IconButton>
-            <ProgressBar progress={progress} />
+
+            <Box className={styles.sliderContainer}>
+                <Slider className={styles.slider} color="info" defaultValue={30} />
+            </Box>
+
+            <Box className={styles.modeSwitchContainer}>
+                <ModeSwitch switchMode={terminalMode} setSwitchMode={setTerminalMode} />
+            </Box>
+
+            {/* <ProgressBar progress={progress} /> */}
         </div>
     );
 };

@@ -4,6 +4,7 @@ import React, { FC } from 'react';
 import Container from '@mui/material/Container';
 import styles from './AboutUs.module.scss';
 import { Gallery } from 'components/Gallery';
+import { team2021 } from 'assets/about/team-2021';
 
 interface Props {}
 
@@ -27,7 +28,9 @@ const About: FC<Props> = () => {
                     <Typography color="textPrimary" variant="h4" className={styles.text}>
                         The 2021 Team
                     </Typography>
-                    <Gallery />
+                    <Container maxWidth={'sm'}>
+                        <Gallery items={team2021} />
+                    </Container>
                 </Container>
             </Box>
         </HomepageLayout>

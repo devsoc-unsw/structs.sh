@@ -3,7 +3,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styles from '../VisualiserController.module.scss';
+import styles from '../Controls/Control.module.scss';
 
 const ModeSwitch = ({ switchMode, setSwitchMode }) => {
     return (
@@ -20,7 +20,7 @@ const ModeSwitch = ({ switchMode, setSwitchMode }) => {
             color={'textPrimary'}
             label={
                 <Typography color="textPrimary" className={styles.label}>
-                    <strong>GUI Mode</strong>
+                    <strong>GUI</strong>
                 </Typography>
             }
         />

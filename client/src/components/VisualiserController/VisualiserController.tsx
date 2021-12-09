@@ -1,6 +1,5 @@
 import { Box, Theme, useTheme } from '@mui/material';
 import React, { Dispatch, SetStateAction } from 'react';
-import ModeSwitch from './GUIMode/ModeSwitch';
 import styles from './VisualiserController.module.scss';
 import Controls from './Controls/Controls';
 
@@ -15,10 +14,9 @@ const VisualiserController: React.FC<Props> = ({ terminalMode, setTerminalMode }
     return (
         <Box
             className={styles.container}
-            sx={{ height: '64px', backgroundColor: theme.palette.background.paper }}
+            sx={{ height: '64px', width: '100%', backgroundColor: theme.palette.background.paper }}
         >
-            <Controls />
-            <ModeSwitch switchMode={terminalMode} setSwitchMode={setTerminalMode} />
+            <Controls terminalMode={terminalMode} setTerminalMode={setTerminalMode} />
         </Box>
     );
 };

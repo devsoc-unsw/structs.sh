@@ -18,21 +18,21 @@ export const ThemeMutationContext = createContext({
     isDarkMode: false,
 });
 
-const DARK_MODE_ON = 'dark-mode-on';
+const LIGHT_MODE_ON = 'light-mode-on';
 
 const App = () => {
-    const [cookies, setCookie] = useCookies([DARK_MODE_ON]);
+    const [cookies, setCookie] = useCookies([LIGHT_MODE_ON]);
     const [currTheme, setCurrTheme] = useState<Theme>(
-        cookies[DARK_MODE_ON] === 'true' ? darkTheme : lightTheme
+        cookies[LIGHT_MODE_ON] === 'true' ? lightTheme : darkTheme
     );
 
     const toggleDarkMode = useCallback(() => {
-        if (currTheme === darkTheme) {
-            setCurrTheme(lightTheme);
-            setCookie(DARK_MODE_ON, 'false');
-        } else {
+        if (currTheme === lightTheme) {
             setCurrTheme(darkTheme);
-            setCookie(DARK_MODE_ON, 'true');
+            setCookie(LIGHT_MODE_ON, 'false');
+        } else {
+            setCurrTheme(lightTheme);
+            setCookie(LIGHT_MODE_ON, 'true');
         }
     }, [currTheme, setCookie]);
 
@@ -43,7 +43,7 @@ const App = () => {
                 <ThemeMutationContext.Provider
                     value={{
                         toggleDarkMode: toggleDarkMode,
-                        isDarkMode: cookies[DARK_MODE_ON] === 'true',
+                        isDarkMode: cookies[LIGHT_MODE_ON] === 'true',
                     }}
                 >
                     <TopNavbar position={'fixed'} enableOnScrollEffect={true} />
