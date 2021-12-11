@@ -12,10 +12,12 @@ import { Notification } from 'utils/Notification';
 
 interface Props {
     quiz: QuestionAnswerQuiz;
-    questionNumber: number;
+    questionNumber?: number;
+    disabled?: boolean;
+    showAnswers?: boolean;
 }
 
-const QuestionAnswer: FC<Props> = ({ quiz, questionNumber }) => {
+const QuestionAnswer: FC<Props> = ({ quiz, questionNumber, disabled, showAnswers }) => {
     const { explanation } = quiz;
     const theme: Theme = useTheme();
     const [response, setResponse] = useState<string>('');
@@ -36,7 +38,7 @@ const QuestionAnswer: FC<Props> = ({ quiz, questionNumber }) => {
             <TextField
                 multiline
                 fullWidth
-                disabled={submitted}
+                disabled={disabled || submitted}
                 rows={3}
                 maxRows={8}
                 variant="outlined"
@@ -44,7 +46,7 @@ const QuestionAnswer: FC<Props> = ({ quiz, questionNumber }) => {
                 onChange={(e) => setResponse(String(e.target.value))}
                 sx={{ mb: 2, mt: 2 }}
             />
-            {submitted && (
+            {(submitted || showAnswers) && (
                 <Box>
                     <Alert
                         severity="info"
@@ -57,7 +59,7 @@ const QuestionAnswer: FC<Props> = ({ quiz, questionNumber }) => {
                     </Alert>
                 </Box>
             )}
-            {!submitted && (
+            {!submitted && !disabled && (
                 <Button
                     variant="contained"
                     color={'primary'}

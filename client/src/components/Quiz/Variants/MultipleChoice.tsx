@@ -27,10 +27,13 @@ import { Notification } from 'utils/Notification';
 
 interface Props {
     quiz: MultipleChoiceQuiz;
-    questionNumber: number;
+    questionNumber?: number;
+    disabled?: boolean;
+
+    showAnswers?: boolean;
 }
 
-const MultiChoiceQuestion: FC<Props> = ({ quiz, questionNumber }) => {
+const MultipleChoice: FC<Props> = ({ quiz, questionNumber, disabled, showAnswers }) => {
     const {
         question,
         description,
@@ -43,7 +46,9 @@ const MultiChoiceQuestion: FC<Props> = ({ quiz, questionNumber }) => {
     } = quiz;
 
     const theme: Theme = useTheme();
-    const [responses, setResponses] = useState<boolean[]>(Array(choices.length).fill(false));
+    const [responses, setResponses] = useState<boolean[]>(
+        Array((choices && choices.length) || 0).fill(false)
+    );
     const [submitted, setSubmitted] = useState<boolean>(false);
     const [result, setResult] = useState<'incorrect' | 'correct' | 'partial'>();
 
@@ -111,62 +116,70 @@ const MultiChoiceQuestion: FC<Props> = ({ quiz, questionNumber }) => {
                         ? 'Select one response'
                         : `Select up to ${maxSelections} responses`}
                 </FormLabel>
-                {choices.map((choice, i) => {
-                    return (
-                        <FormControlLabel
-                            value={i}
-                            disabled={
-                                submitted || (getNumSelected() >= maxSelections && !responses[i])
-                            }
-                            sx={{
-                                background:
-                                    submitted &&
-                                    (answers[i]
-                                        ? 'rgba(0, 255, 59, 0.55)'
-                                        : 'rgba(252, 113, 122, 0.55)'),
-                                borderRadius: '20px',
-                                mt: 1,
-                                mb: 1,
-                                pr: 2,
-                                transition: '0.4s all ease-in-out',
-                            }}
-                            checked={responses[i]}
-                            label={choice}
-                            control={<Radio onClick={() => toggleChoice(i)} />}
-                        />
-                    );
-                })}
+                {choices &&
+                    choices.map((choice, i) => {
+                        return (
+                            <FormControlLabel
+                                value={i}
+                                disabled={
+                                    disabled ||
+                                    submitted ||
+                                    (getNumSelected() >= maxSelections && !responses[i])
+                                }
+                                sx={{
+                                    background:
+                                        (showAnswers || submitted) &&
+                                        (answers[i]
+                                            ? 'rgba(0, 255, 59, 0.55)'
+                                            : 'rgba(252, 113, 122, 0.55)'),
+                                    borderRadius: '20px',
+                                    mt: 1,
+                                    mb: 1,
+                                    pr: 2,
+                                    transition: '0.4s all ease-in-out',
+                                }}
+                                checked={responses[i]}
+                                label={choice}
+                                control={<Radio onClick={() => toggleChoice(i)} />}
+                            />
+                        );
+                    })}
             </FormControl>
-            {submitted && (
-                <Box sx={{ mb: 1 }}>
-                    {result === 'correct' && (
-                        <>
-                            <Alert
-                                severity="success"
-                                sx={{
-                                    mb: 1,
-                                    background: theme.palette.background.paper,
-                                    color: theme.palette.text.primary,
-                                }}
-                            >
-                                {correctMessage}
-                            </Alert>
-                        </>
-                    )}
-                    {result === 'incorrect' && (
-                        <>
-                            <Alert
-                                severity="error"
-                                sx={{
-                                    mb: 1,
-                                    background: theme.palette.background.paper,
-                                    color: theme.palette.text.primary,
-                                }}
-                            >
-                                {incorrectMessage}
-                            </Alert>
-                        </>
-                    )}
+
+            <Box sx={{ mb: 1 }}>
+                {submitted && (
+                    <>
+                        {result === 'correct' && (
+                            <>
+                                <Alert
+                                    severity="success"
+                                    sx={{
+                                        mb: 1,
+                                        background: theme.palette.background.paper,
+                                        color: theme.palette.text.primary,
+                                    }}
+                                >
+                                    {correctMessage}
+                                </Alert>
+                            </>
+                        )}
+                        {result === 'incorrect' && (
+                            <>
+                                <Alert
+                                    severity="error"
+                                    sx={{
+                                        mb: 1,
+                                        background: theme.palette.background.paper,
+                                        color: theme.palette.text.primary,
+                                    }}
+                                >
+                                    {incorrectMessage}
+                                </Alert>
+                            </>
+                        )}
+                    </>
+                )}
+                {(submitted || showAnswers) && (
                     <Alert
                         severity="info"
                         sx={{
@@ -176,10 +189,10 @@ const MultiChoiceQuestion: FC<Props> = ({ quiz, questionNumber }) => {
                     >
                         {explanation}
                     </Alert>
-                </Box>
-            )}
+                )}
+            </Box>
 
-            {!submitted && (
+            {!submitted && !disabled && (
                 <Box>
                     <Button variant="contained" color="primary" onClick={() => submitQuestion()}>
                         Submit
@@ -190,4 +203,4 @@ const MultiChoiceQuestion: FC<Props> = ({ quiz, questionNumber }) => {
     );
 };
 
-export default MultiChoiceQuestion;
+export default MultipleChoice;

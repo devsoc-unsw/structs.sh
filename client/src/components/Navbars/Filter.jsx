@@ -19,7 +19,7 @@ const useStyles = makeStyles({
     },
 });
 
-const Filter = ({ setTopics }) => {
+const Filter = ({ setFilter }) => {
     const [course, setCourse] = React.useState('');
 
     const handleChange = (event) => {
@@ -28,7 +28,7 @@ const Filter = ({ setTopics }) => {
 
     const handleFilter = async () => {
         const reg = new RegExp(`${course}`);
-        setTopics(await getMatchedLessons(reg));
+        setFilter(await getMatchedLessons(reg));
     };
     const classes = useStyles();
 

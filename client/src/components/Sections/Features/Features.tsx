@@ -13,6 +13,7 @@ import structsLogo from 'assets/img/structs.png';
 import { LaptopFrame } from 'components/Frame';
 import BulletIcon from '@mui/icons-material/ArrowForwardIos';
 import { Link as RouterLink } from 'react-router-dom';
+import { HorizontalRule } from 'components/HorizontalRule';
 
 interface Props {}
 
@@ -59,7 +60,7 @@ const Features: React.FC<Props> = () => {
             <Typography className={styles.title} color="textPrimary" variant="h4">
                 Structs.sh
             </Typography>
-            {/* TODO: each feature section should have their own 'in view' animation set */}
+            <HorizontalRule />
             <FeatureItem>
                 <Typography color="textPrimary" variant="h6">
                     <VisualiserIcon /> Algorithm Visualisation

@@ -23,10 +23,12 @@ import { Notification } from 'utils/Notification';
 
 interface Props {
     quiz: TrueFalseQuiz;
-    questionNumber: number;
+    questionNumber?: number;
+    disabled?: boolean;
+    showAnswers?: boolean;
 }
 
-const TrueFalse = ({ quiz, questionNumber }) => {
+const TrueFalse = ({ quiz, questionNumber, disabled, showAnswers }) => {
     const { isTrue, correctMessage, incorrectMessage, explanation } = quiz;
     const theme: Theme = useTheme();
     const [response, setResponse] = useState<0 | 1 | 2>(0); // 3-state boolean where 0 is indeterminate, 1 is true, 2 is false
@@ -68,9 +70,9 @@ const TrueFalse = ({ quiz, questionNumber }) => {
                     />
                 </RadioGroup>
             </FormControl>
-            {submitted && (
-                <Box>
-                    {answeredCorrect ? (
+            <Box>
+                {submitted &&
+                    (answeredCorrect ? (
                         <Alert
                             severity="success"
                             sx={{
@@ -92,7 +94,8 @@ const TrueFalse = ({ quiz, questionNumber }) => {
                         >
                             {incorrectMessage}
                         </Alert>
-                    )}
+                    ))}
+                {(submitted || showAnswers) && (
                     <Alert
                         severity="info"
                         sx={{
@@ -102,9 +105,9 @@ const TrueFalse = ({ quiz, questionNumber }) => {
                     >
                         {explanation}
                     </Alert>
-                </Box>
-            )}
-            {!submitted && (
+                )}
+            </Box>
+            {!submitted && !disabled && (
                 <Box>
                     <Button
                         variant="contained"
