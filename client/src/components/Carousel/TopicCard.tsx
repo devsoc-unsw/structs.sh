@@ -1,15 +1,5 @@
+import { Card, CardContent, Typography } from '@mui/material';
 import React from 'react';
-import Box from '@mui/material/Box';
-import {
-    Button,
-    Card,
-    CardActionArea,
-    CardActions,
-    CardContent,
-    CardMedia,
-    Typography,
-} from '@mui/material';
-import { useTheme } from '@mui/system';
 import { Topic } from 'utils/apiRequests';
 import styles from './TopicCard.module.scss';
 
@@ -19,8 +9,6 @@ interface Props {
 }
 
 const TopicCard: React.FC<Props> = ({ topic, isActive }) => {
-    const theme = useTheme();
-
     return (
         <Card
             className={`${styles.card} ${isActive && styles.activeCard}`}

@@ -2,9 +2,8 @@ import { Theme } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import React, { useEffect } from 'react';
 import Particles from 'react-tsparticles';
-import { darkTheme, lightTheme } from 'structsThemes';
-import { darkParticleTheme, lightParticleTheme } from './ParticleThemes';
 import './ParticleHeader.scss';
+import { darkParticleTheme } from './ParticleThemes';
 
 interface Props {}
 

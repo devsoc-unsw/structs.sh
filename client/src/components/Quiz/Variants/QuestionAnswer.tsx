@@ -1,14 +1,9 @@
-import React, { FC, useCallback, useState } from 'react';
-import { Card, TextField, Button, Box, Typography, Theme, Alert } from '@mui/material';
-import ErrorIcon from '@mui/icons-material/Error';
-import { yellow } from '@mui/material/colors';
-import SyntaxHighlighter from 'react-syntax-highlighter';
-import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { QuestionAnswerQuiz } from 'utils/apiRequests';
-import { MarkdownEditor } from 'components/MarkdownEditor';
+import { Alert, Box, Button, TextField, Theme } from '@mui/material';
 import { useTheme } from '@mui/styles';
-import BaseQuiz from '../BaseQuiz';
+import React, { FC, useCallback, useState } from 'react';
+import { QuestionAnswerQuiz } from 'utils/apiRequests';
 import { Notification } from 'utils/Notification';
+import BaseQuiz from '../BaseQuiz';
 
 interface Props {
     quiz: QuestionAnswerQuiz;

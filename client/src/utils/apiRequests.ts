@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { ApiConstants } from 'constants/api';
-import { Notification } from './Notification';
 
 // TODO: it could be a good idea to set up a yarn workspace, create a `common` directory and put all these TypeScript definitions for data models in that directory so they can be shared between client and server (since both use TypeScript)
 // TODO: this would also also make input validation easier -- you write it once for both client and server rather than doing both independently.

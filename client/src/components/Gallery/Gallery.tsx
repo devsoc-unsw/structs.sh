@@ -1,15 +1,7 @@
-import React from 'react';
-import Typography from '@mui/material/Typography';
-import {
-    IconButton,
-    ImageList,
-    ImageListItem,
-    ImageListItemBar,
-    ListSubheader,
-    Theme,
-} from '@mui/material';
+import { ImageList, ImageListItem, ImageListItemBar, Theme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/styles';
+import React from 'react';
 
 type GalleryItem = {
     name: string;

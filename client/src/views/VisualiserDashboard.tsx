@@ -1,5 +1,6 @@
-import { Box, CircularProgress } from '@mui/material';
+import { Box } from '@mui/material';
 import LinkedListAnimation from 'components/Animation/LinkedList/linkedListAnimation';
+import { CircularLoader } from 'components/Loader';
 import { Pane } from 'components/Panes';
 import Tabs from 'components/Tabs/Tabs';
 import { Terminal } from 'components/Terminal';
@@ -7,12 +8,11 @@ import { VisualiserController } from 'components/Visualisation/Controller';
 import GUIMode from 'components/Visualisation/Controller/ModeSwitch/GuiMode';
 import { VisualiserDashboardLayout } from 'layout';
 import React, { useCallback, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { getTopic, Topic } from 'utils/apiRequests';
+import { Notification } from 'utils/Notification';
 import { urlToTitle } from 'utils/url';
 import styles from './VisualiserDashboard.module.scss';
-import { CircularLoader } from 'components/Loader';
-import { Notification } from 'utils/Notification';
-import { useParams } from 'react-router-dom';
 
 let appendNode = (_: number) => console.log('Not set');
 let deleteNode = (_: number) => console.log('Not set');
@@ -30,7 +30,7 @@ const Dashboard = () => {
         getTopic(urlToTitle(topicTitleInUrl))
             .then((topic) => setTopic(topic))
             .catch(() => Notification.error('Visualiser Dashboard: Failed to get topic'));
-    }, []);
+    }, [params]);
 
     // Note: this is a hacky way of removing scrollability outside of the panes
     useEffect(() => {

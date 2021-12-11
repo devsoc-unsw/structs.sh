@@ -1,4 +1,4 @@
-import { Box, Grid, Tab, Tabs, Theme, Typography } from '@mui/material';
+import { Box, Tab, Tabs, Theme, Typography } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import { FC, useState } from 'react';
 import { Topic } from 'utils/apiRequests';

@@ -15,18 +15,15 @@ import {
     Link,
     List,
     ListItem,
-    MenuItem,
     NativeSelect,
     Pagination,
     Paper,
-    Select,
     TextField,
     Theme,
     useTheme,
 } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { BaseQuizForm, MCQuizForm, TFQuizForm, QAQuizForm } from './QuizForm';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -38,9 +35,12 @@ import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
 import { CoursesSelector } from 'components/Autocomplete';
+import { HorizontalRule } from 'components/HorizontalRule';
 import { MarkdownEditor } from 'components/MarkdownEditor';
+import QuestionRenderer from 'components/Quiz/QuestionRenderer';
 import { TagSelector } from 'components/Tags';
 import React, { FC, useCallback, useEffect, useState } from 'react';
+import { darkTheme } from 'structsThemes';
 import {
     createLesson,
     createQuiz,
@@ -66,10 +66,7 @@ import {
 } from 'utils/apiRequests';
 import { Notification } from 'utils/Notification';
 import styles from './ContentManagement.module.scss';
-import renderMarkdown from 'utils/markdown-util';
-import { HorizontalRule } from 'components/HorizontalRule';
-import { darkTheme } from 'structsThemes';
-import QuestionRenderer from 'components/Quiz/QuestionRenderer';
+import { BaseQuizForm, MCQuizForm, QAQuizForm, TFQuizForm } from './QuizForm';
 
 interface Props {}
 
@@ -103,35 +100,6 @@ const emptyNewQuizForm: QuizForm = {
     explanation: '',
 };
 
-const emptyMCQuizForm: MultipleChoiceQuizForm = {
-    type: '',
-    question: '',
-    description: '',
-    choices: [],
-    answers: [],
-    maxSelections: 1,
-    correctMessage: '',
-    incorrectMessage: '',
-    explanation: '',
-};
-
-const emptyTFQuizForm: TrueFalseQuizForm = {
-    type: '',
-    question: '',
-    description: '',
-    isTrue: true,
-    correctMessage: '',
-    incorrectMessage: '',
-    explanation: '',
-};
-
-const emptyQAQuizForm: QuestionAnswerQuizForm = {
-    type: '',
-    question: '',
-    description: '',
-    explanation: '',
-};
-
 const ContentManagementSteps: FC<Props> = () => {
     const [activeStep, setActiveStep] = React.useState(0);
 
@@ -149,7 +117,6 @@ const ContentManagementSteps: FC<Props> = () => {
     const [lessonFormValues, setLessonFormValues] = useState<LessonForm>(emptyLessonForm);
 
     const [quizzes, setQuizzes] = useState<Quiz[]>([]);
-    const [selectedQuizId, setSelectedQuizId] = useState<string>('');
     const [quizFormValues, setQuizFormValues] = useState<QuizForm>();
     const [selectedQuizIndex, setSelectedQuizIndex] = useState<number>(-1);
 
@@ -222,14 +189,14 @@ const ContentManagementSteps: FC<Props> = () => {
             fetchLessons(selectedTopicId);
             fetchTopicSourceCode(selectedTopicId);
         }
-    }, [selectedTopicId]);
+    }, [selectedTopicId, fetchLessons, fetchTopicSourceCode]);
 
     // When a lesson is selected then all its child quizzes should be fetched
     useEffect(() => {
         if (selectedLessonId) {
             fetchQuizzes(selectedLessonId);
         }
-    }, [selectedLessonId]);
+    }, [selectedLessonId, fetchQuizzes]);
 
     /* --------------------------- Selection Callbacks -------------------------- */
 
@@ -248,14 +215,6 @@ const ContentManagementSteps: FC<Props> = () => {
         [topics, sourceCodeFormValues, lessonFormValues]
     );
 
-    const deselectTopic = useCallback(() => {
-        deselectLesson();
-        setSelectedTopicId('');
-        setTopicFormValues(emptyTopicForm);
-        setLessonFormValues(emptyLessonForm);
-        setSourceCodes([]);
-    }, []);
-
     const selectLesson = useCallback(
         (lessonId: string) => {
             const selectedLesson: Lesson = lessons.find((lesson) => lesson._id === lessonId);
@@ -269,6 +228,24 @@ const ContentManagementSteps: FC<Props> = () => {
         [lessons]
     );
 
+    const selectQuiz = useCallback(
+        (quizId: string) => {
+            const selectedQuizIndex: number = quizzes.findIndex((quiz) => quiz._id === quizId);
+            if (selectedQuizIndex === -1) {
+                Notification.error(`Quiz doesn't seem to exist. ID: ${quizId}`);
+                return;
+            }
+            setQuizFormValues(quizzes[selectedQuizIndex]);
+            setSelectedQuizIndex(selectedQuizIndex);
+        },
+        [quizzes]
+    );
+
+    const deselectQuiz = useCallback(() => {
+        setQuizFormValues(null);
+        setSelectedQuizIndex(-1);
+    }, []);
+
     const deselectLesson = useCallback(() => {
         deselectQuiz();
         setSelectedLessonId('');
@@ -278,27 +255,15 @@ const ContentManagementSteps: FC<Props> = () => {
             creatorId: lessonFormValues.creatorId,
         });
         setSelectedQuizIndex(-1);
-    }, [lessonFormValues]);
+    }, [lessonFormValues, deselectQuiz]);
 
-    const selectQuiz = useCallback(
-        (quizId: string) => {
-            const selectedQuizIndex: number = quizzes.findIndex((quiz) => quiz._id === quizId);
-            if (selectedQuizIndex === -1) {
-                Notification.error(`Quiz doesn't seem to exist. ID: ${quizId}`);
-                return;
-            }
-            setSelectedQuizId(quizId);
-            setQuizFormValues(quizzes[selectedQuizIndex]);
-            setSelectedQuizIndex(selectedQuizIndex);
-        },
-        [quizzes, selectedQuizIndex, quizFormValues]
-    );
-
-    const deselectQuiz = useCallback(() => {
-        setSelectedQuizId('');
-        setQuizFormValues(null);
-        setSelectedQuizIndex(-1);
-    }, []);
+    const deselectTopic = useCallback(() => {
+        deselectLesson();
+        setSelectedTopicId('');
+        setTopicFormValues(emptyTopicForm);
+        setLessonFormValues(emptyLessonForm);
+        setSourceCodes([]);
+    }, [deselectLesson]);
 
     /* ----------------------------- Form Callbacks ----------------------------- */
 
@@ -377,7 +342,7 @@ const ContentManagementSteps: FC<Props> = () => {
                 );
             })
             .catch(Notification.error);
-    }, [lessonFormValues, lessons]);
+    }, [lessonFormValues, lessons, selectedLessonId]);
 
     const handleCreateQuiz = useCallback(() => {
         createQuiz(selectedLessonId, newQuizFormValues)
@@ -387,11 +352,11 @@ const ContentManagementSteps: FC<Props> = () => {
                 setNewQuizFormValues(emptyNewQuizForm);
             })
             .catch(Notification.error);
-    }, [newQuizFormValues]);
+    }, [newQuizFormValues, quizzes, selectedLessonId]);
 
     const handleUpdateQuiz = useCallback(() => {
         Notification.error('Unimplemented');
-    }, [quizFormValues, quizzes]);
+    }, []);
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);

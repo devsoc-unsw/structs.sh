@@ -1,5 +1,4 @@
-import { Box, Paper, Stack, Typography } from '@mui/material';
-import { HorizontalRule } from 'components/HorizontalRule';
+import { Paper, Stack } from '@mui/material';
 import { EmbeddedVideoPlayer } from 'components/Video';
 import React, { FC } from 'react';
 import { Topic } from 'utils/apiRequests';

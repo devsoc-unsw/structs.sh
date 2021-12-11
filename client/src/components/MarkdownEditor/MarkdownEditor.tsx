@@ -5,7 +5,7 @@
 
 import { Theme } from '@mui/material';
 import { useTheme } from '@mui/styles';
-import React, { useEffect } from 'react';
+import React from 'react';
 import Editor from 'rich-markdown-editor';
 import { Notification } from 'utils/Notification';
 import { light } from './theme';

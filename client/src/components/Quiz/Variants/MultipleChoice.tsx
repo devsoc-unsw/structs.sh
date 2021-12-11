@@ -1,29 +1,18 @@
-import BaseQuiz from '../BaseQuiz';
 import {
     Alert,
     Box,
     Button,
-    Card,
-    Checkbox,
     FormControl,
     FormControlLabel,
     FormLabel,
     Radio,
-    RadioGroup,
     Theme,
-    Typography,
     useTheme,
 } from '@mui/material';
-import { green, red } from '@mui/material/colors';
-import CancelIcon from '@mui/icons-material/Cancel';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import React, { FC, useCallback, useEffect, useState } from 'react';
-import SyntaxHighlighter from 'react-syntax-highlighter';
-import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { MultipleChoiceQuiz, Quiz } from 'utils/apiRequests';
-import { HorizontalRule } from 'components/HorizontalRule';
-import { MarkdownEditor } from 'components/MarkdownEditor';
+import React, { FC, useCallback, useState } from 'react';
+import { MultipleChoiceQuiz } from 'utils/apiRequests';
 import { Notification } from 'utils/Notification';
+import BaseQuiz from '../BaseQuiz';
 
 interface Props {
     quiz: MultipleChoiceQuiz;
@@ -34,16 +23,7 @@ interface Props {
 }
 
 const MultipleChoice: FC<Props> = ({ quiz, questionNumber, disabled, showAnswers }) => {
-    const {
-        question,
-        description,
-        choices,
-        answers,
-        maxSelections,
-        correctMessage,
-        incorrectMessage,
-        explanation,
-    } = quiz;
+    const { choices, answers, maxSelections, correctMessage, incorrectMessage, explanation } = quiz;
 
     const theme: Theme = useTheme();
     const [responses, setResponses] = useState<boolean[]>(
@@ -51,6 +31,20 @@ const MultipleChoice: FC<Props> = ({ quiz, questionNumber, disabled, showAnswers
     );
     const [submitted, setSubmitted] = useState<boolean>(false);
     const [result, setResult] = useState<'incorrect' | 'correct' | 'partial'>();
+
+    // Determines the number of responses the user has selected so far
+    const getNumSelected = useCallback(
+        () =>
+            Number(
+                responses &&
+                    responses.reduce(
+                        (numSelected, currIsSelected) =>
+                            numSelected + Number(currIsSelected ? 1 : 0),
+                        0
+                    )
+            ),
+        [responses]
+    );
 
     const toggleChoice = useCallback(
         (i: number) => {
@@ -92,21 +86,7 @@ const MultipleChoice: FC<Props> = ({ quiz, questionNumber, disabled, showAnswers
 
         Notification.success('Well done!');
         setResult('correct');
-    }, [responses]);
-
-    // Determines the number of responses the user has selected so far
-    const getNumSelected = useCallback(
-        () =>
-            Number(
-                responses &&
-                    responses.reduce(
-                        (numSelected, currIsSelected) =>
-                            numSelected + Number(currIsSelected ? 1 : 0),
-                        0
-                    )
-            ),
-        [responses]
-    );
+    }, [responses, answers, getNumSelected, maxSelections]);
 
     return (
         <BaseQuiz quiz={quiz} questionNumber={questionNumber}>

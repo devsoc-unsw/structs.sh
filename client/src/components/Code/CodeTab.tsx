@@ -1,6 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
-import { CopyBlock, dracula } from 'react-code-blocks';
-import { getSourceCodes, SourceCode, Topic } from 'utils/apiRequests';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
     Accordion,
     AccordionDetails,
@@ -14,15 +12,16 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
+import { HorizontalRule } from 'components/HorizontalRule';
+import React, { FC, useEffect, useState } from 'react';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import {
     atomOneDark as darkCodeTheme,
     atomOneLight as lightCodeTheme,
 } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { darkTheme } from 'structsThemes';
+import { getSourceCodes, SourceCode, Topic } from 'utils/apiRequests';
 import { Notification } from 'utils/Notification';
-import { HorizontalRule } from 'components/HorizontalRule';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 interface Props {
     topic: Topic;
@@ -35,7 +34,7 @@ const CodeSnippet: FC<Props> = ({ topic }) => {
 
     useEffect(() => {
         getSourceCodes(topic._id).then(setCodeSnippets).catch(Notification.error);
-    }, []);
+    }, [topic]);
 
     return (
         <Box>

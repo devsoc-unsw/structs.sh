@@ -1,25 +1,19 @@
-import React, { useCallback, useState } from 'react';
 import {
-    Card,
+    Alert,
+    Box,
+    Button,
+    FormControl,
+    FormControlLabel,
+    FormLabel,
     Radio,
     RadioGroup,
-    FormControlLabel,
-    FormControl,
-    FormLabel,
-    Button,
     Theme,
     useTheme,
-    Box,
-    Alert,
 } from '@mui/material';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CancelIcon from '@mui/icons-material/Cancel';
-import { red, green } from '@mui/material/colors';
-import SyntaxHighlighter from 'react-syntax-highlighter';
-import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import React, { FC, useCallback, useState } from 'react';
 import { TrueFalseQuiz } from 'utils/apiRequests';
-import BaseQuiz from '../BaseQuiz';
 import { Notification } from 'utils/Notification';
+import BaseQuiz from '../BaseQuiz';
 
 interface Props {
     quiz: TrueFalseQuiz;
@@ -28,7 +22,7 @@ interface Props {
     showAnswers?: boolean;
 }
 
-const TrueFalse = ({ quiz, questionNumber, disabled, showAnswers }) => {
+const TrueFalse: FC<Props> = ({ quiz, questionNumber, disabled, showAnswers }) => {
     const { isTrue, correctMessage, incorrectMessage, explanation } = quiz;
     const theme: Theme = useTheme();
     const [response, setResponse] = useState<0 | 1 | 2>(0); // 3-state boolean where 0 is indeterminate, 1 is true, 2 is false
@@ -47,7 +41,7 @@ const TrueFalse = ({ quiz, questionNumber, disabled, showAnswers }) => {
         } else {
             setAnsweredCorrect(false);
         }
-    }, [response]);
+    }, [response, isTrue]);
 
     return (
         <BaseQuiz quiz={quiz} questionNumber={questionNumber}>

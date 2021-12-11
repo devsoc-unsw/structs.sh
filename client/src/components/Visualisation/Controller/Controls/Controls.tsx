@@ -1,19 +1,12 @@
-import React, { FC, useEffect, useState } from 'react';
-import styles from './Control.module.scss';
-import { Box, IconButton, useTheme } from '@mui/material';
-import playIcon from 'assets/img/play.png';
-import pauseIcon from 'assets/img/pause.png';
-import replayIcon from 'assets/img/replay.png';
-import fastfoward from 'assets/img/fastforward.png';
-import fastrewind from 'assets/img/fastrewind.png';
-import ProgressBar from './ProgressBar';
-import Slider from '@mui/material/Slider';
-import ModeSwitch from '../ModeSwitch/ModeSwitch';
-
-import PlayIcon from '@mui/icons-material/PlayCircleOutline';
 import PauseIcon from '@mui/icons-material/PauseCircleOutline';
-import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import PlayIcon from '@mui/icons-material/PlayCircleOutline';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
+import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import { Box, IconButton, useTheme } from '@mui/material';
+import Slider from '@mui/material/Slider';
+import React, { FC, useEffect, useState } from 'react';
+import ModeSwitch from '../ModeSwitch/ModeSwitch';
+import styles from './Control.module.scss';
 
 interface Props {
     terminalMode: boolean;

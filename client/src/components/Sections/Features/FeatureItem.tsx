@@ -9,7 +9,7 @@ interface Props {
 }
 
 const FeatureItem: React.FC<Props> = ({ children, fromDirection = 'left' }) => {
-    const { ref, inView, entry } = useInView({
+    const { ref, inView } = useInView({
         threshold: 0,
     });
     const controls = useAnimation();

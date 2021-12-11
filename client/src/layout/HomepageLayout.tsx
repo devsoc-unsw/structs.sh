@@ -1,6 +1,5 @@
 import { Box, Theme } from '@mui/material';
 import { useTheme } from '@mui/styles';
-import TopNavbar from 'components/Navbars/TopNavbar';
 import { motion } from 'framer-motion';
 import React, { FC, useEffect } from 'react';
 

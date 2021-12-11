@@ -1,8 +1,8 @@
 import ModalUnstyled from '@mui/base/ModalUnstyled';
+import CloseIcon from '@mui/icons-material/Close';
 import Fade from '@mui/material/Fade';
 import { Box, styled } from '@mui/system';
 import React, { ComponentType, FC } from 'react';
-import CloseIcon from '@mui/icons-material/Close';
 
 const StyledModal = styled(ModalUnstyled)`
     position: fixed;
@@ -26,8 +26,6 @@ const Backdrop = styled('div')`
     background-color: rgba(0, 0, 0, 0.5);
     -webkit-tap-highlight-color: transparent;
 `;
-
-const style = {};
 
 interface Props {
     children?: React.ReactNode;

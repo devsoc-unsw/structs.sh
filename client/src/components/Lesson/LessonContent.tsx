@@ -1,33 +1,26 @@
-import { HorizontalRule } from 'components/HorizontalRule';
+import BulletIcon from '@mui/icons-material/KeyboardArrowRight';
+import RightChevronIcon from '@mui/icons-material/NavigateNext';
 import {
     Box,
     Button,
-    Divider,
-    Link,
     List,
     ListItem,
     ListItemIcon,
-    Stack,
     Theme,
     Typography,
     useTheme,
 } from '@mui/material';
-import { getLessonContent } from 'utils/content';
-import React, { FC, useCallback, useEffect, useState } from 'react';
-import styles from './Lesson.module.scss';
-import renderMarkdown from 'utils/markdown-util';
-import RightChevronIcon from '@mui/icons-material/NavigateNext';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import { Link as RouterLink } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import { HorizontalRule } from 'components/HorizontalRule';
+import { LineLoader } from 'components/Loader';
+import { MarkdownEditor } from 'components/MarkdownEditor';
+import { LessonQuiz } from 'components/Quiz';
+import { motion } from 'framer-motion';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { getLessons, getQuizzes, Lesson, Quiz, Topic } from 'utils/apiRequests';
 import { Notification } from 'utils/Notification';
-import { determineTimeToRead } from 'utils/markdown-util';
-import BulletIcon from '@mui/icons-material/KeyboardArrowRight';
-import { motion } from 'framer-motion';
-import { MarkdownEditor } from 'components/MarkdownEditor';
-import { LineLoader } from 'components/Loader';
-import { LessonQuiz } from 'components/Quiz';
+import styles from './Lesson.module.scss';
 
 interface Props {
     topic: Topic;
@@ -53,7 +46,7 @@ const LessonContent: FC<Props> = ({ topic }) => {
                 Notification.error(errMessage);
                 setLoading(false);
             });
-    }, []);
+    }, [topic]);
 
     useEffect(() => {
         if (!(activeLesson >= 0 && activeLesson < lessons.length)) {
@@ -64,7 +57,7 @@ const LessonContent: FC<Props> = ({ topic }) => {
                 setQuizzes(fetchedQuizzes);
             })
             .catch(Notification.error);
-    }, [activeLesson]);
+    }, [activeLesson, lessons]);
 
     const deselectLesson = useCallback(() => {
         setQuizActive(false);

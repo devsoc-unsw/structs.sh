@@ -1,9 +1,11 @@
 import { Theme, ThemeProvider } from '@mui/material';
 import TopNavbar from 'components/Navbars/TopNavbar';
+import { LIGHT_MODE_ON } from 'constants/cookies';
 import { AnimatePresence } from 'framer-motion';
 import React, { createContext, useCallback, useState } from 'react';
 import { useCookies } from 'react-cookie';
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
+import { darkTheme, lightTheme } from 'structsThemes';
 import AboutUs from 'views/AboutUs';
 import ContentManagementDashboard from 'views/ContentManagementDashboard';
 import Feedback from 'views/Feedback';
@@ -11,8 +13,6 @@ import HomePage from 'views/HomePage';
 import Page404 from 'views/Page404';
 import VisualiserDashboard from 'views/VisualiserDashboard';
 import './App.scss';
-import { darkTheme, lightTheme } from 'structsThemes';
-import { LIGHT_MODE_ON } from 'constants/cookies';
 
 export const ThemeMutationContext = createContext({
     toggleDarkMode: () => console.log('Dark mode toggling is not ready yet'),

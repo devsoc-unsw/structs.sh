@@ -1,5 +1,7 @@
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import SunIcon from '@mui/icons-material/Brightness7';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import GoogleIcon from '@mui/icons-material/Google';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import MoonIcon from '@mui/icons-material/NightsStay';
@@ -13,21 +15,16 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { SxProps } from '@mui/system';
 import { ThemeMutationContext } from 'App';
-import bstIcon from 'assets/img/bst.png';
-import linkedListIcon from 'assets/img/linked-list.png';
 import logo from 'assets/img/logo.png';
 import { Modal } from 'components/Modal';
-import { getTopicOps } from 'utils/content';
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getTopics, Topic } from 'utils/apiRequests';
+import { Notification } from 'utils/Notification';
+import { titleToUrl } from 'utils/url';
 import Drawer from './Drawer';
 import SidebarContents from './SidebarContents';
 import styles from './TopNavbar.module.scss';
-import { titleToUrl } from 'utils/url';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import GoogleIcon from '@mui/icons-material/Google';
-import { Notification } from 'utils/Notification';
 
 interface Props {
     position?: 'fixed' | 'static';

@@ -1,3 +1,11 @@
+import HomeIcon from '@mui/icons-material/Cottage';
+import EditIcon from '@mui/icons-material/Edit';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import FeedbackIcon from '@mui/icons-material/Feedback';
+import FilterIcon from '@mui/icons-material/FilterList';
+import AboutIcon from '@mui/icons-material/Info';
+import TopicIcon from '@mui/icons-material/School';
 import {
     Box,
     IconButton,
@@ -11,30 +19,19 @@ import {
     Typography,
 } from '@mui/material';
 import Collapse from '@mui/material/Collapse';
-import React, { useEffect, useState } from 'react';
-import logo from '../../assets/img/linked-list.svg';
-import filter from 'assets/img/filter.svg';
-import { makeStyles, useTheme } from '@mui/styles';
-import Filter from './Filter';
-import { getMatchedLessons } from 'utils/content';
-import { Link as RouterLink } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import styles from './Sidebar.module.scss';
+import { useTheme } from '@mui/styles';
 import structsLogo from 'assets/img/logo.png';
-import HomeIcon from '@mui/icons-material/Cottage';
-import AboutIcon from '@mui/icons-material/Info';
-import FeedbackIcon from '@mui/icons-material/Feedback';
 import { HorizontalRule } from 'components/HorizontalRule';
-import { getTopics, Topic } from 'utils/apiRequests';
-import { Notification } from 'utils/Notification';
-import TopicIcon from '@mui/icons-material/School';
-import FilterIcon from '@mui/icons-material/FilterList';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
 import { LineLoader } from 'components/Loader';
 import { TagList } from 'components/Tags/TagList';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import { getTopics, Topic } from 'utils/apiRequests';
+import { Notification } from 'utils/Notification';
 import { titleToUrl } from 'utils/url';
-import EditIcon from '@mui/icons-material/Edit';
+import Filter from './Filter';
+import styles from './Sidebar.module.scss';
 
 const SidebarContents = ({ setShowSidebar }) => {
     const [topics, setTopics] = useState<Topic[]>([]);
@@ -53,7 +50,7 @@ const SidebarContents = ({ setShowSidebar }) => {
         >
             <Box sx={{ textAlign: 'center' }}>
                 <IconButton disabled>
-                    <img src={structsLogo} className={styles.logo} />
+                    <img src={structsLogo} className={styles.logo} alt="Structs.sh logo" />
                     <Typography
                         display="inline"
                         color="textPrimary"

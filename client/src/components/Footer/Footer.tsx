@@ -1,13 +1,13 @@
-import React from 'react';
+import { Theme } from '@mui/material';
+import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import { useTheme } from '@mui/styles';
+import structsLogo from 'assets/img/structs.png';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './Footer.module.scss';
-import { useTheme } from '@mui/styles';
-import { Divider, Theme } from '@mui/material';
-import structsLogo from 'assets/img/structs.png';
 
 interface Props {}
 
@@ -25,7 +25,7 @@ const Footer: React.FC<Props> = () => {
             <Box>
                 <Container maxWidth="lg">
                     <Box className={styles.brand}>
-                        <img className={styles.logo} src={structsLogo} />
+                        <img className={styles.logo} src={structsLogo} alt="Structs.sh logo" />
                         <Box
                             className={styles.brandTextContainer}
                             sx={{

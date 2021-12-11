@@ -1,19 +1,19 @@
+import BulletIcon from '@mui/icons-material/ArrowForwardIos';
+import VisualiserIcon from '@mui/icons-material/AutoFixHigh';
+import EditIcon from '@mui/icons-material/Edit';
+import ToolIcon from '@mui/icons-material/Handyman';
+import EducationIcon from '@mui/icons-material/LocalLibrary';
+import GradCapIcon from '@mui/icons-material/School';
 import { Box, Grid, Link, List, ListItem, ListItemIcon, Typography } from '@mui/material';
+import structsLogo from 'assets/img/structs.png';
+import { LaptopFrame } from 'components/Frame';
+import { HorizontalRule } from 'components/HorizontalRule';
 import { motion, useAnimation } from 'framer-motion';
 import React, { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
-import styles from './Features.module.scss';
-import FeatureItem from './FeatureItem';
-import VisualiserIcon from '@mui/icons-material/AutoFixHigh';
-import EducationIcon from '@mui/icons-material/LocalLibrary';
-import ToolIcon from '@mui/icons-material/Handyman';
-import GradCapIcon from '@mui/icons-material/School';
-import EditIcon from '@mui/icons-material/Edit';
-import structsLogo from 'assets/img/structs.png';
-import { LaptopFrame } from 'components/Frame';
-import BulletIcon from '@mui/icons-material/ArrowForwardIos';
 import { Link as RouterLink } from 'react-router-dom';
-import { HorizontalRule } from 'components/HorizontalRule';
+import FeatureItem from './FeatureItem';
+import styles from './Features.module.scss';
 
 interface Props {}
 
@@ -23,7 +23,7 @@ const variants = {
 };
 
 const Features: React.FC<Props> = () => {
-    const { ref, inView, entry } = useInView({
+    const { ref, inView } = useInView({
         threshold: 0,
     });
     const controls = useAnimation();
@@ -56,7 +56,7 @@ const Features: React.FC<Props> = () => {
             animate={controls}
             ref={ref}
         >
-            <img src={structsLogo} className={styles.logo} />
+            <img src={structsLogo} className={styles.logo} alt="Structs.sh logo" />
             <Typography className={styles.title} color="textPrimary" variant="h4">
                 Structs.sh
             </Typography>
