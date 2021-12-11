@@ -85,7 +85,7 @@ const Terminal: FC<Props> = ({ executeCommand }) => {
             ) : (
                 <Console
                     style={consoleStyle.container}
-                    promptLabel={'username@Structs.sh:~$'}
+                    promptLabel={'admin@Structs.sh:~$'}
                     commands={commands}
                     promptLabelStyle={consoleStyle.prompt}
                     contentStyle={consoleStyle.content}

@@ -12,7 +12,6 @@ import { urlToTitle } from 'utils/url';
 import styles from './VisualiserDashboard.module.scss';
 import { CircularLoader } from 'components/Loader';
 import { Notification } from 'utils/Notification';
-import { Visualiser } from 'components/Visualisation';
 
 let appendNode = (_: number) => console.log('Not set');
 let deleteNode = (_: number) => console.log('Not set');
@@ -65,7 +64,6 @@ const Dashboard = ({ match }) => {
                     deleteNode(Number(args[0]));
                     return '';
                 }
-                return 'Success';
             default:
                 return `Invalid command: ${command}`;
         }
@@ -102,7 +100,19 @@ const Dashboard = ({ match }) => {
         <VisualiserDashboardLayout topic={topic}>
             <Pane orientation="vertical" minSize={340} topGutterSize={64}>
                 <Pane orientation="horizontal" minSize={150.9}>
-                    <Visualiser />
+                    <header style={{ height: '100%', background: 'rgba(235, 235, 235)' }}>
+                        {/* TODO: Place the new visualiser canvas here */}
+                        <div className="visualiser">
+                            <svg
+                                className="visualiser-svg"
+                                overflow="auto"
+                                style={{ width: '100%' }}
+                            >
+                                <g className="nodes" transform="translate(0, 20)" />
+                                <g className="pointers" transform="translate(0, 20)" />
+                            </svg>
+                        </div>
+                    </header>
                     <Box className={styles.interactor}>
                         <VisualiserController
                             terminalMode={terminalMode}

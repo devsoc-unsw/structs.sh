@@ -37,7 +37,6 @@ class LinkedListAnimation {
      * @param data value of the node 
      */
     animateAppend(data) {
-        alert(`RUNNING APPEND with ${data}`)
         appendNodeSVG(this.listData, data, false);
         if (this.listData.nodes.length > 1) appendPointerSVG(this.listData, false);
         const animationSequence = generateAppendSequence(this.listData);
