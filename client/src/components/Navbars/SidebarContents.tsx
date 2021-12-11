@@ -17,7 +17,7 @@ import filter from 'assets/img/filter.svg';
 import { makeStyles, useTheme } from '@mui/styles';
 import Filter from './Filter';
 import { getMatchedLessons } from 'utils/content';
-import { Link as RouterLink, Redirect } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styles from './Sidebar.module.scss';
 import structsLogo from 'assets/img/logo.png';

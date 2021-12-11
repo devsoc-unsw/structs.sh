@@ -15,14 +15,14 @@ const HomePage = () => {
 
     return (
         <HomepageLayout disableBackground>
-            <SplashScreen stillDuration={2.5} disappearDuration={1.5} waitIntervalMinutes={10} />
+            <SplashScreen stillDuration={2.5} disappearDuration={1.5} waitIntervalMinutes={1} />
             <ParticleHeader />
             <Box className={styles.header}>
                 <Box className={styles.headerContent}>
-                    <Typography color="textPrimary" className={styles.title}>
+                    <Typography color="white" className={styles.title}>
                         <strong>Welcome to Structs.sh</strong>
                     </Typography>
-                    <Typography color="textSecondary" className={styles.description}>
+                    <Typography color="white" className={styles.description}>
                         An interactive learning platform for computer science, tailored to UNSW CSE
                         students.
                     </Typography>

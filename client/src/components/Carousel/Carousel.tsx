@@ -15,7 +15,7 @@ import { getTopics, Topic } from 'utils/apiRequests';
 import { Notification } from 'utils/Notification';
 import { LineLoader } from 'components/Loader';
 import './Carousel.scss';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { titleToUrl } from 'utils/url';
 
 interface Props {}
@@ -24,10 +24,9 @@ const Carousel: React.FC<Props> = () => {
     const [currImageIndex, setImageIndex] = useState<number>(0);
     const [topics, setTopics] = useState<Topic[]>([]);
 
-    const history = useHistory();
     const [mouseMoved, setMouseMoved] = useState(false);
 
-    const images = [bst, linkedList, structs, play];
+    const navigate = useNavigate();
 
     useEffect(() => {
         getTopics().then(setTopics).catch(Notification.error);
@@ -35,7 +34,7 @@ const Carousel: React.FC<Props> = () => {
 
     const handleClick = (topic: Topic) => {
         if (!mouseMoved) {
-            history.push(`/visualiser/${titleToUrl(topic.title)}`);
+            navigate(`/visualiser/${titleToUrl(topic.title)}`);
         }
     };
 

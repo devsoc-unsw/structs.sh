@@ -10,7 +10,8 @@ interface Props {}
 
 const ParticleHeader: React.FC<Props> = () => {
     const theme: Theme = useTheme();
-    const particleTheme = theme === darkTheme ? darkParticleTheme : lightParticleTheme;
+    // const particleTheme = theme === darkTheme ? darkParticleTheme : lightParticleTheme;
+    const particleTheme = darkParticleTheme;
 
     const particlesInit = (main) => {
         console.log(main);
@@ -38,9 +39,9 @@ const ParticleHeader: React.FC<Props> = () => {
                 init={particlesInit}
                 options={{
                     background: {
-                        color: {
-                            value: theme.palette.background.default,
-                        },
+                        // color: {
+                        //     value: theme.palette.background.default,
+                        // },
                         opacity: 0.2,
                     },
                     fpsLimit: 60,
@@ -84,9 +85,9 @@ const ParticleHeader: React.FC<Props> = () => {
                         },
                     },
                     particles: {
-                        color: {
-                            value: particleTheme.particleColor,
-                        },
+                        // color: {
+                        //     value: particleTheme.particleColor,
+                        // },
                         number: {
                             value: 50,
                             density: {
@@ -95,9 +96,9 @@ const ParticleHeader: React.FC<Props> = () => {
                             },
                         },
                         links: {
-                            color: {
-                                value: theme.palette.text.secondary,
-                            },
+                            // color: {
+                            //     value: theme.palette.text.secondary,
+                            // },
                             enable: true,
                             distance: 175,
                             opacity: 0.2,

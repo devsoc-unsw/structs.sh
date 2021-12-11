@@ -12,25 +12,27 @@ import { urlToTitle } from 'utils/url';
 import styles from './VisualiserDashboard.module.scss';
 import { CircularLoader } from 'components/Loader';
 import { Notification } from 'utils/Notification';
+import { useParams } from 'react-router-dom';
 
 let appendNode = (_: number) => console.log('Not set');
 let deleteNode = (_: number) => console.log('Not set');
 
-const Dashboard = ({ match }) => {
+const Dashboard = () => {
     const [topic, setTopic] = useState<Topic>();
     const [animationProgress, setAnimationProgress] = useState<number>(0);
     const [terminalMode, setTerminalMode] = useState(true);
 
+    const params = useParams();
+
     // Fetching the topic based on the URL parameter in `/visualiser/:topic`
     useEffect(() => {
-        const { params } = match;
         const topicTitleInUrl = params.topic;
         getTopic(urlToTitle(topicTitleInUrl))
             .then((topic) => setTopic(topic))
             .catch(() => Notification.error('Visualiser Dashboard: Failed to get topic'));
     }, []);
 
-    // Note: this is a hacky way of removing scrolling outside of the panes
+    // Note: this is a hacky way of removing scrollability outside of the panes
     useEffect(() => {
         document.querySelector('html').style.overflow = 'hidden';
         return () => {
