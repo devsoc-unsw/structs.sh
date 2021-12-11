@@ -18,3 +18,9 @@ const toTitleCase = (str: string): string => {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
 };
+
+export const extractQueryParameter = (url: string, param: string): string => {
+    const urlObj = new URL(url);
+    const params = Object.fromEntries(new URLSearchParams(urlObj.search));
+    return params[param];
+};

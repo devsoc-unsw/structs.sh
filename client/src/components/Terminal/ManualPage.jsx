@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import styles from './Terminal.module.scss';
 import commands from './manualDoc';
@@ -27,13 +27,13 @@ const reducer = (state, action) => {
 };
 
 const ManualPage = ({ setShowMan }) => {
-    const [input, setInput] = React.useState('');
-    const [state, dispatch] = React.useReducer(reducer, initialState);
-    const [isSearch, setIsSearch] = React.useState(true);
+    const [input, setInput] = useState('');
+    const [state, dispatch] = useReducer(reducer, initialState);
+    const [isSearch, setIsSearch] = useState(true);
 
-    React.useEffect(() => {
-        dispatch({type: 'SET_DATA', payload: commands})
-    }, [])
+    useEffect(() => {
+        dispatch({ type: 'SET_DATA', payload: commands });
+    }, []);
 
     const handleQuit = (e) => {
         if (e.key === 'Enter' && input === ':q') {
@@ -41,7 +41,7 @@ const ManualPage = ({ setShowMan }) => {
         }
         if (e.key === 'Backspace' && !input.match(/:/)) {
             // when ':' is deleted, enter search mode again
-            setIsSearch(true)
+            setIsSearch(true);
         }
     };
 
@@ -53,7 +53,7 @@ const ManualPage = ({ setShowMan }) => {
             dispatch({ type: 'SEARCH_INPUT', payload: str });
             findMatchCommands(str);
         } else {
-            setIsSearch(false)
+            setIsSearch(false);
         }
     };
 
@@ -69,6 +69,10 @@ const ManualPage = ({ setShowMan }) => {
                     new RegExp(str, 'gi'),
                     (match) => `<mark>${match}</mark>`
                 );
+                let newUsage = item.usage.replace(
+                    new RegExp(str, 'gi'),
+                    (match) => `<mark>${match}</mark>`
+                );
                 let newDescription = item.description.replace(
                     new RegExp(str, 'gi'),
                     (match) => `<mark>${match}</mark>`
@@ -77,11 +81,13 @@ const ManualPage = ({ setShowMan }) => {
                 return {
                     ...item,
                     command: newCommand,
+                    usage: newUsage,
                     description: newDescription,
                 };
             });
         dispatch({ type: 'SEARCH_DATA', payload: matchCommands });
     };
+
     return (
         <div className={styles.manualContainer}>
             {state.search.length > 0

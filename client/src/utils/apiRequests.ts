@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { ApiConstants } from 'constants/api';
+import { Notification } from './Notification';
 
 // TODO: it could be a good idea to set up a yarn workspace, create a `common` directory and put all these TypeScript definitions for data models in that directory so they can be shared between client and server (since both use TypeScript)
-// This would also also make input validation easier -- you write it once for both client and server rather than doing both independently.
+// TODO: this would also also make input validation easier -- you write it once for both client and server rather than doing both independently.
 
 export interface User {
     username: string;
@@ -48,7 +49,7 @@ interface BaseQuiz {
     description: string;
 }
 
-interface MultipleChoiceQuiz extends BaseQuiz {
+export interface MultipleChoiceQuiz extends BaseQuiz {
     choices: string[];
     answers: boolean[];
     maxSelections: number;
@@ -57,14 +58,14 @@ interface MultipleChoiceQuiz extends BaseQuiz {
     explanation: string;
 }
 
-interface TrueFalseQuiz extends BaseQuiz {
+export interface TrueFalseQuiz extends BaseQuiz {
     isTrue: boolean;
     correctMessage: string;
     incorrectMessage: string;
     explanation: string;
 }
 
-interface QuestionAnswerQuiz extends BaseQuiz {
+export interface QuestionAnswerQuiz extends BaseQuiz {
     explanation: string;
 }
 
@@ -93,6 +94,8 @@ type EditQuiz = (quizId: string, newQuiz: QuizForm) => Promise<Quiz>;
 type EditTopic = (topicId: string, newTopic: TopicForm) => Promise<Topic>;
 type EditSourceCode = (sourceCodeId: string, newSourceCode: SourceCodeForm) => Promise<SourceCode>;
 
+/* ---------------------------- Fetch Operations ---------------------------- */
+
 export const getLessons: GetLessons = async (topicId: string) => {
     try {
         const response = await axios.get(`${ApiConstants.URL}/api/lessons?topicId=${topicId}`);
@@ -110,6 +113,15 @@ export const getQuizzes: GetQuizzes = async (lessonId: string) => {
             `${ApiConstants.URL}/api/lessons/quiz?lessonId=${lessonId}`
         );
         const quizzes: Quiz[] = response.data.quizzes as Quiz[];
+
+        // Note: boolean arrays are interpreted as string arrays when the response is extracted.
+        //       We need to cast it back. Eg. ["true", "false"] needs to be casted to [true, false]
+        quizzes.forEach((quiz: any) => {
+            if (quiz.type === 'mc') {
+                quiz.answers = quiz.answers.map((answer) => answer === 'true');
+            }
+        });
+
         return quizzes;
     } catch (err) {
         const errMessage: string = err.response.data.statusText;
@@ -150,7 +162,8 @@ export const getSourceCodes: GetSourceCode = async (topicId: string) => {
     }
 };
 
-// TODO: Untested and unimplemented in backend
+/* ---------------------------- Create Operations --------------------------- */
+
 export const createLesson: CreateLesson = async (lesson: LessonForm) => {
     try {
         const response = await axios.post(`${ApiConstants.URL}/api/lessons`, lesson, {
@@ -163,7 +176,6 @@ export const createLesson: CreateLesson = async (lesson: LessonForm) => {
     }
 };
 
-// TODO: Untested and unimplemented in backend
 export const createQuiz: CreateQuiz = async (lessonId: string, quiz: QuizForm) => {
     try {
         const response = await axios.post(
@@ -183,7 +195,6 @@ export const createQuiz: CreateQuiz = async (lessonId: string, quiz: QuizForm) =
     }
 };
 
-// TODO: Untested and unimplemented in backend
 export const createTopic: CreateTopic = async (topic: TopicForm) => {
     try {
         const response = await axios.post(`${ApiConstants.URL}/api/topics`, topic, {
@@ -196,7 +207,6 @@ export const createTopic: CreateTopic = async (topic: TopicForm) => {
     }
 };
 
-// TODO: Untested and unimplemented in backend
 export const createSourceCode: CreateSourceCode = async (sourceCode: SourceCodeForm) => {
     try {
         const response = await axios.post(`${ApiConstants.URL}/api/source-code`, sourceCode, {
@@ -209,7 +219,8 @@ export const createSourceCode: CreateSourceCode = async (sourceCode: SourceCodeF
     }
 };
 
-// TODO: Untested and unimplemented in backend
+/* ----------------------------- Edit Operations ---------------------------- */
+
 export const editLesson: EditLesson = async (lessonId: string, newLesson: LessonForm) => {
     try {
         if (!lessonId) {
@@ -225,7 +236,6 @@ export const editLesson: EditLesson = async (lessonId: string, newLesson: Lesson
     }
 };
 
-// TODO: Untested and unimplemented in backend
 export const editQuiz: EditQuiz = async (quizId: string, newQuiz: QuizForm) => {
     try {
         if (!quizId) {
@@ -245,7 +255,6 @@ export const editQuiz: EditQuiz = async (quizId: string, newQuiz: QuizForm) => {
     }
 };
 
-// TODO: Untested and unimplemented in backend
 export const editTopic: EditTopic = async (topicId: string, newTopic: TopicForm) => {
     try {
         if (!topicId) {
@@ -261,7 +270,6 @@ export const editTopic: EditTopic = async (topicId: string, newTopic: TopicForm)
     }
 };
 
-// TODO: Untested and unimplemented in backend
 export const editSourceCode: EditSourceCode = async (
     sourceCodeId: string,
     newSourceCode: SourceCodeForm
@@ -280,3 +288,7 @@ export const editSourceCode: EditSourceCode = async (
         throw errMessage;
     }
 };
+
+/* ---------------------------- Delete Operations --------------------------- */
+
+// TODO: None here yet!

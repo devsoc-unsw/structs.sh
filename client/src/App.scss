@@ -4,6 +4,11 @@ html {
     scroll-behavior: smooth;
 }
 
+// MUI Image List Item Bar override styles
+.MuiImageListItemBar-subtitle {
+    white-space: normal !important;
+}
+
 /* ------------------------------ Custom Fonts ------------------------------ */
 
 // Using Atlassian's font: https://atlassian.design/foundations/typography

@@ -89,9 +89,9 @@ const MCQuizForm: React.FC<Props> = ({
                         </ListItem>
                     ))}
             </List>
-            <Typography color="textSecondary" sx={{ mb: 4 }}>
-                Answers: {answers ? answers.join(', ') : 'None'}
-            </Typography>
+            {/* <Typography color="textSecondary" sx={{ mb: 4 }}>
+                Answers: {answers && answers.length > 0 ? answers.join(', ') : 'None'}
+            </Typography> */}
             <TextField
                 label="Max Selections"
                 type="number"

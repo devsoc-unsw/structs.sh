@@ -5,7 +5,7 @@ interface ParticleBackgroundTheme {
 
 // Source: https://uigradients.com/#DigitalWater
 export const lightParticleTheme: ParticleBackgroundTheme = {
-    backgroundCss: 'linear-gradient(to right, #74ebd5, #acb6e5)',
+    backgroundCss: 'linear-gradient(to right, #ffffff, #ffffff)',
     particleColor: '#555555',
 };
 

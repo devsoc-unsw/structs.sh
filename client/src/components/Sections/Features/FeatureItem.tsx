@@ -15,11 +15,11 @@ const FeatureItem: React.FC<Props> = ({ children, fromDirection = 'left' }) => {
     const controls = useAnimation();
 
     const variants = {
-        visible: { opacity: 1, x: 0, y: 0, transition: { duration: 2 } },
+        visible: { opacity: 1, x: 0, y: 0, transition: { duration: 0.6 } },
         hidden: {
             opacity: 0,
-            x: fromDirection === 'left' ? -200 : fromDirection === 'right' ? 200 : 0,
-            y: fromDirection === 'top' ? 200 : fromDirection === 'down' ? -200 : 0,
+            x: fromDirection === 'left' ? -100 : fromDirection === 'right' ? 100 : 0,
+            y: fromDirection === 'top' ? 100 : fromDirection === 'down' ? -100 : 0,
             transition: { duration: 0.2 },
         },
     };
