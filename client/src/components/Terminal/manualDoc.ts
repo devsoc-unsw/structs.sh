@@ -1,10 +1,12 @@
 const commands = [
     {
-        command: 'append &lt;number&gt;',
+        command: 'append',
+        usage: 'append <number>',
         description: 'Append a node containing the number.',
     },
     {
-        command: 'delete &lt;index&gt;',
+        command: 'delete',
+        usage: 'delete <index>',
         description: 'Delete a node by the index given.',
     },
     // {
@@ -13,4 +15,4 @@ const commands = [
     // },
 ];
 
-export default commands
+export default commands;

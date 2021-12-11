@@ -10,12 +10,17 @@ const Manual = ({ manual }) => {
     return (
         <>
             <Typography
-                variant="subtitle1"
+                variant="h5"
                 className={styles.command}
+                sx={{ fontFamily: 'Ubuntu Mono' }}
                 dangerouslySetInnerHTML={createMarkup(manual.command)}
             />
+            <Typography variant="h6" className={styles.usage} sx={{ fontFamily: 'Ubuntu Mono' }}>
+                {manual.usage}
+            </Typography>
             <Typography
                 variant="body2"
+                sx={{ fontFamily: 'Ubuntu Mono' }}
                 dangerouslySetInnerHTML={createMarkup(`${manual.description}`)}
             />
         </>

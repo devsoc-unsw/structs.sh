@@ -3,50 +3,32 @@ import LinkedListAnimation from 'components/Animation/LinkedList/linkedListAnima
 import { Pane } from 'components/Panes';
 import Tabs from 'components/Tabs/Tabs';
 import { Terminal } from 'components/Terminal';
-import { VisualiserController } from 'components/VisualiserController';
-import GUIMode from 'components/VisualiserController/GUIMode/GuiMode';
+import { VisualiserController } from 'components/Visualisation/Controller';
+import GUIMode from 'components/Visualisation/Controller/ModeSwitch/GuiMode';
 import { VisualiserDashboardLayout } from 'layout';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { getTopic, Topic } from 'utils/apiRequests';
 import { urlToTitle } from 'utils/url';
 import styles from './VisualiserDashboard.module.scss';
 import { CircularLoader } from 'components/Loader';
+import { Notification } from 'utils/Notification';
+import { Visualiser } from 'components/Visualisation';
 
 let appendNode = (_: number) => console.log('Not set');
 let deleteNode = (_: number) => console.log('Not set');
 
 const Dashboard = ({ match }) => {
     const [topic, setTopic] = useState<Topic>();
-
-    // Extract route parameters
-    const { params } = match;
-    const topicTitleInUrl = params.topic;
-
-    useEffect(() => {
-        getTopic(urlToTitle(topicTitleInUrl))
-            .then((topic) => setTopic(topic))
-            .catch(() => console.log('VisualiserDashboard: Failed to get topic'));
-    }, [topicTitleInUrl]);
-
+    const [animationProgress, setAnimationProgress] = useState<number>(0);
     const [terminalMode, setTerminalMode] = useState(true);
 
-    const executeCommand = (command, args) => {
-        switch (command) {
-            case 'append':
-                appendNode(Number(args[0]));
-                break;
-            case 'delete':
-                deleteNode(Number(args[0]));
-                break;
-            default:
-                return `Invalid command: ${command}`;
-        }
-    };
-
+    // Fetching the topic based on the URL parameter in `/visualiser/:topic`
     useEffect(() => {
-        const list = new LinkedListAnimation();
-        appendNode = list.animateAppend.bind(list);
-        deleteNode = list.animateDelete.bind(list);
+        const { params } = match;
+        const topicTitleInUrl = params.topic;
+        getTopic(urlToTitle(topicTitleInUrl))
+            .then((topic) => setTopic(topic))
+            .catch(() => Notification.error('Visualiser Dashboard: Failed to get topic'));
     }, []);
 
     // Note: this is a hacky way of removing scrolling outside of the panes
@@ -57,40 +39,87 @@ const Dashboard = ({ match }) => {
         };
     });
 
-    // const handleModeSwitch = () => {
-    //     setTerminalMode(!terminalMode);
-    // };
+    /* ------------------------ Visualiser Initialisation ----------------------- */
+
+    useEffect(() => {
+        const list = new LinkedListAnimation();
+        appendNode = list.animateAppend.bind(list);
+        deleteNode = list.animateDelete.bind(list);
+    }, []);
+
+    /* -------------------------- Visualiser Callbacks -------------------------- */
+
+    const executeCommand = useCallback((command, args): string => {
+        switch (command) {
+            case 'append':
+                if (!args || args.length !== 1) {
+                    return 'Invalid input';
+                } else {
+                    appendNode(Number(args[0]));
+                    return '';
+                }
+            case 'delete':
+                if (!args || args.length !== 1) {
+                    return 'Invalid input';
+                } else {
+                    deleteNode(Number(args[0]));
+                    return '';
+                }
+                return 'Success';
+            default:
+                return `Invalid command: ${command}`;
+        }
+    }, []);
+
+    const handlePlay = useCallback(() => {
+        Notification.info('Playing');
+
+        setInterval(() => {
+            setAnimationProgress((old) => old + 2);
+        }, 1000);
+    }, []);
+
+    const handlePause = useCallback(() => {
+        Notification.info('Pausing');
+    }, []);
+
+    const handleStepForward = useCallback(() => {
+        Notification.info('Stepping forward');
+    }, []);
+
+    const handleStepBackward = useCallback(() => {
+        Notification.info('Stepping backward');
+    }, []);
+
+    const handleSliderDrag = useCallback((val) => {
+        Notification.info(`Dragged slider to ${val} out of 100`);
+        setAnimationProgress(val);
+    }, []);
+
+    /* -------------------------------------------------------------------------- */
 
     return (
         <VisualiserDashboardLayout topic={topic}>
             <Pane orientation="vertical" minSize={340} topGutterSize={64}>
                 <Pane orientation="horizontal" minSize={150.9}>
-                    <header
-                        className="App-header"
-                        style={{ height: '100%', background: 'rgba(225, 225, 225)' }}
-                    >
-                        <div className="visualiser">
-                            <svg
-                                className="visualiser-svg"
-                                overflow="auto"
-                                style={{ width: '100%' }}
-                            >
-                                <g className="nodes" transform="translate(0, 20)" />
-                                <g className="pointers" transform="translate(0, 20)" />
-                            </svg>
-                        </div>
-                    </header>
-                    <div className={styles.interactor}>
+                    <Visualiser />
+                    <Box className={styles.interactor}>
                         <VisualiserController
                             terminalMode={terminalMode}
                             setTerminalMode={setTerminalMode}
+                            handlePlay={handlePlay}
+                            handlePause={handlePause}
+                            handleStepForward={handleStepForward}
+                            handleStepBackward={handleStepBackward}
+                            handleSliderDrag={handleSliderDrag}
+                            animationProgress={animationProgress}
                         />
                         {terminalMode ? (
                             <Terminal executeCommand={executeCommand} />
                         ) : (
                             <GUIMode executeCommand={executeCommand} />
                         )}
-                    </div>
+                    </Box>
                 </Pane>
                 {topic ? <Tabs topic={topic}></Tabs> : <CircularLoader />}
             </Pane>

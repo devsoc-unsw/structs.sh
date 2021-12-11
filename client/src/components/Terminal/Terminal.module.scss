@@ -86,6 +86,7 @@ $textFontSize: 14px;
     flex-direction: column;
     height: 80%;
     padding-left: 1px;
+
     .info {
         flex: 6;
         color: white;
@@ -104,5 +105,8 @@ $textFontSize: 14px;
     }
     .command {
         color: rgb(122, 170, 49);
+    }
+    .usage {
+        color: rgba(255, 255, 255, 0.5);
     }
 }

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import Console from 'react-console-emulator';
 import Typist from 'react-typist';
 import ManualPage from './ManualPage';
 import styles from './Terminal.module.scss';
+import docs from './manualDoc';
 
-const console = {
+const consoleStyle = {
     container: {
         height: 'calc(100% - 100px)',
         paddingTop: '0px',
@@ -19,28 +20,24 @@ const console = {
     },
 };
 
-const usage = (command) => {
-    switch (command) {
-        case 'append':
-            return 'usage: append <number>';
-        case 'delete':
-            return 'usage: delete <number>';
-        default:
-            return;
-    }
-};
+interface Props {
+    executeCommand: (command: string, args: string[]) => string;
+}
 
-const Terminal = ({ executeCommand }) => {
+const Terminal: FC<Props> = ({ executeCommand }) => {
     const [showMan, setShowMan] = useState(false);
 
+    // Attempts to execute command, catching obviously bad inputs and incorrect usage
     const processCommand = (command, arg) => {
         if (arg && parseFloat(arg)) {
-            executeCommand(command, arg);
+            return executeCommand(command, arg);
         } else {
-            return usage(command);
+            const foundEntry = docs.find((entry) => entry.command === command);
+            return foundEntry ? foundEntry.usage : `Documentation for ${command} not found`;
         }
     };
 
+    // See console emulator docs: https://www.npmjs.com/package/react-console-emulator
     const commands = {
         append: {
             usage: 'append <number>',
@@ -87,11 +84,11 @@ const Terminal = ({ executeCommand }) => {
                 <ManualPage setShowMan={setShowMan} />
             ) : (
                 <Console
-                    style={console.container}
+                    style={consoleStyle.container}
                     promptLabel={'username@Structs.sh:~$'}
                     commands={commands}
-                    promptLabelStyle={console.prompt}
-                    contentStyle={console.content}
+                    promptLabelStyle={consoleStyle.prompt}
+                    contentStyle={consoleStyle.content}
                     messageStyle={{ color: 'red' }}
                     autoFocus
                     // other props: contentStyle, inputAreaStyle, inputStyle, inputTextStyle
