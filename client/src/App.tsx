@@ -1,32 +1,72 @@
-import React from 'react';
-import { Route, Switch, useLocation } from 'react-router-dom';
-import HomePage from 'views/HomePage.jsx';
-import Dashboard from 'views/Dashboard.jsx';
-import Page404 from 'views/Page404';
-import AboutUs from 'views/AboutUs';
-import Feedback from 'views/Feedback';
+import { Theme, ThemeProvider } from '@mui/material';
+import TopNavbar from 'components/Navbars/TopNavbar';
 import { AnimatePresence } from 'framer-motion';
-import ContentCreator from 'views/ContentCreator';
-import './App.css'
+import React, { createContext, useCallback, useState } from 'react';
+import { useCookies } from 'react-cookie';
+import { Route, Switch, useLocation } from 'react-router-dom';
+import AboutUs from 'views/AboutUs';
+import ContentManagementDashboard from 'views/ContentManagementDashboard';
+import Feedback from 'views/Feedback';
+import HomePage from 'views/HomePage';
+import Page404 from 'views/Page404';
+import VisualiserDashboard from 'views/VisualiserDashboard';
+import './App.scss';
+import { darkTheme, lightTheme } from 'structsThemes';
+import { LIGHT_MODE_ON } from 'constants/cookies';
+
+export const ThemeMutationContext = createContext({
+    toggleDarkMode: () => console.log('Dark mode toggling is not ready yet'),
+    isDarkMode: false,
+});
 
 const App = () => {
+    const [cookies, setCookie] = useCookies([LIGHT_MODE_ON]);
+    const [currTheme, setCurrTheme] = useState<Theme>(
+        cookies[LIGHT_MODE_ON] === 'true' ? lightTheme : darkTheme
+    );
+
+    const toggleDarkMode = useCallback(() => {
+        if (currTheme === lightTheme) {
+            setCurrTheme(darkTheme);
+            setCookie(LIGHT_MODE_ON, 'false');
+        } else {
+            setCurrTheme(lightTheme);
+            setCookie(LIGHT_MODE_ON, 'true');
+        }
+    }, [currTheme, setCookie]);
+
     const location = useLocation();
     return (
         <AnimatePresence>
-            <Switch location={location}>
-                {/* Visualiser routes */}
-                <Route exact path="/visualiser/:topic" component={Dashboard} />
-                <Route exact path="/" render={HomePage} />
-                {/* About us page */}
-                <Route exact path="/about" render={AboutUs} />
-                {/* Feedback and feature request page */}
-                <Route exact path="/feedback" render={Feedback} />
-                {/* Markdown editor for textual lesson creation */}
-                <Route path="/creator/lesson/new" render={ContentCreator} />
-                <Route path="/creator/lesson/edit" render={ContentCreator} />
-                {/* 404 page */}
-                <Route component={Page404} />
-            </Switch>
+            <ThemeProvider theme={currTheme}>
+                <ThemeMutationContext.Provider
+                    value={{
+                        toggleDarkMode: toggleDarkMode,
+                        isDarkMode: cookies[LIGHT_MODE_ON] === 'true',
+                    }}
+                >
+                    <TopNavbar position={'fixed'} enableOnScrollEffect={true} />
+                    <Switch location={location}>
+                        {/* Homepage */}
+                        <Route exact path="/" component={HomePage} />
+
+                        {/* Visualiser routes */}
+                        <Route exact path="/visualiser/:topic" component={VisualiserDashboard} />
+
+                        {/* About us page */}
+                        <Route exact path="/about" component={AboutUs} />
+
+                        {/* Feedback and feature request page */}
+                        <Route exact path="/feedback" component={Feedback} />
+
+                        {/* Content management dashboard */}
+                        <Route exact path="/content" component={ContentManagementDashboard} />
+
+                        {/* 404 page */}
+                        <Route component={Page404} />
+                    </Switch>
+                </ThemeMutationContext.Provider>
+            </ThemeProvider>
         </AnimatePresence>
     );
 };

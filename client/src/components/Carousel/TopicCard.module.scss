@@ -1,0 +1,33 @@
+.card {
+    width: 300;
+    height: '220px';
+    z-index: 0;
+    position: relative;
+
+    .content {
+        background: rgba(0, 0, 0, 0.8);
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 20px;
+
+        color: white;
+
+        .text {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+    }
+}
+
+.activeCard {
+    cursor: pointer;
+    // transition: 5s all ease-in-out;
+    // &:hover {
+    //     // transform: translateY(-15px);
+    //     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 3px;
+    // }
+}

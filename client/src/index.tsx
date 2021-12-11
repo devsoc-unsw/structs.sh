@@ -1,20 +1,16 @@
 import React from 'react';
+import { CookiesProvider } from 'react-cookie';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-
-// Root React component
 import App from './App';
-
-// Globally applied stylesheets
-import 'assets/css/nucleo-icons.css';
-import 'assets/demo/demo.css';
-import 'assets/scss/global.scss';
 
 ReactDOM.render(
     <React.StrictMode>
-        <BrowserRouter>
-            <App />
-        </BrowserRouter>
+        <CookiesProvider>
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
+        </CookiesProvider>
     </React.StrictMode>,
     document.getElementById('root')
 );

@@ -1,1 +1,7 @@
 node_modules
+yarn.lock
+package-lock.json
+build-storybook
+storybook-static
+build
+.jest-test-results.json

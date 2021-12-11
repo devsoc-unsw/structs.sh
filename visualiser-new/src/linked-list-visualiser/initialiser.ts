@@ -64,8 +64,20 @@ const initialiser = (): void => {
         animationController.pause();
     };
 
+    const handleSelectPrevious: EventListener = (e: Event) => {
+        e.preventDefault();
+        animationController.gotoPrevious();
+    }
+
+    const handleSelectNext: EventListener = (e: Event) => {
+        e.preventDefault();
+        animationController.gotoNext();
+    }
+
     const handleSliderChange: EventListener = (e: Event) => {
-        animationController.seek(parseInt(slider.value));
+        // the timeline can only be seeked when it's paused
+        animationController.pause();
+        animationController.seekPercent(parseInt(slider.value));
     };
 
     const handleSpeedChange: EventListener = (e: Event) => {
@@ -84,6 +96,8 @@ const initialiser = (): void => {
     const playButton = document.querySelector('#playButton');
     const pauseButton = document.querySelector('#pauseButton');
     const insertButton = document.querySelector('#insertButton');
+    const previousButton = document.querySelector('#previousSequenceButton');
+    const nextButton = document.querySelector('#nextSequenceButton');
     const slider = document.querySelector('#timeline-slider') as HTMLInputElement;
     const speedSlider = document.querySelector('#speed-slider') as HTMLInputElement;
 
@@ -93,6 +107,8 @@ const initialiser = (): void => {
     insertButton.addEventListener('click', handleInsertClick);
     playButton.addEventListener('click', handlePlayClick);
     pauseButton.addEventListener('click', handlePauseClick);
+    previousButton.addEventListener('click', handleSelectPrevious);
+    nextButton.addEventListener('click', handleSelectNext);
     slider.addEventListener('input', handleSliderChange);
     speedSlider.addEventListener('input', handleSpeedChange);
     speedSlider.addEventListener('change', handleSpeedChangeComplete);

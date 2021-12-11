@@ -18,6 +18,7 @@ class AnimationController {
     public getCurrentTimeline(): AnimeTimelineInstance {
         return this.currentTimeline;
     }
+
     public play(): void {
         this._isPaused = false;
         this.currentTimeline.play();
@@ -33,7 +34,7 @@ class AnimationController {
         return this._isPaused;
     }
 
-    public seek(position: number): void {
+    public seekPercent(position: number): void {
         this.currentTimeline.seek(this.currentTimeline.duration * (position / 100))
     }
 
@@ -41,6 +42,7 @@ class AnimationController {
     public finish(): void {
         this.currentTimeline.seek(this.currentTimeline.duration);
     }
+
     // this function runs a sequence of animations sequentially
     public runSequence(sequence: AnimationInstruction[], slider: HTMLInputElement): void {
         console.log(this);
@@ -78,6 +80,24 @@ class AnimationController {
         this.currentTimeline.pause();
     }
     
+    public gotoPrevious(): void {
+        this.currentTimeline.pause();
+        this.currentTimeline = this.timelineHistory[this.timelineIndex - 1];
+        this.seekPercent(0);
+        this.timelineIndex--;
+        this.currentTimeline = this.timelineHistory[this.timelineIndex - 1];
+        this.seekPercent(0);
+    }
+
+    public gotoNext(): void {
+        if (this.timelineIndex === this.timelineHistory.length) return;
+        this.currentTimeline.pause();
+        this.currentTimeline = this.timelineHistory[this.timelineIndex - 1];
+        this.seekPercent(100);
+        this.timelineIndex++;
+        this.currentTimeline = this.timelineHistory[this.timelineIndex - 1];
+        this.seekPercent(100);
+    }
 }
 
 export default AnimationController;

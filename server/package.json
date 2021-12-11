@@ -1,11 +1,12 @@
 {
-  "name": "ts-backend",
+  "name": "structs-api",
   "version": "1.0.0",
-  "description": "Backend application for GalacticEd",
+  "description": "Backend application for Structs",
   "license": "MIT",
   "scripts": {
     "start": "nodemon src/server.ts",
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc"
   },
   "dependencies": {
     "@types/bcrypt": "^5.0.0",
@@ -24,6 +25,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.2",
     "nodemon": "^2.0.12",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.1.6",
     "ts-node": "^10.1.0"
   },
   "devDependencies": {

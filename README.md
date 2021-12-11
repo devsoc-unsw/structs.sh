@@ -4,42 +4,61 @@
     <a href=""><img src="./images/StructsBanner.png" height="150px" /></a>
 </p>
 <p align="center">
-    <strong><a href="https://structs.netlify.app/">Visit Structs.sh</a> | <a href="https://www.figma.com/file/zFFuYLSSdc4TnQafDWgKP1/Structs.sh-Interface-Prototype?node-id=401%3A5">Figma Prototype</a></strong>. 
+    <strong><a href="https://structs.netlify.app/">Visit Structs.sh</a></strong> | <strong><a href="https://structs-storybook.netlify.app/">Structs.sh UI Docs</a></strong>
+</p>
+<p align="center">
+    <strong><a href="https://www.figma.com/file/zFFuYLSSdc4TnQafDWgKP1/Structs.sh-Interface-Prototype?node-id=401%3A5">Figma Prototype</a>
+    </strong> | <strong><a href="https://www.figma.com/file/KQcuxGJwz8I7trRlt69Vsy/Structs.sh-Brainstorming?node-id=0%3A1">FigJam</a></strong> |  <strong><a href="https://app.diagrams.net/#Hcsesoc%2FStructs.sh%2Fmaster%2Fstructs-datamodels.drawio">Data Model</a></strong>
 </p>
 
 Structs.sh is an interactive data structure and algorithm visualiser and educational platform for computer science students.
 
+<!-- ### Features:
 
+-   Interactive visualiser for foundational data structures and algorithms
+    -   Controllable through a sleek terminal interface and form GUI
+    -   Animation is syncrhonised with the line-by-line execution of real code
+-   Integrated lessons
+    -   Textual explanations, documented source code in multiple languages and embedded videos are provided alongside the visualiser to help bridge the gap between high-level theory and the real implementation
+    -   Quiz/assessment system
+-   Content management API
+    -   Authorised content creators can introduce or update existing lesson material, quizzes, source code and more -->
 
+<!-- ### Why Use Structs.sh?
+
+The value of Structs.sh as a teaching tool and educational resource. [TODO]
+
+-   Struct.sh is a community-oriented tool. With its content management system, ... [TODO] -->
+
+<!-- ### Architecture
+
+Structs.sh was built using the TypeScript <a href="https://www.mongodb.com/mern-stack">MERN Stack</a> which consists of MongoDB, Express, React and Node.js.
+[TODO] -->
 
 ---
 
 # Table of contents
 
-- [Structs.sh 💻](#structssh-)
-- [Table of contents](#table-of-contents)
-  - [Setup Instructions](#setup-instructions)
-    - [Automatic Setup [Experimental]](#automatic-setup-experimental)
-    - [Manual Setup](#manual-setup)
-  - [Running Structs](#running-structs)
-- [Documentation](#documentation)
-  - [Client and Server Directory Structure](#client-and-server-directory-structure)
-  - [Visualiser Project Directory Structure](#visualiser-project-directory-structure)
-  - [Structs API Documentation](#structs-api-documentation)
-    - [Authentication](#authentication)
-    - [Lessons](#lessons)
-    - [Quizzes](#quizzes)
-    - [Data Model](#data-model)
-- [Guidelines](#guidelines)
-  - [Getting Started With Backend Development](#getting-started-with-backend-development)
-    - [How was the database set up and connected to our backend?](#how-was-the-database-set-up-and-connected-to-our-backend)
-    - [How are we reading/writing to the database?](#how-are-we-readingwriting-to-the-database)
-    - [How does MongoDB differ from other DBMSs like PostgreSQL? [TODO]](#how-does-mongodb-differ-from-other-dbmss-like-postgresql-todo)
-    - [How to implement API endpoints](#how-to-implement-api-endpoints)
-  - [Getting Started with the Visualiser](#getting-started-with-the-visualiser)
-  - [Good Collaborative Coding Practices](#good-collaborative-coding-practices)
-    - [Git Guideline](#git-guideline)
-    - [Style Guidelines](#style-guidelines)
+-   [Setup Instructions](#setup-instructions)
+    -   [Automatic Setup [Experimental]](#automatic-setup-experimental)
+    -   [Manual Setup](#manual-setup)
+-   [Running Structs.sh](#running-structs)
+-   [Documentation](#documentation)
+    -   [Client and Server Directory Structure](#client-and-server-directory-structure)
+    -   [Visualiser Project Directory Structure](#visualiser-project-directory-structure)
+    -   [Structs UI Documentation](#structs-ui-docs)
+    -   [Structs API Documentation](#structs-api-docs)
+        -   [Data Model](#data-model)
+-   [Guidelines](#guidelines)
+    -   [Getting Started With Backend Development](#getting-started-with-backend-development)
+        -   [How was the database set up and connected to our backend?](#how-was-the-database-set-up-and-connected-to-our-backend)
+        -   [How are we reading/writing to the database?](#how-are-we-readingwriting-to-the-database)
+        -   [How does MongoDB differ from other DBMSs like PostgreSQL? [TODO]](#how-does-mongodb-differ-from-other-dbmss-like-postgresql-todo)
+        -   [How to implement API endpoints](#how-to-implement-api-endpoints)
+    -   [Getting Started with the Visualiser](#getting-started-with-the-visualiser)
+    -   [Good Collaborative Coding Practices](#good-collaborative-coding-practices)
+        -   [Git Guideline](#git-guideline)
+        -   [Style Guidelines](#style-guidelines)
 
 ---
 
@@ -52,7 +71,7 @@ Note: this is using **node.js v14.17.0**.
 git clone https://github.com/csesoc/Structs.sh.git
 ```
 
-### Automatic Setup [Experimental]
+<!-- ### Automatic Setup [Experimental]
 
 This may only work on Linux environments.
 
@@ -61,7 +80,7 @@ This may only work on Linux environments.
 sh structs.sh --setup
 ```
 
-Follow the prompts and everything should be ready to go.
+Follow the prompts and everything should be ready to go. -->
 
 ### Manual Setup
 
@@ -89,6 +108,24 @@ npm start
 # In the `server/` directory:
 npm start
 ```
+
+## Testing
+
+<details>
+    <summary>Frontend Unit Testing [TODO]</summary>
+
+</details>
+
+<details>
+    <summary>Frontend End-to-End Testing [TODO]</summary>
+    
+Cypress is an end-to-end testing framework that uses web browser automation.
+
+-   All .spec.tsx files will be picked up and run by Cypress
+-   All .test.tsx files will be picked up and run by Jest
+-   `yarn cypress open-ct` will
+
+</details>
 
 ---
 
@@ -161,17 +198,36 @@ visualiser-new/
 	        └── utils.js
 ```
 
-## Structs API Documentation
+## Structs UI Docs
 
-Structs.sh features a RESTful API for content management, supporting the retrieval, creation, updating and deletion of lessons and quizzes.
+Structs.sh uses <a href="https://storybook.js.org/">Storybook</a> for generating documentation and interactive demos for the React components used on the web client.
+
+See the documentation at <a href="https://structs-storybook.netlify.app">structs-storybook.netlify.app</a>.
+
+## Structs API Docs
+
+Structs.sh features a RESTful API for content management, supporting the retrieval, creation, updating and deletion of lessons and quizzes as well as the management of users.
+
+When you start up the server on port 8080 for example, you'll see the API documentation being served at `http://localhost:8080/` which should look like this:
+
+<p style="text-align: center;">
+    <img src="./docs/swagger-docs-snippet.png" width="50%">
+</p>
+
+The documentation for the Structs.sh API was set up with <a href="https://www.npmjs.com/package/swagger-jsdoc">swagger-jsdoc</a> and <a href="https://www.npmjs.com/package/swagger-ui-express">swagger-ui-express</a>.
+
+> Note: `swagger-jsdoc` generates an <a href="https://swagger.io/specification/">OpenAPI</a> spec from the <a href="https://jsdoc.app/">JSDoc</a> documentation written for each endpoint. The package `swagger-ui-express` serves the documentation which can be accessed by a route you define (eg. `/api-docs`). It takes in the output of `swagger-jsdoc` to achieve this.
+
+> Developer Note: follow the YAML structure <a href="https://swagger.io/docs/specification/basic-structure/">here</a> for documenting endpoints in a way that can be used by Swagger.
 
 <details>
-    <summary>RESTful API conventions</summary>
+    <summary>REST API conventions</summary>
     <img src="./docs/RESTful-API-conventions.png" />
 </details>
 
-### Authentication
-
+<details>
+    <summary>Old API documentation</summary>
+    Authentication
 <table>
     <tbody>
         <tr>
@@ -240,9 +296,7 @@ Structs.sh features a RESTful API for content management, supporting the retriev
         </tr>
     </tbody>
 </table>
-
-### Lessons
-
+    Lessons
 <table>
     <tbody>
         <tr>
@@ -336,9 +390,7 @@ Structs.sh features a RESTful API for content management, supporting the retriev
         </tr>
     </tbody>
 </table>
-
-### Quizzes
-
+Quizzes
 <table>
     <tbody>
         <tr>
@@ -396,10 +448,17 @@ Structs.sh features a RESTful API for content management, supporting the retriev
         </tr>
     </tbody>
 </table>
+</details>
 
 ### Data Model
 
-<div style="width: 640px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:640px; height:480px" src="https://lucid.app/documents/embeddedchart/9b70bc3b-ac94-49dc-a52b-6efa93639534" id="yLpa9YunnZ9P"></iframe></div>
+<p style="text-align: center;">
+    <img src="./docs/structs-datamodels.drawio.png" width="75%" />
+</p>
+
+> Note: This diagram was created and is currently maintained with <a href="https://draw.io/">draw.io</a>. To add or update data models, go <a href="https://app.diagrams.net/#Hcsesoc%2FStructs.sh%2Fmaster%2Fstructs-datamodels.drawio">here</a> to modify the file `structs-datamodels.drawio` in this repository. To update the image below, just save the file (which will automatically create and push a commit) and then export a PNG file to replace `docs/structs-datamodels.drawio.png` in this repository.
+
+> Note: as a better alternate, VSCode has a great extension for an <a href="https://marketplace.visualstudio.com/items?itemName=hediet.vscode-drawio">integrated draw.io client</a> that lets you view and edit .drawio files in the editor.
 
 # Guidelines
 

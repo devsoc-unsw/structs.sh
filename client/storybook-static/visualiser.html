@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualiser</title>
+    <link rel="stylesheet" href="./style.css" /> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha512-z4OUqw38qNLpn1libAN9BsoDx6nbNFio5lA6CuTp9NlK83b89hgyCVq+N5FdBJptINztxn1Z3SaKSKUS5UP60Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+    <form class="visualiser-form">
+        <input name="append" placeholder="number to append"/>
+        <button name="append">append</button>
+        <input name="delete" placeholder="position to delete"/>
+        <button name="delete">delete</button>
+    </form>
+    <div class="visualiser">
+        <svg class="visualiser-svg" overflow="auto">
+            <g class="nodes" transform="translate(0, 20)"></g>
+            <g class="pointers" transform="translate(0, 20)"></g>
+        </svg>
+    </div>
+    <script src="scripts.js"></script>
+</body>
+</html>
