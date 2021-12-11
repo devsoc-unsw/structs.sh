@@ -1,6 +1,6 @@
 import anime, { AnimeTimelineInstance } from 'animejs';
-import { Animation } from '../linked-list-visualiser/typedefs';
-
+import { AnimationInstruction } from '../linked-list-visualiser/util/typedefs';
+import { fastestDuration } from '../linked-list-visualiser/util/constants';
 // controls todo:
 // [x] play/pause
 // [ ] step to the next or previous timestamp in the current timeline
@@ -13,17 +13,25 @@ class AnimationController {
     private currentTimeline: AnimeTimelineInstance = anime.timeline();
     private timelineHistory: AnimeTimelineInstance[] = [];
     private timelineIndex: number = 0;
+    private _isPaused: boolean = false;
 
     public getCurrentTimeline(): AnimeTimelineInstance {
         return this.currentTimeline;
     }
 
     public play(): void {
+        this._isPaused = false;
         this.currentTimeline.play();
     }
 
     public pause(): void {
+        this._isPaused = true;
         this.currentTimeline.pause();
+    }
+
+    
+    public get isPaused(): boolean {
+        return this._isPaused;
     }
 
     public seekPercent(position: number): void {
@@ -36,22 +44,21 @@ class AnimationController {
     }
 
     // this function runs a sequence of animations sequentially
-    // when stepSequence = false or pauses the timeline after each animation finishes
-    public runSequeuce(sequence: Animation[], slider: HTMLInputElement): void {
-        // console.log(this);
+    public runSequence(sequence: AnimationInstruction[], slider: HTMLInputElement): void {
+        console.log(this);
         this.currentTimeline = anime.timeline({
-            duration: 700,
+            duration: fastestDuration,
             easing: 'easeOutExpo',
             update: function(anim) {
                 slider.value = String(anim.progress);
-              }
+            }
         });
 
         for (const seq of sequence) {
-            if ('offset' in seq) {
-                this.currentTimeline.add(seq, seq.offset);
+            if ("offset" in seq) {
+                this.currentTimeline.add(seq.instructions, seq.offset);
             } else {
-                this.currentTimeline.add(seq);
+                this.currentTimeline.add(seq.instructions);
             }
         }
 
@@ -65,6 +72,14 @@ class AnimationController {
         }
     }
 
+    public setSpeed(speed: number): void {
+        anime.speed = speed;
+    }
+
+    public freeze(): void {
+        this.currentTimeline.pause();
+    }
+    
     public gotoPrevious(): void {
         this.currentTimeline.pause();
         this.currentTimeline = this.timelineHistory[this.timelineIndex - 1];
