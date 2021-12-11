@@ -1,3 +1,4 @@
+// SVG Attributes
 const svgWidth = 200;
 const svgHeight = 120;
 const strokeWidth = 3;
@@ -56,3 +57,7 @@ export const pathAttributes = {
     "stroke-linejoin": "round",
     "class": "path"
 }
+
+// Animation attributes
+export const fastestDuration = 350;
+export const defaultSpeed = 0.5;

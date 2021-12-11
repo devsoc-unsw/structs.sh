@@ -1,16 +1,15 @@
-import createNode from './createNode';
 import LinkedListController from '../controller/linkedListController';
-import { Animation, Node } from './typedefs';
-import LinkedList from './linkedList';
-import { Z_BEST_SPEED } from 'zlib';
+import { AnimationInstruction } from './util/typedefs';
+import LinkedList from './data-structure/GraphicalLinkedList';
+import { defaultSpeed } from './util/constants';
 
 /**
  * Initialises the visualiser and binds event handlers to the controller UI.
  */
 const initialiser = (): void => {
-    // const nodes: LinkedList = [];
     const linkedList: LinkedList = new LinkedList();
     const animationController = new LinkedListController();
+    animationController.setSpeed(defaultSpeed);
 
     // Binding event handlers to the append and delete buttons
     const handleAppendClick: EventListener = (e: Event) => {
@@ -18,7 +17,7 @@ const initialiser = (): void => {
         animationController.finish();
 
         // Generating the steps of the animation
-        const sequence: Animation[] = linkedList.append(animationController.inputValue);
+        const sequence: AnimationInstruction[] = linkedList.append(animationController.inputValue);
 
         // Playing the animation
         animationController.runSequence(sequence, slider);
@@ -29,7 +28,7 @@ const initialiser = (): void => {
         animationController.finish();
         const index: number = animationController.inputValue;
 
-        const sequence: Animation[] = linkedList.delete(index);
+        const sequence: AnimationInstruction[] = linkedList.delete(index);
 
         animationController.runSequence(sequence, slider);
     };
@@ -39,7 +38,7 @@ const initialiser = (): void => {
         animationController.finish();
         const input: number = animationController.inputValue;
 
-        const sequence: Animation[] = linkedList.search(input);
+        const sequence: AnimationInstruction[] = linkedList.search(input);
 
         animationController.runSequence(sequence, slider);
     };
@@ -50,7 +49,7 @@ const initialiser = (): void => {
         const input: number = animationController.inputValue;
         const index: number = animationController.altInputValue;
 
-        const sequence: Animation[] = linkedList.insert(input, index);
+        const sequence: AnimationInstruction[] = linkedList.insert(input, index);
 
         animationController.runSequence(sequence, slider);
     }
@@ -75,7 +74,6 @@ const initialiser = (): void => {
     };
 
     const handleSpeedChangeComplete: EventListener = (e: Event) => {
-        console.log("Done");
         if (!animationController.isPaused) animationController.play();
     };
 

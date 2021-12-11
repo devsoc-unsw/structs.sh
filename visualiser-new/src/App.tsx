@@ -3,7 +3,7 @@ import initialiseVisualiser from './linked-list-visualiser/initialiser';
 import './styles/visualiser.css';
 import prev from './assets/prev.svg';
 import curr from './assets/curr.svg';
-import { topOffset } from './linked-list-visualiser/svgAttributes';
+import { topOffset, defaultSpeed } from './linked-list-visualiser/util/constants';
 
 const App = () => {
   useEffect(() => {
@@ -47,7 +47,7 @@ const App = () => {
         </div>
         <div className="col">
             Speed
-            <input type="range" id="speed-slider" name="volume" min="0" max="1" step="0.01" defaultValue="0.5"/> 
+            <input type="range" id="speed-slider" name="volume" min="0" max="1" step="0.01" defaultValue={defaultSpeed}/> 
         </div>
       </form>
       <div className="container" id="canvas">

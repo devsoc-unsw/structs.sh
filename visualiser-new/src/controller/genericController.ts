@@ -1,6 +1,6 @@
 import anime, { AnimeTimelineInstance } from 'animejs';
-import { Animation } from '../linked-list-visualiser/typedefs';
-import { fastestDuration } from '../linked-list-visualiser/animationAttributes';
+import { AnimationInstruction } from '../linked-list-visualiser/util/typedefs';
+import { fastestDuration } from '../linked-list-visualiser/util/constants';
 // controls todo:
 // [x] play/pause
 // [ ] step to the next or previous timestamp in the current timeline
@@ -42,22 +42,21 @@ class AnimationController {
         this.currentTimeline.seek(this.currentTimeline.duration);
     }
     // this function runs a sequence of animations sequentially
-    // when stepSequence = false or pauses the timeline after each animation finishes
-    public runSequence(sequence: Animation[], slider: HTMLInputElement): void {
+    public runSequence(sequence: AnimationInstruction[], slider: HTMLInputElement): void {
         console.log(this);
         this.currentTimeline = anime.timeline({
             duration: fastestDuration,
             easing: 'easeOutExpo',
             update: function(anim) {
                 slider.value = String(anim.progress);
-              }
+            }
         });
 
         for (const seq of sequence) {
-            if ('offset' in seq) {
-                this.currentTimeline.add(seq, seq.offset);
+            if ("offset" in seq) {
+                this.currentTimeline.add(seq.instructions, seq.offset);
             } else {
-                this.currentTimeline.add(seq);
+                this.currentTimeline.add(seq.instructions);
             }
         }
 

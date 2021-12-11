@@ -16,7 +16,7 @@ export interface Node {
     nodeBoxTarget: SVGGElement;
 }
 
-export interface Animation {
+export interface TimelineObject {
     /**
      * CSS selector for the element that is to be animated. This is what animejs uses to select the animation targets
      *  → Eg. '#my-id' will apply the animations to the DOM element with the id 'my-id'
@@ -31,6 +31,11 @@ export interface Animation {
      *  → Docs: https://animejs.com/documentation/#cssSelector
      */
     [key: string]: any;
+}
+
+export interface AnimationInstruction {
+    instructions: TimelineObject;
+    offset?: number | string;
 }
 
 /* -------------------------------------------------------------------------- */
