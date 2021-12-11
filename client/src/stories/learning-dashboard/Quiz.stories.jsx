@@ -1,4 +1,4 @@
-import Quiz from '../../components/Quiz/Quiz';
+import Quiz from '../../components/Quiz/LessonQuiz';
 
 export default {
     // Can create directories on storybook like this:

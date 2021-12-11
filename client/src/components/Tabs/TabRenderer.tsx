@@ -1,5 +1,5 @@
 import { CodeSnippet } from 'components/CodeSnippet';
-import { Quiz } from 'components/Quiz';
+import { LessonQuiz } from 'components/Quiz';
 import { Lesson, AdditionalResources } from 'components/Lesson';
 import { Videos } from 'components/Video';
 import React, { FC } from 'react';
@@ -16,8 +16,6 @@ const TabRenderer: FC<Props> = ({ tab, topic }) => {
             return <Lesson topic={topic} />;
         case 'Additional Resources':
             return <AdditionalResources />;
-        case 'Quiz':
-            return <Quiz />;
         case 'Code':
             return <CodeSnippet />;
         case 'Videos':

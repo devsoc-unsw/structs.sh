@@ -11,14 +11,13 @@ import HomePage from 'views/HomePage';
 import Page404 from 'views/Page404';
 import VisualiserDashboard from 'views/VisualiserDashboard';
 import './App.scss';
-import { darkTheme, lightTheme } from './structsThemes';
+import { darkTheme, lightTheme } from 'structsThemes';
+import { LIGHT_MODE_ON } from 'constants/cookies';
 
 export const ThemeMutationContext = createContext({
     toggleDarkMode: () => console.log('Dark mode toggling is not ready yet'),
     isDarkMode: false,
 });
-
-const LIGHT_MODE_ON = 'light-mode-on';
 
 const App = () => {
     const [cookies, setCookie] = useCookies([LIGHT_MODE_ON]);
