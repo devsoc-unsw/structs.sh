@@ -1,13 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { makeStyles } from '@mui/styles';
+import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormLabel from '@mui/material/FormLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import Button from '@mui/material/Button';
-import { getMatchedLessons } from 'utils/content';
+import { makeStyles } from '@mui/styles';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 const useStyles = makeStyles({
     root: {
@@ -27,8 +26,8 @@ const Filter = ({ setFilter }) => {
     };
 
     const handleFilter = async () => {
-        const reg = new RegExp(`${course}`);
-        setFilter(await getMatchedLessons(reg));
+        // const reg = new RegExp(`${course}`);
+        // setFilter(await getMatchedLessons(reg));
     };
     const classes = useStyles();
 

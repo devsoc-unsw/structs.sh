@@ -5,7 +5,7 @@ import { Pane } from 'components/Panes';
 import Tabs from 'components/Tabs/Tabs';
 import { Terminal } from 'components/Terminal';
 import { VisualiserController } from 'components/Visualisation/Controller';
-import GUIMode from 'components/Visualisation/Controller/ModeSwitch/GuiMode';
+import GUIMode from 'components/Visualisation/Controller/ModeSwitch/GUIMode';
 import { VisualiserDashboardLayout } from 'layout';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -127,9 +127,9 @@ const Dashboard = () => {
                             animationProgress={animationProgress}
                         />
                         {terminalMode ? (
-                            <Terminal executeCommand={executeCommand} />
+                            <Terminal executeCommand={executeCommand} topic={topic} />
                         ) : (
-                            <GUIMode executeCommand={executeCommand} />
+                            <GUIMode executeCommand={executeCommand} topic={topic} />
                         )}
                     </Box>
                 </Pane>
