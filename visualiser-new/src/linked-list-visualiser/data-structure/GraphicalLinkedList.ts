@@ -3,7 +3,10 @@ import {
     PREV
 } from '../util/constants';
 import { GraphicalLinkedListNode } from './GraphicalLinkedListNode'
-import { LinkedListAnimationProducer } from '../LinkedListAnimationProducer';
+import { LinkedListAppendAnimationProducer } from '../animation-producer/LinkedListAppendAnimationProducer';
+import { LinkedListDeleteAnimationProducer } from '../animation-producer/LinkedListDeleteAnimationProducer';
+import { LinkedListInsertAnimationProducer } from '../animation-producer/LinkedListInsertAnimationProducer';
+import { LinkedListSearchAnimationProducer } from '../animation-producer/LinkedListSearchAnimationProducer';
 
 
 export default class GraphicalLinkedList {
@@ -16,7 +19,7 @@ export default class GraphicalLinkedList {
 
     append(input: number) {
         this.length++;
-        const producer = new LinkedListAnimationProducer();
+        const producer = new LinkedListAppendAnimationProducer();
         // Create new node
         const newNode = GraphicalLinkedListNode.from(input);
         producer.addNodeAtEnd(this.length, newNode);
@@ -34,7 +37,7 @@ export default class GraphicalLinkedList {
         // Traverse to last node
         while (curr.next !== null) {
             curr = curr.next;
-            producer.moveToNext(CURRENT);
+            producer.movePointerToNext(CURRENT);
         }
         
         // Link last node to new node
@@ -47,9 +50,12 @@ export default class GraphicalLinkedList {
     }
 
     delete(index: number) {
+        // Check index in range
         if (index < 0 || index > this.length - 1) return [];
         this.length--;
-        const producer = new LinkedListAnimationProducer();
+        const producer = new LinkedListDeleteAnimationProducer();
+        
+        // Look for node to delete
         let curr = this.head;
         producer.initialisePointer(CURRENT);
         let prev = null;
@@ -58,17 +64,18 @@ export default class GraphicalLinkedList {
             if (prev === this.head) {
                 producer.initialisePointer(PREV);
             } else {
-                producer.moveToNext(PREV);
+                producer.movePointerToNext(PREV);
             }
             curr = curr.next;
-            producer.moveToNext(CURRENT);
+            producer.movePointerToNext(CURRENT);
         }
+        
         if (prev !== null) {
             prev.next = curr.next;
             if (prev.next === null) {
-                producer.setPointerToNull(prev)
+                producer.setNextToNull(prev)
             } else {
-                producer.morphPointer(prev);
+                producer.morphNextPointerToArc(prev);
             }
         }
         producer.deleteNode(curr);
@@ -80,19 +87,20 @@ export default class GraphicalLinkedList {
         if (this.head === null) {
             return [];
         }
-        const producer = new LinkedListAnimationProducer();
+        const producer = new LinkedListSearchAnimationProducer();
         let curr = this.head;
         producer.initialisePointer(CURRENT);
         while (curr !== null && curr.value !== value) {
+            producer.indicateNotFound(curr);
             curr = curr.next;
             if (curr !== null) {
-                producer.moveToNext(CURRENT);
+                producer.movePointerToNext(CURRENT);
             }
         }
         if (curr !== null) {
             producer.indicateFound(curr);
         }
-        producer.resetPointers();
+        producer.resetList(this);
         return producer.timeline;
     }
 
@@ -101,14 +109,14 @@ export default class GraphicalLinkedList {
             return this.append(value);
         }
         this.length++;
-        const producer: LinkedListAnimationProducer = new LinkedListAnimationProducer();
+        const producer: LinkedListInsertAnimationProducer = new LinkedListInsertAnimationProducer();
         const newNode: GraphicalLinkedListNode = GraphicalLinkedListNode.from(value);
         producer.createNodeAt(index, newNode);
         let curr = this.head;
         producer.initialisePointer(CURRENT);
         for (let i = 0; i < index; i++) {
             curr = curr.next;
-            producer.moveToNext(CURRENT);
+            producer.movePointerToNext(CURRENT);
         }
         newNode.next = curr.next;
         producer.insertedNodePointToNext(newNode); 
