@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Box, Grid, Stack, Typography } from '@mui/material';
+import { Alert, Box, Grid, Stack, Typography } from '@mui/material';
 
 import QuestionRenderer from './QuestionRenderer';
 
@@ -18,13 +18,17 @@ const LessonQuiz: FC<Props> = ({ quizzes }) => {
     return (
         <Box className="spacing">
             {quizzes ? (
-                <Stack direction="column" spacing={2} sx={{ mt: 2 }}>
-                    {quizzes.map((quiz, i) => (
-                        <Box key={quiz._id}>
-                            <QuestionRenderer quiz={quiz} questionNumber={Number(i + 1)} />
-                        </Box>
-                    ))}
-                </Stack>
+                quizzes.length > 0 ? (
+                    <Stack direction="column" spacing={2} sx={{ mt: 2 }}>
+                        {quizzes.map((quiz, i) => (
+                            <Box key={quiz._id}>
+                                <QuestionRenderer quiz={quiz} questionNumber={Number(i + 1)} />
+                            </Box>
+                        ))}
+                    </Stack>
+                ) : (
+                    <Alert severity="info">This lesson has no quizzes.</Alert>
+                )
             ) : (
                 <LineLoader />
             )}

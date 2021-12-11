@@ -142,10 +142,11 @@ const LessonContent: FC<Props> = ({ topic }) => {
                                     textTransform: 'none',
                                     color: quizActive
                                         ? theme.palette.info.main
-                                        : theme.palette.text.primary,
+                                        : theme.palette.text.disabled,
                                 }}
-                                disabled={!quizActive}
-                                onClick={() => setQuizActive(false)}
+                                onClick={() => {
+                                    if (quizActive) setQuizActive(false);
+                                }}
                             >
                                 {lessons[activeLesson].title}
                             </Button>

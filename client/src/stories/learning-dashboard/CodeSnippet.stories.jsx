@@ -1,4 +1,4 @@
-import CodeSnippet from '../../components/CodeSnippet/CodeSnippet';
+import CodeSnippet from '../../components/Code/CodeTab';
 
 export default {
     // Can create directories on storybook like this:
