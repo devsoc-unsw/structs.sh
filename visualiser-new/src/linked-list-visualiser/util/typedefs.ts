@@ -4,20 +4,26 @@
 
 
 export interface Node {
-    // CSS selector for the node DOM element
+    value: number;
+
+    // full DOM element
     nodeTarget: SVGSVGElement;
 
-    // CSS selector for the arrow DOM element
-    pathTarget: SVGPathElement;
+    // pointer DOM element
+    pointerTarget: SVGPathElement;
+
+    // node box and value DOM element
+    nodeBoxTarget: SVGGElement;
 }
 
-export interface Animation {
+export interface TimelineObject {
     /**
      * CSS selector for the element that is to be animated. This is what animejs uses to select the animation targets
      *  → Eg. '#my-id' will apply the animations to the DOM element with the id 'my-id'
      *  → Docs: https://animejs.com/documentation/#cssSelector
      */
-    targets: string | SVGSVGElement | SVGPathElement | (string | SVGSVGElement | SVGPathElement)[];
+    // targets: string | SVGGElement | SVGSVGElement | SVGPathElement | (string | SVGSVGElement | SVGPathElement)[];
+    targets: string | SVGElement | (string | SVGElement)[];
 
     /**
      * Further CSS properties that Anime will recognise.
@@ -25,6 +31,11 @@ export interface Animation {
      *  → Docs: https://animejs.com/documentation/#cssSelector
      */
     [key: string]: any;
+}
+
+export interface AnimationInstruction {
+    instructions: TimelineObject;
+    offset?: number | string;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -48,15 +59,6 @@ export interface AppendNodeInput {
 export interface DeleteNodeInput {
     // Index of the node to be deleted
     index: number;
-
-    // Details about the node to be deleted
-    deletedNode: Node;
-
-    // Nodes to be shifted leftwards after deletion
-    shiftedNodes: Node[];
-
-    // The node prior to the one that is to be deleted, if it exists
-    prevNode: Node;
 
     // The list of nodes currently on the DOM
     nodes: Node[];

@@ -1,16 +1,13 @@
-import { Collapse, List, ListItem, ListItemIcon } from '@mui/material';
+import { Box, Collapse, List, ListItem, ListItemIcon, Theme } from '@mui/material';
 import Button from '@mui/material/Button';
 import { makeStyles } from '@mui/styles';
 import TextField from '@mui/material/TextField';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { LastLink, Link } from './Links';
 import { useTheme } from '@mui/styles';
-
-// in case to change the lable color in the future
-// const labelStyle = {
-//     style: { color: 'black' },
-// };
+import { Operation, OperationDictionary } from '../operations';
+import { OperationsMenuState } from './OperationsTree';
 
 const useStyles = makeStyles({
     opListContainer: {
@@ -50,16 +47,28 @@ const useStyles = makeStyles({
     },
 });
 
-const OpDetails = ({ op, isLast, showOp, executeCommand }) => {
-    const classes = useStyles();
-    const [args, setArguments] = useState([]);
+interface Props {
+    op: Operation;
+    isLast: boolean;
+    showOp: OperationsMenuState;
+    executeCommand: (command: string, args: string[]) => string;
+}
 
-    const theme = useTheme();
+const OperationDetails: FC<Props> = ({ op, isLast, showOp, executeCommand }) => {
+    const classes = useStyles();
+    const [args, setArguments] = useState<string[]>(
+        Array((op && op.args && op.args.length) || 0).fill('')
+    );
+
+    const theme: Theme = useTheme();
     const textPrimaryColour = theme.palette.text.primary;
 
-    const handleSetArguments = (e, index) => {
+    const handleSetArguments = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+        index: number
+    ) => {
         const newArgs = [...args];
-        newArgs[index] = e.target.value;
+        newArgs[index] = String(e.target.value);
         setArguments(newArgs);
     };
 
@@ -91,10 +100,9 @@ const OpDetails = ({ op, isLast, showOp, executeCommand }) => {
                         </ListItemIcon>
                         <TextField
                             label={eachArg}
-                            //InputLabelProps={labelStyle}
-                            //InputProps={{ classes: { notchedOutline: classes.outline } }}
                             variant="outlined"
                             onChange={(e) => handleSetArguments(e, i)}
+                            sx={{ background: theme.palette.background.paper, height: '100%' }}
                         />
                     </ListItem>
                 ))}
@@ -103,12 +111,12 @@ const OpDetails = ({ op, isLast, showOp, executeCommand }) => {
                         <LastLink colour={textPrimaryColour} />
                     </ListItemIcon>
                     <Button className={classes.opBtn} variant="contained" color="primary">
-                        <div
+                        <Box
                             className={classes.btnText}
-                            onClick={() => executeCommand(op.command, ...args)}
+                            onClick={() => executeCommand(op.command, [...args])}
                         >
-                            Go
-                        </div>
+                            Run
+                        </Box>
                     </Button>
                 </ListItem>
             </List>
@@ -116,10 +124,4 @@ const OpDetails = ({ op, isLast, showOp, executeCommand }) => {
     );
 };
 
-OpDetails.propTypes = {
-    op: PropTypes.object,
-    isLast: PropTypes.bool,
-    showOp: PropTypes.object,
-};
-
-export default OpDetails;
+export default OperationDetails;
