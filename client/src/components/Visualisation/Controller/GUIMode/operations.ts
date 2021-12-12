@@ -19,7 +19,7 @@ export const operationsDictionary: OperationDictionary = {
         },
         {
             command: 'insert',
-            args: ['index'],
+            args: ['value', 'index'],
         },
         {
             command: 'search',

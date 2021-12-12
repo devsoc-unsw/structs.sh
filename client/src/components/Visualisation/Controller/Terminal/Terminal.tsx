@@ -43,14 +43,26 @@ const Terminal: FC<Props> = ({ executeCommand, topic }) => {
     const commands = {
         append: {
             usage: 'append <number>',
-            fn: (arg) => {
-                return processCommand('append', arg);
+            fn: (arg: string) => {
+                return processCommand('append', [arg]);
             },
         },
         delete: {
             usage: 'delete <number>',
-            fn: (arg) => {
-                return processCommand('delete', arg);
+            fn: (arg: string) => {
+                return processCommand('delete', [arg]);
+            },
+        },
+        insert: {
+            usage: 'insert <value> <index>',
+            fn: (arg1: string, arg2: string) => {
+                return processCommand('insert', [arg1, arg2]);
+            },
+        },
+        search: {
+            usage: 'search <value>',
+            fn: (arg: string) => {
+                return processCommand('search', [arg]);
             },
         },
         man: {

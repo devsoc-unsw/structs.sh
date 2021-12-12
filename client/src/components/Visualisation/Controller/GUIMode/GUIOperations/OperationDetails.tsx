@@ -110,13 +110,13 @@ const OperationDetails: FC<Props> = ({ op, isLast, showOp, executeCommand }) => 
                     <ListItemIcon>
                         <LastLink colour={textPrimaryColour} />
                     </ListItemIcon>
-                    <Button className={classes.opBtn} variant="contained" color="primary">
-                        <Box
-                            className={classes.btnText}
-                            onClick={() => executeCommand(op.command, [...args])}
-                        >
-                            Run
-                        </Box>
+                    <Button
+                        className={classes.opBtn}
+                        variant="contained"
+                        color="primary"
+                        onClick={() => executeCommand(op.command, [...args])}
+                    >
+                        <Box className={classes.btnText}>Run</Box>
                     </Button>
                 </ListItem>
             </List>
