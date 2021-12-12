@@ -105,7 +105,7 @@ export default class GraphicalLinkedList {
     }
 
     insert(value: number, index: number) {
-        if (index > this.length - 1) {
+        if (index >= this.length - 1) {
             return this.append(value);
         }
         this.length++;
