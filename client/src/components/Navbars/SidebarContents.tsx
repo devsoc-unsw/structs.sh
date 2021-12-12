@@ -32,6 +32,8 @@ import { Notification } from 'utils/Notification';
 import { titleToUrl } from 'utils/url';
 import Filter from './Filter';
 import styles from './Sidebar.module.scss';
+import CodeIcon from '@mui/icons-material/Code';
+import GitHubIcon from '@mui/icons-material/GitHub';
 
 const SidebarContents = ({ setShowSidebar }) => {
     const [topics, setTopics] = useState<Topic[]>([]);
@@ -95,6 +97,32 @@ const SidebarContents = ({ setShowSidebar }) => {
                         <ListItemText>Feedback & Feature Request</ListItemText>
                     </ListItemButton>
                 </RouterLink>
+                <a
+                    href="https://github.com/csesoc/Structs.sh"
+                    target="_blank"
+                    onClick={() => setShowSidebar(false)}
+                    className={styles.link}
+                >
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <GitHubIcon sx={{ fill: theme.palette.text.primary }} />
+                        </ListItemIcon>
+                        <ListItemText>Repository</ListItemText>
+                    </ListItemButton>
+                </a>
+                <a
+                    href="https://media.csesoc.org.au/tag/csesoc/"
+                    target="_blank"
+                    onClick={() => setShowSidebar(false)}
+                    className={styles.link}
+                >
+                    <ListItemButton>
+                        <ListItemIcon>
+                            <CodeIcon sx={{ fill: theme.palette.text.primary }} />
+                        </ListItemIcon>
+                        <ListItemText>CSESoc Website</ListItemText>
+                    </ListItemButton>
+                </a>
             </List>
 
             {/* Topics */}

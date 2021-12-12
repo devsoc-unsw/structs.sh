@@ -24,10 +24,12 @@ const MarkdownEditor: React.FC<Props> = ({
     themeOverride,
 }) => {
     const theme: Theme = useTheme();
+    const initialMarkdownValue = markdownValue;
 
     return (
         <Editor
-            value={markdownValue}
+            defaultValue={initialMarkdownValue}
+            value={readOnly && markdownValue}
             readOnly={readOnly}
             theme={{
                 ...light,

@@ -1,11 +1,12 @@
 .card {
     width: 300;
-    height: '220px';
     z-index: 0;
     position: relative;
 
     .content {
         background: rgba(0, 0, 0, 0.8);
+        border-bottom-left-radius: 14px;
+        border-bottom-right-radius: 14px;
         position: absolute;
         bottom: 0;
         width: 100%;
