@@ -87,6 +87,7 @@ const Controls: FC<Props> = ({
             ) : (
                 <IconButton>
                     <ReplayIcon
+                        sx={{ fill: theme.palette.text.primary }}
                         onClick={() => {
                             handlePlay();
                             setIsPlaying(true);
@@ -104,7 +105,10 @@ const Controls: FC<Props> = ({
             <Box className={styles.sliderContainer}>
                 <Stack direction="column">
                     <Stack direction="row" sx={{ height: '32px' }}>
-                        <TimeIcon className={styles.sliderIcon} />
+                        <TimeIcon
+                            className={styles.sliderIcon}
+                            sx={{ fill: theme.palette.text.primary }}
+                        />
                         <Slider
                             onChange={(_, newValue) => {
                                 if (userIsDraggingTimeline) {
@@ -129,7 +133,10 @@ const Controls: FC<Props> = ({
                         />
                     </Stack>
                     <Stack direction="row" sx={{ height: '32px' }}>
-                        <SpeedIcon className={styles.sliderIcon} />
+                        <SpeedIcon
+                            className={styles.sliderIcon}
+                            sx={{ fill: theme.palette.text.primary }}
+                        />
                         <Slider
                             onChange={(_, newValue) => handleSpeedSliderDrag(Number(newValue))}
                             onMouseUp={() => {

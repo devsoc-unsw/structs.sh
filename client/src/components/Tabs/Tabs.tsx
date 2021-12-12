@@ -60,6 +60,7 @@ const ContentTabs: FC<Props> = ({ topic, tabs = ['Lesson', 'Code', 'Videos'] }) 
                     aria-label="basic tabs example"
                     textColor="secondary"
                     indicatorColor="secondary"
+                    variant="fullWidth"
                 >
                     {tabs.map((label, i) => (
                         <Tab label={label} />
