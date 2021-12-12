@@ -10,9 +10,11 @@ interface Props {
     handlePause: () => void;
     handleStepForward: () => void;
     handleStepBackward: () => void;
-    handleSliderDrag: (val: number) => void;
+    handleAnimationProgressSliderDrag: (val: number) => void;
+    handleSpeedSliderDrag: (val: number) => void;
     // Value between 0 and 100
     animationProgress: number;
+    speed: number;
 }
 
 const VisualiserController: React.FC<Props> = ({
@@ -22,8 +24,10 @@ const VisualiserController: React.FC<Props> = ({
     handlePause,
     handleStepForward,
     handleStepBackward,
-    handleSliderDrag,
+    handleAnimationProgressSliderDrag,
+    handleSpeedSliderDrag,
     animationProgress,
+    speed,
 }) => {
     const theme: Theme = useTheme();
 
@@ -39,8 +43,10 @@ const VisualiserController: React.FC<Props> = ({
                 handlePause={handlePause}
                 handleStepForward={handleStepForward}
                 handleStepBackward={handleStepBackward}
-                handleSliderDrag={handleSliderDrag}
+                handleAnimationProgressSliderDrag={handleAnimationProgressSliderDrag}
+                handleSpeedSliderDrag={handleSpeedSliderDrag}
                 animationProgress={animationProgress}
+                speed={speed}
             />
         </Box>
     );

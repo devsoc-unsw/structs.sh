@@ -72,7 +72,7 @@ class AnimationController {
     }
 
     public setSpeed(speed: number): void {
-        // `anime.speed` is a readonly property. The following comments prevents typescript from enforcing this rule.
+        // `anime.speed` is a readonly property. The following comments prevent typescript from enforcing this rule.
         // Source: https://stackoverflow.com/questions/51145180/how-to-use-ts-ignore-for-a-block
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore

@@ -27,6 +27,7 @@ let deleteNode = (_: number) => console.log('Not set');
 const Dashboard = () => {
     const [topic, setTopic] = useState<Topic>();
     const [animationProgress, setAnimationProgress] = useState<number>(0);
+    const [speed, setSpeed] = useState<number>(50);
     const [terminalMode, setTerminalMode] = useState(true);
 
     const params = useParams();
@@ -96,9 +97,16 @@ const Dashboard = () => {
         Notification.info('Stepping backward');
     }, []);
 
-    const handleSliderDrag = useCallback((val) => {
-        Notification.info(`Dragged slider to ${val} out of 100`);
+    const handleAnimationProgressSliderDrag = useCallback((val) => {
+        Notification.info(`Timeline slider dragged to ${val} out of 100`);
+
         setAnimationProgress(val);
+    }, []);
+
+    const handleSpeedSliderDrag = useCallback((val) => {
+        Notification.info(`Speed slider dragged to ${val} out of 100`);
+
+        setSpeed(val);
     }, []);
 
     /* -------------------------------------------------------------------------- */
@@ -231,8 +239,10 @@ const Dashboard = () => {
                             handlePause={handlePause}
                             handleStepForward={handleStepForward}
                             handleStepBackward={handleStepBackward}
-                            handleSliderDrag={handleSliderDrag}
+                            handleAnimationProgressSliderDrag={handleAnimationProgressSliderDrag}
+                            handleSpeedSliderDrag={handleSpeedSliderDrag}
                             animationProgress={animationProgress}
+                            speed={speed}
                         />
                         {terminalMode ? (
                             <Terminal executeCommand={executeCommand} topic={topic} />
