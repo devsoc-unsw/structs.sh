@@ -1,4 +1,4 @@
-import Terminal from '../../components/Terminal/Terminal';
+import Terminal from '../../components/Visualisation/Controller/Terminal/Terminal';
 
 export default {
     // Can create directories on storybook like this:

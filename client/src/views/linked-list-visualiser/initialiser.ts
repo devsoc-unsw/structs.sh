@@ -6,112 +6,112 @@ import { defaultSpeed } from './util/constants';
 /**
  * Initialises the visualiser and binds event handlers to the controller UI.
  */
-const initialiser = (): void => {
+const initialiser = (): any => {
     const linkedList: LinkedList = new LinkedList();
     const animationController = new LinkedListController();
     animationController.setSpeed(defaultSpeed);
 
-    // Binding event handlers to the append and delete buttons
-    const handleAppendClick: EventListener = (e: Event) => {
-        e.preventDefault();
+    const appendNode = (val: number, updateSlider: (val: number) => void): void => {
         animationController.finish();
 
         // Generating the steps of the animation
-        const sequence: AnimationInstruction[] = linkedList.append(animationController.inputValue);
+        const sequence: AnimationInstruction[] = linkedList.append(val);
 
         // Playing the animation
-        animationController.runSequence(sequence, slider);
+        animationController.runSequence(sequence, updateSlider);
     };
 
-    const handleDeleteClick: EventListener = (e: Event) => {
-        e.preventDefault();
+    const deleteNode = (index: number, updateSlider: (val: number) => void): void => {
         animationController.finish();
-        const index: number = animationController.inputValue;
 
         const sequence: AnimationInstruction[] = linkedList.delete(index);
 
-        animationController.runSequence(sequence, slider);
+        animationController.runSequence(sequence, updateSlider);
     };
 
-    const handleSearchClick: EventListener = (e: Event) => {
-        e.preventDefault();
+    const searchList = (val: number, updateSlider: (val: number) => void): void => {
         animationController.finish();
-        const input: number = animationController.inputValue;
 
-        const sequence: AnimationInstruction[] = linkedList.search(input);
+        const sequence: AnimationInstruction[] = linkedList.search(val);
 
-        animationController.runSequence(sequence, slider);
+        animationController.runSequence(sequence, updateSlider);
     };
 
-    const handleInsertClick: EventListener = (e: Event) => {
-        e.preventDefault();
+    const insertNode = (val: number, index: number, updateSlider: (val: number) => void): void => {
         animationController.finish();
-        const input: number = animationController.inputValue;
-        const index: number = animationController.altInputValue;
 
-        const sequence: AnimationInstruction[] = linkedList.insert(input, index);
+        const sequence: AnimationInstruction[] = linkedList.insert(val, index);
 
-        animationController.runSequence(sequence, slider);
-    }
+        animationController.runSequence(sequence, updateSlider);
+    };
 
-    const handlePlayClick: EventListener = (e: Event) => {
-        e.preventDefault();
+    const play = () => {
         animationController.play();
     };
 
-    const handlePauseClick: EventListener = (e: Event) => {
-        e.preventDefault();
+    const pause = () => {
         animationController.pause();
     };
 
-    const handleSelectPrevious: EventListener = (e: Event) => {
-        e.preventDefault();
+    const stepBack = () => {
         animationController.gotoPrevious();
-    }
+    };
 
-    const handleSelectNext: EventListener = (e: Event) => {
-        e.preventDefault();
+    const stepForward = () => {
         animationController.gotoNext();
-    }
+    };
 
-    const handleSliderChange: EventListener = (e: Event) => {
-        // the timeline can only be seeked when it's paused
+    const setTimeline = (val: number) => {
         animationController.pause();
-        animationController.seekPercent(parseInt(slider.value));
+        animationController.seekPercent(val);
     };
 
-    const handleSpeedChange: EventListener = (e: Event) => {
+    const setSpeed = (val: number) => {
         animationController.freeze();
-        animationController.setSpeed(parseFloat(speedSlider.value));
+        animationController.setSpeed(val);
     };
 
-    const handleSpeedChangeComplete: EventListener = (e: Event) => {
+    const onFinishSetSpeed = () => {
         if (!animationController.isPaused) animationController.play();
     };
 
-    // Grabbing references to form buttons and attaching event handlers to them
-    const appendButton = document.querySelector('#appendButton');
-    const deleteButton = document.querySelector('#deleteButton');
-    const searchButton = document.querySelector('#searchButton');
-    const playButton = document.querySelector('#playButton');
-    const pauseButton = document.querySelector('#pauseButton');
-    const insertButton = document.querySelector('#insertButton');
-    const previousButton = document.querySelector('#previousSequenceButton');
-    const nextButton = document.querySelector('#nextSequenceButton');
-    const slider = document.querySelector('#timeline-slider') as HTMLInputElement;
-    const speedSlider = document.querySelector('#speed-slider') as HTMLInputElement;
+    return {
+        appendNode: appendNode,
+        deleteNode: deleteNode,
+        searchList: searchList,
+        insertNode: insertNode,
+        play: play,
+        pause: pause,
+        stepBack: stepBack,
+        stepForward: stepForward,
+        setTimeline: setTimeline,
+        setSpeed: setSpeed,
+        onFinishSetSpeed: onFinishSetSpeed,
+    };
 
-    appendButton.addEventListener('click', handleAppendClick);
-    deleteButton.addEventListener('click', handleDeleteClick);
-    searchButton.addEventListener('click', handleSearchClick);
-    insertButton.addEventListener('click', handleInsertClick);
-    playButton.addEventListener('click', handlePlayClick);
-    pauseButton.addEventListener('click', handlePauseClick);
-    previousButton.addEventListener('click', handleSelectPrevious);
-    nextButton.addEventListener('click', handleSelectNext);
-    slider.addEventListener('input', handleSliderChange);
-    speedSlider.addEventListener('input', handleSpeedChange);
-    speedSlider.addEventListener('change', handleSpeedChangeComplete);
+    // Grabbing references to form buttons and attaching event handlers to them
+    // const appendButton = document.querySelector('#appendButton');
+    // const deleteButton = document.querySelector('#deleteButton');
+    // const searchButton = document.querySelector('#searchButton');
+    // const playButton = document.querySelector('#playButton');
+    // const pauseButton = document.querySelector('#pauseButton');
+    // const insertButton = document.querySelector('#insertButton');
+    // const previousButton = document.querySelector('#previousSequenceButton');
+    // const nextButton = document.querySelector('#nextSequenceButton');
+    // const slider = document.querySelector('#timeline-slider') as HTMLInputElement;
+    // const speedSlider = document.querySelector('#speed-slider') as HTMLInputElement;
+
+    // appendButton.addEventListener('click', handleAppendClick);
+    // deleteButton.addEventListener('click', handleDeleteClick);
+    // searchButton.addEventListener('click', handleSearchClick);
+    // insertButton.addEventListener('click', handleInsertClick);
+    // playButton.addEventListener('click', handlePlayClick);
+    // pauseButton.addEventListener('click', handlePauseClick);
+    // previousButton.addEventListener('click', handleSelectPrevious);
+    // nextButton.addEventListener('click', handleSelectNext);
+    // slider.addEventListener('input', handleSliderChange);
+    // speedSlider.addEventListener('input', handleSpeedChange);
+    // speedSlider.addEventListener('change', handleSpeedChangeComplete);
 };
 
 export default initialiser;

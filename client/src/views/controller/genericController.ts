@@ -43,13 +43,16 @@ class AnimationController {
     }
 
     // this function runs a sequence of animations sequentially
-    public runSequence(sequence: AnimationInstruction[], slider: HTMLInputElement): void {
+    public runSequence(
+        sequence: AnimationInstruction[],
+        updateAnimationProgress: (val: number) => void
+    ): void {
         console.log(this);
         this.currentTimeline = anime.timeline({
             duration: fastestDuration,
             easing: 'easeOutExpo',
             update: function (anim) {
-                slider.value = String(anim.progress);
+                updateAnimationProgress(Number(anim.progress));
             },
         });
 

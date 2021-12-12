@@ -5,10 +5,12 @@ import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import { Box, IconButton, Stack, useTheme } from '@mui/material';
 import Slider from '@mui/material/Slider';
 import React, { FC, useEffect, useState } from 'react';
-import ModeSwitch from '../ModeSwitch/ModeSwitch';
+import ModeSwitch from '../GUIMode/ModeSwitch';
 import styles from './Control.module.scss';
 import TimeIcon from '@mui/icons-material/AccessTime';
 import SpeedIcon from '@mui/icons-material/Speed';
+import { Notification } from 'utils/Notification';
+import ReplayIcon from '@mui/icons-material/Replay';
 
 interface Props {
     terminalMode: boolean;
@@ -17,8 +19,10 @@ interface Props {
     handlePause: () => void;
     handleStepForward: () => void;
     handleStepBackward: () => void;
-    handleAnimationProgressSliderDrag: (val: number) => void;
+    handleUpdateTimeline: (val: number) => void;
+    handleDragTimeline: (val: number) => void;
     handleSpeedSliderDrag: (val: number) => void;
+    handleSpeedSliderDragEnd: () => void;
     animationProgress: number;
     speed: number;
 }
@@ -30,17 +34,25 @@ const Controls: FC<Props> = ({
     handlePause,
     handleStepForward,
     handleStepBackward,
-    handleAnimationProgressSliderDrag,
+    handleUpdateTimeline,
+    handleDragTimeline,
     handleSpeedSliderDrag,
+    handleSpeedSliderDragEnd,
     animationProgress,
     speed,
 }) => {
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
+    const [userIsDraggingTimeline, setUserIsDraggingTimeline] = useState<boolean>(false);
     const theme = useTheme();
 
     useEffect(() => {
         if (animationProgress >= 100) {
             setIsPlaying(false);
+            handleUpdateTimeline(0);
+        } else if (animationProgress > 0 && animationProgress < 100) {
+            if (!isPlaying) {
+                setIsPlaying(true);
+            }
         }
     }, [animationProgress]);
 
@@ -62,7 +74,7 @@ const Controls: FC<Props> = ({
                         sx={{ fill: theme.palette.text.primary }}
                     />
                 </IconButton>
-            ) : (
+            ) : animationProgress > 0 && animationProgress <= 100 ? (
                 <IconButton>
                     <PlayIcon
                         onClick={() => {
@@ -70,6 +82,15 @@ const Controls: FC<Props> = ({
                             setIsPlaying(true);
                         }}
                         sx={{ fill: theme.palette.text.primary }}
+                    />
+                </IconButton>
+            ) : (
+                <IconButton>
+                    <ReplayIcon
+                        onClick={() => {
+                            handlePlay();
+                            setIsPlaying(true);
+                        }}
                     />
                 </IconButton>
             )}
@@ -85,10 +106,23 @@ const Controls: FC<Props> = ({
                     <Stack direction="row">
                         <TimeIcon className={styles.sliderIcon} />
                         <Slider
-                            onChange={(_, newValue) =>
-                                handleAnimationProgressSliderDrag(Number(newValue))
-                            }
+                            onChange={(_, newValue) => {
+                                if (userIsDraggingTimeline) {
+                                    handleDragTimeline(Number(newValue));
+                                } else {
+                                    handleUpdateTimeline(Number(newValue));
+                                }
+                            }}
+                            onMouseDown={() => {
+                                setUserIsDraggingTimeline(true);
+                                handlePause();
+                            }}
+                            onMouseUp={() => {
+                                setUserIsDraggingTimeline(false);
+                                handlePlay();
+                            }}
                             value={animationProgress}
+                            disabled={!isPlaying}
                             min={0}
                             max={100}
                             sx={{ ml: '10px' }}
@@ -98,9 +132,18 @@ const Controls: FC<Props> = ({
                         <SpeedIcon className={styles.sliderIcon} />
                         <Slider
                             onChange={(_, newValue) => handleSpeedSliderDrag(Number(newValue))}
+                            onMouseUp={() => {
+                                if (animationProgress > 0) {
+                                    handleSpeedSliderDragEnd();
+                                }
+                            }}
                             value={speed}
                             min={0}
+                            max={1}
+                            step={0.1}
+                            marks
                             sx={{ ml: '10px' }}
+                            color="secondary"
                         />
                     </Stack>
                 </Stack>

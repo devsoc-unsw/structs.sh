@@ -10,7 +10,7 @@ interface Props {
 
 const GUIMode = ({ executeCommand, topic }) => {
     return (
-        <Box>
+        <Box sx={{ height: 'calc(100% - 64px)', overflow: 'auto' }}>
             <OperationsTree topic={topic} executeCommand={executeCommand} />
         </Box>
     );
