@@ -2,11 +2,13 @@ import PauseIcon from '@mui/icons-material/PauseCircleOutline';
 import PlayIcon from '@mui/icons-material/PlayCircleOutline';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
-import { Box, IconButton, useTheme } from '@mui/material';
+import { Box, IconButton, Stack, useTheme } from '@mui/material';
 import Slider from '@mui/material/Slider';
 import React, { FC, useEffect, useState } from 'react';
 import ModeSwitch from '../ModeSwitch/ModeSwitch';
 import styles from './Control.module.scss';
+import TimeIcon from '@mui/icons-material/AccessTime';
+import SpeedIcon from '@mui/icons-material/Speed';
 
 interface Props {
     terminalMode: boolean;
@@ -15,9 +17,10 @@ interface Props {
     handlePause: () => void;
     handleStepForward: () => void;
     handleStepBackward: () => void;
-    handleSliderDrag: (val: number) => void;
-    // Value between 0 and 100
+    handleAnimationProgressSliderDrag: (val: number) => void;
+    handleSpeedSliderDrag: (val: number) => void;
     animationProgress: number;
+    speed: number;
 }
 
 const Controls: FC<Props> = ({
@@ -27,8 +30,10 @@ const Controls: FC<Props> = ({
     handlePause,
     handleStepForward,
     handleStepBackward,
-    handleSliderDrag,
+    handleAnimationProgressSliderDrag,
+    handleSpeedSliderDrag,
     animationProgress,
+    speed,
 }) => {
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const theme = useTheme();
@@ -76,13 +81,29 @@ const Controls: FC<Props> = ({
             </IconButton>
 
             <Box className={styles.sliderContainer}>
-                <Slider
-                    onChange={(_, newValue) => handleSliderDrag(Number(newValue))}
-                    className={styles.slider}
-                    value={animationProgress}
-                    min={0}
-                    max={100}
-                />
+                <Stack direction="column">
+                    <Stack direction="row">
+                        <TimeIcon className={styles.sliderIcon} />
+                        <Slider
+                            onChange={(_, newValue) =>
+                                handleAnimationProgressSliderDrag(Number(newValue))
+                            }
+                            value={animationProgress}
+                            min={0}
+                            max={100}
+                            sx={{ ml: '10px' }}
+                        />
+                    </Stack>
+                    <Stack direction="row">
+                        <SpeedIcon className={styles.sliderIcon} />
+                        <Slider
+                            onChange={(_, newValue) => handleSpeedSliderDrag(Number(newValue))}
+                            value={speed}
+                            min={0}
+                            sx={{ ml: '10px' }}
+                        />
+                    </Stack>
+                </Stack>
             </Box>
 
             <Box className={styles.modeSwitchContainer}>

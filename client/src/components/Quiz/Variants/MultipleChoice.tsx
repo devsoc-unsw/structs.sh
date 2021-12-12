@@ -76,11 +76,15 @@ const MultipleChoice: FC<Props> = ({ quiz, questionNumber, disabled, showAnswers
 
         setSubmitted(true);
 
+        console.log(`Answers`, answers);
+        console.log(`Responses`, responses);
+
         // Compare `responses` and `answers` array
         for (let i = 0; i < answers.length; ++i) {
             if (responses[i] !== answers[i]) {
                 Notification.error('Incorrect');
                 setResult('incorrect');
+                return;
             }
         }
 
