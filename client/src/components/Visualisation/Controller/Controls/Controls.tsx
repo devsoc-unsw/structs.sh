@@ -103,7 +103,7 @@ const Controls: FC<Props> = ({
 
             <Box className={styles.sliderContainer}>
                 <Stack direction="column">
-                    <Stack direction="row">
+                    <Stack direction="row" sx={{ height: '32px' }}>
                         <TimeIcon className={styles.sliderIcon} />
                         <Slider
                             onChange={(_, newValue) => {
@@ -128,7 +128,7 @@ const Controls: FC<Props> = ({
                             sx={{ ml: '10px' }}
                         />
                     </Stack>
-                    <Stack direction="row">
+                    <Stack direction="row" sx={{ height: '32px' }}>
                         <SpeedIcon className={styles.sliderIcon} />
                         <Slider
                             onChange={(_, newValue) => handleSpeedSliderDrag(Number(newValue))}

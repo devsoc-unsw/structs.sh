@@ -3,11 +3,10 @@
 
     &.vertical {
         overflow-y: auto !important;
+    }
+
+    .topGutter {
         // Subtracting the height of the topnav
         height: calc(100vh - 64px) !important;
     }
-
-    // &.horizontal {
-    //     overflow-y: auto !important;
-    // }
 }
