@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Theme, useTheme } from '@mui/material';
 import LinkedListAnimation from 'components/Animation/LinkedList/linkedListAnimation';
 import { CircularLoader } from 'components/Loader';
 import { Pane } from 'components/Panes';
@@ -12,6 +12,7 @@ import { useParams } from 'react-router-dom';
 import { getTopic, Topic } from 'utils/apiRequests';
 import { Notification } from 'utils/Notification';
 import { urlToTitle } from 'utils/url';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import styles from './VisualiserDashboard.module.scss';
 
 // TODO: REARRANGE DIR
@@ -31,6 +32,9 @@ const Dashboard = () => {
     const [terminalMode, setTerminalMode] = useState(true);
 
     const [visualiser, setVisualiser] = useState<any>({});
+
+    const theme: Theme = useTheme();
+    const isAboveMdWidth = useMediaQuery(theme.breakpoints.up('md'));
 
     const params = useParams();
 
@@ -145,11 +149,59 @@ const Dashboard = () => {
 
     return (
         <VisualiserDashboardLayout topic={topic}>
-            <Pane orientation="vertical" minSize={340} topGutterSize={64}>
-                <Pane orientation="horizontal" minSize={150.9}>
+            {isAboveMdWidth ? (
+                <Pane orientation="vertical" minSize={340} hasTopGutter>
+                    <Pane orientation="horizontal" minSize={150.9}>
+                        <header
+                            style={{
+                                height: '100%',
+                                padding: '10px',
+                                background: 'rgba(235, 235, 235)',
+                            }}
+                        >
+                            <div className="container">
+                                <div className="container" id="canvas">
+                                    <div id="current" style={{ top: `${topOffset}px` }}>
+                                        <img src={curr} alt="curr arrow" />
+                                    </div>
+                                    <div id="prev" style={{ top: `${topOffset}px` }}>
+                                        <img src={prev} alt="prev arrow" />
+                                    </div>
+                                </div>
+                            </div>
+                        </header>
+                        <Box className={styles.interactor}>
+                            <VisualiserController
+                                terminalMode={terminalMode}
+                                setTerminalMode={setTerminalMode}
+                                handlePlay={handlePlay}
+                                handlePause={handlePause}
+                                handleStepForward={handleStepForward}
+                                handleStepBackward={handleStepBackward}
+                                handleUpdateTimeline={updateTimeline}
+                                handleDragTimeline={dragTimeline}
+                                handleSpeedSliderDrag={handleSpeedSliderDrag}
+                                handleSpeedSliderDragEnd={handleSpeedSliderDragEnd}
+                                animationProgress={animationProgress}
+                                speed={speed}
+                            />
+                            <Box sx={{ height: '100%' }}>
+                                {terminalMode ? (
+                                    <Terminal executeCommand={executeCommand} topic={topic} />
+                                ) : (
+                                    <GUIMode executeCommand={executeCommand} topic={topic} />
+                                )}
+                            </Box>
+                        </Box>
+                    </Pane>
+                    {topic ? <Tabs topic={topic}></Tabs> : <CircularLoader />}
+                </Pane>
+            ) : (
+                <Pane orientation="horizontal">
                     <header
                         style={{
-                            height: '100%',
+                            height: 'calc(100% - 64px)',
+                            marginTop: '64px',
                             padding: '10px',
                             background: 'rgba(235, 235, 235)',
                         }}
@@ -180,15 +232,16 @@ const Dashboard = () => {
                             animationProgress={animationProgress}
                             speed={speed}
                         />
-                        {terminalMode ? (
-                            <Terminal executeCommand={executeCommand} topic={topic} />
-                        ) : (
-                            <GUIMode executeCommand={executeCommand} topic={topic} />
-                        )}
+                        <Box sx={{ height: '100%' }}>
+                            {terminalMode ? (
+                                <Terminal executeCommand={executeCommand} topic={topic} />
+                            ) : (
+                                <GUIMode executeCommand={executeCommand} topic={topic} />
+                            )}
+                        </Box>
                     </Box>
                 </Pane>
-                {topic ? <Tabs topic={topic}></Tabs> : <CircularLoader />}
-            </Pane>
+            )}
         </VisualiserDashboardLayout>
     );
 };
