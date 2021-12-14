@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import initialiseVisualiser from './bst-visualiser/bst';
+import initialiseVisualiser from './bst-visualiser/initialiser';
 import './styles/visualiser.css';
 import prev from './assets/prev.svg';
 import curr from './assets/curr.svg';
@@ -12,14 +12,14 @@ const App = () => {
 
   return (
     <div className="container">
-      <div className="container" id="canvas">
-        <div id="current" style={{top: `${topOffset}px`}}>
-          <img src={curr} alt="curr arrow"/>
+      <form className="row g-3">
+        <div className="col-auto">
+          <input id="inputValue" type="text" className="form-control" />
         </div>
-        <div id="prev" style={{top: `${topOffset}px`}}>
-          <img src={prev} alt="prev arrow"/>
+        <div className="col-auto">
+          <button id="insertButton" type="submit" className="btn btn-danger mb-3">Insert Value By Position!</button>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

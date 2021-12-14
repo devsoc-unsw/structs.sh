@@ -1,46 +1,76 @@
-import createNode from './createNode';
-import { Animation, Node } from './typedefs';
-import anime from 'animejs';
-import BST from './bstImpl';
-import { create } from 'domain';
+import { Svg } from '@svgdotjs/svg.js';
+import { Node } from './typedefs';
 
-/**
- * Initialises the visualiser and binds event handlers to the controller UI.
- */
+// used for the actual implementation of the bst
+class BST {
+    public root: Node;
 
-// basic structure:
-// - bstimpl class which handles the underlying bst
-// - bstcontroller class which handles animation controls
-// event handlers for bst operations which does:
-//   - finishes the current timeline
-//   - updates the bstimpl class
-//   - creates an animation sequence that gets ran by the controller
-const initialise = (): void => {
-    let bst: BST = new BST();
+    // TODO: remove later this is only for basic rendering of a bst
+    public nodes: Node[];
 
-    // TODO: make it a proper event handler
-    const handleInsertClick = (input: number): void => {
-        const newNode: Node = createNode(input);
-
-        bst.insert(newNode);
-
-        console.log(bst.root);
-        console.log(bst.nodes);
+    constructor() {
+        this.root = null;
+        this.nodes = [];
     }
 
-    for (let i = 0; i < 150; i++) {
-        handleInsertClick(Math.floor(Math.random() * 100));
-    }
+    // inserts a node into the bst and returns the node that was inserted.
+    // this allows us to draw lines between nodes
+    public insert(input: number): Node {
+        const node: Node = {
+            nodeTarget: null,
+            lineTarget: null,
+            left: null,
+            right: null,
+            parent: null,
+            value: input,
+            x: 0,
+            y: 0
+        }
 
-    for (let i = 0; i < bst.nodes.length; i++) {
-        anime({
-            targets: bst.nodes[i].nodeTarget,
-            opacity: 1,
-            left: bst.nodes[i].x,
-            top: bst.nodes[i].y,
-            duration: 0,
-        });
-    }
-};
+        let low: number = 0;
+        let high: number = 1200;
+        let mid: number = (low + high) / 2;
+        node.x = mid;
+        node.y = 0;
+        if (this.root == null) {
+            this.root = node;
+            this.nodes.push(node);
 
-export default initialise;
+            return node;
+        } else {
+            let currentNode: Node = this.root;
+
+            while (currentNode) {
+                node.y += 75;
+                if (node.value < currentNode.value) {
+                    high = mid;
+                    mid = (low + high) / 2;
+                    node.x = mid;
+                    
+                    if (currentNode.left == null) {
+                        currentNode.left = node;
+                        node.parent = currentNode;
+                        this.nodes.push(node);
+                        return node;
+                    }
+
+                    currentNode = currentNode.left;
+                } else {
+                    low = mid;
+                    mid = (low + high) / 2;
+                    node.x = mid;
+                    if (currentNode.right == null) {
+                        currentNode.right = node;
+                        node.parent = currentNode;
+                        this.nodes.push(node);
+                        return node;
+                    }
+
+                    currentNode = currentNode.right;
+                }
+            }
+        }
+    }
+}
+
+export default BST;
