@@ -1,14 +1,17 @@
-import { G, Line, SVG, Text } from '@svgdotjs/svg.js'
+import { Circle, Line, Text } from '@svgdotjs/svg.js'
 
 /**
  * Type definitions used by the visualiser
  */
 
 export interface Node {
-    // CSS selector for the node DOM element
-    nodeTarget: G;
+    // selector for the node svg element
+    nodeTarget: Circle;
 
-    // CSS selector for the arrow DOM element
+    // selector for the text svg element
+    textTarget: Text;
+
+    // selector for the line svg element
     lineTarget: Line;
 
     // reference to a left and right node

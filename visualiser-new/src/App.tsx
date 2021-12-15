@@ -17,7 +17,7 @@ const App = () => {
           <input id="inputValue" type="text" className="form-control" />
         </div>
         <div className="col-auto">
-          <button id="insertButton" type="submit" className="btn btn-danger mb-3">Insert Value By Position!</button>
+          <button id="insertButton" type="submit" className="btn btn-danger mb-3">Insert Value!</button>
         </div>
       </form>
     </div>
