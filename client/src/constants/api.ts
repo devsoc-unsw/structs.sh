@@ -2,6 +2,6 @@
 export abstract class ApiConstants {
     static readonly URL: string =
         process.env.REACT_APP_DEV_OR_PROD === 'prod'
-            ? 'http://structs.sh/api'
+            ? 'http://structs.sh'
             : 'http://localhost:8080';
 }
