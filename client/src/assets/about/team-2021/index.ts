@@ -25,7 +25,7 @@ export const team2021 = [
     },
     {
         name: 'Joseph Xu',
-        tagline: 'Computer Science & Commerce student at UNSW (1st year)',
+        tagline: 'Computer Science & Commerce student at UNSW (3rd year)',
         imageSrc: josephXu,
     },
     {

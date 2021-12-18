@@ -2,12 +2,11 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Alert, Box, List, ListItem, ListItemIcon, Theme, Typography } from '@mui/material';
 import { useTheme } from '@mui/styles';
-import PropTypes from 'prop-types';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Topic } from 'utils/apiRequests';
+import { Operation, operationsDictionary } from '../operations';
 import { LastLink, Link } from './Links';
 import OperationDetails from './OperationDetails';
-import { Operation, operationsDictionary } from '../operations';
 
 export interface OperationsMenuState {
     [k: string]: boolean;

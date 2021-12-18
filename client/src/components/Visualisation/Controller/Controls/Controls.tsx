@@ -1,16 +1,15 @@
+import TimeIcon from '@mui/icons-material/AccessTime';
 import PauseIcon from '@mui/icons-material/PauseCircleOutline';
 import PlayIcon from '@mui/icons-material/PlayCircleOutline';
+import ReplayIcon from '@mui/icons-material/Replay';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import SpeedIcon from '@mui/icons-material/Speed';
 import { Box, IconButton, Stack, useTheme } from '@mui/material';
 import Slider from '@mui/material/Slider';
 import React, { FC, useEffect, useState } from 'react';
 import ModeSwitch from '../GUIMode/ModeSwitch';
 import styles from './Control.module.scss';
-import TimeIcon from '@mui/icons-material/AccessTime';
-import SpeedIcon from '@mui/icons-material/Speed';
-import { Notification } from 'utils/Notification';
-import ReplayIcon from '@mui/icons-material/Replay';
 
 interface Props {
     terminalMode: boolean;
@@ -54,7 +53,7 @@ const Controls: FC<Props> = ({
                 setIsPlaying(true);
             }
         }
-    }, [animationProgress]);
+    }, [animationProgress, handleUpdateTimeline, isPlaying]);
 
     return (
         <div className={styles.root}>

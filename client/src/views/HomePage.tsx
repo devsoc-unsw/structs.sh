@@ -1,23 +1,17 @@
 import { Container, Theme, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/styles';
+import { Carousel } from 'components/Carousel';
 import { Footer } from 'components/Footer';
+import { ParticleHeader } from 'components/Particles';
+import { Features } from 'components/Sections';
 import { SplashScreen } from 'components/SplashScreen';
 import { HomepageLayout } from 'layout';
-import React, { useEffect } from 'react';
+import React from 'react';
 import styles from './HomePage.module.scss';
-import { ParticleHeader } from 'components/Particles';
-import { Carousel } from 'components/Carousel';
-import { Features } from 'components/Sections';
-import { ApiConstants } from 'constants/api';
-import { Notification } from 'utils/Notification';
 
 const HomePage = () => {
     const theme: Theme = useTheme();
-
-    useEffect(() => {
-        Notification.info(`API URL: ${ApiConstants.URL}`);
-    }, []);
 
     return (
         <HomepageLayout disableBackground>

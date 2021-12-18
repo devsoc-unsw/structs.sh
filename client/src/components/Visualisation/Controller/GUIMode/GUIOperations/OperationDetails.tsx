@@ -1,12 +1,10 @@
 import { Box, Collapse, List, ListItem, ListItemIcon, Theme } from '@mui/material';
 import Button from '@mui/material/Button';
-import { makeStyles } from '@mui/styles';
 import TextField from '@mui/material/TextField';
-import PropTypes from 'prop-types';
+import { makeStyles, useTheme } from '@mui/styles';
 import React, { FC, useState } from 'react';
+import { Operation } from '../operations';
 import { LastLink, Link } from './Links';
-import { useTheme } from '@mui/styles';
-import { Operation, OperationDictionary } from '../operations';
 import { OperationsMenuState } from './OperationsTree';
 
 const useStyles = makeStyles({

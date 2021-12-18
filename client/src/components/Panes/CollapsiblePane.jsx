@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import { SplitPane } from 'react-collapse-pane';
 import styles from './CollapsiblePane.module.scss';
 

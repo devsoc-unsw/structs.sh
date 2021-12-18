@@ -1,29 +1,24 @@
 import { Box, Theme, useTheme } from '@mui/material';
-import LinkedListAnimation from 'components/Animation/LinkedList/linkedListAnimation';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { CircularLoader } from 'components/Loader';
 import { Pane } from 'components/Panes';
 import Tabs from 'components/Tabs/Tabs';
-import { Terminal } from 'components/Visualisation/Controller/Terminal';
 import { VisualiserController } from 'components/Visualisation/Controller';
 import GUIMode from 'components/Visualisation/Controller/GUIMode/GUIMode';
+import { Terminal } from 'components/Visualisation/Controller/Terminal';
 import { VisualiserDashboardLayout } from 'layout';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getTopic, Topic } from 'utils/apiRequests';
 import { Notification } from 'utils/Notification';
 import { urlToTitle } from 'utils/url';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import styles from './VisualiserDashboard.module.scss';
-
+import curr from './assets/curr.svg';
+import prev from './assets/prev.svg';
 // TODO: REARRANGE DIR
 import initialiseVisualiser from './linked-list-visualiser/initialiser';
+import { topOffset } from './linked-list-visualiser/util/constants';
 import './styles/visualiser.css';
-import prev from './assets/prev.svg';
-import curr from './assets/curr.svg';
-import { topOffset, defaultSpeed } from './linked-list-visualiser/util/constants';
-
-let appendNode = (_: number) => console.log('Not set');
-let deleteNode = (_: number) => console.log('Not set');
+import styles from './VisualiserDashboard.module.scss';
 
 const Dashboard = () => {
     const [topic, setTopic] = useState<Topic>();
@@ -62,6 +57,10 @@ const Dashboard = () => {
 
     /* -------------------------- Visualiser Callbacks -------------------------- */
 
+    const updateTimeline = useCallback((val) => {
+        setAnimationProgress(val);
+    }, []);
+
     const executeCommand = useCallback(
         (command: string, args: string[]): string => {
             switch (command) {
@@ -99,7 +98,7 @@ const Dashboard = () => {
                     return `Invalid command: ${command}`;
             }
         },
-        [visualiser]
+        [visualiser, updateTimeline]
     );
 
     const handlePlay = useCallback(() => {
@@ -117,13 +116,6 @@ const Dashboard = () => {
     const handleStepBackward = useCallback(() => {
         visualiser.stepBack();
     }, [visualiser]);
-
-    const updateTimeline = useCallback(
-        (val) => {
-            setAnimationProgress(val);
-        },
-        [visualiser]
-    );
 
     const dragTimeline = useCallback(
         (val: number) => {

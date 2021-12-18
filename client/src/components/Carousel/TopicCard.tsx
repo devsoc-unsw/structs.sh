@@ -1,11 +1,4 @@
-import {
-    Card,
-    CardContent,
-    CardMedia,
-    ImageListItem,
-    ImageListItemBar,
-    Typography,
-} from '@mui/material';
+import { ImageListItem, ImageListItemBar } from '@mui/material';
 import React from 'react';
 import { Topic } from 'utils/apiRequests';
 import styles from './TopicCard.module.scss';
@@ -29,7 +22,11 @@ const TopicCard: React.FC<Props> = ({ topic, isActive }) => {
             //     position: 'relative',
             // }}
         >
-            <img src={topic.image} style={{ height: '200px', borderRadius: '13px' }} />
+            <img
+                src={topic.image}
+                style={{ height: '200px', borderRadius: '13px' }}
+                alt="topic card"
+            />
             <ImageListItemBar
                 title={topic.title}
                 sx={{ borderBottomLeftRadius: '13px', borderBottomRightRadius: '13px' }}

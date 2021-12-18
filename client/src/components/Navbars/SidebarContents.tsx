@@ -100,6 +100,7 @@ const SidebarContents = ({ setShowSidebar }) => {
                 <a
                     href="https://github.com/csesoc/Structs.sh"
                     target="_blank"
+                    rel="noreferrer"
                     onClick={() => setShowSidebar(false)}
                     className={styles.link}
                 >
@@ -113,6 +114,7 @@ const SidebarContents = ({ setShowSidebar }) => {
                 <a
                     href="https://media.csesoc.org.au/tag/csesoc/"
                     target="_blank"
+                    rel="noreferrer"
                     onClick={() => setShowSidebar(false)}
                     className={styles.link}
                 >

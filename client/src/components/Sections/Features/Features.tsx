@@ -1,10 +1,12 @@
 import BulletIcon from '@mui/icons-material/ArrowForwardIos';
 import VisualiserIcon from '@mui/icons-material/AutoFixHigh';
 import EditIcon from '@mui/icons-material/Edit';
-import ToolIcon from '@mui/icons-material/Handyman';
 import EducationIcon from '@mui/icons-material/LocalLibrary';
 import GradCapIcon from '@mui/icons-material/School';
 import { Box, Grid, Link, List, ListItem, ListItemIcon, Typography } from '@mui/material';
+import cmsScreen from 'assets/demos/cms.png';
+import visualiserDashboardCodeScreen from 'assets/demos/visualiser-dashboard-code.png';
+import visualiserDashboardLessonScreen from 'assets/demos/visualiser-dashboard-lesson.png';
 import structsLogo from 'assets/img/structs.png';
 import { LaptopFrame } from 'components/Frame';
 import { HorizontalRule } from 'components/HorizontalRule';
@@ -14,9 +16,6 @@ import { useInView } from 'react-intersection-observer';
 import { Link as RouterLink } from 'react-router-dom';
 import FeatureItem from './FeatureItem';
 import styles from './Features.module.scss';
-import visualiserDashboardLessonScreen from 'assets/demos/visualiser-dashboard-lesson.png';
-import visualiserDashboardCodeScreen from 'assets/demos/visualiser-dashboard-code.png';
-import cmsScreen from 'assets/demos/cms.png';
 
 interface Props {}
 

@@ -20,9 +20,20 @@ const About: FC<Props> = () => {
                         The Project
                     </Typography>
                     <Typography color="textPrimary" variant="body1" className={styles.text}>
-                        <strong>Structs.sh</strong> was a project developed by passionate computer
-                        science and engineering students at UNSW. [Note: elaborate on the ideation
-                        and development]
+                        <strong>Structs.sh</strong> is a project that aims to be a comprehensive
+                        educational resource for data structures and algorithms, developed by
+                        passionate computer science and engineering students at UNSW. It features an
+                        interactive algorithm visualiser, integrated educational content and a CMS.
+                    </Typography>
+                    <Typography color="textPrimary" variant="body1" className={styles.text}>
+                        Structs.sh was inspired by{' '}
+                        <a href="https://github.com/Tymotex/Tactile-DS">Tactile DS</a>, an earlier
+                        project developed in 2020 as a tutoring tool and reference for students to
+                        use in{' '}
+                        <a href="https://www.handbook.unsw.edu.au/undergraduate/courses/2022/COMP2521/?year=2022">
+                            COMP2521
+                        </a>
+                        .
                     </Typography>
                     <Divider />
                     <Typography color="textPrimary" variant="h4" className={styles.text}>
