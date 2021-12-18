@@ -44,7 +44,8 @@
         "web-vitals": "^1.0.1"
     },
     "scripts": {
-        "start": "react-scripts start",
+        "start": "REACT_APP_DEV_OR_PROD=dev react-scripts start",
+        "startprod": "REACT_APP_DEV_OR_PROD=prod react-scripts start",
         "build": "react-scripts build",
         "test-unit": "jest",
         "test-e2e": "cypress open",

@@ -4,14 +4,20 @@ import { useTheme } from '@mui/styles';
 import { Footer } from 'components/Footer';
 import { SplashScreen } from 'components/SplashScreen';
 import { HomepageLayout } from 'layout';
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './HomePage.module.scss';
 import { ParticleHeader } from 'components/Particles';
 import { Carousel } from 'components/Carousel';
 import { Features } from 'components/Sections';
+import { ApiConstants } from 'constants/api';
+import { Notification } from 'utils/Notification';
 
 const HomePage = () => {
     const theme: Theme = useTheme();
+
+    useEffect(() => {
+        Notification.info(`API URL: ${ApiConstants.URL}`);
+    }, []);
 
     return (
         <HomepageLayout disableBackground>
