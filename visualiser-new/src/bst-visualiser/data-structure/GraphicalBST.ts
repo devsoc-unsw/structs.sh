@@ -55,7 +55,7 @@ class BST {
                         node.parent = currentNode;
                         this.animationProducer.createNode(node);
                         this.animationProducer.showNode(node, timeline);
-                        return;
+                        return timeline;
                     }
 
                     currentNode = currentNode.left;
@@ -68,13 +68,15 @@ class BST {
                         node.parent = currentNode;
                         this.animationProducer.createNode(node);
                         this.animationProducer.showNode(node, timeline);
-                        return;
+                        return timeline;
                     }
 
                     currentNode = currentNode.right;
                 }
             }
         }
+
+        return timeline;
     }
 }
 

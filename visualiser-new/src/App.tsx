@@ -19,6 +19,12 @@ const App = () => {
         <div className="col-auto">
           <button id="insertButton" type="submit" className="btn btn-danger mb-3">Insert Value!</button>
         </div>
+        <div className="col-auto">
+          <button id="playButton" type="submit" className="btn btn-primary mb-3">Play</button>
+        </div>
+        <div className="col-auto">
+          <button id="pauseButton" type="submit" className="btn btn-primary mb-3">Pause</button>
+        </div>
       </form>
     </div>
   );
