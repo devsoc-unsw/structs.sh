@@ -1,5 +1,6 @@
 import { Box, Theme } from '@mui/material';
 import { useTheme } from '@mui/styles';
+import TopNavbar from 'components/Navbars/TopNavbar';
 import { motion } from 'framer-motion';
 import React, { FC, useEffect } from 'react';
 
@@ -42,7 +43,7 @@ const Layout: FC<Props> = ({
 
     return (
         <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="exit">
-            {/* <TopNavbar position={topNavPosition} enableOnScrollEffect={enableOnScrollEffect} /> */}
+            <TopNavbar position={'fixed'} enableOnScrollEffect={true} />
             <Box
                 sx={{
                     backgroundColor: !disableBackground && theme.palette.background.default,

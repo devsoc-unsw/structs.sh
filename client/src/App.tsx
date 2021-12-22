@@ -44,7 +44,6 @@ const App = () => {
                         isDarkMode: cookies[LIGHT_MODE_ON] !== 'true',
                     }}
                 >
-                    <TopNavbar position={'fixed'} enableOnScrollEffect={true} />
                     <Routes>
                         {/* Homepage */}
                         <Route path="/" element={<HomePage />} />

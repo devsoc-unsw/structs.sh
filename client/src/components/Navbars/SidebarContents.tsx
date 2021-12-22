@@ -57,7 +57,7 @@ const SidebarContents = ({ setShowSidebar }) => {
                         display="inline"
                         color="textPrimary"
                         variant="h6"
-                        sx={{ fontFamily: 'Ubuntu Mono', pl: 1, pr: 2 }}
+                        sx={{ fontFamily: 'CodeText', pl: 1, pr: 2 }}
                     >
                         Structs.sh
                     </Typography>

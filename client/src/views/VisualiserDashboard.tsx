@@ -1,13 +1,14 @@
 import { Box, Theme, useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { CircularLoader } from 'components/Loader';
+import TopNavbar from 'components/Navbars/TopNavbar';
 import { Pane } from 'components/Panes';
 import Tabs from 'components/Tabs/Tabs';
 import { VisualiserController } from 'components/Visualisation/Controller';
 import GUIMode from 'components/Visualisation/Controller/GUIMode/GUIMode';
 import { Terminal } from 'components/Visualisation/Controller/Terminal';
 import { VisualiserDashboardLayout } from 'layout';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getTopic, Topic } from 'utils/apiRequests';
 import { Notification } from 'utils/Notification';
@@ -20,7 +21,9 @@ import { topOffset } from './linked-list-visualiser/util/constants';
 import './styles/visualiser.css';
 import styles from './VisualiserDashboard.module.scss';
 
-const Dashboard = () => {
+interface Props {}
+
+const Dashboard: FC<Props> = () => {
     const [topic, setTopic] = useState<Topic>();
     const [animationProgress, setAnimationProgress] = useState<number>(0);
     const [speed, setSpeed] = useState<number>(0.5);

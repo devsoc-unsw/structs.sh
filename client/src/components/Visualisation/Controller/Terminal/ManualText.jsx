@@ -12,15 +12,15 @@ const Manual = ({ manual }) => {
             <Typography
                 variant="h5"
                 className={styles.command}
-                sx={{ fontFamily: 'Ubuntu Mono' }}
+                sx={{ fontFamily: 'CodeText' }}
                 dangerouslySetInnerHTML={createMarkup(manual.command)}
             />
-            <Typography variant="h6" className={styles.usage} sx={{ fontFamily: 'Ubuntu Mono' }}>
+            <Typography variant="h6" className={styles.usage} sx={{ fontFamily: 'CodeText' }}>
                 {manual.usage}
             </Typography>
             <Typography
                 variant="body2"
-                sx={{ fontFamily: 'Ubuntu Mono' }}
+                sx={{ fontFamily: 'CodeText' }}
                 dangerouslySetInnerHTML={createMarkup(`${manual.description}`)}
             />
         </>

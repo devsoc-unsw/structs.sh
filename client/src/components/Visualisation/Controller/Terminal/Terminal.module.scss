@@ -14,7 +14,7 @@ $textFontSize: 14px;
     // flex-direction: column;
 
     .terminalLine {
-        font-family: 'Ubuntu Mono', monospace !important;
+        font-family: 'CodeText', monospace !important;
         font-size: $textFontSize !important;
         display: table-cell;
 
@@ -31,7 +31,7 @@ $textFontSize: 14px;
         }
 
         .typeInput {
-            font-family: 'Ubuntu Mono', monospace !important;
+            font-family: 'CodeText', monospace !important;
             background-color: $terminalBackgroundColour;
             border: none;
             border: 1px solid white; // Temporary
@@ -71,7 +71,7 @@ $textFontSize: 14px;
         margin-left: 1px;
 
         .manualPrompt {
-            font-family: 'Ubuntu Mono', monospace !important;
+            font-family: 'CodeText', monospace !important;
         }
     }
 

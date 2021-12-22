@@ -27,7 +27,7 @@ import SidebarContents from './SidebarContents';
 import styles from './TopNavbar.module.scss';
 
 interface Props {
-    position?: 'fixed' | 'static';
+    position?: 'fixed' | 'static' | 'relative';
     enableOnScrollEffect?: boolean;
 }
 
@@ -185,7 +185,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
         : hasScrolledDownStyle;
 
     return (
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{ flexGrow: 1, height: '64px' }}>
             <AppBar
                 position={position}
                 sx={{
@@ -224,7 +224,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
                                         xs: 'none',
                                         lg: 'inline-block',
                                         marginLeft: '10px',
-                                        fontFamily: 'Ubuntu Mono',
+                                        fontFamily: 'CodeText',
                                     },
                                 }}
                             >
