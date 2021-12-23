@@ -4,6 +4,12 @@
     <a href=""><img src="./images/StructsBanner.png"  /></a>
 </p>
 <p align="center">
+    <img src="https://img.shields.io/badge/-CSESoc-blue" />
+    <img src="https://img.shields.io/github/issues/csesoc/structs.sh" />
+    <img src="https://img.shields.io/github/license/csesoc/structs.sh" />
+    <img src="https://img.shields.io/github/last-commit/csesoc/structs.sh" />
+</p>
+<p align="center">
     <strong>
         <a href="https://structs.sh">Visit Structs.sh</a>
     </strong> 
