@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import { useTheme } from '@mui/styles';
 import { Carousel } from 'components/Carousel';
 import { Footer } from 'components/Footer';
-import TopNavbar from 'components/Navbars/TopNavbar';
 import { ParticleHeader } from 'components/Particles';
 import { Features } from 'components/Sections';
 import { SplashScreen } from 'components/SplashScreen';

@@ -1,5 +1,4 @@
 import { Theme, ThemeProvider } from '@mui/material';
-import TopNavbar from 'components/Navbars/TopNavbar';
 import { LIGHT_MODE_ON } from 'constants/cookies';
 import { AnimatePresence } from 'framer-motion';
 import React, { createContext, useCallback, useState } from 'react';

@@ -1,7 +1,6 @@
 import { Box, Theme, useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { CircularLoader } from 'components/Loader';
-import TopNavbar from 'components/Navbars/TopNavbar';
 import { Pane } from 'components/Panes';
 import Tabs from 'components/Tabs/Tabs';
 import { VisualiserController } from 'components/Visualisation/Controller';
