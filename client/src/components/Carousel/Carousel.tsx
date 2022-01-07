@@ -30,7 +30,7 @@ const Carousel: React.FC<Props> = () => {
 
     return topics && topics.length > 0 ? (
         <Slider
-            variableWidth
+            variableWidth={topics.length > 2}
             infinite
             speed={500}
             slidesToShow={1}
@@ -45,6 +45,7 @@ const Carousel: React.FC<Props> = () => {
                     onMouseUp={() => handleClick(topic)}
                     key={i}
                     className={`slide ${i === currImageIndex && 'activeSlide'} ${
+                        topics.length > 2 &&
                         (Math.abs(i - currImageIndex) === 1 ||
                             (i === 0 && currImageIndex === topics.length - 1) ||
                             (i === topics.length - 1 && currImageIndex === 0)) &&
