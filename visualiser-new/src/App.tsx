@@ -25,6 +25,15 @@ const App = () => {
         <div className="col-auto">
           <button id="pauseButton" type="submit" className="btn btn-primary mb-3">Pause</button>
         </div>
+        <div className="col-auto">
+          <input id="seekValue" type="text" className="form-control" />
+        </div>
+        <div className="col-auto">
+          <button id="seekButton" type="submit" className="btn btn-danger mb-3">Seek</button>
+        </div>
+        <div className="col-auto">
+          <button id="restartButton" type="submit" className="btn btn-danger mb-3">Restart</button>
+        </div>
       </form>
     </div>
   );

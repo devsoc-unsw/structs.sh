@@ -14,7 +14,7 @@ class BST {
     // inserts a node into the bst and returns the node that was inserted.
     // this allows us to draw lines between nodes
     public insert(input: number): Timeline {
-        const timeline: Timeline = new Timeline();
+        const timeline: Timeline = new Timeline().persist(true);
 
         const node: Node = {
             nodeTarget: null,

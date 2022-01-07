@@ -10,6 +10,7 @@ import { Timeline } from '@svgdotjs/svg.js';
 // not just for the linked list
 class AnimationController {
     private currentTimeline: Timeline = new Timeline();
+    private timelineDuration: number = 0;
 
     public getCurrentTimeline(): Timeline {
         return this.currentTimeline;
@@ -27,8 +28,8 @@ class AnimationController {
         this.currentTimeline.pause();
     }
 
-    public seekPercent(position: number): void {
-        this.currentTimeline.time(100);
+    public seekPercent(): void {
+        this.currentTimeline.time(0);
     }
 
     // Finish playing the timeline

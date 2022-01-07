@@ -2,7 +2,7 @@ import { Node } from './util/typedefs';
 import anime from 'animejs';
 import BST from './data-structure/GraphicalBST';
 import { create } from 'domain';
-import { Timeline } from '@svgdotjs/svg.js';
+import { Timeline, Runner } from '@svgdotjs/svg.js';
 import AnimationController from '../new-controller/genericController'; 
 
 /**
@@ -17,6 +17,7 @@ import AnimationController from '../new-controller/genericController';
 const initialise = (): void => {
     const bst: BST = new BST();
     const inputValue: HTMLInputElement = document.querySelector('#inputValue');
+    const seekValue: HTMLInputElement = document.querySelector('#seekValue');
     const controller: AnimationController = new AnimationController();
 
     const handleInsertClick: EventListener = (e: Event) => {
@@ -41,14 +42,30 @@ const initialise = (): void => {
 
         controller.pause();
     }
+
+    const handleSeekClick: EventListener = (e: Event) => {
+        e.preventDefault();
+
+        controller.seekPercent();
+    }
+
+    const handleRestartClick: EventListener = (e: Event) => {
+        e.preventDefault();
+
+        controller.seekPercent();
+    }
     
     const insertButton = document.querySelector('#insertButton');
     const playButton = document.querySelector('#playButton');
     const pauseButton = document.querySelector('#pauseButton');
+    const seekButton = document.querySelector('#seekButton');
+    const restartButton = document.querySelector('#restartButton');
     
     insertButton.addEventListener('click', handleInsertClick);
     playButton.addEventListener('click', handlePlayClick);
     pauseButton.addEventListener('click', handlePauseClick);
+    seekButton.addEventListener('click', handleSeekClick);
+    restartButton.addEventListener('click', handleRestartClick);
 };
 
 export default initialise;

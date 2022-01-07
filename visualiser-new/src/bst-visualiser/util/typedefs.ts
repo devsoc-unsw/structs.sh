@@ -14,7 +14,7 @@ export interface Node {
     // selector for the line svg element
     lineTarget: Line;
 
-    // reference to a left and right node
+    // reference to a left, right and parent node
     left: Node;
     right: Node;
     parent: Node;
