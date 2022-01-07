@@ -206,9 +206,10 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
                         </Button>
                     </Box>
                     <Box sx={{ flexGrow: 1 }}>
-                        <Link className={styles.link} to="/content">
+                        {/* Note: disabled temporarily for production */}
+                        {/* <Link className={styles.link} to="/content">
                             <Button color="info">Content</Button>
-                        </Link>
+                        </Link> */}
                     </Box>
                     <Box className={styles.centralBox}>
                         <Link to="/">
@@ -239,7 +240,8 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
                     >
                         {context.isDarkMode ? <MoonIcon /> : <SunIcon />}
                     </IconButton>
-                    <Modal
+                    {/* Note: Login and register are disabled temporarily for production deployment */}
+                    {/* <Modal
                         Button={() => (
                             <Button color="info" sx={{ display: { xs: 'none', md: 'flex' } }}>
                                 Login
@@ -297,7 +299,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
                                 Submit
                             </Button>
                         </Box>
-                    </Modal>
+                    </Modal> */}
                     <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                         <IconButton
                             size="large"

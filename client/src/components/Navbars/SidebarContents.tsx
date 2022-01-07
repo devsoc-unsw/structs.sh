@@ -172,7 +172,8 @@ const SidebarContents = ({ setShowSidebar }) => {
             </Collapse>
 
             {/* Content Management */}
-            <HorizontalRule />
+            {/* Note: disabled temporarily for production deployment */}
+            {/* <HorizontalRule />
             <Typography variant="h6" color="textSecondary" sx={{ ml: 2 }}>
                 Content Management
             </Typography>
@@ -189,7 +190,7 @@ const SidebarContents = ({ setShowSidebar }) => {
                         <ListItemText>CMS Dashboard</ListItemText>
                     </ListItemButton>
                 </RouterLink>
-            </List>
+            </List> */}
         </Box>
     );
 };

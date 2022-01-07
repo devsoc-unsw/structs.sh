@@ -143,59 +143,11 @@ const Dashboard: FC<Props> = () => {
 
     return (
         <VisualiserDashboardLayout topic={topic}>
-            {isAboveMdWidth ? (
-                <Pane orientation="vertical" minSize={340} hasTopGutter>
-                    <Pane orientation="horizontal" minSize={150.9}>
-                        <header
-                            style={{
-                                height: '100%',
-                                padding: '10px',
-                                background: 'rgba(235, 235, 235)',
-                            }}
-                        >
-                            <div className="container">
-                                <div className="container" id="canvas">
-                                    <div id="current" style={{ top: `${topOffset}px` }}>
-                                        <img src={curr} alt="curr arrow" />
-                                    </div>
-                                    <div id="prev" style={{ top: `${topOffset}px` }}>
-                                        <img src={prev} alt="prev arrow" />
-                                    </div>
-                                </div>
-                            </div>
-                        </header>
-                        <Box className={styles.interactor}>
-                            <VisualiserController
-                                terminalMode={terminalMode}
-                                setTerminalMode={setTerminalMode}
-                                handlePlay={handlePlay}
-                                handlePause={handlePause}
-                                handleStepForward={handleStepForward}
-                                handleStepBackward={handleStepBackward}
-                                handleUpdateTimeline={updateTimeline}
-                                handleDragTimeline={dragTimeline}
-                                handleSpeedSliderDrag={handleSpeedSliderDrag}
-                                handleSpeedSliderDragEnd={handleSpeedSliderDragEnd}
-                                animationProgress={animationProgress}
-                                speed={speed}
-                            />
-                            <Box sx={{ height: '100%' }}>
-                                {terminalMode ? (
-                                    <Terminal executeCommand={executeCommand} topic={topic} />
-                                ) : (
-                                    <GUIMode executeCommand={executeCommand} topic={topic} />
-                                )}
-                            </Box>
-                        </Box>
-                    </Pane>
-                    {topic ? <Tabs topic={topic}></Tabs> : <CircularLoader />}
-                </Pane>
-            ) : (
+            <Pane orientation="vertical" minSize={340} hasTopGutter>
                 <Pane orientation="horizontal">
                     <header
                         style={{
-                            height: 'calc(100% - 64px)',
-                            marginTop: '64px',
+                            height: '100%',
                             padding: '10px',
                             background: 'rgba(235, 235, 235)',
                         }}
@@ -235,7 +187,8 @@ const Dashboard: FC<Props> = () => {
                         </Box>
                     </Box>
                 </Pane>
-            )}
+                {topic ? <Tabs topic={topic}></Tabs> : <CircularLoader />}
+            </Pane>
         </VisualiserDashboardLayout>
     );
 };
