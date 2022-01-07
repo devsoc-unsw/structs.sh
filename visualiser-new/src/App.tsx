@@ -1,9 +1,6 @@
 import { useEffect } from 'react';
 import initialiseVisualiser from './bst-visualiser/initialiser';
 import './styles/visualiser.css';
-import prev from './assets/prev.svg';
-import curr from './assets/curr.svg';
-import { topOffset } from './linked-list-visualiser/svgAttributes';
 
 const App = () => {
   useEffect(() => {
@@ -26,13 +23,13 @@ const App = () => {
           <button id="pauseButton" type="submit" className="btn btn-primary mb-3">Pause</button>
         </div>
         <div className="col-auto">
-          <input id="seekValue" type="text" className="form-control" />
-        </div>
-        <div className="col-auto">
-          <button id="seekButton" type="submit" className="btn btn-danger mb-3">Seek</button>
-        </div>
-        <div className="col-auto">
           <button id="restartButton" type="submit" className="btn btn-danger mb-3">Restart</button>
+        </div>
+        <div className="col">
+          <input type="range" id="timelineSlider" name="volume" min="0" max="100" /> 
+        </div>
+        <div className="col"> 
+          <input type="range" id="speedSlider" name="volume" min="0" max="4" step="0.25"/> 
         </div>
       </form>
     </div>

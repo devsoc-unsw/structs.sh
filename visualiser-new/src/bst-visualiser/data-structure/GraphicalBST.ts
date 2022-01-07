@@ -1,6 +1,6 @@
 import { Node } from '../util/typedefs';
 import { BSTAnimationProducer} from '../animation-producer/BSTAnimationProducer';
-import { Timeline } from '@svgdotjs/svg.js';
+import { Runner } from '@svgdotjs/svg.js';
 
 // used for the actual implementation of the bst
 class BST {
@@ -13,8 +13,8 @@ class BST {
 
     // inserts a node into the bst and returns the node that was inserted.
     // this allows us to draw lines between nodes
-    public insert(input: number): Timeline {
-        const timeline: Timeline = new Timeline().persist(true);
+    public insert(input: number): Runner[] {
+        const animationSequence: Runner[] = [];
 
         const node: Node = {
             nodeTarget: null,
@@ -37,12 +37,12 @@ class BST {
         if (this.root == null) {
             this.root = node;
             this.animationProducer.createNode(node);
-            this.animationProducer.showNode(node, timeline);
+            this.animationProducer.showNode(node, animationSequence);
         } else {
             let currentNode: Node = this.root;
 
             while (currentNode) {
-                this.animationProducer.highlightNode(currentNode, timeline);
+                this.animationProducer.highlightNode(currentNode, animationSequence);
                 
                 node.y += 75;
                 if (node.value < currentNode.value) {
@@ -54,8 +54,8 @@ class BST {
                         currentNode.left = node;
                         node.parent = currentNode;
                         this.animationProducer.createNode(node);
-                        this.animationProducer.showNode(node, timeline);
-                        return timeline;
+                        this.animationProducer.showNode(node, animationSequence);
+                        return animationSequence;
                     }
 
                     currentNode = currentNode.left;
@@ -67,8 +67,8 @@ class BST {
                         currentNode.right = node;
                         node.parent = currentNode;
                         this.animationProducer.createNode(node);
-                        this.animationProducer.showNode(node, timeline);
-                        return timeline;
+                        this.animationProducer.showNode(node, animationSequence);
+                        return animationSequence;
                     }
 
                     currentNode = currentNode.right;
@@ -76,7 +76,7 @@ class BST {
             }
         }
 
-        return timeline;
+        return animationSequence;
     }
 }
 

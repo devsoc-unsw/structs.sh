@@ -1,4 +1,4 @@
-import { Timeline } from '@svgdotjs/svg.js';
+import { Timeline, Runner } from '@svgdotjs/svg.js';
 
 // controls todo:
 // [x] play/pause
@@ -9,15 +9,22 @@ import { Timeline } from '@svgdotjs/svg.js';
 // eventually this file should be placed in a folder common for all data structures,
 // not just for the linked list
 class AnimationController {
-    private currentTimeline: Timeline = new Timeline();
+    private currentTimeline: Timeline = new Timeline().persist(true);
     private timelineDuration: number = 0;
 
     public getCurrentTimeline(): Timeline {
         return this.currentTimeline;
     }
 
-    public setCurrentTimeline(timeline: Timeline) {
-        this.currentTimeline = timeline;
+    public constructTimeline(animationSequence: Runner[]) {
+        this.currentTimeline = new Timeline().persist(true);
+        this.timelineDuration = 0;
+        for (let i = 0; i < animationSequence.length; i++) {
+            this.currentTimeline.schedule(animationSequence[i]);
+            this.timelineDuration += animationSequence[i].duration();
+        }
+
+        this.currentTimeline.play();
     }
 
     public play(): void {
@@ -28,8 +35,14 @@ class AnimationController {
         this.currentTimeline.pause();
     }
 
-    public seekPercent(): void {
-        this.currentTimeline.time(0);
+    public seekPercent(position: number): void {
+        const timeSeek: number = (position * this.timelineDuration) / 100;
+
+        this.currentTimeline.time(timeSeek);
+    }
+
+    public setSpeed(speed: number): void {
+        this.currentTimeline.speed(speed);
     }
 
     // Finish playing the timeline

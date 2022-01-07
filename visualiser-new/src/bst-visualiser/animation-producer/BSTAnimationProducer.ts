@@ -1,5 +1,5 @@
 import { Node } from '../util/typedefs';
-import { Circle, SVG, Text, Timeline } from '@svgdotjs/svg.js'
+import { SVG, Runner } from '@svgdotjs/svg.js'
 import { nodeSettings } from '../util/settings';
 
 // this class is used for:
@@ -44,21 +44,13 @@ export class BSTAnimationProducer {
         });
     }
 
-    public highlightNode(node: Node, timeline: Timeline) {
-        this.addNodeToTimeline(node, timeline);
-        node.nodeTarget.animate(400, 200, 'after').attr({ fill: '#00ff00' });
-        node.nodeTarget.animate(400, 200, 'after').attr({ fill: '#ffffff' });
+    public highlightNode(node: Node, animationSequence: Runner[]) {
+        animationSequence.push(node.nodeTarget.animate(400, 200, 'after').attr({ fill: '#00ff00' }));
+        animationSequence.push(node.nodeTarget.animate(400, 200, 'after').attr({ fill: '#ffffff' }));
     }
 
-    public showNode(node: Node, timeline: Timeline) {
-        this.addNodeToTimeline(node, timeline);
-        
-        node.nodeTarget.animate(400, 0, 'after').attr({ opacity: 1 });
-        node.textTarget.animate(400, 0, 'after').attr({ opacity: 1 });
-    }
-
-    public addNodeToTimeline(node: Node, timeline: Timeline) {
-        node.nodeTarget.timeline(timeline);
-        node.textTarget.timeline(timeline);
+    public showNode(node: Node, animationSequence: Runner[]) {
+        animationSequence.push(node.nodeTarget.animate(400, 0, 'after').attr({ opacity: 1 }));
+        animationSequence.push(node.textTarget.animate(400, 0, 'after').attr({ opacity: 1 }));
     }
 }

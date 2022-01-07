@@ -1,9 +1,7 @@
-import { Node } from './util/typedefs';
-import anime from 'animejs';
 import BST from './data-structure/GraphicalBST';
-import { create } from 'domain';
-import { Timeline, Runner } from '@svgdotjs/svg.js';
+import { Runner } from '@svgdotjs/svg.js';
 import AnimationController from '../new-controller/genericController'; 
+import { speed } from 'animejs';
 
 /**
  * Initialises the visualiser and binds event handlers to the controller UI.
@@ -17,7 +15,6 @@ import AnimationController from '../new-controller/genericController';
 const initialise = (): void => {
     const bst: BST = new BST();
     const inputValue: HTMLInputElement = document.querySelector('#inputValue');
-    const seekValue: HTMLInputElement = document.querySelector('#seekValue');
     const controller: AnimationController = new AnimationController();
 
     const handleInsertClick: EventListener = (e: Event) => {
@@ -27,8 +24,8 @@ const initialise = (): void => {
         controller.finish();
         
         // this returned timeline value will eventually be used by the animation controller
-        const timeline: Timeline = bst.insert(Number(inputValue.value));
-        controller.setCurrentTimeline(timeline);
+        const animationSequence: Runner[] = bst.insert(Number(inputValue.value));
+        controller.constructTimeline(animationSequence);
     }
 
     const handlePlayClick: EventListener = (e: Event) => {
@@ -43,29 +40,37 @@ const initialise = (): void => {
         controller.pause();
     }
 
-    const handleSeekClick: EventListener = (e: Event) => {
-        e.preventDefault();
-
-        controller.seekPercent();
-    }
-
     const handleRestartClick: EventListener = (e: Event) => {
         e.preventDefault();
 
-        controller.seekPercent();
+        controller.seekPercent(0);
     }
+
+    const handleTimelineSliderChange: EventListener = (e: Event) => {
+        // the timeline can only be seeked when it's paused
+        controller.pause();
+        controller.seekPercent(Number(timelineSlider.value));
+    };
+
+    const handleSpeedSliderChange: EventListener = (e: Event) => {
+        controller.pause();
+        controller.setSpeed(Number(speedSlider.value));
+        controller.play();
+    };
     
     const insertButton = document.querySelector('#insertButton');
     const playButton = document.querySelector('#playButton');
     const pauseButton = document.querySelector('#pauseButton');
-    const seekButton = document.querySelector('#seekButton');
     const restartButton = document.querySelector('#restartButton');
+    const timelineSlider = document.querySelector('#timelineSlider') as HTMLInputElement;
+    const speedSlider = document.querySelector('#speedSlider') as HTMLInputElement;
     
     insertButton.addEventListener('click', handleInsertClick);
     playButton.addEventListener('click', handlePlayClick);
     pauseButton.addEventListener('click', handlePauseClick);
-    seekButton.addEventListener('click', handleSeekClick);
     restartButton.addEventListener('click', handleRestartClick);
+    timelineSlider.addEventListener('input', handleTimelineSliderChange);
+    speedSlider.addEventListener('input', handleSpeedSliderChange);
 };
 
 export default initialise;
