@@ -5,6 +5,7 @@ yarn.lock
 
 # dependencies
 /node_modules
+/visualiser-new/node_modules
 /.pnp
 .pnp.js
 

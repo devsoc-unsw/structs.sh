@@ -2,7 +2,6 @@
  * Type definitions used by the visualiser
  */
 
-
 export interface Node {
     value: number;
 
