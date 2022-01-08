@@ -1,6 +1,6 @@
 import BST from './data-structure/GraphicalBST';
-import { Runner } from '@svgdotjs/svg.js';
 import AnimationController from '../new-controller/genericController'; 
+import { Animation } from './util/typedefs';
 
 /**
  * Initialises the visualiser and binds event handlers to the controller UI.
@@ -23,7 +23,30 @@ const initialise = (): void => {
         controller.finish();
         
         // this returned timeline value will eventually be used by the animation controller
-        const animationSequence: Runner[] = bst.insert(Number(inputValue.value));
+        const a: Animation[] = bst.insert(5);
+        controller.constructTimeline(a);
+
+        const b: Animation[] = bst.insert(3);
+        controller.constructTimeline(b);
+
+        const c: Animation[] = bst.insert(2);
+        controller.constructTimeline(c);
+
+        const d: Animation[] = bst.insert(4);
+        controller.constructTimeline(d);
+
+        const f: Animation[] = bst.insert(6);
+        controller.constructTimeline(f);
+    }
+
+    const handleRotateRightClick: EventListener = (e: Event) => {
+        e.preventDefault();
+
+        // if a timeline is currently running on the controller then finish it and start the new insert timeline
+        controller.finish();
+        
+        // this returned timeline value will eventually be used by the animation controller
+        const animationSequence: Animation[] = bst.rotateRight(Number(inputValue.value));
         controller.constructTimeline(animationSequence);
     }
 
@@ -73,6 +96,7 @@ const initialise = (): void => {
     };
     
     const insertButton = document.querySelector('#insertButton');
+    const rotateRightButton = document.querySelector('#rotateRightButton');
     const playButton = document.querySelector('#playButton');
     const pauseButton = document.querySelector('#pauseButton');
     const restartButton = document.querySelector('#restartButton');
@@ -82,6 +106,7 @@ const initialise = (): void => {
     const stepForwardsButton = document.querySelector('#stepForwardsButton');
     
     insertButton.addEventListener('click', handleInsertClick);
+    rotateRightButton.addEventListener('click', handleRotateRightClick);
     playButton.addEventListener('click', handlePlayClick);
     pauseButton.addEventListener('click', handlePauseClick);
     restartButton.addEventListener('click', handleRestartClick);

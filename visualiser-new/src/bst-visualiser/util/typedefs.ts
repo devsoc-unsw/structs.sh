@@ -35,6 +35,7 @@ export interface Animation {
     // related to when an animation occurs in the timeline
     duration: number;
     delay: number;
+    simultaneous: boolean;
 
     attrs: {
         // any other attributes that svg.js will use

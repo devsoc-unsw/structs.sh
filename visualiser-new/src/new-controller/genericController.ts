@@ -1,4 +1,5 @@
 import { Timeline, Runner } from '@svgdotjs/svg.js';
+import { Animation } from '../bst-visualiser/util/typedefs';
 
 // controls todo:
 // [x] play/pause
@@ -19,25 +20,43 @@ class AnimationController {
         return this.currentTimeline;
     }
 
-    public constructTimeline(animationSequence: Runner[]) {
+    public constructTimeline(animationSequence: Animation[]) {
         this.currentTimeline = new Timeline().persist(true);
         this.timestamps = [];
         this.timelineDuration = 0;
         this.timestampsIndex = 0;
         
         for (let i = 0; i < animationSequence.length; i++) {
-            animationSequence[i].during(() => {
-                // progress corresponds to how many ms have passed in the animation
-                const progress = animationSequence[i].progress() * animationSequence[i].duration();
-                this.slider.value = String(((this.timestamps[i] + progress) / this.timelineDuration) * 100);
+            const animation = animationSequence[i];
+            const attrs = {};
+    
+            // TODO: handle special case attributes like dx, dy, etc
+            for (const attr in animation.attrs) {
+                attrs[attr] = animation.attrs[attr];
+            }
 
-                // TODO: put this in the after() function instead
-                this.timestampsIndex = i;
-            });
+            for (let target in animation.targets) {
+                const runner: Runner = animation.targets[target].animate(
+                    animation.duration,
+                    animation.delay,
+                    'after').attr(attrs)
 
-            this.currentTimeline.schedule(animationSequence[i]);
-            this.timestamps.push(this.timelineDuration);
-            this.timelineDuration += animationSequence[i].duration();
+                runner.during(() => {
+                    // progress corresponds to how many ms have passed in the animation
+                    const progress = runner.progress() * runner.duration();
+                    this.slider.value = String(((this.timestamps[i] + progress) / this.timelineDuration) * 100);
+    
+                    // TODO: put this in the after() function instead
+                    this.timestampsIndex = i;
+                });
+
+                this.currentTimeline.schedule(runner, this.timelineDuration, 'absolute');
+            }
+
+            if (!animation.simultaneous) {
+                this.timestamps.push(this.timelineDuration);
+                this.timelineDuration += animation.duration;
+            }
         }
 
         this.currentTimeline.play();
