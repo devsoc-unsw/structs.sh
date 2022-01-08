@@ -11,6 +11,8 @@ import { Timeline, Runner } from '@svgdotjs/svg.js';
 class AnimationController {
     private currentTimeline: Timeline = new Timeline().persist(true);
     private timelineDuration: number = 0;
+    private slider: HTMLInputElement = document.querySelector('#timelineSlider') as HTMLInputElement;
+    private timestamps: number[] = [];
 
     public getCurrentTimeline(): Timeline {
         return this.currentTimeline;
@@ -18,9 +20,18 @@ class AnimationController {
 
     public constructTimeline(animationSequence: Runner[]) {
         this.currentTimeline = new Timeline().persist(true);
+        this.timestamps = [];
         this.timelineDuration = 0;
+        
         for (let i = 0; i < animationSequence.length; i++) {
+            animationSequence[i].during(() => {
+                // progress corresponds to how many ms have passed in the animation
+                const progress = animationSequence[i].progress() * animationSequence[i].duration();
+                this.slider.value = String(((this.timestamps[i] + progress) / this.timelineDuration) * 100);
+            });
+
             this.currentTimeline.schedule(animationSequence[i]);
+            this.timestamps.push(this.timelineDuration);
             this.timelineDuration += animationSequence[i].duration();
         }
 
