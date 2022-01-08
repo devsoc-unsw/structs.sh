@@ -1,4 +1,4 @@
-import LinkedListController from '../controller/linkedListController';
+import LinkedListController from './controller/linkedListController';
 import { AnimationInstruction } from './util/typedefs';
 import LinkedList from './data-structure/GraphicalLinkedList';
 import { defaultSpeed } from './util/constants';

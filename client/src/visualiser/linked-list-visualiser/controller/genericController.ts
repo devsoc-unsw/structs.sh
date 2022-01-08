@@ -1,6 +1,6 @@
 import anime, { AnimeTimelineInstance } from 'animejs';
-import { AnimationInstruction } from '../linked-list-visualiser/util/typedefs';
-import { fastestDuration } from '../linked-list-visualiser/util/constants';
+import { AnimationInstruction } from '../util/typedefs';
+import { fastestDuration } from '../util/constants';
 // controls todo:
 // [x] play/pause
 // [ ] step to the next or previous timestamp in the current timeline
