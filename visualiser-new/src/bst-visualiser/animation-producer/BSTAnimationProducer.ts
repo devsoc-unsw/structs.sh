@@ -1,6 +1,7 @@
 import { Node } from '../util/typedefs';
 import { SVG, Runner } from '@svgdotjs/svg.js'
 import { nodeSettings } from '../util/settings';
+import { generateAnimation } from '../util/helpers';
 
 // this class is used for:
 // . creation of bst nodes
@@ -45,12 +46,33 @@ export class BSTAnimationProducer {
     }
 
     public highlightNode(node: Node, animationSequence: Runner[]) {
-        animationSequence.push(node.nodeTarget.animate(400, 200, 'after').attr({ fill: '#00ff00' }));
-        animationSequence.push(node.nodeTarget.animate(400, 200, 'after').attr({ fill: '#ffffff' }));
+        generateAnimation({
+            targets: [node.nodeTarget],
+            duration: 400,
+            delay: 200,
+            attrs: {
+                fill: '#00ff00',
+            }
+        }, animationSequence);
+
+        generateAnimation({
+            targets: [node.nodeTarget],
+            duration: 400,
+            delay: 200,
+            attrs: {
+                fill: '#ffffff',
+            }
+        }, animationSequence);
     }
 
     public showNode(node: Node, animationSequence: Runner[]) {
-        animationSequence.push(node.nodeTarget.animate(400, 0, 'after').attr({ opacity: 1 }));
-        animationSequence.push(node.textTarget.animate(400, 0, 'after').attr({ opacity: 1 }));
+        generateAnimation({
+            targets: [node.nodeTarget, node.textTarget],
+            duration: 400,
+            delay: 0,
+            attrs: {
+                opacity: 1,
+            }
+        }, animationSequence);
     }
 }

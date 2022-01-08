@@ -1,4 +1,4 @@
-import { Circle, Line, Text } from '@svgdotjs/svg.js'
+import { Circle, Line, Text, Container } from '@svgdotjs/svg.js'
 
 /**
  * Type definitions used by the visualiser
@@ -25,4 +25,19 @@ export interface Node {
     // the x and y coordinate of the node (just used for basic drawing of a bst for now)
     x: number;
     y: number;
+}
+
+export interface Animation {
+    // by having a targets attribute we can animate multiple
+    // svgs at the same time if needed
+    targets: (Circle | Line | Text)[];
+
+    // related to when an animation occurs in the timeline
+    duration: number;
+    delay: number;
+
+    attrs: {
+        // any other attributes that svg.js will use
+        [key: string]: any;
+    }
 }
