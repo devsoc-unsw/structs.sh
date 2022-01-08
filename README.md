@@ -1,208 +1,99 @@
 # Structs.sh 💻
 
 <p align="center">
-    <a href=""><img src="./images/StructsBanner.png" height="150px" /></a>
+    <a href=""><img src="./images/StructsBanner.png"  /></a>
 </p>
 <p align="center">
-    <strong><a href="https://structs.netlify.app/">Visit Structs.sh</a></strong> | <strong><a href="https://structs-storybook.netlify.app/">Structs.sh UI Docs</a></strong>
+    <img src="https://img.shields.io/badge/-CSESoc-blue" />
+    <img src="https://img.shields.io/github/issues/csesoc/structs.sh" />
+    <img src="https://img.shields.io/github/license/csesoc/structs.sh" />
+    <img src="https://img.shields.io/github/last-commit/csesoc/structs.sh" />
 </p>
 <p align="center">
-    <strong><a href="https://www.figma.com/file/zFFuYLSSdc4TnQafDWgKP1/Structs.sh-Interface-Prototype?node-id=401%3A5">Figma Prototype</a>
-    </strong> | <strong><a href="https://www.figma.com/file/KQcuxGJwz8I7trRlt69Vsy/Structs.sh-Brainstorming?node-id=0%3A1">FigJam</a></strong> |  <strong><a href="https://app.diagrams.net/#Hcsesoc%2FStructs.sh%2Fmaster%2Fstructs-datamodels.drawio">Data Model</a></strong>
+    <strong>
+        <a href="https://structs.sh">Visit Structs.sh</a>
+    </strong> 
 </p>
+
+### About Structs.sh
 
 Structs.sh is an interactive data structure and algorithm visualiser and educational platform for computer science students.
 
-<!-- ### Features:
+### Features:
 
--   Interactive visualiser for foundational data structures and algorithms
-    -   Controllable through a sleek terminal interface and form GUI
-    -   Animation is syncrhonised with the line-by-line execution of real code
--   Integrated lessons
-    -   Textual explanations, documented source code in multiple languages and embedded videos are provided alongside the visualiser to help bridge the gap between high-level theory and the real implementation
-    -   Quiz/assessment system
--   Content management API
-    -   Authorised content creators can introduce or update existing lesson material, quizzes, source code and more -->
+-   Algorithm visualisation
+    -   Interactive animation player for visualising fundamental operations on classic data structures such as linked lists, binary search trees, graphs, etc.
+    -   Control the visualiser through an integrated terminal
+-   Hub for educational computer science content and teaching resources
+    -   Lessons, videos, reference implementations in specific programming languages, all in one place
+-   Content management system
+    -   Create new topics, source code snippets, lessons and quizzes
 
-<!-- ### Why Use Structs.sh?
+## Why Structs.sh Exists
 
-The value of Structs.sh as a teaching tool and educational resource. [TODO]
+Structs.sh is a project that aims to be a comprehensive educational resource for data structures and algorithms, developed by passionate computer science and engineering students at UNSW. Structs.sh was inspired by a previous project, <a href="https://github.com/Tymotex/Tactile-DS">Tactile-DS</a>, an earlier project developed in 2020 as a tutoring tool and reference implementation for students to use in <a href="https://www.handbook.unsw.edu.au/undergraduate/courses/2022/COMP2521/?year=2022">COMP2521</a>.
 
--   Struct.sh is a community-oriented tool. With its content management system, ... [TODO] -->
+Structs.sh exists to help bridge the gap between a student's high-level understanding of computer science concepts and how real code would accomplish a certain task. The project was started by students who felt there was a lack in tools/resources that focus on helping people develop a proper visual intuition for algorithmic thinking.
 
-<!-- ### Architecture
+## Tech Stack and Architecture
 
-Structs.sh was built using the TypeScript <a href="https://www.mongodb.com/mern-stack">MERN Stack</a> which consists of MongoDB, Express, React and Node.js.
-[TODO] -->
+Structs.sh was built with the MERN stack (MongoDB, Express, React, Node), using TypeScript for both the client and api codebases. It uses Material-UI (now called 'MUI') as the UI component system and <a href="https://animejs.com/">anime.js</a>, a lightweight and flexible JavaScript animation framework, for the visualiser.
 
----
+## Setting Up and Running the Project
 
-# Table of contents
+### Before you start:
 
--   [Setup Instructions](#setup-instructions)
-    -   [Automatic Setup [Experimental]](#automatic-setup-experimental)
-    -   [Manual Setup](#manual-setup)
--   [Running Structs.sh](#running-structs)
--   [Documentation](#documentation)
-    -   [Client and Server Directory Structure](#client-and-server-directory-structure)
-    -   [Visualiser Project Directory Structure](#visualiser-project-directory-structure)
-    -   [Structs UI Documentation](#structs-ui-docs)
-    -   [Structs API Documentation](#structs-api-docs)
-        -   [Data Model](#data-model)
--   [Guidelines](#guidelines)
-    -   [Getting Started With Backend Development](#getting-started-with-backend-development)
-        -   [How was the database set up and connected to our backend?](#how-was-the-database-set-up-and-connected-to-our-backend)
-        -   [How are we reading/writing to the database?](#how-are-we-readingwriting-to-the-database)
-        -   [How does MongoDB differ from other DBMSs like PostgreSQL? [TODO]](#how-does-mongodb-differ-from-other-dbmss-like-postgresql-todo)
-        -   [How to implement API endpoints](#how-to-implement-api-endpoints)
-    -   [Getting Started with the Visualiser](#getting-started-with-the-visualiser)
-    -   [Good Collaborative Coding Practices](#good-collaborative-coding-practices)
-        -   [Git Guideline](#git-guideline)
-        -   [Style Guidelines](#style-guidelines)
+-   Ensure you are have <a href="https://nodejs.org/en/download/">node.js</a> installed at version `v14.18.0`.
+    -   Note: it's likely that the project will work with different later node.js versions as well
+    -   <a href="https://github.com/nvm-sh/nvm">`nvm`</a> is a great choice for switching between node.js version
+-   (Optional) Install <a href="https://docs.docker.com/get-docker/">Docker</a> and <a href="https://docs.docker.com/compose/install/">Docker-Compose</a>.
 
----
+### With Docker (Recommended)
 
-## Setup Instructions
+Note: you won't require any knowledge of Docker.
 
-Note: this is using **node.js v14.17.0**.
+#### Steps:
 
-```bash
-# Clone the repo
-git clone https://github.com/csesoc/Structs.sh.git
-```
+1. Clone the repository: `git clone https://github.com/csesoc/Structs.sh.git`.
+2. Change directories into the project root: `cd Structs.sh`.
+3. Run: `docker-compose up --build`. You should be able to view the frontend at `localhost:3000` and the API server at `localhost:8080`.
+    - Note: this can take several minutes the first time it is run, but will become faster when you run it again in the future because of <a href="https://docs.docker.com/develop/develop-images/dockerfile_best-practices/">Docker's caching magic</a>
 
-<!-- ### Automatic Setup [Experimental]
+### Without Docker
 
-This may only work on Linux environments.
+#### Steps:
 
-```bash
-# After cloning the repo, run the following in the root directory
-sh structs.sh --setup
-```
+1. Clone the repository: `git clone https://github.com/csesoc/Structs.sh.git`.
+2. Change directories into the project root: `cd Structs.sh`.
+3. Run: `yarn --cwd client/ install`.
+4. Run: `yarn --cwd server/ install`.
+5. In separate terminals, run `yarn start` in both `client` and `server` subdirectories. You should be able to then view the frontend at `localhost:3000` and the API server at `localhost:8080`.
 
-Follow the prompts and everything should be ready to go. -->
+## Deployment
 
-### Manual Setup
+This section is intended for developers on the CSESoc Projects team.
 
-```bash
-# After cloning the repo, run the following in the root directory
-npm --prefix ./install ./client install
-npm --prefix ./install ./server install
-```
+_Dockerised_ instances of Structs.sh's client application and API server are being run and managed by <a href="https://rancher.com/">Rancher</a>, which can be thought of as a managed <a href="https://kubernetes.io/">Kubernetes</a> service. The Rancher service runs 24/7 on _Wheatley_, a computer science research server physically located on UNSW's campus.
 
-## Running Structs
+> Why use this seemingly overkill infrastructure? Because it was already in place and being adopted by other CSESoc projects. Although this isn't an enterprise application and doesn't have nearly the same scaling requirements and amount of traffic, deploying containers on Rancher is as simple as clicking a button.
 
-From the root directory, you can use the Structs.sh CLI tool:
+### How to Deploy Structs.sh
 
-```bash
-sh structs.sh --frontend     # Starts the frontend development server on port 3000
-sh structs.sh --backend      # Starts the backend development server on port 8080
-```
+The infrastructure for deployment has already been set up. Deployment was achieved by following <a href="https://compclub.atlassian.net/wiki/spaces/Projects/pages/733118519/How+to+deploy+a+project+on+Wheatley">this excellent guide</a>.
 
-Alternatively, you may run the npm start script from the `client` and `server` directories.
+For developers, these are the only steps you need to care about to see changes appear in production:
 
-```bash
-# In the `client/` directory:
-npm start
-
-# In the `server/` directory:
-npm start
-```
-
-## Testing
-
-<details>
-    <summary>Frontend Unit Testing [TODO]</summary>
-
-</details>
-
-<details>
-    <summary>Frontend End-to-End Testing [TODO]</summary>
-    
-Cypress is an end-to-end testing framework that uses web browser automation.
-
--   All .spec.tsx files will be picked up and run by Cypress
--   All .test.tsx files will be picked up and run by Jest
--   `yarn cypress open-ct` will
-
-</details>
-
----
+1. Open a pull request for your feature branch to be merged into `master`. Wait for approval by another member.
+2. After the branch is merged, Dockerhub will be notified of the new change to `master` and will try to build the <a href="https://hub.docker.com/repository/docker/csesocprojects/structs.sh-frontend">Structs.sh client Docker image</a> and <a href="https://hub.docker.com/repository/docker/csesocprojects/structs.sh-backend">backend Docker image</a>. You'll likely have to wait several minutes for this to be done.
+    > It's likely that only the team leads will have access to the Dockerhub account containing all of CSESoc's production images
+3. Once Structs.sh images are built, the team lead will need to go to the <a href="https://wheatley.cse.unsw.edu.au:7654/">Rancher admin page running on Wheatley</a> and redeploying the running container instances. The changes should become live very quickly
 
 # Documentation
 
-## Client and Server Directory Structure
-
-Below is a view of the project's directory hierarchy with succinct annotations.
-
-```bash
-.
-│
-├── structs.sh     # → Shell script for setting up and starting up the Structs.sh
-│
-├── client/
-│       │
-│       └── src
-│           ├── index.tsx
-│           ├── assets           # → Contains public assets such as images and CSS/SCSS. Most global style rules exist here
-│           ├── components       # → Where all our components are stored. Make new directories for your components here
-│           ├── content          # → Contains helpers for fetching lesson content
-│           ├── layout           # → Components defining page structure
-│           └── views                      # → Where our page components are stored.
-│               ├── HomePage.js            # → Structs.sh homepage
-│               ├── Dashboard.js           # → The visualisation and main content page
-│               # ... more pages would go here
-│
-└── server/
-    │
-    ├── src
-    │   ├── database-helpers     # → The files in here contain helper functions for reading/writing to the database
-    │   │   └── user.ts
-    │   ├── routes               # → Where all our API endpoints and handlers live
-    │   │   ├── auth.ts
-    │   │   # ... more routes
-    │   ├── schemas              # → Contains all the files that define what our MongoDB collections look like
-    │   │   ├── user
-    │   │   │   └── user.ts      # → Eg. this file makes the 'users' collection and defines what fields a user document should have
-    │   │   # ... more schema definitions
-    │   ├── server.ts            # → This is the entry point. Config and server startup happesn here
-    │   ├── typedefs             # Backend type definitions are kept here
-    │   │   ├── user
-    │   │   │   └── User.ts
-    │   │   # ... more type definitions
-    │   └── utils                # → Global helper functions
-    │       └── index.ts
-    └── tests                    # → Our unit tests
-        └── sample.test.js
-```
-
-## Visualiser Project Directory Structure
-
-```bash
-visualiser-new/
-	└── src
-	    ├── App.tsx                   # → The React root element. Contains the visualiser's basic UI such as the canvas, the
-	    │                             #   form and the buttons.
-	    ├── index.js
-	    ├── styles
-	    │   ├── index.css
-	    │   └── Landing.css
-	    └── visualiser-scripts        # → Visualiser source code. This is completely independent from React
-	        ├── controller.js         # → This is the entry point. The visualiser is initialised and set up to be ready
-	        │                         #   to receive and execute commands. When the user clicks 'append', it's the controller's
-	        │                         #   responsibility to play the animation, handle play/pause, reversing and history
-	        ├── createNode.js         # → Where nodes are built and spawned onto the canvas
-	        ├── createSequence.js     # → Where the animation sequence for each command is generated. This is where the
-	        │                         #   algorithm's logic is coupled with animation generation
-	        ├── runSequence.js        # → Where the animation is actually played
-	        └── utils.js
-```
-
-## Structs UI Docs
-
-Structs.sh uses <a href="https://storybook.js.org/">Storybook</a> for generating documentation and interactive demos for the React components used on the web client.
-
-See the documentation at <a href="https://structs-storybook.netlify.app">structs-storybook.netlify.app</a>.
+<p align="center">
+    <strong><a href="https://www.figma.com/file/zFFuYLSSdc4TnQafDWgKP1/Structs.sh-Interface-Prototype?node-id=401%3A5">Figma Prototype</a>
+    </strong> | <strong><a href="https://www.figma.com/file/KQcuxGJwz8I7trRlt69Vsy/Structs.sh-Brainstorming?node-id=0%3A1">FigJam</a></strong> |  <strong><a href="https://app.diagrams.net/#Hcsesoc%2FStructs.sh%2Fmaster%2Fstructs-datamodels.drawio">Data Model Diagram</a></strong>
+</p>
 
 ## Structs API Docs
 
@@ -225,308 +116,17 @@ The documentation for the Structs.sh API was set up with <a href="https://www.np
     <img src="./docs/RESTful-API-conventions.png" />
 </details>
 
-<details>
-    <summary>Old API documentation</summary>
-    Authentication
-<table>
-    <tbody>
-        <tr>
-            <th>Endpoint</th>
-            <th>Parameters</th>
-            <th>Response</th>
-            <th>Description</th>
-            <th>Exceptions</th>
-        </tr>
-        <tr>
-            <td>
-                <pre>POST /api/auth/register</pre>
-            </td>
-            <td>
-                <ul>
-                    <li>
-                        username
-                    </li>
-                    <li>
-                        email
-                    </li>
-                    <li>
-                        password
-                    </li>
-                </ul>
-            </td>
-            <td>
-                <pre>Nothing for now</pre>
-            </td>
-            <td>
-                Registers a new user for Structs.sh.
-            </td>
-            <td>
-                <ul>
-                    <li>Emails must be of a valid format</li>
-                </ul>
-                TODO: think of a few more. 
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <pre>POST /api/auth/login</pre>
-            </td>
-            <td>
-                <ul>
-                    <li>
-                        email
-                    </li>
-                    <li>
-                        password
-                    </li>
-                </ul>
-            </td>
-            <td>
-                <pre>Nothing for now</pre>
-            </td>
-            <td>
-                Logs in an existing Structs.sh user.
-            </td>
-            <td>
-                <ul>
-                    <li>Password must match the stored encrypted password</li>
-                </ul>
-                TODO: think of a few more
-            </td>
-        </tr>
-    </tbody>
-</table>
-    Lessons
-<table>
-    <tbody>
-        <tr>
-            <th>Endpoint</th>
-            <th>Parameters</th>
-            <th>Response</th>
-            <th>Description</th>
-            <th>Exceptions</th>
-        </tr>
-        <tr>
-            <td>
-                <pre>GET /api/lessons</pre>
-            </td>
-            <td>
-                None
-            </td>
-            <td>
-                List of <strong>lessons</strong>
-            </td>
-            <td>
-                Fetches a list of all the lessons in Structs.sh
-            </td>
-            <td>
-                None
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <pre>GET /api/lessons/:id</pre>
-            </td>
-            <td>
-                <ul>
-                    <li>lessonId</li>
-                </ul>
-            </td>
-            <td>
-                <strong>lesson</strong>
-            </td>
-            <td>
-                Fetches a single lesson with the given ID
-            </td>
-            <td>
-                <ul>
-                    <li>Lesson with the given ID doesn't exist</li>
-                </ul>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <pre>POST /api/lessons</pre>
-            </td>
-            <td>
-                <ul>
-                    <li>rawMarkdown (str)</li>
-                    <li>creatorId (str)</li>
-                </ul>
-            </td>
-            <td>
-                <strong>lesson</strong>
-            </td>
-            <td>
-                Creates a new lesson.
-            </td>
-            <td>
-                <ul>
-                    <li><strong>rawMarkdown</strong> is longer than 10000 characters</li>
-                    <li><strong>creatorId</strong> doesn't correspond to an existing user</li>
-                </ul>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <pre>GET /api/lessons/myLessons/:creatorId</pre>
-            </td>
-            <td>
-                <ul>
-                    <li>creatorId</li>
-                </ul>
-            </td>
-            <td>
-                List of <strong>lessons</strong> created by the user
-            </td>
-            <td>
-                Fetches a list of all the lessons created by the given user 
-            </td>
-            <td>
-                <ul>
-                    <li><strong>creatorId</strong> doesn't correspond to an existing user</li>
-                </ul>
-            </td>
-        </tr>
-    </tbody>
-</table>
-Quizzes
-<table>
-    <tbody>
-        <tr>
-            <th>Endpoint</th>
-            <th>Parameters</th>
-            <th>Response</th>
-            <th>Description</th>
-            <th>Exceptions</th>
-        </tr>
-        <tr>
-            <td>
-                <pre>GET /api/lessons/quiz</pre>
-            </td>
-            <td>
-                <ul>
-                    <li>lessonId</li>
-                </ul>
-            </td>
-            <td>
-                List of <strong>quizzes</strong> for a <strong>lesson</strong>
-            </td>
-            <td>
-                Fetches a list of all the quizzes for a lesson.
-            </td>
-            <td>
-                <ul>
-                    <li><strong>lessonId</strong> doesn't correspond to an existing lesson</li>
-                </ul>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <pre>POST /api/lessons/quiz</pre>
-            </td>
-            <td>
-                <ul>
-                    <li>lessonId (str)</li>
-                    <li>questionType (str)</li>
-                    <li>question (str)</li>
-                    <li>answer (str)</li>
-                </ul>
-            </td>
-            <td>
-                <strong>lesson</strong>
-            </td>
-            <td>
-                Creates a new quiz under the lesson with the given ID.
-            </td>
-            <td>
-                <ul>
-                    <li><strong>lessonId</strong> doesn't correspond to an existing lesson</li>
-                    <li><strong>questionType</strong> must be one of the strings: 'mc' (multiple choice) or 'qa' (question-answer format)</li> 
-                </ul>
-            </td>
-        </tr>
-    </tbody>
-</table>
-</details>
-
 ### Data Model
 
 <p style="text-align: center;">
     <img src="./docs/structs-datamodels.drawio.png" width="75%" />
 </p>
 
-> Note: This diagram was created and is currently maintained with <a href="https://draw.io/">draw.io</a>. To add or update data models, go <a href="https://app.diagrams.net/#Hcsesoc%2FStructs.sh%2Fmaster%2Fstructs-datamodels.drawio">here</a> to modify the file `structs-datamodels.drawio` in this repository. To update the image below, just save the file (which will automatically create and push a commit) and then export a PNG file to replace `docs/structs-datamodels.drawio.png` in this repository.
+> Note: This diagram was created and is currently maintained with <a href="https://draw.io/">draw.io</a>. VSCode has a great extension for an <a href="https://marketplace.visualstudio.com/items?itemName=hediet.vscode-drawio">integrated draw.io client</a> that lets you view and edit .drawio files in the editor.
 
-> Note: as a better alternate, VSCode has a great extension for an <a href="https://marketplace.visualstudio.com/items?itemName=hediet.vscode-drawio">integrated draw.io client</a> that lets you view and edit .drawio files in the editor.
+> Note: To use the draw.io web app, go <a href="https://app.diagrams.net/#Hcsesoc%2FStructs.sh%2Fmaster%2Fstructs-datamodels.drawio">here</a> to modify the file `structs-datamodels.drawio` in this repository. To update the image below, just save the file (which will automatically create and push a commit) and then export a PNG file to replace `docs/structs-datamodels.drawio.png` in this repository.
 
-# Guidelines
-
-## Getting Started With Backend Development
-
-The Structs.sh backend server is written in Node.js with TypeScript, using Express as a server framework and a cloud instance of MongoDB on MongoDB's official cloud platform, <a href="https://www.mongodb.com/cloud/atlas">MongoDB Atlas</a>.
-
-> Note: if you've done COMP1531, it's helpful to think of Express as the Node.js version of Flask. Both aim to be a very lightweight server framework, and you tend to work with both of them in very similar ways.
-
-Familiarise yourself with the [backend project directory structure](#client-and-server-directory-structure).
-
--   The `.env` file in `server` contains some important environment variables such as the MongoDB connection URI and the server port number. Without the MongoDB connection URI, the server cannot connect to the database and so all reading/writing operations will fail.
--   <a href="https://expressjs.com/">Express.js</a> is an <strong><a href="https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/Introduction#is_express_opinionated">unopinionated</a></strong> server framework.
-
-### How was the database set up and connected to our backend?
-
-A free-tier instance of MongoDB was created on MongoDB Atlas following their <a href="https://docs.atlas.mongodb.com/tutorial/create-new-cluster/">official guide</a>. The server already has the database connection set up - there should be nothing additional you have to do for now. This is done in `server.ts` using the MongoDB connection URI environment variable in `.env`. Usually this string is protected and hidden (because this string contains admin credentials which allows anyone with this string to connect to the database instance and drop everything). For development however, it's more convenient to keep it exposed in our repo.
-
-> Note: the way the database is hooked up to our backend server here is very similar to how you would do it for other DBMSs. If you wanted to set up PostgreSQL, for example, you would spin up a PostgreSQL server somewhere (either locally or on a cloud platform), get a connection URI string, put it in your environment variables file, then configure the server to connect using that URI.
-
-### How are we reading/writing to the database?
-
-There exists an official <a href="https://docs.mongodb.com/drivers/node/current/">MongoDB Node.js driver</a> which allows Node.js applications to connect to MongoDB and read/write to collections. There are also different drivers for different programming languages.
-
-A common standard, however, is to use an <a href="https://en.wikipedia.org/wiki/Object%E2%80%93relational_mapping">ORM</a> library rather than directly use this driver. For Structs.sh, we're using <a href="https://mongoosejs.com/docs/">Mongoose</a>, which is the most popular and well-documented library for interfacing with MongoDB. Like the database drivers, there exists different ORM libraries for different programming languages. If this were a Python + Flask project, for example, we would consider using <a href="https://pymongo.readthedocs.io/en/stable/">PyMongo</a>.
-
-To understand why using ORM is often preferable compared to directly using the official driver, <a href="https://stackoverflow.com/questions/448684/why-should-you-use-an-orm">read this</a>. Another great reason to use an ORM library is that it enables the application programmer to write endpoints that affect the database without having in-depth database knowledge.
-
-### How does MongoDB differ from other DBMSs like PostgreSQL? [TODO]
-
-MongoDB is a NoSQL database management system (and the most popular one of that category).
-
-### How to implement API endpoints
-
-If you want to implement some endpoints for creating and retrieving `lesson` objects, then you would do the follow (roughly):
-
-1. Add a new file to the `routes` directory, eg. `lesson.ts`. Follow the other files in `routes` as a reference
-2. Register the router exported from the new `lesson.ts` routes file to the app in the `routes/index.ts` file. This tells Express to use your endpoints and handlers
-3. To implement your endpoints, you may need to define a new database collection. To do this, add a new file in `schemas`, following the other files in that directory as a reference. Setting up Mongoose schemas will automatically result in a new database collection being created
-4. To do read/write operations, add a new file to `database-helpers` and follow the other files there as a reference.
-    - <a href="https://mongoosejs.com/docs/api/model.html">Documentation for the database operations you can use on your schemas</a>
-    - Note: You may be working with new types. You can add new interface declarations in `typedefs`. TypeScript is optional so only do this if it helps you and others
-5. Implement the endpoints, using functions exported from the files in `database-helper`.
-
-To check if your endpoints do what you think they do, <a href="https://learning.postman.com/docs/getting-started/introduction/">setting up and using Postman</a> is a great option. Remember to set the HTTP header field `Content-Type: application/json`.
-
-To check if the database operations actually affected the database, you can use the web interface for our MongoDB instance <a href="https://cloud.mongodb.com/v2/61220bca0457b11254eb8d4f#clusters">here</a>. A nicer alternative to the web interface is their official desktop GUI application, <a href="https://www.mongodb.com/products/compass">MongoDB Compass</a>.
-
-## Getting Started with the Visualiser
-
-Familiarise yourself with the [visualiser's project directory structure](#visualiser-project-directory-structure). One important idea about the way this project is structured is that it is basically a standard React codebase, **except** the visualiser's source code in `visualiser-scripts` is totally standalone from the React codebase. The reasons for structuring it this way are:
-
--   To ensure that whatever we build can be readily migrated into our primary React frontend codebase.
-    -   Keeping the visualiser source code free from React means we won't be being forced into programming in the paradigm encouraged by the framework (eg. React encourages writing [declarative code](https://stackoverflow.com/questions/33655534/difference-between-declarative-and-imperative-in-react-js), meaning that imperative animation code can't be written without frequent use of hooks - which quickly becomes unmaintainable).
--   To take advantage of the toolchain set up by `create-react-app`. This means we can easily access a great development environment that we're all used to, including features like hot-reloading and modern JavaScript syntax (eg. `import`/`export`, `class`, `async`/`await`, etc.).
-
-Suppose we want to implement a `search` operation for linked lists. The steps to this (very roughly, for now) are:
-
-1. In `App.tsx`, Add an `<input id="searchValue" ... />` element and a `<button id="searchButton">Search</button>` element
-2. In `controller.js`, add an event handler function and bind that event handler to the button you added. User the other event handlers in `controller.js` as a reference.
-3. In the `createSequence` function in `createSequence.js`, add another `else-if` block and write the algorithm for generating the sequence of animation objects (which will later be stepped through by anime.js).
-    - Note: In doing this, you are also defining the 'style' for each animation step _imperatively_.
-        - To see what properties you can style with Anime.js, see [here](https://animejs.com/documentation/#cssProperties). In general, anything you can style with CSS (eg. height, width, colour, position, scale, etc.) can be animated
-    - Idea: In the future, defining the styling declaratively could be more flexible and readable (eg. rather than `translateX: '+=100'`, you would just write something like `action: shiftRight`). This would allow the animation sequence generator to be made more independent from the styling of the animation (in a similar way to how CSS is independent to HTML)
-
----
-
-## Good Collaborative Coding Practices
+# Developer Guidelines
 
 ### Git Guideline
 
@@ -654,7 +254,7 @@ Based on <a href="https://github.com/airbnb/javascript/tree/master/react">Airbnb
 <summary>Styling with SCSS modules</summary>
 <p>
 
-Using global CSS/SCSS is an absolute nightmare in a large project because you have name collisions and specificity issues.
+Using global CSS/SCSS is a nightmare in a large project because you will likely encounter name collisions and CSS specificity issues.
 With SCSS modules, every classname you define is 'mangled' so that it is always unique and is guaranteed to never
 conflict with any other classname in the project.
 

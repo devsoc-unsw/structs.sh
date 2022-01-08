@@ -40,7 +40,7 @@ const TFQuizForm: React.FC<Props> = ({
                 sx={{ mt: 2 }}
                 label={'Correct Message'}
                 placeholder={'That is correct'}
-                value={incorrectMessage}
+                value={correctMessage}
                 multiline
                 onChange={(e) => handleChangeCorrectMessage(String(e.target.value))}
             />
@@ -48,7 +48,7 @@ const TFQuizForm: React.FC<Props> = ({
                 sx={{ mt: 2 }}
                 label={'Incorrect Message'}
                 placeholder={"That isn't correct because..."}
-                value={correctMessage}
+                value={incorrectMessage}
                 multiline
                 onChange={(e) => handleChangeIncorrectMessage(String(e.target.value))}
             />

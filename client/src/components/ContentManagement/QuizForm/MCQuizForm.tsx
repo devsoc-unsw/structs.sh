@@ -1,3 +1,4 @@
+import BulletIcon from '@mui/icons-material/KeyboardArrowRight';
 import {
     Checkbox,
     FormControl,
@@ -7,8 +8,7 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import React, { useEffect } from 'react';
-import BulletIcon from '@mui/icons-material/KeyboardArrowRight';
+import React from 'react';
 import { Notification } from 'utils/Notification';
 
 interface Props {
@@ -89,9 +89,9 @@ const MCQuizForm: React.FC<Props> = ({
                         </ListItem>
                     ))}
             </List>
-            <Typography color="textSecondary" sx={{ mb: 4 }}>
-                Answers: {answers ? answers.join(', ') : 'None'}
-            </Typography>
+            {/* <Typography color="textSecondary" sx={{ mb: 4 }}>
+                Answers: {answers && answers.length > 0 ? answers.join(', ') : 'None'}
+            </Typography> */}
             <TextField
                 label="Max Selections"
                 type="number"

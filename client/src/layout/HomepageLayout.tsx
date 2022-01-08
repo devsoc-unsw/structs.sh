@@ -43,7 +43,7 @@ const Layout: FC<Props> = ({
 
     return (
         <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="exit">
-            {/* <TopNavbar position={topNavPosition} enableOnScrollEffect={enableOnScrollEffect} /> */}
+            <TopNavbar position={'fixed'} enableOnScrollEffect={true} />
             <Box
                 sx={{
                     backgroundColor: !disableBackground && theme.palette.background.default,

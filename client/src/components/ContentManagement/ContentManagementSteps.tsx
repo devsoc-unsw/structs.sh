@@ -7,24 +7,23 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
+    Alert,
     Avatar,
-    Divider,
     FormControl,
     Grid,
     InputLabel,
     Link,
     List,
     ListItem,
-    MenuItem,
     NativeSelect,
     Pagination,
     Paper,
-    Select,
     TextField,
+    Theme,
+    useTheme,
 } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { BaseQuizForm, MCQuizForm, TFQuizForm, QAQuizForm } from './QuizForm';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -36,9 +35,12 @@ import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
 import { CoursesSelector } from 'components/Autocomplete';
+import { HorizontalRule } from 'components/HorizontalRule';
 import { MarkdownEditor } from 'components/MarkdownEditor';
+import QuestionRenderer from 'components/Quiz/QuestionRenderer';
 import { TagSelector } from 'components/Tags';
 import React, { FC, useCallback, useEffect, useState } from 'react';
+import { darkTheme } from 'structsThemes';
 import {
     createLesson,
     createQuiz,
@@ -64,7 +66,7 @@ import {
 } from 'utils/apiRequests';
 import { Notification } from 'utils/Notification';
 import styles from './ContentManagement.module.scss';
-import renderMarkdown from 'utils/markdown-util';
+import { BaseQuizForm, MCQuizForm, QAQuizForm, TFQuizForm } from './QuizForm';
 
 interface Props {}
 
@@ -98,35 +100,6 @@ const emptyNewQuizForm: QuizForm = {
     explanation: '',
 };
 
-const emptyMCQuizForm: MultipleChoiceQuizForm = {
-    type: '',
-    question: '',
-    description: '',
-    choices: [],
-    answers: [],
-    maxSelections: 1,
-    correctMessage: '',
-    incorrectMessage: '',
-    explanation: '',
-};
-
-const emptyTFQuizForm: TrueFalseQuizForm = {
-    type: '',
-    question: '',
-    description: '',
-    isTrue: true,
-    correctMessage: '',
-    incorrectMessage: '',
-    explanation: '',
-};
-
-const emptyQAQuizForm: QuestionAnswerQuizForm = {
-    type: '',
-    question: '',
-    description: '',
-    explanation: '',
-};
-
 const ContentManagementSteps: FC<Props> = () => {
     const [activeStep, setActiveStep] = React.useState(0);
 
@@ -144,11 +117,12 @@ const ContentManagementSteps: FC<Props> = () => {
     const [lessonFormValues, setLessonFormValues] = useState<LessonForm>(emptyLessonForm);
 
     const [quizzes, setQuizzes] = useState<Quiz[]>([]);
-    const [selectedQuizId, setSelectedQuizId] = useState<string>('');
     const [quizFormValues, setQuizFormValues] = useState<QuizForm>();
     const [selectedQuizIndex, setSelectedQuizIndex] = useState<number>(-1);
 
     const [newQuizFormValues, setNewQuizFormValues] = useState<QuizForm>(emptyNewQuizForm);
+
+    const theme: Theme = useTheme();
 
     /* ------------------------------ Data Fetching ----------------------------- */
 
@@ -215,14 +189,14 @@ const ContentManagementSteps: FC<Props> = () => {
             fetchLessons(selectedTopicId);
             fetchTopicSourceCode(selectedTopicId);
         }
-    }, [selectedTopicId]);
+    }, [selectedTopicId, fetchLessons, fetchTopicSourceCode]);
 
     // When a lesson is selected then all its child quizzes should be fetched
     useEffect(() => {
         if (selectedLessonId) {
             fetchQuizzes(selectedLessonId);
         }
-    }, [selectedLessonId]);
+    }, [selectedLessonId, fetchQuizzes]);
 
     /* --------------------------- Selection Callbacks -------------------------- */
 
@@ -241,14 +215,6 @@ const ContentManagementSteps: FC<Props> = () => {
         [topics, sourceCodeFormValues, lessonFormValues]
     );
 
-    const deselectTopic = useCallback(() => {
-        deselectLesson();
-        setSelectedTopicId('');
-        setTopicFormValues(emptyTopicForm);
-        setLessonFormValues(emptyLessonForm);
-        setSourceCodes([]);
-    }, []);
-
     const selectLesson = useCallback(
         (lessonId: string) => {
             const selectedLesson: Lesson = lessons.find((lesson) => lesson._id === lessonId);
@@ -262,6 +228,24 @@ const ContentManagementSteps: FC<Props> = () => {
         [lessons]
     );
 
+    const selectQuiz = useCallback(
+        (quizId: string) => {
+            const selectedQuizIndex: number = quizzes.findIndex((quiz) => quiz._id === quizId);
+            if (selectedQuizIndex === -1) {
+                Notification.error(`Quiz doesn't seem to exist. ID: ${quizId}`);
+                return;
+            }
+            setQuizFormValues(quizzes[selectedQuizIndex]);
+            setSelectedQuizIndex(selectedQuizIndex);
+        },
+        [quizzes]
+    );
+
+    const deselectQuiz = useCallback(() => {
+        setQuizFormValues(null);
+        setSelectedQuizIndex(-1);
+    }, []);
+
     const deselectLesson = useCallback(() => {
         deselectQuiz();
         setSelectedLessonId('');
@@ -271,27 +255,15 @@ const ContentManagementSteps: FC<Props> = () => {
             creatorId: lessonFormValues.creatorId,
         });
         setSelectedQuizIndex(-1);
-    }, [lessonFormValues]);
+    }, [lessonFormValues, deselectQuiz]);
 
-    const selectQuiz = useCallback(
-        (quizId: string) => {
-            const selectedQuizIndex: number = quizzes.findIndex((quiz) => quiz._id === quizId);
-            if (selectedQuizIndex === -1) {
-                Notification.error(`Quiz doesn't seem to exist. ID: ${quizId}`);
-                return;
-            }
-            setSelectedQuizId(quizId);
-            setQuizFormValues(quizzes[selectedQuizIndex]);
-            setSelectedQuizIndex(selectedQuizIndex);
-        },
-        [quizzes, selectedQuizIndex, quizFormValues]
-    );
-
-    const deselectQuiz = useCallback(() => {
-        setSelectedQuizId('');
-        setQuizFormValues(null);
-        setSelectedQuizIndex(-1);
-    }, []);
+    const deselectTopic = useCallback(() => {
+        deselectLesson();
+        setSelectedTopicId('');
+        setTopicFormValues(emptyTopicForm);
+        setLessonFormValues(emptyLessonForm);
+        setSourceCodes([]);
+    }, [deselectLesson]);
 
     /* ----------------------------- Form Callbacks ----------------------------- */
 
@@ -370,7 +342,7 @@ const ContentManagementSteps: FC<Props> = () => {
                 );
             })
             .catch(Notification.error);
-    }, [lessonFormValues, lessons]);
+    }, [lessonFormValues, lessons, selectedLessonId]);
 
     const handleCreateQuiz = useCallback(() => {
         createQuiz(selectedLessonId, newQuizFormValues)
@@ -380,11 +352,11 @@ const ContentManagementSteps: FC<Props> = () => {
                 setNewQuizFormValues(emptyNewQuizForm);
             })
             .catch(Notification.error);
-    }, [newQuizFormValues]);
+    }, [newQuizFormValues, quizzes, selectedLessonId]);
 
     const handleUpdateQuiz = useCallback(() => {
         Notification.error('Unimplemented');
-    }, [quizFormValues, quizzes]);
+    }, []);
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -395,7 +367,7 @@ const ContentManagementSteps: FC<Props> = () => {
     };
 
     return (
-        <Box sx={{ textAlign: 'left' }}>
+        <Box sx={{ textAlign: 'left', pb: 5 }}>
             <Stepper activeStep={activeStep} orientation="vertical">
                 {/* Step 1 */}
                 <Step>
@@ -424,12 +396,9 @@ const ContentManagementSteps: FC<Props> = () => {
                                                 }}
                                                 className={styles.card}
                                                 sx={{
-                                                    transform:
-                                                        selectedTopicId === topic._id &&
-                                                        'scale(1.05)',
                                                     boxShadow:
                                                         selectedTopicId === topic._id &&
-                                                        'rgba(116, 47, 237, 0.25) 0px 0px 20px 10px, rgba(0, 0, 0, 0.6) 0px 0px 0px 1px',
+                                                        'rgba(0, 0, 0, 0.25) 0px 0px 10px 5px, rgba(0, 0, 0, 0.6) 0px 0px 0px 1px',
                                                 }}
                                             >
                                                 <CardMedia
@@ -491,7 +460,7 @@ const ContentManagementSteps: FC<Props> = () => {
                                     >
                                         Manage Topic
                                     </Typography>
-                                    <Divider />
+                                    <HorizontalRule />
                                     {/* Title */}
                                     <TextField
                                         required
@@ -572,7 +541,7 @@ const ContentManagementSteps: FC<Props> = () => {
                                     >
                                         Manage Videos
                                     </Typography>
-                                    <Divider />
+                                    <HorizontalRule />
                                     <List>
                                         {topicFormValues.videos &&
                                             topicFormValues.videos.map((videoUrl) => (
@@ -602,7 +571,7 @@ const ContentManagementSteps: FC<Props> = () => {
                                                     </Link>
                                                 </ListItem>
                                             ))}
-                                        <Divider />
+                                        <HorizontalRule />
                                         <FormControl fullWidth sx={{ mt: 3 }}>
                                             <Typography color="textPrimary">
                                                 Press Enter to add video URL:
@@ -630,11 +599,10 @@ const ContentManagementSteps: FC<Props> = () => {
                                 <Box sx={{ textAlign: 'center' }}>
                                     {selectedTopicId ? (
                                         <>
-                                            <Typography color="textPrimary">
-                                                ⚠️ You <strong>must</strong> click 'Submit' to
-                                                create a new topic or save changes before
-                                                progressing!
-                                            </Typography>
+                                            <Alert severity="warning">
+                                                You <strong>must</strong> click 'Submit' to create a
+                                                new topic or save changes before progressing!
+                                            </Alert>
                                             <Button
                                                 variant="contained"
                                                 color="secondary"
@@ -646,11 +614,10 @@ const ContentManagementSteps: FC<Props> = () => {
                                         </>
                                     ) : (
                                         <>
-                                            <Typography color="textPrimary">
-                                                ⚠️ You <strong>must</strong> click 'Create' to
-                                                create a new topic or save changes before
-                                                progressing!
-                                            </Typography>
+                                            <Alert severity="warning">
+                                                You <strong>must</strong> click 'Create' to create a
+                                                new topic or save changes before progressing!
+                                            </Alert>
                                             <Button
                                                 variant="contained"
                                                 color="secondary"
@@ -672,7 +639,7 @@ const ContentManagementSteps: FC<Props> = () => {
                                     >
                                         Manage Source Code
                                     </Typography>
-                                    <Divider sx={{ mb: 2 }} />
+                                    <HorizontalRule />
 
                                     {sourceCodes &&
                                         sourceCodes.map((sourceCode) => (
@@ -701,7 +668,7 @@ const ContentManagementSteps: FC<Props> = () => {
                                         >
                                             Create Source Code Snippet
                                         </Typography>
-                                        <Divider sx={{ mb: 2 }} />
+                                        <HorizontalRule />
                                         <FormControl fullWidth>
                                             <TextField
                                                 id="topic-source-code-title"
@@ -777,29 +744,20 @@ const ContentManagementSteps: FC<Props> = () => {
                             <Grid container spacing={3} sx={{ mt: 2, mb: 2 }}>
                                 {lessons &&
                                     lessons.map((lesson) => (
-                                        <Grid item xs={12} sm={6} md={4} lg={3}>
+                                        <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
                                             <Card
                                                 onClick={() => {
                                                     selectedLessonId !== lesson._id
                                                         ? selectLesson(lesson._id)
                                                         : deselectLesson();
                                                 }}
-                                                className={styles.card}
                                                 sx={{
-                                                    transform:
-                                                        selectedLessonId === lesson._id &&
-                                                        'scale(1.05)',
+                                                    cursor: 'pointer',
                                                     boxShadow:
                                                         selectedLessonId === lesson._id &&
-                                                        'rgba(116, 47, 237, 0.25) 0px 0px 20px 10px, rgba(0, 0, 0, 0.6) 0px 0px 0px 1px',
+                                                        'rgba(0, 0, 0, 0.25) 0px 0px 10px 5px, rgba(0, 0, 0, 0.6) 0px 0px 0px 1px',
                                                 }}
                                             >
-                                                <CardMedia
-                                                    component="img"
-                                                    height="140"
-                                                    image="https://miro.medium.com/max/1200/1*KpDOKMFAgDWaGTQHL0r70g.png"
-                                                    alt="green iguana"
-                                                />
                                                 <CardContent>
                                                     <Typography
                                                         gutterBottom
@@ -808,6 +766,17 @@ const ContentManagementSteps: FC<Props> = () => {
                                                     >
                                                         {lesson.title}
                                                     </Typography>
+                                                    <HorizontalRule />
+                                                    <Box className={styles.descriptionPreview}>
+                                                        <MarkdownEditor
+                                                            readOnly
+                                                            markdownValue={lesson.rawMarkdown}
+                                                            themeOverride={{
+                                                                background:
+                                                                    theme.palette.background.paper,
+                                                            }}
+                                                        />
+                                                    </Box>
                                                 </CardContent>
                                             </Card>
                                         </Grid>
@@ -861,7 +830,7 @@ const ContentManagementSteps: FC<Props> = () => {
                                     }
                                 />
                                 <Box sx={{ padding: 3 }}>
-                                    <Divider />
+                                    <HorizontalRule />
                                     <MarkdownEditor
                                         markdownValue={lessonFormValues.rawMarkdown}
                                         setMarkdownValue={(newMarkdown: string) =>
@@ -870,15 +839,18 @@ const ContentManagementSteps: FC<Props> = () => {
                                                 rawMarkdown: newMarkdown,
                                             })
                                         }
+                                        themeOverride={{
+                                            background: theme.palette.background.paper,
+                                        }}
                                         readOnly={false}
                                     />
-                                    <Divider />
+                                    <HorizontalRule />
                                 </Box>
                                 <Box sx={{ textAlign: 'center' }}>
-                                    <Typography color="textPrimary">
-                                        ⚠️ You <strong>must</strong> click 'Create' to create a new
-                                        topic or 'Update' to save changes before progressing!
-                                    </Typography>
+                                    <Alert severity="warning">
+                                        You <strong>must</strong> click 'Create' to create a new
+                                        topic or save changes before progressing!
+                                    </Alert>
                                     <Button
                                         color="secondary"
                                         onClick={() =>
@@ -909,52 +881,33 @@ const ContentManagementSteps: FC<Props> = () => {
                                         }}
                                     />
                                 </Box>
-                                {/* Quiz Preview */}
-                                {quizFormValues && (
-                                    <Paper elevation={3} sx={{ margin: 3, padding: 3 }}>
-                                        <Typography gutterBottom variant="h5" component="div">
-                                            Quiz Question Preview:
-                                        </Typography>
-                                        {/* TODO: Render the current quiz component we have */}
-                                        <Typography variant="h6">
-                                            {quizFormValues.question}
-                                        </Typography>
-                                        <Typography variant="body1">
-                                            <div
-                                                dangerouslySetInnerHTML={{
-                                                    __html: renderMarkdown(
-                                                        quizFormValues.description
-                                                    ),
-                                                }}
-                                            />
-                                        </Typography>
-                                    </Paper>
-                                )}
 
                                 {/* Quiz Question Update Form */}
                                 {quizFormValues && (
                                     <Paper elevation={3} sx={{ margin: 3, padding: 4 }}>
                                         <Typography
-                                            color="primary"
+                                            color="textPrimary"
                                             variant={'h5'}
                                             sx={{ textAlign: 'center' }}
                                         >
                                             Update Quiz
                                         </Typography>
-                                        <Divider />
+                                        <HorizontalRule />
                                         <BaseQuizForm
                                             question={quizFormValues.question}
                                             description={quizFormValues.description}
                                             handleChangeQuestion={(question) =>
-                                                setQuizFormValues({
-                                                    ...quizFormValues,
+                                                setQuizFormValues((oldForm) => ({
+                                                    ...oldForm,
                                                     question: question,
-                                                })
+                                                }))
                                             }
                                             handleChangeDescription={(description) =>
-                                                setQuizFormValues({
-                                                    ...quizFormValues,
-                                                    description: description,
+                                                setQuizFormValues((oldForm) => {
+                                                    return {
+                                                        ...oldForm,
+                                                        description: description,
+                                                    };
                                                 })
                                             }
                                         />
@@ -1101,13 +1054,34 @@ const ContentManagementSteps: FC<Props> = () => {
                                     </Paper>
                                 )}
 
+                                {/* Quiz Preview */}
+                                {quizFormValues && (
+                                    <Paper elevation={3} sx={{ margin: 3, padding: 3 }}>
+                                        <Typography
+                                            gutterBottom
+                                            variant="h6"
+                                            component="div"
+                                            sx={{ textAlign: 'center' }}
+                                        >
+                                            Quiz Question Preview:
+                                        </Typography>
+                                        <HorizontalRule />
+                                        <QuestionRenderer
+                                            quiz={quizFormValues}
+                                            disabled
+                                            showAnswers
+                                        />
+                                    </Paper>
+                                )}
+
                                 {/* Quiz Question Creation */}
+                                <HorizontalRule />
                                 {newQuizFormValues && (
                                     <Paper elevation={3} sx={{ margin: 3, padding: 4 }}>
                                         <Typography variant={'h5'} sx={{ textAlign: 'center' }}>
                                             Create Question
                                         </Typography>
-                                        <Divider />
+                                        <HorizontalRule />
                                         <FormControl fullWidth sx={{ mt: 2 }}>
                                             <InputLabel id="quiz-question-type">
                                                 Question Type
@@ -1120,6 +1094,11 @@ const ContentManagementSteps: FC<Props> = () => {
                                                     defaultValue: newQuizFormValues
                                                         ? newQuizFormValues.type
                                                         : 'mc',
+                                                }}
+                                                sx={{
+                                                    background:
+                                                        theme === darkTheme &&
+                                                        theme.palette.primary.main,
                                                 }}
                                                 onChange={(e) =>
                                                     setNewQuizFormValues({
@@ -1287,9 +1266,30 @@ const ContentManagementSteps: FC<Props> = () => {
                                             color="secondary"
                                             variant="contained"
                                             onClick={handleCreateQuiz}
+                                            sx={{ mt: 2 }}
                                         >
                                             Create
                                         </Button>
+                                    </Paper>
+                                )}
+
+                                {/* Quiz Preview */}
+                                {newQuizFormValues && (
+                                    <Paper elevation={3} sx={{ margin: 3, padding: 3 }}>
+                                        <Typography
+                                            gutterBottom
+                                            variant="h6"
+                                            component="div"
+                                            sx={{ textAlign: 'center' }}
+                                        >
+                                            Quiz Question Preview:
+                                        </Typography>
+                                        <HorizontalRule />
+                                        <QuestionRenderer
+                                            quiz={newQuizFormValues}
+                                            disabled
+                                            showAnswers
+                                        />
                                     </Paper>
                                 )}
                             </Box>

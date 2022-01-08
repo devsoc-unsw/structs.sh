@@ -9,3 +9,5 @@ RUN yarn install
 COPY . . 
 
 CMD ["yarn", "start"]
+
+# TODO: Should add a production-grade server rather than using the dev server for production

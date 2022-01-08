@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import styles from './VisualiserDashboardLayout.module.scss';
 import Helmet from 'react-helmet';
 import TopNavbar from 'components/Navbars/TopNavbar';
@@ -30,6 +30,11 @@ interface Props {
 const Dashboard: FC<Props> = ({ children, topic }) => {
     const theme: Theme = useTheme();
 
+    useEffect(() => {
+        // Note: force scrolling to the top of the page so that the top navbar isn't hidden
+        window.scrollTo(0, 0);
+    }, []);
+
     return (
         <motion.div
             className={styles.container}
@@ -41,7 +46,7 @@ const Dashboard: FC<Props> = ({ children, topic }) => {
             <Helmet>
                 <title>{topic ? topic.title : 'Structs.sh'}</title>
             </Helmet>
-            <TopNavbar position="static" enableOnScrollEffect={false} />
+            <TopNavbar position="relative" enableOnScrollEffect={false} />
             <Box
                 sx={{
                     backgroundColor: theme.palette.background.default,

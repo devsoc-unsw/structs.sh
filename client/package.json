@@ -29,7 +29,7 @@
         "react-dom": "^17.0.2",
         "react-helmet": "^6.1.0",
         "react-intersection-observer": "^8.32.5",
-        "react-router-dom": "^5.2.0",
+        "react-router-dom": "^6.1.0",
         "react-scripts": "4.0.3",
         "react-slick": "^0.28.1",
         "react-syntax-highlighter": "^15.4.4",
@@ -44,14 +44,13 @@
         "web-vitals": "^1.0.1"
     },
     "scripts": {
-        "start": "react-scripts start",
-        "build": "react-scripts build",
+        "start": "REACT_APP_DEV_OR_PROD=dev react-scripts start",
+        "startprod": "REACT_APP_DEV_OR_PROD=prod react-scripts start",
+        "build": "REACT_APP_DEV_OR_PROD=prod react-scripts build",
         "test-unit": "jest",
         "test-e2e": "cypress open",
         "eject": "react-scripts eject",
-        "analyse": "source-map-explorer --gzip 'build/static/js/*.js'",
-        "storybook": "start-storybook -p 6006 -s public",
-        "build-storybook": "build-storybook -s public"
+        "analyse": "source-map-explorer --gzip 'build/static/js/*.js'"
     },
     "eslintConfig": {
         "extends": [
@@ -85,12 +84,6 @@
         "@babel/preset-typescript": "^7.16.0",
         "@cypress/react": "^5.10.3",
         "@cypress/webpack-dev-server": "^1.7.0",
-        "@storybook/addon-actions": "^6.3.12",
-        "@storybook/addon-essentials": "^6.3.12",
-        "@storybook/addon-jest": "^6.3.12",
-        "@storybook/node-logger": "^6.3.12",
-        "@storybook/preset-create-react-app": "^3.2.0",
-        "@storybook/react": "^6.3.12",
         "@testing-library/dom": "^8.11.1",
         "@types/react-router-dom": "^5.1.7",
         "@types/react-slick": "^0.23.7",

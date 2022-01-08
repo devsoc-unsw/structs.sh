@@ -1,2 +1,1 @@
-export { default as Lesson } from './Lesson';
-export { default as AdditionalResources } from './AdditionalResources';
+export { default as LessonContent } from './LessonContent';

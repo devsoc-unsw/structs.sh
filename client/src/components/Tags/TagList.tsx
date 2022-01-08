@@ -19,7 +19,11 @@ export const TagList: React.FC<TagListProps> = ({ tags, handleDelete, display })
         <Stack direction="row" spacing={1}>
             {filterInvalidTags(tags).map((tag, index) => (
                 <Fragment key={index}>
-                    <Chip label={tag} onDelete={() => handleDelete(tag)} color="info" />
+                    <Chip
+                        label={tag}
+                        onDelete={handleDelete ? () => handleDelete(tag) : null}
+                        color="info"
+                    />
                 </Fragment>
             ))}
         </Stack>

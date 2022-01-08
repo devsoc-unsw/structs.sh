@@ -1,18 +1,21 @@
+import BulletIcon from '@mui/icons-material/ArrowForwardIos';
+import VisualiserIcon from '@mui/icons-material/AutoFixHigh';
+import EditIcon from '@mui/icons-material/Edit';
+import EducationIcon from '@mui/icons-material/LocalLibrary';
+import GradCapIcon from '@mui/icons-material/School';
 import { Box, Grid, Link, List, ListItem, ListItemIcon, Typography } from '@mui/material';
+import cmsScreen from 'assets/demos/cms.png';
+import visualiserDashboardCodeScreen from 'assets/demos/visualiser-dashboard-code.png';
+import visualiserDashboardLessonScreen from 'assets/demos/visualiser-dashboard-lesson.png';
+import structsLogo from 'assets/img/structs.png';
+import { LaptopFrame } from 'components/Frame';
+import { HorizontalRule } from 'components/HorizontalRule';
 import { motion, useAnimation } from 'framer-motion';
 import React, { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
-import styles from './Features.module.scss';
-import FeatureItem from './FeatureItem';
-import VisualiserIcon from '@mui/icons-material/AutoFixHigh';
-import EducationIcon from '@mui/icons-material/LocalLibrary';
-import ToolIcon from '@mui/icons-material/Handyman';
-import GradCapIcon from '@mui/icons-material/School';
-import EditIcon from '@mui/icons-material/Edit';
-import structsLogo from 'assets/img/structs.png';
-import { LaptopFrame } from 'components/Frame';
-import BulletIcon from '@mui/icons-material/ArrowForwardIos';
 import { Link as RouterLink } from 'react-router-dom';
+import FeatureItem from './FeatureItem';
+import styles from './Features.module.scss';
 
 interface Props {}
 
@@ -22,7 +25,7 @@ const variants = {
 };
 
 const Features: React.FC<Props> = () => {
-    const { ref, inView, entry } = useInView({
+    const { ref, inView } = useInView({
         threshold: 0,
     });
     const controls = useAnimation();
@@ -55,11 +58,11 @@ const Features: React.FC<Props> = () => {
             animate={controls}
             ref={ref}
         >
-            <img src={structsLogo} className={styles.logo} />
+            <img src={structsLogo} className={styles.logo} alt="Structs.sh logo" />
             <Typography className={styles.title} color="textPrimary" variant="h4">
                 Structs.sh
             </Typography>
-            {/* TODO: each feature section should have their own 'in view' animation set */}
+            <HorizontalRule />
             <FeatureItem>
                 <Typography color="textPrimary" variant="h6">
                     <VisualiserIcon /> Algorithm Visualisation
@@ -103,24 +106,16 @@ const Features: React.FC<Props> = () => {
                         md={4}
                         sx={{ position: 'relative', height: '200px' }}
                     >
-                        <LaptopFrame />
+                        <LaptopFrame imageUrl={visualiserDashboardCodeScreen} />
                     </Grid>
                 </Grid>
             </FeatureItem>
-            <FeatureItem fromDirection={'right'}>
-                <Typography color="textPrimary" variant="h6" sx={{ textAlign: 'right' }}>
-                    Educational Resources <EducationIcon />
+            <FeatureItem fromDirection={'left'}>
+                <Typography color="textPrimary" variant="h6" sx={{ textAlign: 'left' }}>
+                    <EducationIcon /> Educational Resources
                 </Typography>
+
                 <Grid container>
-                    <Grid
-                        item
-                        xs={12}
-                        sm={12}
-                        md={4}
-                        sx={{ position: 'relative', height: '200px' }}
-                    >
-                        <LaptopFrame />
-                    </Grid>
                     <Grid item xs={12} sm={12} md={8}>
                         <List>
                             <ListItem>
@@ -141,24 +136,13 @@ const Features: React.FC<Props> = () => {
                                     Lessons, videos and reference implementations all in one place
                                 </Typography>
                             </ListItem>
-                        </List>
-                    </Grid>
-                </Grid>
-            </FeatureItem>
-            <FeatureItem>
-                <Typography color="textPrimary" variant="h6">
-                    <ToolIcon /> Tool for Teachers
-                </Typography>
-                <Grid container>
-                    <Grid item xs={12} sm={12} md={8}>
-                        <List>
                             <ListItem>
                                 <ListItemIcon>
                                     <BulletIcon color={'primary'} />
                                 </ListItemIcon>
                                 <Typography color="textSecondary">
-                                    Helps teachers bridge the gap between high-level visual
-                                    understanding and the source code for their students
+                                    Bridge the gap between a high-level visual understanding of an
+                                    algorithm and the implementation itself
                                 </Typography>
                             </ListItem>
                         </List>
@@ -170,85 +154,91 @@ const Features: React.FC<Props> = () => {
                         md={4}
                         sx={{ position: 'relative', height: '200px' }}
                     >
-                        <LaptopFrame />
+                        <LaptopFrame imageUrl={visualiserDashboardLessonScreen} />
+                    </Grid>
+                </Grid>
+            </FeatureItem>
+            <FeatureItem fromDirection="left">
+                <Typography color="textPrimary" variant="h6" sx={{ textAlign: 'left' }}>
+                    <EditIcon /> Content Management
+                </Typography>
+                <Grid container>
+                    <Grid item xs={12} sm={12} md={8}>
+                        <List>
+                            <ListItem>
+                                <ListItemIcon>
+                                    <BulletIcon color={'primary'} />
+                                </ListItemIcon>
+                                <Typography color="textSecondary">
+                                    Manage and create new topics, source code snippets, lessons and
+                                    quizzes
+                                </Typography>
+                            </ListItem>
+                        </List>
+                        <List>
+                            <ListItem>
+                                <ListItemIcon>
+                                    <BulletIcon color={'primary'} />
+                                </ListItemIcon>
+                                <Typography color="textSecondary">
+                                    Community-contributed resources for all students
+                                </Typography>
+                            </ListItem>
+                        </List>
+                    </Grid>
+                    <Grid
+                        item
+                        xs={12}
+                        sm={12}
+                        md={4}
+                        sx={{ position: 'relative', height: '200px' }}
+                    >
+                        <LaptopFrame imageUrl={cmsScreen} />
                     </Grid>
                 </Grid>
             </FeatureItem>
             <FeatureItem fromDirection="right">
-                <Typography color="textPrimary" variant="h6" sx={{ textAlign: 'right' }}>
-                    Content Management <EditIcon />
-                </Typography>
-                <Grid container>
-                    <Grid
-                        item
-                        xs={12}
-                        sm={12}
-                        md={4}
-                        sx={{ position: 'relative', height: '200px' }}
-                    >
-                        <LaptopFrame />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={8}>
-                        <List>
-                            <ListItem>
-                                <ListItemIcon>
-                                    <BulletIcon color={'primary'} />
-                                </ListItemIcon>
-                                <Typography color="textSecondary">
-                                    Manage topics, source code, lessons and quizzes and contribute
-                                    more resources for students to access
-                                </Typography>
-                            </ListItem>
-                        </List>
-                    </Grid>
-                </Grid>
-            </FeatureItem>
-            <FeatureItem>
                 <Typography color="textPrimary" variant="h6">
-                    <GradCapIcon /> Open source project, developed and maintained by passionate CSE
-                    students
+                    <GradCapIcon /> Open source
                 </Typography>
-                <Grid container>
-                    <Grid item xs={12} sm={12} md={6}>
-                        <List>
-                            <ListItem>
-                                <ListItemIcon>
-                                    <BulletIcon color={'primary'} />
-                                </ListItemIcon>
-                                <Typography color="textSecondary">
-                                    <Link
-                                        href="https://github.com/csesoc/Structs.sh"
-                                        color="textSecondary"
-                                        target="_blank"
-                                    >
-                                        GitHub repo
-                                    </Link>
-                                </Typography>
-                            </ListItem>
-                            <ListItem>
-                                <ListItemIcon>
-                                    <BulletIcon color={'primary'} />
-                                </ListItemIcon>
-                                <Typography color="textSecondary">
-                                    The{' '}
-                                    <RouterLink to="/about">
-                                        <Link color="textSecondary">team</Link>
-                                    </RouterLink>
-                                </Typography>
-                            </ListItem>
-                        </List>
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={6}>
-                        <Box sx={{ mt: 4 }}>
-                            <div
-                                className="github-card"
-                                data-github="csesoc/structs.sh"
-                                data-width="100%"
-                                data-theme="medium"
-                            />
-                        </Box>
-                    </Grid>
-                </Grid>
+                <Typography color="textSecondary" variant="body1">
+                    Developed and maintained by passionate CS and engineering students at UNSW.
+                </Typography>
+                <List>
+                    <ListItem>
+                        <ListItemIcon>
+                            <BulletIcon color={'primary'} />
+                        </ListItemIcon>
+                        <Typography color="textSecondary">
+                            <Link
+                                href="https://github.com/csesoc/Structs.sh"
+                                color="textSecondary"
+                                target="_blank"
+                            >
+                                GitHub
+                            </Link>
+                        </Typography>
+                    </ListItem>
+                    <ListItem>
+                        <ListItemIcon>
+                            <BulletIcon color={'primary'} />
+                        </ListItemIcon>
+                        <Typography color="textSecondary">
+                            The Structs.sh{' '}
+                            <RouterLink to="/about">
+                                <Link color="textSecondary">team</Link>
+                            </RouterLink>
+                        </Typography>
+                    </ListItem>
+                </List>
+                <Box sx={{ mt: 4 }}>
+                    <div
+                        className="github-card"
+                        data-github="csesoc/structs.sh"
+                        data-width="100%"
+                        data-theme="medium"
+                    />
+                </Box>
             </FeatureItem>
         </motion.div>
     );
