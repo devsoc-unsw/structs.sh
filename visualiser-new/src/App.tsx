@@ -26,10 +26,16 @@ const App = () => {
           <button id="restartButton" type="submit" className="btn btn-danger mb-3">Restart</button>
         </div>
         <div className="col">
-          <input type="range" id="timelineSlider" name="volume" min="0" max="100" /> 
+          <input type="range" id="timelineSlider" name="volume" min="0" max="100" defaultValue="0"/> 
         </div>
         <div className="col"> 
-          <input type="range" id="speedSlider" name="volume" min="0" max="4" step="0.25"/> 
+          <input type="range" id="speedSlider" name="volume" min="0" max="8" step="0.25" defaultValue="1"/> 
+        </div>
+        <div className="col-auto">
+          <button id="stepBackwardsButton" type="submit" className="btn btn-primary mb-3">Step Backwards</button>
+        </div>
+        <div className="col-auto">
+          <button id="stepForwardsButton" type="submit" className="btn btn-danger mb-3">Step Forwards</button>
         </div>
       </form>
     </div>

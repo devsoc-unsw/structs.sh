@@ -43,6 +43,7 @@ const initialise = (): void => {
         e.preventDefault();
 
         controller.seekPercent(0);
+        controller.play();
     }
 
     const handleTimelineSliderChange: EventListener = (e: Event) => {
@@ -56,6 +57,20 @@ const initialise = (): void => {
         controller.setSpeed(Number(speedSlider.value));
         controller.play();
     };
+
+    const handleStepBackwardsClick: EventListener = (e: Event) => {
+        e.preventDefault();
+
+        controller.pause();
+        controller.stepBackwards();
+    };
+
+    const handleStepForwardsClick: EventListener = (e: Event) => {
+        e.preventDefault();
+
+        controller.pause();
+        controller.stepForwards();
+    };
     
     const insertButton = document.querySelector('#insertButton');
     const playButton = document.querySelector('#playButton');
@@ -63,6 +78,8 @@ const initialise = (): void => {
     const restartButton = document.querySelector('#restartButton');
     const timelineSlider = document.querySelector('#timelineSlider') as HTMLInputElement;
     const speedSlider = document.querySelector('#speedSlider') as HTMLInputElement;
+    const stepBackwardsButton = document.querySelector('#stepBackwardsButton');
+    const stepForwardsButton = document.querySelector('#stepForwardsButton');
     
     insertButton.addEventListener('click', handleInsertClick);
     playButton.addEventListener('click', handlePlayClick);
@@ -70,6 +87,8 @@ const initialise = (): void => {
     restartButton.addEventListener('click', handleRestartClick);
     timelineSlider.addEventListener('input', handleTimelineSliderChange);
     speedSlider.addEventListener('input', handleSpeedSliderChange);
+    stepBackwardsButton.addEventListener('click', handleStepBackwardsClick);
+    stepForwardsButton.addEventListener('click', handleStepForwardsClick);
 };
 
 export default initialise;

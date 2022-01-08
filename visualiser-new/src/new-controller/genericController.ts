@@ -13,6 +13,7 @@ class AnimationController {
     private timelineDuration: number = 0;
     private slider: HTMLInputElement = document.querySelector('#timelineSlider') as HTMLInputElement;
     private timestamps: number[] = [];
+    private timestampsIndex: number = 0;
 
     public getCurrentTimeline(): Timeline {
         return this.currentTimeline;
@@ -22,12 +23,16 @@ class AnimationController {
         this.currentTimeline = new Timeline().persist(true);
         this.timestamps = [];
         this.timelineDuration = 0;
+        this.timestampsIndex = 0;
         
         for (let i = 0; i < animationSequence.length; i++) {
             animationSequence[i].during(() => {
                 // progress corresponds to how many ms have passed in the animation
                 const progress = animationSequence[i].progress() * animationSequence[i].duration();
                 this.slider.value = String(((this.timestamps[i] + progress) / this.timelineDuration) * 100);
+
+                // TODO: put this in the after() function instead
+                this.timestampsIndex = i;
             });
 
             this.currentTimeline.schedule(animationSequence[i]);
@@ -59,6 +64,25 @@ class AnimationController {
     // Finish playing the timeline
     public finish(): void {
         this.currentTimeline.finish();
+    }
+
+    public stepBackwards(): void {
+        if (this.timestampsIndex === 0) {
+            return;
+        }
+
+        this.timestampsIndex--;
+        this.currentTimeline.time(this.timestamps[this.timestampsIndex]);
+    }
+
+    // TODO: this isn't 100% working
+    public stepForwards(): void {
+        if (this.timestampsIndex === this.timestamps.length - 1) {
+            return;
+        }
+
+        this.timestampsIndex++;
+        this.currentTimeline.time(this.timestamps[this.timestampsIndex]);
     }
 }
 
