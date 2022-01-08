@@ -1,7 +1,6 @@
 import BST from './data-structure/GraphicalBST';
 import { Runner } from '@svgdotjs/svg.js';
 import AnimationController from '../new-controller/genericController'; 
-import { speed } from 'animejs';
 
 /**
  * Initialises the visualiser and binds event handlers to the controller UI.
