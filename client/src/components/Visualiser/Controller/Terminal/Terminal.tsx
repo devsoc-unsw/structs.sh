@@ -1,10 +1,9 @@
 import React, { FC, useState } from 'react';
 import Console from 'react-console-emulator';
 import Typist from 'react-typist';
+import docs from './manualDoc';
 import ManualPage from './ManualPage';
 import styles from './Terminal.module.scss';
-import docs from './manualDoc';
-import { Topic } from 'utils/apiRequests';
 
 const consoleStyle = {
     container: {
@@ -23,10 +22,10 @@ const consoleStyle = {
 
 interface Props {
     executeCommand: (command: string, args: string[]) => string;
-    topic: Topic;
+    topicTitle: string;
 }
 
-const Terminal: FC<Props> = ({ executeCommand, topic }) => {
+const Terminal: FC<Props> = ({ executeCommand, topicTitle }) => {
     const [showMan, setShowMan] = useState(false);
 
     // Attempts to execute command, catching obviously bad inputs and incorrect usage

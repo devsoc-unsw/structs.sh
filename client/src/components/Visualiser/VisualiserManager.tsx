@@ -1,17 +1,17 @@
 import { Box } from '@mui/material';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Notification } from 'utils/Notification';
+import initLinkedListVisualiser from 'visualiser-src/linked-list-visualiser/initialiser';
 import { VisualiserController } from './Controller';
 import GUIMode from './Controller/GUIMode/GUIMode';
 import { Terminal } from './Controller/Terminal';
-import React, { useCallback, useEffect, useState } from 'react';
-import { Topic } from 'utils/apiRequests';
-import initialiseVisualiser from 'visualiser/linked-list-visualiser/initialiser';
 import styles from './VisualiserDashboard.module.scss';
 
 interface Props {
-    topic: Topic;
+    topicTitle: string;
 }
 
-const VisualiserInterface: React.FC<Props> = ({ topic }) => {
+const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
     const [animationProgress, setAnimationProgress] = useState<number>(0);
     const [speed, setSpeed] = useState<number>(0.5);
     const [terminalMode, setTerminalMode] = useState(true);
@@ -21,8 +21,16 @@ const VisualiserInterface: React.FC<Props> = ({ topic }) => {
     /* ------------------------ Visualiser Initialisation ----------------------- */
 
     useEffect(() => {
-        setVisualiser(initialiseVisualiser());
-    }, []);
+        switch (topicTitle) {
+            case 'Linked Lists':
+                setVisualiser(initLinkedListVisualiser());
+                break;
+            case 'Binary Search Tree':
+                break;
+            default:
+                Notification.info(`Couldn't find a visualiser to load for '${topicTitle}'`);
+        }
+    }, [topicTitle]);
 
     /* -------------------------- Visualiser Callbacks -------------------------- */
 
@@ -126,9 +134,9 @@ const VisualiserInterface: React.FC<Props> = ({ topic }) => {
             />
             <Box sx={{ height: '100%' }}>
                 {terminalMode ? (
-                    <Terminal executeCommand={executeCommand} topic={topic} />
+                    <Terminal executeCommand={executeCommand} topicTitle={topicTitle} />
                 ) : (
-                    <GUIMode executeCommand={executeCommand} topic={topic} />
+                    <GUIMode executeCommand={executeCommand} topicTitle={topicTitle} />
                 )}
             </Box>
         </Box>

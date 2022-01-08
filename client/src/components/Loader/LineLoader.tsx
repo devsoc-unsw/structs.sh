@@ -2,11 +2,19 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 
-interface Props {}
+interface Props {
+    fullViewport?: boolean;
+}
 
-const LineLoader: React.FC<Props> = () => {
+const LineLoader: React.FC<Props> = ({ fullViewport = false }) => {
     return (
-        <Box sx={{ position: 'relative', height: '100%', width: '100%' }}>
+        <Box
+            sx={{
+                position: 'relative',
+                height: fullViewport ? '100vh' : '100%',
+                width: fullViewport ? '100vw' : '100%',
+            }}
+        >
             <LinearProgress
                 sx={{
                     position: 'absolute',

@@ -1,4 +1,4 @@
-import { CircularLoader } from 'components/Loader';
+import { CircularLoader, LineLoader } from 'components/Loader';
 import { Pane } from 'components/Panes';
 import Tabs from 'components/Tabs/Tabs';
 import { VisualiserDashboardLayout } from 'layout';
@@ -7,8 +7,9 @@ import { useParams } from 'react-router-dom';
 import { getTopic, Topic } from 'utils/apiRequests';
 import { Notification } from 'utils/Notification';
 import { urlToTitle } from 'utils/url';
-import 'visualiser/linked-list-visualiser/styles/visualiser.css';
 import { Visualiser } from 'components/Visualiser';
+import 'visualiser-src/linked-list-visualiser/styles/visualiser.css';
+import { Box } from '@mui/material';
 
 interface Props {}
 
@@ -32,13 +33,15 @@ const Dashboard: FC<Props> = () => {
         };
     });
 
-    return (
+    return topic ? (
         <VisualiserDashboardLayout topic={topic}>
             <Pane orientation="vertical" minSize={340} hasTopGutter>
-                <Visualiser topic={topic} />
-                {topic ? <Tabs topic={topic}></Tabs> : <CircularLoader />}
+                <Visualiser topicTitle={topic.title} />
+                <Tabs topic={topic}></Tabs>
             </Pane>
         </VisualiserDashboardLayout>
+    ) : (
+        <LineLoader fullViewport />
     );
 };
 

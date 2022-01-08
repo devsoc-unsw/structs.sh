@@ -3,7 +3,6 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Alert, Box, List, ListItem, ListItemIcon, Theme, Typography } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import React, { FC, useState } from 'react';
-import { Topic } from 'utils/apiRequests';
 import { Operation, operationsDictionary } from '../operations';
 import { LastLink, Link } from './Links';
 import OperationDetails from './OperationDetails';
@@ -14,14 +13,14 @@ export interface OperationsMenuState {
 
 interface Props {
     executeCommand: (command: string, args: string[]) => string;
-    topic: Topic;
+    topicTitle: string;
 }
 
-const OperationsTree: FC<Props> = ({ topic, executeCommand }) => {
+const OperationsTree: FC<Props> = ({ topicTitle, executeCommand }) => {
     // Tracks which operation items in the menu are expanded
     const [showOp, setShowOp] = useState<OperationsMenuState>({});
 
-    const ops: Operation[] = operationsDictionary[topic.title];
+    const ops: Operation[] = operationsDictionary[topicTitle];
     const theme: Theme = useTheme();
     const textPrimaryColour = theme.palette.text.primary;
 
@@ -30,10 +29,12 @@ const OperationsTree: FC<Props> = ({ topic, executeCommand }) => {
     };
 
     return !ops ? (
-        <Alert severity={'error'}>No operations are defined for the topic '{topic.title}'</Alert>
+        <Alert severity={'error'}>
+            No operations are defined for the topicTitle '{topicTitle}'
+        </Alert>
     ) : (
         <Box sx={{ padding: 2 }}>
-            <Typography color="textPrimary">{topic.title}</Typography>
+            <Typography color="textPrimary">{topicTitle}</Typography>
             <List>
                 {ops.map((op, idx) => {
                     const isLast = idx === ops.length - 1;
