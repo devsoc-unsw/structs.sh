@@ -98,6 +98,9 @@
 
     border: 1px solid transparent;
 }
+.slick-arrow {
+    transform: scale(2.5) !important;
+}
 .slick-arrow.slick-hidden {
     display: none;
 }

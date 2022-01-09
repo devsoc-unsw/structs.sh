@@ -5,6 +5,10 @@
         overflow-y: auto !important;
     }
 
+    &.horizontal {
+        position: relative;
+    }
+
     .topGutter {
         // Subtracting the height of the topnav
         height: calc(100vh - 64px) !important;
