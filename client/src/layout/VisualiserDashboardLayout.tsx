@@ -50,7 +50,7 @@ const Dashboard: FC<Props> = ({ children, topic }) => {
             <Box
                 sx={{
                     backgroundColor: theme.palette.background.default,
-                    height: '100vh',
+                    height: 'calc(100vh - 64px)',
                     width: '100vw',
                 }}
             >

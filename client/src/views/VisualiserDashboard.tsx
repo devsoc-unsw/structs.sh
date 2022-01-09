@@ -1,7 +1,7 @@
 import { LineLoader } from 'components/Loader';
 import { Pane } from 'components/Panes';
-import Tabs from 'components/Tabs/Tabs';
-import { Visualiser } from 'components/Visualiser';
+import VisualiserCanvas from 'components/Visualiser/VisualiserCanvas';
+import VisualiserManager from 'components/Visualiser/VisualiserManager';
 import { VisualiserDashboardLayout } from 'layout';
 import React, { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -38,9 +38,9 @@ const Dashboard: FC<Props> = () => {
 
     return topic ? (
         <VisualiserDashboardLayout topic={topic}>
-            <Pane orientation="vertical" minSize={340} hasTopGutter>
-                <Visualiser topicTitle={topic.title} />
-                <Tabs topic={topic}></Tabs>
+            <Pane orientation="horizontal" minSize={150.9}>
+                <VisualiserCanvas topicTitle={topic.title} />
+                <VisualiserManager topicTitle={topic.title} />
             </Pane>
         </VisualiserDashboardLayout>
     ) : (
