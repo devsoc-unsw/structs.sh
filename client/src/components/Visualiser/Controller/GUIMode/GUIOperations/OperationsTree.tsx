@@ -2,8 +2,8 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Alert, Box, List, ListItem, ListItemIcon, Theme, Typography } from '@mui/material';
 import { useTheme } from '@mui/styles';
+import { getGUICommands, Operation } from 'components/Visualiser/commandsInputRules';
 import React, { FC, useState } from 'react';
-import { Operation, operationsDictionary } from '../operations';
 import { LastLink, Link } from './Links';
 import OperationDetails from './OperationDetails';
 
@@ -20,7 +20,7 @@ const OperationsTree: FC<Props> = ({ topicTitle, executeCommand }) => {
     // Tracks which operation items in the menu are expanded
     const [showOp, setShowOp] = useState<OperationsMenuState>({});
 
-    const ops: Operation[] = operationsDictionary[topicTitle];
+    const ops: Operation[] = getGUICommands(topicTitle);
     const theme: Theme = useTheme();
     const textPrimaryColour = theme.palette.text.primary;
 

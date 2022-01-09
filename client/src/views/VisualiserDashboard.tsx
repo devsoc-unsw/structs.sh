@@ -1,15 +1,14 @@
-import { CircularLoader, LineLoader } from 'components/Loader';
+import { LineLoader } from 'components/Loader';
 import { Pane } from 'components/Panes';
 import Tabs from 'components/Tabs/Tabs';
+import { Visualiser } from 'components/Visualiser';
 import { VisualiserDashboardLayout } from 'layout';
 import React, { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getTopic, Topic } from 'utils/apiRequests';
 import { Notification } from 'utils/Notification';
 import { urlToTitle } from 'utils/url';
-import { Visualiser } from 'components/Visualiser';
 import 'visualiser-src/linked-list-visualiser/styles/visualiser.css';
-import { Box } from '@mui/material';
 
 interface Props {}
 
@@ -22,7 +21,11 @@ const Dashboard: FC<Props> = () => {
         const topicTitleInUrl = params.topic;
         getTopic(urlToTitle(topicTitleInUrl))
             .then((topic) => setTopic(topic))
-            .catch(() => Notification.error('Visualiser Dashboard: Failed to get topic'));
+            .catch(() =>
+                Notification.error(
+                    `Couldn't find anything for topic: '${urlToTitle(topicTitleInUrl)}'`
+                )
+            );
     }, [params]);
 
     // Note: hacky way of removing scrollability outside of the panes

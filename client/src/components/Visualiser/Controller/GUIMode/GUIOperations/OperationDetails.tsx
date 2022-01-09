@@ -2,8 +2,8 @@ import { Box, Collapse, List, ListItem, ListItemIcon, Theme } from '@mui/materia
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { makeStyles, useTheme } from '@mui/styles';
+import { Operation } from 'components/Visualiser/commandsInputRules';
 import React, { FC, useState } from 'react';
-import { Operation } from '../operations';
 import { LastLink, Link } from './Links';
 import { OperationsMenuState } from './OperationsTree';
 

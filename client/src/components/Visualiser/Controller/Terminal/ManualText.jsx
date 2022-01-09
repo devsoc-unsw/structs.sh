@@ -1,34 +1,32 @@
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import styles from './Terminal.module.scss';
+import { Box } from '@mui/material';
 
-const Manual = ({ manual }) => {
+const ManualText = ({ manual }) => {
     const createMarkup = (html) => {
         return { __html: html };
     };
 
     return (
-        <>
-            <Typography
-                variant="h5"
-                className={styles.command}
-                sx={{ fontFamily: 'CodeText' }}
-                dangerouslySetInnerHTML={createMarkup(manual.command)}
-            />
-            <Typography variant="h6" className={styles.usage} sx={{ fontFamily: 'CodeText' }}>
-                {manual.usage}
+        <Box sx={{ padding: 2 }}>
+            <Typography className={styles.command} sx={{ fontFamily: 'CodeText' }}>
+                {manual.command}
+            </Typography>
+            <Typography className={styles.usage} sx={{ fontFamily: 'CodeText' }}>
+                Usage: {manual.usage}
             </Typography>
             <Typography
                 variant="body2"
                 sx={{ fontFamily: 'CodeText' }}
                 dangerouslySetInnerHTML={createMarkup(`${manual.description}`)}
             />
-        </>
+        </Box>
     );
 };
 
-Manual.propTypes = {
+ManualText.propTypes = {
     manual: PropTypes.object,
 };
 
-export default Manual;
+export default ManualText;

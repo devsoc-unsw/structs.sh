@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useReducer } from 'react';
 import PropTypes from 'prop-types';
+import React, { useEffect, useReducer, useState } from 'react';
+import ManualText from './ManualText';
 import styles from './Terminal.module.scss';
-import commands from './manualDoc';
-import Manual from './ManualText';
 
 const initialState = {
     data: [],
@@ -26,14 +25,14 @@ const reducer = (state, action) => {
     }
 };
 
-const ManualPage = ({ setShowMan }) => {
+const ManualPage = ({ documentation, setShowMan }) => {
     const [input, setInput] = useState('');
     const [state, dispatch] = useReducer(reducer, initialState);
     const [isSearch, setIsSearch] = useState(true);
 
     useEffect(() => {
-        dispatch({ type: 'SET_DATA', payload: commands });
-    }, []);
+        dispatch({ type: 'SET_DATA', payload: documentation });
+    }, [documentation]);
 
     const handleQuit = (e) => {
         if (e.key === 'Enter' && input === ':q') {
@@ -91,8 +90,8 @@ const ManualPage = ({ setShowMan }) => {
     return (
         <div className={styles.manualContainer}>
             {state.search.length > 0
-                ? state.searchData.map((item, key) => <Manual manual={item} key={key} />)
-                : state.data.map((item, key) => <Manual manual={item} key={key} />)}
+                ? state.searchData.map((item, key) => <ManualText manual={item} key={key} />)
+                : state.data.map((item, key) => <ManualText manual={item} key={key} />)}
             <input
                 type="text"
                 className={styles.searchBar}

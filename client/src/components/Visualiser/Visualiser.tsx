@@ -1,9 +1,8 @@
-import React from 'react';
+import { CircularLoader } from 'components/Loader';
 import { Pane } from 'components/Panes';
+import React from 'react';
 import VisualiserCanvas from './VisualiserCanvas';
 import VisualiserManager from './VisualiserManager';
-import { Topic } from 'utils/apiRequests';
-import { CircularLoader } from 'components/Loader';
 
 interface Props {
     topicTitle: string;

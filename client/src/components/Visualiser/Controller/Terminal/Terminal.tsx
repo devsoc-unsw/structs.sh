@@ -1,9 +1,15 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import Console from 'react-console-emulator';
 import Typist from 'react-typist';
-import docs from './manualDoc';
 import ManualPage from './ManualPage';
 import styles from './Terminal.module.scss';
+import {
+    CommandDocumentation,
+    getDocumentation,
+    getVisualiserTerminalCommands,
+} from '../../commandsInputRules';
+import { titleToUrl } from 'utils/url';
+import { useNavigate } from 'react-router-dom';
 
 const consoleStyle = {
     container: {
@@ -14,6 +20,7 @@ const consoleStyle = {
     },
     prompt: {
         color: 'orange',
+        whiteSpace: 'nowrap',
     },
     content: {
         padding: '1px',
@@ -27,51 +34,54 @@ interface Props {
 
 const Terminal: FC<Props> = ({ executeCommand, topicTitle }) => {
     const [showMan, setShowMan] = useState(false);
+    const [documentation, setDocumentation] = useState<CommandDocumentation[]>();
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        setDocumentation(getDocumentation(topicTitle));
+    }, [topicTitle]);
 
     // Attempts to execute command, catching obviously bad inputs and incorrect usage
-    const processCommand = (command, arg) => {
-        if (arg && parseFloat(arg)) {
-            return executeCommand(command, arg);
+    const processCommand = (command: string, args: string[]): string => {
+        if (args) {
+            return executeCommand(command, args);
         } else {
-            const foundEntry = docs.find((entry) => entry.command === command);
+            const foundEntry = documentation.find((entry) => entry.command === command);
             return foundEntry ? foundEntry.usage : `Documentation for ${command} not found`;
         }
     };
 
-    // See console emulator docs: https://www.npmjs.com/package/react-console-emulator
-    const commands = {
-        append: {
-            usage: 'append <number>',
-            fn: (arg: string) => {
-                return processCommand('append', [arg]);
-            },
-        },
-        delete: {
-            usage: 'delete <number>',
-            fn: (arg: string) => {
-                return processCommand('delete', [arg]);
-            },
-        },
-        insert: {
-            usage: 'insert <value> <index>',
-            fn: (arg1: string, arg2: string) => {
-                return processCommand('insert', [arg1, arg2]);
-            },
-        },
-        search: {
-            usage: 'search <value>',
-            fn: (arg: string) => {
-                return processCommand('search', [arg]);
-            },
-        },
+    // Visualiser commands
+    const visualiserCommands = getVisualiserTerminalCommands(topicTitle, processCommand);
+
+    // Built in commands that should be run when any topic is selected
+    // TODO: these are experimental stubs
+    const builtInCommands = {
         man: {
             fn: () => {
-                // avoid updating react state on unmounted component
+                // Note: timeout is necessary to avoid updating react state on unmounted component
                 setTimeout(() => {
                     setShowMan(true);
                 }, 10);
             },
         },
+        cd: {
+            fn: (path: string) => {
+                navigate('/visualiser/' + path);
+            },
+        },
+        ls: {
+            fn: () => {
+                return 'Linked Lists\nBinary Search Trees';
+            },
+        },
+    };
+
+    // Set of all commands that the terminal will be able to execute
+    const commands = {
+        ...visualiserCommands,
+        ...builtInCommands,
     };
 
     return (
@@ -89,16 +99,16 @@ const Terminal: FC<Props> = ({ executeCommand, topicTitle }) => {
                         cursor={{ hideWhenDone: true }}
                         avgTypingDelay={30}
                     >
-                        Type "man" for more commands
+                        Type "man" to see commands available for '{topicTitle}'.
                     </Typist>
                 )}
             </div>
             {showMan ? (
-                <ManualPage setShowMan={setShowMan} />
+                <ManualPage documentation={documentation} setShowMan={setShowMan} />
             ) : (
                 <Console
                     style={consoleStyle.container}
-                    promptLabel={'admin@Structs.sh:~$'}
+                    promptLabel={`/${titleToUrl(topicTitle)} $`}
                     commands={commands}
                     promptLabelStyle={consoleStyle.prompt}
                     contentStyle={consoleStyle.content}

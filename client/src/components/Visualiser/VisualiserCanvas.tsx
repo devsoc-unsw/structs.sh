@@ -1,4 +1,3 @@
-import { Divider, Typography } from '@mui/material';
 import React from 'react';
 import curr from 'visualiser-src/linked-list-visualiser/assets/curr.svg';
 import prev from 'visualiser-src/linked-list-visualiser/assets/prev.svg';
@@ -13,7 +12,7 @@ const VisualiserCanvas: React.FC<Props> = ({ topicTitle }) => {
         case 'Linked Lists':
             return <LinkedListCanvas />;
         case 'Binary Search Trees':
-            return null;
+            return <BSTCanvas />;
         default:
             return null;
     }
@@ -27,10 +26,6 @@ const LinkedListCanvas: React.FC = () => (
             background: 'rgba(235, 235, 235)',
         }}
     >
-        <Typography variant="h5" sx={{ textAlign: 'center' }}>
-            Linked List Visualiser
-        </Typography>
-        <Divider />
         <div className="container">
             <div className="container" id="canvas">
                 <div id="current" style={{ top: `${topOffset}px` }}>
@@ -42,6 +37,13 @@ const LinkedListCanvas: React.FC = () => (
             </div>
         </div>
     </header>
+);
+
+const BSTCanvas: React.FC = () => (
+    <div
+        id="bst-canvas"
+        style={{ height: '100%', width: '100%', background: 'rgba(235, 235, 235)' }}
+    ></div>
 );
 
 export default VisualiserCanvas;

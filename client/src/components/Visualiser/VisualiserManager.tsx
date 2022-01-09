@@ -1,11 +1,13 @@
 import { Box } from '@mui/material';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Notification } from 'utils/Notification';
 import initLinkedListVisualiser from 'visualiser-src/linked-list-visualiser/initialiser';
+import initBSTVisualiser from 'visualiser-src/binary-search-tree-visualiser/initialiser';
 import { VisualiserController } from './Controller';
 import GUIMode from './Controller/GUIMode/GUIMode';
 import { Terminal } from './Controller/Terminal';
 import styles from './VisualiserDashboard.module.scss';
+import { getCommandExecutor } from './executableCommands';
 
 interface Props {
     topicTitle: string;
@@ -25,7 +27,8 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
             case 'Linked Lists':
                 setVisualiser(initLinkedListVisualiser());
                 break;
-            case 'Binary Search Tree':
+            case 'Binary Search Trees':
+                setVisualiser(initBSTVisualiser());
                 break;
             default:
                 Notification.info(`Couldn't find a visualiser to load for '${topicTitle}'`);
@@ -38,44 +41,9 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
         setAnimationProgress(val);
     }, []);
 
-    const executeCommand = useCallback(
-        (command: string, args: string[]): string => {
-            switch (command) {
-                case 'append':
-                    if (!args || args.length !== 1) {
-                        return 'Invalid input';
-                    } else {
-                        // appendNode(Number(args[0]));
-                        visualiser.appendNode(Number(args[0]), updateTimeline);
-                        return '';
-                    }
-                case 'delete':
-                    if (!args || args.length !== 1) {
-                        return 'Invalid input';
-                    } else {
-                        visualiser.deleteNode(Number(args[0]), updateTimeline);
-                        return '';
-                    }
-                case 'insert':
-                    console.log(args);
-                    if (!args || args.length !== 2) {
-                        return 'Invalid input';
-                    } else {
-                        visualiser.insertNode(Number(args[0]), Number(args[1]), updateTimeline);
-                        return '';
-                    }
-                case 'search':
-                    if (!args || args.length !== 1) {
-                        return 'Invalid input';
-                    } else {
-                        visualiser.searchList(Number(args[0]), updateTimeline);
-                        return '';
-                    }
-                default:
-                    return `Invalid command: ${command}`;
-            }
-        },
-        [visualiser, updateTimeline]
+    const executeCommand = useMemo(
+        () => getCommandExecutor(topicTitle, visualiser, updateTimeline),
+        [topicTitle, visualiser, updateTimeline]
     );
 
     const handlePlay = useCallback(() => {

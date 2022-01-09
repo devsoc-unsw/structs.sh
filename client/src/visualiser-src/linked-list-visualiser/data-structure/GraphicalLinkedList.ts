@@ -1,13 +1,9 @@
-import {
-    CURRENT,
-    PREV
-} from '../util/constants';
-import { GraphicalLinkedListNode } from './GraphicalLinkedListNode'
+import { CURRENT, PREV } from '../util/constants';
+import { GraphicalLinkedListNode } from './GraphicalLinkedListNode';
 import { LinkedListAppendAnimationProducer } from '../animation-producer/LinkedListAppendAnimationProducer';
 import { LinkedListDeleteAnimationProducer } from '../animation-producer/LinkedListDeleteAnimationProducer';
 import { LinkedListInsertAnimationProducer } from '../animation-producer/LinkedListInsertAnimationProducer';
 import { LinkedListSearchAnimationProducer } from '../animation-producer/LinkedListSearchAnimationProducer';
-
 
 export default class GraphicalLinkedList {
     head: GraphicalLinkedListNode;
@@ -29,17 +25,17 @@ export default class GraphicalLinkedList {
             this.head = newNode;
             return producer.timeline;
         }
-        
+
         // Initialise curr
         let curr: GraphicalLinkedListNode = this.head;
         producer.initialisePointer(CURRENT);
-        
+
         // Traverse to last node
         while (curr.next !== null) {
             curr = curr.next;
             producer.movePointerToNext(CURRENT);
         }
-        
+
         // Link last node to new node
         curr.next = newNode;
         producer.linkLastToNew(curr);
@@ -54,7 +50,7 @@ export default class GraphicalLinkedList {
         if (index < 0 || index > this.length - 1) return [];
         this.length--;
         const producer = new LinkedListDeleteAnimationProducer();
-        
+
         // Look for node to delete
         let curr = this.head;
         producer.initialisePointer(CURRENT);
@@ -69,11 +65,11 @@ export default class GraphicalLinkedList {
             curr = curr.next;
             producer.movePointerToNext(CURRENT);
         }
-        
+
         if (prev !== null) {
             prev.next = curr.next;
             if (prev.next === null) {
-                producer.setNextToNull(prev)
+                producer.setNextToNull(prev);
             } else {
                 producer.morphNextPointerToArc(prev);
             }
@@ -119,10 +115,10 @@ export default class GraphicalLinkedList {
             producer.movePointerToNext(CURRENT);
         }
         newNode.next = curr.next;
-        producer.insertedNodePointToNext(newNode); 
+        producer.insertedNodePointToNext(newNode);
         curr.next = newNode;
-        producer.pointToInsertedNode(curr)
-        
+        producer.pointToInsertedNode(curr);
+
         producer.resetList(this);
         return producer.timeline;
     }

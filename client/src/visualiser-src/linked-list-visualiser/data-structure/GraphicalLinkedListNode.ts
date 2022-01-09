@@ -1,4 +1,4 @@
-import { setAttributes } from '../util/utils';
+import { setAttributes } from '../util/svgHelpers';
 import { nodeAttributes, shapeAttributes, textAttributes, pathAttributes } from '../util/constants';
 
 const SVG = 'http://www.w3.org/2000/svg';
@@ -6,8 +6,8 @@ const SVG = 'http://www.w3.org/2000/svg';
 interface SVGData {
     nodeTarget: SVGSVGElement;
     pointerTarget: SVGPathElement;
-    boxTarget: SVGGElement;    
-    numberTarget: SVGTextElement;    
+    boxTarget: SVGGElement;
+    numberTarget: SVGTextElement;
 }
 
 interface GraphicalLinkedListNodeData {
@@ -26,21 +26,21 @@ export class GraphicalLinkedListNode {
 
     public static from(input: number) {
         // Create SVG node
-        const newNode = document.createElementNS(SVG, "svg")
+        const newNode = document.createElementNS(SVG, 'svg');
         // Node Box + Value group
-        const nodeBox = document.createElementNS(SVG, "g");
+        const nodeBox = document.createElementNS(SVG, 'g');
         // Box for node
-        const nodeShape = document.createElementNS(SVG, 'rect')
+        const nodeShape = document.createElementNS(SVG, 'rect');
         // Text inside node
-        const nodeValue = document.createElementNS(SVG, 'text')
-        nodeValue.innerHTML = input.toString(); 
+        const nodeValue = document.createElementNS(SVG, 'text');
+        nodeValue.innerHTML = input.toString();
         // Pointer for node
-        const newPointer = document.createElementNS(SVG, 'path')
+        const newPointer = document.createElementNS(SVG, 'path');
 
-        setAttributes(newNode, nodeAttributes)
+        setAttributes(newNode, nodeAttributes);
         setAttributes(nodeShape, shapeAttributes);
         setAttributes(nodeValue, textAttributes);
-        setAttributes(newPointer, pathAttributes)
+        setAttributes(newPointer, pathAttributes);
 
         // Attach all the elements together
         nodeBox.appendChild(nodeShape);
@@ -48,17 +48,15 @@ export class GraphicalLinkedListNode {
         newNode.appendChild(nodeBox);
         newNode.appendChild(newPointer);
 
-        return new GraphicalLinkedListNode(
-            {
-                value: input,
-                svgData: {
-                    numberTarget: nodeValue,
-                    boxTarget: nodeShape,
-                    nodeTarget: newNode,
-                    pointerTarget: newPointer 
-                }
-            }
-        );
+        return new GraphicalLinkedListNode({
+            value: input,
+            svgData: {
+                numberTarget: nodeValue,
+                boxTarget: nodeShape,
+                nodeTarget: newNode,
+                pointerTarget: newPointer,
+            },
+        });
     }
 
     public get data() {

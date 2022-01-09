@@ -15,6 +15,7 @@
         "@types/node": "^12.0.0",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
+        "@svgdotjs/svg.js": "^3.1.1",
         "animejs": "^3.2.1",
         "axios": "^0.24.0",
         "cogo-toast": "^4.2.3",
@@ -39,6 +40,7 @@
         "rich-markdown-editor": "^11.19.4",
         "sass": "^1.43.4",
         "slick-carousel": "^1.8.1",
+        "svg.js": "^2.7.1",
         "source-map-explorer": "^2.5.2",
         "typescript": "^4.1.2",
         "web-vitals": "^1.0.1"
