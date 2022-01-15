@@ -95,4 +95,16 @@ export class BSTAnimationProducer {
             },
         });
     }
+
+    // this will add a delay after a sequence of simultaneous instructions.
+    // this should be removed while the visualiser is being refactored
+    public addSimultaneousDelay(delay: number, animationSequence: Animation[]) {
+        animationSequence.push({
+            targets: [],
+            duration: delay,
+            delay: 0,
+            simultaneous: false,
+            attrs: {},
+        });
+    }
 }

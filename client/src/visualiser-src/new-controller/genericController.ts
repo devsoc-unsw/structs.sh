@@ -18,7 +18,7 @@ class AnimationController {
 
     constructor() {
         this.timelineSlider.addEventListener('input', (e: Event) => {
-            this.seekPercent(Number(this.timelineSlider));
+            this.seekPercent(Number(this.timelineSlider.value));
         })
     }
 
@@ -47,14 +47,6 @@ class AnimationController {
                     .attr(attrs);
 
                 runner.during(() => {
-                    // progress corresponds to how many ms have passed in the animation
-                    const progress = runner.progress() * runner.duration();
-                    // this.slider.value = String(
-                    //     ((this.timestamps[i] + progress) / this.timelineDuration) * 100
-                    // );
-                    updateSlider(
-                        Number(((this.timestamps[i] + progress) / this.timelineDuration) * 100)
-                    );
                     // TODO: put this in the after() function instead
                     this.timestampsIndex = i;
                 });

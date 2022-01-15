@@ -129,9 +129,10 @@ class BST {
         this.root = newRoot;
 
         this.updateNodePositions();
-        // this.animationProducer.moveNode(root, root.x, root.y + 50, animationSequence);
-        // this.animationProducer.moveNode(newRoot, newRoot.x, newRoot.y + 50, animationSequence);
         this.moveNodes(this.root.right, animationSequence);
+        this.animationProducer.addSimultaneousDelay(400, animationSequence);
+        this.moveNodes(this.root, animationSequence);
+        this.animationProducer.addSimultaneousDelay(400, animationSequence);
 
         return animationSequence;
     }
