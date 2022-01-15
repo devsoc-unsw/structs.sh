@@ -14,6 +14,13 @@ class AnimationController {
     private timelineDuration: number = 0;
     private timestamps: number[] = [];
     private timestampsIndex: number = 0;
+    private timelineSlider = document.querySelector('#timelineSlider') as HTMLInputElement;
+
+    constructor() {
+        this.timelineSlider.addEventListener('input', (e: Event) => {
+            this.seekPercent(Number(this.timelineSlider));
+        })
+    }
 
     public getCurrentTimeline(): Timeline {
         return this.currentTimeline;

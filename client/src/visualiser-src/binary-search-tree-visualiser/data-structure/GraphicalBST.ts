@@ -131,14 +131,13 @@ class BST {
         this.updateNodePositions();
         // this.animationProducer.moveNode(root, root.x, root.y + 50, animationSequence);
         // this.animationProducer.moveNode(newRoot, newRoot.x, newRoot.y + 50, animationSequence);
-        this.moveNodes(animationSequence);
+        this.moveNodes(this.root.right, animationSequence);
 
         return animationSequence;
     }
 
-    // TODO: try to get rid of this lol
-    public moveNodes(animationSequence: Animation[]): void {
-        this.moveNodesRecursive(this.root, animationSequence);
+    public moveNodes(root: Node, animationSequence: Animation[]): void {
+        this.moveNodesRecursive(root, animationSequence);
     }
 
     public moveNodesRecursive(node: Node, animationSequence: Animation[]): void {

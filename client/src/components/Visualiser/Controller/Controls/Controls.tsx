@@ -108,7 +108,10 @@ const Controls: FC<Props> = ({
                             className={styles.sliderIcon}
                             sx={{ fill: theme.palette.text.primary }}
                         />
-                        <Slider
+                        <div className="col">
+                            <input type="range" id="timelineSlider" name="volume" min="0" max="100" defaultValue="0" step="0.01"/> 
+                        </div>
+                        {/* <Slider
                             onChange={(_, newValue) => {
                                 if (userIsDraggingTimeline) {
                                     handleDragTimeline(Number(newValue));
@@ -129,7 +132,7 @@ const Controls: FC<Props> = ({
                             min={0}
                             max={100}
                             sx={{ ml: '10px' }}
-                        />
+                        /> */}
                     </Stack>
                     <Stack direction="row" sx={{ height: '32px' }}>
                         <SpeedIcon
