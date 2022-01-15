@@ -15,7 +15,7 @@ export class BSTAnimationProducer {
     public createNode(node: Node) {
         if (node.parent != null) {
             node.lineTarget = this.draw
-                .line(node.parent.x, node.parent.y, node.x, node.y + 50)
+                .line(node.parent.x, node.parent.y + 50, node.x, node.y + 50)
                 .attr({ opacity: 0 });
             node.lineTarget.stroke({
                 color: '#000',
@@ -70,6 +70,18 @@ export class BSTAnimationProducer {
     }
 
     public showNode(node: Node, animationSequence: Animation[]) {
+        if (node.parent != null) {
+            animationSequence.push({
+                targets: [node.lineTarget],
+                duration: 400,
+                delay: 0,
+                simultaneous: false,
+                attrs: {
+                    opacity: 1,
+                },
+            });
+        }
+
         animationSequence.push({
             targets: [node.nodeTarget, node.textTarget],
             duration: 400,
@@ -92,6 +104,42 @@ export class BSTAnimationProducer {
                 y: newY,
                 cx: newX,
                 cy: newY,
+            },
+        });
+    }
+
+    // given a node which should also have a valid parent reference, move the line to the
+    // appropriate coordinates
+    public updateLine(node: Node, animationSequence: Animation[]) {
+        if (node.parent === null) return;
+
+        animationSequence.push({
+            targets: [node.lineTarget],
+            duration: 400,
+            delay: 0,
+            simultaneous: true,
+            attrs: {
+                x1: node.parent.x,
+                y1: node.parent.y + 50,
+                x2: node.x,
+                y2: node.y + 50,
+            },
+        });
+    }
+
+    public moveLine(node: Node, x1: number, y1: number, x2: number, y2: number, animationSequence: Animation[]) {
+        if (node.parent === null) return;
+
+        animationSequence.push({
+            targets: [node.lineTarget],
+            duration: 400,
+            delay: 0,
+            simultaneous: true,
+            attrs: {
+                x1: x1,
+                y1: y1,
+                x2: x2,
+                y2: y2,
             },
         });
     }

@@ -100,6 +100,9 @@ class BST {
 
     // returns a node corresponding to the input
     public getNode(input: number): Node {
+        // handle edgecase where no nodes are present
+        if (this.root === null) return null;
+
         return this.getNodeRecursive(input, this.root);
     }
 
@@ -117,21 +120,51 @@ class BST {
     public rotateRight(input: number): Animation[] {
         const animationSequence: Animation[] = [];
         const root: Node = this.getNode(input);
+
+        if (root === null) return animationSequence;
+
         const newRoot: Node = root.left;
 
-        if (root === null || newRoot === null) {
-            return animationSequence;
-        }
+        if (newRoot === null) return animationSequence;
 
         root.left = newRoot.right;
+        root.left.parent = root;
+
+        // animate the rearrangement of pointer
+        this.animationProducer.updateLine(root.left, animationSequence);
+        this.animationProducer.addSimultaneousDelay(400, animationSequence);
+
         newRoot.right = root;
+        root.parent = newRoot;
+
+        // we also need to swap lineTargets for root and newRoot
+        root.lineTarget = newRoot.lineTarget;
+        newRoot.lineTarget = null;
+
+        // reorientate the line connecting the old root and new root
+        // this is a bit hacky though
+        root.lineTarget.plot([newRoot.x, newRoot.y + 50, root.x, root.y + 50]);
+
         newRoot.parent = null;
         this.root = newRoot;
 
+        // sort of hacky try to make cleaner later
+        const x1 = newRoot.x;
+        const y1 = newRoot.y;
+        
         this.updateNodePositions();
+
+        const x2 = root.x;
+        const y2 = root.y;
+
         this.moveNodes(this.root.right, animationSequence);
+        this.updateLines(root, animationSequence);
+        this.animationProducer.addSimultaneousDelay(400, animationSequence);
+        this.animationProducer.moveLine(root, x1, y1 + 50, x2, y2 + 50, animationSequence);
         this.animationProducer.addSimultaneousDelay(400, animationSequence);
         this.moveNodes(this.root, animationSequence);
+        this.animationProducer.updateLine(newRoot.right, animationSequence);
+        this.animationProducer.updateLine(newRoot.left, animationSequence);
         this.animationProducer.addSimultaneousDelay(400, animationSequence);
 
         return animationSequence;
@@ -150,6 +183,24 @@ class BST {
 
         this.moveNodesRecursive(node.left, animationSequence);
         this.moveNodesRecursive(node.right, animationSequence);
+    }
+
+    public updateLines(root: Node, animationSequence: Animation[]): void {
+        this.updateLinesRecursive(root.left, animationSequence);
+        this.updateLinesRecursive(root.right, animationSequence);
+    }
+
+    public updateLinesRecursive(node: Node, animationSequence: Animation[]): void {
+        if (node === null) {
+            return;
+        }
+
+        console.log(node);
+
+        this.animationProducer.updateLine(node, animationSequence);
+
+        this.updateLinesRecursive(node.left, animationSequence);
+        this.updateLinesRecursive(node.right, animationSequence);
     }
 }
 
