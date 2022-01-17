@@ -103,12 +103,15 @@ class BST {
         // handle edgecase where no nodes are present
         if (this.root === null) return null;
 
+        console.log(this.root);
+
         return this.getNodeRecursive(input, this.root);
     }
 
     // TODO: remove this
     public getNodeRecursive(input: number, node: Node): Node {
         if (input === node.value) {
+            console.log(node);
             return node;
         } else if (input < node.value) {
             this.getNodeRecursive(input, node.left);
@@ -118,10 +121,15 @@ class BST {
     }
 
     public rotateRight(input: number): Animation[] {
+        console.log(this.root);
+        // console.log(root);
         const animationSequence: Animation[] = [];
         const root: Node = this.getNode(input);
 
         if (root === null) return animationSequence;
+
+        console.log(this.root);
+        console.log(root);
 
         const newRoot: Node = root.left;
 
@@ -195,10 +203,7 @@ class BST {
             return;
         }
 
-        console.log(node);
-
         this.animationProducer.updateLine(node, animationSequence);
-
         this.updateLinesRecursive(node.left, animationSequence);
         this.updateLinesRecursive(node.right, animationSequence);
     }

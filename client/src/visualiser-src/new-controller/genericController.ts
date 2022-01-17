@@ -28,6 +28,11 @@ class AnimationController {
 
     public constructTimeline(animationSequence: Animation[], updateSlider: (val: number) => void) {
         this.currentTimeline = new Timeline().persist(true);
+
+        this.currentTimeline.on('time', (e: CustomEvent) => {
+            this.timelineSlider.value = String((e.detail / this.timelineDuration) * 100);
+        });
+
         this.timestamps = [];
         this.timelineDuration = 0;
         this.timestampsIndex = 0;
