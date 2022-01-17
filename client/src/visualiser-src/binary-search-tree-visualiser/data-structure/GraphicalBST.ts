@@ -1,20 +1,16 @@
-import { BSTAnimationProducer } from '../animation-producer/BSTAnimationProducer';
+import BSTAnimationProducer from '../animation-producer/BSTAnimationProducer';
 import { Animation, Node } from '../util/typedefs';
+import { SVG, Container } from '@svgdotjs/svg.js';
 
 // used for the actual implementation of the bst
 class BST {
-    public root: Node;
-    public animationProducer: BSTAnimationProducer;
-
-    constructor() {
-        this.root = null;
-        this.animationProducer = new BSTAnimationProducer();
-    }
-
+    public root: Node = null;
+    public draw: Container = SVG().addTo('#bst-canvas').size('100%', '100%');
+    
     // inserts a node into the bst and produces an animation sequence
     // that is later handled by the animation controller
-    public insert(input: number): Animation[] {
-        const animationSequence: Animation[] = [];
+    public insert(input: number): BSTAnimationProducer {
+        const animationProducer: BSTAnimationProducer = new BSTAnimationProducer(this.draw);
 
         const node: Node = {
             nodeTarget: null,
@@ -31,23 +27,24 @@ class BST {
         if (this.root == null) {
             this.root = node;
             this.updateNodePositions();
-            this.animationProducer.createNode(node);
-            this.animationProducer.showNode(node, animationSequence);
+            console.log(this.root);
+            animationProducer.createNode(node);
+            animationProducer.showNode(node);
         } else {
             let currentNode: Node = this.root;
 
             while (currentNode) {
-                this.animationProducer.highlightNode(currentNode, animationSequence);
+                animationProducer.highlightNode(currentNode);
 
                 if (node.value < currentNode.value) {
                     if (currentNode.left == null) {
                         currentNode.left = node;
                         node.parent = currentNode;
                         this.updateNodePositions();
-                        this.animationProducer.createNode(node);
-                        this.animationProducer.showNode(node, animationSequence);
+                        animationProducer.createNode(node);
+                        animationProducer.showNode(node);
 
-                        return animationSequence;
+                        return animationProducer;
                     }
 
                     currentNode = currentNode.left;
@@ -56,17 +53,17 @@ class BST {
                         currentNode.right = node;
                         node.parent = currentNode;
                         this.updateNodePositions();
-                        this.animationProducer.createNode(node);
-                        this.animationProducer.showNode(node, animationSequence);
+                        animationProducer.createNode(node);
+                        animationProducer.showNode(node);
 
-                        return animationSequence;
+                        return animationProducer;
                     }
 
                     currentNode = currentNode.right;
                 }
             }
         }
-        return animationSequence;
+        return animationProducer;
     }
 
     // use this method after doing bst operations to update
@@ -100,112 +97,115 @@ class BST {
 
     // returns a node corresponding to the input
     public getNode(input: number): Node {
-        // handle edgecase where no nodes are present
-        if (this.root === null) return null;
+        // // handle edgecase where no nodes are present
+        // if (this.root === null) return null;
 
-        console.log(this.root);
+        // console.log(this.root);
 
-        return this.getNodeRecursive(input, this.root);
+        // return this.getNodeRecursive(input, this.root);
+        return null;
     }
 
     // TODO: remove this
     public getNodeRecursive(input: number, node: Node): Node {
-        if (input === node.value) {
-            console.log(node);
-            return node;
-        } else if (input < node.value) {
-            this.getNodeRecursive(input, node.left);
-        } else {
-            this.getNodeRecursive(input, node.right);
-        }
+        // if (input === node.value) {
+        //     console.log(node);
+        //     return node;
+        // } else if (input < node.value) {
+        //     this.getNodeRecursive(input, node.left);
+        // } else {
+        //     this.getNodeRecursive(input, node.right);
+        // }
+
+        return null;
     }
 
     public rotateRight(input: number): Animation[] {
-        console.log(this.root);
+        // console.log(this.root);
+        // // console.log(root);
+        // const animationSequence: Animation[] = [];
+        // const root: Node = this.getNode(input);
+
+        // if (root === null) return animationSequence;
+
+        // console.log(this.root);
         // console.log(root);
-        const animationSequence: Animation[] = [];
-        const root: Node = this.getNode(input);
 
-        if (root === null) return animationSequence;
+        // const newRoot: Node = root.left;
 
-        console.log(this.root);
-        console.log(root);
+        // if (newRoot === null) return animationSequence;
 
-        const newRoot: Node = root.left;
+        // root.left = newRoot.right;
+        // root.left.parent = root;
 
-        if (newRoot === null) return animationSequence;
+        // // animate the rearrangement of pointer
+        // this.animationProducer.updateLine(root.left, animationSequence);
+        // this.animationProducer.addSimultaneousDelay(400, animationSequence);
 
-        root.left = newRoot.right;
-        root.left.parent = root;
+        // newRoot.right = root;
+        // root.parent = newRoot;
 
-        // animate the rearrangement of pointer
-        this.animationProducer.updateLine(root.left, animationSequence);
-        this.animationProducer.addSimultaneousDelay(400, animationSequence);
+        // // we also need to swap lineTargets for root and newRoot
+        // root.lineTarget = newRoot.lineTarget;
+        // newRoot.lineTarget = null;
 
-        newRoot.right = root;
-        root.parent = newRoot;
+        // // reorientate the line connecting the old root and new root
+        // // this is a bit hacky though
+        // root.lineTarget.plot([newRoot.x, newRoot.y + 50, root.x, root.y + 50]);
 
-        // we also need to swap lineTargets for root and newRoot
-        root.lineTarget = newRoot.lineTarget;
-        newRoot.lineTarget = null;
+        // newRoot.parent = null;
+        // this.root = newRoot;
 
-        // reorientate the line connecting the old root and new root
-        // this is a bit hacky though
-        root.lineTarget.plot([newRoot.x, newRoot.y + 50, root.x, root.y + 50]);
-
-        newRoot.parent = null;
-        this.root = newRoot;
-
-        // sort of hacky try to make cleaner later
-        const x1 = newRoot.x;
-        const y1 = newRoot.y;
+        // // sort of hacky try to make cleaner later
+        // const x1 = newRoot.x;
+        // const y1 = newRoot.y;
         
-        this.updateNodePositions();
+        // this.updateNodePositions();
 
-        const x2 = root.x;
-        const y2 = root.y;
+        // const x2 = root.x;
+        // const y2 = root.y;
 
-        this.moveNodes(this.root.right, animationSequence);
-        this.updateLines(root, animationSequence);
-        this.animationProducer.addSimultaneousDelay(400, animationSequence);
-        this.animationProducer.moveLine(root, x1, y1 + 50, x2, y2 + 50, animationSequence);
-        this.animationProducer.addSimultaneousDelay(400, animationSequence);
-        this.moveNodes(this.root, animationSequence);
-        this.animationProducer.updateLine(newRoot.right, animationSequence);
-        this.animationProducer.updateLine(newRoot.left, animationSequence);
-        this.animationProducer.addSimultaneousDelay(400, animationSequence);
+        // this.moveNodes(this.root.right, animationSequence);
+        // this.updateLines(root, animationSequence);
+        // this.animationProducer.addSimultaneousDelay(400, animationSequence);
+        // this.animationProducer.moveLine(root, x1, y1 + 50, x2, y2 + 50, animationSequence);
+        // this.animationProducer.addSimultaneousDelay(400, animationSequence);
+        // this.moveNodes(this.root, animationSequence);
+        // this.animationProducer.updateLine(newRoot.right, animationSequence);
+        // this.animationProducer.updateLine(newRoot.left, animationSequence);
+        // this.animationProducer.addSimultaneousDelay(400, animationSequence);
 
-        return animationSequence;
+        return null;
     }
 
     public moveNodes(root: Node, animationSequence: Animation[]): void {
-        this.moveNodesRecursive(root, animationSequence);
+        // this.moveNodesRecursive(root, animationSequence);
     }
 
     public moveNodesRecursive(node: Node, animationSequence: Animation[]): void {
-        if (node === null) {
-            return;
-        }
+        // if (node === null) {
+        //     return;
+        // }
 
-        this.animationProducer.moveNode(node, node.x, node.y + 50, animationSequence);
+        // this.animationProducer.moveNode(node, node.x, node.y + 50, animationSequence);
 
-        this.moveNodesRecursive(node.left, animationSequence);
-        this.moveNodesRecursive(node.right, animationSequence);
+        // this.moveNodesRecursive(node.left, animationSequence);
+        // this.moveNodesRecursive(node.right, animationSequence);
     }
 
     public updateLines(root: Node, animationSequence: Animation[]): void {
-        this.updateLinesRecursive(root.left, animationSequence);
-        this.updateLinesRecursive(root.right, animationSequence);
+        // this.updateLinesRecursive(root.left, animationSequence);
+        // this.updateLinesRecursive(root.right, animationSequence);
     }
 
     public updateLinesRecursive(node: Node, animationSequence: Animation[]): void {
-        if (node === null) {
-            return;
-        }
+        // if (node === null) {
+        //     return;
+        // }
 
-        this.animationProducer.updateLine(node, animationSequence);
-        this.updateLinesRecursive(node.left, animationSequence);
-        this.updateLinesRecursive(node.right, animationSequence);
+        // this.animationProducer.updateLine(node, animationSequence);
+        // this.updateLinesRecursive(node.left, animationSequence);
+        // this.updateLinesRecursive(node.right, animationSequence);
     }
 }
 

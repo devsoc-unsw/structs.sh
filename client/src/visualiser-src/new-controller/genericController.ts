@@ -1,5 +1,6 @@
 import { Timeline, Runner } from '@svgdotjs/svg.js';
 import { Animation } from '../binary-search-tree-visualiser/util/typedefs';
+import BSTAnimationProducer from '../binary-search-tree-visualiser/animation-producer/BSTAnimationProducer';
 
 // controls todo:
 // [x] play/pause
@@ -26,7 +27,7 @@ class AnimationController {
         return this.currentTimeline;
     }
 
-    public constructTimeline(animationSequence: Animation[], updateSlider: (val: number) => void) {
+    public constructTimeline(animationProducer: BSTAnimationProducer, updateSlider: (val: number) => void) {
         this.currentTimeline = new Timeline().persist(true);
 
         this.currentTimeline.on('time', (e: CustomEvent) => {
@@ -37,32 +38,12 @@ class AnimationController {
         this.timelineDuration = 0;
         this.timestampsIndex = 0;
 
-        for (let i = 0; i < animationSequence.length; i++) {
-            const animation = animationSequence[i];
-            const attrs = {};
-
-            // TODO: handle special case attributes like dx, dy, etc
-            for (const attr in animation.attrs) {
-                attrs[attr] = animation.attrs[attr];
-            }
-
-            for (let target in animation.targets) {
-                const runner: Runner = animation.targets[target]
-                    .animate(animation.duration, animation.delay, 'after')
-                    .attr(attrs);
-
-                runner.during(() => {
-                    // TODO: put this in the after() function instead
-                    this.timestampsIndex = i;
-                });
-
+        for (const animationGroup of animationProducer.getAnimationSequence()) {
+            for (const runner of animationGroup) {
                 this.currentTimeline.schedule(runner, this.timelineDuration, 'absolute');
             }
 
-            if (!animation.simultaneous) {
-                this.timestamps.push(this.timelineDuration);
-                this.timelineDuration += animation.duration;
-            }
+            this.timelineDuration += animationGroup[0].duration();
         }
 
         this.currentTimeline.play();

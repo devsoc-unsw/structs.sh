@@ -1,32 +1,24 @@
 import { Node, Animation } from '../util/typedefs';
-import { SVG } from '@svgdotjs/svg.js';
+import { SVG, Runner, Container } from '@svgdotjs/svg.js';
 import { nodeSettings } from '../util/settings';
 
-// this class is used for:
-// . creation of bst nodes
-// . providing functions which perform specific animations
-// . storing the main svg called draw
-export class BSTAnimationProducer {
-    private draw = SVG().addTo('#bst-canvas').size('100%', '100%');
+export default class BSTAnimationProducer {
+    private animationSequence: Runner[][];
+    public draw: Container;
+
+    public getAnimationSequence() {
+        return this.animationSequence;
+    }
+
+    public constructor(draw: Container) {
+        this.animationSequence = [];
+        this.draw = draw;
+    }
 
     // draws a node which is composed of svgs and adds svg references to
     // the node
     // TODO: remove hardcoded value of 50
     public createNode(node: Node) {
-        if (node.parent != null) {
-            node.lineTarget = this.draw
-                .line(node.parent.x, node.parent.y + 50, node.x, node.y + 50)
-                .attr({ opacity: 0 });
-            node.lineTarget.stroke({
-                color: '#000',
-                width: 3,
-                linecap: 'round',
-            });
-
-            node.lineTarget.back();
-        }
-
-        // create a g element and add the text and circle elements to it
         node.nodeTarget = this.draw.circle(nodeSettings.width);
         node.nodeTarget.attr({
             fill: nodeSettings.fillColour,
@@ -47,50 +39,41 @@ export class BSTAnimationProducer {
         });
     }
 
-    public highlightNode(node: Node, animationSequence: Animation[]) {
-        animationSequence.push({
-            targets: [node.nodeTarget],
-            duration: 400,
-            delay: 200,
-            simultaneous: false,
-            attrs: {
-                fill: '#00ff00',
-            },
-        });
+    public highlightNode(node: Node) {
+        // this.animationSequence.push({
+        //     targets: [node.nodeTarget],
+        //     duration: 400,
+        //     delay: 200,
+        //     simultaneous: false,
+        //     attrs: {
+        //         fill: '#00ff00',
+        //     },
+        // });
 
-        animationSequence.push({
-            targets: [node.nodeTarget],
-            duration: 400,
-            delay: 200,
-            simultaneous: false,
-            attrs: {
-                fill: '#ffffff',
-            },
-        });
+        // animationSequence.push({
+        //     targets: [node.nodeTarget],
+        //     duration: 400,
+        //     delay: 200,
+        //     simultaneous: false,
+        //     attrs: {
+        //         fill: '#ffffff',
+        //     },
+        // });
     }
 
-    public showNode(node: Node, animationSequence: Animation[]) {
-        if (node.parent != null) {
-            animationSequence.push({
-                targets: [node.lineTarget],
-                duration: 400,
-                delay: 0,
-                simultaneous: false,
-                attrs: {
-                    opacity: 1,
-                },
-            });
-        }
-
-        animationSequence.push({
-            targets: [node.nodeTarget, node.textTarget],
-            duration: 400,
-            delay: 0,
-            simultaneous: false,
-            attrs: {
+    public showNode(node: Node) {
+        this.animationSequence.push([
+            node.nodeTarget
+            .animate(1000)
+            .attr({
                 opacity: 1,
-            },
-        });
+            }),
+            node.textTarget
+            .animate(1000)
+            .attr({
+                opacity: 1,
+            })
+        ])
     }
 
     public moveNode(node: Node, newX: number, newY: number, animationSequence: Animation[]) {
