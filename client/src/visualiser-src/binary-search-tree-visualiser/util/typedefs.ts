@@ -11,13 +11,15 @@ export interface Node {
     // selector for the text svg element
     textTarget: Text;
 
-    // selector for the line svg element
-    lineTarget: Line;
+    // selector for the left line svg element
+    leftLineTarget: Line;
+
+    // selector for the right line svg element
+    rightLineTarget: Line;
 
     // reference to a left, right and parent node
     left: Node;
     right: Node;
-    parent: Node;
 
     // the value of the node which is useful for when we do bst operations
     value: number;

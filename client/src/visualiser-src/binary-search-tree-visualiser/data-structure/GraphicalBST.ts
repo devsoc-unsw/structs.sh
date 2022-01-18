@@ -1,6 +1,7 @@
 import BSTAnimationProducer from '../animation-producer/BSTAnimationProducer';
 import { Animation, Node } from '../util/typedefs';
 import { SVG, Container } from '@svgdotjs/svg.js';
+import { canvasPadding } from '../util/settings';
 
 // used for the actual implementation of the bst
 class BST {
@@ -11,14 +12,13 @@ class BST {
     // that is later handled by the animation controller
     public insert(input: number): BSTAnimationProducer {
         const animationProducer: BSTAnimationProducer = new BSTAnimationProducer(this.draw);
-
         const node: Node = {
             nodeTarget: null,
             textTarget: null,
-            lineTarget: null,
+            leftLineTarget: null,
+            rightLineTarget: null,
             left: null,
             right: null,
-            parent: null,
             value: input,
             x: 0,
             y: 0,
@@ -27,9 +27,7 @@ class BST {
         if (this.root == null) {
             this.root = node;
             this.updateNodePositions();
-            console.log(this.root);
             animationProducer.createNode(node);
-            animationProducer.showNode(node);
         } else {
             let currentNode: Node = this.root;
 
@@ -39,11 +37,9 @@ class BST {
                 if (node.value < currentNode.value) {
                     if (currentNode.left == null) {
                         currentNode.left = node;
-                        node.parent = currentNode;
                         this.updateNodePositions();
                         animationProducer.createNode(node);
-                        animationProducer.showNode(node);
-
+        
                         return animationProducer;
                     }
 
@@ -51,10 +47,8 @@ class BST {
                 } else {
                     if (currentNode.right == null) {
                         currentNode.right = node;
-                        node.parent = currentNode;
                         this.updateNodePositions();
                         animationProducer.createNode(node);
-                        animationProducer.showNode(node);
 
                         return animationProducer;
                     }
@@ -74,7 +68,7 @@ class BST {
         const low: number = 0;
         const high: number = Number(canvasWidth);
         const mid: number = (low + high) / 2;
-        this.updateNodePositionsRecursive(this.root, low, high, mid, 0);
+        this.updateNodePositionsRecursive(this.root, low, high, mid, canvasPadding);
     }
 
     public updateNodePositionsRecursive(
