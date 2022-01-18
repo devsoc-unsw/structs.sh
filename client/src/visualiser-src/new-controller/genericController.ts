@@ -1,5 +1,4 @@
-import { Timeline, Runner } from '@svgdotjs/svg.js';
-import { Animation } from '../binary-search-tree-visualiser/util/typedefs';
+import { Timeline } from '@svgdotjs/svg.js';
 import BSTAnimationProducer from '../binary-search-tree-visualiser/animation-producer/BSTAnimationProducer';
 
 // controls todo:

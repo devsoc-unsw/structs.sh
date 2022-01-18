@@ -1,7 +1,6 @@
 import AnimationController from '../new-controller/genericController';
 import { Visualiser } from '../typedefs';
 import BST from './data-structure/GraphicalBST';
-import { Animation } from './util/typedefs';
 import BSTAnimationProducer from './animation-producer/BSTAnimationProducer';
 
 export interface BSTVisualiser extends Visualiser {

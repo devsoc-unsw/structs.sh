@@ -28,19 +28,3 @@ export interface Node {
     x: number;
     y: number;
 }
-
-export interface Animation {
-    // by having a targets attribute we can animate multiple
-    // svgs at the same time if needed
-    targets: (Circle | Line | Text)[];
-
-    // related to when an animation occurs in the timeline
-    duration: number;
-    delay: number;
-    simultaneous: boolean;
-
-    attrs: {
-        // any other attributes that svg.js will use
-        [key: string]: any;
-    }
-}

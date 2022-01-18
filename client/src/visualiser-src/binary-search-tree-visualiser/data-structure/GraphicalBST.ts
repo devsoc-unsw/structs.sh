@@ -1,5 +1,5 @@
 import BSTAnimationProducer from '../animation-producer/BSTAnimationProducer';
-import { Animation, Node } from '../util/typedefs';
+import { Node } from '../util/typedefs';
 import { SVG, Container } from '@svgdotjs/svg.js';
 import { canvasPadding } from '../util/settings';
 
@@ -38,7 +38,7 @@ class BST {
                     if (currentNode.left == null) {
                         currentNode.left = node;
                         this.updateNodePositions();
-                        animationProducer.createNode(node);
+                        animationProducer.createNodeLeft(node, currentNode);
         
                         return animationProducer;
                     }
@@ -48,7 +48,7 @@ class BST {
                     if (currentNode.right == null) {
                         currentNode.right = node;
                         this.updateNodePositions();
-                        animationProducer.createNode(node);
+                        animationProducer.createNodeRight(node, currentNode);
 
                         return animationProducer;
                     }

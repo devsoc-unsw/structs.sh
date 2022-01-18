@@ -1,5 +1,5 @@
-import { Node, Animation } from '../util/typedefs';
-import { SVG, Runner, Container } from '@svgdotjs/svg.js';
+import { Node } from '../util/typedefs';
+import { Runner, Container } from '@svgdotjs/svg.js';
 import { nodeStyle, nodeWidth, textStyle, lineStyle, canvasPadding } from '../util/settings';
 
 export default class BSTAnimationProducer {
@@ -16,6 +16,30 @@ export default class BSTAnimationProducer {
     public constructor(draw: Container) {
         this.animationSequence = [];
         this.draw = draw;
+    }
+
+    public createNodeLeft(node: Node, parent: Node) {
+        this.animationSequence.push([
+            parent.leftLineTarget
+            .animate(400)
+            .attr({
+                opacity: 1,
+            }),
+        ])
+
+        this.createNode(node);
+    }
+
+    public createNodeRight(node: Node, parent: Node) {
+        this.animationSequence.push([
+            parent.rightLineTarget
+            .animate(400)
+            .attr({
+                opacity: 1,
+            }),
+        ])
+
+        this.createNode(node);
     }
 
     // draws a node on the draw canvas and shows the node
@@ -79,18 +103,18 @@ export default class BSTAnimationProducer {
     }
 
     public moveNode(node: Node, newX: number, newY: number, animationSequence: Animation[]) {
-        animationSequence.push({
-            targets: [node.nodeTarget, node.textTarget],
-            duration: 400,
-            delay: 0,
-            simultaneous: true,
-            attrs: {
-                x: newX,
-                y: newY,
-                cx: newX,
-                cy: newY,
-            },
-        });
+        // animationSequence.push({
+        //     targets: [node.nodeTarget, node.textTarget],
+        //     duration: 400,
+        //     delay: 0,
+        //     simultaneous: true,
+        //     attrs: {
+        //         x: newX,
+        //         y: newY,
+        //         cx: newX,
+        //         cy: newY,
+        //     },
+        // });
     }
 
     // given a node which should also have a valid parent reference, move the line to the

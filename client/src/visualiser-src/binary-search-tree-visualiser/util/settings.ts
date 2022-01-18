@@ -18,7 +18,7 @@ export const textStyle = {
 export const lineStyle = {
     'stroke-width': 3,
     'stroke-linecap': 'round',
-    opacity: 1,
+    opacity: 0,
     stroke: '#000',
 }
 
