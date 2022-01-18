@@ -3,7 +3,7 @@ import BSTAnimationProducer from '../binary-search-tree-visualiser/animation-pro
 
 // controls todo:
 // [x] play/pause
-// [ ] step to the next or previous timestamp in the current timeline
+// [x] step to the next or previous timestamp in the current timeline
 // [ ] run a sequence in step mode or sequential mode
 // [ ] control to skip the animation of a sequence
 
@@ -27,15 +27,7 @@ class AnimationController {
     }
 
     public constructTimeline(animationProducer: BSTAnimationProducer, updateSlider: (val: number) => void) {
-        this.currentTimeline = new Timeline().persist(true);
-
-        this.currentTimeline.on('time', (e: CustomEvent) => {
-            this.timelineSlider.value = String((e.detail / this.timelineDuration) * 100);
-        });
-
-        this.timestamps = [];
-        this.timelineDuration = 0;
-        this.timestampsIndex = 0;
+        this.resetTimeline();
 
         for (const animationGroup of animationProducer.getAnimationSequence()) {
             for (const runner of animationGroup) {
@@ -46,6 +38,17 @@ class AnimationController {
         }
 
         this.currentTimeline.play();
+    }
+
+    public resetTimeline() {
+        this.currentTimeline = new Timeline().persist(true);
+        this.currentTimeline.on('time', (e: CustomEvent) => {
+            this.timelineSlider.value = String((e.detail / this.timelineDuration) * 100);
+        });
+
+        this.timestamps = [];
+        this.timelineDuration = 0;
+        this.timestampsIndex = 0;
     }
 
     public play(): void {

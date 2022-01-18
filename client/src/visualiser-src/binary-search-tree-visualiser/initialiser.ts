@@ -24,21 +24,15 @@ const initialise = (): any => {
     const insert = (val: number, updateSlider: (val: number) => void) => {
         // if a timeline is currently running on the controller then finish it and start the new insert timeline
         controller.finish();
-
         const animationSequence: BSTAnimationProducer = bst.insert(val);
-        console.log(bst.root);
         controller.constructTimeline(animationSequence, updateSlider);
-        console.log(bst.root);
     };
 
     const rotateRight = (val: number, updateSlider: (val: number) => void) => {
-        // // if a timeline is currently running on the controller then finish it and start the new insert timeline
-        // controller.finish();
-
-        // // this returned timeline value will eventually be used by the animation controller
-        // console.log(bst.root);
-        // const animationSequence: Animation[] = bst.rotateRight(val);
-        // controller.constructTimeline(animationSequence, updateSlider);
+        // if a timeline is currently running on the controller then finish it and start the new insert timeline
+        controller.finish();
+        const animationSequence: BSTAnimationProducer = bst.rotateRight(val);
+        controller.constructTimeline(animationSequence, updateSlider);
     };
 
     const play = () => {

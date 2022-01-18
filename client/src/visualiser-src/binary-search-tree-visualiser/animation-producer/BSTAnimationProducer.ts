@@ -6,7 +6,7 @@ export default class BSTAnimationProducer {
     private animationSequence: Runner[][];
     public draw: Container;
 
-    public getAnimationSequence() {
+    public getAnimationSequence(): Runner[][] {
         return this.animationSequence;
     }
 
@@ -18,7 +18,7 @@ export default class BSTAnimationProducer {
         this.draw = draw;
     }
 
-    public createNodeLeft(node: Node, parent: Node) {
+    public createNodeLeft(node: Node, parent: Node): void {
         this.animationSequence.push([
             parent.leftLineTarget
             .animate(400)
@@ -30,7 +30,7 @@ export default class BSTAnimationProducer {
         this.createNode(node);
     }
 
-    public createNodeRight(node: Node, parent: Node) {
+    public createNodeRight(node: Node, parent: Node): void {
         this.animationSequence.push([
             parent.rightLineTarget
             .animate(400)
@@ -43,7 +43,7 @@ export default class BSTAnimationProducer {
     }
 
     // draws a node on the draw canvas and shows the node
-    public createNode(node: Node) {
+    public createNode(node: Node): void {
         // based on the depth of the node we are able to create left and right svg line targets
         const canvasWidth = document.getElementById('bst-canvas').offsetWidth;
         const depth: number = (node.y - canvasPadding) / 75;
@@ -84,7 +84,7 @@ export default class BSTAnimationProducer {
         ])
     }
 
-    public highlightNode(node: Node) {
+    public highlightNode(node: Node): void {
         this.animationSequence.push([
             node.nodeTarget
             .animate(400)
@@ -102,54 +102,89 @@ export default class BSTAnimationProducer {
         ])
     }
 
-    public moveNode(node: Node, newX: number, newY: number, animationSequence: Animation[]) {
-        // animationSequence.push({
-        //     targets: [node.nodeTarget, node.textTarget],
-        //     duration: 400,
-        //     delay: 0,
-        //     simultaneous: true,
-        //     attrs: {
-        //         x: newX,
-        //         y: newY,
-        //         cx: newX,
-        //         cy: newY,
-        //     },
-        // });
+    public updateBST(root: Node): void {
+        const animation: Runner[] = [];
+        this.updateNodes(root, animation);
+        this.updateLines(root, animation);
+        this.animationSequence.push(animation);
     }
 
-    // given a node which should also have a valid parent reference, move the line to the
-    // appropriate coordinates
-    public updateLine(node: Node, animationSequence: Animation[]) {
-        // if (node.parent === null) return;
-
-        // animationSequence.push({
-        //     targets: [node.lineTarget],
-        //     duration: 400,
-        //     delay: 0,
-        //     simultaneous: true,
-        //     attrs: {
-        //         x1: node.parent.x,
-        //         y1: node.parent.y + 50,
-        //         x2: node.x,
-        //         y2: node.y + 50,
-        //     },
-        // });
+    // TODO: combine this method with updateLines
+    public updateNodes(root: Node, animation: Runner[]): void {
+        this.updateNodesRecursive(root, animation);
     }
 
-    public moveLine(node: Node, x1: number, y1: number, x2: number, y2: number, animationSequence: Animation[]) {
-        // if (node.parent === null) return;
+    public updateNodesRecursive(node: Node, animation: Runner[]): void {
+        if (node === null) {
+            return;
+        }
 
-        // animationSequence.push({
-        //     targets: [node.lineTarget],
-        //     duration: 400,
-        //     delay: 0,
-        //     simultaneous: true,
-        //     attrs: {
-        //         x1: x1,
-        //         y1: y1,
-        //         x2: x2,
-        //         y2: y2,
-        //     },
-        // });
+        this.updateNode(node, node.x, node.y, animation);
+        this.updateNodesRecursive(node.left, animation);
+        this.updateNodesRecursive(node.right, animation);
+    }
+
+    public updateNode(node: Node, newX: number, newY: number, animation: Runner[]): void {
+        animation.push(
+            node.nodeTarget
+            .animate(400)
+            .cx(newX)
+            .cy(newY),
+        );
+
+        animation.push(
+            node.textTarget
+            .animate(400)
+            .cx(newX)
+            .cy(newY),
+        );
+    }
+
+    public movePointerToNewRootRightChild(oldRoot: Node): void {
+        this.animationSequence.push([
+            oldRoot.leftLineTarget
+            .animate(400)
+            .plot([[oldRoot.x, oldRoot.y], [oldRoot.left.x, oldRoot.left.y]])
+        ])
+    }
+
+    public movePointerToOldRoot(newRoot: Node): void {
+        this.animationSequence.push([
+            newRoot.rightLineTarget
+            .animate(400)
+            .plot([[newRoot.x, newRoot.y], [newRoot.right.x, newRoot.right.y]])
+        ])
+    }
+
+    public updateLines(root: Node, animation: Runner[]): void {
+        this.updateLinesRecursive(root, animation);
+    }
+
+    public updateLinesRecursive(node: Node, animation: Runner[]): void {
+        if (node === null) {
+            return;
+        }
+
+        this.updateNodeLines(node, animation);
+        this.updateLinesRecursive(node.left, animation);
+        this.updateLinesRecursive(node.right, animation);
+    }
+
+    public updateNodeLines(node: Node, animation: Runner[]): void {
+        if (node.left != null) {
+            animation.push(
+                node.leftLineTarget
+                .animate(400)
+                .plot([[node.x, node.y], [node.left.x, node.left.y]])
+            );
+        }
+
+        if (node.right != null) {
+            animation.push(
+                node.rightLineTarget
+                .animate(400)
+                .plot([[node.x, node.y], [node.right.x, node.right.y]])
+            )
+        }
     }
 }
