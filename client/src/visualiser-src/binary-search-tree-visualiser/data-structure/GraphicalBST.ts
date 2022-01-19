@@ -1,4 +1,5 @@
-import BSTAnimationProducer from '../animation-producer/BSTAnimationProducer';
+import BSTInsertAnimationProducer from '../animation-producer/BSTInsertAnimationProducer';
+import BSTRotateAnimationProducer from '../animation-producer/BSTRotateAnimationProducer';
 import { Node } from '../util/typedefs';
 import { SVG, Container } from '@svgdotjs/svg.js';
 import { canvasPadding } from '../util/settings';
@@ -10,8 +11,8 @@ class BST {
     
     // inserts a node into the bst and produces an animation sequence
     // that is later handled by the animation controller
-    public insert(input: number): BSTAnimationProducer {
-        const animationProducer: BSTAnimationProducer = new BSTAnimationProducer(this.draw);
+    public insert(input: number): BSTInsertAnimationProducer {
+        const animationProducer: BSTInsertAnimationProducer = new BSTInsertAnimationProducer(this.draw);
         const node: Node = {
             nodeTarget: null,
             textTarget: null,
@@ -108,8 +109,8 @@ class BST {
         }
     }
 
-    public rotateRight(input: number): BSTAnimationProducer {
-        const animationProducer: BSTAnimationProducer = new BSTAnimationProducer(this.draw);
+    public rotateRight(input: number): BSTRotateAnimationProducer {
+        const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer(this.draw);
         const oldRoot: Node = this.getNode(input);
 
         if (oldRoot === null) return animationProducer;
