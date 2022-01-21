@@ -1,5 +1,6 @@
 import { Node } from '../util/typedefs';
 import { Runner, Container } from '@svgdotjs/svg.js';
+import { canvasPadding } from '../util/settings';
 
 export default class BSTAnimationProducer {
     public animationSequence: Runner[][];
@@ -79,20 +80,29 @@ export default class BSTAnimationProducer {
     }
 
     public updateNodeLines(node: Node, animation: Runner[]): void {
-        if (node.left != null) {
-            animation.push(
-                node.leftLineTarget
-                .animate(400)
-                .plot([[node.x, node.y], [node.left.x, node.left.y]])
-            );
-        }
+        const lineDiffX = this.getLineDiffX(node);
+        const lineDiffY = 75;
 
-        if (node.right != null) {
-            animation.push(
-                node.rightLineTarget
-                .animate(400)
-                .plot([[node.x, node.y], [node.right.x, node.right.y]])
-            )
-        }
+        animation.push(
+            node.leftLineTarget
+            .animate(400)
+            .plot([[node.x, node.y], [node.x - lineDiffX, node.y + lineDiffY]])
+        );
+
+        animation.push(
+            node.rightLineTarget
+            .animate(400)
+            .plot([[node.x, node.y], [node.x + lineDiffX, node.y + lineDiffY]])
+        )
+    }
+
+    // returns the difference in x coordinates with the node
+    // and it's two child nodes
+    public getLineDiffX(node: Node): number {
+        const canvasWidth = document.getElementById('bst-canvas').offsetWidth;
+        const depth: number = (node.y - canvasPadding) / 75;
+        const baseDiff = canvasWidth / 4;
+        
+        return baseDiff / (1 << depth);;
     }
 }

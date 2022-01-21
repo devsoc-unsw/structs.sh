@@ -30,10 +30,7 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
     // draws a node on the draw canvas and shows the node
     public createNode(node: Node): void {
         // based on the depth of the node we are able to create left and right svg line targets
-        const canvasWidth = document.getElementById('bst-canvas').offsetWidth;
-        const depth: number = (node.y - canvasPadding) / 75;
-        const baseDiff = canvasWidth / 4;
-        const lineDiffX = baseDiff / (1 << depth);
+        const lineDiffX = this.getLineDiffX(node);
         const lineDiffY = 75;
 
         node.leftLineTarget = this.draw
