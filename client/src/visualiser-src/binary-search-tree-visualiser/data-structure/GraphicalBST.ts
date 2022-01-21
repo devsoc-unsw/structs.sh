@@ -119,17 +119,34 @@ class BST {
 
         if (newRoot === null) return animationProducer;
 
-        oldRoot.left = newRoot.right;
-        newRoot.right = oldRoot;
-        this.root = newRoot;
+        if (newRoot.right != null) {
+            animationProducer.movePointerToNewRootRightChild(oldRoot, newRoot);
+            animationProducer.movePointerToOldRoot(oldRoot, newRoot);
+        } else {
+            animationProducer.assignNewRootLeftPointerToOldRootRightPointer(oldRoot, newRoot);
+        }
         
-        animationProducer.movePointerToNewRootRightChild(oldRoot);
-        animationProducer.movePointerToOldRoot(newRoot);
+        this.root = this.doRotateRight(this.root, input);
         this.updateNodePositions();
-
         animationProducer.updateBST(this.root);
-
+        
         return animationProducer;
+    }
+
+    public doRotateRight(node: Node, input: number): Node {
+        if (input === node.value) {
+            const newRoot: Node = node.left;
+            node.left = newRoot.right;
+            newRoot.right = node;
+
+            return newRoot;
+        } else if (input < node.value) {
+            node.left = this.doRotateRight(node.left, input);
+        } else {
+            node.right = this.doRotateRight(node.right, input);
+        }
+
+        return node;
     }
 }
 
