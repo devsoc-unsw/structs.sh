@@ -109,6 +109,46 @@ class BST {
         }
     }
 
+    public rotateLeft(input: number): BSTRotateAnimationProducer {
+        const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer(this.draw);
+        const oldRoot: Node = this.getNode(input);
+
+        if (oldRoot === null) return animationProducer;
+
+        const newRoot: Node = oldRoot.right;
+
+        if (newRoot === null) return animationProducer;
+
+        if (newRoot.right != null) {
+            animationProducer.movePointerToNewRootLeftChild(oldRoot, newRoot);
+            animationProducer.moveLeftPointerToOldRoot(oldRoot, newRoot);
+        } else {
+            animationProducer.assignNewRootLeftPointerToOldRootRightPointer(oldRoot, newRoot);
+        }
+
+        this.root = this.doRotateLeft(this.root, input);
+        this.updateNodePositions();
+        animationProducer.updateBST(this.root);
+
+        return animationProducer;
+    }
+
+    public doRotateLeft(node: Node, input: number): Node {
+        if (input === node.value) {
+            const newRoot: Node = node.right;
+            node.right = newRoot.left;
+            newRoot.left = node;
+
+            return newRoot;
+        } else if (input < node.value) {
+            node.left = this.doRotateLeft(node.left, input);
+        } else {
+            node.right = this.doRotateLeft(node.right, input);
+        }
+
+        return node;
+    }
+
     public rotateRight(input: number): BSTRotateAnimationProducer {
         const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer(this.draw);
         const oldRoot: Node = this.getNode(input);
@@ -121,9 +161,9 @@ class BST {
 
         if (newRoot.right != null) {
             animationProducer.movePointerToNewRootRightChild(oldRoot, newRoot);
-            animationProducer.movePointerToOldRoot(oldRoot, newRoot);
+            animationProducer.moveRightPointerToOldRoot(oldRoot, newRoot);
         } else {
-            animationProducer.assignNewRootLeftPointerToOldRootRightPointer(oldRoot, newRoot);
+            animationProducer.assignNewRootRightPointerToOldRootLeftPointer(oldRoot, newRoot);
         }
         
         this.root = this.doRotateRight(this.root, input);

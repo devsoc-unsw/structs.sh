@@ -67,6 +67,12 @@ const getBstTerminalCommands = (processCommand) => {
                 return processCommand('insert', [arg]);
             },
         },
+        rotateLeft: {
+            usage: 'rotateLeft <number>',
+            fn: (arg: string) => {
+                return processCommand('rotateLeft', [arg]);
+            },
+        },
         rotateRight: {
             usage: 'rotateRight <number>',
             fn: (arg: string) => {
@@ -128,6 +134,11 @@ const bstCommandsDocumentation: CommandDocumentation[] = [
             'Executes standard BST insertion to add a new node with the given value into the tree.',
     },
     {
+        command: 'rotateLeft',
+        usage: 'rotateLeft <number>',
+        description: 'Executes a left rotation on the node with the given value.',
+    },
+    {
         command: 'rotateRight',
         usage: 'rotateRight <number>',
         description: 'Executes a right rotation on the node with the given value.',
@@ -177,6 +188,10 @@ const guiLinkedListCommands: Operation[] = [
 const guiBstCommands: Operation[] = [
     {
         command: 'insert',
+        args: ['value'],
+    },
+    {
+        command: 'rotateLeft',
         args: ['value'],
     },
     {

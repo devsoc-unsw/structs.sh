@@ -5,6 +5,7 @@ import BSTAnimationProducer from './animation-producer/BSTAnimationProducer';
 
 export interface BSTVisualiser extends Visualiser {
     insert: (val: number, updateSlider: (val: number) => void) => void;
+    rotateLeft: (val: number, updateSlider: (val: number) => void) => void;
     rotateRight: (val: number, updateSlider: (val: number) => void) => void;
 }
 
@@ -22,14 +23,21 @@ const initialise = (): any => {
     const controller: AnimationController = new AnimationController();
 
     const insert = (val: number, updateSlider: (val: number) => void) => {
-        // if a timeline is currently running on the controller then finish it and start the new insert timeline
+        // if a timeline is currently running on the controller then finish it and start the new timeline
         controller.finish();
         const animationSequence: BSTAnimationProducer = bst.insert(val);
         controller.constructTimeline(animationSequence, updateSlider);
     };
 
+    const rotateLeft = (val: number, updateSlider: (val: number) => void) => {
+        // if a timeline is currently running on the controller then finish it and start the new timeline
+        controller.finish();
+        const animationSequence: BSTAnimationProducer = bst.rotateLeft(val);
+        controller.constructTimeline(animationSequence, updateSlider);
+    };
+
     const rotateRight = (val: number, updateSlider: (val: number) => void) => {
-        // if a timeline is currently running on the controller then finish it and start the new insert timeline
+        // if a timeline is currently running on the controller then finish it and start the new timeline
         controller.finish();
         const animationSequence: BSTAnimationProducer = bst.rotateRight(val);
         controller.constructTimeline(animationSequence, updateSlider);
@@ -72,6 +80,7 @@ const initialise = (): any => {
 
     return {
         insert: insert,
+        rotateLeft: rotateLeft,
         rotateRight: rotateRight,
         play: play,
         pause: pause,
