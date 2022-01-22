@@ -16,7 +16,7 @@ export class LinkedListAppendAnimationProducer extends LinkedListAnimationProduc
         this.timeline.push({
             instructions: {
                 targets: newNode.nodeTarget,
-                left: (length - 1) * nodePathWidth,
+                translateX: (length - 1) * nodePathWidth,
                 opacity: 1,
                 duration: 1,
             },

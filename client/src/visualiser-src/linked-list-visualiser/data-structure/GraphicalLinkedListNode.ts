@@ -4,7 +4,7 @@ import { nodeAttributes, shapeAttributes, textAttributes, pathAttributes } from 
 const SVG = 'http://www.w3.org/2000/svg';
 
 interface SVGData {
-    nodeTarget: SVGSVGElement;
+    nodeTarget: SVGGElement;
     pointerTarget: SVGPathElement;
     boxTarget: SVGGElement;
     numberTarget: SVGTextElement;
@@ -26,7 +26,7 @@ export class GraphicalLinkedListNode {
 
     public static from(input: number) {
         // Create SVG node
-        const newNode = document.createElementNS(SVG, 'svg');
+        const newNode = document.createElementNS(SVG, 'g');
         // Node Box + Value group
         const nodeBox = document.createElementNS(SVG, 'g');
         // Box for node

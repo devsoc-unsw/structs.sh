@@ -29,9 +29,6 @@ export const CURRENT = '#current';
 export const PREV = '#prev';
 export const CANVAS = '#canvas';
 export const nodeAttributes = {
-    width: svgWidth,
-    height: svgHeight,
-    viewBox: `0 0 ${svgWidth} ${svgHeight}`,
     class: 'node',
     stroke: 'black',
 };

@@ -40,7 +40,7 @@ export class LinkedListInsertAnimationProducer extends LinkedListAnimationProduc
         this.timeline.push({
             instructions: {
                 targets: newNode.nodeTarget,
-                left: index * nodePathWidth + actualNodeWidth,
+                translateX: index * nodePathWidth + actualNodeWidth,
                 top: insertedNodeTopOffset,
                 opacity: 1,
                 duration: 1,

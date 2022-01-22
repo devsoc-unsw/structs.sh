@@ -26,16 +26,10 @@ const LinkedListCanvas: React.FC = () => (
             background: 'rgba(235, 235, 235)',
         }}
     >
-        <div className="container">
-            <div className="container" id="canvas">
-                <div id="current" style={{ top: `${topOffset}px` }}>
-                    <img src={curr} alt="curr arrow" />
-                </div>
-                <div id="prev" style={{ top: `${topOffset}px` }}>
-                    <img src={prev} alt="prev arrow" />
-                </div>
-            </div>
-        </div>
+        <svg className="container" id="canvas">
+            <image id="current" href={curr} />
+            <image id="prev" href={prev} />
+        </svg>
     </header>
 );
 

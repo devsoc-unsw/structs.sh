@@ -1,17 +1,11 @@
 import { AnimationInstruction } from '../util/typedefs';
 import {
     RIGHT_ARROW_PATH,
+    topOffset,
     nodePathWidth,
     fastestDuration,
     CURRENT,
     PREV,
-    // UP_ARROW_PATH,
-    // DOWN_RIGHT_ARROW_PATH,
-    // UP_RIGHT_ARROW_PATH,
-    // BENT_ARROW_PATH,
-    // actualNodeWidth,
-    // insertedNodeTopOffset,
-    // CANVAS
 } from '../util/constants';
 import LinkedList from '../data-structure/GraphicalLinkedList';
 import { GraphicalLinkedListNode } from '../data-structure/GraphicalLinkedListNode';
@@ -27,6 +21,13 @@ export class LinkedListAnimationProducer {
         this.timeline.push({
             instructions: {
                 targets: pointerId,
+                translateY: topOffset,
+                duration: 1
+            },
+        });
+        this.timeline.push({
+            instructions: {
+                targets: pointerId,
                 opacity: 1,
             },
         });
@@ -37,6 +38,7 @@ export class LinkedListAnimationProducer {
             instructions: {
                 targets: pointerId,
                 translateX: `+=${nodePathWidth}`,
+                translateY: topOffset
             },
         });
     }
@@ -49,11 +51,12 @@ export class LinkedListAnimationProducer {
                 opacity: 0,
             },
         });
-        // Current arrow goes back to beginning
+        // Arrow goes back to beginning
         this.timeline.push({
             instructions: {
                 targets: [CURRENT, PREV],
                 translateX: 0,
+                translateY: topOffset,
                 duration: 1,
             },
         });
@@ -68,7 +71,7 @@ export class LinkedListAnimationProducer {
                 instructions: {
                     targets: curr.nodeTarget,
                     top: 0,
-                    left: index * nodePathWidth,
+                    translateX: index * nodePathWidth,
                 },
                 offset: '-=' + fastestDuration,
             });
