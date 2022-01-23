@@ -1,15 +1,19 @@
-import { setAttributes } from '../util/utils';
 import {
-  nodeAttributes, shapeAttributes, textAttributes, pathAttributes,
+  SVG, Path, Text, Rect, Svg,
+} from '@svgdotjs/svg.js';
+import {
+  nodeAttributes,
+  shapeAttributes,
+  textAttributes,
+  pathAttributes,
+  RIGHT_ARROW_PATH,
 } from '../util/constants';
 
-const SVG = 'http://www.w3.org/2000/svg';
-
 interface SVGData {
-  nodeTarget: SVGSVGElement;
-  pointerTarget: SVGPathElement;
-  boxTarget: SVGGElement;
-  numberTarget: SVGTextElement;
+  nodeTarget: Svg;
+  pointerTarget: Path;
+  boxTarget: Rect;
+  numberTarget: Text;
 }
 
 interface GraphicalLinkedListNodeData {
@@ -17,7 +21,7 @@ interface GraphicalLinkedListNodeData {
   svgData: SVGData;
 }
 
-export class GraphicalLinkedListNode {
+export default class GraphicalLinkedListNode {
   private _data: GraphicalLinkedListNodeData;
 
   private _next: GraphicalLinkedListNode;
@@ -28,40 +32,19 @@ export class GraphicalLinkedListNode {
   }
 
   public static from(input: number) {
-    // Create SVG node
-    const newNode = document.createElementNS(SVG, 'svg');
-    // Node Box + Value group
-    const nodeBox = document.createElementNS(SVG, 'g');
-    // Box for node
-    const nodeShape = document.createElementNS(SVG, 'rect');
-    // Text inside node
-    const nodeValue = document.createElementNS(SVG, 'text');
-    nodeValue.innerHTML = input.toString();
-    // Pointer for node
-    const newPointer = document.createElementNS(SVG, 'path');
-
-    setAttributes(newNode, nodeAttributes);
-    setAttributes(nodeShape, shapeAttributes);
-    setAttributes(nodeValue, textAttributes);
-    setAttributes(newPointer, pathAttributes);
-
-    // Attach all the elements together
-    nodeBox.appendChild(nodeShape);
-    nodeBox.appendChild(nodeValue);
-    newNode.appendChild(nodeBox);
-    newNode.appendChild(newPointer);
-
-    return new GraphicalLinkedListNode(
-      {
-        value: input,
-        svgData: {
-          numberTarget: nodeValue,
-          boxTarget: nodeShape,
-          nodeTarget: newNode,
-          pointerTarget: newPointer,
-        },
+    const newNode = SVG().attr(nodeAttributes);
+    const nodeShape = newNode.rect().attr(shapeAttributes);
+    const nodeValue = newNode.text(String(input)).attr(textAttributes);
+    const newPointer = newNode.path().attr(pathAttributes).plot(RIGHT_ARROW_PATH);
+    return new GraphicalLinkedListNode({
+      value: input,
+      svgData: {
+        numberTarget: nodeValue,
+        boxTarget: nodeShape,
+        nodeTarget: newNode,
+        pointerTarget: newPointer,
       },
-    );
+    });
   }
 
   public get data() {
@@ -70,6 +53,10 @@ export class GraphicalLinkedListNode {
 
   public get next() {
     return this._next;
+  }
+
+  public set next(next: GraphicalLinkedListNode) {
+    this._next = next;
   }
 
   public get value() {
@@ -90,9 +77,5 @@ export class GraphicalLinkedListNode {
 
   public get numberTarget() {
     return this._data.svgData.numberTarget;
-  }
-
-  public set next(next: GraphicalLinkedListNode) {
-    this._next = next;
   }
 }

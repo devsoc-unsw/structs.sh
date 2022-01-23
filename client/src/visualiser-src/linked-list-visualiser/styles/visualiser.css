@@ -12,9 +12,8 @@ body {
       monospace;
   }
   
-  #current,
+#current,
 #prev {
-    opacity: 0;
     position: absolute;
 }
 #prev {
@@ -35,10 +34,8 @@ body {
 
 .node {
     position: absolute;
-    opacity: 0;
 }
 
 .path {
-    opacity: 0;
     fill: none;
 }

@@ -1,6 +1,7 @@
 import anime, { AnimeTimelineInstance } from 'animejs';
 import { AnimationInstruction } from '../linked-list-visualiser/util/typedefs';
 import { fastestDuration } from '../linked-list-visualiser/util/constants';
+import { Timeline, Runner } from '@svgdotjs/svg.js';
 // controls todo:
 // [x] play/pause
 // [ ] step to the next or previous timestamp in the current timeline
@@ -10,61 +11,77 @@ import { fastestDuration } from '../linked-list-visualiser/util/constants';
 // eventually this file should be placed in a folder common for all data structures,
 // not just for the linked list
 class AnimationController {
-  private currentTimeline: AnimeTimelineInstance = anime.timeline();
+    private currentTimeline: Timeline = new Timeline();
+    private timelineHistory: AnimeTimelineInstance[] = [];
+    private timelineIndex: number = 0;
+    private _isPaused: boolean = false;
 
-  private timelineHistory: AnimeTimelineInstance[] = [];
+    public getCurrentTimeline(): AnimeTimelineInstance {
+        return this.currentTimeline;
+    }
 
-  private timelineIndex: number = 0;
+    public play(): void {
+        this._isPaused = false;
+        this.currentTimeline.play();
+    }
 
-  private _isPaused: boolean = false;
+    public pause(): void {
+        this._isPaused = true;
+        this.currentTimeline.pause();
+    }
 
-  public getCurrentTimeline(): AnimeTimelineInstance {
-    return this.currentTimeline;
-  }
+    public get isPaused(): boolean {
+        return this._isPaused;
+    }
 
-  public play(): void {
-    this._isPaused = false;
-    this.currentTimeline.play();
-  }
+    public seekPercent(position: number): void {
+        //this.currentTimeline.seek(this.currentTimeline.duration * (position / 100));
+    }
 
-  public pause(): void {
-    this._isPaused = true;
-    this.currentTimeline.pause();
-  }
+    // Finish playing the timeline
+    public finish(): void {
+        this.currentTimeline.finish();
+    }
 
-  public get isPaused(): boolean {
-    return this._isPaused;
-  }
+    // this function runs a sequence of animations sequentially
+    public runSequence(
+        allRunners: Runner[][],
+        updateAnimationProgress: (val: number) => void
+    ): void {
+        // console.log(this);
+        // this.currentTimeline = anime.timeline({
+        //     duration: fastestDuration,
+        //     easing: 'easeOutExpo',
+        //     update: function (anim) {
+        //         updateAnimationProgress(Number(anim.progress));
+        //     },
+        // });
+        let currentDuration: number = 0;
+        for (const runners of allRunners) {
+            for (const runner of runners) {
+                this.currentTimeline.schedule(runner, currentDuration, 'absolute');
+            }
+            currentDuration += runners[0].duration();
+        }
 
-  public seekPercent(position: number): void {
-    this.currentTimeline.seek(this.currentTimeline.duration * (position / 100));
-  }
+        this.currentTimeline.play();
+        this.currentTimeline.speed(0.6);
+        // for (const seq of sequence) {
+        //     if ('offset' in seq) {
+        //         this.currentTimeline.add(seq.instructions, seq.offset);
+        //     } else {
+        //         this.currentTimeline.add(seq.instructions);
+        //     }
+        // }
 
-  // Finish playing the timeline
-  public finish(): void {
-    this.currentTimeline.seek(this.currentTimeline.duration);
-  }
+        this.timelineHistory.push(this.currentTimeline);
+        this.timelineIndex++;
+    }
 
-  // this function runs a sequence of animations sequentially
-  public runSequence(
-    sequence: AnimationInstruction[],
-    updateAnimationProgress: (val: number) => void,
-  ): void {
-    console.log(this);
-    this.currentTimeline = anime.timeline({
-      duration: fastestDuration,
-      easing: 'easeOutExpo',
-      update(anim) {
-        updateAnimationProgress(Number(anim.progress));
-      },
-    });
-
-    for (const seq of sequence) {
-      if ('offset' in seq) {
-        this.currentTimeline.add(seq.instructions, seq.offset);
-      } else {
-        this.currentTimeline.add(seq.instructions);
-      }
+    public runNextSequence(): void {
+        if (this.timelineIndex === this.timelineHistory.length - 1) {
+            console.log('cant run next sequence');
+        }
     }
 
     this.timelineHistory.push(this.currentTimeline);

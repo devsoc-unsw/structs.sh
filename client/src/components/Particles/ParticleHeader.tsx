@@ -30,6 +30,7 @@ const ParticleHeader: React.FC<Props> = () => {
       {' '}
       <Particles
         id="tsparticles"
+                /* init={particlesInit} */
         options={{
           background: {
             // color: {

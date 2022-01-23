@@ -1,74 +1,55 @@
-import { AnimationInstruction } from '../util/typedefs';
+import { SVG, Runner, Element } from '@svgdotjs/svg.js';
 import {
-  RIGHT_ARROW_PATH, nodePathWidth, fastestDuration, CURRENT, PREV,
+  RIGHT_ARROW_PATH, topOffset, nodePathWidth, CURRENT, PREV,
 } from '../util/constants';
-import { GraphicalLinkedListNode } from '../data-structure/GraphicalLinkedListNode';
+import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
 
 export default abstract class LinkedListAnimationProducer {
-  private _timeline: AnimationInstruction[] = [];
+  private _allRunners: Runner[][] = [];
 
-  public get timeline() {
-    return this._timeline;
+  public get allRunners() {
+    return this._allRunners;
   }
 
   public initialisePointer(pointerId: string) {
-    this.timeline.push({
-      instructions: {
-        targets: pointerId,
-        opacity: 1,
-      },
-    });
+    const pointerSvg: Element = SVG(pointerId);
+    pointerSvg.move(0, topOffset);
+    this.allRunners.push([pointerSvg.animate().attr({ opacity: 1 })]);
   }
 
   public movePointerToNext(pointerId: string) {
-    this.timeline.push({
-      instructions: {
-        targets: pointerId,
-        translateX: `+=${nodePathWidth}`,
-      },
-    });
+    const pointerSvg: Element = SVG(pointerId);
+    this.allRunners.push([pointerSvg.animate().dx(nodePathWidth)]);
   }
 
   private resetPointers() {
-    // Make disappear
-    this.timeline.push({
-      instructions: {
-        targets: [CURRENT, PREV],
-        opacity: 0,
-      },
-    });
-    // Current arrow goes back to beginning
-    this.timeline.push({
-      instructions: {
-        targets: [CURRENT, PREV],
-        translateX: 0,
-        duration: 1,
-      },
-    });
+    const runners: Runner[] = [];
+    runners.push(
+      SVG(CURRENT)
+        .animate()
+        .attr({ opacity: 0 })
+        .after(() => SVG(CURRENT).move(0, topOffset)),
+    );
+    runners.push(
+      SVG(PREV)
+        .animate()
+        .attr({ opacity: 0 })
+        .after(() => SVG(PREV).move(0, topOffset)),
+    );
+    this.allRunners.push(runners);
   }
 
   public resetList(head: GraphicalLinkedListNode) {
     this.resetPointers();
+    const runners: Runner[] = [];
     let curr: GraphicalLinkedListNode = head;
     let index: number = 0;
     while (curr != null) {
-      this.timeline.push({
-        instructions: {
-          targets: curr.nodeTarget,
-          top: 0,
-          left: index * nodePathWidth,
-        },
-        offset: `-=${fastestDuration}`,
-      });
-      this.timeline.push({
-        instructions: {
-          targets: curr.pointerTarget,
-          d: RIGHT_ARROW_PATH,
-        },
-        offset: `-=${fastestDuration}`,
-      });
+      runners.push(curr.nodeTarget.animate().move(index * nodePathWidth, 0));
+      runners.push(curr.pointerTarget.animate().plot(RIGHT_ARROW_PATH as any));
       index += 1;
       curr = curr.next;
     }
+    this.allRunners.push(runners);
   }
 }
