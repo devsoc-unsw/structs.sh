@@ -17,7 +17,9 @@ import { SxProps } from '@mui/system';
 import { ThemeMutationContext } from 'App';
 import logo from 'assets/img/logo.png';
 import { Modal } from 'components/Modal';
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, {
+  FC, useContext, useEffect, useState,
+} from 'react';
 import { Link } from 'react-router-dom';
 import { getTopics, Topic } from 'utils/apiRequests';
 import { Notification } from 'utils/Notification';
@@ -27,309 +29,309 @@ import SidebarContents from './SidebarContents';
 import styles from './TopNavbar.module.scss';
 
 interface Props {
-    position?: 'fixed' | 'static' | 'relative';
-    enableOnScrollEffect?: boolean;
+  position?: 'fixed' | 'static' | 'relative';
+  enableOnScrollEffect?: boolean;
 }
 
 const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true }) => {
-    const context = useContext(ThemeMutationContext);
+  const context = useContext(ThemeMutationContext);
 
-    const [topics, setTopics] = useState<Topic[]>([]);
+  const [topics, setTopics] = useState<Topic[]>([]);
 
-    const [hasScrolledDown, setHasScrolledDown] = useState<boolean>(false);
+  const [hasScrolledDown, setHasScrolledDown] = useState<boolean>(false);
 
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const [learnAnchorEl, setLearnAnchorEl] = React.useState<null | HTMLElement>(null);
-    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [learnAnchorEl, setLearnAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
 
-    const isMenuOpen = Boolean(anchorEl);
-    const isLearnMenuOpen = Boolean(learnAnchorEl);
-    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const isMenuOpen = Boolean(anchorEl);
+  const isLearnMenuOpen = Boolean(learnAnchorEl);
+  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-    /* -------------------------- Page Scroll Callbacks ------------------------- */
+  /* -------------------------- Page Scroll Callbacks ------------------------- */
 
-    useEffect(() => {
-        window.addEventListener('scroll', () => {
-            const yOffsetPx: number = Number(window.pageYOffset);
-            setHasScrolledDown(yOffsetPx <= 0 ? false : true);
-        });
-    }, [setHasScrolledDown]);
+  useEffect(() => {
+    window.addEventListener('scroll', () => {
+      const yOffsetPx: number = Number(window.pageYOffset);
+      setHasScrolledDown(!(yOffsetPx <= 0));
+    });
+  }, [setHasScrolledDown]);
 
-    /* ------------------------------ Data Fetching ----------------------------- */
+  /* ------------------------------ Data Fetching ----------------------------- */
 
-    useEffect(() => {
-        getTopics()
-            .then((topics) => setTopics(topics))
-            .catch(() => console.log('TopNav: failed to get topics'));
-    }, []);
+  useEffect(() => {
+    getTopics()
+      .then((topics) => setTopics(topics))
+      .catch(() => console.log('TopNav: failed to get topics'));
+  }, []);
 
-    /* --------------------------- Dropdown Callbacks --------------------------- */
+  /* --------------------------- Dropdown Callbacks --------------------------- */
 
-    const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
+  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-    const handleMobileMenuClose = () => {
-        setMobileMoreAnchorEl(null);
-    };
+  const handleMobileMenuClose = () => {
+    setMobileMoreAnchorEl(null);
+  };
 
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-        handleMobileMenuClose();
-    };
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    handleMobileMenuClose();
+  };
 
-    const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setMobileMoreAnchorEl(event.currentTarget);
-    };
+  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setMobileMoreAnchorEl(event.currentTarget);
+  };
 
-    const handleLearnMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setLearnAnchorEl(event.currentTarget);
-    };
+  const handleLearnMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setLearnAnchorEl(event.currentTarget);
+  };
 
-    const handleLearnMenuClose = () => {
-        setLearnAnchorEl(null);
-    };
+  const handleLearnMenuClose = () => {
+    setLearnAnchorEl(null);
+  };
 
-    /* ------------------------ Dropdown Menu Components ------------------------ */
+  /* ------------------------ Dropdown Menu Components ------------------------ */
 
-    const menuId = 'topnav-menu';
-    const renderMenu = (
-        <Menu
-            anchorEl={anchorEl}
-            anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            id={menuId}
-            keepMounted
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            open={isMenuOpen}
-            onClose={handleMenuClose}
+  const menuId = 'topnav-menu';
+  const renderMenu = (
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      id={menuId}
+      keepMounted
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
+    >
+      <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+    </Menu>
+  );
+
+  const mobileMenuId = 'topnav-menu-mobile';
+  const renderMobileMenu = (
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
+      <MenuItem onClick={handleProfileMenuOpen}>
+        <IconButton
+          size="large"
+          aria-label="account of current user"
+          aria-controls="topnav-menu"
+          aria-haspopup="true"
+          color="inherit"
         >
-            <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
-        </Menu>
-    );
+          <AccountCircle />
+        </IconButton>
+        <p>Profile</p>
+      </MenuItem>
+    </Menu>
+  );
 
-    const mobileMenuId = 'topnav-menu-mobile';
-    const renderMobileMenu = (
-        <Menu
-            anchorEl={mobileMoreAnchorEl}
-            anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            id={mobileMenuId}
-            keepMounted
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            open={isMobileMenuOpen}
-            onClose={handleMobileMenuClose}
-        >
-            <MenuItem onClick={handleProfileMenuOpen}>
-                <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="topnav-menu"
-                    aria-haspopup="true"
-                    color="inherit"
-                >
-                    <AccountCircle />
-                </IconButton>
-                <p>Profile</p>
-            </MenuItem>
-        </Menu>
-    );
-
-    const learnMenuId = 'topnav-menu-learn';
-    const renderLearnMenu = (
-        <Menu
-            anchorEl={learnAnchorEl}
-            id={learnMenuId}
-            open={isLearnMenuOpen}
-            onClose={handleLearnMenuClose}
-            className={styles.visualiserMenu}
-        >
-            {topics &&
-                topics.map((topic) => (
-                    <MenuItem className={styles.item}>
-                        <Link to={`/visualiser/${titleToUrl(topic.title)}`}>
-                            <span>{topic.title}</span>
-                        </Link>
-                    </MenuItem>
+  const learnMenuId = 'topnav-menu-learn';
+  const renderLearnMenu = (
+    <Menu
+      anchorEl={learnAnchorEl}
+      id={learnMenuId}
+      open={isLearnMenuOpen}
+      onClose={handleLearnMenuClose}
+      className={styles.visualiserMenu}
+    >
+      {topics
+                && topics.map((topic) => (
+                  <MenuItem className={styles.item}>
+                    <Link to={`/visualiser/${titleToUrl(topic.title)}`}>
+                      <span>{topic.title}</span>
+                    </Link>
+                  </MenuItem>
                 ))}
-        </Menu>
-    );
+    </Menu>
+  );
 
-    /* --------------------------------- Topnav --------------------------------- */
+  /* --------------------------------- Topnav --------------------------------- */
 
-    const hasScrolledDownStyle: SxProps = {
-        backgroundColor: 'rgba(0, 0, 0, 0.85)',
-        backdropFilter: 'blur(7px)',
-    };
+  const hasScrolledDownStyle: SxProps = {
+    backgroundColor: 'rgba(0, 0, 0, 0.85)',
+    backdropFilter: 'blur(7px)',
+  };
 
-    const atTopStyle: SxProps = {
-        boxShadow: 'none',
-        backgroundColor: 'rgba(0, 0, 0, 0.75)',
-        backdropFilter: 'blur(3px)',
-    };
+  const atTopStyle: SxProps = {
+    boxShadow: 'none',
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    backdropFilter: 'blur(3px)',
+  };
 
-    const appliedStyle = enableOnScrollEffect
-        ? hasScrolledDown
-            ? hasScrolledDownStyle
-            : atTopStyle
-        : hasScrolledDownStyle;
+  const appliedStyle = enableOnScrollEffect
+    ? hasScrolledDown
+      ? hasScrolledDownStyle
+      : atTopStyle
+    : hasScrolledDownStyle;
 
-    return (
-        <Box sx={{ flexGrow: 1, height: '64px' }}>
-            <AppBar
-                position={position}
-                sx={{
-                    transition: '0.5s all ease-in-out',
-                    ...appliedStyle,
-                }}
+  return (
+    <Box sx={{ flexGrow: 1, height: '64px' }}>
+      <AppBar
+        position={position}
+        sx={{
+          transition: '0.5s all ease-in-out',
+          ...appliedStyle,
+        }}
+      >
+        <Toolbar>
+          <Drawer Contents={(props) => <SidebarContents {...props} />} />
+          <Box>
+            <Button
+              color="info"
+              onClick={handleLearnMenuOpen}
+              endIcon={<KeyboardArrowDownIcon />}
+              sx={{ fontSize: '100%' }}
             >
-                <Toolbar>
-                    <Drawer Contents={(props) => <SidebarContents {...props} />} />
-                    <Box>
-                        <Button
-                            color="info"
-                            onClick={handleLearnMenuOpen}
-                            endIcon={<KeyboardArrowDownIcon />}
-                            sx={{ fontSize: '100%' }}
-                        >
-                            <strong>Topics</strong>
-                        </Button>
-                    </Box>
-                    <Box sx={{ flexGrow: 1 }}>
-                        <Link className={styles.link} to="/content">
-                            <Button color="info">Content</Button>
-                        </Link>
-                    </Box>
-                    <Box className={styles.centralBox}>
-                        <Link to="/">
-                            <Box sx={{ display: { xs: 'none', lg: 'inline-block' } }}>
-                                <img src={logo} draggable={false} alt="logo" />
-                            </Box>
-                            <Typography
-                                variant="h4"
-                                noWrap
-                                component="div"
-                                sx={{
-                                    display: {
-                                        xs: 'none',
-                                        lg: 'inline-block',
-                                        marginLeft: '10px',
-                                        fontFamily: 'CodeText',
-                                    },
-                                }}
-                            >
-                                Structs.sh
-                            </Typography>
-                        </Link>
-                    </Box>
+              <strong>Topics</strong>
+            </Button>
+          </Box>
+          <Box sx={{ flexGrow: 1 }}>
+            <Link className={styles.link} to="/content">
+              <Button color="info">Content</Button>
+            </Link>
+          </Box>
+          <Box className={styles.centralBox}>
+            <Link to="/">
+              <Box sx={{ display: { xs: 'none', lg: 'inline-block' } }}>
+                <img src={logo} draggable={false} alt="logo" />
+              </Box>
+              <Typography
+                variant="h4"
+                noWrap
+                component="div"
+                sx={{
+                  display: {
+                    xs: 'none',
+                    lg: 'inline-block',
+                    marginLeft: '10px',
+                    fontFamily: 'CodeText',
+                  },
+                }}
+              >
+                Structs.sh
+              </Typography>
+            </Link>
+          </Box>
 
-                    <IconButton
-                        className={styles.darkModeButton}
-                        onClick={() => context.toggleDarkMode()}
-                    >
-                        {context.isDarkMode ? <MoonIcon /> : <SunIcon />}
-                    </IconButton>
-                    <Modal
-                        Button={() => (
-                            <Button color="info" sx={{ display: { xs: 'none', md: 'flex' } }}>
-                                Login
-                            </Button>
-                        )}
-                    >
-                        <Typography color="textPrimary" variant="h4" sx={{ textAlign: 'center' }}>
-                            Login
-                        </Typography>
-                        <FormControl fullWidth>
-                            <TextField label="Email" sx={{ mt: 2 }} />
-                            <TextField label="Password" sx={{ mt: 2 }} />
-                        </FormControl>
-                        <Box sx={{ textAlign: 'center', mt: 2 }}>
-                            <FacebookIcon />
-                            <GoogleIcon />
-                        </Box>
-                        <Box sx={{ textAlign: 'center' }}>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                sx={{ mt: 2 }}
-                                onClick={() => Notification.error('Unimplemented')}
-                            >
-                                Submit
-                            </Button>
-                        </Box>
-                    </Modal>
-                    <Modal
-                        Button={() => (
-                            <Button color="info" sx={{ display: { xs: 'none', md: 'flex' } }}>
-                                Register
-                            </Button>
-                        )}
-                    >
-                        <Typography color="textPrimary" variant="h4" sx={{ textAlign: 'center' }}>
-                            Register
-                        </Typography>
-                        <FormControl fullWidth>
-                            <TextField label="Email" sx={{ mt: 2 }} />
-                            <TextField label="Username" sx={{ mt: 2 }} />
-                            <TextField label="Password" sx={{ mt: 2 }} />
-                        </FormControl>
-                        <Box sx={{ textAlign: 'center', mt: 2 }}>
-                            <FacebookIcon />
-                            <GoogleIcon />
-                        </Box>
-                        <Box sx={{ textAlign: 'center' }}>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                sx={{ mt: 2 }}
-                                onClick={() => Notification.error('Unimplemented')}
-                            >
-                                Submit
-                            </Button>
-                        </Box>
-                    </Modal>
-                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                        <IconButton
-                            size="large"
-                            edge="end"
-                            aria-label="account of current user"
-                            aria-controls={menuId}
-                            aria-haspopup="true"
-                            onClick={handleProfileMenuOpen}
-                            color="inherit"
-                        >
-                            <AccountCircle />
-                        </IconButton>
-                    </Box>
-                    <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-                        <IconButton
-                            size="large"
-                            aria-label="show more"
-                            aria-controls={mobileMenuId}
-                            aria-haspopup="true"
-                            onClick={handleMobileMenuOpen}
-                            color="inherit"
-                        >
-                            <MoreIcon />
-                        </IconButton>
-                    </Box>
-                </Toolbar>
-            </AppBar>
-            {renderMobileMenu}
-            {renderLearnMenu}
-            {renderMenu}
-        </Box>
-    );
+          <IconButton
+            className={styles.darkModeButton}
+            onClick={() => context.toggleDarkMode()}
+          >
+            {context.isDarkMode ? <MoonIcon /> : <SunIcon />}
+          </IconButton>
+          <Modal
+            Button={() => (
+              <Button color="info" sx={{ display: { xs: 'none', md: 'flex' } }}>
+                Login
+              </Button>
+            )}
+          >
+            <Typography color="textPrimary" variant="h4" sx={{ textAlign: 'center' }}>
+              Login
+            </Typography>
+            <FormControl fullWidth>
+              <TextField label="Email" sx={{ mt: 2 }} />
+              <TextField label="Password" sx={{ mt: 2 }} />
+            </FormControl>
+            <Box sx={{ textAlign: 'center', mt: 2 }}>
+              <FacebookIcon />
+              <GoogleIcon />
+            </Box>
+            <Box sx={{ textAlign: 'center' }}>
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ mt: 2 }}
+                onClick={() => Notification.error('Unimplemented')}
+              >
+                Submit
+              </Button>
+            </Box>
+          </Modal>
+          <Modal
+            Button={() => (
+              <Button color="info" sx={{ display: { xs: 'none', md: 'flex' } }}>
+                Register
+              </Button>
+            )}
+          >
+            <Typography color="textPrimary" variant="h4" sx={{ textAlign: 'center' }}>
+              Register
+            </Typography>
+            <FormControl fullWidth>
+              <TextField label="Email" sx={{ mt: 2 }} />
+              <TextField label="Username" sx={{ mt: 2 }} />
+              <TextField label="Password" sx={{ mt: 2 }} />
+            </FormControl>
+            <Box sx={{ textAlign: 'center', mt: 2 }}>
+              <FacebookIcon />
+              <GoogleIcon />
+            </Box>
+            <Box sx={{ textAlign: 'center' }}>
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ mt: 2 }}
+                onClick={() => Notification.error('Unimplemented')}
+              >
+                Submit
+              </Button>
+            </Box>
+          </Modal>
+          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+            <IconButton
+              size="large"
+              edge="end"
+              aria-label="account of current user"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              onClick={handleProfileMenuOpen}
+              color="inherit"
+            >
+              <AccountCircle />
+            </IconButton>
+          </Box>
+          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+            <IconButton
+              size="large"
+              aria-label="show more"
+              aria-controls={mobileMenuId}
+              aria-haspopup="true"
+              onClick={handleMobileMenuOpen}
+              color="inherit"
+            >
+              <MoreIcon />
+            </IconButton>
+          </Box>
+        </Toolbar>
+      </AppBar>
+      {renderMobileMenu}
+      {renderLearnMenu}
+      {renderMenu}
+    </Box>
+  );
 };
 
 export default TopNavbar;

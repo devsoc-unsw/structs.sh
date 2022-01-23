@@ -2,10 +2,10 @@
 // implement each of them and extend it with their own data-structure-specific
 // operations.
 export interface Visualiser {
-    play: () => void;
-    pause: () => void;
-    setTimeline: (val: number) => void;
-    setSpeed: (val: number) => void;
-    stepBack: () => void;
-    stepForward: () => void;
+  play: () => void;
+  pause: () => void;
+  setTimeline: (val: number) => void;
+  setSpeed: (val: number) => void;
+  stepBack: () => void;
+  stepForward: () => void;
 }

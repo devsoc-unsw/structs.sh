@@ -4,8 +4,8 @@ import BST from './data-structure/GraphicalBST';
 import { Animation } from './util/typedefs';
 
 export interface BSTVisualiser extends Visualiser {
-    insert: (val: number, updateSlider: (val: number) => void) => void;
-    rotateRight: (val: number, updateSlider: (val: number) => void) => void;
+  insert: (val: number, updateSlider: (val: number) => void) => void;
+  rotateRight: (val: number, updateSlider: (val: number) => void) => void;
 }
 
 /**
@@ -18,72 +18,72 @@ export interface BSTVisualiser extends Visualiser {
  * . references to html elements which have event listeners to call methods from the bst class
  */
 const initialise = (): any => {
-    const bst: BST = new BST();
-    const controller: AnimationController = new AnimationController();
+  const bst: BST = new BST();
+  const controller: AnimationController = new AnimationController();
 
-    const insert = (val: number, updateSlider: (val: number) => void) => {
-        // if a timeline is currently running on the controller then finish it and start the new insert timeline
-        controller.finish();
+  const insert = (val: number, updateSlider: (val: number) => void) => {
+    // if a timeline is currently running on the controller then finish it and start the new insert timeline
+    controller.finish();
 
-        // this returned timeline value will eventually be used by the animation controller
-        const a: Animation[] = bst.insert(val);
-        controller.constructTimeline(a, updateSlider);
-    };
+    // this returned timeline value will eventually be used by the animation controller
+    const a: Animation[] = bst.insert(val);
+    controller.constructTimeline(a, updateSlider);
+  };
 
-    const rotateRight = (val: number, updateSlider: (val: number) => void) => {
-        // if a timeline is currently running on the controller then finish it and start the new insert timeline
-        controller.finish();
+  const rotateRight = (val: number, updateSlider: (val: number) => void) => {
+    // if a timeline is currently running on the controller then finish it and start the new insert timeline
+    controller.finish();
 
-        // this returned timeline value will eventually be used by the animation controller
-        const animationSequence: Animation[] = bst.rotateRight(val);
-        controller.constructTimeline(animationSequence, updateSlider);
-    };
+    // this returned timeline value will eventually be used by the animation controller
+    const animationSequence: Animation[] = bst.rotateRight(val);
+    controller.constructTimeline(animationSequence, updateSlider);
+  };
 
-    const play = () => {
-        controller.play();
-    };
+  const play = () => {
+    controller.play();
+  };
 
-    const pause = () => {
-        controller.pause();
-    };
+  const pause = () => {
+    controller.pause();
+  };
 
-    // const replay = () => {
-    //     controller.seekPercent(0);
-    //     controller.play();
-    // };
+  // const replay = () => {
+  //     controller.seekPercent(0);
+  //     controller.play();
+  // };
 
-    const setTimeline = (val: number) => {
-        // the timeline can only be seeked when it's paused
-        controller.pause();
-        controller.seekPercent(val);
-    };
+  const setTimeline = (val: number) => {
+    // the timeline can only be seeked when it's paused
+    controller.pause();
+    controller.seekPercent(val);
+  };
 
-    const setSpeed = (val: number) => {
-        controller.pause();
-        controller.setSpeed(val);
-        controller.play();
-    };
+  const setSpeed = (val: number) => {
+    controller.pause();
+    controller.setSpeed(val);
+    controller.play();
+  };
 
-    const stepBack = () => {
-        controller.pause();
-        controller.stepBackwards();
-    };
+  const stepBack = () => {
+    controller.pause();
+    controller.stepBackwards();
+  };
 
-    const stepForward = () => {
-        controller.pause();
-        controller.stepForwards();
-    };
+  const stepForward = () => {
+    controller.pause();
+    controller.stepForwards();
+  };
 
-    return {
-        insert: insert,
-        rotateRight: rotateRight,
-        play: play,
-        pause: pause,
-        setTimeline: setTimeline,
-        setSpeed: setSpeed,
-        stepBack: stepBack,
-        stepForward: stepForward,
-    };
+  return {
+    insert,
+    rotateRight,
+    play,
+    pause,
+    setTimeline,
+    setSpeed,
+    stepBack,
+    stepForward,
+  };
 };
 
 export default initialise;

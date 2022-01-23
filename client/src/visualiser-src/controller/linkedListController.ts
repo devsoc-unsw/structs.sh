@@ -1,8 +1,10 @@
-import AnimationController from "./genericController";
+import AnimationController from './genericController';
 
 class LinkedListController extends AnimationController {
   private _inputElement: HTMLInputElement;
+
   private _altInputElement: HTMLInputElement;
+
   constructor() {
     super();
     this._inputElement = document.querySelector('#inputValue');

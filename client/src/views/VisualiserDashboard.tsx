@@ -13,39 +13,37 @@ import 'visualiser-src/linked-list-visualiser/styles/visualiser.css';
 interface Props {}
 
 const VisualiserDashboard: FC<Props> = () => {
-    const [topic, setTopic] = useState<Topic>();
-    const params = useParams();
+  const [topic, setTopic] = useState<Topic>();
+  const params = useParams();
 
-    // Fetching the topic based on the URL parameter in `/visualiser/:topic`
-    useEffect(() => {
-        const topicTitleInUrl = params.topic;
-        getTopic(urlToTitle(topicTitleInUrl))
-            .then((topic) => setTopic(topic))
-            .catch(() =>
-                Notification.error(
-                    `Couldn't find anything for topic: '${urlToTitle(topicTitleInUrl)}'`
-                )
-            );
-    }, [params]);
+  // Fetching the topic based on the URL parameter in `/visualiser/:topic`
+  useEffect(() => {
+    const topicTitleInUrl = params.topic;
+    getTopic(urlToTitle(topicTitleInUrl))
+      .then((topic) => setTopic(topic))
+      .catch(() => Notification.error(
+        `Couldn't find anything for topic: '${urlToTitle(topicTitleInUrl)}'`,
+      ));
+  }, [params]);
 
-    // Note: hacky way of removing scrollability outside of the panes
-    useEffect(() => {
-        document.querySelector('html').style.overflow = 'hidden';
-        return () => {
-            document.querySelector('html').style.overflow = 'auto';
-        };
-    });
+  // Note: hacky way of removing scrollability outside of the panes
+  useEffect(() => {
+    document.querySelector('html').style.overflow = 'hidden';
+    return () => {
+      document.querySelector('html').style.overflow = 'auto';
+    };
+  });
 
-    return topic ? (
-        <VisualiserDashboardLayout topic={topic}>
-            <Pane orientation="horizontal" minSize={150.9}>
-                <VisualiserCanvas topicTitle={topic.title} />
-                <VisualiserManager topicTitle={topic.title} />
-            </Pane>
-        </VisualiserDashboardLayout>
-    ) : (
-        <LineLoader fullViewport />
-    );
+  return topic ? (
+    <VisualiserDashboardLayout topic={topic}>
+      <Pane orientation="horizontal" minSize={150.9}>
+        <VisualiserCanvas topicTitle={topic.title} />
+        <VisualiserManager topicTitle={topic.title} />
+      </Pane>
+    </VisualiserDashboardLayout>
+  ) : (
+    <LineLoader fullViewport />
+  );
 };
 
 export default VisualiserDashboard;
