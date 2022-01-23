@@ -1,7 +1,6 @@
 import React from 'react';
 import curr from 'visualiser-src/linked-list-visualiser/assets/curr.svg';
 import prev from 'visualiser-src/linked-list-visualiser/assets/prev.svg';
-import { topOffset } from 'visualiser-src/linked-list-visualiser/util/constants';
 
 interface Props {
     topicTitle: string;
@@ -27,8 +26,8 @@ const LinkedListCanvas: React.FC = () => (
         }}
     >
         <svg className="container" id="canvas">
-            <image id="current" href={curr} />
-            <image id="prev" href={prev} />
+            <image opacity="0" id="current" href={curr} />
+            <image opacity="0" id="prev" href={prev} />
         </svg>
     </header>
 );

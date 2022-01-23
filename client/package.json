@@ -8,6 +8,7 @@
         "@mui/icons-material": "^5.1.1",
         "@mui/material": "^5.1.1",
         "@mui/styles": "^5.1.1",
+        "@svgdotjs/svg.js": "^3.1.1",
         "@testing-library/jest-dom": "^5.15.1",
         "@testing-library/react": "^11.1.0",
         "@testing-library/user-event": "^13.5.0",
@@ -15,7 +16,6 @@
         "@types/node": "^12.0.0",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
-        "@svgdotjs/svg.js": "^3.1.1",
         "animejs": "^3.2.1",
         "axios": "^0.24.0",
         "cogo-toast": "^4.2.3",
@@ -24,6 +24,7 @@
         "identity-obj-proxy": "^3.0.0",
         "marked": "^2.1.3",
         "react": "^17.0.2",
+        "react-cookie": "^4.1.1",
         "react-code-blocks": "0.0.9-0",
         "react-collapse-pane": "^2.0.1",
         "react-console-emulator": "^5.0.1",
@@ -40,35 +41,21 @@
         "rich-markdown-editor": "^11.19.4",
         "sass": "^1.43.4",
         "slick-carousel": "^1.8.1",
-        "svg.js": "^2.7.1",
         "source-map-explorer": "^2.5.2",
+        "svg.js": "^2.7.1",
         "typescript": "^4.1.2",
         "web-vitals": "^1.0.1"
     },
     "scripts": {
-        "start": "REACT_APP_DEV_OR_PROD=dev react-scripts start",
+        "start": "DISABLE_ESLINT_PLUGIN=true REACT_APP_DEV_OR_PROD=dev react-scripts start",
         "startprod": "REACT_APP_DEV_OR_PROD=prod react-scripts start",
         "build": "REACT_APP_DEV_OR_PROD=prod react-scripts build",
         "test-unit": "jest",
         "test-e2e": "cypress open",
         "eject": "react-scripts eject",
-        "analyse": "source-map-explorer --gzip 'build/static/js/*.js'"
-    },
-    "eslintConfig": {
-        "extends": [
-            "react-app",
-            "react-app/jest"
-        ],
-        "overrides": [
-            {
-                "files": [
-                    "**/*.stories.*"
-                ],
-                "rules": {
-                    "import/no-anonymous-default-export": "off"
-                }
-            }
-        ]
+        "analyse": "source-map-explorer --gzip 'build/static/js/*.js'",
+        "lint": "eslint './src/**/*.{tsx,ts}'",
+        "lint-fix": "eslint './src/**/*.{tsx,ts}' --fix"
     },
     "browserslist": {
         "production": [
@@ -90,8 +77,15 @@
         "@types/react-router-dom": "^5.1.7",
         "@types/react-slick": "^0.23.7",
         "@types/slick-carousel": "^1.6.37",
+        "@typescript-eslint/eslint-plugin": "^5.0.0",
+        "@typescript-eslint/parser": "^5.0.0",
         "cypress": "^9.1.0",
-        "react-cookie": "^4.1.1",
+        "eslint-config-airbnb": "^19.0.4",
+        "eslint-config-airbnb-typescript": "^16.1.0",
+        "eslint-plugin-import": "^2.25.4",
+        "eslint-plugin-jsx-a11y": "^6.5.1",
+        "eslint-plugin-react": "^7.28.0",
+        "eslint-plugin-react-hooks": "^4.3.0",
         "ts-node": "^10.4.0"
     },
     "resolutions": {

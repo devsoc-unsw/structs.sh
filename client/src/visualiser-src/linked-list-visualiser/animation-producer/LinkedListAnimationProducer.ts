@@ -1,89 +1,55 @@
-import { AnimationInstruction } from '../util/typedefs';
+import { SVG, Runner, Element } from '@svgdotjs/svg.js';
 import {
-    RIGHT_ARROW_PATH,
-    topOffset,
-    nodePathWidth,
-    fastestDuration,
-    CURRENT,
-    PREV,
+  RIGHT_ARROW_PATH, topOffset, nodePathWidth, CURRENT, PREV,
 } from '../util/constants';
-import LinkedList from '../data-structure/GraphicalLinkedList';
-import { GraphicalLinkedListNode } from '../data-structure/GraphicalLinkedListNode';
+import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
 
-export class LinkedListAnimationProducer {
-    private _timeline: AnimationInstruction[] = [];
+export default abstract class LinkedListAnimationProducer {
+  private _allRunners: Runner[][] = [];
 
-    public get timeline() {
-        return this._timeline;
+  public get allRunners() {
+    return this._allRunners;
+  }
+
+  public initialisePointer(pointerId: string) {
+    const pointerSvg: Element = SVG(pointerId);
+    pointerSvg.move(0, topOffset);
+    this.allRunners.push([pointerSvg.animate().attr({ opacity: 1 })]);
+  }
+
+  public movePointerToNext(pointerId: string) {
+    const pointerSvg: Element = SVG(pointerId);
+    this.allRunners.push([pointerSvg.animate().dx(nodePathWidth)]);
+  }
+
+  private resetPointers() {
+    const runners: Runner[] = [];
+    runners.push(
+      SVG(CURRENT)
+        .animate()
+        .attr({ opacity: 0 })
+        .after(() => SVG(CURRENT).move(0, topOffset)),
+    );
+    runners.push(
+      SVG(PREV)
+        .animate()
+        .attr({ opacity: 0 })
+        .after(() => SVG(PREV).move(0, topOffset)),
+    );
+    this.allRunners.push(runners);
+  }
+
+  public resetList(head: GraphicalLinkedListNode) {
+    this.resetPointers();
+    const runners: Runner[] = [];
+    let curr: GraphicalLinkedListNode = head;
+    let index: number = 0;
+    while (curr != null) {
+      runners.push(curr.nodeTarget.animate().move(index * nodePathWidth, 0));
+      runners.push(curr.pointerTarget.animate().plot(RIGHT_ARROW_PATH as any));
+      index += 1;
+      curr = curr.next;
     }
-
-    public initialisePointer(pointerId: string) {
-        this.timeline.push({
-            instructions: {
-                targets: pointerId,
-                translateY: topOffset,
-                duration: 1
-            },
-        });
-        this.timeline.push({
-            instructions: {
-                targets: pointerId,
-                opacity: 1,
-            },
-        });
-    }
-
-    public movePointerToNext(pointerId: string) {
-        this.timeline.push({
-            instructions: {
-                targets: pointerId,
-                translateX: `+=${nodePathWidth}`,
-                translateY: topOffset
-            },
-        });
-    }
-
-    private resetPointers() {
-        // Make disappear
-        this.timeline.push({
-            instructions: {
-                targets: [CURRENT, PREV],
-                opacity: 0,
-            },
-        });
-        // Arrow goes back to beginning
-        this.timeline.push({
-            instructions: {
-                targets: [CURRENT, PREV],
-                translateX: 0,
-                translateY: topOffset,
-                duration: 1,
-            },
-        });
-    }
-
-    public resetList(list: LinkedList) {
-        this.resetPointers();
-        let curr: GraphicalLinkedListNode = list.head;
-        let index: number = 0;
-        while (curr != null) {
-            this.timeline.push({
-                instructions: {
-                    targets: curr.nodeTarget,
-                    top: 0,
-                    translateX: index * nodePathWidth,
-                },
-                offset: '-=' + fastestDuration,
-            });
-            this.timeline.push({
-                instructions: {
-                    targets: curr.pointerTarget,
-                    d: RIGHT_ARROW_PATH,
-                },
-                offset: '-=' + fastestDuration,
-            });
-            index++;
-            curr = curr.next;
-        }
-    }
+    this.allRunners.push(runners);
+  }
 }

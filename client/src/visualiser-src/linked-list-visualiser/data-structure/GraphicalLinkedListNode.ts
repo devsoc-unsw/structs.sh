@@ -1,93 +1,81 @@
-import { setAttributes } from '../util/svgHelpers';
-import { nodeAttributes, shapeAttributes, textAttributes, pathAttributes } from '../util/constants';
-
-const SVG = 'http://www.w3.org/2000/svg';
+import {
+  SVG, Path, Text, Rect, Svg,
+} from '@svgdotjs/svg.js';
+import {
+  nodeAttributes,
+  shapeAttributes,
+  textAttributes,
+  pathAttributes,
+  RIGHT_ARROW_PATH,
+} from '../util/constants';
 
 interface SVGData {
-    nodeTarget: SVGGElement;
-    pointerTarget: SVGPathElement;
-    boxTarget: SVGGElement;
-    numberTarget: SVGTextElement;
+  nodeTarget: Svg;
+  pointerTarget: Path;
+  boxTarget: Rect;
+  numberTarget: Text;
 }
 
 interface GraphicalLinkedListNodeData {
-    value: number;
-    svgData: SVGData;
+  value: number;
+  svgData: SVGData;
 }
 
-export class GraphicalLinkedListNode {
-    private _data: GraphicalLinkedListNodeData;
-    private _next: GraphicalLinkedListNode;
+export default class GraphicalLinkedListNode {
+  private _data: GraphicalLinkedListNodeData;
 
-    private constructor(data: GraphicalLinkedListNodeData) {
-        this._data = data;
-        this._next = null;
-    }
+  private _next: GraphicalLinkedListNode;
 
-    public static from(input: number) {
-        // Create SVG node
-        const newNode = document.createElementNS(SVG, 'g');
-        // Node Box + Value group
-        const nodeBox = document.createElementNS(SVG, 'g');
-        // Box for node
-        const nodeShape = document.createElementNS(SVG, 'rect');
-        // Text inside node
-        const nodeValue = document.createElementNS(SVG, 'text');
-        nodeValue.innerHTML = input.toString();
-        // Pointer for node
-        const newPointer = document.createElementNS(SVG, 'path');
+  private constructor(data: GraphicalLinkedListNodeData) {
+    this._data = data;
+    this._next = null;
+  }
 
-        setAttributes(newNode, nodeAttributes);
-        setAttributes(nodeShape, shapeAttributes);
-        setAttributes(nodeValue, textAttributes);
-        setAttributes(newPointer, pathAttributes);
+  public static from(input: number) {
+    const newNode = SVG().attr(nodeAttributes);
+    const nodeShape = newNode.rect().attr(shapeAttributes);
+    const nodeValue = newNode.text(String(input)).attr(textAttributes);
+    const newPointer = newNode.path().attr(pathAttributes).plot(RIGHT_ARROW_PATH);
+    return new GraphicalLinkedListNode({
+      value: input,
+      svgData: {
+        numberTarget: nodeValue,
+        boxTarget: nodeShape,
+        nodeTarget: newNode,
+        pointerTarget: newPointer,
+      },
+    });
+  }
 
-        // Attach all the elements together
-        nodeBox.appendChild(nodeShape);
-        nodeBox.appendChild(nodeValue);
-        newNode.appendChild(nodeBox);
-        newNode.appendChild(newPointer);
+  public get data() {
+    return this._data;
+  }
 
-        return new GraphicalLinkedListNode({
-            value: input,
-            svgData: {
-                numberTarget: nodeValue,
-                boxTarget: nodeShape,
-                nodeTarget: newNode,
-                pointerTarget: newPointer,
-            },
-        });
-    }
+  public get next() {
+    return this._next;
+  }
 
-    public get data() {
-        return this._data;
-    }
+  public set next(next: GraphicalLinkedListNode) {
+    this._next = next;
+  }
 
-    public get next() {
-        return this._next;
-    }
+  public get value() {
+    return this._data.value;
+  }
 
-    public get value() {
-        return this._data.value;
-    }
+  public get nodeTarget() {
+    return this._data.svgData.nodeTarget;
+  }
 
-    public get nodeTarget() {
-        return this._data.svgData.nodeTarget;
-    }
+  public get pointerTarget() {
+    return this._data.svgData.pointerTarget;
+  }
 
-    public get pointerTarget() {
-        return this._data.svgData.pointerTarget;
-    }
+  public get boxTarget() {
+    return this._data.svgData.boxTarget;
+  }
 
-    public get boxTarget() {
-        return this._data.svgData.boxTarget;
-    }
-
-    public get numberTarget() {
-        return this._data.svgData.numberTarget;
-    }
-
-    public set next(next: GraphicalLinkedListNode) {
-        this._next = next;
-    }
+  public get numberTarget() {
+    return this._data.svgData.numberTarget;
+  }
 }
