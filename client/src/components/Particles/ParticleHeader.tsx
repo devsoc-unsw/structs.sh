@@ -12,11 +12,6 @@ const ParticleHeader: React.FC<Props> = () => {
     // const particleTheme = theme === darkTheme ? darkParticleTheme : lightParticleTheme;
     const particleTheme = darkParticleTheme;
 
-    const particlesInit = (main) => {
-        console.log(main);
-        // You can initialize the tsParticles instance here, adding custom shapes or presets
-    };
-
     // Note: this is a hacky way of forcefully setting the background gradient
     useEffect(() => {
         const body: any = document.querySelector('body');
@@ -35,7 +30,6 @@ const ParticleHeader: React.FC<Props> = () => {
             {' '}
             <Particles
                 id="tsparticles"
-                init={particlesInit}
                 options={{
                     background: {
                         // color: {

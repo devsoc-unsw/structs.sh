@@ -1,12 +1,6 @@
-import marked from 'marked';
-
 // Strips the frontmatter from the given markdown string
 export const bypassFrontmatter = (markdownBody: string): string => {
     return markdownBody ? markdownBody.replace(/^---$.*^---$/ms, '') : '';
-};
-
-export const renderMarkdown = (rawMarkdown: string): string => {
-    return marked(bypassFrontmatter(rawMarkdown));
 };
 
 /**
@@ -20,5 +14,3 @@ export const determineTimeToRead = (rawMarkdown: string) => {
 
     return Math.ceil(wordCount / WORDS_PER_MINUTE);
 };
-
-export default renderMarkdown;

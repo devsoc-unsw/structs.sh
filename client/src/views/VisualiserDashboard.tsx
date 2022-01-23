@@ -12,7 +12,7 @@ import 'visualiser-src/linked-list-visualiser/styles/visualiser.css';
 
 interface Props {}
 
-const Dashboard: FC<Props> = () => {
+const VisualiserDashboard: FC<Props> = () => {
     const [topic, setTopic] = useState<Topic>();
     const params = useParams();
 
@@ -48,4 +48,4 @@ const Dashboard: FC<Props> = () => {
     );
 };
 
-export default Dashboard;
+export default VisualiserDashboard;
