@@ -1,28 +1,25 @@
-import { BSTAnimationProducer } from '../animation-producer/BSTAnimationProducer';
-import { Animation, Node } from '../util/typedefs';
+import BSTInsertAnimationProducer from '../animation-producer/BSTInsertAnimationProducer';
+import BSTRotateAnimationProducer from '../animation-producer/BSTRotateAnimationProducer';
+import { Node } from '../util/typedefs';
+import { SVG, Container } from '@svgdotjs/svg.js';
+import { canvasPadding } from '../util/settings';
 
 // used for the actual implementation of the bst
 class BST {
-    public root: Node;
-    public animationProducer: BSTAnimationProducer;
-
-    constructor() {
-        this.root = null;
-        this.animationProducer = new BSTAnimationProducer();
-    }
-
+    public root: Node = null;
+    public draw: Container = SVG().addTo('#bst-canvas').size('100%', '100%');
+    
     // inserts a node into the bst and produces an animation sequence
     // that is later handled by the animation controller
-    public insert(input: number): Animation[] {
-        const animationSequence: Animation[] = [];
-
+    public insert(input: number): BSTInsertAnimationProducer {
+        const animationProducer: BSTInsertAnimationProducer = new BSTInsertAnimationProducer(this.draw);
         const node: Node = {
             nodeTarget: null,
             textTarget: null,
-            lineTarget: null,
+            leftLineTarget: null,
+            rightLineTarget: null,
             left: null,
             right: null,
-            parent: null,
             value: input,
             x: 0,
             y: 0,
@@ -31,42 +28,37 @@ class BST {
         if (this.root == null) {
             this.root = node;
             this.updateNodePositions();
-            this.animationProducer.createNode(node);
-            this.animationProducer.showNode(node, animationSequence);
+            animationProducer.createNode(node);
         } else {
             let currentNode: Node = this.root;
 
             while (currentNode) {
-                this.animationProducer.highlightNode(currentNode, animationSequence);
+                animationProducer.highlightNode(currentNode);
 
                 if (node.value < currentNode.value) {
                     if (currentNode.left == null) {
                         currentNode.left = node;
-                        node.parent = currentNode;
                         this.updateNodePositions();
-                        this.animationProducer.createNode(node);
-                        this.animationProducer.showNode(node, animationSequence);
-
-                        return animationSequence;
+                        animationProducer.createNodeLeft(node, currentNode);
+        
+                        return animationProducer;
                     }
 
                     currentNode = currentNode.left;
                 } else {
                     if (currentNode.right == null) {
                         currentNode.right = node;
-                        node.parent = currentNode;
                         this.updateNodePositions();
-                        this.animationProducer.createNode(node);
-                        this.animationProducer.showNode(node, animationSequence);
+                        animationProducer.createNodeRight(node, currentNode);
 
-                        return animationSequence;
+                        return animationProducer;
                     }
 
                     currentNode = currentNode.right;
                 }
             }
         }
-        return animationSequence;
+        return animationProducer;
     }
 
     // use this method after doing bst operations to update
@@ -77,7 +69,7 @@ class BST {
         const low: number = 0;
         const high: number = Number(canvasWidth);
         const mid: number = (low + high) / 2;
-        this.updateNodePositionsRecursive(this.root, low, high, mid, 0);
+        this.updateNodePositionsRecursive(this.root, low, high, mid, canvasPadding);
     }
 
     public updateNodePositionsRecursive(
@@ -100,6 +92,9 @@ class BST {
 
     // returns a node corresponding to the input
     public getNode(input: number): Node {
+        // handle edgecase where no nodes are present
+        if (this.root === null) return null;
+
         return this.getNodeRecursive(input, this.root);
     }
 
@@ -108,48 +103,90 @@ class BST {
         if (input === node.value) {
             return node;
         } else if (input < node.value) {
-            this.getNodeRecursive(input, node.left);
+            return this.getNodeRecursive(input, node.left);
         } else {
-            this.getNodeRecursive(input, node.right);
+            return this.getNodeRecursive(input, node.right);
         }
     }
 
-    public rotateRight(input: number): Animation[] {
-        const animationSequence: Animation[] = [];
-        const root: Node = this.getNode(input);
-        const newRoot: Node = root.left;
+    public rotateLeft(input: number): BSTRotateAnimationProducer {
+        const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer(this.draw);
+        const oldRoot: Node = this.getNode(input);
 
-        if (root === null || newRoot === null) {
-            return animationSequence;
+        if (oldRoot === null) return animationProducer;
+
+        const newRoot: Node = oldRoot.right;
+
+        if (newRoot === null) return animationProducer;
+
+        if (newRoot.right != null) {
+            animationProducer.movePointerToNewRootLeftChild(oldRoot, newRoot);
+            animationProducer.moveLeftPointerToOldRoot(oldRoot, newRoot);
+        } else {
+            animationProducer.assignNewRootLeftPointerToOldRootRightPointer(oldRoot, newRoot);
         }
 
-        root.left = newRoot.right;
-        newRoot.right = root;
-        newRoot.parent = null;
-        this.root = newRoot;
-
+        this.root = this.doRotateLeft(this.root, input);
         this.updateNodePositions();
-        // this.animationProducer.moveNode(root, root.x, root.y + 50, animationSequence);
-        // this.animationProducer.moveNode(newRoot, newRoot.x, newRoot.y + 50, animationSequence);
-        this.moveNodes(animationSequence);
+        animationProducer.updateBST(this.root);
 
-        return animationSequence;
+        return animationProducer;
     }
 
-    // TODO: try to get rid of this lol
-    public moveNodes(animationSequence: Animation[]): void {
-        this.moveNodesRecursive(this.root, animationSequence);
-    }
+    public doRotateLeft(node: Node, input: number): Node {
+        if (input === node.value) {
+            const newRoot: Node = node.right;
+            node.right = newRoot.left;
+            newRoot.left = node;
 
-    public moveNodesRecursive(node: Node, animationSequence: Animation[]): void {
-        if (node === null) {
-            return;
+            return newRoot;
+        } else if (input < node.value) {
+            node.left = this.doRotateLeft(node.left, input);
+        } else {
+            node.right = this.doRotateLeft(node.right, input);
         }
 
-        this.animationProducer.moveNode(node, node.x, node.y + 50, animationSequence);
+        return node;
+    }
 
-        this.moveNodesRecursive(node.left, animationSequence);
-        this.moveNodesRecursive(node.right, animationSequence);
+    public rotateRight(input: number): BSTRotateAnimationProducer {
+        const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer(this.draw);
+        const oldRoot: Node = this.getNode(input);
+
+        if (oldRoot === null) return animationProducer;
+
+        const newRoot: Node = oldRoot.left;
+
+        if (newRoot === null) return animationProducer;
+
+        if (newRoot.right != null) {
+            animationProducer.movePointerToNewRootRightChild(oldRoot, newRoot);
+            animationProducer.moveRightPointerToOldRoot(oldRoot, newRoot);
+        } else {
+            animationProducer.assignNewRootRightPointerToOldRootLeftPointer(oldRoot, newRoot);
+        }
+        
+        this.root = this.doRotateRight(this.root, input);
+        this.updateNodePositions();
+        animationProducer.updateBST(this.root);
+        
+        return animationProducer;
+    }
+
+    public doRotateRight(node: Node, input: number): Node {
+        if (input === node.value) {
+            const newRoot: Node = node.left;
+            node.left = newRoot.right;
+            newRoot.right = node;
+
+            return newRoot;
+        } else if (input < node.value) {
+            node.left = this.doRotateRight(node.left, input);
+        } else {
+            node.right = this.doRotateRight(node.right, input);
+        }
+
+        return node;
     }
 }
 

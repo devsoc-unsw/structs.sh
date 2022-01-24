@@ -1,98 +1,108 @@
-import { Node, Animation } from '../util/typedefs';
-import { SVG } from '@svgdotjs/svg.js';
-import { nodeSettings } from '../util/settings';
+import { Node } from '../util/typedefs';
+import { Runner, Container } from '@svgdotjs/svg.js';
+import { canvasPadding } from '../util/settings';
 
-// this class is used for:
-// . creation of bst nodes
-// . providing functions which perform specific animations
-// . storing the main svg called draw
-export class BSTAnimationProducer {
-    private draw = SVG().addTo('#bst-canvas').size('100%', '100%');
+export default class BSTAnimationProducer {
+    public animationSequence: Runner[][];
+    public draw: Container;
 
-    // draws a node which is composed of svgs and adds svg references to
-    // the node
-    // TODO: remove hardcoded value of 50
-    public createNode(node: Node) {
-        if (node.parent != null) {
-            node.lineTarget = this.draw
-                .line(node.parent.x, node.parent.y, node.x, node.y + 50)
-                .attr({ opacity: 0 });
-            node.lineTarget.stroke({
-                color: '#000',
-                width: 3,
-                linecap: 'round',
-            });
+    public getAnimationSequence(): Runner[][] {
+        return this.animationSequence;
+    }
 
-            node.lineTarget.back();
+    // the problem with each BSTAnimationProducer having its own draw canvas created
+    // is that svg.js uses an addTo method which would create an extra svg container
+    // of max width and height. we don't want this
+    public constructor(draw: Container) {
+        this.animationSequence = [];
+        this.draw = draw;
+    }
+
+    public highlightNode(node: Node): void {
+        this.animationSequence.push([
+            node.nodeTarget
+            .animate(400)
+            .attr({
+                fill: '#00ff00',
+            }),
+        ])
+
+        this.animationSequence.push([
+            node.nodeTarget
+            .animate(400)
+            .attr({
+                fill: '#ffffff',
+            }),
+        ])
+    }
+
+    public updateBST(root: Node): void {
+        const animation: Runner[] = [];
+        this.updateNodesRecursive(root, animation);
+        this.updateLinesRecursive(root, animation);
+        this.animationSequence.push(animation);
+    }
+
+    public updateNodesRecursive(node: Node, animation: Runner[]): void {
+        if (node === null) {
+            return;
         }
 
-        // create a g element and add the text and circle elements to it
-        node.nodeTarget = this.draw.circle(nodeSettings.width);
-        node.nodeTarget.attr({
-            fill: nodeSettings.fillColour,
-            cx: node.x,
-            cy: node.y + 50,
-            stroke: '#000',
-            'stroke-width': 3,
-            opacity: 0,
-        });
-
-        node.textTarget = this.draw.text(node.value.toString());
-        node.textTarget.attr({
-            'dominant-baseline': 'middle',
-            'text-anchor': 'middle',
-            x: node.x,
-            y: node.y + 50,
-            opacity: 0,
-        });
+        this.updateNode(node, node.x, node.y, animation);
+        this.updateNodesRecursive(node.left, animation);
+        this.updateNodesRecursive(node.right, animation);
     }
 
-    public highlightNode(node: Node, animationSequence: Animation[]) {
-        animationSequence.push({
-            targets: [node.nodeTarget],
-            duration: 400,
-            delay: 200,
-            simultaneous: false,
-            attrs: {
-                fill: '#00ff00',
-            },
-        });
+    public updateNode(node: Node, newX: number, newY: number, animation: Runner[]): void {
+        animation.push(
+            node.nodeTarget
+            .animate(400)
+            .cx(newX)
+            .cy(newY),
+        );
 
-        animationSequence.push({
-            targets: [node.nodeTarget],
-            duration: 400,
-            delay: 200,
-            simultaneous: false,
-            attrs: {
-                fill: '#ffffff',
-            },
-        });
+        animation.push(
+            node.textTarget
+            .animate(400)
+            .cx(newX)
+            .cy(newY),
+        );
     }
 
-    public showNode(node: Node, animationSequence: Animation[]) {
-        animationSequence.push({
-            targets: [node.nodeTarget, node.textTarget],
-            duration: 400,
-            delay: 0,
-            simultaneous: false,
-            attrs: {
-                opacity: 1,
-            },
-        });
+    public updateLinesRecursive(node: Node, animation: Runner[]): void {
+        if (node === null) {
+            return;
+        }
+
+        this.updateNodeLines(node, animation);
+        this.updateLinesRecursive(node.left, animation);
+        this.updateLinesRecursive(node.right, animation);
     }
 
-    public moveNode(node: Node, newX: number, newY: number, animationSequence: Animation[]) {
-        animationSequence.push({
-            targets: [node.nodeTarget, node.textTarget],
-            duration: 400,
-            delay: 0,
-            simultaneous: true,
-            attrs: {
-                x: newX,
-                y: newY,
-                cx: newX,
-                cy: newY,
-            },
-        });
+    public updateNodeLines(node: Node, animation: Runner[]): void {
+        const lineDiffX = this.getLineDiffX(node);
+        const lineDiffY = 75;
+
+        animation.push(
+            node.leftLineTarget
+            .animate(400)
+            .plot([[node.x, node.y], [node.x - lineDiffX, node.y + lineDiffY]])
+        );
+
+        animation.push(
+            node.rightLineTarget
+            .animate(400)
+            .plot([[node.x, node.y], [node.x + lineDiffX, node.y + lineDiffY]])
+        )
+    }
+
+    // returns the difference in x coordinates with the node
+    // and it's two child nodes
+    public getLineDiffX(node: Node): number {
+        const canvasWidth = document.getElementById('bst-canvas').offsetWidth;
+        const depth: number = (node.y - canvasPadding) / 75;
+        const baseDiff = canvasWidth / 4;
+        
+        return baseDiff / (1 << depth);;
     }
 }

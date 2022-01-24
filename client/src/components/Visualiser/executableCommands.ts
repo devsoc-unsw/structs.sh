@@ -38,6 +38,9 @@ const getBSTExecutor = (visualiser, updateTimeline) => {
             case 'insert':
                 visualiser.insert(Number(args[0]), updateTimeline);
                 break;
+            case 'rotateLeft':
+                visualiser.rotateLeft(Number(args[0]), updateTimeline);
+                break;
             case 'rotateRight':
                 visualiser.rotateRight(Number(args[0]), updateTimeline);
                 break;

@@ -33,7 +33,7 @@ const ParticleHeader: React.FC<Props> = () => {
     return (
         <div>
             {' '}
-            <Particles
+            {/* <Particles
                 id="tsparticles"
                 /*init={particlesInit}*/
                 options={{
@@ -130,7 +130,7 @@ const ParticleHeader: React.FC<Props> = () => {
 
                     retina_detect: true,
                 }}
-            />
+            /> */}
         </div>
     );
 };
