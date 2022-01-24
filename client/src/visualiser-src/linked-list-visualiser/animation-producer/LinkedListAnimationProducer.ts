@@ -2,15 +2,10 @@ import { SVG, Runner, Element } from '@svgdotjs/svg.js';
 import {
   RIGHT_ARROW_PATH, topOffset, nodePathWidth, CURRENT, PREV,
 } from '../util/constants';
+import AnimationProducer from "../../common/AnimationProducer";
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
 
-export default abstract class LinkedListAnimationProducer {
-  private _allRunners: Runner[][] = [];
-
-  public get allRunners() {
-    return this._allRunners;
-  }
-
+export default abstract class LinkedListAnimationProducer extends AnimationProducer {
   public initialisePointer(pointerId: string) {
     const pointerSvg: Element = SVG(pointerId);
     pointerSvg.move(0, topOffset);

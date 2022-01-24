@@ -4,15 +4,15 @@ import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
 import { BENT_ARROW_PATH } from '../util/constants';
 
 export default class LinkedListDeleteAnimationProducer extends LinkedListAnimationProducer {
-  setNextToNull(node: GraphicalLinkedListNode) {
+  public setNextToNull(node: GraphicalLinkedListNode) {
     this.allRunners.push([node.pointerTarget.animate().attr({ opacity: 0 })]);
   }
 
-  morphNextPointerToArc(node: GraphicalLinkedListNode) {
-    this.allRunners.push([node.pointerTarget.animate().attr({ d: BENT_ARROW_PATH })]);
+  public morphNextPointerToArc(node: GraphicalLinkedListNode) {
+    this.allRunners.push([node.pointerTarget.animate().plot(BENT_ARROW_PATH as any)]);
   }
 
-  deleteNode(node: GraphicalLinkedListNode) {
+  public deleteNode(node: GraphicalLinkedListNode) {
     const runners: Runner[] = [];
     runners.push(node.pointerTarget.animate().attr({ opacity: 0 }));
     runners.push(node.nodeTarget.animate().attr({ opacity: 0 }));

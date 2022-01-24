@@ -1,41 +1,70 @@
-import anime, { AnimeTimelineInstance } from 'animejs';
-import { AnimationInstruction } from '../linked-list-visualiser/util/typedefs';
-import { fastestDuration } from '../linked-list-visualiser/util/constants';
-import { Timeline, Runner } from '@svgdotjs/svg.js';
+import { Timeline } from '@svgdotjs/svg.js';
+import AnimationProducer from "../common/AnimationProducer";
+
 // controls todo:
 // [x] play/pause
-// [ ] step to the next or previous timestamp in the current timeline
+// [x] step to the next or previous timestamp in the current timeline
 // [ ] run a sequence in step mode or sequential mode
 // [ ] control to skip the animation of a sequence
 
 // eventually this file should be placed in a folder common for all data structures,
 // not just for the linked list
 class AnimationController {
-    private currentTimeline: Timeline = new Timeline();
-    private timelineHistory: AnimeTimelineInstance[] = [];
-    private timelineIndex: number = 0;
-    private _isPaused: boolean = false;
+    private currentTimeline: Timeline = new Timeline().persist(true);
+    private timelineDuration: number = 0;
+    private timestamps: number[] = [];
+    private timelineSlider = document.querySelector('#timelineSlider') as HTMLInputElement;
 
-    public getCurrentTimeline(): AnimeTimelineInstance {
+    constructor() {
+        this.timelineSlider.addEventListener('input', (e: Event) => {
+            this.seekPercent(Number(this.timelineSlider.value));
+        })
+    }
+
+    public getCurrentTimeline(): Timeline {
         return this.currentTimeline;
     }
 
+    public constructTimeline(animationProducer: AnimationProducer, updateSlider: (val: number) => void) {
+        this.resetTimeline();
+
+        for (const runners of animationProducer.allRunners) {
+            for (const runner of runners) {
+                this.currentTimeline.schedule(runner, this.timelineDuration, 'absolute');
+            }
+            this.timestamps.push(this.timelineDuration);
+            this.timelineDuration += runners[0].duration();
+        }
+        this.timestamps.push(this.timelineDuration);
+        this.currentTimeline.play();
+    }
+
+    public resetTimeline() {
+        this.currentTimeline = new Timeline().persist(true);
+        this.currentTimeline.on('time', (e: CustomEvent) => {
+            this.timelineSlider.value = String((e.detail / this.timelineDuration) * 100);
+        });
+
+        this.timestamps = [];
+        this.timelineDuration = 0;
+    }
+
     public play(): void {
-        this._isPaused = false;
         this.currentTimeline.play();
     }
 
     public pause(): void {
-        this._isPaused = true;
         this.currentTimeline.pause();
     }
 
-    public get isPaused(): boolean {
-        return this._isPaused;
+    public seekPercent(position: number): void {
+        const timeSeek: number = (position * this.timelineDuration) / 100;
+
+        this.currentTimeline.time(timeSeek);
     }
 
-    public seekPercent(position: number): void {
-        //this.currentTimeline.seek(this.currentTimeline.duration * (position / 100));
+    public setSpeed(speed: number): void {
+        this.currentTimeline.speed(speed);
     }
 
     // Finish playing the timeline
@@ -43,76 +72,37 @@ class AnimationController {
         this.currentTimeline.finish();
     }
 
-    // this function runs a sequence of animations sequentially
-    public runSequence(
-        allRunners: Runner[][],
-        updateAnimationProgress: (val: number) => void
-    ): void {
-        // console.log(this);
-        // this.currentTimeline = anime.timeline({
-        //     duration: fastestDuration,
-        //     easing: 'easeOutExpo',
-        //     update: function (anim) {
-        //         updateAnimationProgress(Number(anim.progress));
-        //     },
-        // });
-        let currentDuration: number = 0;
-        for (const runners of allRunners) {
-            for (const runner of runners) {
-                this.currentTimeline.schedule(runner, currentDuration, 'absolute');
+    public stepBackwards(): void {
+        this.currentTimeline.time(this.computePrevTimestamp());
+    }
+
+    // TODO: this isn't 100% working
+    public stepForwards(): void {
+        this.currentTimeline.time(this.computeNextTimestamp());
+    }
+
+    private computeNextTimestamp(): number {
+        for (let timestamp of this.timestamps) {
+            if (timestamp > this.currentTime) {
+                return timestamp;
             }
-            currentDuration += runners[0].duration();
         }
-
-        this.currentTimeline.play();
-        this.currentTimeline.speed(0.6);
-        // for (const seq of sequence) {
-        //     if ('offset' in seq) {
-        //         this.currentTimeline.add(seq.instructions, seq.offset);
-        //     } else {
-        //         this.currentTimeline.add(seq.instructions);
-        //     }
-        // }
-
-        this.timelineHistory.push(this.currentTimeline);
-        this.timelineIndex++;
+        return this.timelineDuration;
     }
 
-    public runNextSequence(): void {
-        if (this.timelineIndex === this.timelineHistory.length - 1) {
-            console.log('cant run next sequence');
+    private computePrevTimestamp(): number {
+        let prev = 0;
+        for (let timestamp of this.timestamps) {
+            if (prev < this.currentTime && timestamp >= this.currentTime) {
+                return prev;
+            }
+            prev = timestamp;
         }
+        return 0;
     }
 
-    public setSpeed(speed: number): void {
-        // `anime.speed` is a readonly property. The following comments prevent typescript from enforcing this rule.
-        // Source: https://stackoverflow.com/questions/51145180/how-to-use-ts-ignore-for-a-block
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        anime.speed = speed;
-    }
-
-    public freeze(): void {
-        this.currentTimeline.pause();
-    }
-
-    public gotoPrevious(): void {
-        this.currentTimeline.pause();
-        this.currentTimeline = this.timelineHistory[this.timelineIndex - 1];
-        this.seekPercent(0);
-        this.timelineIndex--;
-        this.currentTimeline = this.timelineHistory[this.timelineIndex - 1];
-        this.seekPercent(0);
-    }
-
-    public gotoNext(): void {
-        if (this.timelineIndex === this.timelineHistory.length) return;
-        this.currentTimeline.pause();
-        this.currentTimeline = this.timelineHistory[this.timelineIndex - 1];
-        this.seekPercent(100);
-        this.timelineIndex++;
-        this.currentTimeline = this.timelineHistory[this.timelineIndex - 1];
-        this.seekPercent(100);
+    private get currentTime() {
+        return Number(this.timelineSlider.value) * (this.timelineDuration / 100);
     }
 }
 

@@ -21,7 +21,7 @@ export default class LinkedListInsertAnimationProducer extends LinkedListAnimati
 
   public createNodeAt(index: number, newNode: GraphicalLinkedListNode) {
     newNode.nodeTarget.addTo(CANVAS);
-    newNode.nodeTarget.move(index * nodePathWidth + actualNodeWidth, insertedNodeTopOffset);
+    newNode.nodeTarget.move((index - 1) * nodePathWidth + actualNodeWidth, insertedNodeTopOffset);
     this.allRunners.push([newNode.nodeTarget.animate().attr({ opacity: 1 })]);
   }
 }

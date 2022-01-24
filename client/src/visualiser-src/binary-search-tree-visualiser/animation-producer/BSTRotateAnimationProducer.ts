@@ -3,7 +3,7 @@ import { Node } from '../util/typedefs';
 
 export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
     public movePointerToNewRootRightChild(oldRoot: Node, newRoot: Node): void {
-        this.animationSequence.push([
+        this.allRunners.push([
             oldRoot.leftLineTarget
             .animate(400)
             .plot([[oldRoot.x, oldRoot.y], [newRoot.right.x, newRoot.right.y]])
@@ -11,7 +11,7 @@ export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
     }
 
     public movePointerToNewRootLeftChild(oldRoot: Node, newRoot: Node): void {
-        this.animationSequence.push([
+        this.allRunners.push([
             oldRoot.rightLineTarget
             .animate(400)
             .plot([[oldRoot.x, oldRoot.y], [newRoot.left.x, newRoot.left.y]])
@@ -19,7 +19,7 @@ export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
     }
 
     public moveRightPointerToOldRoot(oldRoot: Node, newRoot: Node): void {
-        this.animationSequence.push([
+        this.allRunners.push([
             newRoot.rightLineTarget
             .animate(400)
             .plot([[newRoot.x, newRoot.y], [oldRoot.x, oldRoot.y]])
@@ -27,7 +27,7 @@ export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
     }
 
     public moveLeftPointerToOldRoot(oldRoot: Node, newRoot: Node): void {
-        this.animationSequence.push([
+        this.allRunners.push([
             newRoot.leftLineTarget
             .animate(400)
             .plot([[newRoot.x, newRoot.y], [oldRoot.x, oldRoot.y]])

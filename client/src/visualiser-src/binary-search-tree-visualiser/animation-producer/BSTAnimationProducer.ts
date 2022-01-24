@@ -1,25 +1,21 @@
 import { Node } from '../util/typedefs';
 import { Runner, Container } from '@svgdotjs/svg.js';
 import { canvasPadding } from '../util/settings';
+import AnimationProducer from '../../common/AnimationProducer';
 
-export default class BSTAnimationProducer {
-    public animationSequence: Runner[][];
+export default class BSTAnimationProducer extends AnimationProducer {
     public draw: Container;
-
-    public getAnimationSequence(): Runner[][] {
-        return this.animationSequence;
-    }
 
     // the problem with each BSTAnimationProducer having its own draw canvas created
     // is that svg.js uses an addTo method which would create an extra svg container
     // of max width and height. we don't want this
     public constructor(draw: Container) {
-        this.animationSequence = [];
+        super();
         this.draw = draw;
     }
 
     public highlightNode(node: Node): void {
-        this.animationSequence.push([
+        this.allRunners.push([
             node.nodeTarget
             .animate(400)
             .attr({
@@ -27,7 +23,7 @@ export default class BSTAnimationProducer {
             }),
         ])
 
-        this.animationSequence.push([
+        this.allRunners.push([
             node.nodeTarget
             .animate(400)
             .attr({
@@ -40,7 +36,7 @@ export default class BSTAnimationProducer {
         const animation: Runner[] = [];
         this.updateNodesRecursive(root, animation);
         this.updateLinesRecursive(root, animation);
-        this.animationSequence.push(animation);
+        this.allRunners.push(animation);
     }
 
     public updateNodesRecursive(node: Node, animation: Runner[]): void {

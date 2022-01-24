@@ -4,7 +4,7 @@ import { nodeStyle, nodeWidth, textStyle, lineStyle, canvasPadding } from '../ut
 
 export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
     public createNodeLeft(node: Node, parent: Node): void {
-        this.animationSequence.push([
+        this.allRunners.push([
             parent.leftLineTarget
             .animate(400)
             .attr({
@@ -16,7 +16,7 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
     }
 
     public createNodeRight(node: Node, parent: Node): void {
-        this.animationSequence.push([
+        this.allRunners.push([
             parent.rightLineTarget
             .animate(400)
             .attr({
@@ -52,7 +52,7 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
         node.textTarget.attr(textStyle);
         node.textTarget.cx(node.x).cy(node.y);
 
-        this.animationSequence.push([
+        this.allRunners.push([
             node.nodeTarget
             .animate(400)
             .attr({
