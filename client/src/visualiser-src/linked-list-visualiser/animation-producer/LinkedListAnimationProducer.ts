@@ -23,13 +23,11 @@ export default abstract class LinkedListAnimationProducer extends AnimationProdu
       SVG(CURRENT)
         .animate()
         .attr({ opacity: 0 })
-        .after(() => SVG(CURRENT).move(0, topOffset)),
     );
     runners.push(
       SVG(PREV)
         .animate()
         .attr({ opacity: 0 })
-        .after(() => SVG(PREV).move(0, topOffset)),
     );
     this.allRunners.push(runners);
   }

@@ -1,4 +1,4 @@
-import { Timeline } from '@svgdotjs/svg.js';
+import { Runner, Timeline } from '@svgdotjs/svg.js';
 import AnimationProducer from "../common/AnimationProducer";
 
 // controls todo:
@@ -15,7 +15,14 @@ class AnimationController {
     private timestamps: number[] = [];
     private timelineSlider = document.querySelector('#timelineSlider') as HTMLInputElement;
     private speed: number = 1;
-    
+    private isStepMode: boolean = false;
+
+    constructor() {
+        this.timelineSlider.addEventListener('input', (e: Event) => {
+            this.seekPercent(Number(this.timelineSlider.value));
+        })
+    }
+
     public getCurrentTimeline(): Timeline {
         return this.currentTimeline;
     }
@@ -27,10 +34,15 @@ class AnimationController {
             for (const runner of runners) {
                 this.currentTimeline.schedule(runner, this.timelineDuration, 'absolute');
             }
+            runners[0].after(() => {
+                if (this.isStepMode) {
+                    this.pause();
+                }
+                console.log(this.currentTimeline.time());
+            });
             this.timestamps.push(this.timelineDuration);
             this.timelineDuration += runners[0].duration();
         }
-
         this.timestamps.push(this.timelineDuration);
         this.currentTimeline.play();
     }
@@ -40,13 +52,14 @@ class AnimationController {
         this.currentTimeline.on('time', (e: CustomEvent) => {
             updateSlider((e.detail / this.timelineDuration) * 100);
         });
-
+        this.isStepMode = false;
         this.currentTimeline.speed(this.speed);
         this.timestamps = [];
         this.timelineDuration = 0;
     }
 
     public play(): void {
+        this.isStepMode = false;
         this.currentTimeline.play();
     }
 
@@ -56,8 +69,11 @@ class AnimationController {
 
     public seekPercent(position: number): void {
         const timeSeek: number = (position * this.timelineDuration) / 100;
-
         this.currentTimeline.time(timeSeek);
+        if (this.isStepMode) {
+            this.pause();
+            this.isStepMode = false;
+        }
     }
 
     public setSpeed(speed: number): void {
@@ -76,38 +92,27 @@ class AnimationController {
     }
 
     public stepBackwards(): void {
+        this.pause();
         this.currentTimeline.time(this.computePrevTimestamp());
     }
 
     // TODO: this isn't 100% working
     public stepForwards(): void {
-        this.currentTimeline.time(this.computeNextTimestamp());
-    }
-
-    private computeNextTimestamp(): number {
-        for (let timestamp of this.timestamps) {
-            if (timestamp > this.currentTime) {
-                return timestamp;
-            }
-        }
-        return this.timelineDuration;
+        this.isStepMode = true;
+        this.currentTimeline.play();
     }
 
     private computePrevTimestamp(): number {
-        let prev = 0;
-        for (let timestamp of this.timestamps) {
-            if (prev < this.currentTime && timestamp >= this.currentTime) {
-                return prev;
+        for (let timestamp of [...this.timestamps].reverse()) {
+            if (timestamp + 20 < this.currentTime) {
+                return timestamp;
             }
-
-            prev = timestamp;
         }
-
         return 0;
     }
 
     private get currentTime() {
-        return Math.round(Number(this.timelineSlider.value) * (this.timelineDuration / 100));
+        return this.currentTimeline.time() > this.timelineDuration? this.timelineDuration : this.currentTimeline.time();
     }
 }
 
