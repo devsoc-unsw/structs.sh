@@ -17,17 +17,29 @@ export default class BSTAnimationProducer extends AnimationProducer {
     public highlightNode(node: Node): void {
         this.allRunners.push([
             node.nodeTarget
-            .animate(400)
+            .animate(500)
             .attr({
-                fill: '#00ff00',
+                fill: '#4beb9b',
+                stroke: '#4beb9b',
+            }),
+            node.textTarget
+            .animate(500)
+            .attr({
+                fill: '#ffffff',
             }),
         ])
 
         this.allRunners.push([
             node.nodeTarget
-            .animate(400)
+            .animate(500)
             .attr({
                 fill: '#ffffff',
+                stroke: '#000000',
+            }),
+            node.textTarget
+            .animate(500)
+            .attr({
+                fill: '#000000',
             }),
         ])
     }
