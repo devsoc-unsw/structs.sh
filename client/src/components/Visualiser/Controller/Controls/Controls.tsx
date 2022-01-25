@@ -50,7 +50,7 @@ const Controls: FC<Props> = ({
                 setIsPlaying(true);
             }
         }
-    }, [timelineComplete, handleUpdateTimeline, isPlaying]);
+    }, [timelineComplete, handleUpdateTimeline]);
 
     return (
         <div className={styles.root}>
@@ -60,7 +60,18 @@ const Controls: FC<Props> = ({
                     sx={{ fill: theme.palette.text.primary }}
                 />
             </IconButton>
-            {isPlaying ? (
+            {timelineComplete ? (
+                <IconButton>
+                    <ReplayIcon
+                        sx={{ fill: theme.palette.text.primary }}
+                        onClick={() => {
+                            handleDragTimeline(0);
+                            handlePlay();
+                            setIsPlaying(true);
+                        }}
+                    />
+                </IconButton>
+            ) : isPlaying ? (
                 <IconButton>
                     <PauseIcon
                         onClick={() => {
@@ -70,7 +81,7 @@ const Controls: FC<Props> = ({
                         sx={{ fill: theme.palette.text.primary }}
                     />
                 </IconButton>
-            ) : !timelineComplete ? (
+            ) : (
                 <IconButton>
                     <PlayIcon
                         onClick={() => {
@@ -78,17 +89,6 @@ const Controls: FC<Props> = ({
                             setIsPlaying(true);
                         }}
                         sx={{ fill: theme.palette.text.primary }}
-                    />
-                </IconButton>
-            ) : (
-                <IconButton>
-                    <ReplayIcon
-                        sx={{ fill: theme.palette.text.primary }}
-                        onClick={() => {
-                            handleDragTimeline(0);
-                            handlePlay();
-                            setIsPlaying(true);
-                        }}
                     />
                 </IconButton>
             )}
