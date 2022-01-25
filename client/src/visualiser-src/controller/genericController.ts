@@ -16,9 +16,9 @@ class AnimationController {
     private timelineSlider = document.querySelector('#timelineSlider') as HTMLInputElement;
 
     constructor() {
-        this.timelineSlider.addEventListener('input', (e: Event) => {
-            this.seekPercent(Number(this.timelineSlider.value));
-        })
+        // this.timelineSlider.addEventListener('input', (e: Event) => {
+        //     this.seekPercent(Number(this.timelineSlider.value));
+        // })
     }
 
     public getCurrentTimeline(): Timeline {
@@ -26,7 +26,7 @@ class AnimationController {
     }
 
     public constructTimeline(animationProducer: AnimationProducer, updateSlider: (val: number) => void) {
-        this.resetTimeline();
+        this.resetTimeline(updateSlider);
 
         for (const runners of animationProducer.allRunners) {
             for (const runner of runners) {
@@ -39,10 +39,11 @@ class AnimationController {
         this.currentTimeline.play();
     }
 
-    public resetTimeline() {
+    public resetTimeline(updateSlider: (val: number) => void) {
         this.currentTimeline = new Timeline().persist(true);
         this.currentTimeline.on('time', (e: CustomEvent) => {
-            this.timelineSlider.value = String((e.detail / this.timelineDuration) * 100);
+            updateSlider((e.detail / this.timelineDuration) * 100);
+            // this.timelineSlider.value = String((e.detail / this.timelineDuration) * 100);
         });
 
         this.timestamps = [];

@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { Notification } from 'utils/Notification';
 import initLinkedListVisualiser from 'visualiser-src/linked-list-visualiser/initialiser';
 import initBSTVisualiser from 'visualiser-src/binary-search-tree-visualiser/initialiser';
@@ -14,7 +14,8 @@ interface Props {
 }
 
 const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
-    const [animationProgress, setAnimationProgress] = useState<number>(0);
+    const animationProgress = useRef<number>(0);
+    const [timelineComplete, setTimelineComplete] = useState<boolean>(false);
     const [speed, setSpeed] = useState<number>(0.5);
     const [terminalMode, setTerminalMode] = useState(true);
 
@@ -38,7 +39,14 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
     /* -------------------------- Visualiser Callbacks -------------------------- */
 
     const updateTimeline = useCallback((val) => {
-        setAnimationProgress(val);
+        const timelineSlider = document.querySelector('#timelineSlider') as HTMLInputElement;
+        animationProgress.current = val;
+
+        if (!timelineComplete && animationProgress.current >= 100) {
+            setTimelineComplete(true);
+        }
+        
+        timelineSlider.value = String(val);
     }, []);
 
     const executeCommand = useMemo(
@@ -65,7 +73,7 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
     const dragTimeline = useCallback(
         (val: number) => {
             visualiser.setTimeline(val);
-            setAnimationProgress(val);
+            animationProgress.current = val;
         },
         [visualiser]
     );
@@ -97,7 +105,7 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
                 handleDragTimeline={dragTimeline}
                 handleSpeedSliderDrag={handleSpeedSliderDrag}
                 handleSpeedSliderDragEnd={handleSpeedSliderDragEnd}
-                animationProgress={animationProgress}
+                animationProgress={animationProgress.current}
                 speed={speed}
             />
             <Box sx={{ height: '100%' }}>

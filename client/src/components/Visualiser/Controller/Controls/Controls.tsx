@@ -108,9 +108,31 @@ const Controls: FC<Props> = ({
                             className={styles.sliderIcon}
                             sx={{ fill: theme.palette.text.primary }}
                         />
-                        <div className="col">
-                            <input type="range" id="timelineSlider" name="volume" min="0" max="100" defaultValue="0" step="0.01"/> 
-                        </div>
+                        <input
+                            type="range"
+                            id="timelineSlider"
+                            name="volume"
+                            min="0"
+                            max="100"
+                            defaultValue="0"
+                            step="0.01"
+                            className={styles.timelineSlider}
+                            onChange={(event) => {
+                                if (userIsDraggingTimeline) {
+                                    handleDragTimeline(Number(event.target.value));
+                                } else {
+                                    handleUpdateTimeline(Number(event.target.value));
+                                }
+                            }}
+                            onMouseDown={() => {
+                                setUserIsDraggingTimeline(true);
+                                handlePause();
+                            }}
+                            onMouseUp={() => {
+                                setUserIsDraggingTimeline(false);
+                                handlePlay();
+                            }}
+                        /> 
                         {/* <Slider
                             onChange={(_, newValue) => {
                                 if (userIsDraggingTimeline) {
@@ -131,6 +153,7 @@ const Controls: FC<Props> = ({
                             disabled={!isPlaying}
                             min={0}
                             max={100}
+                            step={0.001}
                             sx={{ ml: '10px' }}
                         /> */}
                     </Stack>
