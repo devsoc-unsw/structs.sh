@@ -14,9 +14,8 @@ interface Props {
 }
 
 const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
-    const animationProgress = useRef<number>(0);
     const [timelineComplete, setTimelineComplete] = useState<boolean>(false);
-    const [speed, setSpeed] = useState<number>(0.5);
+    const [speed, setSpeed] = useState<number>(1);
     const [terminalMode, setTerminalMode] = useState(true);
 
     const [visualiser, setVisualiser] = useState<any>({});
@@ -40,13 +39,9 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
 
     const updateTimeline = useCallback((val) => {
         const timelineSlider = document.querySelector('#timelineSlider') as HTMLInputElement;
-        animationProgress.current = val;
-
-        if (!timelineComplete && animationProgress.current >= 100) {
-            setTimelineComplete(true);
-        }
-        
         timelineSlider.value = String(val);
+
+        setTimelineComplete(val >= 100);
     }, []);
 
     const executeCommand = useMemo(
@@ -73,7 +68,6 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
     const dragTimeline = useCallback(
         (val: number) => {
             visualiser.setTimeline(val);
-            animationProgress.current = val;
         },
         [visualiser]
     );
@@ -104,8 +98,7 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
                 handleUpdateTimeline={updateTimeline}
                 handleDragTimeline={dragTimeline}
                 handleSpeedSliderDrag={handleSpeedSliderDrag}
-                handleSpeedSliderDragEnd={handleSpeedSliderDragEnd}
-                animationProgress={animationProgress.current}
+                timelineComplete={timelineComplete}
                 speed={speed}
             />
             <Box sx={{ height: '100%' }}>

@@ -21,8 +21,7 @@ interface Props {
     handleUpdateTimeline: (val: number) => void;
     handleDragTimeline: (val: number) => void;
     handleSpeedSliderDrag: (val: number) => void;
-    handleSpeedSliderDragEnd: () => void;
-    animationProgress: number;
+    timelineComplete: boolean;
     speed: number;
 }
 
@@ -36,8 +35,7 @@ const Controls: FC<Props> = ({
     handleUpdateTimeline,
     handleDragTimeline,
     handleSpeedSliderDrag,
-    handleSpeedSliderDragEnd,
-    animationProgress,
+    timelineComplete,
     speed,
 }) => {
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -45,15 +43,14 @@ const Controls: FC<Props> = ({
     const theme = useTheme();
 
     useEffect(() => {
-        if (animationProgress >= 100) {
+        if (timelineComplete) {
             setIsPlaying(false);
-            handleUpdateTimeline(0);
-        } else if (animationProgress > 0 && animationProgress < 100) {
+        } else {
             if (!isPlaying) {
                 setIsPlaying(true);
             }
         }
-    }, [animationProgress, handleUpdateTimeline, isPlaying]);
+    }, [timelineComplete, handleUpdateTimeline, isPlaying]);
 
     return (
         <div className={styles.root}>
@@ -73,7 +70,7 @@ const Controls: FC<Props> = ({
                         sx={{ fill: theme.palette.text.primary }}
                     />
                 </IconButton>
-            ) : animationProgress > 0 && animationProgress <= 100 ? (
+            ) : !timelineComplete ? (
                 <IconButton>
                     <PlayIcon
                         onClick={() => {
@@ -88,6 +85,7 @@ const Controls: FC<Props> = ({
                     <ReplayIcon
                         sx={{ fill: theme.palette.text.primary }}
                         onClick={() => {
+                            handleDragTimeline(0);
                             handlePlay();
                             setIsPlaying(true);
                         }}
@@ -164,15 +162,12 @@ const Controls: FC<Props> = ({
                         />
                         <Slider
                             onChange={(_, newValue) => handleSpeedSliderDrag(Number(newValue))}
-                            onMouseUp={() => {
-                                if (animationProgress > 0) {
-                                    handleSpeedSliderDragEnd();
-                                }
-                            }}
+                            onMouseDown={() => handlePause()}
+                            onMouseUp={() => handlePlay()}
                             value={speed}
                             min={0}
-                            max={1}
-                            step={0.1}
+                            max={2}
+                            step={0.25}
                             marks
                             sx={{ ml: '10px' }}
                             color="secondary"

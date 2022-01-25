@@ -13,9 +13,7 @@ interface Props {
     handleUpdateTimeline: (val: number) => void;
     handleDragTimeline: (val: number) => void;
     handleSpeedSliderDrag: (val: number) => void;
-    handleSpeedSliderDragEnd: () => void;
-    // Value between 0 and 100
-    animationProgress: number;
+    timelineComplete: boolean;
     speed: number;
 }
 
@@ -29,8 +27,7 @@ const VisualiserController: React.FC<Props> = ({
     handleUpdateTimeline,
     handleDragTimeline,
     handleSpeedSliderDrag,
-    handleSpeedSliderDragEnd,
-    animationProgress,
+    timelineComplete,
     speed,
 }) => {
     const theme: Theme = useTheme();
@@ -50,8 +47,7 @@ const VisualiserController: React.FC<Props> = ({
                 handleUpdateTimeline={handleUpdateTimeline}
                 handleDragTimeline={handleDragTimeline}
                 handleSpeedSliderDrag={handleSpeedSliderDrag}
-                handleSpeedSliderDragEnd={handleSpeedSliderDragEnd}
-                animationProgress={animationProgress}
+                timelineComplete={timelineComplete}
                 speed={speed}
             />
         </Box>

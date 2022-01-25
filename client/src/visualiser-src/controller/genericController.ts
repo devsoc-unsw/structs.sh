@@ -14,13 +14,8 @@ class AnimationController {
     private timelineDuration: number = 0;
     private timestamps: number[] = [];
     private timelineSlider = document.querySelector('#timelineSlider') as HTMLInputElement;
-
-    constructor() {
-        // this.timelineSlider.addEventListener('input', (e: Event) => {
-        //     this.seekPercent(Number(this.timelineSlider.value));
-        // })
-    }
-
+    private speed: number = 1;
+    
     public getCurrentTimeline(): Timeline {
         return this.currentTimeline;
     }
@@ -35,6 +30,7 @@ class AnimationController {
             this.timestamps.push(this.timelineDuration);
             this.timelineDuration += runners[0].duration();
         }
+
         this.timestamps.push(this.timelineDuration);
         this.currentTimeline.play();
     }
@@ -43,9 +39,9 @@ class AnimationController {
         this.currentTimeline = new Timeline().persist(true);
         this.currentTimeline.on('time', (e: CustomEvent) => {
             updateSlider((e.detail / this.timelineDuration) * 100);
-            // this.timelineSlider.value = String((e.detail / this.timelineDuration) * 100);
         });
 
+        this.currentTimeline.speed(this.speed);
         this.timestamps = [];
         this.timelineDuration = 0;
     }
@@ -65,7 +61,13 @@ class AnimationController {
     }
 
     public setSpeed(speed: number): void {
-        this.currentTimeline.speed(speed);
+        // we need to keep a member variable since
+        // a new timeline is created for each animation sequence,
+        // so the speed would be reset to 1
+        this.speed = speed;
+
+        // incase we are setting the speed without doing another operation
+        this.currentTimeline.speed(this.speed);
     }
 
     // Finish playing the timeline
@@ -97,13 +99,15 @@ class AnimationController {
             if (prev < this.currentTime && timestamp >= this.currentTime) {
                 return prev;
             }
+
             prev = timestamp;
         }
+
         return 0;
     }
 
     private get currentTime() {
-        return Number(this.timelineSlider.value) * (this.timelineDuration / 100);
+        return Math.round(Number(this.timelineSlider.value) * (this.timelineDuration / 100));
     }
 }
 

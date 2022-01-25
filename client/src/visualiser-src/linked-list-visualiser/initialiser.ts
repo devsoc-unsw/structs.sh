@@ -62,17 +62,11 @@ const initialiser = (): any => {
   };
 
   const setTimeline = (val: number) => {
-    animationController.pause();
     animationController.seekPercent(val);
   };
 
   const setSpeed = (val: number) => {
-    // animationController.freeze();
     animationController.setSpeed(val);
-  };
-
-  const onFinishSetSpeed = () => {
-    // if (!animationController.isPaused) animationController.play();
   };
 
   return {
@@ -86,7 +80,6 @@ const initialiser = (): any => {
     stepForward,
     setTimeline,
     setSpeed,
-    onFinishSetSpeed,
   };
 };
 
