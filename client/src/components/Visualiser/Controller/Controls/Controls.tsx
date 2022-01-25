@@ -56,7 +56,10 @@ const Controls: FC<Props> = ({
         <div className={styles.root}>
             <IconButton>
                 <SkipPreviousIcon
-                    onClick={() => handleStepBackward()}
+                    onClick={() =>  {
+                        handleStepBackward();
+                        setIsPlaying(false);
+                    }}
                     sx={{ fill: theme.palette.text.primary }}
                 />
             </IconButton>
@@ -94,7 +97,10 @@ const Controls: FC<Props> = ({
             )}
             <IconButton>
                 <SkipNextIcon
-                    onClick={() => handleStepForward()}
+                    onClick={() => {
+                        handleStepForward();
+                        setIsPlaying(false);
+                    }}
                     sx={{ fill: theme.palette.text.primary }}
                 />
             </IconButton>
@@ -128,7 +134,9 @@ const Controls: FC<Props> = ({
                             }}
                             onMouseUp={() => {
                                 setUserIsDraggingTimeline(false);
-                                handlePlay();
+                                if (isPlaying) {
+                                    handlePlay();
+                                } 
                             }}
                         /> 
                         {/* <Slider

@@ -36,9 +36,8 @@ class AnimationController {
             }
             runners[0].after(() => {
                 if (this.isStepMode) {
-                    this.pause();
+                    this.currentTimeline.pause();
                 }
-                console.log(this.currentTimeline.time());
             });
             this.timestamps.push(this.timelineDuration);
             this.timelineDuration += runners[0].duration();
@@ -104,7 +103,7 @@ class AnimationController {
 
     private computePrevTimestamp(): number {
         for (let timestamp of [...this.timestamps].reverse()) {
-            if (timestamp + 20 < this.currentTime) {
+            if (timestamp + 25 < this.currentTime) {
                 return timestamp;
             }
         }
