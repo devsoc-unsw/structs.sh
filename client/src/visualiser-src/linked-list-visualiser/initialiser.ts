@@ -1,4 +1,3 @@
-import { Runner } from '@svgdotjs/svg.js';
 import AnimationProducer from '../common/AnimationProducer';
 import Controller from '../controller/genericController';
 import LinkedList from './data-structure/GraphicalLinkedList';

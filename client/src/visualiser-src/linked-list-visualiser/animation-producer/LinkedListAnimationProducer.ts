@@ -2,7 +2,7 @@ import { SVG, Runner, Element } from '@svgdotjs/svg.js';
 import {
   RIGHT_ARROW_PATH, topOffset, nodePathWidth, CURRENT, PREV,
 } from '../util/constants';
-import AnimationProducer from "../../common/AnimationProducer";
+import AnimationProducer from '../../common/AnimationProducer';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
 
 export default abstract class LinkedListAnimationProducer extends AnimationProducer {
@@ -22,12 +22,12 @@ export default abstract class LinkedListAnimationProducer extends AnimationProdu
     runners.push(
       SVG(CURRENT)
         .animate()
-        .attr({ opacity: 0 })
+        .attr({ opacity: 0 }),
     );
     runners.push(
       SVG(PREV)
         .animate()
-        .attr({ opacity: 0 })
+        .attr({ opacity: 0 }),
     );
     this.allRunners.push(runners);
   }

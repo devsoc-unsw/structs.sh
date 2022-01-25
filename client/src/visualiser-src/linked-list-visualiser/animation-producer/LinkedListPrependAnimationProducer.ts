@@ -1,6 +1,7 @@
 import LinkedListAnimationProducer from './LinkedListAnimationProducer';
 import { CANVAS, insertedNodeTopOffset, UP_ARROW_PATH } from '../util/constants';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
+
 export default class LinkedListPrependAnimationProducer extends LinkedListAnimationProducer {
   public createNode(newNode: GraphicalLinkedListNode) {
     newNode.nodeTarget.addTo(CANVAS);

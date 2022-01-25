@@ -1,5 +1,5 @@
-import { Runner, Timeline } from '@svgdotjs/svg.js';
-import AnimationProducer from "../common/AnimationProducer";
+import { Timeline } from '@svgdotjs/svg.js';
+import AnimationProducer from '../common/AnimationProducer';
 
 // controls todo:
 // [x] play/pause

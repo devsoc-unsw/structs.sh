@@ -1,3 +1,4 @@
+import AnimationProducer from 'visualiser-src/common/AnimationProducer';
 import { CURRENT, PREV } from '../util/constants';
 import GraphicalLinkedListNode from './GraphicalLinkedListNode';
 import LinkedListAppendAnimationProducer from '../animation-producer/LinkedListAppendAnimationProducer';
@@ -5,10 +6,10 @@ import LinkedListDeleteAnimationProducer from '../animation-producer/LinkedListD
 import LinkedListInsertAnimationProducer from '../animation-producer/LinkedListInsertAnimationProducer';
 import LinkedListSearchAnimationProducer from '../animation-producer/LinkedListSearchAnimationProducer';
 import LinkedListPrependAnimationProducer from '../animation-producer/LinkedListPrependAnimationProducer';
-import AnimationProducer from 'visualiser-src/common/AnimationProducer';
 
 export default class GraphicalLinkedList {
   head: GraphicalLinkedListNode = null;
+
   length: number = 0;
 
   append(input: number): AnimationProducer {
@@ -114,7 +115,6 @@ export default class GraphicalLinkedList {
   }
 
   insert(value: number, index: number): AnimationProducer {
-    console.log(index);
     if (index <= 0) {
       return this.prepend(value);
     }
