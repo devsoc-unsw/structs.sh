@@ -1,7 +1,5 @@
 import { Box } from '@mui/material';
-import React, {
-  useCallback, useEffect, useMemo, useState,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Notification } from 'utils/Notification';
 import initLinkedListVisualiser from 'visualiser-src/linked-list-visualiser/initialiser';
 import initBSTVisualiser from 'visualiser-src/binary-search-tree-visualiser/initialiser';
@@ -15,6 +13,16 @@ interface Props {
   topicTitle: string;
 }
 
+/**
+ * The component responsible for connecting the visualiser source code with the
+ * React client.
+ *   - Contains the controller, terminal and GUI form.
+ *   - Initialises the visualiser and 'puts' it onto the DOM. It relies on
+ *     the corresponding <VisualiserCanvas /> component being there.
+ *   - Defines a bunch of callbacks to that call visualiser methods and passes
+ *     them off to the controller components (basically the play/pause buttons,
+ *     sliders, etc.).
+ */
 const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
   const [animationProgress, setAnimationProgress] = useState<number>(0);
   const [speed, setSpeed] = useState<number>(0.5);
@@ -45,7 +53,7 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
 
   const executeCommand = useMemo(
     () => getCommandExecutor(topicTitle, visualiser, updateTimeline),
-    [topicTitle, visualiser, updateTimeline],
+    [topicTitle, visualiser, updateTimeline]
   );
 
   const handlePlay = useCallback(() => {
@@ -69,7 +77,7 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
       visualiser.setTimeline(val);
       setAnimationProgress(val);
     },
-    [visualiser],
+    [visualiser]
   );
 
   const handleSpeedSliderDrag = useCallback(
@@ -77,7 +85,7 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
       visualiser.setSpeed(val);
       setSpeed(val);
     },
-    [visualiser],
+    [visualiser]
   );
 
   const handleSpeedSliderDragEnd = useCallback(() => {
