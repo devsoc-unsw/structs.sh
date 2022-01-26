@@ -16,15 +16,14 @@ export default abstract class LinkedListAnimationProducer extends AnimationProdu
     this.allRunners.push([pointerSvg.animate().dx(nodePathWidth)]);
   }
 
-  private resetPointers() {
+  public resetPointers() {
     const runners: Runner[] = [];
     runners.push(SVG(CURRENT).animate().attr({ opacity: 0 }));
     runners.push(SVG(PREV).animate().attr({ opacity: 0 }));
     this.allRunners.push(runners);
   }
 
-  public resetList(head: GraphicalLinkedListNode) {
-    this.resetPointers();
+  public resetPositioning(head: GraphicalLinkedListNode) {
     const runners: Runner[] = [];
     let curr: GraphicalLinkedListNode = head;
     let index: number = 0;
@@ -35,5 +34,10 @@ export default abstract class LinkedListAnimationProducer extends AnimationProdu
       curr = curr.next;
     }
     this.allRunners.push(runners);
+  }
+
+  public resetList(head: GraphicalLinkedListNode) {
+    this.resetPointers();
+    this.resetPositioning(head);
   }
 }

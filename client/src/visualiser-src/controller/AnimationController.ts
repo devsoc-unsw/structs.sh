@@ -76,6 +76,7 @@ class AnimationController {
     }
 
     public setSpeed(speed: number): void {
+        console.log(speed);
         // we need to keep a member variable since
         // a new timeline is created for each animation sequence,
         // so the speed would be reset to 1

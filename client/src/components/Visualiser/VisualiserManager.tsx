@@ -15,7 +15,7 @@ interface Props {
 
 const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
     const [timelineComplete, setTimelineComplete] = useState<boolean>(false);
-    const [speed, setSpeed] = useState<number>(1);
+    const [speed, setSpeed] = useState<number>(0.6);
     const [terminalMode, setTerminalMode] = useState(true);
 
     const [visualiser, setVisualiser] = useState<any>({});

@@ -173,9 +173,9 @@ const Controls: FC<Props> = ({
                             onMouseDown={() => handlePause()}
                             onMouseUp={() => handlePlay()}
                             value={speed}
-                            min={0.25}
-                            max={1.75}
-                            step={0.25}
+                            min={0.20}
+                            max={1}
+                            step={0.2}
                             marks
                             sx={{ ml: '10px' }}
                             color="secondary"

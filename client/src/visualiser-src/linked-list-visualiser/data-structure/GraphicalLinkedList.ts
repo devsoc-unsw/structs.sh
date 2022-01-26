@@ -42,8 +42,8 @@ export default class GraphicalLinkedList {
     curr.next = newNode;
     producer.linkLastToNew(curr);
 
-    // Reset positions
-    producer.resetList(this.head);
+    // Reset pointers 
+    producer.resetPointers();
     return producer;
   }
 
@@ -58,7 +58,7 @@ export default class GraphicalLinkedList {
     newHead.next = this.head;
     producer.newHeadPointToOldHead(newHead);
     this.head = newHead;
-    producer.resetList(this.head);
+    producer.resetPositioning(this.head);
     return producer;
   }
 
@@ -113,7 +113,7 @@ export default class GraphicalLinkedList {
     if (curr !== null) {
       producer.indicateFound(curr);
     }
-    producer.resetList(this.head);
+    producer.resetPointers();
     return producer;
   }
 
