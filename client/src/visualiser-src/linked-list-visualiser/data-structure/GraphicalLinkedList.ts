@@ -7,6 +7,9 @@ import LinkedListInsertAnimationProducer from '../animation-producer/LinkedListI
 import LinkedListSearchAnimationProducer from '../animation-producer/LinkedListSearchAnimationProducer';
 import LinkedListPrependAnimationProducer from '../animation-producer/LinkedListPrependAnimationProducer';
 
+// An linked list data structure containing all linked list operations.
+// Every operation producers a LinkedListAnimationProducer, which an AnimationController
+// can then use to place SVG.Runners on a timeline to animate the operation.
 export default class GraphicalLinkedList {
   head: GraphicalLinkedListNode = null;
 

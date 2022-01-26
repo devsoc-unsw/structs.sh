@@ -9,6 +9,7 @@ import {
   actualNodeWidth,
 } from '../util/constants';
 
+// Class that produces SVG.Runners animating linked list operations specific to inserting
 export default class LinkedListInsertAnimationProducer extends LinkedListAnimationProducer {
   public insertedNodePointToNext(newNode: GraphicalLinkedListNode) {
     newNode.pointerTarget.plot(UP_RIGHT_ARROW_PATH);

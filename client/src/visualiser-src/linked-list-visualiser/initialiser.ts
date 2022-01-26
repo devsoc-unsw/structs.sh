@@ -1,5 +1,5 @@
 import AnimationProducer from '../common/AnimationProducer';
-import Controller from '../controller/genericController';
+import Controller from '../controller/AnimationController';
 import LinkedList from './data-structure/GraphicalLinkedList';
 import { defaultSpeed } from './util/constants';
 

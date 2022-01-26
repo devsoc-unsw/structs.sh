@@ -3,6 +3,7 @@ import LinkedListAnimationProducer from './LinkedListAnimationProducer';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
 import { BENT_ARROW_PATH } from '../util/constants';
 
+// Class that produces SVG.Runners animating linked list operations specific to deleting
 export default class LinkedListDeleteAnimationProducer extends LinkedListAnimationProducer {
   public setNextToNull(node: GraphicalLinkedListNode) {
     this.allRunners.push([node.pointerTarget.animate().attr({ opacity: 0 })]);

@@ -2,6 +2,7 @@ import LinkedListAnimationProducer from './LinkedListAnimationProducer';
 import { CANVAS, insertedNodeTopOffset, UP_ARROW_PATH } from '../util/constants';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
 
+// Class that produces SVG.Runners animating linked list operations specific to prepending
 export default class LinkedListPrependAnimationProducer extends LinkedListAnimationProducer {
   public createNode(newNode: GraphicalLinkedListNode) {
     newNode.nodeTarget.addTo(CANVAS);

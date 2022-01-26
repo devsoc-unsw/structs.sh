@@ -2,6 +2,7 @@ import { Runner } from '@svgdotjs/svg.js';
 import LinkedListAnimationProducer from './LinkedListAnimationProducer';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
 
+// Class that produces SVG.Runners animating linked list operations specific to inserting
 export default class LinkedListSearchAnimationProducer extends LinkedListAnimationProducer {
   public indicateFound(node: GraphicalLinkedListNode) {
     const runners: Runner[] = [];

@@ -1,4 +1,4 @@
-import AnimationController from '../controller/genericController';
+import AnimationController from '../controller/AnimationController';
 import { Visualiser } from '../typedefs';
 import BST from './data-structure/GraphicalBST';
 import BSTAnimationProducer from './animation-producer/BSTAnimationProducer';
