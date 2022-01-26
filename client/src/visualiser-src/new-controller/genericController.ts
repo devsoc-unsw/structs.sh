@@ -1,9 +1,9 @@
-import { Timeline, Runner } from '@svgdotjs/svg.js';
-import { Animation } from '../binary-search-tree-visualiser/util/typedefs';
+import { Timeline } from '@svgdotjs/svg.js';
+import BSTAnimationProducer from '../binary-search-tree-visualiser/animation-producer/BSTAnimationProducer';
 
 // controls todo:
 // [x] play/pause
-// [ ] step to the next or previous timestamp in the current timeline
+// [x] step to the next or previous timestamp in the current timeline
 // [ ] run a sequence in step mode or sequential mode
 // [ ] control to skip the animation of a sequence
 
@@ -11,60 +11,47 @@ import { Animation } from '../binary-search-tree-visualiser/util/typedefs';
 // not just for the linked list
 class AnimationController {
   private currentTimeline: Timeline = new Timeline().persist(true);
-
   private timelineDuration: number = 0;
-
   private timestamps: number[] = [];
-
   private timestampsIndex: number = 0;
+  private timelineSlider = document.querySelector('#timelineSlider') as HTMLInputElement;
+
+  constructor() {
+    this.timelineSlider.addEventListener('input', (e: Event) => {
+      this.seekPercent(Number(this.timelineSlider.value));
+    });
+  }
 
   public getCurrentTimeline(): Timeline {
     return this.currentTimeline;
   }
 
-  public constructTimeline(animationSequence: Animation[], updateSlider: (val: number) => void) {
-    this.currentTimeline = new Timeline().persist(true);
-    this.timestamps = [];
-    this.timelineDuration = 0;
-    this.timestampsIndex = 0;
+  public constructTimeline(
+    animationProducer: BSTAnimationProducer,
+    updateSlider: (val: number) => void
+  ) {
+    this.resetTimeline();
 
-    for (let i = 0; i < animationSequence.length; i++) {
-      const animation = animationSequence[i];
-      const attrs = {};
-
-      // TODO: handle special case attributes like dx, dy, etc
-      for (const attr in animation.attrs) {
-        attrs[attr] = animation.attrs[attr];
-      }
-
-      for (const target in animation.targets) {
-        const runner: Runner = animation.targets[target]
-          .animate(animation.duration, animation.delay, 'after')
-          .attr(attrs);
-
-        runner.during(() => {
-          // progress corresponds to how many ms have passed in the animation
-          const progress = runner.progress() * runner.duration();
-          // this.slider.value = String(
-          //     ((this.timestamps[i] + progress) / this.timelineDuration) * 100
-          // );
-          updateSlider(
-            Number(((this.timestamps[i] + progress) / this.timelineDuration) * 100),
-          );
-          // TODO: put this in the after() function instead
-          this.timestampsIndex = i;
-        });
-
+    for (const animationGroup of animationProducer.getAnimationSequence()) {
+      for (const runner of animationGroup) {
         this.currentTimeline.schedule(runner, this.timelineDuration, 'absolute');
       }
 
-      if (!animation.simultaneous) {
-        this.timestamps.push(this.timelineDuration);
-        this.timelineDuration += animation.duration;
-      }
+      this.timelineDuration += animationGroup[0].duration();
     }
 
     this.currentTimeline.play();
+  }
+
+  public resetTimeline() {
+    this.currentTimeline = new Timeline().persist(true);
+    this.currentTimeline.on('time', (e: CustomEvent) => {
+      this.timelineSlider.value = String((e.detail / this.timelineDuration) * 100);
+    });
+
+    this.timestamps = [];
+    this.timelineDuration = 0;
+    this.timestampsIndex = 0;
   }
 
   public play(): void {

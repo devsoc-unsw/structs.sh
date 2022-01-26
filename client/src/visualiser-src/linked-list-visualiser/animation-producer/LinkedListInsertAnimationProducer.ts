@@ -1,5 +1,5 @@
 import LinkedListAnimationProducer from './LinkedListAnimationProducer';
-import { GraphicalLinkedListNode } from '../data-structure/GraphicalLinkedListNode';
+import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
 import {
   CANVAS,
   UP_RIGHT_ARROW_PATH,
@@ -11,40 +11,17 @@ import {
 
 export default class LinkedListInsertAnimationProducer extends LinkedListAnimationProducer {
   public insertedNodePointToNext(newNode: GraphicalLinkedListNode) {
-    this.timeline.push({
-      instructions: {
-        targets: newNode.pointerTarget,
-        d: UP_RIGHT_ARROW_PATH,
-        duration: 1,
-      },
-    });
-    this.timeline.push({
-      instructions: {
-        targets: newNode.pointerTarget,
-        opacity: 1,
-      },
-    });
+    newNode.pointerTarget.plot(UP_RIGHT_ARROW_PATH);
+    this.allRunners.push([newNode.pointerTarget.animate().attr({ opacity: 1 })]);
   }
 
   public pointToInsertedNode(node: GraphicalLinkedListNode) {
-    this.timeline.push({
-      instructions: {
-        targets: node.pointerTarget,
-        d: DOWN_RIGHT_ARROW_PATH,
-      },
-    });
+    this.allRunners.push([node.pointerTarget.animate().plot(DOWN_RIGHT_ARROW_PATH as any)]);
   }
 
   public createNodeAt(index: number, newNode: GraphicalLinkedListNode) {
-    document.querySelector(CANVAS).appendChild(newNode.nodeTarget);
-    this.timeline.push({
-      instructions: {
-        targets: newNode.nodeTarget,
-        left: index * nodePathWidth + actualNodeWidth,
-        top: insertedNodeTopOffset,
-        opacity: 1,
-        duration: 1,
-      },
-    });
+    newNode.nodeTarget.addTo(CANVAS);
+    newNode.nodeTarget.move(index * nodePathWidth + actualNodeWidth, insertedNodeTopOffset);
+    this.allRunners.push([newNode.nodeTarget.animate().attr({ opacity: 1 })]);
   }
 }

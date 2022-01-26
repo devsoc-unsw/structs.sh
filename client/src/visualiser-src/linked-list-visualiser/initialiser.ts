@@ -1,5 +1,5 @@
+import { Runner } from '@svgdotjs/svg.js';
 import LinkedListController from '../controller/linkedListController';
-import { AnimationInstruction } from './util/typedefs';
 import LinkedList from './data-structure/GraphicalLinkedList';
 import { defaultSpeed } from './util/constants';
 
@@ -13,10 +13,8 @@ const initialiser = (): any => {
 
   const appendNode = (val: number, updateSlider: (val: number) => void): void => {
     animationController.finish();
-
     // Generating the steps of the animation
-    const sequence: AnimationInstruction[] = linkedList.append(val);
-
+    const sequence: Runner[][] = linkedList.append(val);
     // Playing the animation
     animationController.runSequence(sequence, updateSlider);
   };
@@ -24,7 +22,7 @@ const initialiser = (): any => {
   const deleteNode = (index: number, updateSlider: (val: number) => void): void => {
     animationController.finish();
 
-    const sequence: AnimationInstruction[] = linkedList.delete(index);
+    const sequence: Runner[][] = linkedList.delete(index);
 
     animationController.runSequence(sequence, updateSlider);
   };
@@ -32,7 +30,7 @@ const initialiser = (): any => {
   const searchList = (val: number, updateSlider: (val: number) => void): void => {
     animationController.finish();
 
-    const sequence: AnimationInstruction[] = linkedList.search(val);
+    const sequence: Runner[][] = linkedList.search(val);
 
     animationController.runSequence(sequence, updateSlider);
   };
@@ -40,7 +38,7 @@ const initialiser = (): any => {
   const insertNode = (val: number, index: number, updateSlider: (val: number) => void): void => {
     animationController.finish();
 
-    const sequence: AnimationInstruction[] = linkedList.insert(val, index);
+    const sequence: Runner[][] = linkedList.insert(val, index);
 
     animationController.runSequence(sequence, updateSlider);
   };

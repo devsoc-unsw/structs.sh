@@ -1,12 +1,16 @@
 import React from 'react';
 import curr from 'visualiser-src/linked-list-visualiser/assets/curr.svg';
 import prev from 'visualiser-src/linked-list-visualiser/assets/prev.svg';
-import { topOffset } from 'visualiser-src/linked-list-visualiser/util/constants';
 
 interface Props {
   topicTitle: string;
 }
 
+/**
+ * The React component that renders the DOM elements that the visualiser
+ * attaches itself to. Each visualiser may have a different canvas that it
+ * needs.
+ */
 const VisualiserCanvas: React.FC<Props> = ({ topicTitle }) => {
   switch (topicTitle) {
     case 'Linked Lists':
@@ -18,6 +22,11 @@ const VisualiserCanvas: React.FC<Props> = ({ topicTitle }) => {
   }
 };
 
+/* -------------------------------------------------------------------------- */
+/*                        Visualiser-Specific Canvases                        */
+/* -------------------------------------------------------------------------- */
+
+// Linked list visualiser canvas
 const LinkedListCanvas: React.FC = () => (
   <header
     style={{
@@ -26,19 +35,14 @@ const LinkedListCanvas: React.FC = () => (
       background: 'rgba(235, 235, 235)',
     }}
   >
-    <div className="container">
-      <div className="container" id="canvas">
-        <div id="current" style={{ top: `${topOffset}px` }}>
-          <img src={curr} alt="curr arrow" />
-        </div>
-        <div id="prev" style={{ top: `${topOffset}px` }}>
-          <img src={prev} alt="prev arrow" />
-        </div>
-      </div>
-    </div>
+    <svg className="container" id="canvas">
+      <image opacity="0" id="current" href={curr} />
+      <image opacity="0" id="prev" href={prev} />
+    </svg>
   </header>
 );
 
+// Binary search tree canvas
 const BSTCanvas: React.FC = () => (
   <div
     id="bst-canvas"

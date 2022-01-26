@@ -2,33 +2,20 @@
  * Type definitions used by the visualiser
  */
 
-export interface Node {
-  value: number;
-
-  // full DOM element
-  nodeTarget: SVGSVGElement;
-
-  // pointer DOM element
-  pointerTarget: SVGPathElement;
-
-  // node box and value DOM element
-  nodeBoxTarget: SVGGElement;
-}
-
 export interface TimelineObject {
   /**
-     * CSS selector for the element that is to be animated. This is what animejs uses to select the animation targets
-     *  → Eg. '#my-id' will apply the animations to the DOM element with the id 'my-id'
-     *  → Docs: https://animejs.com/documentation/#cssSelector
-     */
-  // targets: string | SVGGElement | SVGSVGElement | SVGPathElement | (string | SVGSVGElement | SVGPathElement)[];
+   * CSS selector for the element that is to be animated. This is what animejs uses to select the
+   * animation targets
+   *  → Eg. '#my-id' will apply the animations to the DOM element with the id 'my-id'
+   *  → Docs: https://animejs.com/documentation/#cssSelector
+   */
   targets: string | SVGElement | (string | SVGElement)[];
 
   /**
-     * Further CSS properties that Anime will recognise.
-     *  → Eg. 'opacity: 1' or 'top: 37%'
-     *  → Docs: https://animejs.com/documentation/#cssSelector
-     */
+   * Further CSS properties that Anime will recognise.
+   *  → Eg. 'opacity: 1' or 'top: 37%'
+   *  → Docs: https://animejs.com/documentation/#cssSelector
+   */
   [key: string]: any;
 }
 

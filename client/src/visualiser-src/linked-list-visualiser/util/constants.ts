@@ -1,12 +1,11 @@
 // SVG Attributes
-const svgWidth = 200;
 const svgHeight = 120;
 const strokeWidth = 3;
 const nodeWidth = 47;
 const nodeHeight = 47;
 const pathLength = 50;
 const diagonalPathLength = 40;
-const diagonalPathAngle = 70 * Math.PI / 180;
+const diagonalPathAngle = 70 * (Math.PI / 180);
 export const actualNodeWidth = nodeWidth + strokeWidth;
 export const actualNodeHeight = nodeHeight + strokeWidth;
 export const nodePathWidth = actualNodeWidth + pathLength;
@@ -21,11 +20,9 @@ export const CURRENT = '#current';
 export const PREV = '#prev';
 export const CANVAS = '#canvas';
 export const nodeAttributes = {
-  width: svgWidth,
-  height: svgHeight,
-  viewBox: `0 0 ${svgWidth} ${svgHeight}`,
   class: 'node',
   stroke: 'black',
+  opacity: 0,
 };
 
 export const shapeAttributes = {
@@ -50,12 +47,12 @@ export const textAttributes = {
 };
 
 export const pathAttributes = {
-  d: RIGHT_ARROW_PATH,
   'stroke-width': strokeWidth,
   stroke: 'black',
   'stroke-linecap': 'round',
   'stroke-linejoin': 'round',
   class: 'path',
+  opacity: 0,
 };
 
 // Animation attributes
