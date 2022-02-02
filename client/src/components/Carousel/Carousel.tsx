@@ -11,54 +11,54 @@ import TopicCard from './TopicCard';
 interface Props {}
 
 const Carousel: React.FC<Props> = () => {
-    const [currImageIndex, setImageIndex] = useState<number>(0);
-    const [topics, setTopics] = useState<Topic[]>([]);
+  const [currImageIndex, setImageIndex] = useState<number>(0);
+  const [topics, setTopics] = useState<Topic[]>([]);
 
-    const [mouseMoved, setMouseMoved] = useState(false);
+  const [mouseMoved, setMouseMoved] = useState(false);
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        getTopics().then(setTopics).catch(Notification.error);
-    }, []);
+  useEffect(() => {
+    getTopics().then(setTopics).catch(Notification.error);
+  }, []);
 
-    const handleClick = (topic: Topic) => {
-        if (!mouseMoved) {
-            navigate(`/visualiser/${titleToUrl(topic.title)}`);
-        }
-    };
+  const handleClick = (topic: Topic) => {
+    if (!mouseMoved) {
+      navigate(`/visualiser/${titleToUrl(topic.title)}`);
+    }
+  };
 
-    return topics && topics.length > 0 ? (
-        <Slider
-            variableWidth={topics.length > 2}
-            infinite
-            speed={500}
-            slidesToShow={1}
-            centerMode
-            centerPadding="0"
-            beforeChange={(oldIndex, newIndex) => setImageIndex(newIndex)}
+  return topics && topics.length > 0 ? (
+    <Slider
+      variableWidth={topics.length > 2}
+      infinite
+      speed={500}
+      slidesToShow={1}
+      centerMode
+      centerPadding="0"
+      beforeChange={(oldIndex, newIndex) => setImageIndex(newIndex)}
+    >
+      {topics.map((topic, i) => (
+        <div
+          onMouseMove={() => setMouseMoved(true)}
+          onMouseDown={() => setMouseMoved(false)}
+          onMouseUp={() => handleClick(topic)}
+          key={i}
+          className={`slide ${i === currImageIndex && 'activeSlide'} ${
+            topics.length > 2
+                        && (Math.abs(i - currImageIndex) === 1
+                            || (i === 0 && currImageIndex === topics.length - 1)
+                            || (i === topics.length - 1 && currImageIndex === 0))
+                        && 'adjacentSlide'
+          }`}
         >
-            {topics.map((topic, i) => (
-                <div
-                    onMouseMove={() => setMouseMoved(true)}
-                    onMouseDown={() => setMouseMoved(false)}
-                    onMouseUp={() => handleClick(topic)}
-                    key={i}
-                    className={`slide ${i === currImageIndex && 'activeSlide'} ${
-                        topics.length > 2 &&
-                        (Math.abs(i - currImageIndex) === 1 ||
-                            (i === 0 && currImageIndex === topics.length - 1) ||
-                            (i === topics.length - 1 && currImageIndex === 0)) &&
-                        'adjacentSlide'
-                    }`}
-                >
-                    <TopicCard topic={topic} isActive={i === currImageIndex} />
-                </div>
-            ))}
-        </Slider>
-    ) : (
-        <LineLoader />
-    );
+          <TopicCard topic={topic} isActive={i === currImageIndex} />
+        </div>
+      ))}
+    </Slider>
+  ) : (
+    <LineLoader />
+  );
 };
 
 export default Carousel;

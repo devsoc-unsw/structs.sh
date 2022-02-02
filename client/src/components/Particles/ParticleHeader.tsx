@@ -8,32 +8,32 @@ import { darkParticleTheme } from './ParticleThemes';
 interface Props {}
 
 const ParticleHeader: React.FC<Props> = () => {
-    const theme: Theme = useTheme();
-    // const particleTheme = theme === darkTheme ? darkParticleTheme : lightParticleTheme;
-    const particleTheme = darkParticleTheme;
+  const theme: Theme = useTheme();
+  // const particleTheme = theme === darkTheme ? darkParticleTheme : lightParticleTheme;
+  const particleTheme = darkParticleTheme;
 
-    const particlesInit = (main) => {
-        console.log(main);
-        // You can initialize the tsParticles instance here, adding custom shapes or presets
+  const particlesInit = (main) => {
+    console.log(main);
+    // You can initialize the tsParticles instance here, adding custom shapes or presets
+  };
+
+  // Note: this is a hacky way of forcefully setting the background gradient
+  useEffect(() => {
+    const body: any = document.querySelector('body');
+    if (!body) return;
+
+    body.style.background = particleTheme.backgroundCss;
+
+    return () => {
+      const body = document.querySelector('body');
+      body.style.background = theme.palette.background.default;
     };
+  });
 
-    // Note: this is a hacky way of forcefully setting the background gradient
-    useEffect(() => {
-        const body: any = document.querySelector('body');
-        if (!body) return;
-
-        body.style.background = particleTheme.backgroundCss;
-
-        return () => {
-            const body = document.querySelector('body');
-            body.style.background = theme.palette.background.default;
-        };
-    });
-
-    return (
-        <div>
-            {' '}
-            {/* <Particles
+  return (
+    <div>
+      {' '}
+      {/* <Particles
                 id="tsparticles"
                 /*init={particlesInit
                 options={{
@@ -131,8 +131,8 @@ const ParticleHeader: React.FC<Props> = () => {
                     retina_detect: true,
                 }}
             /> */}
-        </div>
-    );
+    </div>
+  );
 };
 
 export default ParticleHeader;

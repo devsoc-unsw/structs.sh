@@ -14,58 +14,58 @@ import VisualiserDashboard from 'views/VisualiserDashboard';
 import './App.scss';
 
 export const ThemeMutationContext = createContext({
-    toggleDarkMode: () => console.log('Dark mode toggling is not ready yet'),
-    isDarkMode: false,
+  toggleDarkMode: () => console.log('Dark mode toggling is not ready yet'),
+  isDarkMode: false,
 });
 
-const App = () => {
-    const [cookies, setCookie] = useCookies([LIGHT_MODE_ON]);
-    const [currTheme, setCurrTheme] = useState<Theme>(
-        cookies[LIGHT_MODE_ON] === 'true' ? lightTheme : darkTheme
-    );
+function App() {
+  const [cookies, setCookie] = useCookies([LIGHT_MODE_ON]);
+  const [currTheme, setCurrTheme] = useState<Theme>(
+    cookies[LIGHT_MODE_ON] === 'true' ? lightTheme : darkTheme,
+  );
 
-    const toggleDarkMode = useCallback(() => {
-        if (currTheme === lightTheme) {
-            setCurrTheme(darkTheme);
-            setCookie(LIGHT_MODE_ON, 'false');
-        } else {
-            setCurrTheme(lightTheme);
-            setCookie(LIGHT_MODE_ON, 'true');
-        }
-    }, [currTheme, setCookie]);
+  const toggleDarkMode = useCallback(() => {
+    if (currTheme === lightTheme) {
+      setCurrTheme(darkTheme);
+      setCookie(LIGHT_MODE_ON, 'false');
+    } else {
+      setCurrTheme(lightTheme);
+      setCookie(LIGHT_MODE_ON, 'true');
+    }
+  }, [currTheme, setCookie]);
 
-    return (
-        <AnimatePresence>
-            <ThemeProvider theme={currTheme}>
-                <ThemeMutationContext.Provider
-                    value={{
-                        toggleDarkMode: toggleDarkMode,
-                        isDarkMode: cookies[LIGHT_MODE_ON] !== 'true',
-                    }}
-                >
-                    <Routes>
-                        {/* Homepage */}
-                        <Route path="/" element={<HomePage />} />
+  return (
+    <AnimatePresence>
+      <ThemeProvider theme={currTheme}>
+        <ThemeMutationContext.Provider
+          value={{
+            toggleDarkMode,
+            isDarkMode: cookies[LIGHT_MODE_ON] !== 'true',
+          }}
+        >
+          <Routes>
+            {/* Homepage */}
+            <Route path="/" element={<HomePage />} />
 
-                        {/* Visualiser routes */}
-                        <Route path="/visualiser/:topic" element={<VisualiserDashboard />} />
+            {/* Visualiser routes */}
+            <Route path="/visualiser/:topic" element={<VisualiserDashboard />} />
 
-                        {/* About us page */}
-                        <Route path="/about" element={<AboutUs />} />
+            {/* About us page */}
+            <Route path="/about" element={<AboutUs />} />
 
-                        {/* Feedback and feature request page */}
-                        <Route path="/feedback" element={<Feedback />} />
+            {/* Feedback and feature request page */}
+            <Route path="/feedback" element={<Feedback />} />
 
-                        {/* Content management dashboard */}
-                        <Route path="/content" element={<ContentManagementDashboard />} />
+            {/* Content management dashboard */}
+            <Route path="/content" element={<ContentManagementDashboard />} />
 
-                        {/* 404 page */}
-                        <Route element={<Page404 />} />
-                    </Routes>
-                </ThemeMutationContext.Provider>
-            </ThemeProvider>
-        </AnimatePresence>
-    );
-};
+            {/* 404 page */}
+            <Route element={<Page404 />} />
+          </Routes>
+        </ThemeMutationContext.Provider>
+      </ThemeProvider>
+    </AnimatePresence>
+  );
+}
 
 export default App;

@@ -42,7 +42,7 @@ export default class GraphicalLinkedList {
     curr.next = newNode;
     producer.linkLastToNew(curr);
 
-    // Reset pointers 
+    // Reset pointers
     producer.resetPointers();
     return producer;
   }

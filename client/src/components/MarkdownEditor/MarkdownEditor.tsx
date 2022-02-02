@@ -11,41 +11,41 @@ import { Notification } from 'utils/Notification';
 import { light } from './theme';
 
 interface Props {
-    markdownValue: string;
-    setMarkdownValue?: (newMarkdown: string) => void;
-    readOnly?: boolean;
-    themeOverride?: any;
+  markdownValue: string;
+  setMarkdownValue?: (newMarkdown: string) => void;
+  readOnly?: boolean;
+  themeOverride?: any;
 }
 
 const MarkdownEditor: React.FC<Props> = ({
-    markdownValue,
-    setMarkdownValue,
-    readOnly = false,
-    themeOverride,
+  markdownValue,
+  setMarkdownValue,
+  readOnly = false,
+  themeOverride,
 }) => {
-    const theme: Theme = useTheme();
-    const initialMarkdownValue = markdownValue;
+  const theme: Theme = useTheme();
+  const initialMarkdownValue = markdownValue;
 
-    return (
-        <Editor
-            defaultValue={initialMarkdownValue}
-            value={readOnly && markdownValue}
-            readOnly={readOnly}
-            theme={{
-                ...light,
-                background: theme.palette.background.default,
-                text: theme.palette.text.primary,
-                ...themeOverride,
-            }}
-            onChange={(getValue) => {
-                setMarkdownValue(getValue());
-            }}
-            onSave={() => {
-                Notification.info('Saving');
-            }}
-            placeholder={'Start typing anything'}
-        />
-    );
+  return (
+    <Editor
+      defaultValue={initialMarkdownValue}
+      value={readOnly && markdownValue}
+      readOnly={readOnly}
+      theme={{
+        ...light,
+        background: theme.palette.background.default,
+        text: theme.palette.text.primary,
+        ...themeOverride,
+      }}
+      onChange={(getValue) => {
+        setMarkdownValue(getValue());
+      }}
+      onSave={() => {
+        Notification.info('Saving');
+      }}
+      placeholder="Start typing anything"
+    />
+  );
 };
 
 export default MarkdownEditor;

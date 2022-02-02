@@ -1,9 +1,9 @@
-import { Runner } from "@svgdotjs/svg.js";
+import { Runner } from '@svgdotjs/svg.js';
 
 export default abstract class AnimationProducer {
-    private _allRunners: Runner[][] = [];
+  private _allRunners: Runner[][] = [];
 
-    public get allRunners() {
-        return this._allRunners;
-    }
+  public get allRunners() {
+    return this._allRunners;
+  }
 }

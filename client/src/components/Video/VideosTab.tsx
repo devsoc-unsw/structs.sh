@@ -5,19 +5,17 @@ import { Topic } from 'utils/apiRequests';
 import styles from './Videos.module.scss';
 
 interface Props {
-    topic: Topic;
+  topic: Topic;
 }
 
-const VideoTab: FC<Props> = ({ topic }) => {
-    return (
-        <Stack direction="column">
-            {topic.videos.map((videoUrl) => (
-                <Paper className={styles.videoCard} elevation={3}>
-                    <EmbeddedVideoPlayer videoUrl={videoUrl} />
-                </Paper>
-            ))}
-        </Stack>
-    );
-};
+const VideoTab: FC<Props> = ({ topic }) => (
+  <Stack direction="column">
+    {topic.videos.map((videoUrl) => (
+      <Paper className={styles.videoCard} elevation={3}>
+        <EmbeddedVideoPlayer videoUrl={videoUrl} />
+      </Paper>
+    ))}
+  </Stack>
+);
 
 export default VideoTab;

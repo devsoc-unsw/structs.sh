@@ -7,9 +7,9 @@ import { darkTheme } from 'structsThemes';
 interface Props {}
 
 const HorizontalRule: React.FC<Props> = () => {
-    const theme: Theme = useTheme();
+  const theme: Theme = useTheme();
 
-    return <Divider sx={{ mt: 2, mb: 2, background: theme === darkTheme && 'white' }}></Divider>;
+  return <Divider sx={{ mt: 2, mb: 2, background: theme === darkTheme && 'white' }} />;
 };
 
 export default HorizontalRule;

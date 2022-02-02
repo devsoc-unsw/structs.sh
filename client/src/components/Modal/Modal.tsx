@@ -28,54 +28,54 @@ const Backdrop = styled('div')`
 `;
 
 interface Props {
-    children?: React.ReactNode;
-    Button: ComponentType;
+  children?: React.ReactNode;
+  Button: ComponentType;
 }
 
 const Modal: FC<Props> = ({ children, Button }) => {
-    const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
-    return (
-        <Box>
-            <span onClick={handleOpen}>
-                <Button />
-            </span>
-            <StyledModal
-                aria-labelledby="unstyled-modal-title"
-                aria-describedby="unstyled-modal-description"
-                open={open}
-                onClose={handleClose}
-                BackdropComponent={Backdrop}
-            >
-                <Fade in={open}>
-                    <Box
-                        sx={{
-                            width: 400,
-                            bgcolor: 'background.paper',
-                            p: 2,
-                            px: 4,
-                            pb: 3,
-                            outline: 'none',
-                            position: 'relative',
-                        }}
-                    >
-                        <CloseIcon
-                            sx={{
-                                position: 'absolute',
-                                top: '10px',
-                                right: '10px',
-                                cursor: 'pointer',
-                            }}
-                            onClick={() => handleClose()}
-                        />
-                        {children}
-                    </Box>
-                </Fade>
-            </StyledModal>
-        </Box>
-    );
+  return (
+    <Box>
+      <span onClick={handleOpen}>
+        <Button />
+      </span>
+      <StyledModal
+        aria-labelledby="unstyled-modal-title"
+        aria-describedby="unstyled-modal-description"
+        open={open}
+        onClose={handleClose}
+        BackdropComponent={Backdrop}
+      >
+        <Fade in={open}>
+          <Box
+            sx={{
+              width: 400,
+              bgcolor: 'background.paper',
+              p: 2,
+              px: 4,
+              pb: 3,
+              outline: 'none',
+              position: 'relative',
+            }}
+          >
+            <CloseIcon
+              sx={{
+                position: 'absolute',
+                top: '10px',
+                right: '10px',
+                cursor: 'pointer',
+              }}
+              onClick={() => handleClose()}
+            />
+            {children}
+          </Box>
+        </Fade>
+      </StyledModal>
+    </Box>
+  );
 };
 
 export default Modal;

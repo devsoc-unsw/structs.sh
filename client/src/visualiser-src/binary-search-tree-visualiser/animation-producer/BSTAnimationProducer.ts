@@ -1,116 +1,116 @@
-import { Node } from '../util/typedefs';
 import { Runner, Container } from '@svgdotjs/svg.js';
+import { Node } from '../util/typedefs';
 import { canvasPadding } from '../util/settings';
 import AnimationProducer from '../../common/AnimationProducer';
 
 export default class BSTAnimationProducer extends AnimationProducer {
-    public draw: Container;
+  public draw: Container;
 
-    // the problem with each BSTAnimationProducer having its own draw canvas created
-    // is that svg.js uses an addTo method which would create an extra svg container
-    // of max width and height. we don't want this
-    public constructor(draw: Container) {
-        super();
-        this.draw = draw;
+  // the problem with each BSTAnimationProducer having its own draw canvas created
+  // is that svg.js uses an addTo method which would create an extra svg container
+  // of max width and height. we don't want this
+  public constructor(draw: Container) {
+    super();
+    this.draw = draw;
+  }
+
+  public highlightNode(node: Node): void {
+    this.allRunners.push([
+      node.nodeTarget
+        .animate(500)
+        .attr({
+          fill: '#4beb9b',
+          stroke: '#4beb9b',
+        }),
+      node.textTarget
+        .animate(500)
+        .attr({
+          fill: '#ffffff',
+        }),
+    ]);
+
+    this.allRunners.push([
+      node.nodeTarget
+        .animate(500)
+        .attr({
+          fill: '#ffffff',
+          stroke: '#000000',
+        }),
+      node.textTarget
+        .animate(500)
+        .attr({
+          fill: '#000000',
+        }),
+    ]);
+  }
+
+  public updateBST(root: Node): void {
+    const animation: Runner[] = [];
+    this.updateNodesRecursive(root, animation);
+    this.updateLinesRecursive(root, animation);
+    this.allRunners.push(animation);
+  }
+
+  public updateNodesRecursive(node: Node, animation: Runner[]): void {
+    if (node === null) {
+      return;
     }
 
-    public highlightNode(node: Node): void {
-        this.allRunners.push([
-            node.nodeTarget
-            .animate(500)
-            .attr({
-                fill: '#4beb9b',
-                stroke: '#4beb9b',
-            }),
-            node.textTarget
-            .animate(500)
-            .attr({
-                fill: '#ffffff',
-            }),
-        ])
+    this.updateNode(node, node.x, node.y, animation);
+    this.updateNodesRecursive(node.left, animation);
+    this.updateNodesRecursive(node.right, animation);
+  }
 
-        this.allRunners.push([
-            node.nodeTarget
-            .animate(500)
-            .attr({
-                fill: '#ffffff',
-                stroke: '#000000',
-            }),
-            node.textTarget
-            .animate(500)
-            .attr({
-                fill: '#000000',
-            }),
-        ])
+  public updateNode(node: Node, newX: number, newY: number, animation: Runner[]): void {
+    animation.push(
+      node.nodeTarget
+        .animate(400)
+        .cx(newX)
+        .cy(newY),
+    );
+
+    animation.push(
+      node.textTarget
+        .animate(400)
+        .cx(newX)
+        .cy(newY),
+    );
+  }
+
+  public updateLinesRecursive(node: Node, animation: Runner[]): void {
+    if (node === null) {
+      return;
     }
 
-    public updateBST(root: Node): void {
-        const animation: Runner[] = [];
-        this.updateNodesRecursive(root, animation);
-        this.updateLinesRecursive(root, animation);
-        this.allRunners.push(animation);
-    }
+    this.updateNodeLines(node, animation);
+    this.updateLinesRecursive(node.left, animation);
+    this.updateLinesRecursive(node.right, animation);
+  }
 
-    public updateNodesRecursive(node: Node, animation: Runner[]): void {
-        if (node === null) {
-            return;
-        }
+  public updateNodeLines(node: Node, animation: Runner[]): void {
+    const lineDiffX = this.getLineDiffX(node);
+    const lineDiffY = 75;
 
-        this.updateNode(node, node.x, node.y, animation);
-        this.updateNodesRecursive(node.left, animation);
-        this.updateNodesRecursive(node.right, animation);
-    }
+    animation.push(
+      node.leftLineTarget
+        .animate(400)
+        .plot([[node.x, node.y], [node.x - lineDiffX, node.y + lineDiffY]]),
+    );
 
-    public updateNode(node: Node, newX: number, newY: number, animation: Runner[]): void {
-        animation.push(
-            node.nodeTarget
-            .animate(400)
-            .cx(newX)
-            .cy(newY),
-        );
+    animation.push(
+      node.rightLineTarget
+        .animate(400)
+        .plot([[node.x, node.y], [node.x + lineDiffX, node.y + lineDiffY]]),
+    );
+  }
 
-        animation.push(
-            node.textTarget
-            .animate(400)
-            .cx(newX)
-            .cy(newY),
-        );
-    }
+  // returns the difference in x coordinates with the node
+  // and it's two child nodes
+  public getLineDiffX(node: Node): number {
+    const canvasWidth = document.getElementById('bst-canvas').offsetWidth;
+    const depth: number = (node.y - canvasPadding) / 75;
+    const baseDiff = canvasWidth / 4;
 
-    public updateLinesRecursive(node: Node, animation: Runner[]): void {
-        if (node === null) {
-            return;
-        }
-
-        this.updateNodeLines(node, animation);
-        this.updateLinesRecursive(node.left, animation);
-        this.updateLinesRecursive(node.right, animation);
-    }
-
-    public updateNodeLines(node: Node, animation: Runner[]): void {
-        const lineDiffX = this.getLineDiffX(node);
-        const lineDiffY = 75;
-
-        animation.push(
-            node.leftLineTarget
-            .animate(400)
-            .plot([[node.x, node.y], [node.x - lineDiffX, node.y + lineDiffY]])
-        );
-
-        animation.push(
-            node.rightLineTarget
-            .animate(400)
-            .plot([[node.x, node.y], [node.x + lineDiffX, node.y + lineDiffY]])
-        )
-    }
-
-    // returns the difference in x coordinates with the node
-    // and it's two child nodes
-    public getLineDiffX(node: Node): number {
-        const canvasWidth = document.getElementById('bst-canvas').offsetWidth;
-        const depth: number = (node.y - canvasPadding) / 75;
-        const baseDiff = canvasWidth / 4;
-        
-        return baseDiff / (1 << depth);;
-    }
+    return baseDiff / (1 << depth);
+  }
 }

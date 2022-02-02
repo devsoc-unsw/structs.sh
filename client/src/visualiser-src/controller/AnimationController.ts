@@ -10,110 +10,106 @@ import AnimationProducer from '../common/AnimationProducer';
 // eventually this file should be placed in a folder common for all data structures,
 // not just for the linked list
 class AnimationController {
-    private currentTimeline: Timeline = new Timeline().persist(true);
-    private timelineDuration: number = 0;
-    private timestamps: number[] = [];
-    private timelineSlider = document.querySelector('#timelineSlider') as HTMLInputElement;
-    private speed: number = 1;
-    private isStepMode: boolean = false;
+  private currentTimeline: Timeline = new Timeline().persist(true);
 
-    constructor() {
-        this.timelineSlider.addEventListener('input', (e: Event) => {
-            this.seekPercent(Number(this.timelineSlider.value));
-        })
-    }
+  private timelineDuration: number = 0;
 
-    public getCurrentTimeline(): Timeline {
-        return this.currentTimeline;
-    }
+  private timestamps: number[] = [];
 
-    public constructTimeline(animationProducer: AnimationProducer, updateSlider: (val: number) => void) {
-        this.resetTimeline(updateSlider);
+  private speed: number = 1;
 
-        for (const runners of animationProducer.allRunners) {
-            for (const runner of runners) {
-                this.currentTimeline.schedule(runner, this.timelineDuration, 'absolute');
-            }
-            runners[0].after(() => {
-                if (this.isStepMode) {
-                    this.currentTimeline.pause();
-                }
-            });
-            this.timestamps.push(this.timelineDuration);
-            this.timelineDuration += runners[0].duration();
-        }
-        this.timestamps.push(this.timelineDuration);
-        this.currentTimeline.play();
-    }
+  private isStepMode: boolean = false;
 
-    public resetTimeline(updateSlider: (val: number) => void) {
-        this.currentTimeline = new Timeline().persist(true);
-        this.currentTimeline.on('time', (e: CustomEvent) => {
-            updateSlider((e.detail / this.timelineDuration) * 100);
-        });
-        this.isStepMode = false;
-        this.currentTimeline.speed(this.speed);
-        this.timestamps = [];
-        this.timelineDuration = 0;
-    }
+  public getCurrentTimeline(): Timeline {
+    return this.currentTimeline;
+  }
 
-    public play(): void {
-        this.isStepMode = false;
-        this.currentTimeline.play();
-    }
+  public constructTimeline(animationProducer: AnimationProducer, updateSlider: (val: number) => void) {
+    this.resetTimeline(updateSlider);
 
-    public pause(): void {
-        this.currentTimeline.pause();
-    }
-
-    public seekPercent(position: number): void {
-        const timeSeek: number = (position * this.timelineDuration) / 100;
-        this.currentTimeline.time(timeSeek);
+    for (const runners of animationProducer.allRunners) {
+      for (const runner of runners) {
+        this.currentTimeline.schedule(runner, this.timelineDuration, 'absolute');
+      }
+      runners[0].after(() => {
         if (this.isStepMode) {
-            this.pause();
-            this.isStepMode = false;
+          this.currentTimeline.pause();
         }
+      });
+      this.timestamps.push(this.timelineDuration);
+      this.timelineDuration += runners[0].duration();
     }
+    this.timestamps.push(this.timelineDuration);
+    this.currentTimeline.play();
+  }
 
-    public setSpeed(speed: number): void {
-        console.log(speed);
-        // we need to keep a member variable since
-        // a new timeline is created for each animation sequence,
-        // so the speed would be reset to 1
-        this.speed = speed;
+  public resetTimeline(updateSlider: (val: number) => void) {
+    this.currentTimeline = new Timeline().persist(true);
+    this.currentTimeline.on('time', (e: CustomEvent) => {
+      updateSlider((e.detail / this.timelineDuration) * 100);
+    });
+    this.isStepMode = false;
+    this.currentTimeline.speed(this.speed);
+    this.timestamps = [];
+    this.timelineDuration = 0;
+  }
 
-        // incase we are setting the speed without doing another operation
-        this.currentTimeline.speed(this.speed);
+  public play(): void {
+    this.isStepMode = false;
+    this.currentTimeline.play();
+  }
+
+  public pause(): void {
+    this.currentTimeline.pause();
+  }
+
+  public seekPercent(position: number): void {
+    const timeSeek: number = (position * this.timelineDuration) / 100;
+    this.currentTimeline.time(timeSeek);
+    if (this.isStepMode) {
+      this.pause();
+      this.isStepMode = false;
     }
+  }
 
-    // Finish playing the timeline
-    public finish(): void {
-        this.currentTimeline.finish();
-    }
+  public setSpeed(speed: number): void {
+    // we need to keep a member variable since
+    // a new timeline is created for each animation sequence,
+    // so the speed would be reset to 1
+    this.speed = speed;
 
-    public stepBackwards(): void {
-        this.pause();
-        this.currentTimeline.time(this.computePrevTimestamp());
-    }
+    // incase we are setting the speed without doing another operation
+    this.currentTimeline.speed(this.speed);
+  }
 
-    // TODO: this isn't 100% working
-    public stepForwards(): void {
-        this.isStepMode = true;
-        this.currentTimeline.play();
-    }
+  // Finish playing the timeline
+  public finish(): void {
+    this.currentTimeline.finish();
+  }
 
-    private computePrevTimestamp(): number {
-        for (let timestamp of [...this.timestamps].reverse()) {
-            if (timestamp + 25 < this.currentTime) {
-                return timestamp;
-            }
-        }
-        return 0;
-    }
+  public stepBackwards(): void {
+    this.pause();
+    this.currentTimeline.time(this.computePrevTimestamp());
+  }
 
-    private get currentTime() {
-        return this.currentTimeline.time() > this.timelineDuration? this.timelineDuration : this.currentTimeline.time();
+  // TODO: this isn't 100% working
+  public stepForwards(): void {
+    this.isStepMode = true;
+    this.currentTimeline.play();
+  }
+
+  private computePrevTimestamp(): number {
+    for (const timestamp of [...this.timestamps].reverse()) {
+      if (timestamp + 25 < this.currentTime) {
+        return timestamp;
+      }
     }
+    return 0;
+  }
+
+  private get currentTime() {
+    return this.currentTimeline.time() > this.timelineDuration ? this.timelineDuration : this.currentTimeline.time();
+  }
 }
 
 export default AnimationController;

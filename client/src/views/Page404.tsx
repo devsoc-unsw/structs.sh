@@ -7,91 +7,93 @@ import { useLocation } from 'react-router-dom';
 import './Page404.scss';
 
 const containerVariants = {
-    hidden: {
-        opacity: 0,
-    },
-    visible: {
-        opacity: 1,
-        transition: { duration: 1 },
-    },
-    exit: {
-        opacity: '-100vw',
-        transition: { ease: 'easeInOut' },
-    },
+  hidden: {
+    opacity: 0,
+  },
+  visible: {
+    opacity: 1,
+    transition: { duration: 1 },
+  },
+  exit: {
+    opacity: '-100vw',
+    transition: { ease: 'easeInOut' },
+  },
 };
 
-const Page404 = (props) => {
-    const location = useLocation();
-    const path: string = String(location.pathname);
+function Page404(props) {
+  const location = useLocation();
+  const path: string = String(location.pathname);
 
-    useEffect(() => {
-        document.querySelector('html').style.overflow = 'hidden';
-        return () => {
-            document.querySelector('html').style.overflow = 'auto';
-        };
-    });
+  useEffect(() => {
+    document.querySelector('html').style.overflow = 'hidden';
+    return () => {
+      document.querySelector('html').style.overflow = 'auto';
+    };
+  });
 
-    return (
-        <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="exit">
-            <Box sx={{ overflow: 'hidden', height: '100vh', background: '#261C2C' }}>
-                <TopNavbar position={'fixed'} enableOnScrollEffect />
-                <Box
-                    sx={{
-                        width: '100vw',
-                        overflow: 'hidden',
-                    }}
-                >
-                    <Box
-                        sx={{
-                            marginTop: '64px',
-                            height: '100%',
-                            overflow: 'hidden',
-                        }}
-                    >
-                        <div
-                            style={{
-                                overflow: 'hidden',
-                            }}
-                        >
-                            <div>
-                                <div className="starsec" />
-                                <div className="starthird" />
-                                <div className="starfourth" />
-                                <div className="starfifth" />
-                            </div>
-                            <div className="lamp__wrap">
-                                <div className="lamp">
-                                    <div className="cable" />
-                                    <div className="cover" />
-                                    <div className="in-cover">
-                                        <div className="bulb" />
-                                    </div>
-                                    <div className="light" />
-                                </div>
-                            </div>
-                        </div>
-                        <Container
-                            sx={{
-                                color: 'rgba(255, 255, 255, 0.8)',
-                                textAlign: 'center',
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                transform: 'translate(-50%, -50%)',
-                            }}
-                            maxWidth="md"
-                        >
-                            <Typography variant="h2">404</Typography>
-                            <br />
-                            <Typography variant="body1">
-                                Couldn't find a page for: <pre>{path}</pre>
-                            </Typography>
-                        </Container>
-                    </Box>
-                </Box>
-            </Box>
-        </motion.div>
-    );
-};
+  return (
+    <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="exit">
+      <Box sx={{ overflow: 'hidden', height: '100vh', background: '#261C2C' }}>
+        <TopNavbar position="fixed" enableOnScrollEffect />
+        <Box
+          sx={{
+            width: '100vw',
+            overflow: 'hidden',
+          }}
+        >
+          <Box
+            sx={{
+              marginTop: '64px',
+              height: '100%',
+              overflow: 'hidden',
+            }}
+          >
+            <div
+              style={{
+                overflow: 'hidden',
+              }}
+            >
+              <div>
+                <div className="starsec" />
+                <div className="starthird" />
+                <div className="starfourth" />
+                <div className="starfifth" />
+              </div>
+              <div className="lamp__wrap">
+                <div className="lamp">
+                  <div className="cable" />
+                  <div className="cover" />
+                  <div className="in-cover">
+                    <div className="bulb" />
+                  </div>
+                  <div className="light" />
+                </div>
+              </div>
+            </div>
+            <Container
+              sx={{
+                color: 'rgba(255, 255, 255, 0.8)',
+                textAlign: 'center',
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+              }}
+              maxWidth="md"
+            >
+              <Typography variant="h2">404</Typography>
+              <br />
+              <Typography variant="body1">
+                Couldn't find a page for:
+                {' '}
+                <pre>{path}</pre>
+              </Typography>
+            </Container>
+          </Box>
+        </Box>
+      </Box>
+    </motion.div>
+  );
+}
 
 export default Page404;
