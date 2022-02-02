@@ -56,12 +56,12 @@ export default class BSTAnimationProducer extends AnimationProducer {
       return;
     }
 
-    this.updateNode(node, node.x, node.y, animation);
+    BSTAnimationProducer.updateNode(node, node.x, node.y, animation);
     this.updateNodesRecursive(node.left, animation);
     this.updateNodesRecursive(node.right, animation);
   }
 
-  public updateNode(node: Node, newX: number, newY: number, animation: Runner[]): void {
+  public static updateNode(node: Node, newX: number, newY: number, animation: Runner[]): void {
     animation.push(
       node.nodeTarget
         .animate(400)
@@ -82,13 +82,13 @@ export default class BSTAnimationProducer extends AnimationProducer {
       return;
     }
 
-    this.updateNodeLines(node, animation);
+    BSTAnimationProducer.updateNodeLines(node, animation);
     this.updateLinesRecursive(node.left, animation);
     this.updateLinesRecursive(node.right, animation);
   }
 
-  public updateNodeLines(node: Node, animation: Runner[]): void {
-    const lineDiffX = this.getLineDiffX(node);
+  public static updateNodeLines(node: Node, animation: Runner[]): void {
+    const lineDiffX = BSTAnimationProducer.getLineDiffX(node);
     const lineDiffY = 75;
 
     animation.push(
@@ -106,11 +106,11 @@ export default class BSTAnimationProducer extends AnimationProducer {
 
   // returns the difference in x coordinates with the node
   // and it's two child nodes
-  public getLineDiffX(node: Node): number {
+  public static getLineDiffX(node: Node): number {
     const canvasWidth = document.getElementById('bst-canvas').offsetWidth;
     const depth: number = (node.y - canvasPadding) / 75;
     const baseDiff = canvasWidth / 4;
 
-    return baseDiff / (1 << depth);
+    return baseDiff / 2 ** depth;
   }
 }

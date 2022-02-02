@@ -123,7 +123,7 @@ class BST {
       animationProducer.movePointerToNewRootLeftChild(oldRoot, newRoot);
       animationProducer.moveLeftPointerToOldRoot(oldRoot, newRoot);
     } else {
-      animationProducer.assignNewRootLeftPointerToOldRootRightPointer(oldRoot, newRoot);
+      BSTRotateAnimationProducer.assignNewRootLeftPointerToOldRootRightPointer(oldRoot, newRoot);
     }
 
     this.root = this.doRotateLeft(this.root, input);
@@ -163,7 +163,7 @@ class BST {
       animationProducer.movePointerToNewRootRightChild(oldRoot, newRoot);
       animationProducer.moveRightPointerToOldRoot(oldRoot, newRoot);
     } else {
-      animationProducer.assignNewRootRightPointerToOldRootLeftPointer(oldRoot, newRoot);
+      BSTRotateAnimationProducer.assignNewRootRightPointerToOldRootLeftPointer(oldRoot, newRoot);
     }
 
     this.root = this.doRotateRight(this.root, input);

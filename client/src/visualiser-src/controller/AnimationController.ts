@@ -24,13 +24,16 @@ class AnimationController {
     return this.currentTimeline;
   }
 
-  public constructTimeline(animationProducer: AnimationProducer, updateSlider: (val: number) => void) {
+  public constructTimeline(
+    animationProducer: AnimationProducer,
+    updateSlider: (val: number) => void,
+  ): void {
     this.resetTimeline(updateSlider);
 
-    for (const runners of animationProducer.allRunners) {
-      for (const runner of runners) {
+    animationProducer.allRunners.forEach((runners) => {
+      runners.forEach((runner) => {
         this.currentTimeline.schedule(runner, this.timelineDuration, 'absolute');
-      }
+      });
       runners[0].after(() => {
         if (this.isStepMode) {
           this.currentTimeline.pause();
@@ -38,7 +41,7 @@ class AnimationController {
       });
       this.timestamps.push(this.timelineDuration);
       this.timelineDuration += runners[0].duration();
-    }
+    });
     this.timestamps.push(this.timelineDuration);
     this.currentTimeline.play();
   }
@@ -99,16 +102,17 @@ class AnimationController {
   }
 
   private computePrevTimestamp(): number {
-    for (const timestamp of [...this.timestamps].reverse()) {
+    let prevTimestamp = 0;
+    [...this.timestamps].reverse().forEach((timestamp) => {
       if (timestamp + 25 < this.currentTime) {
-        return timestamp;
+        prevTimestamp = timestamp;
       }
-    }
-    return 0;
+    });
+    return prevTimestamp;
   }
 
   private get currentTime() {
-    return this.currentTimeline.time() > this.timelineDuration ? this.timelineDuration : this.currentTimeline.time();
+    return Math.min(this.currentTimeline.time(), this.timelineDuration);
   }
 }
 

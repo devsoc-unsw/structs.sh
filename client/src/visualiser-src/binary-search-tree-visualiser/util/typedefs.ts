@@ -1,5 +1,5 @@
 import {
-  Circle, Line, Text, Container,
+  Circle, Line, Text,
 } from '@svgdotjs/svg.js';
 
 /**
