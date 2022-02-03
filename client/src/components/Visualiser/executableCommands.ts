@@ -1,16 +1,8 @@
 // TODO: DOCUMENTATION
-export const getCommandExecutor = (topicTitle, visualiser, updateTimeline) => {
-  switch (topicTitle) {
-    case 'Linked Lists':
-      return getLinkedListExecutor(visualiser, updateTimeline);
-    case 'Binary Search Trees':
-      return getBSTExecutor(visualiser, updateTimeline);
-    default:
-      console.error(`Can't find the executor for ${topicTitle}`);
-  }
-};
-
-const getLinkedListExecutor = (visualiser, updateTimeline) => (command: string, args: string[]): string => {
+const getLinkedListExecutor = (
+  visualiser,
+  updateTimeline,
+) => (command: string, args: string[]): string => {
   switch (command) {
     case 'append':
       visualiser.appendNode(Number(args[0]), updateTimeline);
@@ -30,7 +22,10 @@ const getLinkedListExecutor = (visualiser, updateTimeline) => (command: string, 
   return '';
 };
 
-const getBSTExecutor = (visualiser, updateTimeline) => (command: string, args: string[]): string => {
+const getBSTExecutor = (
+  visualiser,
+  updateTimeline,
+) => (command: string, args: string[]): string => {
   switch (command) {
     case 'insert':
       visualiser.insert(Number(args[0]), updateTimeline);
@@ -46,3 +41,21 @@ const getBSTExecutor = (visualiser, updateTimeline) => (command: string, args: s
   }
   return '';
 };
+
+const undefinedExecutor = (topicTitle) => (command: string, args: string[]): string => {
+  console.error(`Can't find the executor for ${topicTitle}`);
+  return '';
+};
+
+const getCommandExecutor = (topicTitle, visualiser, updateTimeline) => {
+  switch (topicTitle) {
+    case 'Linked Lists':
+      return getLinkedListExecutor(visualiser, updateTimeline);
+    case 'Binary Search Trees':
+      return getBSTExecutor(visualiser, updateTimeline);
+    default:
+      return undefinedExecutor(topicTitle);
+  }
+};
+
+export default getCommandExecutor;

@@ -23,7 +23,7 @@ import React, {
 import {
   getLessons, getQuizzes, Lesson, Quiz, Topic,
 } from 'utils/apiRequests';
-import { Notification } from 'utils/Notification';
+import Notification from 'utils/Notification';
 import styles from './Lesson.module.scss';
 
 interface Props {

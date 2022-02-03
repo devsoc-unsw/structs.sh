@@ -9,7 +9,7 @@ import {
   Box, IconButton, Stack, useTheme,
 } from '@mui/material';
 import Slider from '@mui/material/Slider';
-import { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import ModeSwitch from './GUIMode/ModeSwitch';
 import styles from './Control.module.scss';
 

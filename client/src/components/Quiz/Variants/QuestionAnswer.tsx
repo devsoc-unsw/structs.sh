@@ -4,7 +4,7 @@ import {
 import { useTheme } from '@mui/styles';
 import React, { FC, useCallback, useState } from 'react';
 import { QuestionAnswerQuiz } from 'utils/apiRequests';
-import { Notification } from 'utils/Notification';
+import Notification from 'utils/Notification';
 import BaseQuiz from '../BaseQuiz';
 
 interface Props {

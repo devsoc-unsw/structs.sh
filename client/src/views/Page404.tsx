@@ -20,7 +20,7 @@ const containerVariants = {
   },
 };
 
-function Page404() {
+const Page404 = () => {
   const location = useLocation();
   const path: string = String(location.pathname);
 
@@ -84,7 +84,7 @@ function Page404() {
               <Typography variant="h2">404</Typography>
               <br />
               <Typography variant="body1">
-                Couldn't find a page for:
+                Couldn&apost find a page for:
                 {' '}
                 <pre>{path}</pre>
               </Typography>
@@ -94,6 +94,6 @@ function Page404() {
       </Box>
     </motion.div>
   );
-}
+};
 
 export default Page404;

@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import React, { FC, useCallback, useState } from 'react';
 import { MultipleChoiceQuiz } from 'utils/apiRequests';
-import { Notification } from 'utils/Notification';
+import Notification from 'utils/Notification';
 import BaseQuiz from '../BaseQuiz';
 
 interface Props {

@@ -14,11 +14,11 @@ import VisualiserDashboard from 'views/VisualiserDashboard';
 import './App.scss';
 
 export const ThemeMutationContext = createContext({
-  toggleDarkMode: () => console.log('Dark mode toggling is not ready yet'),
+  toggleDarkMode: () => {},
   isDarkMode: false,
 });
 
-function App() {
+const App = () => {
   const [cookies, setCookie] = useCookies([LIGHT_MODE_ON]);
   const [currTheme, setCurrTheme] = useState<Theme>(
     cookies[LIGHT_MODE_ON] === 'true' ? lightTheme : darkTheme,
@@ -66,6 +66,6 @@ function App() {
       </ThemeProvider>
     </AnimatePresence>
   );
-}
+};
 
 export default App;

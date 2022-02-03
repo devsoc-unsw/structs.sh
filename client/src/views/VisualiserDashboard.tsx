@@ -1,13 +1,10 @@
 import { LineLoader } from 'components/Loader';
-import { Pane } from 'components/Panes';
 import { Visualiser } from 'components/Visualiser';
-import VisualiserCanvas from 'components/Visualiser/VisualiserCanvas';
-import VisualiserManager from 'components/Visualiser/VisualiserManager';
 import { VisualiserDashboardLayout } from 'layout';
 import React, { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getTopic, Topic } from 'utils/apiRequests';
-import { Notification } from 'utils/Notification';
+import Notification from 'utils/Notification';
 import { urlToTitle } from 'utils/url';
 import 'visualiser-src/linked-list-visualiser/styles/visualiser.css';
 
@@ -25,7 +22,7 @@ const VisualiserDashboard: FC<Props> = () => {
   useEffect(() => {
     const topicTitleInUrl = params.topic;
     getTopic(urlToTitle(topicTitleInUrl))
-      .then((topic) => setTopic(topic))
+      .then((newTopic) => setTopic(newTopic))
       .catch(() => Notification.error(`Couldn't find anything for topic: '${urlToTitle(topicTitleInUrl)}'`));
   }, [params]);
 

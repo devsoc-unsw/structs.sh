@@ -66,7 +66,7 @@ import {
   TopicForm,
   TrueFalseQuizForm,
 } from 'utils/apiRequests';
-import { Notification } from 'utils/Notification';
+import Notification from 'utils/Notification';
 import styles from './ContentManagement.module.scss';
 import {
   BaseQuizForm, MCQuizForm, QAQuizForm, TFQuizForm,
@@ -387,46 +387,46 @@ const ContentManagementSteps: FC<Props> = () => {
             <Box sx={{ margin: 4 }}>
               <Grid container spacing={5}>
                 {topics
-                                    && topics.length > 0
-                                    && topics.map((topic) => (
-                                      <Grid item>
-                                        <Card
-                                          onClick={() => {
-                                            selectedTopicId !== topic._id
-                                              ? selectTopic(topic._id)
-                                              : deselectTopic();
-                                          }}
-                                          className={styles.card}
-                                          sx={{
-                                            boxShadow:
-                                                        selectedTopicId === topic._id
-                                                        && 'rgba(0, 0, 0, 0.25) 0px 0px 10px 5px, rgba(0, 0, 0, 0.6) 0px 0px 0px 1px',
-                                          }}
-                                        >
-                                          <CardMedia
-                                            component="img"
-                                            height="140"
-                                            image={
-                                                        topic.image
-                                                        || 'https://via.placeholder.com/150'
-                                                    }
-                                            alt={topic.title}
-                                          />
-                                          <CardContent>
-                                            <Typography
-                                              gutterBottom
-                                              variant="h5"
-                                              component="div"
-                                            >
-                                              {topic.title}
-                                            </Typography>
-                                            <Typography variant="body1">
-                                              {topic.description}
-                                            </Typography>
-                                          </CardContent>
-                                        </Card>
-                                      </Grid>
-                                    ))}
+                && topics.length > 0
+                && topics.map((topic) => (
+                  <Grid item>
+                    <Card
+                      onClick={() => {
+                        selectedTopicId !== topic._id
+                          ? selectTopic(topic._id)
+                          : deselectTopic();
+                      }}
+                      className={styles.card}
+                      sx={{
+                        boxShadow:
+                                    selectedTopicId === topic._id
+                                    && 'rgba(0, 0, 0, 0.25) 0px 0px 10px 5px, rgba(0, 0, 0, 0.6) 0px 0px 0px 1px',
+                      }}
+                    >
+                      <CardMedia
+                        component="img"
+                        height="140"
+                        image={
+                                    topic.image
+                                    || 'https://via.placeholder.com/150'
+                                }
+                        alt={topic.title}
+                      />
+                      <CardContent>
+                        <Typography
+                          gutterBottom
+                          variant="h5"
+                          component="div"
+                        >
+                          {topic.title}
+                        </Typography>
+                        <Typography variant="body1">
+                          {topic.description}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
               </Grid>
             </Box>
             <div>
@@ -542,31 +542,31 @@ const ContentManagementSteps: FC<Props> = () => {
                   <HorizontalRule />
                   <List>
                     {topicFormValues.videos
-                                            && topicFormValues.videos.map((videoUrl) => (
-                                              <ListItem
-                                                secondaryAction={(
-                                                  <IconButton
-                                                    edge="end"
-                                                    aria-label="delete"
-                                                    color="error"
-                                                    onClick={() => Notification.info(
-                                                      'Not implemented yet',
-                                                    )}
-                                                  >
-                                                    <DeleteIcon />
-                                                  </IconButton>
-                                                      )}
-                                              >
-                                                <ListItemAvatar>
-                                                  <Avatar>
-                                                    <VideoIcon />
-                                                  </Avatar>
-                                                </ListItemAvatar>
-                                                <Link href={videoUrl} color="textPrimary">
-                                                  {videoUrl}
-                                                </Link>
-                                              </ListItem>
-                                            ))}
+                    && topicFormValues.videos.map((videoUrl) => (
+                      <ListItem
+                        secondaryAction={(
+                          <IconButton
+                            edge="end"
+                            aria-label="delete"
+                            color="error"
+                            onClick={() => Notification.info(
+                              'Not implemented yet',
+                            )}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                              )}
+                      >
+                        <ListItemAvatar>
+                          <Avatar>
+                            <VideoIcon />
+                          </Avatar>
+                        </ListItemAvatar>
+                        <Link href={videoUrl} color="textPrimary">
+                          {videoUrl}
+                        </Link>
+                      </ListItem>
+                    ))}
                     <HorizontalRule />
                     <FormControl fullWidth sx={{ mt: 3 }}>
                       <Typography color="textPrimary">
@@ -644,24 +644,23 @@ const ContentManagementSteps: FC<Props> = () => {
                     Manage Source Code
                   </Typography>
                   <HorizontalRule />
-
                   {sourceCodes
-                                        && sourceCodes.map((sourceCode) => (
-                                          <Accordion>
-                                            <AccordionSummary
-                                              expandIcon={<ExpandMoreIcon />}
-                                              aria-controls="panel1a-content"
-                                              id="panel1a-header"
-                                            >
-                                              <Typography color="textPrimary">
-                                                {sourceCode.title}
-                                              </Typography>
-                                            </AccordionSummary>
-                                            <AccordionDetails>
-                                              <pre>{sourceCode.code}</pre>
-                                            </AccordionDetails>
-                                          </Accordion>
-                                        ))}
+                  && sourceCodes.map((sourceCode) => (
+                    <Accordion>
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                      >
+                        <Typography color="textPrimary">
+                          {sourceCode.title}
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <pre>{sourceCode.code}</pre>
+                      </AccordionDetails>
+                    </Accordion>
+                  ))}
                 </Paper>
                 <Paper elevation={3} sx={{ margin: 3, padding: 3 }}>
                   <Box sx={{ textAlign: 'center' }}>
@@ -743,44 +742,44 @@ const ContentManagementSteps: FC<Props> = () => {
             <Box sx={{ mb: 2 }}>
               <Grid container spacing={3} sx={{ mt: 2, mb: 2 }}>
                 {lessons
-                                    && lessons.map((lesson) => (
-                                      <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
-                                        <Card
-                                          onClick={() => {
-                                            selectedLessonId !== lesson._id
-                                              ? selectLesson(lesson._id)
-                                              : deselectLesson();
-                                          }}
-                                          sx={{
-                                            cursor: 'pointer',
-                                            boxShadow:
-                                                        selectedLessonId === lesson._id
-                                                        && 'rgba(0, 0, 0, 0.25) 0px 0px 10px 5px, rgba(0, 0, 0, 0.6) 0px 0px 0px 1px',
-                                          }}
-                                        >
-                                          <CardContent>
-                                            <Typography
-                                              gutterBottom
-                                              variant="h5"
-                                              component="div"
-                                            >
-                                              {lesson.title}
-                                            </Typography>
-                                            <HorizontalRule />
-                                            <Box className={styles.descriptionPreview}>
-                                              <MarkdownEditor
-                                                readOnly
-                                                markdownValue={lesson.rawMarkdown}
-                                                themeOverride={{
-                                                  background:
-                                                                    theme.palette.background.paper,
-                                                }}
-                                              />
-                                            </Box>
-                                          </CardContent>
-                                        </Card>
-                                      </Grid>
-                                    ))}
+                && lessons.map((lesson) => (
+                  <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
+                    <Card
+                      onClick={() => {
+                        selectedLessonId !== lesson._id
+                          ? selectLesson(lesson._id)
+                          : deselectLesson();
+                      }}
+                      sx={{
+                        cursor: 'pointer',
+                        boxShadow:
+                                    selectedLessonId === lesson._id
+                                    && 'rgba(0, 0, 0, 0.25) 0px 0px 10px 5px, rgba(0, 0, 0, 0.6) 0px 0px 0px 1px',
+                      }}
+                    >
+                      <CardContent>
+                        <Typography
+                          gutterBottom
+                          variant="h5"
+                          component="div"
+                        >
+                          {lesson.title}
+                        </Typography>
+                        <HorizontalRule />
+                        <Box className={styles.descriptionPreview}>
+                          <MarkdownEditor
+                            readOnly
+                            markdownValue={lesson.rawMarkdown}
+                            themeOverride={{
+                              background:
+                                                theme.palette.background.paper,
+                            }}
+                          />
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
               </Grid>
               <div>
                 <Button
@@ -904,115 +903,115 @@ const ContentManagementSteps: FC<Props> = () => {
                     }))}
                   />
                   {quizFormValues
-                                            && (quizFormValues.type === 'mc' ? (
-                                              <MCQuizForm
-                                                choices={
-                                                            (quizFormValues as MultipleChoiceQuizForm)
-                                                              .choices
-                                                        }
-                                                handleChangeChoices={(newChoices) => {
-                                                  setQuizFormValues((oldForm) => ({
-                                                    ...oldForm,
-                                                    choices: newChoices,
-                                                  }));
-                                                }}
-                                                answers={
-                                                            (quizFormValues as MultipleChoiceQuizForm)
-                                                              .answers
-                                                        }
-                                                handleChangeAnswers={(answers) => setQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  answers,
-                                                }))}
-                                                maxSelections={
-                                                            (quizFormValues as MultipleChoiceQuizForm)
-                                                              .maxSelections
-                                                        }
-                                                handleChangeMaxSelections={(
-                                                  maxSelections,
-                                                ) => setQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  maxSelections,
-                                                }))}
-                                                correctMessage={
-                                                            (quizFormValues as MultipleChoiceQuizForm)
-                                                              .correctMessage
-                                                        }
-                                                handleChangeCorrectMessage={(
-                                                  correctMessage,
-                                                ) => setQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  correctMessage,
-                                                }))}
-                                                incorrectMessage={
-                                                            (quizFormValues as MultipleChoiceQuizForm)
-                                                              .incorrectMessage
-                                                        }
-                                                handleChangeIncorrectMessage={(
-                                                  incorrectMessage,
-                                                ) => setQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  incorrectMessage,
-                                                }))}
-                                                explanation={
-                                                            (quizFormValues as MultipleChoiceQuizForm)
-                                                              .explanation
-                                                        }
-                                                handleChangeExplanation={(explanation) => setQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  explanation,
-                                                }))}
-                                              />
-                                            ) : quizFormValues.type === 'tf' ? (
-                                              <TFQuizForm
-                                                isTrue={
-                                                        (quizFormValues as TrueFalseQuizForm).isTrue
-                                                    }
-                                                handleChangeIsTrue={(isTrue) => setQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  isTrue,
-                                                }))}
-                                                correctMessage={
-                                                        (quizFormValues as TrueFalseQuizForm)
-                                                          .correctMessage
-                                                    }
-                                                handleChangeCorrectMessage={(correctMessage) => setQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  correctMessage,
-                                                }))}
-                                                incorrectMessage={
-                                                        (quizFormValues as TrueFalseQuizForm)
-                                                          .incorrectMessage
-                                                    }
-                                                handleChangeIncorrectMessage={(
-                                                  incorrectMessage,
-                                                ) => setQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  incorrectMessage,
-                                                }))}
-                                                explanation={
-                                                        (quizFormValues as TrueFalseQuizForm)
-                                                          .explanation
-                                                    }
-                                                handleChangeExplanation={(explanation) => setQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  explanation,
-                                                }))}
-                                              />
-                                            ) : quizFormValues.type === 'qa' ? (
-                                              <QAQuizForm
-                                                explanation={
-                                                        (quizFormValues as QuestionAnswerQuizForm)
-                                                          .explanation
-                                                    }
-                                                handleChangeExplanation={(explanation) => setQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  explanation,
-                                                }))}
-                                              />
-                                            ) : (
-                                              <>Invalid question type</>
-                                            ))}
+                  && (quizFormValues.type === 'mc' ? (
+                    <MCQuizForm
+                      choices={
+                                  (quizFormValues as MultipleChoiceQuizForm)
+                                    .choices
+                              }
+                      handleChangeChoices={(newChoices) => {
+                        setQuizFormValues((oldForm) => ({
+                          ...oldForm,
+                          choices: newChoices,
+                        }));
+                      }}
+                      answers={
+                                  (quizFormValues as MultipleChoiceQuizForm)
+                                    .answers
+                              }
+                      handleChangeAnswers={(answers) => setQuizFormValues((oldForm) => ({
+                        ...oldForm,
+                        answers,
+                      }))}
+                      maxSelections={
+                                  (quizFormValues as MultipleChoiceQuizForm)
+                                    .maxSelections
+                              }
+                      handleChangeMaxSelections={(
+                        maxSelections,
+                      ) => setQuizFormValues((oldForm) => ({
+                        ...oldForm,
+                        maxSelections,
+                      }))}
+                      correctMessage={
+                                  (quizFormValues as MultipleChoiceQuizForm)
+                                    .correctMessage
+                              }
+                      handleChangeCorrectMessage={(
+                        correctMessage,
+                      ) => setQuizFormValues((oldForm) => ({
+                        ...oldForm,
+                        correctMessage,
+                      }))}
+                      incorrectMessage={
+                                  (quizFormValues as MultipleChoiceQuizForm)
+                                    .incorrectMessage
+                              }
+                      handleChangeIncorrectMessage={(
+                        incorrectMessage,
+                      ) => setQuizFormValues((oldForm) => ({
+                        ...oldForm,
+                        incorrectMessage,
+                      }))}
+                      explanation={
+                                  (quizFormValues as MultipleChoiceQuizForm)
+                                    .explanation
+                              }
+                      handleChangeExplanation={(explanation) => setQuizFormValues((oldForm) => ({
+                        ...oldForm,
+                        explanation,
+                      }))}
+                    />
+                  ) : quizFormValues.type === 'tf' ? (
+                    <TFQuizForm
+                      isTrue={
+                              (quizFormValues as TrueFalseQuizForm).isTrue
+                          }
+                      handleChangeIsTrue={(isTrue) => setQuizFormValues((oldForm) => ({
+                        ...oldForm,
+                        isTrue,
+                      }))}
+                      correctMessage={
+                              (quizFormValues as TrueFalseQuizForm)
+                                .correctMessage
+                          }
+                      handleChangeCorrectMessage={(correctMessage) => setQuizFormValues((oldForm) => ({
+                        ...oldForm,
+                        correctMessage,
+                      }))}
+                      incorrectMessage={
+                              (quizFormValues as TrueFalseQuizForm)
+                                .incorrectMessage
+                          }
+                      handleChangeIncorrectMessage={(
+                        incorrectMessage,
+                      ) => setQuizFormValues((oldForm) => ({
+                        ...oldForm,
+                        incorrectMessage,
+                      }))}
+                      explanation={
+                              (quizFormValues as TrueFalseQuizForm)
+                                .explanation
+                          }
+                      handleChangeExplanation={(explanation) => setQuizFormValues((oldForm) => ({
+                        ...oldForm,
+                        explanation,
+                      }))}
+                    />
+                  ) : quizFormValues.type === 'qa' ? (
+                    <QAQuizForm
+                      explanation={
+                              (quizFormValues as QuestionAnswerQuizForm)
+                                .explanation
+                          }
+                      handleChangeExplanation={(explanation) => setQuizFormValues((oldForm) => ({
+                        ...oldForm,
+                        explanation,
+                      }))}
+                    />
+                  ) : (
+                    <>Invalid question type</>
+                  ))}
                   <Button
                     variant="contained"
                     color="secondary"
@@ -1093,116 +1092,116 @@ const ContentManagementSteps: FC<Props> = () => {
                     })}
                   />
                   {newQuizFormValues
-                                            && (newQuizFormValues.type === 'mc' ? (
-                                              <MCQuizForm
-                                                choices={
-                                                            (newQuizFormValues as MultipleChoiceQuizForm)
-                                                              .choices || []
-                                                        }
-                                                handleChangeChoices={(newChoices) => {
-                                                  setNewQuizFormValues((oldForm) => ({
-                                                    ...oldForm,
-                                                    choices: newChoices,
-                                                  }));
-                                                }}
-                                                answers={
-                                                            (newQuizFormValues as MultipleChoiceQuizForm)
-                                                              .answers || []
-                                                        }
-                                                handleChangeAnswers={(answers) => setNewQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  answers,
-                                                }))}
-                                                maxSelections={
-                                                            (newQuizFormValues as MultipleChoiceQuizForm)
-                                                              .maxSelections
-                                                        }
-                                                handleChangeMaxSelections={(
-                                                  maxSelections,
-                                                ) => setNewQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  maxSelections,
-                                                }))}
-                                                correctMessage={
-                                                            (newQuizFormValues as MultipleChoiceQuizForm)
-                                                              .correctMessage
-                                                        }
-                                                handleChangeCorrectMessage={(
-                                                  correctMessage,
-                                                ) => setNewQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  correctMessage,
-                                                }))}
-                                                incorrectMessage={
-                                                            (newQuizFormValues as MultipleChoiceQuizForm)
-                                                              .incorrectMessage
-                                                        }
-                                                handleChangeIncorrectMessage={(
-                                                  incorrectMessage,
-                                                ) => setNewQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  incorrectMessage,
-                                                }))}
-                                                explanation={
-                                                            (newQuizFormValues as MultipleChoiceQuizForm)
-                                                              .explanation
-                                                        }
-                                                handleChangeExplanation={(explanation) => setNewQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  explanation,
-                                                }))}
-                                              />
-                                            ) : newQuizFormValues.type === 'tf' ? (
-                                              <TFQuizForm
-                                                isTrue={
-                                                        (newQuizFormValues as TrueFalseQuizForm)
-                                                          .isTrue
-                                                    }
-                                                handleChangeIsTrue={(isTrue) => setNewQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  isTrue,
-                                                }))}
-                                                correctMessage={
-                                                        (newQuizFormValues as TrueFalseQuizForm)
-                                                          .correctMessage
-                                                    }
-                                                handleChangeCorrectMessage={(correctMessage) => setNewQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  correctMessage,
-                                                }))}
-                                                incorrectMessage={
-                                                        (newQuizFormValues as TrueFalseQuizForm)
-                                                          .incorrectMessage
-                                                    }
-                                                handleChangeIncorrectMessage={(
-                                                  incorrectMessage,
-                                                ) => setNewQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  incorrectMessage,
-                                                }))}
-                                                explanation={
-                                                        (newQuizFormValues as TrueFalseQuizForm)
-                                                          .explanation
-                                                    }
-                                                handleChangeExplanation={(explanation) => setNewQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  explanation,
-                                                }))}
-                                              />
-                                            ) : newQuizFormValues.type === 'qa' ? (
-                                              <QAQuizForm
-                                                explanation={
-                                                        (newQuizFormValues as QuestionAnswerQuizForm)
-                                                          .explanation
-                                                    }
-                                                handleChangeExplanation={(explanation) => setNewQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  explanation,
-                                                }))}
-                                              />
-                                            ) : (
-                                              <></>
-                                            ))}
+                  && (newQuizFormValues.type === 'mc' ? (
+                    <MCQuizForm
+                      choices={
+                                  (newQuizFormValues as MultipleChoiceQuizForm)
+                                    .choices || []
+                              }
+                      handleChangeChoices={(newChoices) => {
+                        setNewQuizFormValues((oldForm) => ({
+                          ...oldForm,
+                          choices: newChoices,
+                        }));
+                      }}
+                      answers={
+                                  (newQuizFormValues as MultipleChoiceQuizForm)
+                                    .answers || []
+                              }
+                      handleChangeAnswers={(answers) => setNewQuizFormValues((oldForm) => ({
+                        ...oldForm,
+                        answers,
+                      }))}
+                      maxSelections={
+                                  (newQuizFormValues as MultipleChoiceQuizForm)
+                                    .maxSelections
+                              }
+                      handleChangeMaxSelections={(
+                        maxSelections,
+                      ) => setNewQuizFormValues((oldForm) => ({
+                        ...oldForm,
+                        maxSelections,
+                      }))}
+                      correctMessage={
+                                  (newQuizFormValues as MultipleChoiceQuizForm)
+                                    .correctMessage
+                              }
+                      handleChangeCorrectMessage={(
+                        correctMessage,
+                      ) => setNewQuizFormValues((oldForm) => ({
+                        ...oldForm,
+                        correctMessage,
+                      }))}
+                      incorrectMessage={
+                                  (newQuizFormValues as MultipleChoiceQuizForm)
+                                    .incorrectMessage
+                              }
+                      handleChangeIncorrectMessage={(
+                        incorrectMessage,
+                      ) => setNewQuizFormValues((oldForm) => ({
+                        ...oldForm,
+                        incorrectMessage,
+                      }))}
+                      explanation={
+                                  (newQuizFormValues as MultipleChoiceQuizForm)
+                                    .explanation
+                              }
+                      handleChangeExplanation={(explanation) => setNewQuizFormValues((oldForm) => ({
+                        ...oldForm,
+                        explanation,
+                      }))}
+                    />
+                  ) : newQuizFormValues.type === 'tf' ? (
+                    <TFQuizForm
+                      isTrue={
+                              (newQuizFormValues as TrueFalseQuizForm)
+                                .isTrue
+                          }
+                      handleChangeIsTrue={(isTrue) => setNewQuizFormValues((oldForm) => ({
+                        ...oldForm,
+                        isTrue,
+                      }))}
+                      correctMessage={
+                              (newQuizFormValues as TrueFalseQuizForm)
+                                .correctMessage
+                          }
+                      handleChangeCorrectMessage={(correctMessage) => setNewQuizFormValues((oldForm) => ({
+                        ...oldForm,
+                        correctMessage,
+                      }))}
+                      incorrectMessage={
+                              (newQuizFormValues as TrueFalseQuizForm)
+                                .incorrectMessage
+                          }
+                      handleChangeIncorrectMessage={(
+                        incorrectMessage,
+                      ) => setNewQuizFormValues((oldForm) => ({
+                        ...oldForm,
+                        incorrectMessage,
+                      }))}
+                      explanation={
+                              (newQuizFormValues as TrueFalseQuizForm)
+                                .explanation
+                          }
+                      handleChangeExplanation={(explanation) => setNewQuizFormValues((oldForm) => ({
+                        ...oldForm,
+                        explanation,
+                      }))}
+                    />
+                  ) : newQuizFormValues.type === 'qa' ? (
+                    <QAQuizForm
+                      explanation={
+                              (newQuizFormValues as QuestionAnswerQuizForm)
+                                .explanation
+                          }
+                      handleChangeExplanation={(explanation) => setNewQuizFormValues((oldForm) => ({
+                        ...oldForm,
+                        explanation,
+                      }))}
+                    />
+                  ) : (
+                    <></>
+                  ))}
 
                   <Button
                     color="secondary"

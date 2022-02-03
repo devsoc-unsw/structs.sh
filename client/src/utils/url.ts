@@ -3,15 +3,14 @@
  * substitutes/removes characters that are special in URL parsing and
  * converts whitespace to hyphens.
  */
-export const titleToUrl = (title: string): string =>
+
 // TODO: substitute or remove special URL characters like /
-  title.toLowerCase().replaceAll(' ', '-')
-;
+export const titleToUrl = (title: string): string => title.toLowerCase().replaceAll(' ', '-');
+
+const toTitleCase = (str: string): string => str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 
 // The inverse of `titleToUrl`
 export const urlToTitle = (url: string): string => toTitleCase(url.replaceAll('-', ' '));
-
-const toTitleCase = (str: string): string => str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 
 export const extractQueryParameter = (url: string, param: string): string => {
   const urlObj = new URL(url);

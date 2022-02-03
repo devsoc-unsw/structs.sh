@@ -22,7 +22,7 @@ import React, {
 } from 'react';
 import { Link } from 'react-router-dom';
 import { getTopics, Topic } from 'utils/apiRequests';
-import { Notification } from 'utils/Notification';
+import Notification from 'utils/Notification';
 import { titleToUrl } from 'utils/url';
 import Drawer from './Drawer';
 import SidebarContents from './SidebarContents';

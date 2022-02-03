@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import React from 'react';
-import { Notification } from 'utils/Notification';
+import Notification from 'utils/Notification';
 
 interface Props {
   choices: string[];

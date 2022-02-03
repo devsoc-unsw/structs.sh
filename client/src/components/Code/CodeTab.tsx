@@ -21,7 +21,7 @@ import {
 } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { darkTheme } from 'structsThemes';
 import { getSourceCodes, SourceCode, Topic } from 'utils/apiRequests';
-import { Notification } from 'utils/Notification';
+import Notification from 'utils/Notification';
 
 interface Props {
   topic: Topic;

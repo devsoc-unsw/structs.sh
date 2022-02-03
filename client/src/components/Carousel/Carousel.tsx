@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
 import { getTopics, Topic } from 'utils/apiRequests';
-import { Notification } from 'utils/Notification';
+import Notification from 'utils/Notification';
 import { titleToUrl } from 'utils/url';
 import './Carousel.scss';
 import TopicCard from './TopicCard';

@@ -18,8 +18,9 @@ const containerVariants = {
   },
 };
 
+// TODO: check if it's fine for children to be required
 interface Props {
-  children?: React.ReactNode;
+  children: React.ReactNode;
   topNavPosition?: 'fixed' | 'static';
   enableOnScrollEffect?: boolean;
   disableBackground?: boolean;

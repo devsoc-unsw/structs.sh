@@ -2,14 +2,14 @@ import { Box } from '@mui/material';
 import React, {
   useCallback, useEffect, useMemo, useState, useRef,
 } from 'react';
-import { Notification } from 'utils/Notification';
+import Notification from 'utils/Notification';
 import initLinkedListVisualiser from 'visualiser-src/linked-list-visualiser/initialiser';
 import initBSTVisualiser from 'visualiser-src/binary-search-tree-visualiser/initialiser';
 import { VisualiserController } from './Controller';
 import GUIMode from './Controller/GUIMode/GUIMode';
 import { Terminal } from './Controller/Terminal';
 import styles from './VisualiserDashboard.module.scss';
-import { getCommandExecutor } from './executableCommands';
+import getCommandExecutor from './executableCommands';
 
 interface Props {
   topicTitle: string;
