@@ -1,5 +1,6 @@
 import { LineLoader } from 'components/Loader';
 import { Pane } from 'components/Panes';
+import { Visualiser } from 'components/Visualiser';
 import VisualiserCanvas from 'components/Visualiser/VisualiserCanvas';
 import VisualiserManager from 'components/Visualiser/VisualiserManager';
 import { VisualiserDashboardLayout } from 'layout';
@@ -12,7 +13,11 @@ import 'visualiser-src/linked-list-visualiser/styles/visualiser.css';
 
 interface Props {}
 
-const Dashboard: FC<Props> = () => {
+/**
+ * Defines the layout and contents of the visualiser pages.
+ * Notably, we're using a split-pane layout here.
+ */
+const VisualiserDashboard: FC<Props> = () => {
   const [topic, setTopic] = useState<Topic>();
   const params = useParams();
 
@@ -21,9 +26,7 @@ const Dashboard: FC<Props> = () => {
     const topicTitleInUrl = params.topic;
     getTopic(urlToTitle(topicTitleInUrl))
       .then((topic) => setTopic(topic))
-      .catch(() => Notification.error(
-        `Couldn't find anything for topic: '${urlToTitle(topicTitleInUrl)}'`,
-      ));
+      .catch(() => Notification.error(`Couldn't find anything for topic: '${urlToTitle(topicTitleInUrl)}'`));
   }, [params]);
 
   // Note: hacky way of removing scrollability outside of the panes
@@ -36,14 +39,11 @@ const Dashboard: FC<Props> = () => {
 
   return topic ? (
     <VisualiserDashboardLayout topic={topic}>
-      <Pane orientation="horizontal" minSize={150.9}>
-        <VisualiserCanvas topicTitle={topic.title} />
-        <VisualiserManager topicTitle={topic.title} />
-      </Pane>
+      <Visualiser topicTitle={topic.title} />
     </VisualiserDashboardLayout>
   ) : (
     <LineLoader fullViewport />
   );
 };
 
-export default Dashboard;
+export default VisualiserDashboard;

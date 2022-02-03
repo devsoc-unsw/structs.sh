@@ -60,7 +60,7 @@ function App() {
             <Route path="/content" element={<ContentManagementDashboard />} />
 
             {/* 404 page */}
-            <Route element={<Page404 />} />
+            <Route path="*" element={<Page404 />} />
           </Routes>
         </ThemeMutationContext.Provider>
       </ThemeProvider>

@@ -20,7 +20,7 @@ const containerVariants = {
   },
 };
 
-function Page404(props) {
+function Page404() {
   const location = useLocation();
   const path: string = String(location.pathname);
 

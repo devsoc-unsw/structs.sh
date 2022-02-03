@@ -4,7 +4,7 @@ import { useTheme } from '@mui/styles';
 import { Carousel } from 'components/Carousel';
 import { Footer } from 'components/Footer';
 import { ParticleHeader } from 'components/Particles';
-import { Features } from 'components/Sections';
+import { Features } from 'components/Features';
 import { SplashScreen } from 'components/SplashScreen';
 import { HomepageLayout } from 'layout';
 import React from 'react';

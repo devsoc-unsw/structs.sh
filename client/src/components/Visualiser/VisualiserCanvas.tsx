@@ -6,6 +6,11 @@ interface Props {
   topicTitle: string;
 }
 
+/**
+ * The React component that renders the DOM elements that the visualiser
+ * attaches itself to. Each visualiser may have a different canvas that it
+ * needs.
+ */
 const VisualiserCanvas: React.FC<Props> = ({ topicTitle }) => {
   switch (topicTitle) {
     case 'Linked Lists':
@@ -17,6 +22,11 @@ const VisualiserCanvas: React.FC<Props> = ({ topicTitle }) => {
   }
 };
 
+/* -------------------------------------------------------------------------- */
+/*                        Visualiser-Specific Canvases                        */
+/* -------------------------------------------------------------------------- */
+
+// Linked list visualiser canvas
 const LinkedListCanvas: React.FC = () => (
   <header
     style={{
@@ -32,6 +42,7 @@ const LinkedListCanvas: React.FC = () => (
   </header>
 );
 
+// Binary search tree canvas
 const BSTCanvas: React.FC = () => (
   <div
     id="bst-canvas"

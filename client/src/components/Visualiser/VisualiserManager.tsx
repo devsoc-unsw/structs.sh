@@ -15,6 +15,16 @@ interface Props {
   topicTitle: string;
 }
 
+/**
+ * The component responsible for connecting the visualiser source code with the
+ * React client.
+ *   - Contains the controller, terminal and GUI form.
+ *   - Initialises the visualiser and 'puts' it onto the DOM. It relies on
+ *     the corresponding <VisualiserCanvas /> component being there.
+ *   - Defines a bunch of callbacks to that call visualiser methods and passes
+ *     them off to the controller components (basically the play/pause buttons,
+ *     sliders, etc.).
+ */
 const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
   const [timelineComplete, setTimelineComplete] = useState<boolean>(false);
   const [speed, setSpeed] = useState<number>(0.6);

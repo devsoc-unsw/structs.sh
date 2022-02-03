@@ -3,7 +3,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styles from '../Controls/Control.module.scss';
+import styles from '../Control.module.scss';
 
 function ModeSwitch({ switchMode, setSwitchMode }) {
   return (
@@ -16,13 +16,13 @@ function ModeSwitch({ switchMode, setSwitchMode }) {
           onChange={(e) => setSwitchMode(!switchMode)}
           name="mode switch"
         />
-              )}
+      )}
       color="textPrimary"
       label={(
         <Typography color="textPrimary" className={styles.label}>
           <strong>GUI</strong>
         </Typography>
-              )}
+      )}
     />
   );
 }

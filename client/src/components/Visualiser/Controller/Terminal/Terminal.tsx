@@ -32,6 +32,16 @@ interface Props {
   topicTitle: string;
 }
 
+/**
+ * The terminal that lets users input commands and then have them affect the
+ * visualiser.
+ *
+ * It receives an `executeCommand` callback which should be linked to call
+ * commands in the visualiser source code.
+ *
+ * All the commands that the terminal supports and their man page
+ * 'documentation' are listed separately in the `commandsInputRules.ts` file.
+ */
 const Terminal: FC<Props> = ({ executeCommand, topicTitle }) => {
   const [showMan, setShowMan] = useState(false);
   const [documentation, setDocumentation] = useState<CommandDocumentation[]>();
@@ -55,7 +65,8 @@ const Terminal: FC<Props> = ({ executeCommand, topicTitle }) => {
   const visualiserCommands = getVisualiserTerminalCommands(topicTitle, processCommand);
 
   // Built in commands that should be run when any topic is selected
-  // TODO: these are experimental stubs
+  // Note: these are experimental stubs. We may want to develop this idea more
+  //       in the future.
   const builtInCommands = {
     man: {
       fn: () => {

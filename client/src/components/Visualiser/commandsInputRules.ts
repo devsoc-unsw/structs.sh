@@ -1,5 +1,12 @@
-// TODO: documentation
-
+// This file contains all the commands we support in all our visualisers,
+// their input rules and their man page documentation.
+//
+// The terminal and GUI form rely on this file to know what commands they can
+// execute.
+//
+// Eg. in this file, we define that the linked list's `append` command should
+//     take in exactly 1 argument in the terminal and GUI form.
+//
 // Note: the terminal and GUI menu have their independent command lists.
 //       It would be better to have both use the same commands from the
 //       same commands object.
@@ -7,7 +14,8 @@
 //       the same commands object is quite challenging.
 //       That's why we have them separate like below.
 //
-// See react console emulator docs: https://www.npmjs.com/package/react-console-emulator
+// See react console emulator docs:
+//     https://www.npmjs.com/package/react-console-emulator
 
 /* -------------------------------------------------------------------------- */
 /*                              Terminal Commands                             */
@@ -30,6 +38,7 @@ export const getVisualiserTerminalCommands = (
   return terminalCommands;
 };
 
+/* -------------------------- Linked List Commands -------------------------- */
 const getLinkedListTerminalCommands = (processCommand) => ({
   append: {
     usage: 'append <number>',
@@ -49,6 +58,7 @@ const getLinkedListTerminalCommands = (processCommand) => ({
   },
 });
 
+/* ------------------------------ BST Commands ------------------------------ */
 const getBstTerminalCommands = (processCommand) => ({
   insert: {
     usage: 'insert <number>',
@@ -85,6 +95,7 @@ export const getDocumentation = (topicTitle: string): CommandDocumentation[] => 
   }
 };
 
+/* -------------------------- Linked List Man Page -------------------------- */
 const linkedListCommandsDocumentation: CommandDocumentation[] = [
   {
     command: 'append',
@@ -108,12 +119,13 @@ const linkedListCommandsDocumentation: CommandDocumentation[] = [
   },
 ];
 
+/* ------------------------------ BST Man Page ------------------------------ */
 const bstCommandsDocumentation: CommandDocumentation[] = [
   {
     command: 'insert',
     usage: 'insert <number>',
     description:
-            'Executes standard BST insertion to add a new node with the given value into the tree.',
+      'Executes standard BST insertion to add a new node with the given value into the tree.',
   },
   {
     command: 'rotateLeft',
@@ -148,6 +160,7 @@ export const getGUICommands = (topicTitle: string): Operation[] => {
   }
 };
 
+/* ------------------------- Linked List Operations ------------------------- */
 const guiLinkedListCommands: Operation[] = [
   {
     command: 'append',
@@ -167,6 +180,7 @@ const guiLinkedListCommands: Operation[] = [
   },
 ];
 
+/* ----------------------------- BST Operations ----------------------------- */
 const guiBstCommands: Operation[] = [
   {
     command: 'insert',
