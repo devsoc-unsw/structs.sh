@@ -59,6 +59,7 @@ const MCQuizForm: React.FC<Props> = ({
       {choices
       && choices.map((choice, i) => (
         <ListItem
+          key={i}
           secondaryAction={(
             <>
               <Typography color="textSecondary" display="inline">
@@ -85,9 +86,9 @@ const MCQuizForm: React.FC<Props> = ({
           <ListItemIcon>
             <BulletIcon color="info" />
           </ListItemIcon>
-          &quot
+          &quot;
           {choice}
-          &quot
+          &quot;
         </ListItem>
       ))}
     </List>

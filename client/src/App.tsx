@@ -1,7 +1,9 @@
 import { Theme, ThemeProvider } from '@mui/material';
 import { LIGHT_MODE_ON } from 'constants/cookies';
 import { AnimatePresence } from 'framer-motion';
-import React, { createContext, useCallback, useState } from 'react';
+import React, {
+  createContext, useCallback, useState, useMemo,
+} from 'react';
 import { useCookies } from 'react-cookie';
 import { Route, Routes } from 'react-router-dom';
 import { darkTheme, lightTheme } from 'structsThemes';
@@ -34,14 +36,16 @@ const App = () => {
     }
   }, [currTheme, setCookie]);
 
+  const themeMutationContextProviderValue = useMemo(() => ({
+    toggleDarkMode,
+    isDarkMode: cookies[LIGHT_MODE_ON] !== 'true',
+  }), []);
+
   return (
     <AnimatePresence>
       <ThemeProvider theme={currTheme}>
         <ThemeMutationContext.Provider
-          value={{
-            toggleDarkMode,
-            isDarkMode: cookies[LIGHT_MODE_ON] !== 'true',
-          }}
+          value={themeMutationContextProviderValue}
         >
           <Routes>
             {/* Homepage */}

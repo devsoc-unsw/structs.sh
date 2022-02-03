@@ -39,7 +39,7 @@ const Modal: FC<Props> = ({ children, Button }) => {
 
   return (
     <Box>
-      <span onClick={handleOpen}>
+      <span role="presentation" onClick={handleOpen}>
         <Button />
       </span>
       <StyledModal

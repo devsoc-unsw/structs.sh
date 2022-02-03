@@ -7,7 +7,10 @@ import { makeStyles, useTheme } from '@mui/styles';
 import { Operation } from 'components/Visualiser/commandsInputRules';
 import React, { FC, useState } from 'react';
 import { LastLink, Link } from './Links';
-import { OperationsMenuState } from './OperationsTree';
+
+export interface OperationsMenuState {
+  [k: string]: boolean;
+}
 
 const useStyles = makeStyles({
   opListContainer: {
@@ -54,7 +57,7 @@ interface Props {
   executeCommand: (command: string, args: string[]) => string;
 }
 
-const OperationDetails: FC<Props> = ({
+export const OperationDetails: FC<Props> = ({
   op, isLast, showOp, executeCommand,
 }) => {
   const classes = useStyles();
@@ -125,5 +128,3 @@ const OperationDetails: FC<Props> = ({
     </Collapse>
   );
 };
-
-export default OperationDetails;

@@ -68,7 +68,7 @@ const CodeSnippet: FC<Props> = ({ topic }) => {
       <HorizontalRule />
       {codeSnippets
                 && codeSnippets.map((snippet, i) => (
-                  <Accordion defaultExpanded={i === 0}>
+                  <Accordion key={i} defaultExpanded={i === 0}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                       <Typography>{snippet.title}</Typography>
                     </AccordionSummary>

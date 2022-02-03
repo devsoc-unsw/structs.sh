@@ -84,7 +84,7 @@ const Page404 = () => {
               <Typography variant="h2">404</Typography>
               <br />
               <Typography variant="body1">
-                Couldn&apost find a page for:
+                Couldn&apos;t find a page for:
                 {' '}
                 <pre>{path}</pre>
               </Typography>

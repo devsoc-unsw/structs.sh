@@ -30,7 +30,7 @@ const QuestionRenderer: React.FC<Props> = ({
           showAnswers={showAnswers}
         />
       ) : (
-        <Alert severity="error">This question can&apost be rendered, please report this!</Alert>
+        <Alert severity="error">This question can&apos;t be rendered, please report this!</Alert>
       );
     case 'qa':
       return quiz as QuestionAnswerQuiz !== null ? (
@@ -41,7 +41,7 @@ const QuestionRenderer: React.FC<Props> = ({
           showAnswers={showAnswers}
         />
       ) : (
-        <Alert severity="error">This question can&apost be rendered, please report this!</Alert>
+        <Alert severity="error">This question can&apos;t be rendered, please report this!</Alert>
       );
     case 'tf':
       return quiz as TrueFalseQuiz !== null ? (
@@ -52,14 +52,14 @@ const QuestionRenderer: React.FC<Props> = ({
           showAnswers={showAnswers}
         />
       ) : (
-        <Alert severity="error">This question can&apost be rendered, please report this!</Alert>
+        <Alert severity="error">This question can&apos;t be rendered, please report this!</Alert>
       );
     default:
       return (
         <Alert severity="error">
-          Invalid question type: &apos
+          Invalid question type: &apos;
           {type}
-          &apos
+          &apos;
         </Alert>
       );
   }

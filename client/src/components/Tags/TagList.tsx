@@ -9,7 +9,7 @@ interface TagListProps {
 }
 
 export const TagList: React.FC<TagListProps> = ({ tags, handleDelete, display }) => {
-  const filterInvalidTags = useCallback((tags: string[]): string[] => tags.filter((tag: string) => /\S/.test(tag)), []);
+  const filterInvalidTags = useCallback((filterTags: string[]): string[] => filterTags.filter((tag: string) => /\S/.test(tag)), []);
 
   return tags && tags.length > 0 ? (
     <Stack direction="row" spacing={1}>
@@ -24,6 +24,6 @@ export const TagList: React.FC<TagListProps> = ({ tags, handleDelete, display })
       ))}
     </Stack>
   ) : (
-    <></>
+    null
   );
 };

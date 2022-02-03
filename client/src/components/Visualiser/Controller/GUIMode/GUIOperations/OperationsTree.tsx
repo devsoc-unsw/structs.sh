@@ -7,11 +7,7 @@ import { useTheme } from '@mui/styles';
 import { getGUICommands, Operation } from 'components/Visualiser/commandsInputRules';
 import React, { FC, useState } from 'react';
 import { LastLink, Link } from './Links';
-import OperationDetails from './OperationDetails';
-
-export interface OperationsMenuState {
-  [k: string]: boolean;
-}
+import { OperationDetails, OperationsMenuState } from './OperationDetails';
 
 interface Props {
   executeCommand: (command: string, args: string[]) => string;
@@ -32,9 +28,9 @@ const OperationsTree: FC<Props> = ({ topicTitle, executeCommand }) => {
 
   return !ops ? (
     <Alert severity="error">
-      No operations are defined for the topicTitle &apos
+      No operations are defined for the topicTitle &apos;
       {topicTitle}
-      &apos
+      &apos;
     </Alert>
   ) : (
     <Box sx={{ padding: 2 }}>

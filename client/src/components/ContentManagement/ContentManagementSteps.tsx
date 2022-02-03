@@ -132,8 +132,8 @@ const ContentManagementSteps: FC<Props> = () => {
 
   const fetchTopics = useCallback(() => {
     getTopics()
-      .then((topics: Topic[]) => {
-        setTopics(topics);
+      .then((newTopics: Topic[]) => {
+        setTopics(newTopics);
       })
       .catch((errMessage) => {
         Notification.error(`Failed to load topics. Reason: ${errMessage}`);
@@ -143,8 +143,8 @@ const ContentManagementSteps: FC<Props> = () => {
   const fetchLessons = useCallback(
     (topicId: string) => {
       getLessons(topicId)
-        .then((lessons: Lesson[]) => {
-          setLessons(lessons);
+        .then((newLessons: Lesson[]) => {
+          setLessons(newLessons);
         })
         .catch((errMessage) => {
           Notification.error(`Failed to load lessons. Reason: ${errMessage}`);
@@ -156,12 +156,12 @@ const ContentManagementSteps: FC<Props> = () => {
   const fetchQuizzes = useCallback(
     (lessonId: string) => {
       getQuizzes(lessonId)
-        .then((quizzes: Quiz[]) => {
-          if (!quizzes) throw Error('Invalid quizzes were retrieved');
-          setQuizzes(quizzes);
-          if (quizzes.length > 0) {
+        .then((newQuizzes: Quiz[]) => {
+          if (!newQuizzes) throw Error('Invalid quizzes were retrieved');
+          setQuizzes(newQuizzes);
+          if (newQuizzes.length > 0) {
             setSelectedQuizIndex(0);
-            setQuizFormValues(quizzes[0]);
+            setQuizFormValues(newQuizzes[0]);
           }
         })
         .catch((errMessage) => {
@@ -232,13 +232,13 @@ const ContentManagementSteps: FC<Props> = () => {
 
   const selectQuiz = useCallback(
     (quizId: string) => {
-      const selectedQuizIndex: number = quizzes.findIndex((quiz) => quiz._id === quizId);
-      if (selectedQuizIndex === -1) {
+      const newSelectedQuizIndex: number = quizzes.findIndex((quiz) => quiz._id === quizId);
+      if (newSelectedQuizIndex === -1) {
         Notification.error(`Quiz doesn't seem to exist. ID: ${quizId}`);
         return;
       }
-      setQuizFormValues(quizzes[selectedQuizIndex]);
-      setSelectedQuizIndex(selectedQuizIndex);
+      setQuizFormValues(quizzes[newSelectedQuizIndex]);
+      setSelectedQuizIndex(newSelectedQuizIndex);
     },
     [quizzes],
   );
@@ -302,7 +302,8 @@ const ContentManagementSteps: FC<Props> = () => {
           (topic) => topic._id === selectedTopicId,
         );
         if (topicIndex === -1) throw Error('Topics data inconsistent. Please report');
-        // Replace the old topic with the new one in the `topics` array to ensure that changes are reflected in the UI
+        // Replace the old topic with the new one in the `topics`
+        // array to ensure that changes are reflected in the UI
         setTopics(
           topics.map((topic, i) => {
             if (topic._id === selectedTopicId) {
@@ -382,19 +383,21 @@ const ContentManagementSteps: FC<Props> = () => {
             <Typography color="textPrimary">
               Select a topic or data structure that you want to make new lessons for,
               or whose lessons you wish to modify or delete. To create a new topic
-              entirely, don&apost select any of the topics below and click &aposcontinue&apos
+              entirely, don&apos;t select any of the topics below and click &apos;continue&apos;
             </Typography>
             <Box sx={{ margin: 4 }}>
               <Grid container spacing={5}>
                 {topics
                 && topics.length > 0
-                && topics.map((topic) => (
-                  <Grid item>
+                && topics.map((topic, i) => (
+                  <Grid key={i} item>
                     <Card
                       onClick={() => {
-                        selectedTopicId !== topic._id
-                          ? selectTopic(topic._id)
-                          : deselectTopic();
+                        if (selectedTopicId !== topic._id) {
+                          selectTopic(topic._id);
+                        } else {
+                          deselectTopic();
+                        }
                       }}
                       className={styles.card}
                       sx={{
@@ -542,8 +545,9 @@ const ContentManagementSteps: FC<Props> = () => {
                   <HorizontalRule />
                   <List>
                     {topicFormValues.videos
-                    && topicFormValues.videos.map((videoUrl) => (
+                    && topicFormValues.videos.map((videoUrl, i) => (
                       <ListItem
+                        key={i}
                         secondaryAction={(
                           <IconButton
                             edge="end"
@@ -600,7 +604,7 @@ const ContentManagementSteps: FC<Props> = () => {
                         {' '}
                         <strong>must</strong>
                         {' '}
-                        click &aposSubmit&apos to create a
+                        click &apos;Submit&apos; to create a
                         new topic or save changes before progressing!
                       </Alert>
                       <Button
@@ -619,7 +623,7 @@ const ContentManagementSteps: FC<Props> = () => {
                         {' '}
                         <strong>must</strong>
                         {' '}
-                        click &aposCreate&apos to create a
+                        click &apos;Create&apos; to create a
                         new topic or save changes before progressing!
                       </Alert>
                       <Button
@@ -645,8 +649,8 @@ const ContentManagementSteps: FC<Props> = () => {
                   </Typography>
                   <HorizontalRule />
                   {sourceCodes
-                  && sourceCodes.map((sourceCode) => (
-                    <Accordion>
+                  && sourceCodes.map((sourceCode, i) => (
+                    <Accordion key={i}>
                       <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
                         aria-controls="panel1a-content"
@@ -742,13 +746,15 @@ const ContentManagementSteps: FC<Props> = () => {
             <Box sx={{ mb: 2 }}>
               <Grid container spacing={3} sx={{ mt: 2, mb: 2 }}>
                 {lessons
-                && lessons.map((lesson) => (
-                  <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
+                && lessons.map((lesson, i) => (
+                  <Grid key={i} item xs={12} sm={6} md={6} lg={6} xl={6}>
                     <Card
                       onClick={() => {
-                        selectedLessonId !== lesson._id
-                          ? selectLesson(lesson._id)
-                          : deselectLesson();
+                        if (selectedLessonId !== lesson._id) {
+                          selectLesson(lesson._id);
+                        } else {
+                          deselectLesson();
+                        }
                       }}
                       sx={{
                         cursor: 'pointer',
@@ -847,7 +853,7 @@ const ContentManagementSteps: FC<Props> = () => {
                     {' '}
                     <strong>must</strong>
                     {' '}
-                    click &aposCreate&apos to create a new
+                    click &apos;Create&apos; to create a new
                     topic or save changes before progressing!
                   </Alert>
                   <Button
@@ -975,7 +981,9 @@ const ContentManagementSteps: FC<Props> = () => {
                               (quizFormValues as TrueFalseQuizForm)
                                 .correctMessage
                           }
-                      handleChangeCorrectMessage={(correctMessage) => setQuizFormValues((oldForm) => ({
+                      handleChangeCorrectMessage={(
+                        correctMessage,
+                      ) => setQuizFormValues((oldForm) => ({
                         ...oldForm,
                         correctMessage,
                       }))}
@@ -1165,7 +1173,9 @@ const ContentManagementSteps: FC<Props> = () => {
                               (newQuizFormValues as TrueFalseQuizForm)
                                 .correctMessage
                           }
-                      handleChangeCorrectMessage={(correctMessage) => setNewQuizFormValues((oldForm) => ({
+                      handleChangeCorrectMessage={(
+                        correctMessage,
+                      ) => setNewQuizFormValues((oldForm) => ({
                         ...oldForm,
                         correctMessage,
                       }))}
@@ -1200,7 +1210,7 @@ const ContentManagementSteps: FC<Props> = () => {
                       }))}
                     />
                   ) : (
-                    <></>
+                    null
                   ))}
 
                   <Button

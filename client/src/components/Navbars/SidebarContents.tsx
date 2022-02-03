@@ -136,6 +136,7 @@ const SidebarContents = ({ setShowSidebar }) => {
         {topics && topics.length > 0 ? (
           topics.map((topic, idx) => (
             <RouterLink
+              key={idx}
               to={`/visualiser/${titleToUrl(topic.title)}`}
               style={{ color: 'inherit', textDecoration: 'none' }}
             >

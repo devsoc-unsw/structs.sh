@@ -29,7 +29,8 @@ const TrueFalse: FC<Props> = ({
     isTrue, correctMessage, incorrectMessage, explanation,
   } = quiz;
   const theme: Theme = useTheme();
-  const [response, setResponse] = useState<0 | 1 | 2>(0); // 3-state boolean where 0 is indeterminate, 1 is true, 2 is false
+  // 3-state boolean where 0 is indeterminate, 1 is true, 2 is false
+  const [response, setResponse] = useState<0 | 1 | 2>(0);
   const [submitted, setSubmitted] = useState(false);
   const [answeredCorrect, setAnsweredCorrect] = useState(false);
 

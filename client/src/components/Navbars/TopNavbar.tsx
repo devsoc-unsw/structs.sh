@@ -61,7 +61,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
 
   useEffect(() => {
     getTopics()
-      .then((topics) => setTopics(topics))
+      .then((newTopics) => setTopics(newTopics))
       .catch(() => console.log('TopNav: failed to get topics'));
   }, []);
 
@@ -157,13 +157,13 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
       className={styles.visualiserMenu}
     >
       {topics
-                && topics.map((topic) => (
-                  <MenuItem className={styles.item}>
-                    <Link to={`/visualiser/${titleToUrl(topic.title)}`}>
-                      <span>{topic.title}</span>
-                    </Link>
-                  </MenuItem>
-                ))}
+      && topics.map((topic, i) => (
+        <MenuItem key={i} className={styles.item}>
+          <Link to={`/visualiser/${titleToUrl(topic.title)}`}>
+            <span>{topic.title}</span>
+          </Link>
+        </MenuItem>
+      ))}
     </Menu>
   );
 

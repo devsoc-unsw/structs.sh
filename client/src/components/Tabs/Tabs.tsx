@@ -67,12 +67,12 @@ const ContentTabs: FC<Props> = ({ topic, tabs = ['Lesson', 'Code', 'Videos'] }) 
           variant="fullWidth"
         >
           {tabs.map((label, i) => (
-            <Tab label={label} />
+            <Tab key={i} label={label} />
           ))}
         </Tabs>
       </Box>
       {tabs.map((tab, i) => (
-        <TabPanel value={tabIndex} index={i}>
+        <TabPanel key={i} value={tabIndex} index={i}>
           <TabRenderer topic={topic} tab={tab} />
         </TabPanel>
       ))}

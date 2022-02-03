@@ -42,8 +42,8 @@ const LessonContent: FC<Props> = ({ topic }) => {
 
   useEffect(() => {
     getLessons(topic._id)
-      .then((lessons) => {
-        setLessons(lessons);
+      .then((newLessons) => {
+        setLessons(newLessons);
         setLoading(false);
       })
       .catch((errMessage) => {
@@ -81,9 +81,9 @@ const LessonContent: FC<Props> = ({ topic }) => {
             color: theme.palette.text.primary,
           }}
         >
-          Can&apost find anything for &apos
+          Can&apos;t find anything for &apos;
           {topic.title}
-          &apos
+          &apos;
         </Alert>
       )}
 
@@ -102,7 +102,7 @@ const LessonContent: FC<Props> = ({ topic }) => {
           <HorizontalRule />
           <List>
             {lessons.map((lesson, i) => (
-              <ListItem>
+              <ListItem key={i}>
                 <Button
                   sx={{
                     textTransform: 'none',

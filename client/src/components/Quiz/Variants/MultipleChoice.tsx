@@ -103,31 +103,32 @@ const MultipleChoice: FC<Props> = ({
             : `Select up to ${maxSelections} responses`}
         </FormLabel>
         {choices
-                    && choices.map((choice, i) => (
-                      <FormControlLabel
-                        value={i}
-                        disabled={
-                                    disabled
-                                    || submitted
-                                    || (getNumSelected() >= maxSelections && !responses[i])
-                                }
-                        sx={{
-                          background:
-                                        (showAnswers || submitted)
-                                        && (answers[i]
-                                          ? 'rgba(0, 255, 59, 0.55)'
-                                          : 'rgba(252, 113, 122, 0.55)'),
-                          borderRadius: '20px',
-                          mt: 1,
-                          mb: 1,
-                          pr: 2,
-                          transition: '0.4s all ease-in-out',
-                        }}
-                        checked={responses[i]}
-                        label={choice}
-                        control={<Radio onClick={() => toggleChoice(i)} />}
-                      />
-                    ))}
+        && choices.map((choice, i) => (
+          <FormControlLabel
+            key={i}
+            value={i}
+            disabled={
+              disabled
+              || submitted
+              || (getNumSelected() >= maxSelections && !responses[i])
+            }
+            sx={{
+              background:
+                (showAnswers || submitted)
+                && (answers[i]
+                  ? 'rgba(0, 255, 59, 0.55)'
+                  : 'rgba(252, 113, 122, 0.55)'),
+              borderRadius: '20px',
+              mt: 1,
+              mb: 1,
+              pr: 2,
+              transition: '0.4s all ease-in-out',
+            }}
+            checked={responses[i]}
+            label={choice}
+            control={<Radio onClick={() => toggleChoice(i)} />}
+          />
+        ))}
       </FormControl>
 
       <Box sx={{ mb: 1 }}>

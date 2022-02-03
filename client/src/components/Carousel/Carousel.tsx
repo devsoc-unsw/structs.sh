@@ -40,6 +40,7 @@ const Carousel: React.FC<Props> = () => {
     >
       {topics.map((topic, i) => (
         <div
+          role="presentation"
           onMouseMove={() => setMouseMoved(true)}
           onMouseDown={() => setMouseMoved(false)}
           onMouseUp={() => handleClick(topic)}
