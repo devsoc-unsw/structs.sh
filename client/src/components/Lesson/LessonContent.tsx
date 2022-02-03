@@ -81,9 +81,9 @@ const LessonContent: FC<Props> = ({ topic }) => {
             color: theme.palette.text.primary,
           }}
         >
-          Can't find anything for '
+          Can&apost find anything for &apos
           {topic.title}
-          '
+          &apos
         </Alert>
       )}
 

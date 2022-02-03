@@ -30,8 +30,12 @@ const CoursesSelector: FC<Props> = ({ addValue, courses }) => {
           onKeyDown={(e: any) => {
             if (
               e.keyCode === 13
-                            && options.some((option) => option.label === String(e.target.value)) // The option must exist in the possible choices
-                            && !courses.includes(String(e.target.value)) // Option mustn't have already been selected before
+
+              // The option must exist in the possible choices
+              && options.some((option) => option.label === String(e.target.value))
+
+              // Option mustn't have already been selected before
+              && !courses.includes(String(e.target.value))
             ) {
               addValue(String(e.target.value));
             }

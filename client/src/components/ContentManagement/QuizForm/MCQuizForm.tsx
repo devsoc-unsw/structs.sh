@@ -57,39 +57,39 @@ const MCQuizForm: React.FC<Props> = ({
     />
     <List>
       {choices
-                    && choices.map((choice, i) => (
-                      <ListItem
-                        secondaryAction={(
-                          <>
-                            <Typography color="textSecondary" display="inline">
-                              Correct?
-                            </Typography>
-                            {' '}
-                            <Checkbox
-                              edge="end"
-                              checked={answers[i]}
-                              defaultChecked={answers[i]}
-                              onChange={(e) => {
-                                const newAnswers = answers.map((answer, j) => {
-                                  if (i === j) {
-                                    return Boolean(e.target.checked);
-                                  }
-                                  return answer;
-                                });
-                                handleChangeAnswers(newAnswers);
-                              }}
-                            />
-                          </>
-                              )}
-                      >
-                        <ListItemIcon>
-                          <BulletIcon color="info" />
-                        </ListItemIcon>
-                        "
-                        {choice}
-                        "
-                      </ListItem>
-                    ))}
+      && choices.map((choice, i) => (
+        <ListItem
+          secondaryAction={(
+            <>
+              <Typography color="textSecondary" display="inline">
+                Correct?
+              </Typography>
+              {' '}
+              <Checkbox
+                edge="end"
+                checked={answers[i]}
+                defaultChecked={answers[i]}
+                onChange={(e) => {
+                  const newAnswers = answers.map((answer, j) => {
+                    if (i === j) {
+                      return Boolean(e.target.checked);
+                    }
+                    return answer;
+                  });
+                  handleChangeAnswers(newAnswers);
+                }}
+              />
+            </>
+                )}
+        >
+          <ListItemIcon>
+            <BulletIcon color="info" />
+          </ListItemIcon>
+          &quot
+          {choice}
+          &quot
+        </ListItem>
+      ))}
     </List>
     {/* <Typography color="textSecondary" sx={{ mb: 4 }}>
                 Answers: {answers && answers.length > 0 ? answers.join(', ') : 'None'}

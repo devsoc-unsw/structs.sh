@@ -22,20 +22,18 @@ const QuestionRenderer: React.FC<Props> = ({
 
   switch (type) {
     case 'mc':
-      const multipleChoiceQuizData = quiz as MultipleChoiceQuiz;
-      return multipleChoiceQuizData !== null ? (
+      return quiz as MultipleChoiceQuiz !== null ? (
         <MultipleChoice
-          quiz={multipleChoiceQuizData}
+          quiz={quiz as MultipleChoiceQuiz}
           questionNumber={questionNumber}
           disabled={disabled}
           showAnswers={showAnswers}
         />
       ) : (
-        <Alert severity="error">This question can't be rendered, please report this!</Alert>
+        <Alert severity="error">This question can&apost be rendered, please report this!</Alert>
       );
     case 'qa':
-      const questionAnswerQuizData = quiz as QuestionAnswerQuiz;
-      return questionAnswerQuizData !== null ? (
+      return quiz as QuestionAnswerQuiz !== null ? (
         <QuestionAnswer
           quiz={quiz as QuestionAnswerQuiz}
           questionNumber={questionNumber}
@@ -43,11 +41,10 @@ const QuestionRenderer: React.FC<Props> = ({
           showAnswers={showAnswers}
         />
       ) : (
-        <Alert severity="error">This question can't be rendered, please report this!</Alert>
+        <Alert severity="error">This question can&apost be rendered, please report this!</Alert>
       );
     case 'tf':
-      const trueFalseQuizData = quiz as TrueFalseQuiz;
-      return trueFalseQuizData !== null ? (
+      return quiz as TrueFalseQuiz !== null ? (
         <TrueFalse
           quiz={quiz as TrueFalseQuiz}
           questionNumber={questionNumber}
@@ -55,14 +52,14 @@ const QuestionRenderer: React.FC<Props> = ({
           showAnswers={showAnswers}
         />
       ) : (
-        <Alert severity="error">This question can't be rendered, please report this!</Alert>
+        <Alert severity="error">This question can&apost be rendered, please report this!</Alert>
       );
     default:
       return (
         <Alert severity="error">
-          Invalid question type: '
+          Invalid question type: &apos
           {type}
-          '
+          &apos
         </Alert>
       );
   }

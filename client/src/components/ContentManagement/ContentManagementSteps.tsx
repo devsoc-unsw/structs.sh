@@ -382,7 +382,7 @@ const ContentManagementSteps: FC<Props> = () => {
             <Typography color="textPrimary">
               Select a topic or data structure that you want to make new lessons for,
               or whose lessons you wish to modify or delete. To create a new topic
-              entirely, don't select any of the topics below and click 'continue'
+              entirely, don&apost select any of the topics below and click &aposcontinue&apos
             </Typography>
             <Box sx={{ margin: 4 }}>
               <Grid container spacing={5}>
@@ -600,7 +600,7 @@ const ContentManagementSteps: FC<Props> = () => {
                         {' '}
                         <strong>must</strong>
                         {' '}
-                        click 'Submit' to create a
+                        click &aposSubmit&apos to create a
                         new topic or save changes before progressing!
                       </Alert>
                       <Button
@@ -619,7 +619,7 @@ const ContentManagementSteps: FC<Props> = () => {
                         {' '}
                         <strong>must</strong>
                         {' '}
-                        click 'Create' to create a
+                        click &aposCreate&apos to create a
                         new topic or save changes before progressing!
                       </Alert>
                       <Button
@@ -847,7 +847,7 @@ const ContentManagementSteps: FC<Props> = () => {
                     {' '}
                     <strong>must</strong>
                     {' '}
-                    click 'Create' to create a new
+                    click &aposCreate&apos to create a new
                     topic or save changes before progressing!
                   </Alert>
                   <Button

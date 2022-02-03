@@ -32,9 +32,9 @@ const OperationsTree: FC<Props> = ({ topicTitle, executeCommand }) => {
 
   return !ops ? (
     <Alert severity="error">
-      No operations are defined for the topicTitle '
+      No operations are defined for the topicTitle &apos
       {topicTitle}
-      '
+      &apos
     </Alert>
   ) : (
     <Box sx={{ padding: 2 }}>

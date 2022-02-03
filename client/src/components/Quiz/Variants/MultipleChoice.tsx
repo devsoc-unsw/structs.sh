@@ -82,7 +82,7 @@ const MultipleChoice: FC<Props> = ({
     console.log('Responses', responses);
 
     // Compare `responses` and `answers` array
-    for (let i = 0; i < answers.length; ++i) {
+    for (let i = 0; i < answers.length; i += 1) {
       if (responses[i] !== answers[i]) {
         Notification.error('Incorrect');
         setResult('incorrect');
