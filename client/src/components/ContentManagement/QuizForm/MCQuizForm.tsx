@@ -57,9 +57,9 @@ const MCQuizForm: React.FC<Props> = ({
     />
     <List>
       {choices
-      && choices.map((choice, i) => (
+      && choices.map((choice, idx) => (
         <ListItem
-          key={i}
+          key={idx}
           secondaryAction={(
             <>
               <Typography color="textSecondary" display="inline">
@@ -68,11 +68,11 @@ const MCQuizForm: React.FC<Props> = ({
               {' '}
               <Checkbox
                 edge="end"
-                checked={answers[i]}
-                defaultChecked={answers[i]}
+                checked={answers[idx]}
+                defaultChecked={answers[idx]}
                 onChange={(e) => {
                   const newAnswers = answers.map((answer, j) => {
-                    if (i === j) {
+                    if (idx === j) {
                       return Boolean(e.target.checked);
                     }
                     return answer;

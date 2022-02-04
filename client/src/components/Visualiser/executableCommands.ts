@@ -1,4 +1,5 @@
-// TODO: DOCUMENTATION
+// for documentation read: https://compclub.atlassian.net/wiki/spaces/S/pages/2150892071/Documentation#Visualiser-Docs%3A
+
 const getLinkedListExecutor = (
   visualiser,
   updateTimeline,

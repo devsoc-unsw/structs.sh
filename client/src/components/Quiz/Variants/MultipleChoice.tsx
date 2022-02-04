@@ -103,19 +103,19 @@ const MultipleChoice: FC<Props> = ({
             : `Select up to ${maxSelections} responses`}
         </FormLabel>
         {choices
-        && choices.map((choice, i) => (
+        && choices.map((choice, idx) => (
           <FormControlLabel
-            key={i}
-            value={i}
+            key={idx}
+            value={idx}
             disabled={
               disabled
               || submitted
-              || (getNumSelected() >= maxSelections && !responses[i])
+              || (getNumSelected() >= maxSelections && !responses[idx])
             }
             sx={{
               background:
                 (showAnswers || submitted)
-                && (answers[i]
+                && (answers[idx]
                   ? 'rgba(0, 255, 59, 0.55)'
                   : 'rgba(252, 113, 122, 0.55)'),
               borderRadius: '20px',
@@ -124,9 +124,9 @@ const MultipleChoice: FC<Props> = ({
               pr: 2,
               transition: '0.4s all ease-in-out',
             }}
-            checked={responses[i]}
+            checked={responses[idx]}
             label={choice}
-            control={<Radio onClick={() => toggleChoice(i)} />}
+            control={<Radio onClick={() => toggleChoice(idx)} />}
           />
         ))}
       </FormControl>

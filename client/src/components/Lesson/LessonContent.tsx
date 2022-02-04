@@ -101,13 +101,13 @@ const LessonContent: FC<Props> = ({ topic }) => {
           </Typography>
           <HorizontalRule />
           <List>
-            {lessons.map((lesson, i) => (
-              <ListItem key={i}>
+            {lessons.map((lesson, idx) => (
+              <ListItem key={idx}>
                 <Button
                   sx={{
                     textTransform: 'none',
                   }}
-                  onClick={() => setActiveLesson(i)}
+                  onClick={() => setActiveLesson(idx)}
                 >
                   <ListItemIcon>
                     <BulletIcon sx={{ fill: theme.palette.text.primary }} />

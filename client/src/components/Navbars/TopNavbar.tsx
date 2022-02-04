@@ -157,8 +157,8 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
       className={styles.visualiserMenu}
     >
       {topics
-      && topics.map((topic, i) => (
-        <MenuItem key={i} className={styles.item}>
+      && topics.map((topic, idx) => (
+        <MenuItem key={idx} className={styles.item}>
           <Link to={`/visualiser/${titleToUrl(topic.title)}`}>
             <span>{topic.title}</span>
           </Link>

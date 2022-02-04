@@ -67,26 +67,26 @@ const CodeSnippet: FC<Props> = ({ topic }) => {
       </FormControl>
       <HorizontalRule />
       {codeSnippets
-                && codeSnippets.map((snippet, i) => (
-                  <Accordion key={i} defaultExpanded={i === 0}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                      <Typography>{snippet.title}</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <SyntaxHighlighter
-                        language="c"
-                        style={theme === darkTheme ? darkCodeTheme : lightCodeTheme}
-                        showLineNumbers
-                        wrapLines
-                        lineProps={{
-                          style: { wordBreak: 'break-all', whiteSpace: 'pre-wrap' },
-                        }}
-                      >
-                        {snippet.code}
-                      </SyntaxHighlighter>
-                    </AccordionDetails>
-                  </Accordion>
-                ))}
+      && codeSnippets.map((snippet, idx) => (
+        <Accordion key={idx} defaultExpanded={idx === 0}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography>{snippet.title}</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <SyntaxHighlighter
+              language="c"
+              style={theme === darkTheme ? darkCodeTheme : lightCodeTheme}
+              showLineNumbers
+              wrapLines
+              lineProps={{
+                style: { wordBreak: 'break-all', whiteSpace: 'pre-wrap' },
+              }}
+            >
+              {snippet.code}
+            </SyntaxHighlighter>
+          </AccordionDetails>
+        </Accordion>
+      ))}
     </Box>
   );
 };

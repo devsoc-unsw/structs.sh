@@ -66,13 +66,13 @@ const ContentTabs: FC<Props> = ({ topic, tabs = ['Lesson', 'Code', 'Videos'] }) 
           indicatorColor="secondary"
           variant="fullWidth"
         >
-          {tabs.map((label, i) => (
-            <Tab key={i} label={label} />
+          {tabs.map((label, idx) => (
+            <Tab key={idx} label={label} />
           ))}
         </Tabs>
       </Box>
-      {tabs.map((tab, i) => (
-        <TabPanel key={i} value={tabIndex} index={i}>
+      {tabs.map((tab, idx) => (
+        <TabPanel key={idx} value={tabIndex} index={idx}>
           <TabRenderer topic={topic} tab={tab} />
         </TabPanel>
       ))}

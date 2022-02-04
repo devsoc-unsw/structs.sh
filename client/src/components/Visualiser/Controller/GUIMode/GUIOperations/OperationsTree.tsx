@@ -7,7 +7,7 @@ import { useTheme } from '@mui/styles';
 import { getGUICommands, Operation } from 'components/Visualiser/commandsInputRules';
 import React, { FC, useState } from 'react';
 import { LastLink, Link } from './Links';
-import { OperationDetails, OperationsMenuState } from './OperationDetails';
+import OperationDetails, { OperationsMenuState } from './OperationDetails';
 
 interface Props {
   executeCommand: (command: string, args: string[]) => string;

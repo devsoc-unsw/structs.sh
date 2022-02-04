@@ -38,22 +38,22 @@ const Carousel: React.FC<Props> = () => {
       centerPadding="0"
       beforeChange={(oldIndex, newIndex) => setImageIndex(newIndex)}
     >
-      {topics.map((topic, i) => (
+      {topics.map((topic, idx) => (
         <div
           role="presentation"
           onMouseMove={() => setMouseMoved(true)}
           onMouseDown={() => setMouseMoved(false)}
           onMouseUp={() => handleClick(topic)}
-          key={i}
-          className={`slide ${i === currImageIndex && 'activeSlide'} ${
+          key={idx}
+          className={`slide ${idx === currImageIndex && 'activeSlide'} ${
             topics.length > 2
-                        && (Math.abs(i - currImageIndex) === 1
-                            || (i === 0 && currImageIndex === topics.length - 1)
-                            || (i === topics.length - 1 && currImageIndex === 0))
-                        && 'adjacentSlide'
+            && (Math.abs(idx - currImageIndex) === 1
+            || (idx === 0 && currImageIndex === topics.length - 1)
+            || (idx === topics.length - 1 && currImageIndex === 0))
+            && 'adjacentSlide'
           }`}
         >
-          <TopicCard topic={topic} isActive={i === currImageIndex} />
+          <TopicCard topic={topic} isActive={idx === currImageIndex} />
         </div>
       ))}
     </Slider>

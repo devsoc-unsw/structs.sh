@@ -95,7 +95,6 @@ class AnimationController {
     this.currentTimeline.time(this.computePrevTimestamp());
   }
 
-  // TODO: this isn't 100% working
   public stepForwards(): void {
     this.isStepMode = true;
     this.currentTimeline.play();

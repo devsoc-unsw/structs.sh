@@ -389,8 +389,8 @@ const ContentManagementSteps: FC<Props> = () => {
               <Grid container spacing={5}>
                 {topics
                 && topics.length > 0
-                && topics.map((topic, i) => (
-                  <Grid key={i} item>
+                && topics.map((topic, idx) => (
+                  <Grid key={idx} item>
                     <Card
                       onClick={() => {
                         if (selectedTopicId !== topic._id) {
@@ -545,9 +545,9 @@ const ContentManagementSteps: FC<Props> = () => {
                   <HorizontalRule />
                   <List>
                     {topicFormValues.videos
-                    && topicFormValues.videos.map((videoUrl, i) => (
+                    && topicFormValues.videos.map((videoUrl, idx) => (
                       <ListItem
-                        key={i}
+                        key={idx}
                         secondaryAction={(
                           <IconButton
                             edge="end"
@@ -649,8 +649,8 @@ const ContentManagementSteps: FC<Props> = () => {
                   </Typography>
                   <HorizontalRule />
                   {sourceCodes
-                  && sourceCodes.map((sourceCode, i) => (
-                    <Accordion key={i}>
+                  && sourceCodes.map((sourceCode, idx) => (
+                    <Accordion key={idx}>
                       <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
                         aria-controls="panel1a-content"
@@ -746,8 +746,8 @@ const ContentManagementSteps: FC<Props> = () => {
             <Box sx={{ mb: 2 }}>
               <Grid container spacing={3} sx={{ mt: 2, mb: 2 }}>
                 {lessons
-                && lessons.map((lesson, i) => (
-                  <Grid key={i} item xs={12} sm={6} md={6} lg={6} xl={6}>
+                && lessons.map((lesson, idx) => (
+                  <Grid key={idx} item xs={12} sm={6} md={6} lg={6} xl={6}>
                     <Card
                       onClick={() => {
                         if (selectedLessonId !== lesson._id) {

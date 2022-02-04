@@ -57,7 +57,7 @@ interface Props {
   executeCommand: (command: string, args: string[]) => string;
 }
 
-export const OperationDetails: FC<Props> = ({
+const OperationDetails: FC<Props> = ({
   op, isLast, showOp, executeCommand,
 }) => {
   const classes = useStyles();
@@ -98,15 +98,15 @@ export const OperationDetails: FC<Props> = ({
         </svg>
       )}
       <List className={isLast ? `${classes.opList} ${classes.last}` : classes.opList}>
-        {op.args.map((eachArg, i) => (
-          <ListItem key={i}>
+        {op.args.map((eachArg, idx) => (
+          <ListItem key={idx}>
             <ListItemIcon>
               <Link colour={textPrimaryColour} />
             </ListItemIcon>
             <TextField
               label={eachArg}
               variant="outlined"
-              onChange={(e) => handleSetArguments(e, i)}
+              onChange={(e) => handleSetArguments(e, idx)}
               sx={{ background: theme.palette.background.paper, height: '100%' }}
             />
           </ListItem>
@@ -128,3 +128,5 @@ export const OperationDetails: FC<Props> = ({
     </Collapse>
   );
 };
+
+export default OperationDetails;

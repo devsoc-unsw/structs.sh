@@ -3,9 +3,8 @@ import Controller from '../controller/AnimationController';
 import LinkedList from './data-structure/GraphicalLinkedList';
 import { defaultSpeed } from './util/constants';
 
-/**
- * Initialises the visualiser and binds event handlers to the controller UI.
- */
+// for documentation read: https://compclub.atlassian.net/wiki/spaces/S/pages/2150892071/Documentation#Visualiser-Docs%3A
+
 const initialiser = (): any => {
   const linkedList: LinkedList = new LinkedList();
   const animationController = new Controller();
@@ -14,9 +13,9 @@ const initialiser = (): any => {
 
   const appendNode = (val: number, updateSlider: (val: number) => void): void => {
     animationController.finish();
-    // Generating the steps of the animation
+
     const producer: AnimationProducer = linkedList.append(val);
-    // Playing the animation
+
     animationController.constructTimeline(producer, updateSlider);
   };
 

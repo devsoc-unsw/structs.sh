@@ -3,6 +3,8 @@ import { Visualiser } from '../typedefs';
 import BST from './data-structure/GraphicalBST';
 import BSTAnimationProducer from './animation-producer/BSTAnimationProducer';
 
+// for documentation read: https://compclub.atlassian.net/wiki/spaces/S/pages/2150892071/Documentation#Visualiser-Docs%3A
+
 export interface BSTVisualiser extends Visualiser {
   insert: (val: number, updateSlider: (val: number) => void) => void;
   rotateLeft: (val: number, updateSlider: (val: number) => void) => void;
