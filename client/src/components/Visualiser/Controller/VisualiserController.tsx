@@ -5,9 +5,7 @@ import ReplayIcon from '@mui/icons-material/Replay';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import SpeedIcon from '@mui/icons-material/Speed';
-import {
-  Box, IconButton, Stack, useTheme,
-} from '@mui/material';
+import { Box, IconButton, Stack, useTheme } from '@mui/material';
 import Slider from '@mui/material/Slider';
 import React, { FC, useEffect, useState } from 'react';
 import ModeSwitch from './GUIMode/ModeSwitch';
@@ -73,11 +71,8 @@ const VisualiserController: FC<Props> = ({
       sx={{ height: '64px', width: '100%', backgroundColor: theme.palette.background.paper }}
     >
       <div className={styles.root}>
-        <IconButton>
-          <SkipPreviousIcon
-            onClick={() => handleStepBackward()}
-            sx={{ fill: theme.palette.text.primary }}
-          />
+        <IconButton onClick={() => handleStepBackward()}>
+          <SkipPreviousIcon sx={{ fill: theme.palette.text.primary }} />
         </IconButton>
         {isPlaying ? (
           <IconButton>
@@ -90,31 +85,26 @@ const VisualiserController: FC<Props> = ({
             />
           </IconButton>
         ) : animationProgress > 0 && animationProgress <= 100 ? (
-          <IconButton>
-            <PlayIcon
-              onClick={() => {
-                handlePlay();
-                setIsPlaying(true);
-              }}
-              sx={{ fill: theme.palette.text.primary }}
-            />
+          <IconButton
+            onClick={() => {
+              handlePlay();
+              setIsPlaying(true);
+            }}
+          >
+            <PlayIcon sx={{ fill: theme.palette.text.primary }} />
           </IconButton>
         ) : (
-          <IconButton>
-            <ReplayIcon
-              sx={{ fill: theme.palette.text.primary }}
-              onClick={() => {
-                handlePlay();
-                setIsPlaying(true);
-              }}
-            />
+          <IconButton
+            onClick={() => {
+              handlePlay();
+              setIsPlaying(true);
+            }}
+          >
+            <ReplayIcon sx={{ fill: theme.palette.text.primary }} />
           </IconButton>
         )}
-        <IconButton>
-          <SkipNextIcon
-            onClick={() => handleStepForward()}
-            sx={{ fill: theme.palette.text.primary }}
-          />
+        <IconButton onClick={() => handleStepForward()}>
+          <SkipNextIcon sx={{ fill: theme.palette.text.primary }} />
         </IconButton>
 
         <Box className={styles.sliderContainer}>

@@ -17,9 +17,7 @@ import { SxProps } from '@mui/system';
 import { ThemeMutationContext } from 'App';
 import logo from 'assets/img/logo.png';
 import { Modal } from 'components/Modal';
-import React, {
-  FC, useContext, useEffect, useState,
-} from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getTopics, Topic } from 'utils/apiRequests';
 import { Notification } from 'utils/Notification';
@@ -50,11 +48,17 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
 
   /* -------------------------- Page Scroll Callbacks ------------------------- */
 
+  const detectUserHasScrolledDown = () => {
+    const yOffsetPx: number = Number(window.pageYOffset);
+    setHasScrolledDown(!(yOffsetPx <= 0));
+  };
+
   useEffect(() => {
-    window.addEventListener('scroll', () => {
-      const yOffsetPx: number = Number(window.pageYOffset);
-      setHasScrolledDown(!(yOffsetPx <= 0));
-    });
+    window.addEventListener('scroll', detectUserHasScrolledDown);
+    return () => {
+      window.removeEventListener('scroll', detectUserHasScrolledDown);
+      return;
+    };
   }, [setHasScrolledDown]);
 
   /* ------------------------------ Data Fetching ----------------------------- */
@@ -156,14 +160,14 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
       onClose={handleLearnMenuClose}
       className={styles.visualiserMenu}
     >
-      {topics
-                && topics.map((topic) => (
-                  <MenuItem className={styles.item}>
-                    <Link to={`/visualiser/${titleToUrl(topic.title)}`}>
-                      <span>{topic.title}</span>
-                    </Link>
-                  </MenuItem>
-                ))}
+      {topics &&
+        topics.map((topic, i) => (
+          <MenuItem key={i} className={styles.item}>
+            <Link to={`/visualiser/${titleToUrl(topic.title)}`}>
+              <span>{topic.title}</span>
+            </Link>
+          </MenuItem>
+        ))}
     </Menu>
   );
 
@@ -235,10 +239,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
             </Link>
           </Box>
 
-          <IconButton
-            className={styles.darkModeButton}
-            onClick={() => context.toggleDarkMode()}
-          >
+          <IconButton className={styles.darkModeButton} onClick={() => context.toggleDarkMode()}>
             {context.isDarkMode ? <MoonIcon /> : <SunIcon />}
           </IconButton>
           <Modal
