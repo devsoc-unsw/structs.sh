@@ -3,9 +3,7 @@ import VisualiserIcon from '@mui/icons-material/AutoFixHigh';
 import EditIcon from '@mui/icons-material/Edit';
 import EducationIcon from '@mui/icons-material/LocalLibrary';
 import GradCapIcon from '@mui/icons-material/School';
-import {
-  Box, Grid, Link, List, ListItem, ListItemIcon, Typography,
-} from '@mui/material';
+import { Box, Grid, Link, List, ListItem, ListItemIcon, Typography } from '@mui/material';
 import cmsScreen from 'assets/demos/cms.png';
 import visualiserDashboardCodeScreen from 'assets/demos/visualiser-dashboard-code.png';
 import visualiserDashboardLessonScreen from 'assets/demos/visualiser-dashboard-lesson.png';
@@ -67,9 +65,7 @@ const Features: React.FC<Props> = () => {
       <HorizontalRule />
       <FeatureItem>
         <Typography color="textPrimary" variant="h6">
-          <VisualiserIcon />
-          {' '}
-          Algorithm Visualisation
+          <VisualiserIcon /> Algorithm Visualisation
         </Typography>
         <Grid container>
           <Grid item xs={12} sm={12} md={8}>
@@ -79,8 +75,8 @@ const Features: React.FC<Props> = () => {
                   <BulletIcon color="primary" />
                 </ListItemIcon>
                 <Typography color="textSecondary">
-                  Visualise algorithms for fundamental operations on classic data
-                  structures such as linked lists, binary search trees and graphs.
+                  Visualise algorithms for fundamental operations on classic data structures such as
+                  linked lists, binary search trees and graphs.
                 </Typography>
               </ListItem>
               <ListItem>
@@ -88,8 +84,7 @@ const Features: React.FC<Props> = () => {
                   <BulletIcon color="primary" />
                 </ListItemIcon>
                 <Typography color="textSecondary">
-                  Granular animation control with play/pause, stepping, slider and
-                  speed control
+                  Granular animation control with play/pause, stepping, slider and speed control
                 </Typography>
               </ListItem>
               <ListItem>
@@ -97,28 +92,19 @@ const Features: React.FC<Props> = () => {
                   <BulletIcon color="primary" />
                 </ListItemIcon>
                 <Typography color="textSecondary">
-                  Control the visualiser through an integrated terminal or through
-                  a simple menu
+                  Control the visualiser through an integrated terminal or through a simple menu
                 </Typography>
               </ListItem>
             </List>
           </Grid>
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            md={4}
-            sx={{ position: 'relative', height: '200px' }}
-          >
+          <Grid item xs={12} sm={12} md={4} sx={{ position: 'relative', height: '200px' }}>
             <LaptopFrame imageUrl={visualiserDashboardCodeScreen} />
           </Grid>
         </Grid>
       </FeatureItem>
       <FeatureItem fromDirection="left">
         <Typography color="textPrimary" variant="h6" sx={{ textAlign: 'left' }}>
-          <EducationIcon />
-          {' '}
-          Educational Resources
+          <EducationIcon /> Educational Resources
         </Typography>
 
         <Grid container>
@@ -129,9 +115,8 @@ const Features: React.FC<Props> = () => {
                   <BulletIcon color="primary" />
                 </ListItemIcon>
                 <Typography color="textSecondary">
-                  Access resources about computer science and software
-                  engineering, written and peer-reviewed by the UNSW CSE teaching
-                  community
+                  Access resources about computer science and software engineering, written and
+                  peer-reviewed by the UNSW CSE teaching community
                 </Typography>
               </ListItem>
               <ListItem>
@@ -147,28 +132,20 @@ const Features: React.FC<Props> = () => {
                   <BulletIcon color="primary" />
                 </ListItemIcon>
                 <Typography color="textSecondary">
-                  Bridge the gap between a high-level visual understanding of an
-                  algorithm and the implementation itself
+                  Bridge the gap between a high-level visual understanding of an algorithm and the
+                  implementation itself
                 </Typography>
               </ListItem>
             </List>
           </Grid>
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            md={4}
-            sx={{ position: 'relative', height: '200px' }}
-          >
+          <Grid item xs={12} sm={12} md={4} sx={{ position: 'relative', height: '200px' }}>
             <LaptopFrame imageUrl={visualiserDashboardLessonScreen} />
           </Grid>
         </Grid>
       </FeatureItem>
       <FeatureItem fromDirection="left">
         <Typography color="textPrimary" variant="h6" sx={{ textAlign: 'left' }}>
-          <EditIcon />
-          {' '}
-          Content Management
+          <EditIcon /> Content Management
         </Typography>
         <Grid container>
           <Grid item xs={12} sm={12} md={8}>
@@ -178,8 +155,7 @@ const Features: React.FC<Props> = () => {
                   <BulletIcon color="primary" />
                 </ListItemIcon>
                 <Typography color="textSecondary">
-                  Manage and create new topics, source code snippets, lessons and
-                  quizzes
+                  Manage and create new topics, source code snippets, lessons and quizzes
                 </Typography>
               </ListItem>
             </List>
@@ -194,22 +170,14 @@ const Features: React.FC<Props> = () => {
               </ListItem>
             </List>
           </Grid>
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            md={4}
-            sx={{ position: 'relative', height: '200px' }}
-          >
+          <Grid item xs={12} sm={12} md={4} sx={{ position: 'relative', height: '200px' }}>
             <LaptopFrame imageUrl={cmsScreen} />
           </Grid>
         </Grid>
       </FeatureItem>
       <FeatureItem fromDirection="right">
         <Typography color="textPrimary" variant="h6">
-          <GradCapIcon />
-          {' '}
-          Open source
+          <GradCapIcon /> Open source
         </Typography>
         <Typography color="textSecondary" variant="body1">
           Developed and maintained by passionate CS and engineering students at UNSW.
@@ -234,11 +202,7 @@ const Features: React.FC<Props> = () => {
               <BulletIcon color="primary" />
             </ListItemIcon>
             <Typography color="textSecondary">
-              The Structs.sh
-              {' '}
-              <RouterLink to="/about">
-                <Link color="textSecondary">team</Link>
-              </RouterLink>
+              The Structs.sh <RouterLink to="/about">team</RouterLink>
             </Typography>
           </ListItem>
         </List>

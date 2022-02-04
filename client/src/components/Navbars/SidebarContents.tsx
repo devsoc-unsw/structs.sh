@@ -73,11 +73,7 @@ function SidebarContents({ setShowSidebar }) {
             <ListItemText>Home</ListItemText>
           </ListItemButton>
         </RouterLink>
-        <RouterLink
-          to="/about"
-          onClick={() => setShowSidebar(false)}
-          className={styles.link}
-        >
+        <RouterLink to="/about" onClick={() => setShowSidebar(false)} className={styles.link}>
           <ListItemButton>
             <ListItemIcon>
               <AboutIcon sx={{ fill: theme.palette.text.primary }} />
@@ -85,11 +81,7 @@ function SidebarContents({ setShowSidebar }) {
             <ListItemText>About Structs.sh</ListItemText>
           </ListItemButton>
         </RouterLink>
-        <RouterLink
-          to="/feedback"
-          onClick={() => setShowSidebar(false)}
-          className={styles.link}
-        >
+        <RouterLink to="/feedback" onClick={() => setShowSidebar(false)} className={styles.link}>
           <ListItemButton>
             <ListItemIcon>
               <FeedbackIcon sx={{ fill: theme.palette.text.primary }} />
@@ -134,21 +126,23 @@ function SidebarContents({ setShowSidebar }) {
       </Typography>
       <List>
         {topics && topics.length > 0 ? (
-          topics.map((topic, idx) => (
-            <RouterLink
-              to={`/visualiser/${titleToUrl(topic.title)}`}
-              style={{ color: 'inherit', textDecoration: 'none' }}
-            >
-              <ListItem key={idx} button>
-                <ListItemAvatar>
-                  <TopicIcon />
-                </ListItemAvatar>
-                <ListItemText
-                  primary={topic.title}
-                  secondary={<TagList tags={topic.courses} />}
-                />
-              </ListItem>
-            </RouterLink>
+          topics.map((topic, i) => (
+            <Box key={i}>
+              <RouterLink
+                to={`/visualiser/${titleToUrl(topic.title)}`}
+                style={{ color: 'inherit', textDecoration: 'none' }}
+              >
+                <ListItem key={i} button>
+                  <ListItemAvatar>
+                    <TopicIcon />
+                  </ListItemAvatar>
+                  <ListItemText primary={topic.title} />
+                </ListItem>
+                <Box sx={{ paddingLeft: 3 }}>
+                  <TagList tags={topic.courses} />
+                </Box>
+              </RouterLink>
+            </Box>
           ))
         ) : (
           <LineLoader />
@@ -175,11 +169,7 @@ function SidebarContents({ setShowSidebar }) {
         Content Management
       </Typography>
       <List>
-        <RouterLink
-          to="/content"
-          onClick={() => setShowSidebar(false)}
-          className={styles.link}
-        >
+        <RouterLink to="/content" onClick={() => setShowSidebar(false)} className={styles.link}>
           <ListItemButton>
             <ListItemIcon>
               <EditIcon sx={{ fill: theme.palette.text.primary }} />
