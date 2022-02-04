@@ -20,7 +20,7 @@ const containerVariants = {
   },
 };
 
-function Page404() {
+const Page404 = () => {
   const location = useLocation();
   const path: string = String(location.pathname);
 
@@ -94,6 +94,6 @@ function Page404() {
       </Box>
     </motion.div>
   );
-}
+};
 
 export default Page404;

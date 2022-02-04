@@ -49,10 +49,7 @@ const Footer: React.FC<Props> = () => {
                 </Link>
               </Typography>
               <Typography color="textSecondary">
-                <a
-                  className={styles.link}
-                  href="https://github.com/csesoc/Structs.sh"
-                >
+                <a className={styles.link} href="https://github.com/csesoc/Structs.sh">
                   GitHub Repository
                 </a>
               </Typography>
@@ -67,12 +64,9 @@ const Footer: React.FC<Props> = () => {
                 </Link>
               </Typography>
               <Typography color="textSecondary">
-                <address>
-                  <a href="mailto:projects@csesoc.org.au" className={styles.link}>
-                    Email Us
-                  </a>
-                  {' '}
-                </address>
+                <a href="mailto:projects@csesoc.org.au" className={styles.link}>
+                  Email Us
+                </a>{' '}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={4} className={styles.columnContainer}>
@@ -80,10 +74,7 @@ const Footer: React.FC<Props> = () => {
                 Social
               </Typography>
               <Typography color="textSecondary">
-                <a
-                  className={styles.link}
-                  href="https://media.csesoc.org.au/tag/csesoc/"
-                >
+                <a className={styles.link} href="https://media.csesoc.org.au/tag/csesoc/">
                   CSESoc Website
                 </a>
               </Typography>

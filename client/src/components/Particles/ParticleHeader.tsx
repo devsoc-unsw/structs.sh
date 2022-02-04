@@ -1,7 +1,6 @@
 import { Theme } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import React, { useEffect } from 'react';
-import Particles from 'react-tsparticles';
 import './ParticleHeader.scss';
 import { darkParticleTheme } from './ParticleThemes';
 
@@ -14,13 +13,13 @@ const ParticleHeader: React.FC<Props> = () => {
 
   // Note: this is a hacky way of forcefully setting the background gradient
   useEffect(() => {
-    const body: any = document.querySelector('body');
+    let body: any = document.querySelector('body');
     if (!body) return;
 
     body.style.background = particleTheme.backgroundCss;
 
     return () => {
-      const body = document.querySelector('body');
+      body = document.querySelector('body');
       body.style.background = theme.palette.background.default;
     };
   });

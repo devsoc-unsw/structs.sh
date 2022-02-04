@@ -132,8 +132,8 @@ const ContentManagementSteps: FC<Props> = () => {
 
   const fetchTopics = useCallback(() => {
     getTopics()
-      .then((topics: Topic[]) => {
-        setTopics(topics);
+      .then((fetchedTopics: Topic[]) => {
+        setTopics(fetchedTopics);
       })
       .catch((errMessage) => {
         Notification.error(`Failed to load topics. Reason: ${errMessage}`);
@@ -143,8 +143,8 @@ const ContentManagementSteps: FC<Props> = () => {
   const fetchLessons = useCallback(
     (topicId: string) => {
       getLessons(topicId)
-        .then((lessons: Lesson[]) => {
-          setLessons(lessons);
+        .then((fetchedLessons: Lesson[]) => {
+          setLessons(fetchedLessons);
         })
         .catch((errMessage) => {
           Notification.error(`Failed to load lessons. Reason: ${errMessage}`);
@@ -156,12 +156,12 @@ const ContentManagementSteps: FC<Props> = () => {
   const fetchQuizzes = useCallback(
     (lessonId: string) => {
       getQuizzes(lessonId)
-        .then((quizzes: Quiz[]) => {
-          if (!quizzes) throw Error('Invalid quizzes were retrieved');
-          setQuizzes(quizzes);
-          if (quizzes.length > 0) {
+        .then((fetchedQuizzes: Quiz[]) => {
+          if (!fetchedQuizzes) throw Error('Invalid quizzes were retrieved');
+          setQuizzes(fetchedQuizzes);
+          if (fetchedQuizzes.length > 0) {
             setSelectedQuizIndex(0);
-            setQuizFormValues(quizzes[0]);
+            setQuizFormValues(fetchedQuizzes[0]);
           }
         })
         .catch((errMessage) => {
@@ -904,115 +904,115 @@ const ContentManagementSteps: FC<Props> = () => {
                     }))}
                   />
                   {quizFormValues
-                                            && (quizFormValues.type === 'mc' ? (
-                                              <MCQuizForm
-                                                choices={
-                                                            (quizFormValues as MultipleChoiceQuizForm)
-                                                              .choices
-                                                        }
-                                                handleChangeChoices={(newChoices) => {
-                                                  setQuizFormValues((oldForm) => ({
-                                                    ...oldForm,
-                                                    choices: newChoices,
-                                                  }));
-                                                }}
-                                                answers={
-                                                            (quizFormValues as MultipleChoiceQuizForm)
-                                                              .answers
-                                                        }
-                                                handleChangeAnswers={(answers) => setQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  answers,
-                                                }))}
-                                                maxSelections={
-                                                            (quizFormValues as MultipleChoiceQuizForm)
-                                                              .maxSelections
-                                                        }
-                                                handleChangeMaxSelections={(
-                                                  maxSelections,
-                                                ) => setQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  maxSelections,
-                                                }))}
-                                                correctMessage={
-                                                            (quizFormValues as MultipleChoiceQuizForm)
-                                                              .correctMessage
-                                                        }
-                                                handleChangeCorrectMessage={(
-                                                  correctMessage,
-                                                ) => setQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  correctMessage,
-                                                }))}
-                                                incorrectMessage={
-                                                            (quizFormValues as MultipleChoiceQuizForm)
-                                                              .incorrectMessage
-                                                        }
-                                                handleChangeIncorrectMessage={(
-                                                  incorrectMessage,
-                                                ) => setQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  incorrectMessage,
-                                                }))}
-                                                explanation={
-                                                            (quizFormValues as MultipleChoiceQuizForm)
-                                                              .explanation
-                                                        }
-                                                handleChangeExplanation={(explanation) => setQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  explanation,
-                                                }))}
-                                              />
-                                            ) : quizFormValues.type === 'tf' ? (
-                                              <TFQuizForm
-                                                isTrue={
-                                                        (quizFormValues as TrueFalseQuizForm).isTrue
-                                                    }
-                                                handleChangeIsTrue={(isTrue) => setQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  isTrue,
-                                                }))}
-                                                correctMessage={
-                                                        (quizFormValues as TrueFalseQuizForm)
-                                                          .correctMessage
-                                                    }
-                                                handleChangeCorrectMessage={(correctMessage) => setQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  correctMessage,
-                                                }))}
-                                                incorrectMessage={
-                                                        (quizFormValues as TrueFalseQuizForm)
-                                                          .incorrectMessage
-                                                    }
-                                                handleChangeIncorrectMessage={(
-                                                  incorrectMessage,
-                                                ) => setQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  incorrectMessage,
-                                                }))}
-                                                explanation={
-                                                        (quizFormValues as TrueFalseQuizForm)
-                                                          .explanation
-                                                    }
-                                                handleChangeExplanation={(explanation) => setQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  explanation,
-                                                }))}
-                                              />
-                                            ) : quizFormValues.type === 'qa' ? (
-                                              <QAQuizForm
-                                                explanation={
-                                                        (quizFormValues as QuestionAnswerQuizForm)
-                                                          .explanation
-                                                    }
-                                                handleChangeExplanation={(explanation) => setQuizFormValues((oldForm) => ({
-                                                  ...oldForm,
-                                                  explanation,
-                                                }))}
-                                              />
-                                            ) : (
-                                              <>Invalid question type</>
-                                            ))}
+                    && (quizFormValues.type === 'mc' ? (
+                      <MCQuizForm
+                        choices={
+                                    (quizFormValues as MultipleChoiceQuizForm)
+                                      .choices
+                                }
+                        handleChangeChoices={(newChoices) => {
+                          setQuizFormValues((oldForm) => ({
+                            ...oldForm,
+                            choices: newChoices,
+                          }));
+                        }}
+                        answers={
+                                    (quizFormValues as MultipleChoiceQuizForm)
+                                      .answers
+                                }
+                        handleChangeAnswers={(answers) => setQuizFormValues((oldForm) => ({
+                          ...oldForm,
+                          answers,
+                        }))}
+                        maxSelections={
+                                    (quizFormValues as MultipleChoiceQuizForm)
+                                      .maxSelections
+                                }
+                        handleChangeMaxSelections={(
+                          maxSelections,
+                        ) => setQuizFormValues((oldForm) => ({
+                          ...oldForm,
+                          maxSelections,
+                        }))}
+                        correctMessage={
+                                    (quizFormValues as MultipleChoiceQuizForm)
+                                      .correctMessage
+                                }
+                        handleChangeCorrectMessage={(
+                          correctMessage,
+                        ) => setQuizFormValues((oldForm) => ({
+                          ...oldForm,
+                          correctMessage,
+                        }))}
+                        incorrectMessage={
+                                    (quizFormValues as MultipleChoiceQuizForm)
+                                      .incorrectMessage
+                                }
+                        handleChangeIncorrectMessage={(
+                          incorrectMessage,
+                        ) => setQuizFormValues((oldForm) => ({
+                          ...oldForm,
+                          incorrectMessage,
+                        }))}
+                        explanation={
+                                    (quizFormValues as MultipleChoiceQuizForm)
+                                      .explanation
+                                }
+                        handleChangeExplanation={(explanation) => setQuizFormValues((oldForm) => ({
+                          ...oldForm,
+                          explanation,
+                        }))}
+                      />
+                    ) : quizFormValues.type === 'tf' ? (
+                      <TFQuizForm
+                        isTrue={
+                                (quizFormValues as TrueFalseQuizForm).isTrue
+                            }
+                        handleChangeIsTrue={(isTrue) => setQuizFormValues((oldForm) => ({
+                          ...oldForm,
+                          isTrue,
+                        }))}
+                        correctMessage={
+                                (quizFormValues as TrueFalseQuizForm)
+                                  .correctMessage
+                            }
+                        handleChangeCorrectMessage={(correctMessage) => setQuizFormValues((oldForm) => ({
+                          ...oldForm,
+                          correctMessage,
+                        }))}
+                        incorrectMessage={
+                                (quizFormValues as TrueFalseQuizForm)
+                                  .incorrectMessage
+                            }
+                        handleChangeIncorrectMessage={(
+                          incorrectMessage,
+                        ) => setQuizFormValues((oldForm) => ({
+                          ...oldForm,
+                          incorrectMessage,
+                        }))}
+                        explanation={
+                                (quizFormValues as TrueFalseQuizForm)
+                                  .explanation
+                            }
+                        handleChangeExplanation={(explanation) => setQuizFormValues((oldForm) => ({
+                          ...oldForm,
+                          explanation,
+                        }))}
+                      />
+                    ) : quizFormValues.type === 'qa' ? (
+                      <QAQuizForm
+                        explanation={
+                                (quizFormValues as QuestionAnswerQuizForm)
+                                  .explanation
+                            }
+                        handleChangeExplanation={(explanation) => setQuizFormValues((oldForm) => ({
+                          ...oldForm,
+                          explanation,
+                        }))}
+                      />
+                    ) : (
+                      <>Invalid question type</>
+                    ))}
                   <Button
                     variant="contained"
                     color="secondary"

@@ -23,13 +23,15 @@ interface Props {
 }
 
 const TrueFalse: FC<Props> = ({
-  quiz, questionNumber, disabled, showAnswers,
+  quiz, questionNumber = 0, disabled = false, showAnswers = false,
 }) => {
   const {
     isTrue, correctMessage, incorrectMessage, explanation,
   } = quiz;
   const theme: Theme = useTheme();
-  const [response, setResponse] = useState<0 | 1 | 2>(0); // 3-state boolean where 0 is indeterminate, 1 is true, 2 is false
+  const [response, setResponse] = useState<0 | 1 | 2>(0); // 3-state boolean where 0 is indeterminate,
+  // 1 is true,
+  // 2 is false
   const [submitted, setSubmitted] = useState(false);
   const [answeredCorrect, setAnsweredCorrect] = useState(false);
 

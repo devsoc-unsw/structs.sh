@@ -11,9 +11,13 @@ import BSTAnimationProducer from '../binary-search-tree-visualiser/animation-pro
 // not just for the linked list
 class AnimationController {
   private currentTimeline: Timeline = new Timeline().persist(true);
+
   private timelineDuration: number = 0;
+
   private timestamps: number[] = [];
+
   private timestampsIndex: number = 0;
+
   private timelineSlider = document.querySelector('#timelineSlider') as HTMLInputElement;
 
   constructor() {
@@ -28,7 +32,7 @@ class AnimationController {
 
   public constructTimeline(
     animationProducer: BSTAnimationProducer,
-    updateSlider: (val: number) => void
+    updateSlider: (val: number) => void,
   ) {
     this.resetTimeline();
 

@@ -1,7 +1,9 @@
 import { Theme, ThemeProvider } from '@mui/material';
 import { LIGHT_MODE_ON } from 'constants/cookies';
 import { AnimatePresence } from 'framer-motion';
-import React, { createContext, useCallback, useState } from 'react';
+import React, {
+  createContext, useCallback, useState, useMemo,
+} from 'react';
 import { useCookies } from 'react-cookie';
 import { Route, Routes } from 'react-router-dom';
 import { darkTheme, lightTheme } from 'structsThemes';
@@ -14,11 +16,11 @@ import VisualiserDashboard from 'views/VisualiserDashboard';
 import './App.scss';
 
 export const ThemeMutationContext = createContext({
-  toggleDarkMode: () => console.log('Dark mode toggling is not ready yet'),
+  toggleDarkMode: () => console.error('Dark mode toggling is not ready yet'),
   isDarkMode: false,
 });
 
-function App() {
+const App = () => {
   const [cookies, setCookie] = useCookies([LIGHT_MODE_ON]);
   const [currTheme, setCurrTheme] = useState<Theme>(
     cookies[LIGHT_MODE_ON] === 'true' ? lightTheme : darkTheme,
@@ -34,14 +36,16 @@ function App() {
     }
   }, [currTheme, setCookie]);
 
+  const darkModeValues = useMemo(() => ({
+    toggleDarkMode,
+    isDarkMode: cookies[LIGHT_MODE_ON] !== 'true',
+  }), [toggleDarkMode, cookies]);
+
   return (
     <AnimatePresence>
       <ThemeProvider theme={currTheme}>
         <ThemeMutationContext.Provider
-          value={{
-            toggleDarkMode,
-            isDarkMode: cookies[LIGHT_MODE_ON] !== 'true',
-          }}
+          value={darkModeValues}
         >
           <Routes>
             {/* Homepage */}
@@ -66,6 +70,6 @@ function App() {
       </ThemeProvider>
     </AnimatePresence>
   );
-}
+};
 
 export default App;

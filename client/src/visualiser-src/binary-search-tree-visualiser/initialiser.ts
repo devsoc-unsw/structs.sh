@@ -79,15 +79,15 @@ const initialise = (): any => {
   };
 
   return {
-    insert: insert,
-    rotateLeft: rotateLeft,
-    rotateRight: rotateRight,
-    play: play,
-    pause: pause,
-    setTimeline: setTimeline,
-    setSpeed: setSpeed,
-    stepBack: stepBack,
-    stepForward: stepForward,
+    insert,
+    rotateLeft,
+    rotateRight,
+    play,
+    pause,
+    setTimeline,
+    setSpeed,
+    stepBack,
+    stepForward,
   };
 };
 

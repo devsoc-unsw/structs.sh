@@ -3,13 +3,13 @@ import { HomepageLayout } from 'layout';
 import React, { FC } from 'react';
 import Container from '@mui/material/Container';
 import { Gallery } from 'components/Gallery';
-import { team2021 } from 'assets/about/team-2021';
+import team2021 from 'assets/about/team-2021';
 import styles from './AboutUs.module.scss';
 
 interface Props {}
 
 const About: FC<Props> = () => (
-  <HomepageLayout topNavPosition="fixed" enableOnScrollEffect={false}>
+  <HomepageLayout enableOnScrollEffect={false}>
     <Box sx={{ marginTop: '80px', textAlign: 'center', height: 'calc(100vh - 80px)' }}>
       <Container maxWidth="md" className={styles.container}>
         <Typography color="textPrimary" variant="h3" className={styles.text}>

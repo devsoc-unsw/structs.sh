@@ -22,7 +22,7 @@
 /* -------------------------------------------------------------------------- */
 export const getVisualiserTerminalCommands = (
   topicTitle: string,
-  processCommand: (command: string, args: string[]) => string
+  processCommand: (command: string, args: string[]) => string,
 ) => {
   let terminalCommands = {};
   switch (topicTitle) {
@@ -59,28 +59,20 @@ const getLinkedListTerminalCommands = (processCommand) => ({
 });
 
 /* ------------------------------ BST Commands ------------------------------ */
-const getBstTerminalCommands = (processCommand) => {
-  return {
-    insert: {
-      usage: 'insert <number>',
-      fn: (arg: string) => {
-        return processCommand('insert', [arg]);
-      },
-    },
-    rotateLeft: {
-      usage: 'rotateLeft <number>',
-      fn: (arg: string) => {
-        return processCommand('rotateLeft', [arg]);
-      },
-    },
-    rotateRight: {
-      usage: 'rotateRight <number>',
-      fn: (arg: string) => {
-        return processCommand('rotateRight', [arg]);
-      },
-    },
-  };
-};
+const getBstTerminalCommands = (processCommand) => ({
+  insert: {
+    usage: 'insert <number>',
+    fn: (arg: string) => processCommand('insert', [arg]),
+  },
+  rotateLeft: {
+    usage: 'rotateLeft <number>',
+    fn: (arg: string) => processCommand('rotateLeft', [arg]),
+  },
+  rotateRight: {
+    usage: 'rotateRight <number>',
+    fn: (arg: string) => processCommand('rotateRight', [arg]),
+  },
+});
 
 /* -------------------------------------------------------------------------- */
 /*                        Terminal Manual Documentation                       */

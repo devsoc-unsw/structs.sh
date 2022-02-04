@@ -1,9 +1,10 @@
-import { Node } from '../util/typedefs';
 import { Runner, Container } from '@svgdotjs/svg.js';
+import { Node } from '../util/typedefs';
 import { canvasPadding } from '../util/settings';
 
 export default class BSTAnimationProducer {
   public animationSequence: Runner[][];
+
   public draw: Container;
 
   public getAnimationSequence(): Runner[][] {
@@ -73,14 +74,14 @@ export default class BSTAnimationProducer {
       node.leftLineTarget.animate(400).plot([
         [node.x, node.y],
         [node.x - lineDiffX, node.y + lineDiffY],
-      ])
+      ]),
     );
 
     animation.push(
       node.rightLineTarget.animate(400).plot([
         [node.x, node.y],
         [node.x + lineDiffX, node.y + lineDiffY],
-      ])
+      ]),
     );
   }
 

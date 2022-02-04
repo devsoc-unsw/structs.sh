@@ -1,8 +1,5 @@
 import { LineLoader } from 'components/Loader';
-import { Pane } from 'components/Panes';
 import { Visualiser } from 'components/Visualiser';
-import VisualiserCanvas from 'components/Visualiser/VisualiserCanvas';
-import VisualiserManager from 'components/Visualiser/VisualiserManager';
 import { VisualiserDashboardLayout } from 'layout';
 import React, { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -25,10 +22,8 @@ const VisualiserDashboard: FC<Props> = () => {
   useEffect(() => {
     const topicTitleInUrl = params.topic;
     getTopic(urlToTitle(topicTitleInUrl))
-      .then((topic) => setTopic(topic))
-      .catch(() =>
-        Notification.error(`Couldn't find anything for topic: '${urlToTitle(topicTitleInUrl)}'`)
-      );
+      .then((fetchedTopic) => setTopic(fetchedTopic))
+      .catch(() => Notification.error(`Couldn't find anything for topic: '${urlToTitle(topicTitleInUrl)}'`));
   }, [params]);
 
   // Note: hacky way of removing scrollability outside of the panes

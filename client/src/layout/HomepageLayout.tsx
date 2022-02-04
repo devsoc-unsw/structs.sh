@@ -20,14 +20,12 @@ const containerVariants = {
 
 interface Props {
   children?: React.ReactNode;
-  topNavPosition?: 'fixed' | 'static';
   enableOnScrollEffect?: boolean;
   disableBackground?: boolean;
 }
 
 const Layout: FC<Props> = ({
-  children,
-  topNavPosition = 'fixed',
+  children = null,
   enableOnScrollEffect = true,
   disableBackground = false,
 }) => {
@@ -43,7 +41,7 @@ const Layout: FC<Props> = ({
 
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="exit">
-      <TopNavbar position="fixed" enableOnScrollEffect />
+      <TopNavbar position="fixed" enableOnScrollEffect={enableOnScrollEffect} />
       <Box
         sx={{
           backgroundColor: !disableBackground && theme.palette.background.default,

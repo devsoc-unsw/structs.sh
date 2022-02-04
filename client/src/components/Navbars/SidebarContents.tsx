@@ -1,9 +1,11 @@
+import CodeIcon from '@mui/icons-material/Code';
 import HomeIcon from '@mui/icons-material/Cottage';
 import EditIcon from '@mui/icons-material/Edit';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import FeedbackIcon from '@mui/icons-material/Feedback';
 import FilterIcon from '@mui/icons-material/FilterList';
+import GitHubIcon from '@mui/icons-material/GitHub';
 import AboutIcon from '@mui/icons-material/Info';
 import TopicIcon from '@mui/icons-material/School';
 import {
@@ -24,18 +26,15 @@ import structsLogo from 'assets/img/logo.png';
 import { HorizontalRule } from 'components/HorizontalRule';
 import { LineLoader } from 'components/Loader';
 import { TagList } from 'components/Tags/TagList';
-import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { getTopics, Topic } from 'utils/apiRequests';
 import { Notification } from 'utils/Notification';
 import { titleToUrl } from 'utils/url';
-import CodeIcon from '@mui/icons-material/Code';
-import GitHubIcon from '@mui/icons-material/GitHub';
 import Filter from './Filter';
 import styles from './Sidebar.module.scss';
 
-function SidebarContents({ setShowSidebar }) {
+const SidebarContents = ({ setShowSidebar }) => {
   const [topics, setTopics] = useState<Topic[]>([]);
   const [showFilter, setShowFilter] = useState(false);
 
@@ -153,7 +152,7 @@ function SidebarContents({ setShowSidebar }) {
         ) : (
           <LineLoader />
         )}
-        <ListItem onClick={(e) => setShowFilter(!showFilter)} button>
+        <ListItem onClick={() => setShowFilter(!showFilter)} button>
           <ListItemAvatar>
             <FilterIcon />
           </ListItemAvatar>
@@ -190,10 +189,6 @@ function SidebarContents({ setShowSidebar }) {
       </List>
     </Box>
   );
-}
-
-SidebarContents.propTypes = {
-  setShowSidebar: PropTypes.func,
 };
 
 export default SidebarContents;

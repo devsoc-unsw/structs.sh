@@ -18,6 +18,21 @@
         }
     },
     "rules": {
-        "no-underscore-dangle": [2, { "allowAfterThis": true }]
+        "no-underscore-dangle": "off",
+        "react/function-component-definition": [
+            2,
+            {
+              "namedComponents": "arrow-function",
+              "unnamedComponents": "arrow-function"
+            }
+        ],
+        "react/no-unescaped-entities": "off",
+        "import/prefer-default-export": "off",
+        "no-plusplus": "off",
+        "@typescript-eslint/no-use-before-define": "off",
+        "react/no-array-index-key": "off",
+        "react/require-default-props": "off",
+        "no-case-declarations": "off",
+        "no-nested-ternary": "off"
     }
 }

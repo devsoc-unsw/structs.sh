@@ -1,7 +1,7 @@
 import anime, { AnimeTimelineInstance } from 'animejs';
+import { Timeline, Runner } from '@svgdotjs/svg.js';
 import { AnimationInstruction } from '../linked-list-visualiser/util/typedefs';
 import { fastestDuration } from '../linked-list-visualiser/util/constants';
-import { Timeline, Runner } from '@svgdotjs/svg.js';
 // controls todo:
 // [x] play/pause
 // [ ] step to the next or previous timestamp in the current timeline
@@ -12,8 +12,11 @@ import { Timeline, Runner } from '@svgdotjs/svg.js';
 // not just for the linked list
 class AnimationController {
   private currentTimeline: Timeline = new Timeline();
+
   private timelineHistory: AnimeTimelineInstance[] = [];
+
   private timelineIndex: number = 0;
+
   private _isPaused: boolean = false;
 
   public getCurrentTimeline(): AnimeTimelineInstance {
@@ -35,7 +38,7 @@ class AnimationController {
   }
 
   public seekPercent(position: number): void {
-    //this.currentTimeline.seek(this.currentTimeline.duration * (position / 100));
+    // this.currentTimeline.seek(this.currentTimeline.duration * (position / 100));
   }
 
   // Finish playing the timeline

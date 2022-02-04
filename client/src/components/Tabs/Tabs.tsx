@@ -1,8 +1,8 @@
+import React, { FC, useState } from 'react';
 import {
   Box, Tab, Tabs, Theme, Typography,
 } from '@mui/material';
 import { useTheme } from '@mui/styles';
-import { FC, useState } from 'react';
 import { Topic } from 'utils/apiRequests';
 import TabRenderer from './TabRenderer';
 import './Tabs.scss';
@@ -13,7 +13,7 @@ interface TabPanelProps {
   value: number;
 }
 
-function TabPanel(props: TabPanelProps) {
+const TabPanel = (props: TabPanelProps) => {
   const {
     children, value, index, ...other
   } = props;
@@ -33,7 +33,7 @@ function TabPanel(props: TabPanelProps) {
       )}
     </div>
   );
-}
+};
 
 interface Props {
   topic: Topic;
@@ -66,7 +66,7 @@ const ContentTabs: FC<Props> = ({ topic, tabs = ['Lesson', 'Code', 'Videos'] }) 
           indicatorColor="secondary"
           variant="fullWidth"
         >
-          {tabs.map((label, i) => (
+          {tabs.map((label) => (
             <Tab label={label} />
           ))}
         </Tabs>

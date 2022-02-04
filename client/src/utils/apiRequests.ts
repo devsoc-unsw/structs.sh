@@ -1,8 +1,15 @@
 import axios from 'axios';
 import { ApiConstants } from 'constants/api';
 
-// TODO: it could be a good idea to set up a yarn workspace, create a `common` directory and put all these TypeScript definitions for data models in that directory so they can be shared between client and server (since both use TypeScript)
-// TODO: this would also also make input validation easier -- you write it once for both client and server rather than doing both independently.
+/*
+TODO: it could be a good idea to set up a yarn workspace, create a `common`
+directory and put all these TypeScript definitions for data models in that
+directory so they can be shared between client and server (since both use
+TypeScript)
+
+TODO: this would also also make input validation easier -- you write it once
+for both client and server rather than doing both independently.
+*/
 
 export interface User {
   username: string;
@@ -102,7 +109,7 @@ export const getLessons: GetLessons = async (topicId: string) => {
     return lessons;
   } catch (err) {
     const errMessage: string = err.response.data.statusText;
-    throw errMessage;
+    throw new Error(errMessage);
   }
 };
 
@@ -124,7 +131,7 @@ export const getQuizzes: GetQuizzes = async (lessonId: string) => {
     return quizzes;
   } catch (err) {
     const errMessage: string = err.response.data.statusText;
-    throw errMessage;
+    throw new Error(errMessage);
   }
 };
 
@@ -135,7 +142,7 @@ export const getTopics: GetTopics = async () => {
     return topics;
   } catch (err) {
     const errMessage: string = err.response.data.statusText;
-    throw errMessage;
+    throw new Error(errMessage);
   }
 };
 
@@ -146,7 +153,7 @@ export const getTopic: GetTopic = async (title: string) => {
     return topic;
   } catch (err) {
     const errMessage: string = err.response.data.statusText;
-    throw errMessage;
+    throw new Error(errMessage);
   }
 };
 
@@ -157,7 +164,7 @@ export const getSourceCodes: GetSourceCode = async (topicId: string) => {
     return sourceCode;
   } catch (err) {
     const errMessage: string = err.response.data.statusText;
-    throw errMessage;
+    throw new Error(errMessage);
   }
 };
 
@@ -171,7 +178,7 @@ export const createLesson: CreateLesson = async (lesson: LessonForm) => {
     return response.data.lesson as Lesson;
   } catch (err) {
     const errMessage: string = err.response.data.statusText;
-    throw errMessage;
+    throw new Error(errMessage);
   }
 };
 
@@ -190,7 +197,7 @@ export const createQuiz: CreateQuiz = async (lessonId: string, quiz: QuizForm) =
     return response.data.quiz as Quiz;
   } catch (err) {
     const errMessage: string = err.response.data.statusText;
-    throw errMessage;
+    throw new Error(errMessage);
   }
 };
 
@@ -202,7 +209,7 @@ export const createTopic: CreateTopic = async (topic: TopicForm) => {
     return response.data.topic as Topic;
   } catch (err) {
     const errMessage: string = err.response.data.statusText;
-    throw errMessage;
+    throw new Error(errMessage);
   }
 };
 
@@ -214,7 +221,7 @@ export const createSourceCode: CreateSourceCode = async (sourceCode: SourceCodeF
     return response.data.sourceCode as SourceCode;
   } catch (err) {
     const errMessage: string = err.response.data.statusText;
-    throw errMessage;
+    throw new Error(errMessage);
   }
 };
 
@@ -231,7 +238,7 @@ export const editLesson: EditLesson = async (lessonId: string, newLesson: Lesson
     return response.data.lesson as Lesson;
   } catch (err) {
     const errMessage: string = err.response.data.statusText;
-    throw errMessage;
+    throw new Error(errMessage);
   }
 };
 
@@ -250,7 +257,7 @@ export const editQuiz: EditQuiz = async (quizId: string, newQuiz: QuizForm) => {
     return response.data.quiz as Quiz;
   } catch (err) {
     const errMessage: string = err.response.data.statusText;
-    throw errMessage;
+    throw new Error(errMessage);
   }
 };
 
@@ -265,7 +272,7 @@ export const editTopic: EditTopic = async (topicId: string, newTopic: TopicForm)
     return response.data.topic as Topic;
   } catch (err) {
     const errMessage: string = err.response.data.statusText;
-    throw errMessage;
+    throw new Error(errMessage);
   }
 };
 
@@ -284,7 +291,7 @@ export const editSourceCode: EditSourceCode = async (
     return response.data.sourceCode as SourceCode;
   } catch (err) {
     const errMessage: string = err.response.data.statusText;
-    throw errMessage;
+    throw new Error(errMessage);
   }
 };
 

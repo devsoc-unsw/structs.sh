@@ -4,7 +4,8 @@ import Tabs from './Tabs';
 
 describe('Tabs tests', () => {
   it('should display buttons for the given tabs', () => {
-    // `render` renders the component into document.body and returns an object with lots of query functions
+    // `render` renders the component into document.body and returns an object
+    // with lots of query functions
     const { getByRole } = render(<Tabs tabs={['First tab', 'Second tab']} />);
 
     expect(getByRole('button', { name: /First tab/i })).toBeDefined();
