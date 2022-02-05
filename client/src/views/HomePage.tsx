@@ -10,7 +10,7 @@ import { HomepageLayout } from 'layout';
 import React from 'react';
 import styles from './HomePage.module.scss';
 
-function HomePage() {
+const HomePage = () => {
   const theme: Theme = useTheme();
 
   return (
@@ -65,6 +65,6 @@ function HomePage() {
       <Footer />
     </HomepageLayout>
   );
-}
+};
 
 export default HomePage;

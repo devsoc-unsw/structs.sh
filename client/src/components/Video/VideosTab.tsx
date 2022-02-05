@@ -10,8 +10,8 @@ interface Props {
 
 const VideoTab: FC<Props> = ({ topic }) => (
   <Stack direction="column">
-    {topic.videos.map((videoUrl) => (
-      <Paper className={styles.videoCard} elevation={3}>
+    {topic.videos.map((videoUrl, idx) => (
+      <Paper key={idx} className={styles.videoCard} elevation={3}>
         <EmbeddedVideoPlayer videoUrl={videoUrl} />
       </Paper>
     ))}

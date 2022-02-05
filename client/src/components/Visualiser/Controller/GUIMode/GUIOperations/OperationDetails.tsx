@@ -7,7 +7,10 @@ import { makeStyles, useTheme } from '@mui/styles';
 import { Operation } from 'components/Visualiser/commandsInputRules';
 import React, { FC, useState } from 'react';
 import { LastLink, Link } from './Links';
-import { OperationsMenuState } from './OperationsTree';
+
+export interface OperationsMenuState {
+  [k: string]: boolean;
+}
 
 const useStyles = makeStyles({
   opListContainer: {
@@ -95,15 +98,15 @@ const OperationDetails: FC<Props> = ({
         </svg>
       )}
       <List className={isLast ? `${classes.opList} ${classes.last}` : classes.opList}>
-        {op.args.map((eachArg, i) => (
-          <ListItem key={i}>
+        {op.args.map((eachArg, idx) => (
+          <ListItem key={idx}>
             <ListItemIcon>
               <Link colour={textPrimaryColour} />
             </ListItemIcon>
             <TextField
               label={eachArg}
               variant="outlined"
-              onChange={(e) => handleSetArguments(e, i)}
+              onChange={(e) => handleSetArguments(e, idx)}
               sx={{ background: theme.palette.background.paper, height: '100%' }}
             />
           </ListItem>

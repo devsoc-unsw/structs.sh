@@ -28,14 +28,14 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { getTopics, Topic } from 'utils/apiRequests';
-import { Notification } from 'utils/Notification';
+import Notification from 'utils/Notification';
 import { titleToUrl } from 'utils/url';
 import CodeIcon from '@mui/icons-material/Code';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import Filter from './Filter';
 import styles from './Sidebar.module.scss';
 
-function SidebarContents({ setShowSidebar }) {
+const SidebarContents = ({ setShowSidebar }) => {
   const [topics, setTopics] = useState<Topic[]>([]);
   const [showFilter, setShowFilter] = useState(false);
 
@@ -136,6 +136,7 @@ function SidebarContents({ setShowSidebar }) {
         {topics && topics.length > 0 ? (
           topics.map((topic, idx) => (
             <RouterLink
+              key={idx}
               to={`/visualiser/${titleToUrl(topic.title)}`}
               style={{ color: 'inherit', textDecoration: 'none' }}
             >
@@ -190,7 +191,7 @@ function SidebarContents({ setShowSidebar }) {
       </List>
     </Box>
   );
-}
+};
 
 SidebarContents.propTypes = {
   setShowSidebar: PropTypes.func,

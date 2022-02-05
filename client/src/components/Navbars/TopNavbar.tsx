@@ -22,7 +22,7 @@ import React, {
 } from 'react';
 import { Link } from 'react-router-dom';
 import { getTopics, Topic } from 'utils/apiRequests';
-import { Notification } from 'utils/Notification';
+import Notification from 'utils/Notification';
 import { titleToUrl } from 'utils/url';
 import Drawer from './Drawer';
 import SidebarContents from './SidebarContents';
@@ -61,7 +61,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
 
   useEffect(() => {
     getTopics()
-      .then((topics) => setTopics(topics))
+      .then((newTopics) => setTopics(newTopics))
       .catch(() => console.log('TopNav: failed to get topics'));
   }, []);
 
@@ -157,13 +157,13 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
       className={styles.visualiserMenu}
     >
       {topics
-                && topics.map((topic) => (
-                  <MenuItem className={styles.item}>
-                    <Link to={`/visualiser/${titleToUrl(topic.title)}`}>
-                      <span>{topic.title}</span>
-                    </Link>
-                  </MenuItem>
-                ))}
+      && topics.map((topic, idx) => (
+        <MenuItem key={idx} className={styles.item}>
+          <Link to={`/visualiser/${titleToUrl(topic.title)}`}>
+            <span>{topic.title}</span>
+          </Link>
+        </MenuItem>
+      ))}
     </Menu>
   );
 

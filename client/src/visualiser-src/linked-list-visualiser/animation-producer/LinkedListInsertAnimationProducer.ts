@@ -9,6 +9,7 @@ import {
   actualNodeWidth,
 } from '../util/constants';
 
+// Class that produces SVG.Runners animating linked list operations specific to inserting
 export default class LinkedListInsertAnimationProducer extends LinkedListAnimationProducer {
   public insertedNodePointToNext(newNode: GraphicalLinkedListNode) {
     newNode.pointerTarget.plot(UP_RIGHT_ARROW_PATH);
@@ -21,7 +22,7 @@ export default class LinkedListInsertAnimationProducer extends LinkedListAnimati
 
   public createNodeAt(index: number, newNode: GraphicalLinkedListNode) {
     newNode.nodeTarget.addTo(CANVAS);
-    newNode.nodeTarget.move(index * nodePathWidth + actualNodeWidth, insertedNodeTopOffset);
+    newNode.nodeTarget.move((index - 1) * nodePathWidth + actualNodeWidth, insertedNodeTopOffset);
     this.allRunners.push([newNode.nodeTarget.animate().attr({ opacity: 1 })]);
   }
 }

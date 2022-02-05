@@ -20,24 +20,6 @@
 /* -------------------------------------------------------------------------- */
 /*                              Terminal Commands                             */
 /* -------------------------------------------------------------------------- */
-export const getVisualiserTerminalCommands = (
-  topicTitle: string,
-  processCommand: (command: string, args: string[]) => string
-) => {
-  let terminalCommands = {};
-  switch (topicTitle) {
-    case 'Linked Lists':
-      terminalCommands = getLinkedListTerminalCommands(processCommand);
-      break;
-    case 'Binary Search Trees':
-      terminalCommands = getBstTerminalCommands(processCommand);
-      break;
-    default:
-      console.error(`Can't find the terminal commands for ${topicTitle}`);
-  }
-  return terminalCommands;
-};
-
 /* -------------------------- Linked List Commands -------------------------- */
 const getLinkedListTerminalCommands = (processCommand) => ({
   append: {
@@ -59,27 +41,37 @@ const getLinkedListTerminalCommands = (processCommand) => ({
 });
 
 /* ------------------------------ BST Commands ------------------------------ */
-const getBstTerminalCommands = (processCommand) => {
-  return {
-    insert: {
-      usage: 'insert <number>',
-      fn: (arg: string) => {
-        return processCommand('insert', [arg]);
-      },
-    },
-    rotateLeft: {
-      usage: 'rotateLeft <number>',
-      fn: (arg: string) => {
-        return processCommand('rotateLeft', [arg]);
-      },
-    },
-    rotateRight: {
-      usage: 'rotateRight <number>',
-      fn: (arg: string) => {
-        return processCommand('rotateRight', [arg]);
-      },
-    },
-  };
+const getBstTerminalCommands = (processCommand) => ({
+  insert: {
+    usage: 'insert <number>',
+    fn: (arg: string) => processCommand('insert', [arg]),
+  },
+  rotateLeft: {
+    usage: 'rotateLeft <number>',
+    fn: (arg: string) => processCommand('rotateLeft', [arg]),
+  },
+  rotateRight: {
+    usage: 'rotateRight <number>',
+    fn: (arg: string) => processCommand('rotateRight', [arg]),
+  },
+});
+
+export const getVisualiserTerminalCommands = (
+  topicTitle: string,
+  processCommand: (command: string, args: string[]) => string,
+) => {
+  let terminalCommands = {};
+  switch (topicTitle) {
+    case 'Linked Lists':
+      terminalCommands = getLinkedListTerminalCommands(processCommand);
+      break;
+    case 'Binary Search Trees':
+      terminalCommands = getBstTerminalCommands(processCommand);
+      break;
+    default:
+      console.error(`Can't find the terminal commands for ${topicTitle}`);
+  }
+  return terminalCommands;
 };
 
 /* -------------------------------------------------------------------------- */
@@ -91,17 +83,6 @@ export interface CommandDocumentation {
   usage: string;
   description: string;
 }
-
-export const getDocumentation = (topicTitle: string): CommandDocumentation[] => {
-  switch (topicTitle) {
-    case 'Linked Lists':
-      return linkedListCommandsDocumentation;
-    case 'Binary Search Trees':
-      return bstCommandsDocumentation;
-    default:
-      console.error(`Documentation for topic: '${topicTitle}' not found`);
-  }
-};
 
 /* -------------------------- Linked List Man Page -------------------------- */
 const linkedListCommandsDocumentation: CommandDocumentation[] = [
@@ -147,6 +128,18 @@ const bstCommandsDocumentation: CommandDocumentation[] = [
   },
 ];
 
+export const getDocumentation = (topicTitle: string): CommandDocumentation[] => {
+  switch (topicTitle) {
+    case 'Linked Lists':
+      return linkedListCommandsDocumentation;
+    case 'Binary Search Trees':
+      return bstCommandsDocumentation;
+    default:
+      console.error(`Documentation for topic: '${topicTitle}' not found`);
+      return [];
+  }
+};
+
 /* -------------------------------------------------------------------------- */
 /*                              GUI Mode Commands                             */
 /* -------------------------------------------------------------------------- */
@@ -155,18 +148,6 @@ export interface Operation {
   command: string;
   args: string[];
 }
-
-export const getGUICommands = (topicTitle: string): Operation[] => {
-  switch (topicTitle) {
-    case 'Linked Lists':
-      return guiLinkedListCommands;
-    case 'Binary Search Trees':
-      return guiBstCommands;
-    default:
-      console.error(`GUI commands for topic '${topicTitle}' not found.`);
-      return [];
-  }
-};
 
 /* ------------------------- Linked List Operations ------------------------- */
 const guiLinkedListCommands: Operation[] = [
@@ -203,3 +184,15 @@ const guiBstCommands: Operation[] = [
     args: ['value'],
   },
 ];
+
+export const getGUICommands = (topicTitle: string): Operation[] => {
+  switch (topicTitle) {
+    case 'Linked Lists':
+      return guiLinkedListCommands;
+    case 'Binary Search Trees':
+      return guiBstCommands;
+    default:
+      console.error(`GUI commands for topic '${topicTitle}' not found.`);
+      return [];
+  }
+};

@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import React, { FC, useCallback, useState } from 'react';
 import { MultipleChoiceQuiz } from 'utils/apiRequests';
-import { Notification } from 'utils/Notification';
+import Notification from 'utils/Notification';
 import BaseQuiz from '../BaseQuiz';
 
 interface Props {
@@ -82,7 +82,7 @@ const MultipleChoice: FC<Props> = ({
     console.log('Responses', responses);
 
     // Compare `responses` and `answers` array
-    for (let i = 0; i < answers.length; ++i) {
+    for (let i = 0; i < answers.length; i += 1) {
       if (responses[i] !== answers[i]) {
         Notification.error('Incorrect');
         setResult('incorrect');
@@ -103,31 +103,32 @@ const MultipleChoice: FC<Props> = ({
             : `Select up to ${maxSelections} responses`}
         </FormLabel>
         {choices
-                    && choices.map((choice, i) => (
-                      <FormControlLabel
-                        value={i}
-                        disabled={
-                                    disabled
-                                    || submitted
-                                    || (getNumSelected() >= maxSelections && !responses[i])
-                                }
-                        sx={{
-                          background:
-                                        (showAnswers || submitted)
-                                        && (answers[i]
-                                          ? 'rgba(0, 255, 59, 0.55)'
-                                          : 'rgba(252, 113, 122, 0.55)'),
-                          borderRadius: '20px',
-                          mt: 1,
-                          mb: 1,
-                          pr: 2,
-                          transition: '0.4s all ease-in-out',
-                        }}
-                        checked={responses[i]}
-                        label={choice}
-                        control={<Radio onClick={() => toggleChoice(i)} />}
-                      />
-                    ))}
+        && choices.map((choice, idx) => (
+          <FormControlLabel
+            key={idx}
+            value={idx}
+            disabled={
+              disabled
+              || submitted
+              || (getNumSelected() >= maxSelections && !responses[idx])
+            }
+            sx={{
+              background:
+                (showAnswers || submitted)
+                && (answers[idx]
+                  ? 'rgba(0, 255, 59, 0.55)'
+                  : 'rgba(252, 113, 122, 0.55)'),
+              borderRadius: '20px',
+              mt: 1,
+              mb: 1,
+              pr: 2,
+              transition: '0.4s all ease-in-out',
+            }}
+            checked={responses[idx]}
+            label={choice}
+            control={<Radio onClick={() => toggleChoice(idx)} />}
+          />
+        ))}
       </FormControl>
 
       <Box sx={{ mb: 1 }}>

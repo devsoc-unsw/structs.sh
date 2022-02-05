@@ -15,6 +15,10 @@ const options: Option[] = [{ label: 'COMP1511' }, { label: 'COMP2521' }, { label
 
 const CoursesSelector: FC<Props> = ({ addValue, courses }) => {
   const optionsWithoutDuplicates = options.filter((option) => !courses.includes(option.label));
+  const optionExistsInChoices = (
+    e: any,
+  ) => options.some((option) => option.label === String(e.target.value));
+  const optionNotSelectedYet = (e: any) => !courses.includes(String(e.target.value));
 
   return (
     <Autocomplete
@@ -30,8 +34,8 @@ const CoursesSelector: FC<Props> = ({ addValue, courses }) => {
           onKeyDown={(e: any) => {
             if (
               e.keyCode === 13
-                            && options.some((option) => option.label === String(e.target.value)) // The option must exist in the possible choices
-                            && !courses.includes(String(e.target.value)) // Option mustn't have already been selected before
+              && optionExistsInChoices(e)
+              && optionNotSelectedYet(e)
             ) {
               addValue(String(e.target.value));
             }

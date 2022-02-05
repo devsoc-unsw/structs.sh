@@ -23,7 +23,7 @@ import React, {
 import {
   getLessons, getQuizzes, Lesson, Quiz, Topic,
 } from 'utils/apiRequests';
-import { Notification } from 'utils/Notification';
+import Notification from 'utils/Notification';
 import styles from './Lesson.module.scss';
 
 interface Props {
@@ -42,8 +42,8 @@ const LessonContent: FC<Props> = ({ topic }) => {
 
   useEffect(() => {
     getLessons(topic._id)
-      .then((lessons) => {
-        setLessons(lessons);
+      .then((newLessons) => {
+        setLessons(newLessons);
         setLoading(false);
       })
       .catch((errMessage) => {
@@ -81,9 +81,9 @@ const LessonContent: FC<Props> = ({ topic }) => {
             color: theme.palette.text.primary,
           }}
         >
-          Can't find anything for '
+          Can&apos;t find anything for &apos;
           {topic.title}
-          '
+          &apos;
         </Alert>
       )}
 
@@ -101,13 +101,13 @@ const LessonContent: FC<Props> = ({ topic }) => {
           </Typography>
           <HorizontalRule />
           <List>
-            {lessons.map((lesson, i) => (
-              <ListItem>
+            {lessons.map((lesson, idx) => (
+              <ListItem key={idx}>
                 <Button
                   sx={{
                     textTransform: 'none',
                   }}
-                  onClick={() => setActiveLesson(i)}
+                  onClick={() => setActiveLesson(idx)}
                 >
                   <ListItemIcon>
                     <BulletIcon sx={{ fill: theme.palette.text.primary }} />

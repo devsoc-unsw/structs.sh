@@ -3,7 +3,7 @@ import { HomepageLayout } from 'layout';
 import React, { FC } from 'react';
 import Container from '@mui/material/Container';
 import { Gallery } from 'components/Gallery';
-import { team2021 } from 'assets/about/team-2021';
+import team2021 from 'assets/about/team-2021';
 import styles from './AboutUs.module.scss';
 
 interface Props {}

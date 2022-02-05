@@ -1,12 +1,13 @@
+import { SVG, Container } from '@svgdotjs/svg.js';
 import BSTInsertAnimationProducer from '../animation-producer/BSTInsertAnimationProducer';
 import BSTRotateAnimationProducer from '../animation-producer/BSTRotateAnimationProducer';
 import { Node } from '../util/typedefs';
-import { SVG, Container } from '@svgdotjs/svg.js';
 import { canvasPadding } from '../util/settings';
 
 // used for the actual implementation of the bst
 class BST {
   public root: Node = null;
+
   public draw: Container = SVG().addTo('#bst-canvas').size('100%', '100%');
 
   // inserts a node into the bst and produces an animation sequence
@@ -77,7 +78,7 @@ class BST {
     low: number,
     high: number,
     mid: number,
-    y: number
+    y: number,
   ): void {
     if (node === null) {
       return;
@@ -102,11 +103,10 @@ class BST {
   public getNodeRecursive(input: number, node: Node): Node {
     if (input === node.value) {
       return node;
-    } else if (input < node.value) {
+    } if (input < node.value) {
       return this.getNodeRecursive(input, node.left);
-    } else {
-      return this.getNodeRecursive(input, node.right);
     }
+    return this.getNodeRecursive(input, node.right);
   }
 
   public rotateLeft(input: number): BSTRotateAnimationProducer {
@@ -119,11 +119,11 @@ class BST {
 
     if (newRoot === null) return animationProducer;
 
-    if (newRoot.right != null) {
+    if (newRoot.left != null) {
       animationProducer.movePointerToNewRootLeftChild(oldRoot, newRoot);
       animationProducer.moveLeftPointerToOldRoot(oldRoot, newRoot);
     } else {
-      animationProducer.assignNewRootLeftPointerToOldRootRightPointer(oldRoot, newRoot);
+      BSTRotateAnimationProducer.assignNewRootLeftPointerToOldRootRightPointer(oldRoot, newRoot);
     }
 
     this.root = this.doRotateLeft(this.root, input);
@@ -140,7 +140,7 @@ class BST {
       newRoot.left = node;
 
       return newRoot;
-    } else if (input < node.value) {
+    } if (input < node.value) {
       node.left = this.doRotateLeft(node.left, input);
     } else {
       node.right = this.doRotateLeft(node.right, input);
@@ -163,7 +163,7 @@ class BST {
       animationProducer.movePointerToNewRootRightChild(oldRoot, newRoot);
       animationProducer.moveRightPointerToOldRoot(oldRoot, newRoot);
     } else {
-      animationProducer.assignNewRootRightPointerToOldRootLeftPointer(oldRoot, newRoot);
+      BSTRotateAnimationProducer.assignNewRootRightPointerToOldRootLeftPointer(oldRoot, newRoot);
     }
 
     this.root = this.doRotateRight(this.root, input);
@@ -180,7 +180,7 @@ class BST {
       newRoot.right = node;
 
       return newRoot;
-    } else if (input < node.value) {
+    } if (input < node.value) {
       node.left = this.doRotateRight(node.left, input);
     } else {
       node.right = this.doRotateRight(node.right, input);

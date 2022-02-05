@@ -5,7 +5,9 @@ import ReplayIcon from '@mui/icons-material/Replay';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import SpeedIcon from '@mui/icons-material/Speed';
-import { Box, IconButton, Stack, useTheme } from '@mui/material';
+import {
+  Box, IconButton, Stack, useTheme,
+} from '@mui/material';
 import Slider from '@mui/material/Slider';
 import React, { FC, useEffect, useState } from 'react';
 import ModeSwitch from './GUIMode/ModeSwitch';
@@ -21,8 +23,7 @@ interface Props {
   handleUpdateTimeline: (val: number) => void;
   handleDragTimeline: (val: number) => void;
   handleSpeedSliderDrag: (val: number) => void;
-  handleSpeedSliderDragEnd: () => void;
-  animationProgress: number;
+  timelineComplete: boolean;
   speed: number;
 }
 
@@ -44,26 +45,22 @@ const VisualiserController: FC<Props> = ({
   handleStepForward,
   handleStepBackward,
   handleUpdateTimeline,
-  //   handleDragTimeline,
+  handleDragTimeline,
   handleSpeedSliderDrag,
-  handleSpeedSliderDragEnd,
-  animationProgress,
+  timelineComplete,
   speed,
 }) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  //   const [userIsDraggingTimeline, setUserIsDraggingTimeline] = useState<boolean>(false);
+  const [userIsDraggingTimeline, setUserIsDraggingTimeline] = useState<boolean>(false);
   const theme = useTheme();
 
   useEffect(() => {
-    if (animationProgress >= 100) {
+    if (timelineComplete) {
       setIsPlaying(false);
-      handleUpdateTimeline(0);
-    } else if (animationProgress > 0 && animationProgress < 100) {
-      if (!isPlaying) {
-        setIsPlaying(true);
-      }
+    } else if (!isPlaying) {
+      setIsPlaying(true);
     }
-  }, [animationProgress, handleUpdateTimeline, isPlaying]);
+  }, [timelineComplete, handleUpdateTimeline]);
 
   return (
     <Box
@@ -77,7 +74,18 @@ const VisualiserController: FC<Props> = ({
             sx={{ fill: theme.palette.text.primary }}
           />
         </IconButton>
-        {isPlaying ? (
+        {timelineComplete ? (
+          <IconButton>
+            <ReplayIcon
+              sx={{ fill: theme.palette.text.primary }}
+              onClick={() => {
+                handleDragTimeline(0);
+                handlePlay();
+                setIsPlaying(true);
+              }}
+            />
+          </IconButton>
+        ) : isPlaying ? (
           <IconButton>
             <PauseIcon
               onClick={() => {
@@ -87,7 +95,7 @@ const VisualiserController: FC<Props> = ({
               sx={{ fill: theme.palette.text.primary }}
             />
           </IconButton>
-        ) : animationProgress > 0 && animationProgress <= 100 ? (
+        ) : (
           <IconButton>
             <PlayIcon
               onClick={() => {
@@ -95,16 +103,6 @@ const VisualiserController: FC<Props> = ({
                 setIsPlaying(true);
               }}
               sx={{ fill: theme.palette.text.primary }}
-            />
-          </IconButton>
-        ) : (
-          <IconButton>
-            <ReplayIcon
-              sx={{ fill: theme.palette.text.primary }}
-              onClick={() => {
-                handlePlay();
-                setIsPlaying(true);
-              }}
             />
           </IconButton>
         )}
@@ -119,17 +117,33 @@ const VisualiserController: FC<Props> = ({
           <Stack direction="column">
             <Stack direction="row" sx={{ height: '32px' }}>
               <TimeIcon className={styles.sliderIcon} sx={{ fill: theme.palette.text.primary }} />
-              <div className="col">
-                <input
-                  type="range"
-                  id="timelineSlider"
-                  name="volume"
-                  min="0"
-                  max="100"
-                  defaultValue="0"
-                  step="0.01"
-                />
-              </div>
+              <input
+                type="range"
+                id="timelineSlider"
+                name="volume"
+                min="0"
+                max="100"
+                defaultValue="0"
+                step="0.01"
+                className={styles.timelineSlider}
+                onChange={(event) => {
+                  if (userIsDraggingTimeline) {
+                    handleDragTimeline(Number(event.target.value));
+                  } else {
+                    handleUpdateTimeline(Number(event.target.value));
+                  }
+                }}
+                onMouseDown={() => {
+                  setUserIsDraggingTimeline(true);
+                  handlePause();
+                }}
+                onMouseUp={() => {
+                  setUserIsDraggingTimeline(false);
+                  if (isPlaying) {
+                    handlePlay();
+                  }
+                }}
+              />
               {/* <Slider
                     onChange={(_, newValue) => {
                         if (userIsDraggingTimeline) {
@@ -157,15 +171,12 @@ const VisualiserController: FC<Props> = ({
               <SpeedIcon className={styles.sliderIcon} sx={{ fill: theme.palette.text.primary }} />
               <Slider
                 onChange={(_, newValue) => handleSpeedSliderDrag(Number(newValue))}
-                onMouseUp={() => {
-                  if (animationProgress > 0) {
-                    handleSpeedSliderDragEnd();
-                  }
-                }}
+                onMouseDown={() => handlePause()}
+                onMouseUp={() => handlePlay()}
                 value={speed}
-                min={0}
+                min={0.20}
                 max={1}
-                step={0.1}
+                step={0.2}
                 marks
                 sx={{ ml: '10px' }}
                 color="secondary"
