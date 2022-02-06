@@ -1,0 +1,23 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - master 
+      - dev
+  pull_request:
+    branches:
+      - master 
+      - dev
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        working-directory: ./client
+        run: yarn
+      - name: Lint
+        working-directory: ./client
+        run: yarn lint

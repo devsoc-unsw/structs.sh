@@ -56,5 +56,4 @@ export const pathAttributes = {
 };
 
 // Animation attributes
-export const fastestDuration = 350;
 export const defaultSpeed = 0.6;
