@@ -9,6 +9,9 @@ export interface BSTVisualiser extends Visualiser {
   insert: (val: number, updateSlider: (val: number) => void) => void;
   rotateLeft: (val: number, updateSlider: (val: number) => void) => void;
   rotateRight: (val: number, updateSlider: (val: number) => void) => void;
+  inorderTraversal: (updateSlider: (val: number) => void) => void;
+  preorderTraversal: (updateSlider: (val: number) => void) => void;
+  postorderTraversal: (updateSlider: (val: number) => void) => void;
 }
 
 const initialise = (): any => {
@@ -30,6 +33,24 @@ const initialise = (): any => {
   const rotateRight = (val: number, updateSlider: (val: number) => void) => {
     controller.finish();
     const animationSequence: BSTAnimationProducer = bst.rotateRight(val);
+    controller.constructTimeline(animationSequence, updateSlider);
+  };
+
+  const inorderTraversal = (updateSlider: (val: number) => void) => {
+    controller.finish();
+    const animationSequence: BSTAnimationProducer = bst.inorderTraversal();
+    controller.constructTimeline(animationSequence, updateSlider);
+  };
+
+  const preorderTraversal = (updateSlider: (val: number) => void) => {
+    controller.finish();
+    const animationSequence: BSTAnimationProducer = bst.preorderTraversal();
+    controller.constructTimeline(animationSequence, updateSlider);
+  };
+
+  const postorderTraversal = (updateSlider: (val: number) => void) => {
+    controller.finish();
+    const animationSequence: BSTAnimationProducer = bst.postorderTraversal();
     controller.constructTimeline(animationSequence, updateSlider);
   };
 
@@ -63,6 +84,9 @@ const initialise = (): any => {
     insert,
     rotateLeft,
     rotateRight,
+    inorderTraversal,
+    preorderTraversal,
+    postorderTraversal,
     play,
     pause,
     setTimeline,

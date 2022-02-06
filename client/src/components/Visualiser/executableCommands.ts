@@ -37,6 +37,15 @@ const getBSTExecutor = (
     case 'rotateRight':
       visualiser.rotateRight(Number(args[0]), updateTimeline);
       break;
+    case 'inorderTraversal':
+      visualiser.inorderTraversal(updateTimeline);
+      break;
+    case 'preorderTraversal':
+      visualiser.preorderTraversal(updateTimeline);
+      break;
+    case 'postorderTraversal':
+      visualiser.postorderTraversal(updateTimeline);
+      break;
     default:
       return `Invalid command: ${command}`;
   }
