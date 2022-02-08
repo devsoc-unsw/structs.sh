@@ -54,6 +54,18 @@ const getBstTerminalCommands = (processCommand) => ({
     usage: 'rotateRight <number>',
     fn: (arg: string) => processCommand('rotateRight', [arg]),
   },
+  inorderTraversal: {
+    usage: 'inorderTraversal',
+    fn: () => processCommand('inorderTraversal', []),
+  },
+  preorderTraversal: {
+    usage: 'preorderTraversal',
+    fn: () => processCommand('preorderTraversal', []),
+  },
+  postorderTraversal: {
+    usage: 'postorderTraversal',
+    fn: () => processCommand('postorderTraversal', []),
+  },
 });
 
 export const getVisualiserTerminalCommands = (
@@ -126,6 +138,21 @@ const bstCommandsDocumentation: CommandDocumentation[] = [
     usage: 'rotateRight <number>',
     description: 'Executes a right rotation on the node with the given value.',
   },
+  {
+    command: 'inorderTraversal',
+    usage: 'inorderTraversal',
+    description: 'Executes an inorder traversal on the tree.',
+  },
+  {
+    command: 'preorderTraversal',
+    usage: 'preorderTraversal',
+    description: 'Executes a preorder traversal on the tree.',
+  },
+  {
+    command: 'postorderTraversal',
+    usage: 'postorderTraversal',
+    description: 'Executes a postorder traversal on the tree.',
+  },
 ];
 
 export const getDocumentation = (topicTitle: string): CommandDocumentation[] => {
@@ -182,6 +209,18 @@ const guiBstCommands: Operation[] = [
   {
     command: 'rotateRight',
     args: ['value'],
+  },
+  {
+    command: 'inorderTraversal',
+    args: [],
+  },
+  {
+    command: 'preorderTraversal',
+    args: [],
+  },
+  {
+    command: 'postorderTraversal',
+    args: [],
   },
 ];
 

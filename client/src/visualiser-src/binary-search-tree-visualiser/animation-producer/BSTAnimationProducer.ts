@@ -1,4 +1,4 @@
-import { Runner, Container } from '@svgdotjs/svg.js';
+import { Runner, Container, Line } from '@svgdotjs/svg.js';
 import { Node } from '../util/typedefs';
 import { canvasPadding } from '../util/settings';
 import AnimationProducer from '../../common/AnimationProducer';
@@ -14,7 +14,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
     this.draw = draw;
   }
 
-  public highlightNode(node: Node): void {
+  public flashNode(node: Node): void {
     this.allRunners.push([
       node.nodeTarget
         .animate(500)
@@ -112,5 +112,61 @@ export default class BSTAnimationProducer extends AnimationProducer {
     const baseDiff = canvasWidth / 4;
 
     return baseDiff / 2 ** depth;
+  }
+
+  public resetBST(root: Node): void {
+    const animation: Runner[] = [];
+    this.resetLinesRecursive(root, animation);
+    this.resetNodesRecursive(root, animation);
+    this.allRunners.push(animation);
+  }
+
+  public resetLinesRecursive(node: Node, animation: Runner[]): void {
+    if (node === null) {
+      return;
+    }
+
+    BSTAnimationProducer.unhighlightLine(node.leftLineTarget, animation);
+    BSTAnimationProducer.unhighlightLine(node.rightLineTarget, animation);
+    this.resetLinesRecursive(node.left, animation);
+    this.resetLinesRecursive(node.right, animation);
+  }
+
+  public static unhighlightLine(lineTarget: Line, animation: Runner[]): void {
+    if (lineTarget != null) {
+      animation.push(
+        lineTarget
+          .animate(500)
+          .attr({
+            stroke: '#000000',
+          }),
+      );
+    }
+  }
+
+  public resetNodesRecursive(node: Node, animation: Runner[]): void {
+    if (node === null) {
+      return;
+    }
+
+    BSTAnimationProducer.unhighlightNode(node, animation);
+    this.resetNodesRecursive(node.left, animation);
+    this.resetNodesRecursive(node.right, animation);
+  }
+
+  public static unhighlightNode(node: Node, animation: Runner[]): void {
+    animation.push(
+      node.nodeTarget
+        .animate(500)
+        .attr({
+          fill: '#ffffff',
+          stroke: '#000000',
+        }),
+      node.textTarget
+        .animate(500)
+        .attr({
+          fill: '#000000',
+        }),
+    );
   }
 }
