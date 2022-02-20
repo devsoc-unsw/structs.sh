@@ -143,7 +143,7 @@ const Features: React.FC<Props> = () => {
           </Grid>
         </Grid>
       </FeatureItem>
-      <FeatureItem fromDirection="left">
+      {/* <FeatureItem fromDirection="left">
         <Typography color="textPrimary" variant="h6" sx={{ textAlign: 'left' }}>
           <EditIcon /> Content Management
         </Typography>
@@ -174,7 +174,7 @@ const Features: React.FC<Props> = () => {
             <LaptopFrame imageUrl={cmsScreen} />
           </Grid>
         </Grid>
-      </FeatureItem>
+      </FeatureItem> */}
       <FeatureItem fromDirection="right">
         <Typography color="textPrimary" variant="h6">
           <GradCapIcon /> Open source

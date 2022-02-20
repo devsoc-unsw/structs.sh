@@ -1,8 +1,6 @@
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import {
-  Alert, Box, List, ListItem, ListItemIcon, Theme, Typography,
-} from '@mui/material';
+import { Alert, Box, List, ListItem, ListItemIcon, Theme, Typography } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import { getGUICommands, Operation } from 'components/Visualiser/commandsInputRules';
 import React, { FC, useState } from 'react';
@@ -31,19 +29,15 @@ const OperationsTree: FC<Props> = ({ topicTitle, executeCommand }) => {
   };
 
   return !ops ? (
-    <Alert severity="error">
-      No operations are defined for the topicTitle '
-      {topicTitle}
-      '
-    </Alert>
+    <Alert severity="error">No operations are defined for the topicTitle '{topicTitle}'</Alert>
   ) : (
     <Box sx={{ padding: 2 }}>
       <Typography color="textPrimary">{topicTitle}</Typography>
       <List>
-        {ops.map((op, idx) => {
-          const isLast = idx === ops.length - 1;
+        {ops.map((op, i) => {
+          const isLast = i === ops.length - 1;
           return (
-            <Box key={idx}>
+            <Box key={i}>
               <ListItem
                 button
                 sx={{
