@@ -39,7 +39,9 @@ import { HorizontalRule } from 'components/HorizontalRule';
 import { MarkdownEditor } from 'components/MarkdownEditor';
 import QuestionRenderer from 'components/Quiz/QuestionRenderer';
 import { TagSelector } from 'components/Tags';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, {
+  FC, useCallback, useEffect, useState,
+} from 'react';
 import { darkTheme } from 'structsThemes';
 import {
   createLesson,
@@ -66,7 +68,9 @@ import {
 } from 'utils/apiRequests';
 import Notification from 'utils/Notification';
 import styles from './ContentManagement.module.scss';
-import { BaseQuizForm, MCQuizForm, QAQuizForm, TFQuizForm } from './QuizForm';
+import {
+  BaseQuizForm, MCQuizForm, QAQuizForm, TFQuizForm,
+} from './QuizForm';
 
 interface Props {}
 
@@ -108,8 +112,9 @@ const ContentManagementSteps: FC<Props> = () => {
   const [topicFormValues, setTopicFormValues] = useState<TopicForm>(emptyTopicForm);
 
   const [sourceCodes, setSourceCodes] = useState<SourceCode[]>([]);
-  const [sourceCodeFormValues, setSourceCodeFormValues] =
-    useState<SourceCodeForm>(emptySourceCodeForm);
+  const [sourceCodeFormValues, setSourceCodeFormValues] = useState<SourceCodeForm>(
+    emptySourceCodeForm,
+  );
 
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [selectedLessonId, setSelectedLessonId] = useState<string>('');
@@ -145,7 +150,7 @@ const ContentManagementSteps: FC<Props> = () => {
           Notification.error(`Failed to load lessons. Reason: ${errMessage}`);
         });
     },
-    [setLessons]
+    [setLessons],
   );
 
   const fetchQuizzes = useCallback(
@@ -163,18 +168,16 @@ const ContentManagementSteps: FC<Props> = () => {
           Notification.error(`Failed to load quizzes. Reason: ${errMessage}`);
         });
     },
-    [setQuizzes]
+    [setQuizzes],
   );
 
   const fetchTopicSourceCode = useCallback(
     (topicId: string) => {
       getSourceCodes(topicId)
         .then((sourceCode: SourceCode[]) => setSourceCodes(sourceCode))
-        .catch((errMessage) =>
-          Notification.error(`Failed to load source code. Reason: ${errMessage}`)
-        );
+        .catch((errMessage) => Notification.error(`Failed to load source code. Reason: ${errMessage}`));
     },
-    [setSourceCodes]
+    [setSourceCodes],
   );
 
   // Initially fetch all topics
@@ -211,7 +214,7 @@ const ContentManagementSteps: FC<Props> = () => {
       setLessonFormValues({ ...lessonFormValues, topicId });
       setActiveStep(1);
     },
-    [topics, sourceCodeFormValues, lessonFormValues]
+    [topics, sourceCodeFormValues, lessonFormValues],
   );
 
   const selectLesson = useCallback(
@@ -224,7 +227,7 @@ const ContentManagementSteps: FC<Props> = () => {
       setLessonFormValues(selectedLesson);
       setActiveStep(3);
     },
-    [lessons]
+    [lessons],
   );
 
   const selectQuiz = useCallback(
@@ -237,7 +240,7 @@ const ContentManagementSteps: FC<Props> = () => {
       setQuizFormValues(quizzes[newSelectedQuizIndex]);
       setSelectedQuizIndex(newSelectedQuizIndex);
     },
-    [quizzes]
+    [quizzes],
   );
 
   const deselectQuiz = useCallback(() => {
@@ -305,7 +308,7 @@ const ContentManagementSteps: FC<Props> = () => {
               return newTopic;
             }
             return topic;
-          })
+          }),
         );
       })
       .catch(Notification.error);
@@ -334,7 +337,7 @@ const ContentManagementSteps: FC<Props> = () => {
               return newLesson;
             }
             return lesson;
-          })
+          }),
         );
       })
       .catch(Notification.error);
@@ -380,9 +383,9 @@ const ContentManagementSteps: FC<Props> = () => {
             </Typography>
             <Box sx={{ margin: 4 }}>
               <Grid container spacing={5}>
-                {topics &&
-                  topics.length > 0 &&
-                  topics.map((topic, idx) => (
+                {topics
+                  && topics.length > 0
+                  && topics.map((topic, idx) => (
                     <Grid key={idx} item>
                       <Card
                         onClick={() => {
@@ -395,8 +398,8 @@ const ContentManagementSteps: FC<Props> = () => {
                         className={styles.card}
                         sx={{
                           boxShadow:
-                            selectedTopicId === topic._id &&
-                            'rgba(0, 0, 0, 0.25) 0px 0px 10px 5px, rgba(0, 0, 0, 0.6) 0px 0px 0px 1px',
+                            selectedTopicId === topic._id
+                            && 'rgba(0, 0, 0, 0.25) 0px 0px 10px 5px, rgba(0, 0, 0, 0.6) 0px 0px 0px 1px',
                         }}
                       >
                         <CardMedia
@@ -496,21 +499,17 @@ const ContentManagementSteps: FC<Props> = () => {
                     </Typography>
                     <CoursesSelector
                       courses={topicFormValues.courses}
-                      addValue={(newValue: string) =>
-                        setTopicFormValues({
-                          ...topicFormValues,
-                          courses: [...topicFormValues.courses, newValue],
-                        })
-                      }
+                      addValue={(newValue: string) => setTopicFormValues({
+                        ...topicFormValues,
+                        courses: [...topicFormValues.courses, newValue],
+                      })}
                     />
                     <TagSelector
                       selectedTags={topicFormValues.courses}
-                      setSelectedTags={(tags) =>
-                        setTopicFormValues({
-                          ...topicFormValues,
-                          courses: tags,
-                        })
-                      }
+                      setSelectedTags={(tags) => setTopicFormValues({
+                        ...topicFormValues,
+                        courses: tags,
+                      })}
                     />
                   </Box>
                 </Paper>
@@ -522,11 +521,11 @@ const ContentManagementSteps: FC<Props> = () => {
                   </Typography>
                   <HorizontalRule />
                   <List>
-                    {topicFormValues.videos &&
-                      topicFormValues.videos.map((videoUrl, idx) => (
+                    {topicFormValues.videos
+                      && topicFormValues.videos.map((videoUrl, idx) => (
                         <ListItem
                           key={idx}
-                          secondaryAction={
+                          secondaryAction={(
                             <IconButton
                               edge="end"
                               aria-label="delete"
@@ -535,7 +534,7 @@ const ContentManagementSteps: FC<Props> = () => {
                             >
                               <DeleteIcon />
                             </IconButton>
-                          }
+                          )}
                         >
                           <ListItemAvatar>
                             <Avatar>
@@ -571,7 +570,11 @@ const ContentManagementSteps: FC<Props> = () => {
                   {selectedTopicId ? (
                     <>
                       <Alert severity="warning">
-                        You <strong>must</strong> click &apos;Submit&apos; to create a new topic or
+                        You
+                        {' '}
+                        <strong>must</strong>
+                        {' '}
+                        click &apos;Submit&apos; to create a new topic or
                         save changes before progressing!
                       </Alert>
                       <Button
@@ -586,7 +589,11 @@ const ContentManagementSteps: FC<Props> = () => {
                   ) : (
                     <>
                       <Alert severity="warning">
-                        You <strong>must</strong> click &apos;Create&apos; to create a new topic or
+                        You
+                        {' '}
+                        <strong>must</strong>
+                        {' '}
+                        click &apos;Create&apos; to create a new topic or
                         save changes before progressing!
                       </Alert>
                       <Button
@@ -607,8 +614,8 @@ const ContentManagementSteps: FC<Props> = () => {
                     Manage Source Code
                   </Typography>
                   <HorizontalRule />
-                  {sourceCodes &&
-                    sourceCodes.map((sourceCode, idx) => (
+                  {sourceCodes
+                    && sourceCodes.map((sourceCode, idx) => (
                       <Accordion key={idx}>
                         <AccordionSummary
                           expandIcon={<ExpandMoreIcon />}
@@ -634,12 +641,10 @@ const ContentManagementSteps: FC<Props> = () => {
                         id="topic-source-code-title"
                         label="Title"
                         placeholder="Eg. Insertion Algorithm"
-                        onChange={(e) =>
-                          setSourceCodeFormValues({
-                            ...sourceCodeFormValues,
-                            title: String(e.target.value),
-                          })
-                        }
+                        onChange={(e) => setSourceCodeFormValues({
+                          ...sourceCodeFormValues,
+                          title: String(e.target.value),
+                        })}
                       />
                       <TextField
                         id="topic-source-code-code"
@@ -647,12 +652,10 @@ const ContentManagementSteps: FC<Props> = () => {
                         placeholder="void insert(...) { ... }"
                         multiline
                         variant="standard"
-                        onChange={(e) =>
-                          setSourceCodeFormValues({
-                            ...sourceCodeFormValues,
-                            code: String(e.target.value),
-                          })
-                        }
+                        onChange={(e) => setSourceCodeFormValues({
+                          ...sourceCodeFormValues,
+                          code: String(e.target.value),
+                        })}
                         sx={{ width: '100%' }}
                       />
                     </FormControl>
@@ -702,8 +705,8 @@ const ContentManagementSteps: FC<Props> = () => {
             </Typography>
             <Box sx={{ mb: 2 }}>
               <Grid container spacing={3} sx={{ mt: 2, mb: 2 }}>
-                {lessons &&
-                  lessons.map((lesson, idx) => (
+                {lessons
+                  && lessons.map((lesson, idx) => (
                     <Grid key={idx} item xs={12} sm={6} md={6} lg={6} xl={6}>
                       <Card
                         onClick={() => {
@@ -716,8 +719,8 @@ const ContentManagementSteps: FC<Props> = () => {
                         sx={{
                           cursor: 'pointer',
                           boxShadow:
-                            selectedLessonId === lesson._id &&
-                            'rgba(0, 0, 0, 0.25) 0px 0px 10px 5px, rgba(0, 0, 0, 0.6) 0px 0px 0px 1px',
+                            selectedLessonId === lesson._id
+                            && 'rgba(0, 0, 0, 0.25) 0px 0px 10px 5px, rgba(0, 0, 0, 0.6) 0px 0px 0px 1px',
                         }}
                       >
                         <CardContent>
@@ -779,23 +782,19 @@ const ContentManagementSteps: FC<Props> = () => {
                   id="lesson-title"
                   required
                   value={lessonFormValues.title}
-                  onChange={(e) =>
-                    setLessonFormValues({
-                      ...lessonFormValues,
-                      title: String(e.target.value),
-                    })
-                  }
+                  onChange={(e) => setLessonFormValues({
+                    ...lessonFormValues,
+                    title: String(e.target.value),
+                  })}
                 />
                 <Box sx={{ padding: 3 }}>
                   <HorizontalRule />
                   <MarkdownEditor
                     markdownValue={lessonFormValues.rawMarkdown}
-                    setMarkdownValue={(newMarkdown: string) =>
-                      setLessonFormValues({
-                        ...lessonFormValues,
-                        rawMarkdown: newMarkdown,
-                      })
-                    }
+                    setMarkdownValue={(newMarkdown: string) => setLessonFormValues({
+                      ...lessonFormValues,
+                      rawMarkdown: newMarkdown,
+                    })}
                     themeOverride={{
                       background: theme.palette.background.paper,
                     }}
@@ -805,7 +804,11 @@ const ContentManagementSteps: FC<Props> = () => {
                 </Box>
                 <Box sx={{ textAlign: 'center' }}>
                   <Alert severity="warning">
-                    You <strong>must</strong> click &apos;Create&apos; to create a new topic or save
+                    You
+                    {' '}
+                    <strong>must</strong>
+                    {' '}
+                    click &apos;Create&apos; to create a new topic or save
                     changes before progressing!
                   </Alert>
                   <Button
@@ -845,21 +848,17 @@ const ContentManagementSteps: FC<Props> = () => {
                     <BaseQuizForm
                       question={quizFormValues.question}
                       description={quizFormValues.description}
-                      handleChangeQuestion={(question) =>
-                        setQuizFormValues((oldForm) => ({
-                          ...oldForm,
-                          question,
-                        }))
-                      }
-                      handleChangeDescription={(description) =>
-                        setQuizFormValues((oldForm) => ({
-                          ...oldForm,
-                          description,
-                        }))
-                      }
+                      handleChangeQuestion={(question) => setQuizFormValues((oldForm) => ({
+                        ...oldForm,
+                        question,
+                      }))}
+                      handleChangeDescription={(description) => setQuizFormValues((oldForm) => ({
+                        ...oldForm,
+                        description,
+                      }))}
                     />
-                    {quizFormValues &&
-                      (quizFormValues.type === 'mc' ? (
+                    {quizFormValues
+                      && (quizFormValues.type === 'mc' ? (
                         <MCQuizForm
                           choices={(quizFormValues as MultipleChoiceQuizForm).choices}
                           handleChangeChoices={(newChoices) => {
@@ -869,22 +868,20 @@ const ContentManagementSteps: FC<Props> = () => {
                             }));
                           }}
                           answers={(quizFormValues as MultipleChoiceQuizForm).answers}
-                          handleChangeAnswers={(answers) =>
-                            setQuizFormValues((oldForm) => ({
-                              ...oldForm,
-                              answers,
-                            }))
-                          }
+                          handleChangeAnswers={(answers) => setQuizFormValues((oldForm) => ({
+                            ...oldForm,
+                            answers,
+                          }))}
                           maxSelections={(quizFormValues as MultipleChoiceQuizForm).maxSelections}
-                          handleChangeMaxSelections={(maxSelections) =>
-                            setQuizFormValues((oldForm) => ({
+                          handleChangeMaxSelections={
+                            (maxSelections) => setQuizFormValues((oldForm) => ({
                               ...oldForm,
                               maxSelections,
                             }))
                           }
                           correctMessage={(quizFormValues as MultipleChoiceQuizForm).correctMessage}
-                          handleChangeCorrectMessage={(correctMessage) =>
-                            setQuizFormValues((oldForm) => ({
+                          handleChangeCorrectMessage={
+                            (correctMessage) => setQuizFormValues((oldForm) => ({
                               ...oldForm,
                               correctMessage,
                             }))
@@ -892,15 +889,15 @@ const ContentManagementSteps: FC<Props> = () => {
                           incorrectMessage={
                             (quizFormValues as MultipleChoiceQuizForm).incorrectMessage
                           }
-                          handleChangeIncorrectMessage={(incorrectMessage) =>
-                            setQuizFormValues((oldForm) => ({
+                          handleChangeIncorrectMessage={
+                            (incorrectMessage) => setQuizFormValues((oldForm) => ({
                               ...oldForm,
                               incorrectMessage,
                             }))
                           }
                           explanation={(quizFormValues as MultipleChoiceQuizForm).explanation}
-                          handleChangeExplanation={(explanation) =>
-                            setQuizFormValues((oldForm) => ({
+                          handleChangeExplanation={
+                            (explanation) => setQuizFormValues((oldForm) => ({
                               ...oldForm,
                               explanation,
                             }))
@@ -909,29 +906,27 @@ const ContentManagementSteps: FC<Props> = () => {
                       ) : quizFormValues.type === 'tf' ? (
                         <TFQuizForm
                           isTrue={(quizFormValues as TrueFalseQuizForm).isTrue}
-                          handleChangeIsTrue={(isTrue) =>
-                            setQuizFormValues((oldForm) => ({
-                              ...oldForm,
-                              isTrue,
-                            }))
-                          }
+                          handleChangeIsTrue={(isTrue) => setQuizFormValues((oldForm) => ({
+                            ...oldForm,
+                            isTrue,
+                          }))}
                           correctMessage={(quizFormValues as TrueFalseQuizForm).correctMessage}
-                          handleChangeCorrectMessage={(correctMessage) =>
-                            setQuizFormValues((oldForm) => ({
+                          handleChangeCorrectMessage={
+                            (correctMessage) => setQuizFormValues((oldForm) => ({
                               ...oldForm,
                               correctMessage,
                             }))
                           }
                           incorrectMessage={(quizFormValues as TrueFalseQuizForm).incorrectMessage}
-                          handleChangeIncorrectMessage={(incorrectMessage) =>
-                            setQuizFormValues((oldForm) => ({
+                          handleChangeIncorrectMessage={
+                            (incorrectMessage) => setQuizFormValues((oldForm) => ({
                               ...oldForm,
                               incorrectMessage,
                             }))
                           }
                           explanation={(quizFormValues as TrueFalseQuizForm).explanation}
-                          handleChangeExplanation={(explanation) =>
-                            setQuizFormValues((oldForm) => ({
+                          handleChangeExplanation={
+                            (explanation) => setQuizFormValues((oldForm) => ({
                               ...oldForm,
                               explanation,
                             }))
@@ -940,8 +935,8 @@ const ContentManagementSteps: FC<Props> = () => {
                       ) : quizFormValues.type === 'qa' ? (
                         <QAQuizForm
                           explanation={(quizFormValues as QuestionAnswerQuizForm).explanation}
-                          handleChangeExplanation={(explanation) =>
-                            setQuizFormValues((oldForm) => ({
+                          handleChangeExplanation={
+                            (explanation) => setQuizFormValues((oldForm) => ({
                               ...oldForm,
                               explanation,
                             }))
@@ -996,12 +991,10 @@ const ContentManagementSteps: FC<Props> = () => {
                         sx={{
                           background: theme === darkTheme && theme.palette.primary.main,
                         }}
-                        onChange={(e) =>
-                          setNewQuizFormValues({
-                            ...newQuizFormValues,
-                            type: String(e.target.value),
-                          })
-                        }
+                        onChange={(e) => setNewQuizFormValues({
+                          ...newQuizFormValues,
+                          type: String(e.target.value),
+                        })}
                       >
                         <option value="mc">Multiple Choice</option>
                         <option value="tf">True/False</option>
@@ -1011,21 +1004,17 @@ const ContentManagementSteps: FC<Props> = () => {
                     <BaseQuizForm
                       question={newQuizFormValues.question}
                       description={newQuizFormValues.description}
-                      handleChangeQuestion={(question) =>
-                        setNewQuizFormValues({
-                          ...newQuizFormValues,
-                          question,
-                        })
-                      }
-                      handleChangeDescription={(description) =>
-                        setNewQuizFormValues({
-                          ...newQuizFormValues,
-                          description,
-                        })
-                      }
+                      handleChangeQuestion={(question) => setNewQuizFormValues({
+                        ...newQuizFormValues,
+                        question,
+                      })}
+                      handleChangeDescription={(description) => setNewQuizFormValues({
+                        ...newQuizFormValues,
+                        description,
+                      })}
                     />
-                    {newQuizFormValues &&
-                      (newQuizFormValues.type === 'mc' ? (
+                    {newQuizFormValues
+                      && (newQuizFormValues.type === 'mc' ? (
                         <MCQuizForm
                           choices={(newQuizFormValues as MultipleChoiceQuizForm).choices || []}
                           handleChangeChoices={(newChoices) => {
@@ -1035,17 +1024,15 @@ const ContentManagementSteps: FC<Props> = () => {
                             }));
                           }}
                           answers={(newQuizFormValues as MultipleChoiceQuizForm).answers || []}
-                          handleChangeAnswers={(answers) =>
-                            setNewQuizFormValues((oldForm) => ({
-                              ...oldForm,
-                              answers,
-                            }))
-                          }
+                          handleChangeAnswers={(answers) => setNewQuizFormValues((oldForm) => ({
+                            ...oldForm,
+                            answers,
+                          }))}
                           maxSelections={
                             (newQuizFormValues as MultipleChoiceQuizForm).maxSelections
                           }
-                          handleChangeMaxSelections={(maxSelections) =>
-                            setNewQuizFormValues((oldForm) => ({
+                          handleChangeMaxSelections={
+                            (maxSelections) => setNewQuizFormValues((oldForm) => ({
                               ...oldForm,
                               maxSelections,
                             }))
@@ -1053,8 +1040,8 @@ const ContentManagementSteps: FC<Props> = () => {
                           correctMessage={
                             (newQuizFormValues as MultipleChoiceQuizForm).correctMessage
                           }
-                          handleChangeCorrectMessage={(correctMessage) =>
-                            setNewQuizFormValues((oldForm) => ({
+                          handleChangeCorrectMessage={
+                            (correctMessage) => setNewQuizFormValues((oldForm) => ({
                               ...oldForm,
                               correctMessage,
                             }))
@@ -1062,15 +1049,15 @@ const ContentManagementSteps: FC<Props> = () => {
                           incorrectMessage={
                             (newQuizFormValues as MultipleChoiceQuizForm).incorrectMessage
                           }
-                          handleChangeIncorrectMessage={(incorrectMessage) =>
-                            setNewQuizFormValues((oldForm) => ({
+                          handleChangeIncorrectMessage={
+                            (incorrectMessage) => setNewQuizFormValues((oldForm) => ({
                               ...oldForm,
                               incorrectMessage,
                             }))
                           }
                           explanation={(newQuizFormValues as MultipleChoiceQuizForm).explanation}
-                          handleChangeExplanation={(explanation) =>
-                            setNewQuizFormValues((oldForm) => ({
+                          handleChangeExplanation={
+                            (explanation) => setNewQuizFormValues((oldForm) => ({
                               ...oldForm,
                               explanation,
                             }))
@@ -1079,15 +1066,13 @@ const ContentManagementSteps: FC<Props> = () => {
                       ) : newQuizFormValues.type === 'tf' ? (
                         <TFQuizForm
                           isTrue={(newQuizFormValues as TrueFalseQuizForm).isTrue}
-                          handleChangeIsTrue={(isTrue) =>
-                            setNewQuizFormValues((oldForm) => ({
-                              ...oldForm,
-                              isTrue,
-                            }))
-                          }
+                          handleChangeIsTrue={(isTrue) => setNewQuizFormValues((oldForm) => ({
+                            ...oldForm,
+                            isTrue,
+                          }))}
                           correctMessage={(newQuizFormValues as TrueFalseQuizForm).correctMessage}
-                          handleChangeCorrectMessage={(correctMessage) =>
-                            setNewQuizFormValues((oldForm) => ({
+                          handleChangeCorrectMessage={
+                            (correctMessage) => setNewQuizFormValues((oldForm) => ({
                               ...oldForm,
                               correctMessage,
                             }))
@@ -1095,15 +1080,15 @@ const ContentManagementSteps: FC<Props> = () => {
                           incorrectMessage={
                             (newQuizFormValues as TrueFalseQuizForm).incorrectMessage
                           }
-                          handleChangeIncorrectMessage={(incorrectMessage) =>
-                            setNewQuizFormValues((oldForm) => ({
+                          handleChangeIncorrectMessage={
+                            (incorrectMessage) => setNewQuizFormValues((oldForm) => ({
                               ...oldForm,
                               incorrectMessage,
                             }))
                           }
                           explanation={(newQuizFormValues as TrueFalseQuizForm).explanation}
-                          handleChangeExplanation={(explanation) =>
-                            setNewQuizFormValues((oldForm) => ({
+                          handleChangeExplanation={
+                            (explanation) => setNewQuizFormValues((oldForm) => ({
                               ...oldForm,
                               explanation,
                             }))
@@ -1112,8 +1097,8 @@ const ContentManagementSteps: FC<Props> = () => {
                       ) : newQuizFormValues.type === 'qa' ? (
                         <QAQuizForm
                           explanation={(newQuizFormValues as QuestionAnswerQuizForm).explanation}
-                          handleChangeExplanation={(explanation) =>
-                            setNewQuizFormValues((oldForm) => ({
+                          handleChangeExplanation={
+                            (explanation) => setNewQuizFormValues((oldForm) => ({
                               ...oldForm,
                               explanation,
                             }))
