@@ -5,7 +5,6 @@ import { TagList } from './TagList';
 interface TagSelectorProps {
   selectedTags: string[];
   setSelectedTags: (tags: string[]) => void;
-  allowDuplicates?: boolean;
 }
 
 const TagSelector: React.FC<TagSelectorProps> = ({ selectedTags, setSelectedTags }) => (

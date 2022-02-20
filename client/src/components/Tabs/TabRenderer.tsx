@@ -21,9 +21,9 @@ const TabRenderer: FC<Props> = ({ tab, topic }) => {
     default:
       return (
         <Alert severity="error">
-          Invalid tab: '
+          Invalid tab: &apos;
           {tab}
-          '
+          &apos;
         </Alert>
       );
   }

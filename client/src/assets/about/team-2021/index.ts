@@ -7,7 +7,7 @@ import raghavLall from './raghav-lall.png';
 import samShi from './sam-shi.png';
 import timZhang from './tim-zhang.png';
 
-export const team2021 = [
+const team2021 = [
   {
     name: 'Alexander Cunio',
     tagline: 'Mechatronic Engineering & Computer Science student at UNSW (4th year)',
@@ -49,3 +49,5 @@ export const team2021 = [
     imageSrc: timZhang,
   },
 ];
+
+export default team2021;

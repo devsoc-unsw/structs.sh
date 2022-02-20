@@ -1,6 +1,6 @@
 import cogoToast, { CTReturn } from 'cogo-toast';
 
-export class Notification {
+export default class Notification {
   public static lifespan: number = 4;
 
   public static success = (message: string) => {
@@ -19,5 +19,7 @@ export class Notification {
     cogoToast.warn(message, { hideAfter: this.lifespan });
   };
 
-  public static loading = (loadingMessage: string): CTReturn => cogoToast.loading(loadingMessage, { hideAfter: 0 });
+  public static loading = (
+    loadingMessage: string,
+  ): CTReturn => cogoToast.loading(loadingMessage, { hideAfter: 0 });
 }

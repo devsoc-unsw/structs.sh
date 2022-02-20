@@ -1,6 +1,6 @@
 import { Box, Tab, Tabs, Theme, Typography } from '@mui/material';
 import { useTheme } from '@mui/styles';
-import { FC, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Topic } from 'utils/apiRequests';
 import TabRenderer from './TabRenderer';
 import './Tabs.scss';
@@ -11,7 +11,7 @@ interface TabPanelProps {
   value: number;
 }
 
-function TabPanel(props: TabPanelProps) {
+const TabPanel = (props: TabPanelProps) => {
   const { children, value, index, ...other } = props;
 
   return (
@@ -29,7 +29,7 @@ function TabPanel(props: TabPanelProps) {
       )}
     </div>
   );
-}
+};
 
 interface Props {
   topic: Topic;
@@ -62,13 +62,13 @@ const ContentTabs: FC<Props> = ({ topic, tabs = ['Lesson', 'Code', 'Videos'] }) 
           indicatorColor="secondary"
           variant="fullWidth"
         >
-          {tabs.map((label, i) => (
-            <Tab label={label} />
+          {tabs.map((label, idx) => (
+            <Tab key={idx} label={label} />
           ))}
         </Tabs>
       </Box>
-      {tabs.map((tab, i) => (
-        <TabPanel value={tabIndex} index={i}>
+      {tabs.map((tab, idx) => (
+        <TabPanel key={idx} value={tabIndex} index={idx}>
           <TabRenderer topic={topic} tab={tab} />
         </TabPanel>
       ))}

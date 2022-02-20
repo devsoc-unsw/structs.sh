@@ -7,7 +7,7 @@ import { Theme } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import React from 'react';
 import Editor from 'rich-markdown-editor';
-import { Notification } from 'utils/Notification';
+import Notification from 'utils/Notification';
 import { light } from './theme';
 
 interface Props {

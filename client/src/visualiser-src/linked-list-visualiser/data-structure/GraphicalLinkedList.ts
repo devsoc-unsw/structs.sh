@@ -1,21 +1,21 @@
+import AnimationProducer from 'visualiser-src/common/AnimationProducer';
 import { CURRENT, PREV } from '../util/constants';
 import GraphicalLinkedListNode from './GraphicalLinkedListNode';
 import LinkedListAppendAnimationProducer from '../animation-producer/LinkedListAppendAnimationProducer';
 import LinkedListDeleteAnimationProducer from '../animation-producer/LinkedListDeleteAnimationProducer';
 import LinkedListInsertAnimationProducer from '../animation-producer/LinkedListInsertAnimationProducer';
 import LinkedListSearchAnimationProducer from '../animation-producer/LinkedListSearchAnimationProducer';
+import LinkedListPrependAnimationProducer from '../animation-producer/LinkedListPrependAnimationProducer';
 
+// An linked list data structure containing all linked list operations.
+// Every operation producers a LinkedListAnimationProducer, which an AnimationController
+// can then use to place SVG.Runners on a timeline to animate the operation.
 export default class GraphicalLinkedList {
-  head: GraphicalLinkedListNode;
+  head: GraphicalLinkedListNode = null;
 
-  length: number;
+  length: number = 0;
 
-  constructor() {
-    this.head = null;
-    this.length = 0;
-  }
-
-  append(input: number) {
+  append(input: number): AnimationProducer {
     this.length += 1;
     const producer = new LinkedListAppendAnimationProducer();
     // Create new node
@@ -25,7 +25,7 @@ export default class GraphicalLinkedList {
     // Account for case when list is empty
     if (this.head === null) {
       this.head = newNode;
-      return producer.allRunners;
+      return producer;
     }
 
     // Initialise curr
@@ -42,16 +42,31 @@ export default class GraphicalLinkedList {
     curr.next = newNode;
     producer.linkLastToNew(curr);
 
-    // Reset positions
-    producer.resetList(this.head);
-    return producer.allRunners;
+    // Reset pointers
+    producer.resetPointers();
+    return producer;
   }
 
-  delete(index: number) {
+  prepend(input: number): AnimationProducer {
+    if (this.length === 0) {
+      return this.append(input);
+    }
+    this.length += 1;
+    const producer = new LinkedListPrependAnimationProducer();
+    const newHead: GraphicalLinkedListNode = GraphicalLinkedListNode.from(input);
+    producer.createNode(newHead);
+    newHead.next = this.head;
+    producer.newHeadPointToOldHead(newHead);
+    this.head = newHead;
+    producer.resetPositioning(this.head);
+    return producer;
+  }
+
+  delete(index: number): AnimationProducer {
     // Check index in range
-    if (index < 0 || index > this.length - 1) return [];
-    this.length -= 1;
     const producer = new LinkedListDeleteAnimationProducer();
+    if (index < 0 || index > this.length - 1) return producer;
+    this.length -= 1;
 
     // Look for node to delete
     let curr = this.head;
@@ -78,14 +93,14 @@ export default class GraphicalLinkedList {
     }
     producer.deleteNode(curr);
     producer.resetList(this.head);
-    return producer.allRunners;
+    return producer;
   }
 
-  search(value: number) {
-    if (this.head === null) {
-      return [];
-    }
+  search(value: number): AnimationProducer {
     const producer = new LinkedListSearchAnimationProducer();
+    if (this.head === null) {
+      return producer;
+    }
     let curr = this.head;
     producer.initialisePointer(CURRENT);
     while (curr !== null && curr.value !== value) {
@@ -98,12 +113,15 @@ export default class GraphicalLinkedList {
     if (curr !== null) {
       producer.indicateFound(curr);
     }
-    producer.resetList(this.head);
-    return producer.allRunners;
+    producer.resetPointers();
+    return producer;
   }
 
-  insert(value: number, index: number) {
-    if (index >= this.length - 1) {
+  insert(value: number, index: number): AnimationProducer {
+    if (index <= 0) {
+      return this.prepend(value);
+    }
+    if (index > this.length - 1) {
       return this.append(value);
     }
     this.length += 1;
@@ -112,7 +130,7 @@ export default class GraphicalLinkedList {
     producer.createNodeAt(index, newNode);
     let curr = this.head;
     producer.initialisePointer(CURRENT);
-    for (let i = 0; i < index; i += 1) {
+    for (let i = 0; i < index - 1; i += 1) {
       curr = curr.next;
       producer.movePointerToNext(CURRENT);
     }
@@ -122,6 +140,6 @@ export default class GraphicalLinkedList {
     producer.pointToInsertedNode(curr);
 
     producer.resetList(this.head);
-    return producer.allRunners;
+    return producer;
   }
 }

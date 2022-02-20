@@ -1,46 +1,46 @@
-import { Runner } from '@svgdotjs/svg.js';
-import LinkedListController from '../controller/linkedListController';
+import AnimationProducer from '../common/AnimationProducer';
+import Controller from '../controller/AnimationController';
 import LinkedList from './data-structure/GraphicalLinkedList';
 import { defaultSpeed } from './util/constants';
 
-/**
- * Initialises the visualiser and binds event handlers to the controller UI.
- */
+// for documentation read: https://compclub.atlassian.net/wiki/spaces/S/pages/2150892071/Documentation#Visualiser-Docs%3A
+
 const initialiser = (): any => {
   const linkedList: LinkedList = new LinkedList();
-  const animationController = new LinkedListController();
+  const animationController = new Controller();
+
   animationController.setSpeed(defaultSpeed);
 
   const appendNode = (val: number, updateSlider: (val: number) => void): void => {
     animationController.finish();
-    // Generating the steps of the animation
-    const sequence: Runner[][] = linkedList.append(val);
-    // Playing the animation
-    animationController.runSequence(sequence, updateSlider);
+
+    const producer: AnimationProducer = linkedList.append(val);
+
+    animationController.constructTimeline(producer, updateSlider);
   };
 
   const deleteNode = (index: number, updateSlider: (val: number) => void): void => {
     animationController.finish();
 
-    const sequence: Runner[][] = linkedList.delete(index);
+    const producer: AnimationProducer = linkedList.delete(index);
 
-    animationController.runSequence(sequence, updateSlider);
+    animationController.constructTimeline(producer, updateSlider);
   };
 
   const searchList = (val: number, updateSlider: (val: number) => void): void => {
     animationController.finish();
 
-    const sequence: Runner[][] = linkedList.search(val);
+    const producer: AnimationProducer = linkedList.search(val);
 
-    animationController.runSequence(sequence, updateSlider);
+    animationController.constructTimeline(producer, updateSlider);
   };
 
   const insertNode = (val: number, index: number, updateSlider: (val: number) => void): void => {
     animationController.finish();
 
-    const sequence: Runner[][] = linkedList.insert(val, index);
+    const producer: AnimationProducer = linkedList.insert(val, index);
 
-    animationController.runSequence(sequence, updateSlider);
+    animationController.constructTimeline(producer, updateSlider);
   };
 
   const play = () => {
@@ -52,25 +52,19 @@ const initialiser = (): any => {
   };
 
   const stepBack = () => {
-    animationController.gotoPrevious();
+    animationController.stepBackwards();
   };
 
   const stepForward = () => {
-    animationController.gotoNext();
+    animationController.stepForwards();
   };
 
   const setTimeline = (val: number) => {
-    animationController.pause();
     animationController.seekPercent(val);
   };
 
   const setSpeed = (val: number) => {
-    animationController.freeze();
     animationController.setSpeed(val);
-  };
-
-  const onFinishSetSpeed = () => {
-    if (!animationController.isPaused) animationController.play();
   };
 
   return {
@@ -84,32 +78,7 @@ const initialiser = (): any => {
     stepForward,
     setTimeline,
     setSpeed,
-    onFinishSetSpeed,
   };
-
-  // Grabbing references to form buttons and attaching event handlers to them
-  // const appendButton = document.querySelector('#appendButton');
-  // const deleteButton = document.querySelector('#deleteButton');
-  // const searchButton = document.querySelector('#searchButton');
-  // const playButton = document.querySelector('#playButton');
-  // const pauseButton = document.querySelector('#pauseButton');
-  // const insertButton = document.querySelector('#insertButton');
-  // const previousButton = document.querySelector('#previousSequenceButton');
-  // const nextButton = document.querySelector('#nextSequenceButton');
-  // const slider = document.querySelector('#timeline-slider') as HTMLInputElement;
-  // const speedSlider = document.querySelector('#speed-slider') as HTMLInputElement;
-
-  // appendButton.addEventListener('click', handleAppendClick);
-  // deleteButton.addEventListener('click', handleDeleteClick);
-  // searchButton.addEventListener('click', handleSearchClick);
-  // insertButton.addEventListener('click', handleInsertClick);
-  // playButton.addEventListener('click', handlePlayClick);
-  // pauseButton.addEventListener('click', handlePauseClick);
-  // previousButton.addEventListener('click', handleSelectPrevious);
-  // nextButton.addEventListener('click', handleSelectNext);
-  // slider.addEventListener('input', handleSliderChange);
-  // speedSlider.addEventListener('input', handleSpeedChange);
-  // speedSlider.addEventListener('change', handleSpeedChangeComplete);
 };
 
 export default initialiser;

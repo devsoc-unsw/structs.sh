@@ -15,12 +15,11 @@ const ParticleHeader: React.FC<Props> = () => {
   // Note: this is a hacky way of forcefully setting the background gradient
   useEffect(() => {
     const body: any = document.querySelector('body');
-    if (!body) return;
+    if (!body) return () => {};
 
     body.style.background = particleTheme.backgroundCss;
 
     return () => {
-      const body = document.querySelector('body');
       body.style.background = theme.palette.background.default;
     };
   });

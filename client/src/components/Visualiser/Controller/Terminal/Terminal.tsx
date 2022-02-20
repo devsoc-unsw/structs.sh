@@ -107,8 +107,9 @@ const Terminal: FC<Props> = ({ executeCommand, topicTitle }) => {
             cursor={{ hideWhenDone: true }}
             avgTypingDelay={30}
           >
-            Type "man" to see commands available for '{topicTitle}
-            '.
+            Type &quot;man&quot; to see commands available for &apos;
+            {topicTitle}
+            &apos;.
           </Typist>
         )}
       </div>

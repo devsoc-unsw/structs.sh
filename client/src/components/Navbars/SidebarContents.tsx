@@ -28,14 +28,14 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { getTopics, Topic } from 'utils/apiRequests';
-import { Notification } from 'utils/Notification';
+import Notification from 'utils/Notification';
 import { titleToUrl } from 'utils/url';
 import CodeIcon from '@mui/icons-material/Code';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import Filter from './Filter';
 import styles from './Sidebar.module.scss';
 
-function SidebarContents({ setShowSidebar }) {
+const SidebarContents = ({ setShowSidebar }) => {
   const [topics, setTopics] = useState<Topic[]>([]);
   const [showFilter, setShowFilter] = useState(false);
 
@@ -126,23 +126,19 @@ function SidebarContents({ setShowSidebar }) {
       </Typography>
       <List>
         {topics && topics.length > 0 ? (
-          topics.map((topic, i) => (
-            <Box key={i}>
-              <RouterLink
-                to={`/visualiser/${titleToUrl(topic.title)}`}
-                style={{ color: 'inherit', textDecoration: 'none' }}
-              >
-                <ListItem key={i} button>
-                  <ListItemAvatar>
-                    <TopicIcon />
-                  </ListItemAvatar>
-                  <ListItemText primary={topic.title} />
-                </ListItem>
-                <Box sx={{ paddingLeft: 3 }}>
-                  <TagList tags={topic.courses} />
-                </Box>
-              </RouterLink>
-            </Box>
+          topics.map((topic, idx) => (
+            <RouterLink
+              key={idx}
+              to={`/visualiser/${titleToUrl(topic.title)}`}
+              style={{ color: 'inherit', textDecoration: 'none' }}
+            >
+              <ListItem key={idx} button>
+                <ListItemAvatar>
+                  <TopicIcon />
+                </ListItemAvatar>
+                <ListItemText primary={topic.title} secondary={<TagList tags={topic.courses} />} />
+              </ListItem>
+            </RouterLink>
           ))
         ) : (
           <LineLoader />
@@ -180,7 +176,7 @@ function SidebarContents({ setShowSidebar }) {
       </List>
     </Box>
   );
-}
+};
 
 SidebarContents.propTypes = {
   setShowSidebar: PropTypes.func,

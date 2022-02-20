@@ -1,12 +1,14 @@
+import { SVG, Container } from '@svgdotjs/svg.js';
 import BSTInsertAnimationProducer from '../animation-producer/BSTInsertAnimationProducer';
 import BSTRotateAnimationProducer from '../animation-producer/BSTRotateAnimationProducer';
+import BSTTraverseAnimationProducer from '../animation-producer/BSTTraverseAnimationProducer';
 import { Node } from '../util/typedefs';
-import { SVG, Container } from '@svgdotjs/svg.js';
 import { canvasPadding } from '../util/settings';
 
 // used for the actual implementation of the bst
 class BST {
   public root: Node = null;
+
   public draw: Container = SVG().addTo('#bst-canvas').size('100%', '100%');
 
   // inserts a node into the bst and produces an animation sequence
@@ -25,6 +27,8 @@ class BST {
       y: 0,
     };
 
+    animationProducer.resetBST(this.root);
+
     if (this.root == null) {
       this.root = node;
       this.updateNodePositions();
@@ -33,7 +37,7 @@ class BST {
       let currentNode: Node = this.root;
 
       while (currentNode) {
-        animationProducer.highlightNode(currentNode);
+        animationProducer.flashNode(currentNode);
 
         if (node.value < currentNode.value) {
           if (currentNode.left == null) {
@@ -77,7 +81,7 @@ class BST {
     low: number,
     high: number,
     mid: number,
-    y: number
+    y: number,
   ): void {
     if (node === null) {
       return;
@@ -102,11 +106,10 @@ class BST {
   public getNodeRecursive(input: number, node: Node): Node {
     if (input === node.value) {
       return node;
-    } else if (input < node.value) {
+    } if (input < node.value) {
       return this.getNodeRecursive(input, node.left);
-    } else {
-      return this.getNodeRecursive(input, node.right);
     }
+    return this.getNodeRecursive(input, node.right);
   }
 
   public rotateLeft(input: number): BSTRotateAnimationProducer {
@@ -119,11 +122,13 @@ class BST {
 
     if (newRoot === null) return animationProducer;
 
-    if (newRoot.right != null) {
+    animationProducer.resetBST(this.root);
+
+    if (newRoot.left != null) {
       animationProducer.movePointerToNewRootLeftChild(oldRoot, newRoot);
       animationProducer.moveLeftPointerToOldRoot(oldRoot, newRoot);
     } else {
-      animationProducer.assignNewRootLeftPointerToOldRootRightPointer(oldRoot, newRoot);
+      BSTRotateAnimationProducer.assignNewRootLeftPointerToOldRootRightPointer(oldRoot, newRoot);
     }
 
     this.root = this.doRotateLeft(this.root, input);
@@ -140,7 +145,7 @@ class BST {
       newRoot.left = node;
 
       return newRoot;
-    } else if (input < node.value) {
+    } if (input < node.value) {
       node.left = this.doRotateLeft(node.left, input);
     } else {
       node.right = this.doRotateLeft(node.right, input);
@@ -159,11 +164,13 @@ class BST {
 
     if (newRoot === null) return animationProducer;
 
+    animationProducer.resetBST(this.root);
+
     if (newRoot.right != null) {
       animationProducer.movePointerToNewRootRightChild(oldRoot, newRoot);
       animationProducer.moveRightPointerToOldRoot(oldRoot, newRoot);
     } else {
-      animationProducer.assignNewRootRightPointerToOldRootLeftPointer(oldRoot, newRoot);
+      BSTRotateAnimationProducer.assignNewRootRightPointerToOldRootLeftPointer(oldRoot, newRoot);
     }
 
     this.root = this.doRotateRight(this.root, input);
@@ -180,13 +187,81 @@ class BST {
       newRoot.right = node;
 
       return newRoot;
-    } else if (input < node.value) {
+    } if (input < node.value) {
       node.left = this.doRotateRight(node.left, input);
     } else {
       node.right = this.doRotateRight(node.right, input);
     }
 
     return node;
+  }
+
+  public inorderTraversal(): BSTTraverseAnimationProducer {
+    const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer(
+      this.draw,
+    );
+    animationProducer.resetBST(this.root);
+    this.doInorderTraversal(this.root, animationProducer);
+
+    return animationProducer;
+  }
+
+  public doInorderTraversal(node: Node, animationProducer: BSTTraverseAnimationProducer) {
+    if (node === null) {
+      return;
+    }
+
+    animationProducer.halfHighlightNode(node);
+    animationProducer.highlightLine(node.leftLineTarget);
+    this.doInorderTraversal(node.left, animationProducer);
+    animationProducer.highlightNode(node);
+    animationProducer.highlightLine(node.rightLineTarget);
+    this.doInorderTraversal(node.right, animationProducer);
+  }
+
+  public preorderTraversal(): BSTTraverseAnimationProducer {
+    const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer(
+      this.draw,
+    );
+    animationProducer.resetBST(this.root);
+    this.doPreorderTraversal(this.root, animationProducer);
+
+    return animationProducer;
+  }
+
+  public doPreorderTraversal(node: Node, animationProducer: BSTTraverseAnimationProducer) {
+    if (node === null) {
+      return;
+    }
+
+    animationProducer.highlightNode(node);
+    animationProducer.highlightLine(node.leftLineTarget);
+    this.doPreorderTraversal(node.left, animationProducer);
+    animationProducer.highlightLine(node.rightLineTarget);
+    this.doPreorderTraversal(node.right, animationProducer);
+  }
+
+  public postorderTraversal(): BSTTraverseAnimationProducer {
+    const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer(
+      this.draw,
+    );
+    animationProducer.resetBST(this.root);
+    this.doPostorderTraversal(this.root, animationProducer);
+
+    return animationProducer;
+  }
+
+  public doPostorderTraversal(node: Node, animationProducer: BSTTraverseAnimationProducer) {
+    if (node === null) {
+      return;
+    }
+
+    animationProducer.halfHighlightNode(node);
+    animationProducer.highlightLine(node.leftLineTarget);
+    this.doPostorderTraversal(node.left, animationProducer);
+    animationProducer.highlightLine(node.rightLineTarget);
+    this.doPostorderTraversal(node.right, animationProducer);
+    animationProducer.highlightNode(node);
   }
 }
 

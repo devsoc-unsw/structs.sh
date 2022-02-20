@@ -6,22 +6,6 @@ interface Props {
   topicTitle: string;
 }
 
-/**
- * The React component that renders the DOM elements that the visualiser
- * attaches itself to. Each visualiser may have a different canvas that it
- * needs.
- */
-const VisualiserCanvas: React.FC<Props> = ({ topicTitle }) => {
-  switch (topicTitle) {
-    case 'Linked Lists':
-      return <LinkedListCanvas />;
-    case 'Binary Search Trees':
-      return <BSTCanvas />;
-    default:
-      return null;
-  }
-};
-
 /* -------------------------------------------------------------------------- */
 /*                        Visualiser-Specific Canvases                        */
 /* -------------------------------------------------------------------------- */
@@ -49,5 +33,21 @@ const BSTCanvas: React.FC = () => (
     style={{ height: '100%', width: '100%', background: 'rgba(235, 235, 235)' }}
   />
 );
+
+/**
+ * The React component that renders the DOM elements that the visualiser
+ * attaches itself to. Each visualiser may have a different canvas that it
+ * needs.
+ */
+const VisualiserCanvas: React.FC<Props> = ({ topicTitle }) => {
+  switch (topicTitle) {
+    case 'Linked Lists':
+      return <LinkedListCanvas />;
+    case 'Binary Search Trees':
+      return <BSTCanvas />;
+    default:
+      return null;
+  }
+};
 
 export default VisualiserCanvas;

@@ -1,8 +1,8 @@
 // dom elements to manipulate
 const pointersGroup = document.querySelector(".visualiser-svg .pointers")
 const nodesGroup = document.querySelector(".visualiser-svg .nodes")
-const [ appendButton, deleteButton ] = document.querySelectorAll(".visualiser-form button");
-const [ appendInput, deleteInput ] = document.querySelectorAll(".visualiser-form input");
+const [appendButton, deleteButton] = document.querySelectorAll(".visualiser-form button");
+const [appendInput, deleteInput] = document.querySelectorAll(".visualiser-form input");
 
 // current nodes and pointers
 const nodes = [];
@@ -43,15 +43,15 @@ function generateAppendSequence(data) {
                 action: 'highlight',
                 targets: [nodeSVGs[i]],
                 // second last node is highlighted for longer 
-                duration: i === nodeSVGs.length - 2? 2500: 1000,
-                delay: i === 0? 0: 500 
+                duration: i === nodeSVGs.length - 2 ? 2500 : 1000,
+                delay: i === 0 ? 0 : 500
             })
         } else {
             animationSequence.push({
                 action: 'fadeIn',
                 targets: [nodeSVGs[i]],
                 duration: 1000,
-                delay: 500 
+                delay: 500
             })
             if (pointers.length > 0) {
                 animationSequence.push({
@@ -70,7 +70,7 @@ function generateAppendSequence(data) {
                 duration: 1000,
                 delay: 500
             })
-        } 
+        }
     }
     console.log(animationSequence)
     return animationSequence;
@@ -89,7 +89,7 @@ function generateDeleteSequence(position) {
             action: 'highlight',
             targets: [nodeSVGs[0]],
             duration: 1000,
-            delay: 0 
+            delay: 0
         })
         animationSequence.push({
             action: 'fadeOut',
@@ -102,8 +102,8 @@ function generateDeleteSequence(position) {
                 action: 'fadeOut',
                 targets: [pointerSVGs[0]],
                 duration: 1000,
-                delay: 0 
-            }); 
+                delay: 0
+            });
         }
         // shift items to left
         if (nodes.length > 1) {
@@ -119,7 +119,7 @@ function generateDeleteSequence(position) {
                 action: 'shiftLeft',
                 targets: [[...pointerSVGs].slice(1)],
                 duration: 1000,
-                delay: 0 
+                delay: 0
             });
         }
         console.log(animationSequence);
@@ -131,7 +131,7 @@ function generateDeleteSequence(position) {
             action: 'highlight',
             targets: [nodeSVGs[i]],
             duration: 1000,
-            delay: i === 0? 0: 500
+            delay: i === 0 ? 0 : 500
         })
         // only highlight pointers before position to be deleted
         animationSequence.push({
@@ -146,7 +146,7 @@ function generateDeleteSequence(position) {
         action: 'highlight',
         targets: [nodeSVGs[position]],
         duration: 1000,
-        delay: 500 
+        delay: 500
     });
 
     if (position < nodes.length - 1) {
@@ -201,19 +201,19 @@ function generateDeleteSequence(position) {
             action: 'shorten',
             targets: [pointerSVGs[position - 1]],
             duration: 1000,
-            delay: 1500 
+            delay: 1500
         })
         animationSequence.push({
             action: 'shiftLeft',
             targets: [[...pointerSVGs].slice(position + 1)],
             duration: 1000,
-            delay: 0 
+            delay: 0
         })
         animationSequence.push({
             action: 'shiftLeft',
             targets: [[...nodeSVGs].slice(position + 1)],
             duration: 1000,
-            delay: 0 
+            delay: 0
         })
     }
     return animationSequence;
@@ -224,22 +224,22 @@ function generateDeleteSequence(position) {
 function createAnimation(animationSequence) {
     let offset = 0;
     animation = anime.timeline();
-    animationSequence.forEach((frame, i) => {
+    animationSequence.forEach((frame, idx) => {
         offset += frame.delay
-        switch(frame.action) {
+        switch (frame.action) {
             case 'highlight':
                 // highlight node without transition
                 animation.add({
                     targets: frame.targets,
                     fill: [
-                        {value: '#000000', duration: 5},
-                        {value: '#ff0000', duration: frame.duration - 5},
-                        {value: '#000000', duration: 0}
+                        { value: '#000000', duration: 5 },
+                        { value: '#ff0000', duration: frame.duration - 5 },
+                        { value: '#000000', duration: 0 }
                     ],
                     stroke: [
-                        {value: '#000000', duration: 5},
-                        {value: '#ff0000', duration: frame.duration - 5},
-                        {value: '#000000', duration: 0}
+                        { value: '#000000', duration: 5 },
+                        { value: '#ff0000', duration: frame.duration - 5 },
+                        { value: '#000000', duration: 0 }
                     ],
                     easing: 'steps(1)'
                 }, offset);
@@ -248,18 +248,18 @@ function createAnimation(animationSequence) {
                 animation.add({
                     targets: frame.targets,
                     opacity: [
-                        {value: 0, duration: 5},
-                        {value: 1, duration: frame.duration - 5}
+                        { value: 0, duration: 5 },
+                        { value: 1, duration: frame.duration - 5 }
                     ],
-                    easing: 'linear' 
+                    easing: 'linear'
                 }, offset);
                 break;
             case 'fadeOut':
                 animation.add({
                     targets: frame.targets,
-                    opacity: [{value: 0, duration: frame.duration}],
+                    opacity: [{ value: 0, duration: frame.duration }],
                     easing: 'linear',
-                    changeComplete: function() {
+                    changeComplete: function () {
                         // clean up svgs from dom
                         frame.targets.forEach(el => el.remove());
                     }
@@ -270,8 +270,8 @@ function createAnimation(animationSequence) {
                 animation.add({
                     targets: frame.targets,
                     opacity: [
-                        {value: 0, duration: 5},
-                        {value: 1, duration: frame.duration - 5}
+                        { value: 0, duration: 5 },
+                        { value: 1, duration: frame.duration - 5 }
                     ],
                     easing: 'steps(1)'
                 }, offset);
@@ -281,11 +281,11 @@ function createAnimation(animationSequence) {
                 animation.add({
                     targets: frame.targets,
                     opacity: [
-                        {value: 1, duration: 5},
-                        {value: 0, duration: frame.duration - 5}
+                        { value: 1, duration: 5 },
+                        { value: 0, duration: frame.duration - 5 }
                     ],
                     easing: 'steps(1)',
-                    changeComplete: function() {
+                    changeComplete: function () {
                         // clean up svgs from dom
                         frame.targets.forEach(el => el.remove());
                     }
@@ -295,10 +295,10 @@ function createAnimation(animationSequence) {
                 // shift all nodes and pointers to the left
                 animation.add({
                     targets: frame.targets,
-                    transform: function(el) {
+                    transform: function (el) {
                         const currentTransform = getTransformValue(el);
                         return `translate(${currentTransform[0] - getOffsetDistance()}, `
-                            +`${currentTransform[1]})`;
+                            + `${currentTransform[1]})`;
                     },
                     easing: 'linear'
                 }, offset)
@@ -309,7 +309,7 @@ function createAnimation(animationSequence) {
                 // TODO: add a animation that draws the arc, and allows the
                 // tip to follow the path it traces while it's being drawn
                 animation.add({
-                    changeBegin: function() {
+                    changeBegin: function () {
                         convertToArc(frame.targets[0])
                     },
                 }, offset);
@@ -319,11 +319,11 @@ function createAnimation(animationSequence) {
                 animation.add({
                     targets: frame.targets[0].childNodes[0],
                     d: [
-                        {value: getArcD(), duration: 5},
-                        {value: getFlatArcD(), duration: frame.duration - 5}
+                        { value: getArcD(), duration: 5 },
+                        { value: getFlatArcD(), duration: frame.duration - 5 }
                     ],
-                    easing: function() {
-                        return function(t) {
+                    easing: function () {
+                        return function (t) {
                             // initially slow, then speeds up
                             return Math.pow(t, 5);
                         };
@@ -334,11 +334,11 @@ function createAnimation(animationSequence) {
                 animation.add({
                     targets: frame.targets[0].childNodes[2],
                     transform: [
-                        {value: getArcTipTransform(), duration: 5},
-                        {value: getLongPointerTipTransform(), duration: frame.duration - 5}
+                        { value: getArcTipTransform(), duration: 5 },
+                        { value: getLongPointerTipTransform(), duration: frame.duration - 5 }
                     ],
                     easing: 'linear',
-                    changeComplete: function() {
+                    changeComplete: function () {
                         // once animation finishes, the curved tail is hidden and the straight tail
                         // is displayed
                         convertToLongPointer(frame.targets[0])
@@ -350,8 +350,8 @@ function createAnimation(animationSequence) {
                 animation.add({
                     targets: frame.targets[0].childNodes[1],
                     x2: [
-                        {value: getLongPointerTailLength(), duration: 5},
-                        {value: getShortPointerLength() - getPointerTipHeight(), duration: frame.duration - 5}
+                        { value: getLongPointerTailLength(), duration: 5 },
+                        { value: getShortPointerLength() - getPointerTipHeight(), duration: frame.duration - 5 }
                     ],
                     duration: frame.duration,
                     easing: 'linear'
@@ -361,7 +361,7 @@ function createAnimation(animationSequence) {
                 animation.add({
                     targets: frame.targets[0].childNodes[2],
                     duration: frame.duration,
-                    transform: [{value: getLongPointerTipTransform(), duration: 5}, {value: 'translate(0, 0)', duration: frame.duration - 5}],
+                    transform: [{ value: getLongPointerTipTransform(), duration: 5 }, { value: 'translate(0, 0)', duration: frame.duration - 5 }],
                     easing: 'linear'
                 }, offset);
                 break;
@@ -374,9 +374,9 @@ function createAnimation(animationSequence) {
 // positions and appends a pointer to the visualiser
 function appendPointerSVG(visible) {
     const newPointer = createPointer();
-    const {width, height} = getNodeDimensions();
+    const { width, height } = getNodeDimensions();
     newPointer.setAttribute('transform', `translate(${5 / 6 * width + getOffsetDistance() * pointers.length}, ${height / 2 - 1 / 2 * getPointerTipBaseLength() + 1 / 2 * getStrokeWidth()})`)
-    newPointer.setAttribute('opacity', visible? 1: 0);
+    newPointer.setAttribute('opacity', visible ? 1 : 0);
     pointersGroup.appendChild(newPointer);
     pointers.push(1);
 }
@@ -385,7 +385,7 @@ function appendPointerSVG(visible) {
 function appendNodeSVG(data, visible) {
     const newNode = createNode(data);
     newNode.setAttribute('transform', `translate(${getOffsetDistance() * nodes.length + getStrokeWidth() / 2}, ${getStrokeWidth() / 2})`);
-    newNode.setAttribute('opacity', visible? 1: 0);
+    newNode.setAttribute('opacity', visible ? 1 : 0);
     nodesGroup.appendChild(newNode);
     nodes.push(data);
 }
@@ -408,7 +408,7 @@ function createNode(data) {
     // pointer representing null value 
     const pointer = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     // key attribute values
-    const {height, width} = getNodeDimensions();
+    const { height, width } = getNodeDimensions();
     const strokeWidth = getStrokeWidth();
     // style node components
     container.setAttribute('fill', 'transparent');
@@ -504,7 +504,7 @@ function getArcD() {
 
 // returns d attribute of the target frame when flattening curved tail 
 function getFlatArcD() {
-    return `M ${1 / 2 * getPointerTipHeight()} ${getPointerTipBaseLength() / 2} ` 
+    return `M ${1 / 2 * getPointerTipHeight()} ${getPointerTipBaseLength() / 2} `
         + `a 5000 5000 0 0 1 ${getLongPointerTailLength()} 0`;
 }
 
@@ -525,7 +525,7 @@ function getLongPointerTipTransform() {
 function getNodeDimensions() {
     const height = 2 * parseInt(getComputedStyle(document.documentElement).fontSize);
     const width = 3 / 2 * height;
-    return {width, height};
+    return { width, height };
 }
 
 // returns full horizontal length of a short pointer, including the tip

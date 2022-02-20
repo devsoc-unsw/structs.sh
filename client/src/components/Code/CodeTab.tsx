@@ -21,7 +21,7 @@ import {
 } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { darkTheme } from 'structsThemes';
 import { getSourceCodes, SourceCode, Topic } from 'utils/apiRequests';
-import { Notification } from 'utils/Notification';
+import Notification from 'utils/Notification';
 
 interface Props {
   topic: Topic;
@@ -67,26 +67,26 @@ const CodeSnippet: FC<Props> = ({ topic }) => {
       </FormControl>
       <HorizontalRule />
       {codeSnippets
-                && codeSnippets.map((snippet, i) => (
-                  <Accordion defaultExpanded={i === 0}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                      <Typography>{snippet.title}</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <SyntaxHighlighter
-                        language="c"
-                        style={theme === darkTheme ? darkCodeTheme : lightCodeTheme}
-                        showLineNumbers
-                        wrapLines
-                        lineProps={{
-                          style: { wordBreak: 'break-all', whiteSpace: 'pre-wrap' },
-                        }}
-                      >
-                        {snippet.code}
-                      </SyntaxHighlighter>
-                    </AccordionDetails>
-                  </Accordion>
-                ))}
+      && codeSnippets.map((snippet, idx) => (
+        <Accordion key={idx} defaultExpanded={idx === 0}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography>{snippet.title}</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <SyntaxHighlighter
+              language="c"
+              style={theme === darkTheme ? darkCodeTheme : lightCodeTheme}
+              showLineNumbers
+              wrapLines
+              lineProps={{
+                style: { wordBreak: 'break-all', whiteSpace: 'pre-wrap' },
+              }}
+            >
+              {snippet.code}
+            </SyntaxHighlighter>
+          </AccordionDetails>
+        </Accordion>
+      ))}
     </Box>
   );
 };

@@ -1,4 +1,6 @@
-import { Circle, Line, Text, Container } from '@svgdotjs/svg.js';
+import {
+  Circle, Line, Text,
+} from '@svgdotjs/svg.js';
 
 /**
  * Type definitions used by the visualiser

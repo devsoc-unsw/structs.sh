@@ -5,11 +5,7 @@ import { useTheme } from '@mui/styles';
 import { getGUICommands, Operation } from 'components/Visualiser/commandsInputRules';
 import React, { FC, useState } from 'react';
 import { LastLink, Link } from './Links';
-import OperationDetails from './OperationDetails';
-
-export interface OperationsMenuState {
-  [k: string]: boolean;
-}
+import OperationDetails, { OperationsMenuState } from './OperationDetails';
 
 interface Props {
   executeCommand: (command: string, args: string[]) => string;
@@ -29,15 +25,19 @@ const OperationsTree: FC<Props> = ({ topicTitle, executeCommand }) => {
   };
 
   return !ops ? (
-    <Alert severity="error">No operations are defined for the topicTitle '{topicTitle}'</Alert>
+    <Alert severity="error">
+      No operations are defined for the topicTitle &apos;
+      {topicTitle}
+      &apos;
+    </Alert>
   ) : (
     <Box sx={{ padding: 2 }}>
       <Typography color="textPrimary">{topicTitle}</Typography>
       <List>
-        {ops.map((op, i) => {
-          const isLast = i === ops.length - 1;
+        {ops.map((op, idx) => {
+          const isLast = idx === ops.length - 1;
           return (
-            <Box key={i}>
+            <Box key={idx}>
               <ListItem
                 button
                 sx={{
