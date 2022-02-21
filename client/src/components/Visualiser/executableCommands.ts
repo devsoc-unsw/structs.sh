@@ -4,6 +4,10 @@ const getLinkedListExecutor = (
   visualiser,
   updateTimeline,
 ) => (command: string, args: string[]): string => {
+  console.log(command, args)
+  if (!isValidCommandArgs(args, getLinkedListNumArgsRequired(command))) {
+    return 'Invalid arguments: check the man page for command usage';
+  }
   switch (command) {
     case 'append':
       visualiser.appendNode(Number(args[0]), updateTimeline);
@@ -27,6 +31,9 @@ const getBSTExecutor = (
   visualiser,
   updateTimeline,
 ) => (command: string, args: string[]): string => {
+  if (!isValidCommandArgs(args, getBSTNumArgsRequired(command))) {
+    return 'Invalid arguments: check the man page for command usage';
+  }
   switch (command) {
     case 'insert':
       visualiser.insert(Number(args[0]), updateTimeline);
@@ -56,6 +63,28 @@ const undefinedExecutor = (topicTitle) => (command: string, args: string[]): str
   console.error(`Can't find the executor for ${topicTitle}`);
   return '';
 };
+
+const isValidCommandArgs = (args: string[], numExpectedArgs: number): boolean => {
+  return args.length === numExpectedArgs && args.every((value) => /^\d+$/.test(value));
+}
+
+const getLinkedListNumArgsRequired = (command: string): number => {
+  switch (command) {
+    case 'insert':
+      return 2;
+    default:
+      return 1;
+  }
+}
+
+const getBSTNumArgsRequired = (command: string): number => {
+  switch (command) {
+    case 'inorderTraversal': case 'preorderTraversal': case 'postorderTraversal': 
+      return 0;
+    default:
+      return 1;
+  }
+}
 
 const getCommandExecutor = (topicTitle, visualiser, updateTimeline) => {
   switch (topicTitle) {
