@@ -50,11 +50,16 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
 
   /* -------------------------- Page Scroll Callbacks ------------------------- */
 
+  const detectUserHasScrolledDown = () => {
+    const yOffsetPx: number = Number(window.pageYOffset);
+    setHasScrolledDown(!(yOffsetPx <= 0));
+  };
+
   useEffect(() => {
-    window.addEventListener('scroll', () => {
-      const yOffsetPx: number = Number(window.pageYOffset);
-      setHasScrolledDown(!(yOffsetPx <= 0));
-    });
+    window.addEventListener('scroll', detectUserHasScrolledDown);
+    return () => {
+      window.removeEventListener('scroll', detectUserHasScrolledDown);
+    };
   }, [setHasScrolledDown]);
 
   /* ------------------------------ Data Fetching ----------------------------- */
@@ -157,17 +162,17 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
       className={styles.visualiserMenu}
     >
       {topics
-      && topics.map((topic, idx) => (
-        <MenuItem key={idx} className={styles.item}>
-          <Link to={`/visualiser/${titleToUrl(topic.title)}`}>
-            <span>{topic.title}</span>
-          </Link>
-        </MenuItem>
-      ))}
+        && topics.map((topic, idx) => (
+          <MenuItem key={idx} className={styles.item}>
+            <Link to={`/visualiser/${titleToUrl(topic.title)}`}>
+              <span>{topic.title}</span>
+            </Link>
+          </MenuItem>
+        ))}
     </Menu>
   );
 
-  /* --------------------------------- Topnav --------------------------------- */
+  /* -------------------------------- Topnav --------------------------------- */
 
   const hasScrolledDownStyle: SxProps = {
     backgroundColor: 'rgba(0, 0, 0, 0.85)',
@@ -235,10 +240,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
             </Link>
           </Box>
 
-          <IconButton
-            className={styles.darkModeButton}
-            onClick={() => context.toggleDarkMode()}
-          >
+          <IconButton className={styles.darkModeButton} onClick={() => context.toggleDarkMode()}>
             {context.isDarkMode ? <MoonIcon /> : <SunIcon />}
           </IconButton>
           <Modal

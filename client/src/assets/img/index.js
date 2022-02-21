@@ -1,7 +1,7 @@
 import structs from './structs.png';
 
 const images = {
-    logo: structs,
+  logo: structs,
 };
 
 export default images;

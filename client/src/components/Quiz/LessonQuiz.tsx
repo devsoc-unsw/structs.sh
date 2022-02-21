@@ -13,9 +13,9 @@ const LessonQuiz: FC<Props> = ({ quizzes }) => (
     {quizzes ? (
       quizzes.length > 0 ? (
         <Stack direction="column" spacing={2} sx={{ mt: 2 }}>
-          {quizzes.map((quiz, i) => (
+          {quizzes.map((quiz, idx) => (
             <Box key={quiz._id}>
-              <QuestionRenderer quiz={quiz} questionNumber={Number(i + 1)} />
+              <QuestionRenderer quiz={quiz} questionNumber={Number(idx + 1)} />
             </Box>
           ))}
         </Stack>
