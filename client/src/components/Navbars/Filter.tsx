@@ -61,7 +61,7 @@ const Filter: FC<Props> = ({ setFilter }) => {
           <FormControlLabel value="comp1511" control={<Radio />} label="COMP1511" />
           <FormControlLabel value="comp2521" control={<Radio />} label="COMP2521" />
         </RadioGroup>
-        <Button variant="contained" color="primary" onClick={(e) => handleFilter(e)}>
+        <Button variant="contained" color="primary" onClick={() => handleFilter()}>
           Filter
         </Button>
       </FormControl>

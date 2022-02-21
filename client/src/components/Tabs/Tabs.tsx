@@ -1,6 +1,4 @@
-import {
-  Box, Tab, Tabs, Theme, Typography,
-} from '@mui/material';
+import { Box, Tab, Tabs, Theme, Typography } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import React, { FC, useState } from 'react';
 import { Topic } from 'utils/apiRequests';
@@ -14,9 +12,7 @@ interface TabPanelProps {
 }
 
 const TabPanel = (props: TabPanelProps) => {
-  const {
-    children, value, index, ...other
-  } = props;
+  const { children, value, index, ...other } = props;
 
   return (
     <div
@@ -77,24 +73,6 @@ const ContentTabs: FC<Props> = ({ topic, tabs = ['Lesson', 'Code', 'Videos'] }) 
         </TabPanel>
       ))}
     </Box>
-    // <Grid container>
-    //     <Grid item container className="Tab-Group" direction="row" spacing={0}>
-    //         {tabs.map((label,  i) => (
-    //             <Grid item key={label}>
-    //                 <button
-    //                     type="button"
-    //                     onClick={() => setTabIndex( i)}
-    //                     className={tabIndex ===  i ? 'Tab-Selected' : 'Tab'}
-    //                 >
-    //                     {label}
-    //                 </button>
-    //             </Grid>
-    //         ))}
-    //     </Grid>
-    //     <Grid item style={{ margin: '24px 12px 16px 12px', width: '100%' }}>
-    //
-    //     </Grid>
-    // </Grid>
   );
 };
 

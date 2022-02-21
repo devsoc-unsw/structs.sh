@@ -2,15 +2,7 @@ import React, { FC } from 'react';
 import { SplitPane } from 'react-collapse-pane';
 import styles from './CollapsiblePane.module.scss';
 
-interface Props {
-  orientation: 'vertical' | 'horizontal';
-  collapseDirection: 'left' | 'right';
-  minSize: number;
-  hasTopGutter: boolean;
-  children: React.ReactNode;
-}
-
-const CollapsiblePane: FC<Props> = ({
+const CollapsiblePane = ({
   orientation = 'vertical',
   collapseDirection = 'right',
   minSize = 0,
