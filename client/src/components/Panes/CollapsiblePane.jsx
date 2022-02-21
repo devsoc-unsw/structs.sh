@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { SplitPane } from 'react-collapse-pane';
+import PropTypes from 'prop-types';
 import styles from './CollapsiblePane.module.scss';
 
 const CollapsiblePane = ({
@@ -24,5 +25,13 @@ const CollapsiblePane = ({
     {children}
   </SplitPane>
 );
+
+CollapsiblePane.propTypes = {
+  orientation: PropTypes.string,
+  collapseDirection: PropTypes.string,
+  minSize: PropTypes.number,
+  hasTopGutter: PropTypes.number,
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
+};
 
 export default CollapsiblePane;
