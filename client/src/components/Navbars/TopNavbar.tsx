@@ -17,9 +17,7 @@ import { SxProps } from '@mui/system';
 import { ThemeMutationContext } from 'App';
 import logo from 'assets/img/logo.png';
 import { Modal } from 'components/Modal';
-import React, {
-  FC, useContext, useEffect, useState,
-} from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getTopics, Topic } from 'utils/apiRequests';
 import Notification from 'utils/Notification';
@@ -161,8 +159,8 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
       onClose={handleLearnMenuClose}
       className={styles.visualiserMenu}
     >
-      {topics
-        && topics.map((topic, idx) => (
+      {topics &&
+        topics.map((topic, idx) => (
           <MenuItem key={idx} className={styles.item}>
             <Link to={`/visualiser/${titleToUrl(topic.title)}`}>
               <span>{topic.title}</span>
@@ -213,9 +211,9 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
             </Button>
           </Box>
           <Box sx={{ flexGrow: 1 }}>
-            <Link className={styles.link} to="/content">
+            {/* <Link className={styles.link} to="/content">
               <Button color="info">Content</Button>
-            </Link>
+            </Link> */}
           </Box>
           <Box className={styles.centralBox}>
             <Link to="/">
