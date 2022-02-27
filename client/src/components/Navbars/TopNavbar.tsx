@@ -200,21 +200,19 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
       >
         <Toolbar>
           <Drawer Contents={(props) => <SidebarContents {...props} />} />
-          <Box>
-            <Button
-              color="info"
-              onClick={handleLearnMenuOpen}
-              endIcon={<KeyboardArrowDownIcon />}
-              sx={{ fontSize: '100%' }}
-            >
-              <strong>Topics</strong>
-            </Button>
-          </Box>
-          <Box sx={{ flexGrow: 1 }}>
-            {/* <Link className={styles.link} to="/content">
+          <Button
+            color="info"
+            onClick={handleLearnMenuOpen}
+            endIcon={<KeyboardArrowDownIcon />}
+            sx={{ fontSize: '100%' }}
+          >
+            <strong>Topics</strong>
+          </Button>
+          {/* <Box sx={{ flexGrow: 1 }}> */}
+          {/* <Link className={styles.link} to="/content">
               <Button color="info">Content</Button>
             </Link> */}
-          </Box>
+          {/* </Box> */}
           <Box className={styles.centralBox}>
             <Link to="/">
               <Box sx={{ display: { xs: 'none', lg: 'inline-block' } }}>
