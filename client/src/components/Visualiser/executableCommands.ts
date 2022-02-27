@@ -1,17 +1,22 @@
 // for documentation read: https://compclub.atlassian.net/wiki/spaces/S/pages/2150892071/Documentation#Visualiser-Docs%3A
 
-import { getDocumentation, getGUICommands } from "./commandsInputRules";
+import { getDocumentation, getGUICommands } from './commandsInputRules';
 
+const isValidCommandArgs = (command: string, args: string[], topicTitle: string): boolean => {
+  const currentOperation = getGUICommands(topicTitle)
+    .find((operation) => operation.command === command);
+  return args.length === currentOperation.args.length && args.every((value) => /^\d+$/.test(value));
+};
 
 const getLinkedListExecutor = (
   visualiser,
   updateTimeline,
 ) => (command: string, args: string[]): string => {
-  console.log(command, args)
+  console.log(command, args);
   if (!isValidCommandArgs(command, args, 'Linked Lists')) {
-    const usage = getDocumentation('Linked Lists')
-                    .find(operation => operation.command == command).usage
-    return `Invalid arguments. Usage: ${usage}`;;
+    const { usage } = getDocumentation('Linked Lists')
+      .find((operation) => operation.command === command);
+    return `Invalid arguments. Usage: ${usage}`;
   }
   switch (command) {
     case 'append':
@@ -37,9 +42,9 @@ const getBSTExecutor = (
   updateTimeline,
 ) => (command: string, args: string[]): string => {
   if (!isValidCommandArgs(command, args, 'Binary Search Trees')) {
-    const usage = getDocumentation('Binary Search Trees')
-                    .find(operation => operation.command == command).usage
-    return `Invalid arguments. Usage: ${usage}`;;
+    const { usage } = getDocumentation('Binary Search Trees')
+      .find((operation) => operation.command === command);
+    return `Invalid arguments. Usage: ${usage}`;
   }
   switch (command) {
     case 'insert':
@@ -70,11 +75,6 @@ const undefinedExecutor = (topicTitle) => (command: string, args: string[]): str
   console.error(`Can't find the executor for ${topicTitle}`);
   return '';
 };
-
-const isValidCommandArgs = (command: string, args: string[], topicTitle: string): boolean => {
-  const currentOperation = getGUICommands(topicTitle).find(operation => operation.command === command)
-  return args.length === currentOperation.args.length && args.every((value) => /^\d+$/.test(value));
-}
 
 const getCommandExecutor = (topicTitle, visualiser, updateTimeline) => {
   switch (topicTitle) {
