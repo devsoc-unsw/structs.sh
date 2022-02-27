@@ -68,11 +68,8 @@ const VisualiserController: FC<Props> = ({
       sx={{ height: '64px', width: '100%', backgroundColor: theme.palette.background.paper }}
     >
       <div className={styles.root}>
-        <IconButton>
-          <SkipPreviousIcon
-            onClick={() => handleStepBackward()}
-            sx={{ fill: theme.palette.text.primary }}
-          />
+        <IconButton onClick={() => handleStepBackward()}>
+          <SkipPreviousIcon sx={{ fill: theme.palette.text.primary }} />
         </IconButton>
         {timelineComplete ? (
           <IconButton>
@@ -106,11 +103,8 @@ const VisualiserController: FC<Props> = ({
             />
           </IconButton>
         )}
-        <IconButton>
-          <SkipNextIcon
-            onClick={() => handleStepForward()}
-            sx={{ fill: theme.palette.text.primary }}
-          />
+        <IconButton onClick={() => handleStepForward()}>
+          <SkipNextIcon sx={{ fill: theme.palette.text.primary }} />
         </IconButton>
 
         <Box className={styles.sliderContainer}>
@@ -174,7 +168,7 @@ const VisualiserController: FC<Props> = ({
                 onMouseDown={() => handlePause()}
                 onMouseUp={() => handlePlay()}
                 value={speed}
-                min={0.20}
+                min={0.2}
                 max={1}
                 step={0.2}
                 marks

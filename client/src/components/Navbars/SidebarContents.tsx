@@ -73,11 +73,7 @@ const SidebarContents = ({ setShowSidebar }) => {
             <ListItemText>Home</ListItemText>
           </ListItemButton>
         </RouterLink>
-        <RouterLink
-          to="/about"
-          onClick={() => setShowSidebar(false)}
-          className={styles.link}
-        >
+        <RouterLink to="/about" onClick={() => setShowSidebar(false)} className={styles.link}>
           <ListItemButton>
             <ListItemIcon>
               <AboutIcon sx={{ fill: theme.palette.text.primary }} />
@@ -85,11 +81,7 @@ const SidebarContents = ({ setShowSidebar }) => {
             <ListItemText>About Structs.sh</ListItemText>
           </ListItemButton>
         </RouterLink>
-        <RouterLink
-          to="/feedback"
-          onClick={() => setShowSidebar(false)}
-          className={styles.link}
-        >
+        <RouterLink to="/feedback" onClick={() => setShowSidebar(false)} className={styles.link}>
           <ListItemButton>
             <ListItemIcon>
               <FeedbackIcon sx={{ fill: theme.palette.text.primary }} />
@@ -144,10 +136,7 @@ const SidebarContents = ({ setShowSidebar }) => {
                 <ListItemAvatar>
                   <TopicIcon />
                 </ListItemAvatar>
-                <ListItemText
-                  primary={topic.title}
-                  secondary={<TagList tags={topic.courses} />}
-                />
+                <ListItemText primary={topic.title} secondary={<TagList tags={topic.courses} />} />
               </ListItem>
             </RouterLink>
           ))
@@ -176,11 +165,7 @@ const SidebarContents = ({ setShowSidebar }) => {
         Content Management
       </Typography>
       <List>
-        <RouterLink
-          to="/content"
-          onClick={() => setShowSidebar(false)}
-          className={styles.link}
-        >
+        <RouterLink to="/content" onClick={() => setShowSidebar(false)} className={styles.link}>
           <ListItemButton>
             <ListItemIcon>
               <EditIcon sx={{ fill: theme.palette.text.primary }} />

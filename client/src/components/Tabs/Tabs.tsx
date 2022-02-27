@@ -27,9 +27,9 @@ const TabPanel = (props: TabPanelProps) => {
       {...other}
     >
       {value === index && (
-      <Box sx={{ p: 3 }}>
-        <Typography>{children}</Typography>
-      </Box>
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
       )}
     </div>
   );
@@ -77,24 +77,6 @@ const ContentTabs: FC<Props> = ({ topic, tabs = ['Lesson', 'Code', 'Videos'] }) 
         </TabPanel>
       ))}
     </Box>
-  // <Grid container>
-  //     <Grid item container className="Tab-Group" direction="row" spacing={0}>
-  //         {tabs.map((label, idx) => (
-  //             <Grid item key={label}>
-  //                 <button
-  //                     type="button"
-  //                     onClick={() => setTabIndex(idx)}
-  //                     className={tabIndex === idx ? 'Tab-Selected' : 'Tab'}
-  //                 >
-  //                     {label}
-  //                 </button>
-  //             </Grid>
-  //         ))}
-  //     </Grid>
-  //     <Grid item style={{ margin: '24px 12px 16px 12px', width: '100%' }}>
-  //
-  //     </Grid>
-  // </Grid>
   );
 };
 
