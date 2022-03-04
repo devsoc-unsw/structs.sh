@@ -12,7 +12,6 @@ const getLinkedListExecutor = (
   visualiser,
   updateTimeline,
 ) => (command: string, args: string[]): string => {
-  console.log(command, args);
   if (!isValidCommandArgs(command, args, 'Linked Lists')) {
     const { usage } = getDocumentation('Linked Lists')
       .find((operation) => operation.command === command);
