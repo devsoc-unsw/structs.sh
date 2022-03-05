@@ -43,6 +43,14 @@ const initialiser = (): any => {
     animationController.constructTimeline(producer, updateSlider);
   };
 
+  const prependNode = (val: number, updateSlider: (val: number) => void): void => {
+    animationController.finish();
+
+    const producer: AnimationProducer = linkedList.prepend(val);
+
+    animationController.constructTimeline(producer, updateSlider);
+  };
+
   const play = () => {
     animationController.play();
   };

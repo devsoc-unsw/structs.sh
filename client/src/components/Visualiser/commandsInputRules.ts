@@ -38,6 +38,10 @@ const getLinkedListTerminalCommands = (processCommand) => ({
     usage: 'search <value>',
     fn: (arg: string) => processCommand('search', [arg]),
   },
+  prepend: {
+    usage: 'prepend <value>',
+    fn: (arg: string) => processCommand('prepend', [arg]),
+  },
 });
 
 /* ------------------------------ BST Commands ------------------------------ */
@@ -117,6 +121,11 @@ const linkedListCommandsDocumentation: CommandDocumentation[] = [
     command: 'search',
     usage: 'search <value>',
     description: 'Search for a value in the linked list.',
+  },
+  {
+    command: 'prepend',
+    usage: 'prepend <value>',
+    description: 'Prepend a node containing the number.',
   },
 ];
 
