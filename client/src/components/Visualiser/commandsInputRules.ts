@@ -203,6 +203,10 @@ const guiLinkedListCommands: Operation[] = [
     command: 'search',
     args: ['value'],
   },
+  {
+    command: 'prepend',
+    args: ['value'],
+  },
 ];
 
 /* ----------------------------- BST Operations ----------------------------- */

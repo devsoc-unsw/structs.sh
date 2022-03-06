@@ -18,7 +18,7 @@ const getLinkedListExecutor = (
       visualiser.searchList(Number(args[0]), updateTimeline);
       break;
     case 'prepend':
-      visualiser.searchList(Number(args[0]), updateTimeline);
+      visualiser.prependNode(Number(args[0]), updateTimeline);
       break;
     default:
       return `Invalid command: ${command}`;

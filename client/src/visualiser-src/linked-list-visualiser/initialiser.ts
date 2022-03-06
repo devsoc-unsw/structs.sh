@@ -80,6 +80,7 @@ const initialiser = (): any => {
     deleteNode,
     searchList,
     insertNode,
+    prependNode,
     play,
     pause,
     stepBack,
