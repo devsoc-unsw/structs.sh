@@ -83,22 +83,24 @@ const VisualiserController: FC<Props> = ({
             />
           </IconButton>
         ) : isPlaying ? (
-          <IconButton>
+          <IconButton
+            onClick={() => {
+              handlePause();
+              setIsPlaying(false);
+            }}
+          >
             <PauseIcon
-              onClick={() => {
-                handlePause();
-                setIsPlaying(false);
-              }}
               sx={{ fill: theme.palette.text.primary }}
             />
           </IconButton>
         ) : (
-          <IconButton>
+          <IconButton
+            onClick={() => {
+              handlePlay();
+              setIsPlaying(true);
+            }}
+          >
             <PlayIcon
-              onClick={() => {
-                handlePlay();
-                setIsPlaying(true);
-              }}
               sx={{ fill: theme.palette.text.primary }}
             />
           </IconButton>
