@@ -1,7 +1,7 @@
 import { CommandDocumentation } from 'components/Visualiser/commandsInputRules';
 import PropTypes from 'prop-types';
 import React, {
-  FC, useEffect, useReducer, useState,
+  FC, useEffect, useReducer, useRef, useState,
 } from 'react';
 import ManualText from './ManualText';
 import styles from './Terminal.module.scss';
@@ -41,6 +41,8 @@ const ManualPage: FC<Props> = ({ documentation, setShowMan }) => {
   useEffect(() => {
     dispatch({ type: 'SET_DATA', payload: documentation });
   }, [documentation]);
+
+  const inputRef = useRef<HTMLInputElement>();
 
   const handleQuit = (e) => {
     if (e.key === 'Enter' && input === ':q') {
@@ -85,6 +87,7 @@ const ManualPage: FC<Props> = ({ documentation, setShowMan }) => {
   const handleInput = (e) => {
     const str = e.target.value;
     setInput(str);
+    console.log("input")
     if (str !== ':' && isSearch) {
       // only search if it is in search mode
       dispatch({ type: 'SEARCH_INPUT', payload: str });
@@ -95,7 +98,7 @@ const ManualPage: FC<Props> = ({ documentation, setShowMan }) => {
   };
 
   return (
-    <div className={styles.manualContainer}>
+    <div onClick={() => inputRef.current.focus()} className={styles.manualContainer}>
       {state.search.length > 0
         ? state.searchData.map((item, key) => (
           <ManualText manual={item as CommandDocumentation} key={key} />
@@ -104,6 +107,8 @@ const ManualPage: FC<Props> = ({ documentation, setShowMan }) => {
           <ManualText manual={item as CommandDocumentation} key={key} />
         ))}
       <input
+        ref={inputRef}
+        autoFocus
         type="text"
         className={styles.searchBar}
         value={input}
