@@ -210,11 +210,11 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
           >
             <strong>Topics</strong>
           </Button>
-          {/* <Box sx={{ flexGrow: 1 }}> */}
-          {/* <Link className={styles.link} to="/content">
+          <Box sx={{ flexGrow: 1 }}>
+            {/* <Link className={styles.link} to="/content">
               <Button color="info">Content</Button>
             </Link> */}
-          {/* </Box> */}
+          </Box>
           <Box className={styles.centralBox}>
             <Link to="/">
               <Box sx={{ display: { xs: 'none', lg: 'inline-block' } }}>
@@ -241,7 +241,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
           <IconButton className={styles.darkModeButton} onClick={() => context.toggleDarkMode()}>
             {context.isDarkMode ? <MoonIcon /> : <SunIcon />}
           </IconButton>
-          <Modal
+          {/* <Modal
             Button={() => (
               <Button color="info" sx={{ display: { xs: 'none', md: 'flex' } }}>
                 Login
@@ -299,8 +299,8 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
                 Submit
               </Button>
             </Box>
-          </Modal>
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+          </Modal> */}
+          {/* <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton
               size="large"
               edge="end"
@@ -312,7 +312,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
             >
               <AccountCircle />
             </IconButton>
-          </Box>
+          </Box> */}
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
