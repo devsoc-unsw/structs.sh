@@ -1,9 +1,6 @@
 *reflections.md
 request-examples
 
-package-lock.json
-yarn.lock
-
 # dependencies
 /node_modules
 /visualiser-new/node_modules
@@ -26,7 +23,5 @@ yarn.lock
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-*-lock*
 
 /.vscode
