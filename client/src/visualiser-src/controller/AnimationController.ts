@@ -26,11 +26,12 @@ class AnimationController {
 
   public constructTimeline(
     animationProducer: AnimationProducer,
-    updateSlider: (val: number) => void,
+    updateSlider: (val: number) => void
   ): void {
     this.resetTimeline(updateSlider);
 
     animationProducer.allRunners.forEach((runners) => {
+      console.log(runners);
       runners.forEach((runner) => {
         this.currentTimeline.schedule(runner, this.timelineDuration, 'absolute');
       });
@@ -102,7 +103,7 @@ class AnimationController {
 
   private computePrevTimestamp(): number {
     let prevTimestamp = 0;
-    [...this.timestamps].reverse().forEach((timestamp) => {
+    this.timestamps.forEach((timestamp) => {
       if (timestamp + 25 < this.currentTime) {
         prevTimestamp = timestamp;
       }

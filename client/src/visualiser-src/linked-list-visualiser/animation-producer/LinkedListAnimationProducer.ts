@@ -1,7 +1,5 @@
 import { SVG, Runner, Element } from '@svgdotjs/svg.js';
-import {
-  RIGHT_ARROW_PATH, topOffset, nodePathWidth, CURRENT, PREV,
-} from '../util/constants';
+import { RIGHT_ARROW_PATH, topOffset, nodePathWidth, CURRENT, PREV } from '../util/constants';
 import AnimationProducer from '../../common/AnimationProducer';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
 
@@ -10,19 +8,19 @@ export default abstract class LinkedListAnimationProducer extends AnimationProdu
   public initialisePointer(pointerId: string) {
     const pointerSvg: Element = SVG(pointerId);
     pointerSvg.move(0, topOffset);
-    this.allRunners.push([pointerSvg.animate().attr({ opacity: 1 })]);
+    this.addAnimation([pointerSvg.animate().attr({ opacity: 1 })]);
   }
 
   public movePointerToNext(pointerId: string) {
     const pointerSvg: Element = SVG(pointerId);
-    this.allRunners.push([pointerSvg.animate().dx(nodePathWidth)]);
+    this.addAnimation([pointerSvg.animate().dx(nodePathWidth)]);
   }
 
   public resetPointers() {
     const runners: Runner[] = [];
     runners.push(SVG(CURRENT).animate().attr({ opacity: 0 }));
     runners.push(SVG(PREV).animate().attr({ opacity: 0 }));
-    this.allRunners.push(runners);
+    this.addAnimation(runners);
   }
 
   public resetPositioning(head: GraphicalLinkedListNode) {
@@ -35,7 +33,7 @@ export default abstract class LinkedListAnimationProducer extends AnimationProdu
       index += 1;
       curr = curr.next;
     }
-    this.allRunners.push(runners);
+    this.addAnimation(runners);
   }
 
   public resetList(head: GraphicalLinkedListNode) {
