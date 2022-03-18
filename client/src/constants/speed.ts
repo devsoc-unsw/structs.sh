@@ -1,0 +1,1 @@
+export const defaultSpeed = 0.6;
