@@ -2,7 +2,7 @@ FROM node:14-alpine
 
 WORKDIR /server
 
-COPY package.json .
+COPY package.json yarn.lock ./
 
 RUN yarn install
 

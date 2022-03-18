@@ -1,9 +1,6 @@
 dist
 build
 
-yarn.lock
-package-lock.json
-
 lib-cov
 *.seed
 *.log
@@ -43,7 +40,5 @@ Thumbs.db
 # Ignore built ts files
 dist/**/*
 
-# ignore yarn.lock
-yarn.lock
 
 .todo
