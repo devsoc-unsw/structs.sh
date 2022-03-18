@@ -1,6 +1,8 @@
 import BSTAnimationProducer from './BSTAnimationProducer';
 import { Node } from '../util/typedefs';
-import { nodeStyle, nodeWidth, textStyle, lineStyle } from '../util/settings';
+import {
+  nodeStyle, nodeWidth, textStyle, lineStyle,
+} from '../util/settings';
 
 export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
   public createNodeLeft(node: Node, parent: Node): void {

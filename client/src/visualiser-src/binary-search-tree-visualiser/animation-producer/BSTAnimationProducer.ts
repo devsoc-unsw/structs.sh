@@ -77,14 +77,14 @@ export default class BSTAnimationProducer extends AnimationProducer {
       node.leftLineTarget.animate(400).plot([
         [node.x, node.y],
         [node.x - lineDiffX, node.y + lineDiffY],
-      ])
+      ]),
     );
 
     animation.push(
       node.rightLineTarget.animate(400).plot([
         [node.x, node.y],
         [node.x + lineDiffX, node.y + lineDiffY],
-      ])
+      ]),
     );
   }
 
@@ -121,7 +121,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
       animation.push(
         lineTarget.animate(500).attr({
           stroke: '#000000',
-        })
+        }),
       );
     }
   }
@@ -144,7 +144,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
       }),
       node.textTarget.animate(500).attr({
         fill: '#000000',
-      })
+      }),
     );
   }
 }

@@ -1,7 +1,5 @@
 import { Box } from '@mui/material';
-import React, {
-  useCallback, useEffect, useMemo, useState, useRef,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import Notification from 'utils/Notification';
 import initLinkedListVisualiser from 'visualiser-src/linked-list-visualiser/initialiser';
 import initBSTVisualiser from 'visualiser-src/binary-search-tree-visualiser/initialiser';
@@ -58,7 +56,7 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
 
   const executeCommand = useMemo(
     () => getCommandExecutor(topicTitle, visualiser, updateTimeline),
-    [topicTitle, visualiser, updateTimeline],
+    [topicTitle, visualiser, updateTimeline]
   );
 
   const handlePlay = useCallback(() => {
@@ -81,7 +79,7 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
     (val: number) => {
       visualiser.setTimeline(val);
     },
-    [visualiser],
+    [visualiser]
   );
 
   const handleSpeedSliderDrag = useCallback(
@@ -89,7 +87,7 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
       visualiser.setSpeed(val);
       setSpeed(val);
     },
-    [visualiser],
+    [visualiser]
   );
 
   const handleSpeedSliderDragEnd = useCallback(() => {
@@ -114,11 +112,10 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
         speed={speed}
       />
       <Box sx={{ height: '100%' }}>
-        {terminalMode ? (
+        {/* terminalMode ? (
           <Terminal executeCommand={executeCommand} topicTitle={topicTitle} />
-        ) : (
-          <GUIMode executeCommand={executeCommand} topicTitle={topicTitle} />
-        )}
+        ) : ( */}
+        <GUIMode executeCommand={executeCommand} topicTitle={topicTitle} />
       </Box>
     </Box>
   );

@@ -1,7 +1,9 @@
 import { Line } from '@svgdotjs/svg.js';
 import BSTAnimationProducer from './BSTAnimationProducer';
 import { Node } from '../util/typedefs';
-import { nodeStyle, nodeWidth, textStyle, lineStyle } from '../util/settings';
+import {
+  nodeStyle, nodeWidth, textStyle, lineStyle,
+} from '../util/settings';
 
 export default class BSTTraverseAnimationProducer extends BSTAnimationProducer {
   public halfHighlightNode(node: Node): void {

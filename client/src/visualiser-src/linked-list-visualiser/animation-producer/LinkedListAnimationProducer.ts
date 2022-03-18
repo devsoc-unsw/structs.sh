@@ -1,5 +1,7 @@
 import { SVG, Runner, Element } from '@svgdotjs/svg.js';
-import { RIGHT_ARROW_PATH, topOffset, nodePathWidth, CURRENT, PREV } from '../util/constants';
+import {
+  RIGHT_ARROW_PATH, topOffset, nodePathWidth, CURRENT, PREV,
+} from '../util/constants';
 import AnimationProducer from '../../common/AnimationProducer';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
 
