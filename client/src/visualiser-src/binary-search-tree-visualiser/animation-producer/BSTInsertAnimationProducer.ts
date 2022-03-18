@@ -6,24 +6,20 @@ import {
 
 export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
   public createNodeLeft(node: Node, parent: Node): void {
-    this.allRunners.push([
-      parent.leftLineTarget
-        .animate(400)
-        .attr({
-          opacity: 1,
-        }),
+    this.addAnimation([
+      parent.leftLineTarget.animate(400).attr({
+        opacity: 1,
+      }),
     ]);
 
     this.createNode(node);
   }
 
   public createNodeRight(node: Node, parent: Node): void {
-    this.allRunners.push([
-      parent.rightLineTarget
-        .animate(400)
-        .attr({
-          opacity: 1,
-        }),
+    this.addAnimation([
+      parent.rightLineTarget.animate(400).attr({
+        opacity: 1,
+      }),
     ]);
 
     this.createNode(node);
@@ -54,17 +50,13 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
     node.textTarget.attr(textStyle);
     node.textTarget.cx(node.x).cy(node.y);
 
-    this.allRunners.push([
-      node.nodeTarget
-        .animate(400)
-        .attr({
-          opacity: 1,
-        }),
-      node.textTarget
-        .animate(400)
-        .attr({
-          opacity: 1,
-        }),
+    this.addAnimation([
+      node.nodeTarget.animate(400).attr({
+        opacity: 1,
+      }),
+      node.textTarget.animate(400).attr({
+        opacity: 1,
+      }),
     ]);
   }
 }

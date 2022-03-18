@@ -15,32 +15,24 @@ export default class BSTAnimationProducer extends AnimationProducer {
   }
 
   public flashNode(node: Node): void {
-    this.allRunners.push([
-      node.nodeTarget
-        .animate(500)
-        .attr({
-          fill: '#4beb9b',
-          stroke: '#4beb9b',
-        }),
-      node.textTarget
-        .animate(500)
-        .attr({
-          fill: '#ffffff',
-        }),
+    this.addAnimation([
+      node.nodeTarget.animate(500).attr({
+        fill: '#4beb9b',
+        stroke: '#4beb9b',
+      }),
+      node.textTarget.animate(500).attr({
+        fill: '#ffffff',
+      }),
     ]);
 
-    this.allRunners.push([
-      node.nodeTarget
-        .animate(500)
-        .attr({
-          fill: '#ffffff',
-          stroke: '#000000',
-        }),
-      node.textTarget
-        .animate(500)
-        .attr({
-          fill: '#000000',
-        }),
+    this.addAnimation([
+      node.nodeTarget.animate(500).attr({
+        fill: '#ffffff',
+        stroke: '#000000',
+      }),
+      node.textTarget.animate(500).attr({
+        fill: '#000000',
+      }),
     ]);
   }
 
@@ -48,7 +40,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
     const animation: Runner[] = [];
     this.updateNodesRecursive(root, animation);
     this.updateLinesRecursive(root, animation);
-    this.allRunners.push(animation);
+    this.addAnimation(animation);
   }
 
   public updateNodesRecursive(node: Node, animation: Runner[]): void {
@@ -62,19 +54,9 @@ export default class BSTAnimationProducer extends AnimationProducer {
   }
 
   public static updateNode(node: Node, newX: number, newY: number, animation: Runner[]): void {
-    animation.push(
-      node.nodeTarget
-        .animate(400)
-        .cx(newX)
-        .cy(newY),
-    );
+    animation.push(node.nodeTarget.animate(400).cx(newX).cy(newY));
 
-    animation.push(
-      node.textTarget
-        .animate(400)
-        .cx(newX)
-        .cy(newY),
-    );
+    animation.push(node.textTarget.animate(400).cx(newX).cy(newY));
   }
 
   public updateLinesRecursive(node: Node, animation: Runner[]): void {
@@ -92,15 +74,17 @@ export default class BSTAnimationProducer extends AnimationProducer {
     const lineDiffY = 75;
 
     animation.push(
-      node.leftLineTarget
-        .animate(400)
-        .plot([[node.x, node.y], [node.x - lineDiffX, node.y + lineDiffY]]),
+      node.leftLineTarget.animate(400).plot([
+        [node.x, node.y],
+        [node.x - lineDiffX, node.y + lineDiffY],
+      ]),
     );
 
     animation.push(
-      node.rightLineTarget
-        .animate(400)
-        .plot([[node.x, node.y], [node.x + lineDiffX, node.y + lineDiffY]]),
+      node.rightLineTarget.animate(400).plot([
+        [node.x, node.y],
+        [node.x + lineDiffX, node.y + lineDiffY],
+      ]),
     );
   }
 
@@ -118,7 +102,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
     const animation: Runner[] = [];
     this.resetLinesRecursive(root, animation);
     this.resetNodesRecursive(root, animation);
-    this.allRunners.push(animation);
+    this.addAnimation(animation);
   }
 
   public resetLinesRecursive(node: Node, animation: Runner[]): void {
@@ -135,11 +119,9 @@ export default class BSTAnimationProducer extends AnimationProducer {
   public static unhighlightLine(lineTarget: Line, animation: Runner[]): void {
     if (lineTarget != null) {
       animation.push(
-        lineTarget
-          .animate(500)
-          .attr({
-            stroke: '#000000',
-          }),
+        lineTarget.animate(500).attr({
+          stroke: '#000000',
+        }),
       );
     }
   }
@@ -156,17 +138,13 @@ export default class BSTAnimationProducer extends AnimationProducer {
 
   public static unhighlightNode(node: Node, animation: Runner[]): void {
     animation.push(
-      node.nodeTarget
-        .animate(500)
-        .attr({
-          fill: '#ffffff',
-          stroke: '#000000',
-        }),
-      node.textTarget
-        .animate(500)
-        .attr({
-          fill: '#000000',
-        }),
+      node.nodeTarget.animate(500).attr({
+        fill: '#ffffff',
+        stroke: '#000000',
+      }),
+      node.textTarget.animate(500).attr({
+        fill: '#000000',
+      }),
     );
   }
 }

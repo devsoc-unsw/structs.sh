@@ -26,7 +26,7 @@ class AnimationController {
 
   public constructTimeline(
     animationProducer: AnimationProducer,
-    updateSlider: (val: number) => void,
+    updateSlider: (val: number) => void
   ): void {
     this.resetTimeline(updateSlider);
 
@@ -49,7 +49,7 @@ class AnimationController {
   public resetTimeline(updateSlider: (val: number) => void) {
     this.currentTimeline = new Timeline().persist(true);
     this.currentTimeline.on('time', (e: CustomEvent) => {
-      updateSlider((e.detail / this.timelineDuration) * 100);
+      updateSlider((Math.min(e.detail, this.timelineDuration) / this.timelineDuration) * 100);
     });
     this.isStepMode = false;
     this.currentTimeline.speed(this.speed);
@@ -102,7 +102,7 @@ class AnimationController {
 
   private computePrevTimestamp(): number {
     let prevTimestamp = 0;
-    [...this.timestamps].reverse().forEach((timestamp) => {
+    this.timestamps.forEach((timestamp) => {
       if (timestamp + 25 < this.currentTime) {
         prevTimestamp = timestamp;
       }

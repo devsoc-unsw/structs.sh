@@ -6,4 +6,10 @@ export default abstract class AnimationProducer {
   public get allRunners() {
     return this._allRunners;
   }
+
+  public addAnimation(animation: Runner[]) {
+    if (animation.length > 0) {
+      this.allRunners.push(animation);
+    }
+  }
 }
