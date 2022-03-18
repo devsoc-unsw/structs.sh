@@ -98,7 +98,7 @@ const Terminal: FC<Props> = ({ executeCommand, topicTitle }) => {
         {showMan ? (
           <div>
             <Typist cursor={{ hideWhenDone: true }} avgTypingDelay={30}>
-              Type :q + Enter to exit
+              Type :q + Enter to exit. Press t to focus the terminal input.
             </Typist>
           </div>
         ) : (

@@ -1,3 +1,7 @@
+/* eslint-disable
+jsx-a11y/click-events-have-key-events,
+jsx-a11y/no-autofocus,
+jsx-a11y/no-noninteractive-element-interactions */
 import { CommandDocumentation } from 'components/Visualiser/commandsInputRules';
 import PropTypes from 'prop-types';
 import React, {
@@ -87,7 +91,6 @@ const ManualPage: FC<Props> = ({ documentation, setShowMan }) => {
   const handleInput = (e) => {
     const str = e.target.value;
     setInput(str);
-    console.log("input")
     if (str !== ':' && isSearch) {
       // only search if it is in search mode
       dispatch({ type: 'SEARCH_INPUT', payload: str });
@@ -98,7 +101,11 @@ const ManualPage: FC<Props> = ({ documentation, setShowMan }) => {
   };
 
   return (
-    <div onClick={() => inputRef.current.focus()} className={styles.manualContainer}>
+    <div
+      role="contentinfo"
+      onClick={() => inputRef.current.focus()}
+      className={styles.manualContainer}
+    >
       {state.search.length > 0
         ? state.searchData.map((item, key) => (
           <ManualText manual={item as CommandDocumentation} key={key} />
@@ -123,3 +130,7 @@ ManualPage.propTypes = {
   setShowMan: PropTypes.func,
 };
 export default ManualPage;
+/* eslint-disable
+jsx-a11y/click-events-have-key-events,
+jsx-a11y/no-autofocus,
+jsx-a11y/no-noninteractive-element-interactions */
