@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    name: "Build (${{ matrix.components}})"
+    name: "Build (${{ matrix.component }})"
     runs-on: ubuntu-latest
     permissions:
       contents: read
