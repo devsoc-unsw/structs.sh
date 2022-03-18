@@ -1,5 +1,5 @@
 # ===== Stage 1: Producing Build Files =====
-FROM node:14-alpine AS build
+FROM node:17.7.1-alpine AS build
 
 WORKDIR /app
 
@@ -14,11 +14,13 @@ RUN yarn build
 
 # ===== Stage 2: Setting up NGINX =====
 
-FROM nginx:latest
+FROM nginx:1.21.6-alpine
 
 # From stage 1, copy the build files into the default directory that NGINX serves files from.
 # The project will serve requests inbound at port 80 in the container
 COPY --from=build /app/build /usr/share/nginx/html
+
+EXPOSE 80
 
 # We need to put in our own nginx config.
 COPY nginx.conf /etc/nginx/nginx.conf
