@@ -1,6 +1,7 @@
 import { Runner, Container, Line } from '@svgdotjs/svg.js';
 import { Node } from '../util/typedefs';
-import { canvasPadding } from '../util/settings';
+import { canvasPadding, nodeWidth } from '../util/settings';
+import { getPointerStartEndCoordinates } from '../util/util';
 import AnimationProducer from '../../common/AnimationProducer';
 
 export default class BSTAnimationProducer extends AnimationProducer {
@@ -74,17 +75,31 @@ export default class BSTAnimationProducer extends AnimationProducer {
     const lineDiffY = 75;
 
     animation.push(
-      node.leftLineTarget.animate(400).plot([
-        [node.x, node.y],
-        [node.x - lineDiffX, node.y + lineDiffY],
-      ]),
+      node.leftLineTarget
+        .animate(400)
+        .plot(
+          getPointerStartEndCoordinates(
+            node.x,
+            node.y,
+            node.x - lineDiffX,
+            node.y + lineDiffY,
+            nodeWidth / 2
+          )
+        )
     );
 
     animation.push(
-      node.rightLineTarget.animate(400).plot([
-        [node.x, node.y],
-        [node.x + lineDiffX, node.y + lineDiffY],
-      ]),
+      node.rightLineTarget
+        .animate(400)
+        .plot(
+          getPointerStartEndCoordinates(
+            node.x,
+            node.y,
+            node.x + lineDiffX,
+            node.y + lineDiffY,
+            nodeWidth / 2
+          )
+        )
     );
   }
 
@@ -121,7 +136,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
       animation.push(
         lineTarget.animate(500).attr({
           stroke: '#000000',
-        }),
+        })
       );
     }
   }
@@ -144,7 +159,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
       }),
       node.textTarget.animate(500).attr({
         fill: '#000000',
-      }),
+      })
     );
   }
 }

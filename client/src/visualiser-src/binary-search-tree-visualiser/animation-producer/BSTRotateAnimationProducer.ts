@@ -1,40 +1,61 @@
 import BSTAnimationProducer from './BSTAnimationProducer';
 import { Node } from '../util/typedefs';
+import { getPointerStartEndCoordinates } from '../util/util';
+import { nodeWidth } from '../util/settings';
 
 export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
   public movePointerToNewRootRightChild(oldRoot: Node, newRoot: Node): void {
     this.addAnimation([
-      oldRoot.leftLineTarget.animate(400).plot([
-        [oldRoot.x, oldRoot.y],
-        [newRoot.right.x, newRoot.right.y],
-      ]),
+      oldRoot.leftLineTarget
+        .animate(400)
+        .plot(
+          getPointerStartEndCoordinates(
+            oldRoot.x,
+            oldRoot.y,
+            newRoot.right.x,
+            newRoot.right.y,
+            nodeWidth / 2
+          )
+        ),
     ]);
   }
 
   public movePointerToNewRootLeftChild(oldRoot: Node, newRoot: Node): void {
     this.addAnimation([
-      oldRoot.rightLineTarget.animate(400).plot([
-        [oldRoot.x, oldRoot.y],
-        [newRoot.left.x, newRoot.left.y],
-      ]),
+      oldRoot.rightLineTarget
+        .animate(400)
+        .plot(
+          getPointerStartEndCoordinates(
+            oldRoot.x,
+            oldRoot.y,
+            newRoot.left.x,
+            newRoot.left.y,
+            nodeWidth / 2
+          )
+        ),
     ]);
   }
 
   public moveRightPointerToOldRoot(oldRoot: Node, newRoot: Node): void {
     this.addAnimation([
-      newRoot.rightLineTarget.animate(400).plot([
-        [newRoot.x, newRoot.y],
-        [oldRoot.x, oldRoot.y],
-      ]),
+      newRoot.rightLineTarget
+        .animate(400)
+        .plot(
+          getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y, nodeWidth / 2)
+        ),
     ]);
+    console.log(
+      getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y, nodeWidth / 2)
+    );
   }
 
   public moveLeftPointerToOldRoot(oldRoot: Node, newRoot: Node): void {
     this.addAnimation([
-      newRoot.leftLineTarget.animate(400).plot([
-        [newRoot.x, newRoot.y],
-        [oldRoot.x, oldRoot.y],
-      ]),
+      newRoot.leftLineTarget
+        .animate(400)
+        .plot(
+          getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y, nodeWidth / 2)
+        ),
     ]);
   }
 
@@ -48,10 +69,9 @@ export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
 
     // replot the line (swap x1 with x2 and y1 with y2) so when we move the pointer
     // when calling updateBST the line doesn't do a quick flip animation first
-    newRoot.rightLineTarget.plot([
-      [newRoot.x, newRoot.y],
-      [oldRoot.x, oldRoot.y],
-    ]);
+    newRoot.rightLineTarget.plot(
+      getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y, nodeWidth / 2)
+    );
   }
 
   // this method is only called when the newRoots left line target is not visible,
@@ -64,9 +84,8 @@ export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
 
     // replot the line (swap x1 with x2 and y1 with y2) so when we move the pointer
     // when calling updateBST the line doesn't do a quick flip animation first
-    newRoot.leftLineTarget.plot([
-      [newRoot.x, newRoot.y],
-      [oldRoot.x, oldRoot.y],
-    ]);
+    newRoot.leftLineTarget.plot(
+      getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y, nodeWidth / 2)
+    );
   }
 }
