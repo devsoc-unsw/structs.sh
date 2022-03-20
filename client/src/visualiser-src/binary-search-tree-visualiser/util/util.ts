@@ -1,3 +1,4 @@
+import { strokeWidth, nodeWidth, markerLength } from './settings';
 /**
  * Calculates the starting and ending coordinates of a pointer, given the coordinates of the centres of the
  * originating nodes and target nodes.
@@ -7,27 +8,27 @@ export const getPointerStartEndCoordinates = (
   startCentreX: number,
   startCentreY: number,
   endCentreX: number,
-  endCentreY: number,
-  nodeRadius: number
+  endCentreY: number
 ): [[number, number], [number, number]] => {
+  const nodeRadius = nodeWidth / 2 + strokeWidth / 2;
   const theta: number = Math.atan(
     Math.abs(startCentreX - endCentreX) / Math.abs(startCentreY - endCentreY)
   );
   let startX, endX;
   if (startCentreX < endCentreX) {
     startX = startCentreX + nodeRadius * Math.sin(theta);
-    endX = endCentreX - nodeRadius * Math.sin(theta);
+    endX = endCentreX - (nodeRadius + strokeWidth / 2 + markerLength) * Math.sin(theta);
   } else {
     startX = startCentreX - nodeRadius * Math.sin(theta);
-    endX = endCentreX + nodeRadius * Math.sin(theta);
+    endX = endCentreX + (nodeRadius + strokeWidth / 2 + markerLength) * Math.sin(theta);
   }
   let startY, endY;
   if (startCentreY < endCentreY) {
     startY = startCentreY + nodeRadius * Math.cos(theta);
-    endY = endCentreY - nodeRadius * Math.cos(theta);
+    endY = endCentreY - (nodeRadius + strokeWidth / 2 + markerLength) * Math.cos(theta);
   } else {
     startY = startCentreY - nodeRadius * Math.cos(theta);
-    endY = endCentreY + nodeRadius * Math.cos(theta);
+    endY = endCentreY + (nodeRadius + strokeWidth / 2 + markerLength) * Math.cos(theta);
   }
   return [
     [startX, startY],

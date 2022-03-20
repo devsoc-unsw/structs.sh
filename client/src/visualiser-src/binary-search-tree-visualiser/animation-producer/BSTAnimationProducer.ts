@@ -77,29 +77,13 @@ export default class BSTAnimationProducer extends AnimationProducer {
     animation.push(
       node.leftLineTarget
         .animate(400)
-        .plot(
-          getPointerStartEndCoordinates(
-            node.x,
-            node.y,
-            node.x - lineDiffX,
-            node.y + lineDiffY,
-            nodeWidth / 2
-          )
-        )
+        .plot(getPointerStartEndCoordinates(node.x, node.y, node.x - lineDiffX, node.y + lineDiffY))
     );
 
     animation.push(
       node.rightLineTarget
         .animate(400)
-        .plot(
-          getPointerStartEndCoordinates(
-            node.x,
-            node.y,
-            node.x + lineDiffX,
-            node.y + lineDiffY,
-            nodeWidth / 2
-          )
-        )
+        .plot(getPointerStartEndCoordinates(node.x, node.y, node.x + lineDiffX, node.y + lineDiffY))
     );
   }
 

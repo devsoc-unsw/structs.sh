@@ -1,6 +1,6 @@
 import BSTAnimationProducer from './BSTAnimationProducer';
 import { Node } from '../util/typedefs';
-import { nodeStyle, nodeWidth, textStyle, lineStyle } from '../util/settings';
+import { nodeStyle, nodeWidth, textStyle, lineStyle, markerLength } from '../util/settings';
 import { getPointerStartEndCoordinates } from '../util/util';
 
 export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
@@ -33,8 +33,7 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
       node.x,
       node.y,
       node.x - lineDiffX,
-      node.y + lineDiffY,
-      nodeWidth / 2
+      node.y + lineDiffY
     );
     node.leftLineTarget = this.draw
       .line(
@@ -49,8 +48,7 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
       node.x,
       node.y,
       node.x + lineDiffX,
-      node.y + lineDiffY,
-      nodeWidth / 2
+      node.y + lineDiffY
     );
     node.rightLineTarget = this.draw
       .line(
@@ -60,8 +58,17 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
         rightChildCoordinates[1][1]
       )
       .attr(lineStyle);
-    node.leftLineTarget.back();
-    node.rightLineTarget.back();
+
+    // Draw a triangle at the end of the line
+    const pathD = `M 0 0 L ${markerLength} ${markerLength / 2} L 0 ${markerLength} z`;
+
+    node.leftLineTarget.marker('end', markerLength, markerLength, function (add) {
+      add.path(pathD);
+    });
+
+    node.rightLineTarget.marker('end', markerLength, markerLength, function (add) {
+      add.path(pathD);
+    });
 
     node.nodeTarget = this.draw.circle(nodeWidth);
     node.nodeTarget.attr(nodeStyle);
