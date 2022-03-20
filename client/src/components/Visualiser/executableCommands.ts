@@ -7,7 +7,18 @@ const isValidCommandArgs = (command: string, args: string[], topicTitle: string)
   const currentOperation = getGUICommands(topicTitle).find(
     (operation) => operation.command === command,
   );
-  return args.length === currentOperation.args.length && args.every((value) => /^\d+$/.test(value));
+
+  if (args.length !== currentOperation.args.length) return false;
+
+  if (!args.every((value) => /^\d+$/.test(value))) return false;
+
+  const valueIndex = currentOperation.args.indexOf('value');
+
+  if (valueIndex !== -1) {
+    return Number(args[valueIndex]) >= 0 && Number(args[valueIndex]) <= 999;
+  }
+
+  return true;
 };
 
 const getLinkedListExecutor = (visualiser, updateTimeline) => (command: string, args: string[]): string => {
