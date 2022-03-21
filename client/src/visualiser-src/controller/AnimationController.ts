@@ -32,7 +32,7 @@ class AnimationController {
 
     animationProducer.allRunners.forEach((runners) => {
       runners.forEach((runner) => {
-        this.currentTimeline.schedule(runner, this.timelineDuration, 'absolute');
+        this.currentTimeline.schedule(runner, this.timelineDuration + 25, 'absolute');
       });
       runners[0].after(() => {
         if (this.isStepMode) {
@@ -40,7 +40,7 @@ class AnimationController {
         }
       });
       this.timestamps.push(this.timelineDuration);
-      this.timelineDuration += runners[0].duration();
+      this.timelineDuration += runners[0].duration() + 25;
     });
     this.timestamps.push(this.timelineDuration);
     this.currentTimeline.play();
