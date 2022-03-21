@@ -64,10 +64,12 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
 
     node.leftLineTarget.marker('end', markerLength, markerLength, function (add) {
       add.path(pathD);
+      this.attr('markerUnits', 'userSpaceOnUse');
     });
 
     node.rightLineTarget.marker('end', markerLength, markerLength, function (add) {
       add.path(pathD);
+      this.attr('markerUnits', 'userSpaceOnUse');
     });
 
     node.nodeTarget = this.draw.circle(nodeWidth);

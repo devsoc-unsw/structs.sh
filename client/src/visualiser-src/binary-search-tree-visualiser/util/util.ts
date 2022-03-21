@@ -17,18 +17,18 @@ export const getPointerStartEndCoordinates = (
   let startX, endX;
   if (startCentreX < endCentreX) {
     startX = startCentreX + nodeRadius * Math.sin(theta);
-    endX = endCentreX - (nodeRadius + strokeWidth / 2 + markerLength) * Math.sin(theta);
+    endX = endCentreX - (nodeRadius + markerLength / 2) * Math.sin(theta);
   } else {
     startX = startCentreX - nodeRadius * Math.sin(theta);
-    endX = endCentreX + (nodeRadius + strokeWidth / 2 + markerLength) * Math.sin(theta);
+    endX = endCentreX + (nodeRadius + markerLength / 2) * Math.sin(theta);
   }
   let startY, endY;
   if (startCentreY < endCentreY) {
     startY = startCentreY + nodeRadius * Math.cos(theta);
-    endY = endCentreY - (nodeRadius + strokeWidth / 2 + markerLength) * Math.cos(theta);
+    endY = endCentreY - (nodeRadius + markerLength / 2) * Math.cos(theta);
   } else {
     startY = startCentreY - nodeRadius * Math.cos(theta);
-    endY = endCentreY + (nodeRadius + strokeWidth / 2 + markerLength) * Math.cos(theta);
+    endY = endCentreY + (nodeRadius + markerLength / 2) * Math.cos(theta);
   }
   return [
     [startX, startY],
