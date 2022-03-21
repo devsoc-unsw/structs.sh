@@ -1,3 +1,4 @@
+import { Line } from '@svgdotjs/svg.js';
 import BSTAnimationProducer from './BSTAnimationProducer';
 import { Node } from '../util/typedefs';
 import { getPointerStartEndCoordinates } from '../util/util';
@@ -51,6 +52,32 @@ export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
     newRoot.rightLineTarget.plot(
       getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y)
     );
+  }
+
+  public hideLine(line: Line): void {
+    this.addAnimation([
+      line.animate(500).attr({
+        opacity: 0,
+      })
+    ])
+  } 
+
+  public showLine(line: Line): void {
+    this.addAnimation([
+      line.animate(500).attr({
+        opacity: 1,
+      })
+    ])
+  }
+
+  public assignNewRootRightPointerToOldRoot(oldRoot: Node, newRoot: Node): void {
+    this.hideLine(oldRoot.leftLineTarget);
+
+    newRoot.rightLineTarget.plot(
+      getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y)
+    );
+
+    this.showLine(newRoot.rightLineTarget);
   }
 
   // this method is only called when the newRoots left line target is not visible,

@@ -15,26 +15,25 @@ export default class BSTAnimationProducer extends AnimationProducer {
     this.draw = draw;
   }
 
-  public flashNode(node: Node): void {
+  public halfHighlightNode(node: Node): void {
     this.addAnimation([
       node.nodeTarget.animate(500).attr({
-        fill: '#4beb9b',
         stroke: '#4beb9b',
       }),
       node.textTarget.animate(500).attr({
-        fill: '#ffffff',
+        fill: '#4beb9b',
       }),
     ]);
+  }
 
-    this.addAnimation([
-      node.nodeTarget.animate(500).attr({
-        fill: '#ffffff',
-        stroke: '#000000',
-      }),
-      node.textTarget.animate(500).attr({
-        fill: '#000000',
-      }),
-    ]);
+  public highlightLine(lineTarget: Line): void {
+    if (lineTarget != null) {
+      this.addAnimation([
+        lineTarget.animate(500).attr({
+          stroke: '#4beb9b',
+        }),
+      ]);
+    }
   }
 
   public updateBST(root: Node): void {

@@ -6,17 +6,6 @@ import {
 } from '../util/settings';
 
 export default class BSTTraverseAnimationProducer extends BSTAnimationProducer {
-  public halfHighlightNode(node: Node): void {
-    this.addAnimation([
-      node.nodeTarget.animate(500).attr({
-        stroke: '#4beb9b',
-      }),
-      node.textTarget.animate(500).attr({
-        fill: '#4beb9b',
-      }),
-    ]);
-  }
-
   public highlightNode(node: Node): void {
     this.addAnimation([
       node.nodeTarget.animate(500).attr({
@@ -27,15 +16,5 @@ export default class BSTTraverseAnimationProducer extends BSTAnimationProducer {
         fill: '#ffffff',
       }),
     ]);
-  }
-
-  public highlightLine(lineTarget: Line): void {
-    if (lineTarget != null) {
-      this.addAnimation([
-        lineTarget.animate(500).attr({
-          stroke: '#4beb9b',
-        }),
-      ]);
-    }
   }
 }

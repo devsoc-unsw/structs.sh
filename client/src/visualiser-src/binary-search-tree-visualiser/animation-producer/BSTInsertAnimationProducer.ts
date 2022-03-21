@@ -5,23 +5,23 @@ import { getPointerStartEndCoordinates } from '../util/util';
 
 export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
   public createNodeLeft(node: Node, parent: Node): void {
+    this.createNode(node);
+
     this.addAnimation([
       parent.leftLineTarget.animate(400).attr({
         opacity: 1,
       }),
     ]);
-
-    this.createNode(node);
   }
 
   public createNodeRight(node: Node, parent: Node): void {
+    this.createNode(node);
+
     this.addAnimation([
       parent.rightLineTarget.animate(400).attr({
         opacity: 1,
       }),
     ]);
-
-    this.createNode(node);
   }
 
   // draws a node on the draw canvas and shows the node
