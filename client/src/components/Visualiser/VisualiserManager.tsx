@@ -5,7 +5,9 @@ import initLinkedListVisualiser from 'visualiser-src/linked-list-visualiser/init
 import initBSTVisualiser from 'visualiser-src/binary-search-tree-visualiser/initialiser';
 import { VisualiserController } from './Controller';
 import GUIMode from './Controller/GUIMode/GUIMode';
+import CodeSnippet from 'components/CodeSnippet/CodeSnippet';
 import { Terminal } from './Controller/Terminal';
+import { Pane } from 'components/Panes';
 import styles from './VisualiserDashboard.module.scss';
 import getCommandExecutor from './executableCommands';
 
@@ -29,6 +31,8 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
   const [terminalMode, setTerminalMode] = useState(true);
 
   const [visualiser, setVisualiser] = useState<any>({});
+
+  const [code, setCode] = useState<string[]>([]);
 
   /* ------------------------ Visualiser Initialisation ----------------------- */
 
@@ -54,8 +58,12 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
     setTimelineComplete(val >= 100);
   }, []);
 
+  const updateCode = useCallback((val) => {
+    setCode(val);
+  }, []);
+
   const executeCommand = useMemo(
-    () => getCommandExecutor(topicTitle, visualiser, updateTimeline),
+    () => getCommandExecutor(topicTitle, visualiser, updateTimeline, updateCode),
     [topicTitle, visualiser, updateTimeline]
   );
 
@@ -111,12 +119,13 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
         timelineComplete={timelineComplete}
         speed={speed}
       />
-      <Box sx={{ height: '100%' }}>
+      <Pane orientation="vertical" minSize={150.9}>
         {/* terminalMode ? (
           <Terminal executeCommand={executeCommand} topicTitle={topicTitle} />
         ) : ( */}
         <GUIMode executeCommand={executeCommand} topicTitle={topicTitle} />
-      </Box>
+        <CodeSnippet code={code}/>
+      </Pane>
     </Box>
   );
 };

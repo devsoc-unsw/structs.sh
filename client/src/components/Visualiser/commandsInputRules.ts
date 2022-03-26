@@ -17,6 +17,8 @@
 // See react console emulator docs:
 //     https://www.npmjs.com/package/react-console-emulator
 
+// TODO: how can we more easily store the code snippets? (maybe move into database)
+
 /* -------------------------------------------------------------------------- */
 /*                              Terminal Commands                             */
 /* -------------------------------------------------------------------------- */
@@ -183,6 +185,7 @@ export const getDocumentation = (topicTitle: string): CommandDocumentation[] => 
 export interface Operation {
   command: string;
   args: string[];
+  code: string[];
 }
 
 /* ------------------------- Linked List Operations ------------------------- */
@@ -190,22 +193,27 @@ const guiLinkedListCommands: Operation[] = [
   {
     command: 'append',
     args: ['value'],
+    code: ['a']
   },
   {
     command: 'delete',
     args: ['index'],
+    code: ['a']
   },
   {
     command: 'insert',
     args: ['value', 'index'],
+    code: ['a']
   },
   {
     command: 'search',
     args: ['value'],
+    code: ['a']
   },
   {
     command: 'prepend',
     args: ['value'],
+    code: ['a']
   },
 ];
 
@@ -214,26 +222,50 @@ const guiBstCommands: Operation[] = [
   {
     command: 'insert',
     args: ['value'],
+    code: [
+      'while current not null',
+      '  if value to be inserted < current.val',
+      '    if current.left is null',
+      '      current.left = node to be inserted',
+      '      return',
+      '    current = current.left',
+      '  else',
+      '    if current.right is null',
+      '      current.right = node to be inserted',
+      '      return',
+      '    current = current.right'
+    ],
   },
   {
     command: 'rotateLeft',
     args: ['value'],
+    code: ['a'],
   },
   {
     command: 'rotateRight',
     args: ['value'],
+    code: ['a'],
   },
   {
     command: 'inorderTraversal',
     args: [],
+    code: [
+      'if current is null',
+      '  return',
+      'do inorder traversal on current.left',
+      'visit current',
+      'do inorder traversal on current.right'
+    ],
   },
   {
     command: 'preorderTraversal',
     args: [],
+    code: ['a']
   },
   {
     command: 'postorderTraversal',
     args: [],
+    code: ['a']
   },
 ];
 

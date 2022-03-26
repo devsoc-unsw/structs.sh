@@ -10,7 +10,7 @@ import { LastLink, Link } from './Links';
 import OperationDetails, { OperationsMenuState } from './OperationDetails';
 
 interface Props {
-  executeCommand: (command: string, args: string[]) => string;
+  executeCommand: (command: string, args: string[], code: string[]) => string;
   topicTitle: string;
 }
 

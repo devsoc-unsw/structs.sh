@@ -21,13 +21,16 @@ const isValidCommandArgs = (command: string, args: string[], topicTitle: string)
   return true;
 };
 
-const getLinkedListExecutor = (visualiser, updateTimeline) => (command: string, args: string[]): string => {
+const getLinkedListExecutor = (visualiser, updateTimeline, updateCode) => (command: string, args: string[], code: string[]): string => {
   if (!isValidCommandArgs(command, args, 'Linked Lists')) {
     const { usage } = getDocumentation('Linked Lists').find(
       (operation) => operation.command === command,
     );
     return `Invalid arguments. Usage: ${usage}`;
   }
+
+  updateCode(code);
+
   switch (command) {
     case 'append':
       visualiser.appendNode(Number(args[0]), updateTimeline);
@@ -50,13 +53,16 @@ const getLinkedListExecutor = (visualiser, updateTimeline) => (command: string, 
   return '';
 };
 
-const getBSTExecutor = (visualiser, updateTimeline) => (command: string, args: string[]): string => {
+const getBSTExecutor = (visualiser, updateTimeline, updateCode) => (command: string, args: string[], code: string[]): string => {
   if (!isValidCommandArgs(command, args, 'Binary Search Trees')) {
     const { usage } = getDocumentation('Binary Search Trees').find(
       (operation) => operation.command === command,
     );
     return `Invalid arguments. Usage: ${usage}`;
   }
+
+  updateCode(code);
+
   switch (command) {
     case 'insert':
       visualiser.insert(Number(args[0]), updateTimeline);
@@ -82,17 +88,17 @@ const getBSTExecutor = (visualiser, updateTimeline) => (command: string, args: s
   return '';
 };
 
-const undefinedExecutor = (topicTitle) => (command: string, args: string[]): string => {
+const undefinedExecutor = (topicTitle) => (command: string, args: string[], code: string[]): string => {
   console.error(`Can't find the executor for ${topicTitle}`);
   return '';
 };
 
-const getCommandExecutor = (topicTitle, visualiser, updateTimeline) => {
+const getCommandExecutor = (topicTitle, visualiser, updateTimeline, updateCode) => {
   switch (topicTitle) {
     case 'Linked Lists':
-      return getLinkedListExecutor(visualiser, updateTimeline);
+      return getLinkedListExecutor(visualiser, updateTimeline, updateCode);
     case 'Binary Search Trees':
-      return getBSTExecutor(visualiser, updateTimeline);
+      return getBSTExecutor(visualiser, updateTimeline, updateCode);
     default:
       return undefinedExecutor(topicTitle);
   }

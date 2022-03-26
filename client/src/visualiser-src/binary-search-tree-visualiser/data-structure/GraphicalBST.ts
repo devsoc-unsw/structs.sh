@@ -109,9 +109,9 @@ class BST {
 
   // TODO: remove this
   public getNodeRecursive(input: number, node: Node): Node {
-    if (input === node.value) {
-      return node;
-    }
+    if (node === null) return null;
+    if (input === node.value) return node;
+      
     if (input < node.value) {
       return this.getNodeRecursive(input, node.left);
     }
