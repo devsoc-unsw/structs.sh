@@ -19,6 +19,7 @@ RUN yarn install --production
 
 
 FROM node:16.14-alpine as runner
+WORKDIR /app
 
 COPY package.json yarn.lock ./
 COPY --from=bcrypt_builder /app/node_modules ./node_modules

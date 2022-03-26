@@ -33,7 +33,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
-          context: client
+          context: ${{ matrix.component }}
           push: ${{ github.event_name != 'pull_request' }}
           platforms: linux/amd64
           file: ${{ matrix.component }}/Dockerfile.prod
