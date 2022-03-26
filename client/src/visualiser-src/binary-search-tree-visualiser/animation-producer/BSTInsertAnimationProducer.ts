@@ -63,14 +63,18 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
     // Draw a triangle at the end of the line
     const pathD = `M 0 0 L ${markerLength} ${markerLength / 2} L 0 ${markerLength} z`;
 
-    node.leftLineTarget.marker('end', markerLength, markerLength, (add: Marker) => {
+    node.leftArrowTarget = this.draw.marker(markerLength, markerLength, (add: Marker) => {
       add.path(pathD);
     }).attr('markerUnits', 'userSpaceOnUse');
 
-    node.rightLineTarget.marker('end', markerLength, markerLength, (add: Marker) => {
+    node.leftLineTarget.marker('end', node.leftArrowTarget);
+
+    node.rightArrowTarget = this.draw.marker(markerLength, markerLength, (add: Marker) => {
       add.path(pathD);
     }).attr('markerUnits', 'userSpaceOnUse');
 
+    node.rightLineTarget.marker('end', node.rightArrowTarget);
+    
     node.nodeTarget = this.draw.circle(nodeWidth);
     node.nodeTarget.attr(nodeStyle);
     node.nodeTarget.cx(node.x).cy(node.y);

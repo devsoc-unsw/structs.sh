@@ -8,7 +8,7 @@ import { canvasPadding } from '../util/settings';
 // used for the actual implementation of the bst
 class BST {
   public root: Node = null;
-  
+
   public draw: Container = SVG().addTo('#bst-canvas').size('100%', '100%');
 
   // inserts a node into the bst and produces an animation sequence
@@ -20,6 +20,8 @@ class BST {
       textTarget: null,
       leftLineTarget: null,
       rightLineTarget: null,
+      leftArrowTarget: null,
+      rightArrowTarget: null,
       left: null,
       right: null,
       value: input,
@@ -47,7 +49,7 @@ class BST {
             return animationProducer;
           }
 
-          animationProducer.highlightLine(currentNode.leftLineTarget);
+          animationProducer.highlightLine(currentNode.leftLineTarget, currentNode.leftArrowTarget);
           currentNode = currentNode.left;
         } else {
           if (currentNode.right == null) {
@@ -59,7 +61,7 @@ class BST {
             return animationProducer;
           }
 
-          animationProducer.highlightLine(currentNode.rightLineTarget);
+          animationProducer.highlightLine(currentNode.rightLineTarget, currentNode.rightArrowTarget);
           currentNode = currentNode.right;
         }
       }
@@ -215,10 +217,10 @@ class BST {
     }
 
     animationProducer.halfHighlightNode(node);
-    animationProducer.highlightLine(node.leftLineTarget);
+    animationProducer.highlightLine(node.leftLineTarget, node.leftArrowTarget);
     this.doInorderTraversal(node.left, animationProducer);
     animationProducer.highlightNode(node);
-    animationProducer.highlightLine(node.rightLineTarget);
+    animationProducer.highlightLine(node.rightLineTarget, node.rightArrowTarget);
     this.doInorderTraversal(node.right, animationProducer);
   }
 
@@ -239,9 +241,9 @@ class BST {
     }
 
     animationProducer.highlightNode(node);
-    animationProducer.highlightLine(node.leftLineTarget);
+    animationProducer.highlightLine(node.leftLineTarget, node.leftArrowTarget);
     this.doPreorderTraversal(node.left, animationProducer);
-    animationProducer.highlightLine(node.rightLineTarget);
+    animationProducer.highlightLine(node.rightLineTarget, node.rightArrowTarget);
     this.doPreorderTraversal(node.right, animationProducer);
   }
 
@@ -262,9 +264,9 @@ class BST {
     }
 
     animationProducer.halfHighlightNode(node);
-    animationProducer.highlightLine(node.leftLineTarget);
+    animationProducer.highlightLine(node.leftLineTarget, node.leftArrowTarget);
     this.doPostorderTraversal(node.left, animationProducer);
-    animationProducer.highlightLine(node.rightLineTarget);
+    animationProducer.highlightLine(node.rightLineTarget, node.rightArrowTarget);
     this.doPostorderTraversal(node.right, animationProducer);
     animationProducer.highlightNode(node);
   }

@@ -1,5 +1,5 @@
 import {
-  Circle, Line, Text,
+  Circle, Line, Marker, Text,
 } from '@svgdotjs/svg.js';
 
 /**
@@ -18,6 +18,12 @@ export interface Node {
 
   // selector for the right line svg element
   rightLineTarget: Line;
+
+  // selector for the left arrow svg element
+  leftArrowTarget: Marker;
+
+  // selector for the right arrow svg element
+  rightArrowTarget: Marker;
 
   // reference to a left, right and parent node
   left: Node;
