@@ -1,6 +1,4 @@
-import {
-  SVG, Path, Text, Rect, Svg,
-} from '@svgdotjs/svg.js';
+import { SVG, Path, Text, Circle, Svg } from '@svgdotjs/svg.js';
 import {
   nodeAttributes,
   shapeAttributes,
@@ -8,11 +6,13 @@ import {
   pathAttributes,
   RIGHT_ARROW_PATH,
 } from '../util/constants';
+import { getPointerPath, Style } from '../util/util';
+import { markerLength, pathD } from '../../binary-search-tree-visualiser/util/settings';
 
 interface SVGData {
   nodeTarget: Svg;
   pointerTarget: Path;
-  boxTarget: Rect;
+  boxTarget: Circle;
   numberTarget: Text;
 }
 
@@ -33,9 +33,13 @@ export default class GraphicalLinkedListNode {
 
   public static from(input: number) {
     const newNode = SVG().attr(nodeAttributes);
-    const nodeShape = newNode.rect().attr(shapeAttributes);
+    const nodeShape = newNode.circle().attr(shapeAttributes);
     const nodeValue = newNode.text(String(input)).attr(textAttributes);
-    const newPointer = newNode.path().attr(pathAttributes).plot(RIGHT_ARROW_PATH);
+    const newPointer = newNode.path().attr(pathAttributes).plot(getPointerPath(Style.RIGHT));
+    newPointer.marker('end', markerLength, markerLength, function (add) {
+      add.path(pathD);
+      this.attr('markerUnits', 'userSpaceOnUse');
+    });
     return new GraphicalLinkedListNode({
       value: input,
       svgData: {

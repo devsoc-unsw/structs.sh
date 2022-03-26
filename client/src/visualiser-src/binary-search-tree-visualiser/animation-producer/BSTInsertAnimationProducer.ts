@@ -1,8 +1,7 @@
 import BSTAnimationProducer from './BSTAnimationProducer';
 import { Node } from '../util/typedefs';
-import { nodeStyle, nodeWidth, textStyle, lineStyle, markerLength } from '../util/settings';
+import { nodeStyle, nodeWidth, textStyle, lineStyle, markerLength, pathD } from '../util/settings';
 import { getPointerStartEndCoordinates } from '../util/util';
-
 export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
   public createNodeLeft(node: Node, parent: Node): void {
     this.addAnimation([
@@ -60,7 +59,6 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
       .attr(lineStyle);
 
     // Draw a triangle at the end of the line
-    const pathD = `M 0 0 L ${markerLength} ${markerLength / 2} L 0 ${markerLength} z`;
 
     node.leftLineTarget.marker('end', markerLength, markerLength, function (add) {
       add.path(pathD);

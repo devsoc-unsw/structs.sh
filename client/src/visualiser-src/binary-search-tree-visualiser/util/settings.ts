@@ -26,3 +26,4 @@ export const lineStyle = {
 // we need this so that all svg elements have some padding
 export const canvasPadding = 75;
 export const markerLength = 15;
+export const pathD = `M 0 0 L ${markerLength} ${markerLength / 2} L 0 ${markerLength} z`;

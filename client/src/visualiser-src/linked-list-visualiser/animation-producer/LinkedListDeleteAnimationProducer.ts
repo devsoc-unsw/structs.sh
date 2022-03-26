@@ -1,7 +1,7 @@
 import { Runner } from '@svgdotjs/svg.js';
 import LinkedListAnimationProducer from './LinkedListAnimationProducer';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
-import { BENT_ARROW_PATH } from '../util/constants';
+import { Style, getPointerPath } from '../util/util';
 
 // Class that produces SVG.Runners animating linked list operations specific to deleting
 export default class LinkedListDeleteAnimationProducer extends LinkedListAnimationProducer {
@@ -10,7 +10,9 @@ export default class LinkedListDeleteAnimationProducer extends LinkedListAnimati
   }
 
   public morphNextPointerToArc(node: GraphicalLinkedListNode) {
-    this.addAnimation([node.pointerTarget.animate().plot(BENT_ARROW_PATH as any)]);
+    this.addAnimation([
+      node.pointerTarget.animate().plot(getPointerPath(Style.CURVED_RIGHT) as any),
+    ]);
   }
 
   public deleteNode(node: GraphicalLinkedListNode) {

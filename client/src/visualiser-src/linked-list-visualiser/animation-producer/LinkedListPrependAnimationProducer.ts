@@ -1,6 +1,7 @@
 import LinkedListAnimationProducer from './LinkedListAnimationProducer';
-import { CANVAS, insertedNodeTopOffset, UP_ARROW_PATH } from '../util/constants';
+import { CANVAS, insertedNodeTopOffset } from '../util/constants';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
+import { getPointerPath, Style } from '../util/util';
 
 // Class that produces SVG.Runners animating linked list operations specific to prepending
 export default class LinkedListPrependAnimationProducer extends LinkedListAnimationProducer {
@@ -11,7 +12,7 @@ export default class LinkedListPrependAnimationProducer extends LinkedListAnimat
   }
 
   public newHeadPointToOldHead(newHead: GraphicalLinkedListNode) {
-    newHead.pointerTarget.plot(UP_ARROW_PATH as any);
+    newHead.pointerTarget.plot(getPointerPath(Style.UP) as any);
     this.addAnimation([newHead.pointerTarget.animate().attr({ opacity: 1 })]);
   }
 }

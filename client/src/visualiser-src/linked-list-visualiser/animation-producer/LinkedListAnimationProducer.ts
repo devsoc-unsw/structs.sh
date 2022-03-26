@@ -1,15 +1,14 @@
 import { SVG, Runner, Element } from '@svgdotjs/svg.js';
-import {
-  RIGHT_ARROW_PATH, topOffset, nodePathWidth, CURRENT, PREV,
-} from '../util/constants';
+import { topOffset, nodePathWidth, CURRENT, PREV, actualNodeDiameter } from '../util/constants';
 import AnimationProducer from '../../common/AnimationProducer';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
+import { getPointerPath, Style } from '../util/util';
 
 // Class that produces SVG.Runners animating general linked list operations
 export default abstract class LinkedListAnimationProducer extends AnimationProducer {
   public initialisePointer(pointerId: string) {
     const pointerSvg: Element = SVG(pointerId);
-    pointerSvg.move(0, topOffset);
+    pointerSvg.move(0, topOffset + actualNodeDiameter / 2);
     this.addAnimation([pointerSvg.animate().attr({ opacity: 1 })]);
   }
 
@@ -31,7 +30,7 @@ export default abstract class LinkedListAnimationProducer extends AnimationProdu
     let index: number = 0;
     while (curr != null) {
       runners.push(curr.nodeTarget.animate().move(index * nodePathWidth, 0));
-      runners.push(curr.pointerTarget.animate().plot(RIGHT_ARROW_PATH as any));
+      runners.push(curr.pointerTarget.animate().plot(getPointerPath(Style.RIGHT) as any));
       index += 1;
       curr = curr.next;
     }
