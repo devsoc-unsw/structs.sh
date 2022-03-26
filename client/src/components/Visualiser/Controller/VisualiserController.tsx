@@ -5,9 +5,7 @@ import ReplayIcon from '@mui/icons-material/Replay';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import SpeedIcon from '@mui/icons-material/Speed';
-import {
-  Box, IconButton, Stack, useTheme,
-} from '@mui/material';
+import { Box, IconButton, Stack, useTheme } from '@mui/material';
 import Slider from '@mui/material/Slider';
 import React, { FC, useEffect, useState } from 'react';
 import ModeSwitch from './GUIMode/ModeSwitch';
@@ -89,9 +87,7 @@ const VisualiserController: FC<Props> = ({
               setIsPlaying(false);
             }}
           >
-            <PauseIcon
-              sx={{ fill: theme.palette.text.primary }}
-            />
+            <PauseIcon sx={{ fill: theme.palette.text.primary }} />
           </IconButton>
         ) : (
           <IconButton
@@ -100,9 +96,7 @@ const VisualiserController: FC<Props> = ({
               setIsPlaying(true);
             }}
           >
-            <PlayIcon
-              sx={{ fill: theme.palette.text.primary }}
-            />
+            <PlayIcon sx={{ fill: theme.palette.text.primary }} />
           </IconButton>
         )}
         <IconButton onClick={() => handleStepForward()}>
@@ -181,9 +175,9 @@ const VisualiserController: FC<Props> = ({
           </Stack>
         </Box>
 
-        <Box className={styles.modeSwitchContainer}>
+        {/* <Box className={styles.modeSwitchContainer}>
           <ModeSwitch switchMode={terminalMode} setSwitchMode={setTerminalMode} />
-        </Box>
+          </Box> */}
       </div>
     </Box>
   );

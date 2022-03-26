@@ -3,34 +3,38 @@ import { Node } from '../util/typedefs';
 
 export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
   public movePointerToNewRootRightChild(oldRoot: Node, newRoot: Node): void {
-    this.allRunners.push([
-      oldRoot.leftLineTarget
-        .animate(400)
-        .plot([[oldRoot.x, oldRoot.y], [newRoot.right.x, newRoot.right.y]]),
+    this.addAnimation([
+      oldRoot.leftLineTarget.animate(400).plot([
+        [oldRoot.x, oldRoot.y],
+        [newRoot.right.x, newRoot.right.y],
+      ]),
     ]);
   }
 
   public movePointerToNewRootLeftChild(oldRoot: Node, newRoot: Node): void {
-    this.allRunners.push([
-      oldRoot.rightLineTarget
-        .animate(400)
-        .plot([[oldRoot.x, oldRoot.y], [newRoot.left.x, newRoot.left.y]]),
+    this.addAnimation([
+      oldRoot.rightLineTarget.animate(400).plot([
+        [oldRoot.x, oldRoot.y],
+        [newRoot.left.x, newRoot.left.y],
+      ]),
     ]);
   }
 
   public moveRightPointerToOldRoot(oldRoot: Node, newRoot: Node): void {
-    this.allRunners.push([
-      newRoot.rightLineTarget
-        .animate(400)
-        .plot([[newRoot.x, newRoot.y], [oldRoot.x, oldRoot.y]]),
+    this.addAnimation([
+      newRoot.rightLineTarget.animate(400).plot([
+        [newRoot.x, newRoot.y],
+        [oldRoot.x, oldRoot.y],
+      ]),
     ]);
   }
 
   public moveLeftPointerToOldRoot(oldRoot: Node, newRoot: Node): void {
-    this.allRunners.push([
-      newRoot.leftLineTarget
-        .animate(400)
-        .plot([[newRoot.x, newRoot.y], [oldRoot.x, oldRoot.y]]),
+    this.addAnimation([
+      newRoot.leftLineTarget.animate(400).plot([
+        [newRoot.x, newRoot.y],
+        [oldRoot.x, oldRoot.y],
+      ]),
     ]);
   }
 
@@ -44,7 +48,10 @@ export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
 
     // replot the line (swap x1 with x2 and y1 with y2) so when we move the pointer
     // when calling updateBST the line doesn't do a quick flip animation first
-    newRoot.rightLineTarget.plot([[newRoot.x, newRoot.y], [oldRoot.x, oldRoot.y]]);
+    newRoot.rightLineTarget.plot([
+      [newRoot.x, newRoot.y],
+      [oldRoot.x, oldRoot.y],
+    ]);
   }
 
   // this method is only called when the newRoots left line target is not visible,
@@ -57,6 +64,9 @@ export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
 
     // replot the line (swap x1 with x2 and y1 with y2) so when we move the pointer
     // when calling updateBST the line doesn't do a quick flip animation first
-    newRoot.leftLineTarget.plot([[newRoot.x, newRoot.y], [oldRoot.x, oldRoot.y]]);
+    newRoot.leftLineTarget.plot([
+      [newRoot.x, newRoot.y],
+      [oldRoot.x, oldRoot.y],
+    ]);
   }
 }

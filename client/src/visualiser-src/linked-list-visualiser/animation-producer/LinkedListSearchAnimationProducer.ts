@@ -8,7 +8,7 @@ export default class LinkedListSearchAnimationProducer extends LinkedListAnimati
     const runners: Runner[] = [];
     runners.push(node.boxTarget.animate().attr({ stroke: '#46B493' }));
     runners.push(node.numberTarget.animate().attr({ stroke: '#46B493' }));
-    this.allRunners.push(runners);
+    this.addAnimation(runners);
     this.resetColor(node);
   }
 
@@ -16,7 +16,7 @@ export default class LinkedListSearchAnimationProducer extends LinkedListAnimati
     const runners: Runner[] = [];
     runners.push(node.boxTarget.animate().attr({ stroke: '#FF0000' }));
     runners.push(node.numberTarget.animate().attr({ stroke: '#FF0000' }));
-    this.allRunners.push(runners);
+    this.addAnimation(runners);
     this.resetColor(node);
   }
 
@@ -24,6 +24,6 @@ export default class LinkedListSearchAnimationProducer extends LinkedListAnimati
     const runners: Runner[] = [];
     runners.push(node.boxTarget.animate(200).attr({ stroke: '#000000' }));
     runners.push(node.numberTarget.animate(200).attr({ stroke: '#000000' }));
-    this.allRunners.push(runners);
+    this.addAnimation(runners);
   }
 }

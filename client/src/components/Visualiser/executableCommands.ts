@@ -1,20 +1,31 @@
-// for documentation read: https://compclub.atlassian.net/wiki/spaces/S/pages/2150892071/Documentation#Visualiser-Docs%3A
+// for documentation read:
+// https://compclub.atlassian.net/wiki/spaces/S/pages/2150892071/Documentation#Visualiser-Docs%3A
 
 import { getDocumentation, getGUICommands } from './commandsInputRules';
 
 const isValidCommandArgs = (command: string, args: string[], topicTitle: string): boolean => {
-  const currentOperation = getGUICommands(topicTitle)
-    .find((operation) => operation.command === command);
-  return args.length === currentOperation.args.length && args.every((value) => /^\d+$/.test(value));
+  const currentOperation = getGUICommands(topicTitle).find(
+    (operation) => operation.command === command,
+  );
+
+  if (args.length !== currentOperation.args.length) return false;
+
+  if (!args.every((value) => /^\d+$/.test(value))) return false;
+
+  const valueIndex = currentOperation.args.indexOf('value');
+
+  if (valueIndex !== -1) {
+    return Number(args[valueIndex]) >= 0 && Number(args[valueIndex]) <= 999;
+  }
+
+  return true;
 };
 
-const getLinkedListExecutor = (
-  visualiser,
-  updateTimeline,
-) => (command: string, args: string[]): string => {
+const getLinkedListExecutor = (visualiser, updateTimeline) => (command: string, args: string[]): string => {
   if (!isValidCommandArgs(command, args, 'Linked Lists')) {
-    const { usage } = getDocumentation('Linked Lists')
-      .find((operation) => operation.command === command);
+    const { usage } = getDocumentation('Linked Lists').find(
+      (operation) => operation.command === command,
+    );
     return `Invalid arguments. Usage: ${usage}`;
   }
   switch (command) {
@@ -39,13 +50,11 @@ const getLinkedListExecutor = (
   return '';
 };
 
-const getBSTExecutor = (
-  visualiser,
-  updateTimeline,
-) => (command: string, args: string[]): string => {
+const getBSTExecutor = (visualiser, updateTimeline) => (command: string, args: string[]): string => {
   if (!isValidCommandArgs(command, args, 'Binary Search Trees')) {
-    const { usage } = getDocumentation('Binary Search Trees')
-      .find((operation) => operation.command === command);
+    const { usage } = getDocumentation('Binary Search Trees').find(
+      (operation) => operation.command === command,
+    );
     return `Invalid arguments. Usage: ${usage}`;
   }
   switch (command) {
