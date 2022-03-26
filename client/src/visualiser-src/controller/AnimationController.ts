@@ -49,7 +49,7 @@ class AnimationController {
   public resetTimeline(updateSlider: (val: number) => void) {
     this.currentTimeline = new Timeline().persist(true);
     this.currentTimeline.on('time', (e: CustomEvent) => {
-      updateSlider((e.detail / this.timelineDuration) * 100);
+      updateSlider((Math.min(e.detail, this.timelineDuration) / this.timelineDuration) * 100);
     });
     this.isStepMode = false;
     this.currentTimeline.speed(this.speed);
