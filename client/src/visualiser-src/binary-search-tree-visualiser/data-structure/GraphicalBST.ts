@@ -8,6 +8,7 @@ import { canvasPadding } from '../util/settings';
 // used for the actual implementation of the bst
 class BST {
   public root: Node = null;
+
   public draw: Container = SVG().addTo('#bst-canvas').size('100%', '100%');
 
   // inserts a node into the bst and produces an animation sequence
