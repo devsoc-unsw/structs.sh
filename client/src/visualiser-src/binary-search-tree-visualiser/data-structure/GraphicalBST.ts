@@ -8,6 +8,7 @@ import { canvasPadding } from '../util/settings';
 // used for the actual implementation of the bst
 class BST {
   public root: Node = null;
+  
   public draw: Container = SVG().addTo('#bst-canvas').size('100%', '100%');
 
   // inserts a node into the bst and produces an animation sequence
@@ -129,7 +130,7 @@ class BST {
       animationProducer.movePointerToNewRootLeftChild(oldRoot, newRoot);
       animationProducer.moveLeftPointerToOldRoot(oldRoot, newRoot);
     } else {
-      BSTRotateAnimationProducer.assignNewRootLeftPointerToOldRootRightPointer(oldRoot, newRoot);
+      animationProducer.assignNewRootLeftPointerToOldRoot(oldRoot, newRoot);
     }
 
     this.root = this.doRotateLeft(this.root, input);
@@ -171,7 +172,6 @@ class BST {
       animationProducer.moveRightPointerToOldRoot(oldRoot, newRoot);
     } else {
       animationProducer.assignNewRootRightPointerToOldRoot(oldRoot, newRoot);
-      // BSTRotateAnimationProducer.assignNewRootRightPointerToOldRootLeftPointer(oldRoot, newRoot);
     }
 
     this.root = this.doRotateRight(this.root, input);

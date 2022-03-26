@@ -1,3 +1,4 @@
+import { Marker } from '@svgdotjs/svg.js';
 import BSTAnimationProducer from './BSTAnimationProducer';
 import { Node } from '../util/typedefs';
 import { nodeStyle, nodeWidth, textStyle, lineStyle, markerLength } from '../util/settings';
@@ -62,15 +63,13 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
     // Draw a triangle at the end of the line
     const pathD = `M 0 0 L ${markerLength} ${markerLength / 2} L 0 ${markerLength} z`;
 
-    node.leftLineTarget.marker('end', markerLength, markerLength, function (add) {
+    node.leftLineTarget.marker('end', markerLength, markerLength, (add: Marker) => {
       add.path(pathD);
-      this.attr('markerUnits', 'userSpaceOnUse');
-    });
+    }).attr('markerUnits', 'userSpaceOnUse');
 
-    node.rightLineTarget.marker('end', markerLength, markerLength, function (add) {
+    node.rightLineTarget.marker('end', markerLength, markerLength, (add: Marker) => {
       add.path(pathD);
-      this.attr('markerUnits', 'userSpaceOnUse');
-    });
+    }).attr('markerUnits', 'userSpaceOnUse');
 
     node.nodeTarget = this.draw.circle(nodeWidth);
     node.nodeTarget.attr(nodeStyle);
