@@ -1,8 +1,7 @@
 import BSTAnimationProducer from './BSTAnimationProducer';
 import { Node } from '../util/typedefs';
-import {
-  nodeStyle, nodeWidth, textStyle, lineStyle,
-} from '../util/settings';
+import { nodeStyle, nodeWidth, textStyle, lineStyle, markerLength } from '../util/settings';
+import { getPointerStartEndCoordinates } from '../util/util';
 
 export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
   public createNodeLeft(node: Node, parent: Node): void {
@@ -30,17 +29,48 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
     // based on the depth of the node we are able to create left and right svg line targets
     const lineDiffX = BSTAnimationProducer.getLineDiffX(node);
     const lineDiffY = 75;
-
+    const leftChildCoordinates = getPointerStartEndCoordinates(
+      node.x,
+      node.y,
+      node.x - lineDiffX,
+      node.y + lineDiffY
+    );
     node.leftLineTarget = this.draw
-      .line(node.x, node.y, node.x - lineDiffX, node.y + lineDiffY)
+      .line(
+        leftChildCoordinates[0][0],
+        leftChildCoordinates[0][1],
+        leftChildCoordinates[1][0],
+        leftChildCoordinates[1][1]
+      )
       .attr(lineStyle);
 
+    const rightChildCoordinates = getPointerStartEndCoordinates(
+      node.x,
+      node.y,
+      node.x + lineDiffX,
+      node.y + lineDiffY
+    );
     node.rightLineTarget = this.draw
-      .line(node.x, node.y, node.x + lineDiffX, node.y + lineDiffY)
+      .line(
+        rightChildCoordinates[0][0],
+        rightChildCoordinates[0][1],
+        rightChildCoordinates[1][0],
+        rightChildCoordinates[1][1]
+      )
       .attr(lineStyle);
 
-    node.leftLineTarget.back();
-    node.rightLineTarget.back();
+    // Draw a triangle at the end of the line
+    const pathD = `M 0 0 L ${markerLength} ${markerLength / 2} L 0 ${markerLength} z`;
+
+    node.leftLineTarget.marker('end', markerLength, markerLength, function (add) {
+      add.path(pathD);
+      this.attr('markerUnits', 'userSpaceOnUse');
+    });
+
+    node.rightLineTarget.marker('end', markerLength, markerLength, function (add) {
+      add.path(pathD);
+      this.attr('markerUnits', 'userSpaceOnUse');
+    });
 
     node.nodeTarget = this.draw.circle(nodeWidth);
     node.nodeTarget.attr(nodeStyle);

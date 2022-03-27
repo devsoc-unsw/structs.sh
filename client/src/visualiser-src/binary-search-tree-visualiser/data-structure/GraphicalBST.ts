@@ -81,7 +81,7 @@ class BST {
     low: number,
     high: number,
     mid: number,
-    y: number,
+    y: number
   ): void {
     if (node === null) {
       return;
@@ -106,7 +106,8 @@ class BST {
   public getNodeRecursive(input: number, node: Node): Node {
     if (input === node.value) {
       return node;
-    } if (input < node.value) {
+    }
+    if (input < node.value) {
       return this.getNodeRecursive(input, node.left);
     }
     return this.getNodeRecursive(input, node.right);
@@ -145,7 +146,8 @@ class BST {
       newRoot.left = node;
 
       return newRoot;
-    } if (input < node.value) {
+    }
+    if (input < node.value) {
       node.left = this.doRotateLeft(node.left, input);
     } else {
       node.right = this.doRotateLeft(node.right, input);
@@ -187,7 +189,8 @@ class BST {
       newRoot.right = node;
 
       return newRoot;
-    } if (input < node.value) {
+    }
+    if (input < node.value) {
       node.left = this.doRotateRight(node.left, input);
     } else {
       node.right = this.doRotateRight(node.right, input);
@@ -198,7 +201,7 @@ class BST {
 
   public inorderTraversal(): BSTTraverseAnimationProducer {
     const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer(
-      this.draw,
+      this.draw
     );
     animationProducer.resetBST(this.root);
     this.doInorderTraversal(this.root, animationProducer);
@@ -221,7 +224,7 @@ class BST {
 
   public preorderTraversal(): BSTTraverseAnimationProducer {
     const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer(
-      this.draw,
+      this.draw
     );
     animationProducer.resetBST(this.root);
     this.doPreorderTraversal(this.root, animationProducer);
@@ -243,7 +246,7 @@ class BST {
 
   public postorderTraversal(): BSTTraverseAnimationProducer {
     const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer(
-      this.draw,
+      this.draw
     );
     animationProducer.resetBST(this.root);
     this.doPostorderTraversal(this.root, animationProducer);
