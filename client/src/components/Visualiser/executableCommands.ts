@@ -21,7 +21,7 @@ const isValidCommandArgs = (command: string, args: string[], topicTitle: string)
   return true;
 };
 
-const getLinkedListExecutor = (visualiser, updateTimeline, updateCode) => (command: string, args: string[], code: string[]): string => {
+const getLinkedListExecutor = (visualiser, updateTimeline, updateCode, updateLine) => (command: string, args: string[], code: string[]): string => {
   if (!isValidCommandArgs(command, args, 'Linked Lists')) {
     const { usage } = getDocumentation('Linked Lists').find(
       (operation) => operation.command === command,
@@ -53,7 +53,7 @@ const getLinkedListExecutor = (visualiser, updateTimeline, updateCode) => (comma
   return '';
 };
 
-const getBSTExecutor = (visualiser, updateTimeline, updateCode) => (command: string, args: string[], code: string[]): string => {
+const getBSTExecutor = (visualiser, updateTimeline, updateCode, updateLine) => (command: string, args: string[], code: string[]): string => {
   if (!isValidCommandArgs(command, args, 'Binary Search Trees')) {
     const { usage } = getDocumentation('Binary Search Trees').find(
       (operation) => operation.command === command,
@@ -65,22 +65,22 @@ const getBSTExecutor = (visualiser, updateTimeline, updateCode) => (command: str
 
   switch (command) {
     case 'insert':
-      visualiser.insert(Number(args[0]), updateTimeline);
+      visualiser.insert(Number(args[0]), updateTimeline, updateLine);
       break;
     case 'rotateLeft':
-      visualiser.rotateLeft(Number(args[0]), updateTimeline);
+      visualiser.rotateLeft(Number(args[0]), updateTimeline, updateLine);
       break;
     case 'rotateRight':
-      visualiser.rotateRight(Number(args[0]), updateTimeline);
+      visualiser.rotateRight(Number(args[0]), updateTimeline, updateLine);
       break;
     case 'inorderTraversal':
-      visualiser.inorderTraversal(updateTimeline);
+      visualiser.inorderTraversal(updateTimeline, updateLine);
       break;
     case 'preorderTraversal':
-      visualiser.preorderTraversal(updateTimeline);
+      visualiser.preorderTraversal(updateTimeline, updateLine);
       break;
     case 'postorderTraversal':
-      visualiser.postorderTraversal(updateTimeline);
+      visualiser.postorderTraversal(updateTimeline, updateLine);
       break;
     default:
       return `Invalid command: ${command}`;
@@ -93,12 +93,12 @@ const undefinedExecutor = (topicTitle) => (command: string, args: string[], code
   return '';
 };
 
-const getCommandExecutor = (topicTitle, visualiser, updateTimeline, updateCode) => {
+const getCommandExecutor = (topicTitle, visualiser, updateTimeline, updateCode, updateLine) => {
   switch (topicTitle) {
     case 'Linked Lists':
-      return getLinkedListExecutor(visualiser, updateTimeline, updateCode);
+      return getLinkedListExecutor(visualiser, updateTimeline, updateCode, updateLine);
     case 'Binary Search Trees':
-      return getBSTExecutor(visualiser, updateTimeline, updateCode);
+      return getBSTExecutor(visualiser, updateTimeline, updateCode, updateLine);
     default:
       return undefinedExecutor(topicTitle);
   }

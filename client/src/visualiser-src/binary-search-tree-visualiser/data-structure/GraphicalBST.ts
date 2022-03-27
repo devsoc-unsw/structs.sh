@@ -13,7 +13,7 @@ class BST {
 
   // inserts a node into the bst and produces an animation sequence
   // that is later handled by the animation controller
-  public insert(input: number): BSTInsertAnimationProducer {
+  public insert(input: number, updateLine: (val: number) => void): BSTInsertAnimationProducer {
     const animationProducer: BSTInsertAnimationProducer = new BSTInsertAnimationProducer(this.draw);
     const node: Node = {
       nodeTarget: null,
@@ -37,31 +37,43 @@ class BST {
       let currentNode: Node = this.root;
 
       while (currentNode) {
+        updateLine(0);
         animationProducer.halfHighlightNode(currentNode);
 
+        updateLine(1);
         if (node.value < currentNode.value) {
+          updateLine(2);
           if (currentNode.left == null) {
+            updateLine(3);
             currentNode.left = node;
             this.updateNodePositions();
             animationProducer.createNodeLeft(node, currentNode);
             animationProducer.resetBST(this.root);
 
+            updateLine(4);
             return animationProducer;
           }
 
           animationProducer.highlightLine(currentNode.leftLineTarget, currentNode.leftArrowTarget);
+
+          updateLine(5);
           currentNode = currentNode.left;
         } else {
+          updateLine(7);
           if (currentNode.right == null) {
+            updateLine(8);
             currentNode.right = node;
             this.updateNodePositions();
             animationProducer.createNodeRight(node, currentNode);
             animationProducer.resetBST(this.root);
 
+            updateLine(9);
             return animationProducer;
           }
 
           animationProducer.highlightLine(currentNode.rightLineTarget, currentNode.rightArrowTarget);
+
+          updateLine(10);
           currentNode = currentNode.right;
         }
       }
@@ -118,7 +130,7 @@ class BST {
     return this.getNodeRecursive(input, node.right);
   }
 
-  public rotateLeft(input: number): BSTRotateAnimationProducer {
+  public rotateLeft(input: number, updateLine: (val: number) => void): BSTRotateAnimationProducer {
     const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer(this.draw);
     const oldRoot: Node = this.getNode(input);
 
@@ -159,7 +171,7 @@ class BST {
     return node;
   }
 
-  public rotateRight(input: number): BSTRotateAnimationProducer {
+  public rotateRight(input: number, updateLine: (val: number) => void): BSTRotateAnimationProducer {
     const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer(this.draw);
     const oldRoot: Node = this.getNode(input);
 
@@ -200,7 +212,7 @@ class BST {
     return node;
   }
 
-  public inorderTraversal(): BSTTraverseAnimationProducer {
+  public inorderTraversal(updateLine: (val: number) => void): BSTTraverseAnimationProducer {
     const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer(
       this.draw
     );
@@ -224,7 +236,7 @@ class BST {
     this.doInorderTraversal(node.right, animationProducer);
   }
 
-  public preorderTraversal(): BSTTraverseAnimationProducer {
+  public preorderTraversal(updateLine: (val: number) => void): BSTTraverseAnimationProducer {
     const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer(
       this.draw
     );
@@ -247,7 +259,7 @@ class BST {
     this.doPreorderTraversal(node.right, animationProducer);
   }
 
-  public postorderTraversal(): BSTTraverseAnimationProducer {
+  public postorderTraversal(updateLine: (val: number) => void): BSTTraverseAnimationProducer {
     const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer(
       this.draw
     );

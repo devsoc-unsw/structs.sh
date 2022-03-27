@@ -33,6 +33,7 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
   const [visualiser, setVisualiser] = useState<any>({});
 
   const [code, setCode] = useState<string[]>([]);
+  const [line, setLine] = useState<number>(0);
 
   /* ------------------------ Visualiser Initialisation ----------------------- */
 
@@ -62,8 +63,13 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
     setCode(val);
   }, []);
 
+  const updateLine = useCallback((val) => {
+    console.log(val);
+    setLine(val);
+  }, []);
+
   const executeCommand = useMemo(
-    () => getCommandExecutor(topicTitle, visualiser, updateTimeline, updateCode),
+    () => getCommandExecutor(topicTitle, visualiser, updateTimeline, updateCode, updateLine),
     [topicTitle, visualiser, updateTimeline]
   );
 
@@ -124,7 +130,7 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
           <Terminal executeCommand={executeCommand} topicTitle={topicTitle} />
         ) : ( */}
         <GUIMode executeCommand={executeCommand} topicTitle={topicTitle} />
-        <CodeSnippet code={code}/>
+        <CodeSnippet code={code} currentLine={line}/>
       </Pane>
     </Box>
   );
