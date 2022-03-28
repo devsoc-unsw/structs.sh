@@ -93,6 +93,21 @@ export default class BSTAnimationProducer extends AnimationProducer {
     })
   }
 
+  // the reason we have these 2 methods is for abstraction and readability
+  // in the operation methods
+  public doAnimationAndHighlight(line: number, fn: any, ...args: any[]): void {
+    fn.apply(this, [...args]);
+    this.highlightCode(line);
+  }
+
+  public doAnimation(fn: any, ...args: any[]): void {
+    fn.apply(this, [...args]);
+
+    // make sure that the animation function finishes the sequence if it
+    // produced simultaneous animations
+    this.finishSequence();
+  }
+
   public halfHighlightNode(node: Node): void {
     this.addSequenceAnimation(
       node.nodeTarget.animate(500).attr({
@@ -126,7 +141,6 @@ export default class BSTAnimationProducer extends AnimationProducer {
   public updateBST(root: Node): void {
     this.updateNodesRecursive(root);
     this.updateLinesRecursive(root);
-    this.finishSequence();
   }
 
   public updateNodesRecursive(node: Node): void {

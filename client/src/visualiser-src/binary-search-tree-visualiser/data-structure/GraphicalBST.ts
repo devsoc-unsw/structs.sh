@@ -34,51 +34,44 @@ class BST {
     if (this.root == null) {
       this.root = node;
       this.updateNodePositions();
-      animationProducer.createNode(node);
-      animationProducer.highlightCode(4);
+      animationProducer.doAnimationAndHighlight(4, animationProducer.createNode, node);
     } else {
       let currentNode: Node = this.root;
 
       while (currentNode) {
-        animationProducer.halfHighlightNode(currentNode);
-        animationProducer.highlightCode(8);
-
+        animationProducer.doAnimationAndHighlight(8, animationProducer.halfHighlightNode, currentNode);
+        
         if (node.value < currentNode.value) {
           if (currentNode.left == null) {
             currentNode.left = node;
             this.updateNodePositions();
-            animationProducer.createNodeLeft(node, currentNode);
-            animationProducer.highlightCode(10);
-            animationProducer.resetBST(this.root);
-            animationProducer.highlightCode(11);
+            animationProducer.doAnimationAndHighlight(10, animationProducer.createNodeLeft, node, currentNode);
+            animationProducer.doAnimationAndHighlight(11, animationProducer.resetBST, this.root);
 
             return animationProducer;
           }
 
-          animationProducer.highlightLine(currentNode.leftLineTarget, currentNode.leftArrowTarget);
-          animationProducer.highlightCode(14);
-
+          animationProducer.doAnimationAndHighlight(14, animationProducer.highlightLine, currentNode.leftLineTarget, currentNode.leftArrowTarget);
+          
           currentNode = currentNode.left;
         } else {
           if (currentNode.right == null) {
             currentNode.right = node;
             this.updateNodePositions();
-            animationProducer.createNodeRight(node, currentNode);
-            animationProducer.highlightCode(17);
-            animationProducer.resetBST(this.root);
-            animationProducer.highlightCode(18);
+            animationProducer.doAnimationAndHighlight(17, animationProducer.createNodeRight, node, currentNode);
+            animationProducer.doAnimationAndHighlight(18, animationProducer.resetBST, this.root);
 
             return animationProducer;
           }
 
-          animationProducer.highlightLine(currentNode.rightLineTarget, currentNode.rightArrowTarget);
-          animationProducer.highlightCode(21);
+          animationProducer.doAnimationAndHighlight(21, animationProducer.highlightLine, currentNode.rightLineTarget, currentNode.rightArrowTarget)
 
           currentNode = currentNode.right;
         }
       }
     }
-    animationProducer.resetBST(this.root);
+
+    animationProducer.doAnimation(animationProducer.resetBST, this.root);
     return animationProducer;
   }
 

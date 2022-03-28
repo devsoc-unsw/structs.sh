@@ -19,7 +19,5 @@ export default class BSTTraverseAnimationProducer extends BSTAnimationProducer {
         fill: '#ffffff',
       })
     );
-
-    this.finishSequence();
   }
 }
