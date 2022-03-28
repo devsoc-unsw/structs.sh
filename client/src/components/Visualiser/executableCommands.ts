@@ -5,7 +5,7 @@ import { getDocumentation, getGUICommands } from './commandsInputRules';
 
 const isValidCommandArgs = (command: string, args: string[], topicTitle: string): boolean => {
   const currentOperation = getGUICommands(topicTitle).find(
-    (operation) => operation.command === command,
+    (operation) => operation.command === command
   );
 
   if (args.length !== currentOperation.args.length) return false;
