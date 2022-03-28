@@ -9,10 +9,7 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
     // TODO: figure out cleaner way to store c code (possibly in database)
     this.renderCode(
 `Node *curr = root;
-Node *node = malloc(sizeof(Node));
-node->left = NULL;
-node->right = NULL;
-node->val = val;
+Node *node = createNode(val);
 if (root == NULL) {
   root = node;
   return;
@@ -40,7 +37,7 @@ while (curr != NULL) {
   public createNodeLeft(node: Node, parent: Node): void {
     this.createNode(node);
 
-    this.addSingleAnimation(
+    this.addSequenceAnimation(
       parent.leftLineTarget.animate(400).attr({
         opacity: 1,
       }),
@@ -50,7 +47,7 @@ while (curr != NULL) {
   public createNodeRight(node: Node, parent: Node): void {
     this.createNode(node);
 
-    this.addSingleAnimation(
+    this.addSequenceAnimation(
       parent.rightLineTarget.animate(400).attr({
         opacity: 1,
       }),
@@ -126,7 +123,5 @@ while (curr != NULL) {
         opacity: 1,
       })
     );
-
-    this.finishSequence();
   }
 }

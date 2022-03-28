@@ -35,41 +35,44 @@ class BST {
       this.root = node;
       this.updateNodePositions();
       animationProducer.createNode(node);
-      animationProducer.highlightCodeMultiple([2, 3, 4, 5, 6, 7, 8, 9]);
+      animationProducer.highlightCode(4);
     } else {
       let currentNode: Node = this.root;
 
       while (currentNode) {
         animationProducer.halfHighlightNode(currentNode);
+        animationProducer.highlightCode(8);
 
         if (node.value < currentNode.value) {
           if (currentNode.left == null) {
             currentNode.left = node;
             this.updateNodePositions();
-            animationProducer.highlightCodeMultiple([12, 13, 14, 15]);
             animationProducer.createNodeLeft(node, currentNode);
+            animationProducer.highlightCode(10);
             animationProducer.resetBST(this.root);
+            animationProducer.highlightCode(11);
 
             return animationProducer;
           }
 
-          animationProducer.highlightCode(17);
           animationProducer.highlightLine(currentNode.leftLineTarget, currentNode.leftArrowTarget);
+          animationProducer.highlightCode(14);
 
           currentNode = currentNode.left;
         } else {
           if (currentNode.right == null) {
             currentNode.right = node;
             this.updateNodePositions();
-            animationProducer.highlightCodeMultiple([19, 20, 21, 22]);
             animationProducer.createNodeRight(node, currentNode);
+            animationProducer.highlightCode(17);
             animationProducer.resetBST(this.root);
+            animationProducer.highlightCode(18);
 
             return animationProducer;
           }
 
-          animationProducer.highlightCode(24);
           animationProducer.highlightLine(currentNode.rightLineTarget, currentNode.rightArrowTarget);
+          animationProducer.highlightCode(21);
 
           currentNode = currentNode.right;
         }

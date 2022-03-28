@@ -1,5 +1,5 @@
 import { Container, Line, Marker, Text } from '@svgdotjs/svg.js';
-import { Node } from '../util/typedefs';
+import { Node, CodeLine } from '../util/typedefs';
 import { canvasPadding, nodeWidth } from '../util/settings';
 import { getPointerStartEndCoordinates } from '../util/util';
 import AnimationProducer from '../../common/AnimationProducer';
@@ -12,7 +12,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
   public codeCanvas: Container;
 
   // TODO: move to AnimationProducer later
-  private codeTargets: Text[] = [];
+  private codeTargets: CodeLine[] = [];
   private highlightedLines: number[] = [];
 
 
@@ -33,12 +33,18 @@ export default class BSTAnimationProducer extends AnimationProducer {
     const lines: string[] = code.split('\n');
 
     lines.forEach((line, i) => {
-      this.codeTargets.push(
-        this.codeCanvas.text(SHOW_LINE_NUMBERS ? String(i + 1).padEnd(4, ' ') + line : line)
-        .font('family', 'CodeText')
-        .attr('style','white-space: pre-wrap')
-        .move(0, 22 * i)
-      );
+      const codeLine: CodeLine = {
+        textTarget: this.codeCanvas.text(SHOW_LINE_NUMBERS ? String(i + 1).padEnd(4, ' ') + line : line)
+          .font({'family': 'CodeText', 'size': 10})
+          .attr('style','white-space: pre-wrap')
+          .move(0, 22 * i),
+        rectTarget: this.codeCanvas.rect(1000, 22)
+          .move(0, 22 * i)
+          .back()
+          .fill('#ebebeb')
+      }
+
+      this.codeTargets.push(codeLine);
     })
   }
 
@@ -50,7 +56,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
     this.unhighlightCodeMultiple();
 
     this.addSequenceAnimation(
-      this.codeTargets[line - 1].animate(1).attr({
+      this.codeTargets[line - 1].rectTarget.animate(1).attr({
         fill: '#4beb9b',
       })
     );
@@ -66,7 +72,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
 
     lines.forEach((line) => {
       this.addSequenceAnimation(
-        this.codeTargets[line - 1].animate(1).attr({
+        this.codeTargets[line - 1].rectTarget.animate(1).attr({
           fill: '#4beb9b',
         })
       );
@@ -80,8 +86,8 @@ export default class BSTAnimationProducer extends AnimationProducer {
   public unhighlightCodeMultiple(): void {
     this.highlightedLines.forEach((line) => {
       this.addSequenceAnimation(
-        this.codeTargets[line - 1].animate(1).attr({
-          fill: '#000000',
+        this.codeTargets[line - 1].rectTarget.animate(1).attr({
+          fill: '#ebebeb',
         })
       );
     })
@@ -99,8 +105,6 @@ export default class BSTAnimationProducer extends AnimationProducer {
         fill: '#4beb9b',
       })
     );
-
-    this.finishSequence();
   }
 
   public highlightLine(lineTarget: Line, arrowTarget: Marker): void {
@@ -116,8 +120,6 @@ export default class BSTAnimationProducer extends AnimationProducer {
           fill: '#4beb9b',
         })
       );
-
-      this.finishSequence();
     }
   }
 
@@ -187,7 +189,6 @@ export default class BSTAnimationProducer extends AnimationProducer {
   public resetBST(root: Node): void {
     this.resetLinesRecursive(root);
     this.resetNodesRecursive(root);
-    this.finishSequence();
   }
 
   public resetLinesRecursive(node: Node): void {

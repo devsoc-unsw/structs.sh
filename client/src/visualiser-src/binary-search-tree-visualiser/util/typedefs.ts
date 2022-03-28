@@ -39,6 +39,5 @@ export interface Node {
 
 export interface CodeLine {
   textTarget: Text;
-
   rectTarget: Rect;
 }
