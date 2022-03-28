@@ -15,6 +15,7 @@ node->right = NULL;
 node->val = val;
 if (root == NULL) {
   root = node;
+  return;
 }
 while (curr != NULL) {
   if (node->val < curr->val) {

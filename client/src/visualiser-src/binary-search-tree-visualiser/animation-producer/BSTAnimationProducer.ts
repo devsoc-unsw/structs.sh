@@ -4,18 +4,19 @@ import { canvasPadding, nodeWidth } from '../util/settings';
 import { getPointerStartEndCoordinates } from '../util/util';
 import AnimationProducer from '../../common/AnimationProducer';
 
+// just a constant used for developer with matching lines to code
+const SHOW_LINE_NUMBERS = true;
+
 export default class BSTAnimationProducer extends AnimationProducer {
   public visualiserCanvas: Container;
   public codeCanvas: Container;
 
   // TODO: move to AnimationProducer later
-  private _codeTargets: Text[] = [];
+  private codeTargets: Text[] = [];
+  private highlightedLines: number[] = [];
+
 
   // TODO: change bst lines to be pointers instead
-
-  public get codeTargets() {
-    return this._codeTargets;
-  }
 
   // the problem with each BSTAnimationProducer having its own visualiser canvas created
   // is that svg.js uses an addTo method which would create an extra svg container
@@ -24,6 +25,8 @@ export default class BSTAnimationProducer extends AnimationProducer {
     super();
     this.visualiserCanvas = visualiserCanvas;
     this.codeCanvas = codeCanvas;
+
+    this.codeCanvas.clear();
   }
 
   public renderCode(code: string): void {
@@ -31,7 +34,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
 
     lines.forEach((line, i) => {
       this.codeTargets.push(
-        this.codeCanvas.text(line)
+        this.codeCanvas.text(SHOW_LINE_NUMBERS ? String(i + 1).padEnd(4, ' ') + line : line)
         .font('family', 'CodeText')
         .attr('style','white-space: pre-wrap')
         .move(0, 22 * i)
@@ -43,25 +46,45 @@ export default class BSTAnimationProducer extends AnimationProducer {
   // we treat line numbers as starting from 1, so
   // substract 1 from each index
   public highlightCode(line: number): void {
+    // unhighlight previously highlighted lines
+    this.unhighlightCodeMultiple();
+
     this.addSequenceAnimation(
-      this.codeTargets[line - 1].animate(500).attr({
+      this.codeTargets[line - 1].animate(1).attr({
         fill: '#4beb9b',
       })
     );
+
+    this.highlightedLines = [line];
 
     this.finishSequence();
   }
 
   public highlightCodeMultiple(lines: number[]): void {
+    // unhighlight previously highlighted lines
+    this.unhighlightCodeMultiple();
+
     lines.forEach((line) => {
       this.addSequenceAnimation(
-        this.codeTargets[line - 1].animate(500).attr({
+        this.codeTargets[line - 1].animate(1).attr({
           fill: '#4beb9b',
         })
       );
     })
 
+    this.highlightedLines = lines;
+
     this.finishSequence();
+  }
+
+  public unhighlightCodeMultiple(): void {
+    this.highlightedLines.forEach((line) => {
+      this.addSequenceAnimation(
+        this.codeTargets[line - 1].animate(1).attr({
+          fill: '#000000',
+        })
+      );
+    })
   }
 
   public halfHighlightNode(node: Node): void {

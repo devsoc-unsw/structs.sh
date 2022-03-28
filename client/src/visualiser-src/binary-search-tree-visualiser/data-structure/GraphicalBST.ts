@@ -35,7 +35,7 @@ class BST {
       this.root = node;
       this.updateNodePositions();
       animationProducer.createNode(node);
-      animationProducer.highlightCodeMultiple([2, 3, 4, 5]);
+      animationProducer.highlightCodeMultiple([2, 3, 4, 5, 6, 7, 8, 9]);
     } else {
       let currentNode: Node = this.root;
 
@@ -46,12 +46,14 @@ class BST {
           if (currentNode.left == null) {
             currentNode.left = node;
             this.updateNodePositions();
+            animationProducer.highlightCodeMultiple([12, 13, 14, 15]);
             animationProducer.createNodeLeft(node, currentNode);
             animationProducer.resetBST(this.root);
 
             return animationProducer;
           }
 
+          animationProducer.highlightCode(17);
           animationProducer.highlightLine(currentNode.leftLineTarget, currentNode.leftArrowTarget);
 
           currentNode = currentNode.left;
@@ -59,12 +61,14 @@ class BST {
           if (currentNode.right == null) {
             currentNode.right = node;
             this.updateNodePositions();
+            animationProducer.highlightCodeMultiple([19, 20, 21, 22]);
             animationProducer.createNodeRight(node, currentNode);
             animationProducer.resetBST(this.root);
 
             return animationProducer;
           }
 
+          animationProducer.highlightCode(24);
           animationProducer.highlightLine(currentNode.rightLineTarget, currentNode.rightArrowTarget);
 
           currentNode = currentNode.right;
