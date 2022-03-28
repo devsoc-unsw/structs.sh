@@ -32,9 +32,6 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
 
   const [visualiser, setVisualiser] = useState<any>({});
 
-  const [code, setCode] = useState<string[]>([]);
-  const [line, setLine] = useState<number>(0);
-
   /* ------------------------ Visualiser Initialisation ----------------------- */
 
   useEffect(() => {
@@ -59,17 +56,8 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
     setTimelineComplete(val >= 100);
   }, []);
 
-  const updateCode = useCallback((val) => {
-    setCode(val);
-  }, []);
-
-  const updateLine = useCallback((val) => {
-    console.log(val);
-    setLine(val);
-  }, []);
-
   const executeCommand = useMemo(
-    () => getCommandExecutor(topicTitle, visualiser, updateTimeline, updateCode, updateLine),
+    () => getCommandExecutor(topicTitle, visualiser, updateTimeline),
     [topicTitle, visualiser, updateTimeline]
   );
 
@@ -130,7 +118,7 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
           <Terminal executeCommand={executeCommand} topicTitle={topicTitle} />
         ) : ( */}
         <GUIMode executeCommand={executeCommand} topicTitle={topicTitle} />
-        <CodeSnippet code={code} currentLine={line}/>
+        <CodeSnippet />
       </Pane>
     </Box>
   );

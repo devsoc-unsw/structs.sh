@@ -7,14 +7,19 @@ import {
 
 export default class BSTTraverseAnimationProducer extends BSTAnimationProducer {
   public highlightNode(node: Node): void {
-    this.addAnimation([
+    this.addSequenceAnimation(
       node.nodeTarget.animate(500).attr({
         fill: '#4beb9b',
         stroke: '#4beb9b',
-      }),
+      })
+    );
+
+    this.addSequenceAnimation(
       node.textTarget.animate(500).attr({
         fill: '#ffffff',
-      }),
-    ]);
+      })
+    );
+
+    this.finishSequence();
   }
 }

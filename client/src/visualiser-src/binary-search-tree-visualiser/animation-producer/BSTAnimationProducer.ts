@@ -11,6 +11,8 @@ export default class BSTAnimationProducer extends AnimationProducer {
   // TODO: move to AnimationProducer later
   private _codeTargets: Text[] = [];
 
+  // TODO: change bst lines to be pointers instead
+
   public get codeTargets() {
     return this._codeTargets;
   }
@@ -28,83 +30,108 @@ export default class BSTAnimationProducer extends AnimationProducer {
     const lines: string[] = code.split('\n');
 
     lines.forEach((line, i) => {
-      console.log(line);
       this.codeTargets.push(
         this.codeCanvas.text(line)
-        .move(0, 20 * i)
-        .attr('white-space', 'pre')
+        .font('family', 'CodeText')
+        .attr('style','white-space: pre-wrap')
+        .move(0, 22 * i)
       );
     })
   }
 
+  // public highlightCodeLine(line: number): Runner {
+  //   return this.codeTargets[line].animate(500).attr({
+  //     fill: '#4beb9b',
+  //   })
+  // }
+
+  // public highlightCodeLine(line: number): Runner {
+  //   return this.codeTargets[line].animate(500).attr({
+  //     fill: '#4beb9b',
+  //   })
+  // }
+
   public halfHighlightNode(node: Node): void {
-    this.addAnimation([
+    this.addSequenceAnimation(
       node.nodeTarget.animate(500).attr({
         stroke: '#4beb9b',
-      }),
+      })
+    );
+
+    this.addSequenceAnimation(
       node.textTarget.animate(500).attr({
         fill: '#4beb9b',
-      }),
-    ]);
+      })
+    );
+
+    this.finishSequence();
   }
 
   public highlightLine(lineTarget: Line, arrowTarget: Marker): void {
     if (lineTarget != null) {
-      this.addAnimation([
+      this.addSequenceAnimation(
         lineTarget.animate(500).attr({
           stroke: '#4beb9b',
         }),
+      );
+      
+      this.addSequenceAnimation(
         arrowTarget.animate(500).attr({
           fill: '#4beb9b',
-        }),
-      ]);
+        })
+      );
+
+      this.finishSequence();
     }
   }
 
   public updateBST(root: Node): void {
-    const animation: Runner[] = [];
-    this.updateNodesRecursive(root, animation);
-    this.updateLinesRecursive(root, animation);
-    this.addAnimation(animation);
+    this.updateNodesRecursive(root);
+    this.updateLinesRecursive(root);
+    this.finishSequence();
   }
 
-  public updateNodesRecursive(node: Node, animation: Runner[]): void {
+  public updateNodesRecursive(node: Node): void {
     if (node === null) {
       return;
     }
 
-    BSTAnimationProducer.updateNode(node, node.x, node.y, animation);
-    this.updateNodesRecursive(node.left, animation);
-    this.updateNodesRecursive(node.right, animation);
+    this.updateNode(node, node.x, node.y);
+    this.updateNodesRecursive(node.left);
+    this.updateNodesRecursive(node.right);
   }
 
-  public static updateNode(node: Node, newX: number, newY: number, animation: Runner[]): void {
-    animation.push(node.nodeTarget.animate(400).cx(newX).cy(newY));
+  public updateNode(node: Node, newX: number, newY: number): void {
+    this.addSequenceAnimation(
+      node.nodeTarget.animate(400).cx(newX).cy(newY)
+    );
 
-    animation.push(node.textTarget.animate(400).cx(newX).cy(newY));
+    this.addSequenceAnimation(
+      node.textTarget.animate(400).cx(newX).cy(newY)
+    );
   }
 
-  public updateLinesRecursive(node: Node, animation: Runner[]): void {
+  public updateLinesRecursive(node: Node): void {
     if (node === null) {
       return;
     }
 
-    BSTAnimationProducer.updateNodeLines(node, animation);
-    this.updateLinesRecursive(node.left, animation);
-    this.updateLinesRecursive(node.right, animation);
+    this.updateNodeLines(node);
+    this.updateLinesRecursive(node.left);
+    this.updateLinesRecursive(node.right);
   }
 
-  public static updateNodeLines(node: Node, animation: Runner[]): void {
+  public updateNodeLines(node: Node): void {
     const lineDiffX = BSTAnimationProducer.getLineDiffX(node);
     const lineDiffY = 75;
 
-    animation.push(
+    this.addSequenceAnimation(
       node.leftLineTarget
         .animate(400)
         .plot(getPointerStartEndCoordinates(node.x, node.y, node.x - lineDiffX, node.y + lineDiffY))
     );
 
-    animation.push(
+    this.addSequenceAnimation(
       node.rightLineTarget
         .animate(400)
         .plot(getPointerStartEndCoordinates(node.x, node.y, node.x + lineDiffX, node.y + lineDiffY))
@@ -122,29 +149,31 @@ export default class BSTAnimationProducer extends AnimationProducer {
   }
 
   public resetBST(root: Node): void {
-    const animation: Runner[] = [];
-    this.resetLinesRecursive(root, animation);
-    this.resetNodesRecursive(root, animation);
-    this.addAnimation(animation);
+    this.resetLinesRecursive(root);
+    this.resetNodesRecursive(root);
+    this.finishSequence();
   }
 
-  public resetLinesRecursive(node: Node, animation: Runner[]): void {
+  public resetLinesRecursive(node: Node): void {
     if (node === null) {
       return;
     }
 
-    BSTAnimationProducer.unhighlightLine(node.leftLineTarget, node.leftArrowTarget, animation);
-    BSTAnimationProducer.unhighlightLine(node.rightLineTarget, node.rightArrowTarget, animation);
-    this.resetLinesRecursive(node.left, animation);
-    this.resetLinesRecursive(node.right, animation);
+    this.unhighlightLine(node.leftLineTarget, node.leftArrowTarget);
+    this.unhighlightLine(node.rightLineTarget, node.rightArrowTarget);
+    this.resetLinesRecursive(node.left);
+    this.resetLinesRecursive(node.right);
   }
 
-  public static unhighlightLine(lineTarget: Line, arrowTarget: Marker, animation: Runner[]): void {
+  public unhighlightLine(lineTarget: Line, arrowTarget: Marker): void {
     if (lineTarget != null) {
-      animation.push(
+      this.addSequenceAnimation(
         lineTarget.animate(500).attr({
           stroke: '#000000',
-        }),
+        })
+      );
+
+      this.addSequenceAnimation(
         arrowTarget.animate(500).attr({
           fill: '#000000',
         })
@@ -152,22 +181,25 @@ export default class BSTAnimationProducer extends AnimationProducer {
     }
   }
 
-  public resetNodesRecursive(node: Node, animation: Runner[]): void {
+  public resetNodesRecursive(node: Node): void {
     if (node === null) {
       return;
     }
 
-    BSTAnimationProducer.unhighlightNode(node, animation);
-    this.resetNodesRecursive(node.left, animation);
-    this.resetNodesRecursive(node.right, animation);
+    this.unhighlightNode(node);
+    this.resetNodesRecursive(node.left);
+    this.resetNodesRecursive(node.right);
   }
 
-  public static unhighlightNode(node: Node, animation: Runner[]): void {
-    animation.push(
+  public unhighlightNode(node: Node): void {
+    this.addSequenceAnimation(
       node.nodeTarget.animate(500).attr({
         fill: '#ffffff',
         stroke: '#000000',
-      }),
+      })
+    );
+
+    this.addSequenceAnimation(
       node.textTarget.animate(500).attr({
         fill: '#000000',
       })

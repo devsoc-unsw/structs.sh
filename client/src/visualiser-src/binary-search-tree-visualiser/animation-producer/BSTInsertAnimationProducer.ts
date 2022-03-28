@@ -13,6 +13,9 @@ Node *node = malloc(sizeof(Node));
 node->left = NULL;
 node->right = NULL;
 node->val = val;
+if (root == NULL) {
+  root = node;
+}
 while (curr != NULL) {
   if (node->val < curr->val) {
     if (curr->left == NULL) {
@@ -36,21 +39,21 @@ while (curr != NULL) {
   public createNodeLeft(node: Node, parent: Node): void {
     this.createNode(node);
 
-    this.addAnimation([
+    this.addSingleAnimation(
       parent.leftLineTarget.animate(400).attr({
         opacity: 1,
       }),
-    ]);
+    );
   }
 
   public createNodeRight(node: Node, parent: Node): void {
     this.createNode(node);
 
-    this.addAnimation([
+    this.addSingleAnimation(
       parent.rightLineTarget.animate(400).attr({
         opacity: 1,
       }),
-    ]);
+    );
   }
 
   // draws a node on the draw canvas and shows the node
@@ -111,13 +114,18 @@ while (curr != NULL) {
     node.textTarget.attr(textStyle);
     node.textTarget.cx(node.x).cy(node.y);
 
-    this.addAnimation([
+    this.addSequenceAnimation(
       node.nodeTarget.animate(400).attr({
         opacity: 1,
-      }),
+      })
+    );
+
+    this.addSequenceAnimation(
       node.textTarget.animate(400).attr({
         opacity: 1,
-      }),
-    ]);
+      })
+    );
+
+    this.finishSequence();
   }
 }
