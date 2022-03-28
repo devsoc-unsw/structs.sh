@@ -35,6 +35,7 @@ class BST {
       this.root = node;
       this.updateNodePositions();
       animationProducer.createNode(node);
+      animationProducer.highlightCodeMultiple([2, 3, 4, 5]);
     } else {
       let currentNode: Node = this.root;
 

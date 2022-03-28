@@ -1,4 +1,4 @@
-import { Runner, Container, Line, Marker, Text } from '@svgdotjs/svg.js';
+import { Container, Line, Marker, Text } from '@svgdotjs/svg.js';
 import { Node } from '../util/typedefs';
 import { canvasPadding, nodeWidth } from '../util/settings';
 import { getPointerStartEndCoordinates } from '../util/util';
@@ -39,17 +39,30 @@ export default class BSTAnimationProducer extends AnimationProducer {
     })
   }
 
-  // public highlightCodeLine(line: number): Runner {
-  //   return this.codeTargets[line].animate(500).attr({
-  //     fill: '#4beb9b',
-  //   })
-  // }
+  // with highlightCode and highlightCodeMultiple
+  // we treat line numbers as starting from 1, so
+  // substract 1 from each index
+  public highlightCode(line: number): void {
+    this.addSequenceAnimation(
+      this.codeTargets[line - 1].animate(500).attr({
+        fill: '#4beb9b',
+      })
+    );
 
-  // public highlightCodeLine(line: number): Runner {
-  //   return this.codeTargets[line].animate(500).attr({
-  //     fill: '#4beb9b',
-  //   })
-  // }
+    this.finishSequence();
+  }
+
+  public highlightCodeMultiple(lines: number[]): void {
+    lines.forEach((line) => {
+      this.addSequenceAnimation(
+        this.codeTargets[line - 1].animate(500).attr({
+          fill: '#4beb9b',
+        })
+      );
+    })
+
+    this.finishSequence();
+  }
 
   public halfHighlightNode(node: Node): void {
     this.addSequenceAnimation(
