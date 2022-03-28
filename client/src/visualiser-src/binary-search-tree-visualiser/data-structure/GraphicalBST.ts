@@ -9,12 +9,14 @@ import { canvasPadding } from '../util/settings';
 class BST {
   public root: Node = null;
 
-  public draw: Container = SVG().addTo('#bst-canvas').size('100%', '100%');
+  public visualiserCanvas: Container = SVG().addTo('#bst-canvas').size('100%', '100%');
+  public codeCanvas: Container = SVG().addTo('#code-canvas').size('100%', '100%');
 
   // inserts a node into the bst and produces an animation sequence
   // that is later handled by the animation controller
-  public insert(input: number, updateLine: (val: number) => void): BSTInsertAnimationProducer {
-    const animationProducer: BSTInsertAnimationProducer = new BSTInsertAnimationProducer(this.draw);
+  public insert(input: number): BSTInsertAnimationProducer {
+    const animationProducer: BSTInsertAnimationProducer = new BSTInsertAnimationProducer(this.visualiserCanvas, this.codeCanvas);
+    animationProducer.renderInsertCode();
     const node: Node = {
       nodeTarget: null,
       textTarget: null,
@@ -37,43 +39,33 @@ class BST {
       let currentNode: Node = this.root;
 
       while (currentNode) {
-        updateLine(0);
         animationProducer.halfHighlightNode(currentNode);
 
-        updateLine(1);
         if (node.value < currentNode.value) {
-          updateLine(2);
           if (currentNode.left == null) {
-            updateLine(3);
             currentNode.left = node;
             this.updateNodePositions();
             animationProducer.createNodeLeft(node, currentNode);
             animationProducer.resetBST(this.root);
 
-            updateLine(4);
             return animationProducer;
           }
 
           animationProducer.highlightLine(currentNode.leftLineTarget, currentNode.leftArrowTarget);
 
-          updateLine(5);
           currentNode = currentNode.left;
         } else {
-          updateLine(7);
           if (currentNode.right == null) {
-            updateLine(8);
             currentNode.right = node;
             this.updateNodePositions();
             animationProducer.createNodeRight(node, currentNode);
             animationProducer.resetBST(this.root);
 
-            updateLine(9);
             return animationProducer;
           }
 
           animationProducer.highlightLine(currentNode.rightLineTarget, currentNode.rightArrowTarget);
 
-          updateLine(10);
           currentNode = currentNode.right;
         }
       }
@@ -130,8 +122,8 @@ class BST {
     return this.getNodeRecursive(input, node.right);
   }
 
-  public rotateLeft(input: number, updateLine: (val: number) => void): BSTRotateAnimationProducer {
-    const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer(this.draw);
+  public rotateLeft(input: number): BSTRotateAnimationProducer {
+    const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer(this.visualiserCanvas, this.codeCanvas);
     const oldRoot: Node = this.getNode(input);
 
     if (oldRoot === null) return animationProducer;
@@ -171,8 +163,8 @@ class BST {
     return node;
   }
 
-  public rotateRight(input: number, updateLine: (val: number) => void): BSTRotateAnimationProducer {
-    const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer(this.draw);
+  public rotateRight(input: number): BSTRotateAnimationProducer {
+    const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer(this.visualiserCanvas, this.codeCanvas);
     const oldRoot: Node = this.getNode(input);
 
     if (oldRoot === null) return animationProducer;
@@ -212,9 +204,9 @@ class BST {
     return node;
   }
 
-  public inorderTraversal(updateLine: (val: number) => void): BSTTraverseAnimationProducer {
+  public inorderTraversal(): BSTTraverseAnimationProducer {
     const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer(
-      this.draw
+      this.visualiserCanvas, this.codeCanvas
     );
     
     this.doInorderTraversal(this.root, animationProducer);
@@ -236,9 +228,9 @@ class BST {
     this.doInorderTraversal(node.right, animationProducer);
   }
 
-  public preorderTraversal(updateLine: (val: number) => void): BSTTraverseAnimationProducer {
+  public preorderTraversal(): BSTTraverseAnimationProducer {
     const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer(
-      this.draw
+      this.visualiserCanvas, this.codeCanvas
     );
     
     this.doPreorderTraversal(this.root, animationProducer);
@@ -259,9 +251,9 @@ class BST {
     this.doPreorderTraversal(node.right, animationProducer);
   }
 
-  public postorderTraversal(updateLine: (val: number) => void): BSTTraverseAnimationProducer {
+  public postorderTraversal(): BSTTraverseAnimationProducer {
     const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer(
-      this.draw
+      this.visualiserCanvas, this.codeCanvas
     );
     
     this.doPostorderTraversal(this.root, animationProducer);

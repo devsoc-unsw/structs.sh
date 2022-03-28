@@ -7,8 +7,7 @@ export default abstract class AnimationProducer {
     return this._allRunners;
   }
 
-  public addAnimation(animation: Runner[]) {
-    console.log(animation);
+  public addAnimation(animation: Runner[]): void {
     if (animation.length > 0) {
       this.allRunners.push(animation);
     }

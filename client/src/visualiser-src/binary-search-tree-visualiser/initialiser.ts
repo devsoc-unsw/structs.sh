@@ -6,51 +6,51 @@ import BSTAnimationProducer from './animation-producer/BSTAnimationProducer';
 // for documentation read: https://compclub.atlassian.net/wiki/spaces/S/pages/2150892071/Documentation#Visualiser-Docs%3A
 
 export interface BSTVisualiser extends Visualiser {
-  insert: (val: number, updateSlider: (val: number) => void, updateLine: (val: number) => void) => void;
-  rotateLeft: (val: number, updateSlider: (val: number) => void, updateLine: (val: number) => void) => void;
-  rotateRight: (val: number, updateSlider: (val: number) => void, updateLine: (val: number) => void) => void;
-  inorderTraversal: (updateSlider: (val: number) => void, updateLine: (val: number) => void) => void;
-  preorderTraversal: (updateSlider: (val: number) => void, updateLine: (val: number) => void) => void;
-  postorderTraversal: (updateSlider: (val: number) => void, updateLine: (val: number) => void) => void;
+  insert: (val: number, updateSlider: (val: number) => void) => void;
+  rotateLeft: (val: number, updateSlider: (val: number) => void) => void;
+  rotateRight: (val: number, updateSlider: (val: number) => void) => void;
+  inorderTraversal: (updateSlider: (val: number) => void) => void;
+  preorderTraversal: (updateSlider: (val: number) => void) => void;
+  postorderTraversal: (updateSlider: (val: number) => void) => void;
 }
 
 const initialise = (): any => {
   const bst: BST = new BST();
   const controller: AnimationController = new AnimationController();
 
-  const insert = (val: number, updateSlider: (val: number) => void, updateLine: (val: number) => void) => {
+  const insert = (val: number, updateSlider: (val: number) => void) => {
     controller.finish();
-    const animationSequence: BSTAnimationProducer = bst.insert(val, updateLine);
+    const animationSequence: BSTAnimationProducer = bst.insert(val);
     controller.constructTimeline(animationSequence, updateSlider);
   };
 
-  const rotateLeft = (val: number, updateSlider: (val: number) => void, updateLine: (val: number) => void) => {
+  const rotateLeft = (val: number, updateSlider: (val: number) => void) => {
     controller.finish();
-    const animationSequence: BSTAnimationProducer = bst.rotateLeft(val, updateLine);
+    const animationSequence: BSTAnimationProducer = bst.rotateLeft(val);
     controller.constructTimeline(animationSequence, updateSlider);
   };
 
-  const rotateRight = (val: number, updateSlider: (val: number) => void, updateLine: (val: number) => void) => {
+  const rotateRight = (val: number, updateSlider: (val: number) => void) => {
     controller.finish();
-    const animationSequence: BSTAnimationProducer = bst.rotateRight(val, updateLine);
+    const animationSequence: BSTAnimationProducer = bst.rotateRight(val);
     controller.constructTimeline(animationSequence, updateSlider);
   };
 
-  const inorderTraversal = (updateSlider: (val: number) => void, updateLine: (val: number) => void) => {
+  const inorderTraversal = (updateSlider: (val: number) => void) => {
     controller.finish();
-    const animationSequence: BSTAnimationProducer = bst.inorderTraversal(updateLine);
+    const animationSequence: BSTAnimationProducer = bst.inorderTraversal();
     controller.constructTimeline(animationSequence, updateSlider);
   };
 
-  const preorderTraversal = (updateSlider: (val: number) => void, updateLine: (val: number) => void) => {
+  const preorderTraversal = (updateSlider: (val: number) => void) => {
     controller.finish();
-    const animationSequence: BSTAnimationProducer = bst.preorderTraversal(updateLine);
+    const animationSequence: BSTAnimationProducer = bst.preorderTraversal();
     controller.constructTimeline(animationSequence, updateSlider);
   };
 
-  const postorderTraversal = (updateSlider: (val: number) => void, updateLine: (val: number) => void) => {
+  const postorderTraversal = (updateSlider: (val: number) => void) => {
     controller.finish();
-    const animationSequence: BSTAnimationProducer = bst.postorderTraversal(updateLine);
+    const animationSequence: BSTAnimationProducer = bst.postorderTraversal();
     controller.constructTimeline(animationSequence, updateSlider);
   };
 

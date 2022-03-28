@@ -1,18 +1,40 @@
-import { Runner, Container, Line, Marker } from '@svgdotjs/svg.js';
+import { Runner, Container, Line, Marker, Text } from '@svgdotjs/svg.js';
 import { Node } from '../util/typedefs';
 import { canvasPadding, nodeWidth } from '../util/settings';
 import { getPointerStartEndCoordinates } from '../util/util';
 import AnimationProducer from '../../common/AnimationProducer';
 
 export default class BSTAnimationProducer extends AnimationProducer {
-  public draw: Container;
+  public visualiserCanvas: Container;
+  public codeCanvas: Container;
 
-  // the problem with each BSTAnimationProducer having its own draw canvas created
+  // TODO: move to AnimationProducer later
+  private _codeTargets: Text[] = [];
+
+  public get codeTargets() {
+    return this._codeTargets;
+  }
+
+  // the problem with each BSTAnimationProducer having its own visualiser canvas created
   // is that svg.js uses an addTo method which would create an extra svg container
   // of max width and height. we don't want this
-  public constructor(draw: Container) {
+  public constructor(visualiserCanvas: Container, codeCanvas: Container) {
     super();
-    this.draw = draw;
+    this.visualiserCanvas = visualiserCanvas;
+    this.codeCanvas = codeCanvas;
+  }
+
+  public renderCode(code: string): void {
+    const lines: string[] = code.split('\n');
+
+    lines.forEach((line, i) => {
+      console.log(line);
+      this.codeTargets.push(
+        this.codeCanvas.text(line)
+        .move(0, 20 * i)
+        .attr('white-space', 'pre')
+      );
+    })
   }
 
   public halfHighlightNode(node: Node): void {

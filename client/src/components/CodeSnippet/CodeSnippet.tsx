@@ -7,23 +7,11 @@ interface Props {
 }
   
 const CodeSnippet: FC<Props> = ({code, currentLine}) => {
-  useEffect(() => {
-    console.log("rerender");
-  }, [currentLine]);
-
   return (
-    <div key={currentLine}>
-      <Box sx={{ padding: 2 }}>
-        {code.map((line, i) => {
-          if (i === currentLine) {
-            return <Typography color="textPrimary" sx={{ 'white-space': 'pre-wrap', fontFamily: 'CodeText', 'background-color': '#4beb9b' }}>{line}</Typography>
-          }
-
-          return <Typography color="textPrimary" sx={{ 'white-space': 'pre-wrap', fontFamily: 'CodeText' }}>{line}</Typography>
-          
-        })}
-      </Box>
-    </div>
+    <div
+      id="code-canvas"
+      style={{ height: '100%', width: '100%', background: 'rgba(235, 235, 235)' }}
+    />
   );
 };
 

@@ -5,6 +5,34 @@ import { nodeStyle, nodeWidth, textStyle, lineStyle, markerLength } from '../uti
 import { getPointerStartEndCoordinates } from '../util/util';
 
 export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
+  public renderInsertCode(): void {
+    // TODO: figure out cleaner way to store c code (possibly in database)
+    this.renderCode(
+`Node *curr = root;
+Node *node = malloc(sizeof(Node));
+node->left = NULL;
+node->right = NULL;
+node->val = val;
+while (curr != NULL) {
+  if (node->val < curr->val) {
+    if (curr->left == NULL) {
+      curr->left = node;
+      return;
+    }
+
+    curr = curr->left;
+  } else {
+    if (curr->right == NULL) {
+      curr->right = node;
+      return;
+    }
+
+    curr = curr->right;
+  }
+}`
+    );  
+  }
+
   public createNodeLeft(node: Node, parent: Node): void {
     this.createNode(node);
 
@@ -36,7 +64,7 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
       node.x - lineDiffX,
       node.y + lineDiffY
     );
-    node.leftLineTarget = this.draw
+    node.leftLineTarget = this.visualiserCanvas
       .line(
         leftChildCoordinates[0][0],
         leftChildCoordinates[0][1],
@@ -51,7 +79,7 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
       node.x + lineDiffX,
       node.y + lineDiffY
     );
-    node.rightLineTarget = this.draw
+    node.rightLineTarget = this.visualiserCanvas
       .line(
         rightChildCoordinates[0][0],
         rightChildCoordinates[0][1],
@@ -63,23 +91,23 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
     // Draw a triangle at the end of the line
     const pathD = `M 0 0 L ${markerLength} ${markerLength / 2} L 0 ${markerLength} z`;
 
-    node.leftArrowTarget = this.draw.marker(markerLength, markerLength, (add: Marker) => {
+    node.leftArrowTarget = this.visualiserCanvas.marker(markerLength, markerLength, (add: Marker) => {
       add.path(pathD);
     }).attr('markerUnits', 'userSpaceOnUse');
 
     node.leftLineTarget.marker('end', node.leftArrowTarget);
 
-    node.rightArrowTarget = this.draw.marker(markerLength, markerLength, (add: Marker) => {
+    node.rightArrowTarget = this.visualiserCanvas.marker(markerLength, markerLength, (add: Marker) => {
       add.path(pathD);
     }).attr('markerUnits', 'userSpaceOnUse');
 
     node.rightLineTarget.marker('end', node.rightArrowTarget);
     
-    node.nodeTarget = this.draw.circle(nodeWidth);
+    node.nodeTarget = this.visualiserCanvas.circle(nodeWidth);
     node.nodeTarget.attr(nodeStyle);
     node.nodeTarget.cx(node.x).cy(node.y);
 
-    node.textTarget = this.draw.text(node.value.toString());
+    node.textTarget = this.visualiserCanvas.text(node.value.toString());
     node.textTarget.attr(textStyle);
     node.textTarget.cx(node.x).cy(node.y);
 
