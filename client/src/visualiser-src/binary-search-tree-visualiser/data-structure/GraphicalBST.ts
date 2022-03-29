@@ -20,14 +20,14 @@ class BST {
       textTarget: null,
       leftLineTarget: null,
       rightLineTarget: null,
+      leftArrowTarget: null,
+      rightArrowTarget: null,
       left: null,
       right: null,
       value: input,
       x: 0,
       y: 0,
     };
-
-    animationProducer.resetBST(this.root);
 
     if (this.root == null) {
       this.root = node;
@@ -37,31 +37,36 @@ class BST {
       let currentNode: Node = this.root;
 
       while (currentNode) {
-        animationProducer.flashNode(currentNode);
+        animationProducer.halfHighlightNode(currentNode);
 
         if (node.value < currentNode.value) {
           if (currentNode.left == null) {
             currentNode.left = node;
             this.updateNodePositions();
             animationProducer.createNodeLeft(node, currentNode);
+            animationProducer.resetBST(this.root);
 
             return animationProducer;
           }
 
+          animationProducer.highlightLine(currentNode.leftLineTarget, currentNode.leftArrowTarget);
           currentNode = currentNode.left;
         } else {
           if (currentNode.right == null) {
             currentNode.right = node;
             this.updateNodePositions();
             animationProducer.createNodeRight(node, currentNode);
+            animationProducer.resetBST(this.root);
 
             return animationProducer;
           }
 
+          animationProducer.highlightLine(currentNode.rightLineTarget, currentNode.rightArrowTarget);
           currentNode = currentNode.right;
         }
       }
     }
+    animationProducer.resetBST(this.root);
     return animationProducer;
   }
 
@@ -123,13 +128,11 @@ class BST {
 
     if (newRoot === null) return animationProducer;
 
-    animationProducer.resetBST(this.root);
-
     if (newRoot.left != null) {
       animationProducer.movePointerToNewRootLeftChild(oldRoot, newRoot);
       animationProducer.moveLeftPointerToOldRoot(oldRoot, newRoot);
     } else {
-      BSTRotateAnimationProducer.assignNewRootLeftPointerToOldRootRightPointer(oldRoot, newRoot);
+      animationProducer.assignNewRootLeftPointerToOldRoot(oldRoot, newRoot);
     }
 
     this.root = this.doRotateLeft(this.root, input);
@@ -166,13 +169,11 @@ class BST {
 
     if (newRoot === null) return animationProducer;
 
-    animationProducer.resetBST(this.root);
-
     if (newRoot.right != null) {
       animationProducer.movePointerToNewRootRightChild(oldRoot, newRoot);
       animationProducer.moveRightPointerToOldRoot(oldRoot, newRoot);
     } else {
-      BSTRotateAnimationProducer.assignNewRootRightPointerToOldRootLeftPointer(oldRoot, newRoot);
+      animationProducer.assignNewRootRightPointerToOldRoot(oldRoot, newRoot);
     }
 
     this.root = this.doRotateRight(this.root, input);
@@ -203,8 +204,9 @@ class BST {
     const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer(
       this.draw
     );
-    animationProducer.resetBST(this.root);
+    
     this.doInorderTraversal(this.root, animationProducer);
+    animationProducer.resetBST(this.root);
 
     return animationProducer;
   }
@@ -215,10 +217,10 @@ class BST {
     }
 
     animationProducer.halfHighlightNode(node);
-    animationProducer.highlightLine(node.leftLineTarget);
+    animationProducer.highlightLine(node.leftLineTarget, node.leftArrowTarget);
     this.doInorderTraversal(node.left, animationProducer);
     animationProducer.highlightNode(node);
-    animationProducer.highlightLine(node.rightLineTarget);
+    animationProducer.highlightLine(node.rightLineTarget, node.rightArrowTarget);
     this.doInorderTraversal(node.right, animationProducer);
   }
 
@@ -226,8 +228,9 @@ class BST {
     const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer(
       this.draw
     );
-    animationProducer.resetBST(this.root);
+    
     this.doPreorderTraversal(this.root, animationProducer);
+    animationProducer.resetBST(this.root);
 
     return animationProducer;
   }
@@ -238,9 +241,9 @@ class BST {
     }
 
     animationProducer.highlightNode(node);
-    animationProducer.highlightLine(node.leftLineTarget);
+    animationProducer.highlightLine(node.leftLineTarget, node.leftArrowTarget);
     this.doPreorderTraversal(node.left, animationProducer);
-    animationProducer.highlightLine(node.rightLineTarget);
+    animationProducer.highlightLine(node.rightLineTarget, node.rightArrowTarget);
     this.doPreorderTraversal(node.right, animationProducer);
   }
 
@@ -248,8 +251,9 @@ class BST {
     const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer(
       this.draw
     );
-    animationProducer.resetBST(this.root);
+    
     this.doPostorderTraversal(this.root, animationProducer);
+    animationProducer.resetBST(this.root);
 
     return animationProducer;
   }
@@ -260,9 +264,9 @@ class BST {
     }
 
     animationProducer.halfHighlightNode(node);
-    animationProducer.highlightLine(node.leftLineTarget);
+    animationProducer.highlightLine(node.leftLineTarget, node.leftArrowTarget);
     this.doPostorderTraversal(node.left, animationProducer);
-    animationProducer.highlightLine(node.rightLineTarget);
+    animationProducer.highlightLine(node.rightLineTarget, node.rightArrowTarget);
     this.doPostorderTraversal(node.right, animationProducer);
     animationProducer.highlightNode(node);
   }

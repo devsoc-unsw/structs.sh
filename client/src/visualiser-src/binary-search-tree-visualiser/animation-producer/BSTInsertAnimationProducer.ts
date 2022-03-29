@@ -1,3 +1,4 @@
+import { Marker } from '@svgdotjs/svg.js';
 import BSTAnimationProducer from './BSTAnimationProducer';
 import { Node } from '../util/typedefs';
 import { nodeStyle, nodeWidth, textStyle, lineStyle, markerLength } from '../util/settings';
@@ -5,23 +6,23 @@ import { getPointerStartEndCoordinates } from '../util/util';
 
 export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
   public createNodeLeft(node: Node, parent: Node): void {
+    this.createNode(node);
+
     this.addAnimation([
       parent.leftLineTarget.animate(400).attr({
         opacity: 1,
       }),
     ]);
-
-    this.createNode(node);
   }
 
   public createNodeRight(node: Node, parent: Node): void {
+    this.createNode(node);
+
     this.addAnimation([
       parent.rightLineTarget.animate(400).attr({
         opacity: 1,
       }),
     ]);
-
-    this.createNode(node);
   }
 
   // draws a node on the draw canvas and shows the node
@@ -62,16 +63,18 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
     // Draw a triangle at the end of the line
     const pathD = `M 0 0 L ${markerLength} ${markerLength / 2} L 0 ${markerLength} z`;
 
-    node.leftLineTarget.marker('end', markerLength, markerLength, function (add) {
+    node.leftArrowTarget = this.draw.marker(markerLength, markerLength, (add: Marker) => {
       add.path(pathD);
-      this.attr('markerUnits', 'userSpaceOnUse');
-    });
+    }).attr('markerUnits', 'userSpaceOnUse');
 
-    node.rightLineTarget.marker('end', markerLength, markerLength, function (add) {
+    node.leftLineTarget.marker('end', node.leftArrowTarget);
+
+    node.rightArrowTarget = this.draw.marker(markerLength, markerLength, (add: Marker) => {
       add.path(pathD);
-      this.attr('markerUnits', 'userSpaceOnUse');
-    });
+    }).attr('markerUnits', 'userSpaceOnUse');
 
+    node.rightLineTarget.marker('end', node.rightArrowTarget);
+    
     node.nodeTarget = this.draw.circle(nodeWidth);
     node.nodeTarget.attr(nodeStyle);
     node.nodeTarget.cx(node.x).cy(node.y);

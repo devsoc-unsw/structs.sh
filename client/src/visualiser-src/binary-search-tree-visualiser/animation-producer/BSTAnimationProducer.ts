@@ -1,4 +1,4 @@
-import { Runner, Container, Line } from '@svgdotjs/svg.js';
+import { Runner, Container, Line, Marker } from '@svgdotjs/svg.js';
 import { Node } from '../util/typedefs';
 import { canvasPadding, nodeWidth } from '../util/settings';
 import { getPointerStartEndCoordinates } from '../util/util';
@@ -15,26 +15,28 @@ export default class BSTAnimationProducer extends AnimationProducer {
     this.draw = draw;
   }
 
-  public flashNode(node: Node): void {
+  public halfHighlightNode(node: Node): void {
     this.addAnimation([
       node.nodeTarget.animate(500).attr({
-        fill: '#4beb9b',
         stroke: '#4beb9b',
       }),
       node.textTarget.animate(500).attr({
-        fill: '#ffffff',
+        fill: '#4beb9b',
       }),
     ]);
+  }
 
-    this.addAnimation([
-      node.nodeTarget.animate(500).attr({
-        fill: '#ffffff',
-        stroke: '#000000',
-      }),
-      node.textTarget.animate(500).attr({
-        fill: '#000000',
-      }),
-    ]);
+  public highlightLine(lineTarget: Line, arrowTarget: Marker): void {
+    if (lineTarget != null) {
+      this.addAnimation([
+        lineTarget.animate(500).attr({
+          stroke: '#4beb9b',
+        }),
+        arrowTarget.animate(500).attr({
+          fill: '#4beb9b',
+        }),
+      ]);
+    }
   }
 
   public updateBST(root: Node): void {
@@ -109,17 +111,20 @@ export default class BSTAnimationProducer extends AnimationProducer {
       return;
     }
 
-    BSTAnimationProducer.unhighlightLine(node.leftLineTarget, animation);
-    BSTAnimationProducer.unhighlightLine(node.rightLineTarget, animation);
+    BSTAnimationProducer.unhighlightLine(node.leftLineTarget, node.leftArrowTarget, animation);
+    BSTAnimationProducer.unhighlightLine(node.rightLineTarget, node.rightArrowTarget, animation);
     this.resetLinesRecursive(node.left, animation);
     this.resetLinesRecursive(node.right, animation);
   }
 
-  public static unhighlightLine(lineTarget: Line, animation: Runner[]): void {
+  public static unhighlightLine(lineTarget: Line, arrowTarget: Marker, animation: Runner[]): void {
     if (lineTarget != null) {
       animation.push(
         lineTarget.animate(500).attr({
           stroke: '#000000',
+        }),
+        arrowTarget.animate(500).attr({
+          fill: '#000000',
         })
       );
     }
