@@ -34,37 +34,37 @@ class BST {
     if (this.root == null) {
       this.root = node;
       this.updateNodePositions();
-      animationProducer.doAnimationAndHighlight(4, animationProducer.createNode, node);
+      animationProducer.doAnimationAndHighlight(2, animationProducer.createNode, node);
     } else {
       let currentNode: Node = this.root;
 
       while (currentNode) {
-        animationProducer.doAnimationAndHighlight(8, animationProducer.halfHighlightNode, currentNode);
+        animationProducer.doAnimationAndHighlight(6, animationProducer.halfHighlightNode, currentNode);
         
         if (node.value < currentNode.value) {
           if (currentNode.left == null) {
             currentNode.left = node;
             this.updateNodePositions();
-            animationProducer.doAnimationAndHighlight(10, animationProducer.createNodeLeft, node, currentNode);
-            animationProducer.doAnimationAndHighlight(11, animationProducer.resetBST, this.root);
+            animationProducer.doAnimationAndHighlight(8, animationProducer.createNodeLeft, node, currentNode);
+            animationProducer.doAnimationAndHighlight(9, animationProducer.resetBST, this.root);
 
             return animationProducer;
           }
 
-          animationProducer.doAnimationAndHighlight(14, animationProducer.highlightLine, currentNode.leftLineTarget, currentNode.leftArrowTarget);
+          animationProducer.doAnimationAndHighlight(12, animationProducer.highlightLine, currentNode.leftLineTarget, currentNode.leftArrowTarget);
           
           currentNode = currentNode.left;
         } else {
           if (currentNode.right == null) {
             currentNode.right = node;
             this.updateNodePositions();
-            animationProducer.doAnimationAndHighlight(17, animationProducer.createNodeRight, node, currentNode);
-            animationProducer.doAnimationAndHighlight(18, animationProducer.resetBST, this.root);
+            animationProducer.doAnimationAndHighlight(15, animationProducer.createNodeRight, node, currentNode);
+            animationProducer.doAnimationAndHighlight(16, animationProducer.resetBST, this.root);
 
             return animationProducer;
           }
 
-          animationProducer.doAnimationAndHighlight(21, animationProducer.highlightLine, currentNode.rightLineTarget, currentNode.rightArrowTarget)
+          animationProducer.doAnimationAndHighlight(19, animationProducer.highlightLine, currentNode.rightLineTarget, currentNode.rightArrowTarget)
 
           currentNode = currentNode.right;
         }

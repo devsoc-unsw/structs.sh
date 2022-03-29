@@ -8,23 +8,21 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
   public renderInsertCode(): void {
     // TODO: figure out cleaner way to store c code (possibly in database)
     this.renderCode(
-`Node *curr = root;
-Node *node = createNode(val);
-if (root == NULL) {
-  root = node;
+`if (root == NULL) {
+  root = createNode(val);
   return;
 }
 while (curr != NULL) {
-  if (node->val < curr->val) {
+  if (val < curr->val) {
     if (curr->left == NULL) {
-      curr->left = node;
+      curr->left = createNode(val);
       return;
     }
 
     curr = curr->left;
   } else {
     if (curr->right == NULL) {
-      curr->right = node;
+      curr->right = createNode(val);
       return;
     }
 

@@ -32,14 +32,15 @@ export default class BSTAnimationProducer extends AnimationProducer {
   public renderCode(code: string): void {
     const lines: string[] = code.split('\n');
 
+    // TODO: find simple way to vertically center text in svg rectangle
     lines.forEach((line, i) => {
       const codeLine: CodeLine = {
         textTarget: this.codeCanvas.text(SHOW_LINE_NUMBERS ? String(i + 1).padEnd(4, ' ') + line : line)
           .font({'family': 'CodeText', 'size': 10})
           .attr('style','white-space: pre-wrap')
-          .move(0, 22 * i),
-        rectTarget: this.codeCanvas.rect(1000, 22)
-          .move(0, 22 * i)
+          .move(0, 18 * i + 6),
+        rectTarget: this.codeCanvas.rect(1000, 20)
+          .move(0, 18 * i)
           .back()
           .fill('#ebebeb')
       }
