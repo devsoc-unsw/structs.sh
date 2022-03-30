@@ -125,6 +125,7 @@ class BST {
 
   public rotateLeft(input: number): BSTRotateAnimationProducer {
     const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer(this.visualiserCanvas, this.codeCanvas);
+    animationProducer.renderRotateLeftCode();
     const oldRoot: Node = this.getNode(input);
 
     if (oldRoot === null) return animationProducer;
@@ -134,15 +135,16 @@ class BST {
     if (newRoot === null) return animationProducer;
 
     if (newRoot.left != null) {
-      animationProducer.doAnimation(animationProducer.movePointerToNewRootLeftChild, oldRoot, newRoot);
-      animationProducer.doAnimation(animationProducer.moveLeftPointerToOldRoot, oldRoot, newRoot);
+      animationProducer.doAnimationAndHighlight(3, animationProducer.movePointerToNewRootLeftChild, oldRoot, newRoot);
+      animationProducer.doAnimationAndHighlight(4, animationProducer.moveLeftPointerToOldRoot, oldRoot, newRoot);
     } else {
-      animationProducer.doAnimation(animationProducer.assignNewRootLeftPointerToOldRoot, oldRoot, newRoot);
+      animationProducer.doAnimation(animationProducer.hideLine, oldRoot.rightLineTarget);
+      animationProducer.doAnimationAndHighlight(4, animationProducer.assignNewRootLeftPointerToOldRoot, oldRoot, newRoot);
     }
 
     this.root = this.doRotateLeft(this.root, input);
     this.updateNodePositions();
-    animationProducer.doAnimation(animationProducer.updateBST, this.root);
+    animationProducer.doAnimationAndHighlight(6, animationProducer.updateBST, this.root);
 
     return animationProducer;
   }
@@ -178,6 +180,7 @@ class BST {
       animationProducer.doAnimation(animationProducer.movePointerToNewRootRightChild, oldRoot, newRoot);
       animationProducer.doAnimation(animationProducer.moveRightPointerToOldRoot, oldRoot, newRoot);
     } else {
+      animationProducer.doAnimation(animationProducer.hideLine, oldRoot.leftLineTarget);
       animationProducer.doAnimation(animationProducer.assignNewRootRightPointerToOldRoot, oldRoot, newRoot);
     }
 

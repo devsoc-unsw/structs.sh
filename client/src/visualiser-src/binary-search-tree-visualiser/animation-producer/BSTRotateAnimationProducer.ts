@@ -4,8 +4,28 @@ import { Node } from '../util/typedefs';
 import { getPointerStartEndCoordinates } from '../util/util';
 
 export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
+  public renderRotateLeftCode(): void {
+    // TODO: figure out cleaner way to store c code (possibly in database)
+    this.renderCode(
+`if (val == node->val) {
+  Node* newRoot = node->right;
+  node->right = newRoot->left;
+  newRoot->left = node;
+
+  return newRoot;
+}
+if (val < node->val) {
+  node->left = rotateLeft(node->left, val);
+} else {
+  node->right = rotateLeft(node->right, val);
+}
+return node;
+`
+    );  
+  }
+
   public movePointerToNewRootRightChild(oldRoot: Node, newRoot: Node): void {
-    this.addSingleAnimation(
+    this.addSequenceAnimation(
       oldRoot.leftLineTarget
         .animate(400)
         .plot(
@@ -15,7 +35,7 @@ export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
   }
 
   public movePointerToNewRootLeftChild(oldRoot: Node, newRoot: Node): void {
-    this.addSingleAnimation(
+    this.addSequenceAnimation(
       oldRoot.rightLineTarget
         .animate(400)
         .plot(getPointerStartEndCoordinates(oldRoot.x, oldRoot.y, newRoot.left.x, newRoot.left.y)),
@@ -23,7 +43,7 @@ export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
   }
 
   public moveRightPointerToOldRoot(oldRoot: Node, newRoot: Node): void {
-    this.addSingleAnimation(
+    this.addSequenceAnimation(
       newRoot.rightLineTarget
         .animate(400)
         .plot(getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y)),
@@ -31,7 +51,7 @@ export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
   }
 
   public moveLeftPointerToOldRoot(oldRoot: Node, newRoot: Node): void {
-    this.addSingleAnimation(
+    this.addSequenceAnimation(
       newRoot.leftLineTarget
         .animate(400)
         .plot(getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y)),
@@ -39,24 +59,22 @@ export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
   }
 
   public hideLine(line: Line): void {
-    this.addSingleAnimation(
-      line.animate(500).attr({
+    this.addSequenceAnimation(
+      line.animate(400).attr({
         opacity: 0,
       })
     )
   } 
 
   public showLine(line: Line): void {
-    this.addSingleAnimation(
-      line.animate(500).attr({
+    this.addSequenceAnimation(
+      line.animate(400).attr({
         opacity: 1,
       })
     )
   }
 
   public assignNewRootRightPointerToOldRoot(oldRoot: Node, newRoot: Node): void {
-    this.hideLine(oldRoot.leftLineTarget);
-
     newRoot.rightLineTarget.plot(
       getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y)
     );
@@ -65,8 +83,6 @@ export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
   }
 
   public assignNewRootLeftPointerToOldRoot(oldRoot: Node, newRoot: Node): void {
-    this.hideLine(oldRoot.rightLineTarget);
-
     newRoot.leftLineTarget.plot(
       getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y)
     );
