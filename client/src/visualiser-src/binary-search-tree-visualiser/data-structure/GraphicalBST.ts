@@ -134,15 +134,15 @@ class BST {
     if (newRoot === null) return animationProducer;
 
     if (newRoot.left != null) {
-      animationProducer.movePointerToNewRootLeftChild(oldRoot, newRoot);
-      animationProducer.moveLeftPointerToOldRoot(oldRoot, newRoot);
+      animationProducer.doAnimation(animationProducer.movePointerToNewRootLeftChild, oldRoot, newRoot);
+      animationProducer.doAnimation(animationProducer.moveLeftPointerToOldRoot, oldRoot, newRoot);
     } else {
-      animationProducer.assignNewRootLeftPointerToOldRoot(oldRoot, newRoot);
+      animationProducer.doAnimation(animationProducer.assignNewRootLeftPointerToOldRoot, oldRoot, newRoot);
     }
 
     this.root = this.doRotateLeft(this.root, input);
     this.updateNodePositions();
-    animationProducer.updateBST(this.root);
+    animationProducer.doAnimation(animationProducer.updateBST, this.root);
 
     return animationProducer;
   }
@@ -175,15 +175,15 @@ class BST {
     if (newRoot === null) return animationProducer;
 
     if (newRoot.right != null) {
-      animationProducer.movePointerToNewRootRightChild(oldRoot, newRoot);
-      animationProducer.moveRightPointerToOldRoot(oldRoot, newRoot);
+      animationProducer.doAnimation(animationProducer.movePointerToNewRootRightChild, oldRoot, newRoot);
+      animationProducer.doAnimation(animationProducer.moveRightPointerToOldRoot, oldRoot, newRoot);
     } else {
-      animationProducer.assignNewRootRightPointerToOldRoot(oldRoot, newRoot);
+      animationProducer.doAnimation(animationProducer.assignNewRootRightPointerToOldRoot, oldRoot, newRoot);
     }
 
     this.root = this.doRotateRight(this.root, input);
     this.updateNodePositions();
-    animationProducer.updateBST(this.root);
+    animationProducer.doAnimation(animationProducer.updateBST, this.root);
 
     return animationProducer;
   }
@@ -211,7 +211,7 @@ class BST {
     );
     
     this.doInorderTraversal(this.root, animationProducer);
-    animationProducer.resetBST(this.root);
+    animationProducer.doAnimation(animationProducer.resetBST, this.root);
 
     return animationProducer;
   }
@@ -221,11 +221,11 @@ class BST {
       return;
     }
 
-    animationProducer.halfHighlightNode(node);
-    animationProducer.highlightLine(node.leftLineTarget, node.leftArrowTarget);
+    animationProducer.doAnimation(animationProducer.halfHighlightNode, node);
+    animationProducer.doAnimation(animationProducer.highlightLine, node.leftLineTarget, node.leftArrowTarget);
     this.doInorderTraversal(node.left, animationProducer);
-    animationProducer.highlightNode(node);
-    animationProducer.highlightLine(node.rightLineTarget, node.rightArrowTarget);
+    animationProducer.doAnimation(animationProducer.highlightNode, node);
+    animationProducer.doAnimation(animationProducer.highlightLine, node.rightLineTarget, node.rightArrowTarget);
     this.doInorderTraversal(node.right, animationProducer);
   }
 
@@ -235,7 +235,7 @@ class BST {
     );
     
     this.doPreorderTraversal(this.root, animationProducer);
-    animationProducer.resetBST(this.root);
+    animationProducer.doAnimation(animationProducer.resetBST, this.root);
 
     return animationProducer;
   }
@@ -245,10 +245,10 @@ class BST {
       return;
     }
 
-    animationProducer.highlightNode(node);
-    animationProducer.highlightLine(node.leftLineTarget, node.leftArrowTarget);
+    animationProducer.doAnimation(animationProducer.highlightNode, node);
+    animationProducer.doAnimation(animationProducer.highlightLine, node.leftLineTarget, node.leftArrowTarget);
     this.doPreorderTraversal(node.left, animationProducer);
-    animationProducer.highlightLine(node.rightLineTarget, node.rightArrowTarget);
+    animationProducer.doAnimation(animationProducer.highlightLine, node.rightLineTarget, node.rightArrowTarget);
     this.doPreorderTraversal(node.right, animationProducer);
   }
 
@@ -258,7 +258,7 @@ class BST {
     );
     
     this.doPostorderTraversal(this.root, animationProducer);
-    animationProducer.resetBST(this.root);
+    animationProducer.doAnimation(animationProducer.resetBST, this.root);
 
     return animationProducer;
   }
@@ -268,12 +268,12 @@ class BST {
       return;
     }
 
-    animationProducer.halfHighlightNode(node);
-    animationProducer.highlightLine(node.leftLineTarget, node.leftArrowTarget);
+    animationProducer.doAnimation(animationProducer.halfHighlightNode, node);
+    animationProducer.doAnimation(animationProducer.highlightLine, node.leftLineTarget, node.leftArrowTarget);
     this.doPostorderTraversal(node.left, animationProducer);
-    animationProducer.highlightLine(node.rightLineTarget, node.rightArrowTarget);
+    animationProducer.doAnimation(animationProducer.highlightLine, node.rightLineTarget, node.rightArrowTarget);
     this.doPostorderTraversal(node.right, animationProducer);
-    animationProducer.highlightNode(node);
+    animationProducer.doAnimation(animationProducer.highlightNode, node);
   }
 }
 
