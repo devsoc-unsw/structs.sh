@@ -222,6 +222,7 @@ class BST {
       this.visualiserCanvas, this.codeCanvas
     );
     
+    animationProducer.renderInorderTraversalCode();
     this.doInorderTraversal(this.root, animationProducer);
     animationProducer.doAnimation(animationProducer.unhighlightBST, this.root);
 
@@ -233,11 +234,11 @@ class BST {
       return;
     }
 
-    animationProducer.doAnimation(animationProducer.halfHighlightNode, node);
-    animationProducer.doAnimation(animationProducer.highlightLine, node.leftLineTarget, node.leftArrowTarget);
+    animationProducer.doAnimationAndHighlight(1, animationProducer.halfHighlightNode, node);
+    animationProducer.doAnimationAndHighlight(4, animationProducer.highlightLine, node.leftLineTarget, node.leftArrowTarget);
     this.doInorderTraversal(node.left, animationProducer);
-    animationProducer.doAnimation(animationProducer.highlightNode, node);
-    animationProducer.doAnimation(animationProducer.highlightLine, node.rightLineTarget, node.rightArrowTarget);
+    animationProducer.doAnimationAndHighlight(5, animationProducer.highlightNode, node);
+    animationProducer.doAnimationAndHighlight(6, animationProducer.highlightLine, node.rightLineTarget, node.rightArrowTarget);
     this.doInorderTraversal(node.right, animationProducer);
   }
 
@@ -246,6 +247,7 @@ class BST {
       this.visualiserCanvas, this.codeCanvas
     );
     
+    animationProducer.renderPreorderTraversalCode();
     this.doPreorderTraversal(this.root, animationProducer);
     animationProducer.doAnimation(animationProducer.unhighlightBST, this.root);
 
@@ -257,10 +259,11 @@ class BST {
       return;
     }
 
-    animationProducer.doAnimation(animationProducer.highlightNode, node);
-    animationProducer.doAnimation(animationProducer.highlightLine, node.leftLineTarget, node.leftArrowTarget);
+    animationProducer.doAnimationAndHighlight(1, animationProducer.halfHighlightNode, node);
+    animationProducer.doAnimationAndHighlight(4, animationProducer.highlightNode, node);
+    animationProducer.doAnimationAndHighlight(5, animationProducer.highlightLine, node.leftLineTarget, node.leftArrowTarget);
     this.doPreorderTraversal(node.left, animationProducer);
-    animationProducer.doAnimation(animationProducer.highlightLine, node.rightLineTarget, node.rightArrowTarget);
+    animationProducer.doAnimationAndHighlight(6, animationProducer.highlightLine, node.rightLineTarget, node.rightArrowTarget);
     this.doPreorderTraversal(node.right, animationProducer);
   }
 
@@ -269,6 +272,7 @@ class BST {
       this.visualiserCanvas, this.codeCanvas
     );
     
+    animationProducer.renderPostorderTraversalCode();
     this.doPostorderTraversal(this.root, animationProducer);
     animationProducer.doAnimation(animationProducer.unhighlightBST, this.root);
 
@@ -280,12 +284,12 @@ class BST {
       return;
     }
 
-    animationProducer.doAnimation(animationProducer.halfHighlightNode, node);
-    animationProducer.doAnimation(animationProducer.highlightLine, node.leftLineTarget, node.leftArrowTarget);
+    animationProducer.doAnimationAndHighlight(1, animationProducer.halfHighlightNode, node);
+    animationProducer.doAnimationAndHighlight(4, animationProducer.highlightLine, node.leftLineTarget, node.leftArrowTarget);
     this.doPostorderTraversal(node.left, animationProducer);
-    animationProducer.doAnimation(animationProducer.highlightLine, node.rightLineTarget, node.rightArrowTarget);
+    animationProducer.doAnimationAndHighlight(5, animationProducer.highlightLine, node.rightLineTarget, node.rightArrowTarget);
     this.doPostorderTraversal(node.right, animationProducer);
-    animationProducer.doAnimation(animationProducer.highlightNode, node);
+    animationProducer.doAnimationAndHighlight(6, animationProducer.highlightNode, node);
   }
 }
 
