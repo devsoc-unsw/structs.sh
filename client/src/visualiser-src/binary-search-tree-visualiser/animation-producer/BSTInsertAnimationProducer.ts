@@ -3,33 +3,11 @@ import BSTAnimationProducer from './BSTAnimationProducer';
 import { Node } from '../util/typedefs';
 import { nodeStyle, nodeWidth, textStyle, lineStyle, markerLength } from '../util/settings';
 import { getPointerStartEndCoordinates } from '../util/util';
+import { insertCodeSnippet } from '../util/codeSnippets';
 
 export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
   public renderInsertCode(): void {
-    // TODO: figure out cleaner way to store c code (possibly in database)
-    this.renderCode(
-`if (root == NULL) {
-  root = createNode(val);
-  return;
-}
-while (curr != NULL) {
-  if (val < curr->val) {
-    if (curr->left == NULL) {
-      curr->left = createNode(val);
-      return;
-    }
-
-    curr = curr->left;
-  } else {
-    if (curr->right == NULL) {
-      curr->right = createNode(val);
-      return;
-    }
-
-    curr = curr->right;
-  }
-}`
-    );  
+    this.renderCode(insertCodeSnippet);  
   }
 
   public createNodeLeft(node: Node, parent: Node): void {

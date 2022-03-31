@@ -1,42 +1,18 @@
-import { Line } from '@svgdotjs/svg.js';
 import BSTAnimationProducer from './BSTAnimationProducer';
 import { Node } from '../util/typedefs';
-import {
-  nodeStyle, nodeWidth, textStyle, lineStyle,
-} from '../util/settings';
+import { inorderTraversalCodeSnippet, preorderTraversalCodeSnippet, postorderTraversalCodeSnippet } from '../util/codeSnippets';
 
 export default class BSTTraverseAnimationProducer extends BSTAnimationProducer {
   public renderInorderTraversalCode(): void {
-    this.renderCode(
-`if (node == NULL) {
-  return;
-}
-inorderTraversal(node->left);
-printf("%d ", node->val);
-inorderTraversal(node->right);`
-    );
+    this.renderCode(inorderTraversalCodeSnippet);
   }
 
   public renderPreorderTraversalCode(): void {
-    this.renderCode(
-`if (node == NULL) {
-  return;
-}
-printf("%d ", node->val);
-preorderTraversal(node->left);
-preorderTraversal(node->right);`
-    );
+    this.renderCode(preorderTraversalCodeSnippet);
   }
 
   public renderPostorderTraversalCode(): void {
-    this.renderCode(
-`if (node == NULL) {
-  return;
-}
-postorderTraversal(node->left);
-postorderTraversal(node->right);
-printf("%d ", node->val);`
-    );
+    this.renderCode(postorderTraversalCodeSnippet);
   }
   
   public highlightNode(node: Node): void {

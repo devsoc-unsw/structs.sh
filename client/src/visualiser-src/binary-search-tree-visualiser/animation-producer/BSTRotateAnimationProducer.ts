@@ -2,40 +2,15 @@ import { Line } from '@svgdotjs/svg.js';
 import BSTAnimationProducer from './BSTAnimationProducer';
 import { Node } from '../util/typedefs';
 import { getPointerStartEndCoordinates } from '../util/util';
+import { rotateLeftCodeSnippet, rotateRightCodeSnippet } from '../util/codeSnippets';
 
 export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
   public renderRotateLeftCode(): void {
-    // TODO: figure out cleaner way to store c code (possibly in database)
-    this.renderCode(
-`if (val == node->val) {
-  Node* newRoot = node->right;
-  node->right = newRoot->left;
-  newRoot->left = node;
-  return newRoot;
-} else if (val < node->val) {
-  node->left = rotateLeft(node->left, val);
-} else {
-  node->right = rotateLeft(node->right, val);
-}
-return node;`
-    );  
+    this.renderCode(rotateLeftCodeSnippet);  
   }
 
   public renderRotateRightCode(): void {
-    // TODO: figure out cleaner way to store c code (possibly in database)
-    this.renderCode(
-`if (val == node->val) {
-  Node* newRoot = node->left;
-  node->left = newRoot->right;
-  newRoot->right = node;
-  return newRoot;
-} else if (val < node->val) {
-  node->left = rotateRight(node->left, val);
-} else {
-  node->right = rotateRight(node->right, val);
-}
-return node;`
-    );  
+    this.renderCode(rotateRightCodeSnippet);  
   }
 
   public movePointerToNewRootRightChild(oldRoot: Node, newRoot: Node): void {
