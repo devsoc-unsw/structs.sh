@@ -11,10 +11,8 @@ export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
   Node* newRoot = node->right;
   node->right = newRoot->left;
   newRoot->left = node;
-
   return newRoot;
-}
-if (val < node->val) {
+} else if (val < node->val) {
   node->left = rotateLeft(node->left, val);
 } else {
   node->right = rotateLeft(node->right, val);

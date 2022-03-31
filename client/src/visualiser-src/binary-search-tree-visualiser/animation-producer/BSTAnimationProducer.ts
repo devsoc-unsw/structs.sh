@@ -201,20 +201,20 @@ export default class BSTAnimationProducer extends AnimationProducer {
     return baseDiff / 2 ** depth;
   }
 
-  public resetBST(root: Node): void {
-    this.resetLinesRecursive(root);
-    this.resetNodesRecursive(root);
+  public unhighlightBST(root: Node): void {
+    this.unhighlightLinesRecursive(root);
+    this.unhighlightNodesRecursive(root);
   }
 
-  public resetLinesRecursive(node: Node): void {
+  public unhighlightLinesRecursive(node: Node): void {
     if (node === null) {
       return;
     }
 
     this.unhighlightLine(node.leftLineTarget, node.leftArrowTarget);
     this.unhighlightLine(node.rightLineTarget, node.rightArrowTarget);
-    this.resetLinesRecursive(node.left);
-    this.resetLinesRecursive(node.right);
+    this.unhighlightLinesRecursive(node.left);
+    this.unhighlightLinesRecursive(node.right);
   }
 
   public unhighlightLine(lineTarget: Line, arrowTarget: Marker): void {
@@ -233,14 +233,21 @@ export default class BSTAnimationProducer extends AnimationProducer {
     }
   }
 
-  public resetNodesRecursive(node: Node): void {
+  public unhighlightNodesRecursive(node: Node): void {
     if (node === null) {
       return;
     }
 
     this.unhighlightNode(node);
-    this.resetNodesRecursive(node.left);
-    this.resetNodesRecursive(node.right);
+    this.unhighlightNodesRecursive(node.left);
+    this.unhighlightNodesRecursive(node.right);
+  }
+
+  public updateAndUnhighlightBST(root: Node): void {
+    this.updateNodesRecursive(root);
+    this.updateLinesRecursive(root);
+    this.unhighlightLinesRecursive(root);
+    this.unhighlightNodesRecursive(root);
   }
 
   public unhighlightNode(node: Node): void {
