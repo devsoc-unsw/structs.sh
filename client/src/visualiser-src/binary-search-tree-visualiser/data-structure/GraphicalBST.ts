@@ -10,6 +10,7 @@ class BST {
   public root: Node = null;
 
   public visualiserCanvas: Container = SVG().addTo('#bst-canvas').size('100%', '100%');
+  
   public codeCanvas: Container = SVG().addTo('#code-canvas').size('100%', 1000);
 
   // inserts a node into the bst and produces an animation sequence

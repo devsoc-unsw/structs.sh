@@ -9,10 +9,12 @@ const SHOW_LINE_NUMBERS = true;
 
 export default class BSTAnimationProducer extends AnimationProducer {
   public visualiserCanvas: Container;
+  
   public codeCanvas: Container;
 
   // TODO: move to AnimationProducer later
   private codeTargets: CodeLine[] = [];
+
   private highlightedLines: number[] = [];
 
 

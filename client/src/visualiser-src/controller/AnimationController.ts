@@ -30,7 +30,7 @@ class AnimationController {
   ): void {
     this.resetTimeline(updateSlider);
 
-    if (animationProducer.allRunners.length == 0) return;
+    if (animationProducer.allRunners.length === 0) return;
 
     animationProducer.allRunners.forEach((runners) => {
       runners.forEach((runner) => {
@@ -52,7 +52,7 @@ class AnimationController {
     this.currentTimeline = new Timeline().persist(true);
     this.currentTimeline.on('time', (e: CustomEvent) => {
       // avoid division by 0
-      if (this.timelineDuration != 0) {
+      if (this.timelineDuration !== 0) {
         updateSlider((Math.min(e.detail, this.timelineDuration) / this.timelineDuration) * 100);
       }
     });
