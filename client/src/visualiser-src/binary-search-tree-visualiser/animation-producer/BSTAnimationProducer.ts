@@ -1,6 +1,6 @@
-import { Container, Line, Marker, Text } from '@svgdotjs/svg.js';
+import { Container, Line, Marker } from '@svgdotjs/svg.js';
 import { Node, CodeLine } from '../util/typedefs';
-import { canvasPadding, nodeWidth } from '../util/settings';
+import { canvasPadding } from '../util/settings';
 import { getPointerStartEndCoordinates } from '../util/util';
 import AnimationProducer from '../../common/AnimationProducer';
 
@@ -222,6 +222,12 @@ export default class BSTAnimationProducer extends AnimationProducer {
       this.addSequenceAnimation(
         lineTarget.animate(500).attr({
           stroke: '#000000',
+        }),
+      );
+
+      this.addSequenceAnimation(
+        arrowTarget.animate(500).attr({
+          fill: '#000000',
         })
       );
 
