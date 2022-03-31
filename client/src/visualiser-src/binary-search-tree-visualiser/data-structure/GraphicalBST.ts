@@ -137,7 +137,6 @@ class BST {
     this.root = this.doRotateLeft(this.root, input, animationProducer);
     this.updateNodePositions();
     animationProducer.doAnimationAndHighlight(5, animationProducer.updateAndUnhighlightBST, this.root);
-    animationProducer.doAnimation(animationProducer.unhighlightBST, this.root);
 
     return animationProducer;
   }
@@ -173,6 +172,7 @@ class BST {
 
   public rotateRight(input: number): BSTRotateAnimationProducer {
     const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer(this.visualiserCanvas, this.codeCanvas);
+    animationProducer.renderRotateRightCode();
     const oldRoot: Node = this.getNode(input);
 
     if (oldRoot === null) return animationProducer;
@@ -181,33 +181,37 @@ class BST {
 
     if (newRoot === null) return animationProducer;
 
-    if (newRoot.right != null) {
-      animationProducer.doAnimation(animationProducer.movePointerToNewRootRightChild, oldRoot, newRoot);
-      animationProducer.doAnimation(animationProducer.moveRightPointerToOldRoot, oldRoot, newRoot);
-    } else {
-      animationProducer.doAnimation(animationProducer.hideLine, oldRoot.leftLineTarget);
-      animationProducer.doAnimation(animationProducer.assignNewRootRightPointerToOldRoot, oldRoot, newRoot);
-    }
-
-    this.root = this.doRotateRight(this.root, input);
+    this.root = this.doRotateRight(this.root, input, animationProducer);
     this.updateNodePositions();
-    animationProducer.doAnimation(animationProducer.updateBST, this.root);
+    animationProducer.doAnimationAndHighlight(5, animationProducer.updateAndUnhighlightBST, this.root);
 
     return animationProducer;
   }
 
-  public doRotateRight(node: Node, input: number): Node {
+  public doRotateRight(node: Node, input: number, animationProducer: BSTRotateAnimationProducer): Node {
+    animationProducer.doAnimationAndHighlight(1, animationProducer.halfHighlightNode, node);
     if (input === node.value) {
       const newRoot: Node = node.left;
+
+      if (newRoot.right != null) {
+        animationProducer.doAnimationAndHighlight(3, animationProducer.movePointerToNewRootRightChild, node, newRoot);
+        animationProducer.doAnimationAndHighlight(4, animationProducer.moveRightPointerToOldRoot, node, newRoot);
+      } else {
+        animationProducer.doAnimation(animationProducer.hideLine, node.leftLineTarget);
+        animationProducer.doAnimationAndHighlight(4, animationProducer.assignNewRootRightPointerToOldRoot, node, newRoot);
+      }
+
       node.left = newRoot.right;
       newRoot.right = node;
 
       return newRoot;
     }
     if (input < node.value) {
-      node.left = this.doRotateRight(node.left, input);
+      animationProducer.doAnimationAndHighlight(7, animationProducer.highlightLine, node.leftLineTarget, node.leftArrowTarget);
+      node.left = this.doRotateRight(node.left, input, animationProducer);
     } else {
-      node.right = this.doRotateRight(node.right, input);
+      animationProducer.doAnimationAndHighlight(9, animationProducer.highlightLine, node.rightLineTarget, node.rightArrowTarget);
+      node.right = this.doRotateRight(node.right, input, animationProducer);
     }
 
     return node;

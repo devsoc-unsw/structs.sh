@@ -17,8 +17,24 @@ export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
 } else {
   node->right = rotateLeft(node->right, val);
 }
-return node;
-`
+return node;`
+    );  
+  }
+
+  public renderRotateRightCode(): void {
+    // TODO: figure out cleaner way to store c code (possibly in database)
+    this.renderCode(
+`if (val == node->val) {
+  Node* newRoot = node->left;
+  node->left = newRoot->right;
+  newRoot->right = node;
+  return newRoot;
+} else if (val < node->val) {
+  node->left = rotateRight(node->left, val);
+} else {
+  node->right = rotateRight(node->right, val);
+}
+return node;`
     );  
   }
 
