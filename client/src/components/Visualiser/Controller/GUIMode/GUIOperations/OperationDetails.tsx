@@ -54,7 +54,7 @@ interface Props {
   op: Operation;
   isLast: boolean;
   showOp: OperationsMenuState;
-  executeCommand: (command: string, args: string[], code: string[]) => string;
+  executeCommand: (command: string, args: string[]) => string;
 }
 
 const OperationDetails: FC<Props> = ({
@@ -119,7 +119,7 @@ const OperationDetails: FC<Props> = ({
             className={classes.opBtn}
             variant="contained"
             color="primary"
-            onClick={() => executeCommand(op.command, [...args], op.code)}
+            onClick={() => executeCommand(op.command, [...args])}
           >
             <Box className={classes.btnText}>Run</Box>
           </Button>

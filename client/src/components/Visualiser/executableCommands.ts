@@ -21,7 +21,7 @@ const isValidCommandArgs = (command: string, args: string[], topicTitle: string)
   return true;
 };
 
-const getLinkedListExecutor = (visualiser, updateTimeline) => (command: string, args: string[], code: string[]): string => {
+const getLinkedListExecutor = (visualiser, updateTimeline) => (command: string, args: string[]): string => {
   if (!isValidCommandArgs(command, args, 'Linked Lists')) {
     const { usage } = getDocumentation('Linked Lists').find(
       (operation) => operation.command === command,
@@ -51,7 +51,7 @@ const getLinkedListExecutor = (visualiser, updateTimeline) => (command: string, 
   return '';
 };
 
-const getBSTExecutor = (visualiser, updateTimeline) => (command: string, args: string[], code: string[]): string => {
+const getBSTExecutor = (visualiser, updateTimeline) => (command: string, args: string[]): string => {
   if (!isValidCommandArgs(command, args, 'Binary Search Trees')) {
     const { usage } = getDocumentation('Binary Search Trees').find(
       (operation) => operation.command === command,
@@ -84,7 +84,7 @@ const getBSTExecutor = (visualiser, updateTimeline) => (command: string, args: s
   return '';
 };
 
-const undefinedExecutor = (topicTitle) => (command: string, args: string[], code: string[]): string => {
+const undefinedExecutor = (topicTitle) => (command: string, args: string[]): string => {
   console.error(`Can't find the executor for ${topicTitle}`);
   return '';
 };

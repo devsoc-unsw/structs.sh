@@ -1,5 +1,4 @@
-import React, { FC, useEffect } from 'react';
-import { Box, Typography } from '@mui/material';
+import React, { FC } from 'react';
 
 interface Props {}
   
