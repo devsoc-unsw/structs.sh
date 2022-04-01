@@ -1,7 +1,7 @@
 import AnimationProducer from '../common/AnimationProducer';
 import Controller from '../controller/AnimationController';
 import LinkedList from './data-structure/GraphicalLinkedList';
-import { defaultSpeed } from './util/constants';
+import { defaultSpeed } from '../../constants/speed';
 
 // for documentation read: https://compclub.atlassian.net/wiki/spaces/S/pages/2150892071/Documentation#Visualiser-Docs%3A
 
