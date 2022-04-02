@@ -34,11 +34,16 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
   /* ------------------------ Visualiser Initialisation ----------------------- */
 
   useEffect(() => {
-    switch (topicTitle) {
-      case 'Linked Lists':
+    const normalisedTitle: string = topicTitle.toLowerCase();
+    switch (normalisedTitle) {
+      case 'linked lists':
         setVisualiser(initLinkedListVisualiser());
         break;
-      case 'Binary Search Trees':
+      case 'binary search trees':
+        setVisualiser(initBSTVisualiser());
+        break;
+      case 'avl trees':
+        // TODO: invoke the AVL tree visualiser initialiser instead of BST: 
         setVisualiser(initBSTVisualiser());
         break;
       default:

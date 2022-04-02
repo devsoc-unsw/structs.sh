@@ -147,7 +147,7 @@ export const getTopic: GetTopic = async (title: string) => {
   try {
     const response = await axios.get(`${ApiConstants.URL}/api/topics?title=${title}`);
     const { topic } = response.data;
-    return topic;
+    return topic as Topic;
   } catch (err) {
     const errMessage: string = err.response.data.statusText;
     throw new Error(errMessage);
