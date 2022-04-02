@@ -49,7 +49,7 @@ export class TopicMongoService {
 
     public async getTopicByTitle(title: string): Promise<Topic> {
         try {
-            const topic = (await TopicModel.findOne({ title: title })) as Topic;
+            const topic = (await TopicModel.findOne({ title: new RegExp(title, "i") })) as Topic;
             return topic;
         } catch (err) {
             throw new Error(err.message);
