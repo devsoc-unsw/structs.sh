@@ -33,7 +33,6 @@ const initialise = (): any => {
   const rotateRight = (val: number, updateSlider: (val: number) => void) => {
     controller.finish();
     const animationSequence: BSTAnimationProducer = bst.rotateRight(val);
-    console.log(animationSequence);
     controller.constructTimeline(animationSequence, updateSlider);
   };
 

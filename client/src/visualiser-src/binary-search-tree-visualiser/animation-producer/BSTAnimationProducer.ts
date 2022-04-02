@@ -96,8 +96,11 @@ export default class BSTAnimationProducer extends AnimationProducer {
     })
   }
 
-  // the reason we have these 2 methods is for abstraction and readability
-  // in the operation methods
+  // these 2 functions are used to "decorate" animation function so each animation function doesn't
+  // have to do code highlighting itself or push an animation sequence itself, which gives us more flexibility.
+  // - fn: specifies an animation function and gets executed
+  // - args: allows us to pass a variable amount of arguments which then get passed as arguments
+  // to fn
   public doAnimationAndHighlight(line: number, fn: any, ...args: any[]): void {
     fn.apply(this, [...args]);
     this.highlightCode(line);
