@@ -1,5 +1,5 @@
 import {
-  Circle, Line, Marker, Text,
+  Circle, Line, Marker, Rect, Text,
 } from '@svgdotjs/svg.js';
 
 /**
@@ -35,4 +35,9 @@ export interface Node {
   // the x and y coordinate of the node (just used for basic drawing of a bst for now)
   x: number;
   y: number;
+}
+
+export interface CodeLine {
+  textTarget: Text;
+  rectTarget: Rect;
 }

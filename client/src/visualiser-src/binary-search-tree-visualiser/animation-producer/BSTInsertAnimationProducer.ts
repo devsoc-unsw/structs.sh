@@ -3,26 +3,31 @@ import BSTAnimationProducer from './BSTAnimationProducer';
 import { Node } from '../util/typedefs';
 import { nodeStyle, nodeWidth, textStyle, lineStyle, markerLength } from '../util/settings';
 import { getPointerStartEndCoordinates } from '../util/util';
+import { insertCodeSnippet } from '../util/codeSnippets';
 
 export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
+  public renderInsertCode(): void {
+    this.renderCode(insertCodeSnippet);  
+  }
+
   public createNodeLeft(node: Node, parent: Node): void {
     this.createNode(node);
 
-    this.addAnimation([
+    this.addSequenceAnimation(
       parent.leftLineTarget.animate(400).attr({
         opacity: 1,
       }),
-    ]);
+    );
   }
 
   public createNodeRight(node: Node, parent: Node): void {
     this.createNode(node);
 
-    this.addAnimation([
+    this.addSequenceAnimation(
       parent.rightLineTarget.animate(400).attr({
         opacity: 1,
       }),
-    ]);
+    );
   }
 
   // draws a node on the draw canvas and shows the node
@@ -36,7 +41,7 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
       node.x - lineDiffX,
       node.y + lineDiffY
     );
-    node.leftLineTarget = this.draw
+    node.leftLineTarget = this.visualiserCanvas
       .line(
         leftChildCoordinates[0][0],
         leftChildCoordinates[0][1],
@@ -51,7 +56,7 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
       node.x + lineDiffX,
       node.y + lineDiffY
     );
-    node.rightLineTarget = this.draw
+    node.rightLineTarget = this.visualiserCanvas
       .line(
         rightChildCoordinates[0][0],
         rightChildCoordinates[0][1],
@@ -63,33 +68,36 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
     // Draw a triangle at the end of the line
     const pathD = `M 0 0 L ${markerLength} ${markerLength / 2} L 0 ${markerLength} z`;
 
-    node.leftArrowTarget = this.draw.marker(markerLength, markerLength, (add: Marker) => {
+    node.leftArrowTarget = this.visualiserCanvas.marker(markerLength, markerLength, (add: Marker) => {
       add.path(pathD);
     }).attr('markerUnits', 'userSpaceOnUse');
 
     node.leftLineTarget.marker('end', node.leftArrowTarget);
 
-    node.rightArrowTarget = this.draw.marker(markerLength, markerLength, (add: Marker) => {
+    node.rightArrowTarget = this.visualiserCanvas.marker(markerLength, markerLength, (add: Marker) => {
       add.path(pathD);
     }).attr('markerUnits', 'userSpaceOnUse');
 
     node.rightLineTarget.marker('end', node.rightArrowTarget);
     
-    node.nodeTarget = this.draw.circle(nodeWidth);
+    node.nodeTarget = this.visualiserCanvas.circle(nodeWidth);
     node.nodeTarget.attr(nodeStyle);
     node.nodeTarget.cx(node.x).cy(node.y);
 
-    node.textTarget = this.draw.text(node.value.toString());
+    node.textTarget = this.visualiserCanvas.text(node.value.toString());
     node.textTarget.attr(textStyle);
     node.textTarget.cx(node.x).cy(node.y);
 
-    this.addAnimation([
+    this.addSequenceAnimation(
       node.nodeTarget.animate(400).attr({
         opacity: 1,
-      }),
+      })
+    );
+
+    this.addSequenceAnimation(
       node.textTarget.animate(400).attr({
         opacity: 1,
-      }),
-    ]);
+      })
+    );
   }
 }
