@@ -31,11 +31,7 @@ export default class GraphicalLinkedListNode {
   }
 
   public static newHeadPointer() {
-    const headText = SVG()
-      .text('head')
-      .attr(textAttributes)
-      .attr({ 'font-size': 16 })
-      .addTo(CANVAS);
+    SVG().text('head').attr(textAttributes).attr({ 'font-size': 16 }).addTo(CANVAS);
     const headPointer = SVG()
       .path()
       .attr(pathAttributes)
