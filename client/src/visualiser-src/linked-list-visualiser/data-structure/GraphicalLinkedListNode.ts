@@ -7,7 +7,7 @@ import {
   CANVAS,
 } from '../util/constants';
 import { getPointerPath, Style } from '../util/util';
-import { markerLength, pathD } from '../../binary-search-tree-visualiser/util/settings';
+import { markerLength, pathD } from '../../common/constants';
 
 interface SVGData {
   nodeTarget: Svg;

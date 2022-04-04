@@ -1,12 +1,7 @@
 import LinkedListAnimationProducer from './LinkedListAnimationProducer';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
-import {
-  CANVAS,
-  insertedNodeTopOffset,
-  nodePathWidth,
-  actualNodeDiameter,
-  topOffset,
-} from '../util/constants';
+import { CANVAS, insertedNodeTopOffset, nodePathWidth, topOffset } from '../util/constants';
+import { actualNodeDiameter } from '../../common/constants';
 import { getPointerPath, Style } from '../util/util';
 
 // Class that produces SVG.Runners animating linked list operations specific to inserting

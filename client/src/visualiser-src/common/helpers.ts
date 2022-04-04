@@ -1,4 +1,4 @@
-import { strokeWidth, nodeWidth, markerLength } from './settings';
+import { actualNodeDiameter, markerLength } from './constants';
 /**
  * Calculates the starting and ending coordinates of a pointer, given the coordinates of the centres of the
  * originating nodes and target nodes.
@@ -10,7 +10,7 @@ export const getPointerStartEndCoordinates = (
   endCentreX: number,
   endCentreY: number
 ): [[number, number], [number, number]] => {
-  const nodeRadius = nodeWidth / 2 + strokeWidth / 2;
+  const nodeRadius = actualNodeDiameter / 2;
   const theta: number = Math.atan(
     Math.abs(startCentreX - endCentreX) / Math.abs(startCentreY - endCentreY)
   );

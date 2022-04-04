@@ -1,7 +1,7 @@
 import { Container, Line, Marker } from '@svgdotjs/svg.js';
 import { Node, CodeLine } from '../util/typedefs';
 import { canvasPadding } from '../util/settings';
-import { getPointerStartEndCoordinates } from '../util/util';
+import { getPointerStartEndCoordinates } from '../../common/helpers';
 import AnimationProducer from '../../common/AnimationProducer';
 
 // just a constant used for developer with matching lines to code

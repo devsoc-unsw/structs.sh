@@ -1,5 +1,6 @@
 import { SVG, Path, Element } from '@svgdotjs/svg.js';
-import { topOffset, nodePathWidth, CURRENT, PREV, actualNodeDiameter } from '../util/constants';
+import { topOffset, nodePathWidth, CURRENT, PREV } from '../util/constants';
+import { actualNodeDiameter } from '../../common/constants';
 import AnimationProducer from '../../common/AnimationProducer';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
 import { getPointerPath, Style } from '../util/util';

@@ -1,5 +1,6 @@
 import LinkedListAnimationProducer from './LinkedListAnimationProducer';
-import { actualNodeDiameter, CANVAS, insertedNodeTopOffset, topOffset } from '../util/constants';
+import { CANVAS, insertedNodeTopOffset, topOffset } from '../util/constants';
+import { actualNodeDiameter } from '../../common/constants';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
 import { getPointerPath, Style } from '../util/util';
 import { Path } from '@svgdotjs/svg.js';

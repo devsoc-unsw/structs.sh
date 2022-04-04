@@ -1,11 +1,6 @@
-import {
-  actualNodeDiameter,
-  insertedNodeTopOffset,
-  nodePathWidth,
-  pathLength,
-  topOffset,
-} from './constants';
-import { getPointerStartEndCoordinates } from './../../binary-search-tree-visualiser/util/util';
+import { insertedNodeTopOffset, nodePathWidth, pathLength, topOffset } from './constants';
+import { actualNodeDiameter } from '../../common/constants';
+import { getPointerStartEndCoordinates } from '../../common/helpers';
 export enum Style {
   RIGHT,
   CURVED_RIGHT,

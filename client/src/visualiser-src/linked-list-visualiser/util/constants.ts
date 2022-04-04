@@ -1,8 +1,6 @@
 // SVG Attributes
-const strokeWidth = 3;
-const nodeDiameter = 50;
+import { nodeDiameter, strokeWidth, actualNodeDiameter } from '../../common/constants';
 export const pathLength = 50;
-export const actualNodeDiameter = nodeDiameter + strokeWidth;
 export const nodePathWidth = actualNodeDiameter + pathLength;
 export const topOffset = 60;
 export const insertedNodeTopOffset =

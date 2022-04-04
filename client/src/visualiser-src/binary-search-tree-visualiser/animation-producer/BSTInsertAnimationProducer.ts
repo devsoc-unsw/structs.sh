@@ -1,8 +1,9 @@
 import { Marker } from '@svgdotjs/svg.js';
 import BSTAnimationProducer from './BSTAnimationProducer';
 import { Node } from '../util/typedefs';
-import { nodeStyle, nodeWidth, textStyle, lineStyle, markerLength, pathD } from '../util/settings';
-import { getPointerStartEndCoordinates } from '../util/util';
+import { nodeStyle, textStyle, lineStyle } from '../util/settings';
+import { markerLength, nodeDiameter, pathD } from '../../common/constants';
+import { getPointerStartEndCoordinates } from '../../common/helpers';
 import { insertCodeSnippet } from '../util/codeSnippets';
 
 export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
@@ -83,7 +84,7 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
 
     node.rightLineTarget.marker('end', node.rightArrowTarget);
 
-    node.nodeTarget = this.visualiserCanvas.circle(nodeWidth);
+    node.nodeTarget = this.visualiserCanvas.circle(nodeDiameter);
     node.nodeTarget.attr(nodeStyle);
     node.nodeTarget.cx(node.x).cy(node.y);
 
