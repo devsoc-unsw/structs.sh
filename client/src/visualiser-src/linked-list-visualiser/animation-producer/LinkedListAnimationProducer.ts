@@ -9,32 +9,32 @@ export default abstract class LinkedListAnimationProducer extends AnimationProdu
   public initialisePointer(pointerId: string) {
     const pointerSvg: Element = SVG(pointerId);
     pointerSvg.move(0, topOffset + actualNodeDiameter / 2);
-    this.addAnimation([pointerSvg.animate().attr({ opacity: 1 })]);
+    this.addSingleAnimation(pointerSvg.animate().attr({ opacity: 1 }));
   }
 
   public movePointerToNext(pointerId: string) {
     const pointerSvg: Element = SVG(pointerId);
-    this.addAnimation([pointerSvg.animate().dx(nodePathWidth)]);
+    this.addSingleAnimation(pointerSvg.animate().dx(nodePathWidth));
   }
 
   public resetPointers() {
-    const runners: Runner[] = [];
-    runners.push(SVG(CURRENT).animate().attr({ opacity: 0 }));
-    runners.push(SVG(PREV).animate().attr({ opacity: 0 }));
-    this.addAnimation(runners);
+    this.addSequenceAnimation(SVG(CURRENT).animate().attr({ opacity: 0 }));
+    this.addSequenceAnimation(SVG(PREV).animate().attr({ opacity: 0 }));
+    this.finishSequence();
   }
 
   public resetPositioning(head: GraphicalLinkedListNode) {
-    const runners: Runner[] = [];
     let curr: GraphicalLinkedListNode = head;
     let index: number = 0;
     while (curr != null) {
-      runners.push(curr.nodeTarget.animate().move(index * nodePathWidth, 0));
-      runners.push(curr.pointerTarget.animate().plot(getPointerPath(Style.RIGHT) as any));
+      this.addSequenceAnimation(curr.nodeTarget.animate().move(index * nodePathWidth, 0));
+      this.addSequenceAnimation(
+        curr.pointerTarget.animate().plot(getPointerPath(Style.RIGHT) as any)
+      );
       index += 1;
       curr = curr.next;
     }
-    this.addAnimation(runners);
+    this.finishSequence();
   }
 
   public resetList(head: GraphicalLinkedListNode) {

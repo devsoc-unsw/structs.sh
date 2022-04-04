@@ -12,11 +12,13 @@ import { getPointerPath, Style } from '../util/util';
 export default class LinkedListInsertAnimationProducer extends LinkedListAnimationProducer {
   public insertedNodePointToNext(newNode: GraphicalLinkedListNode) {
     newNode.pointerTarget.plot(getPointerPath(Style.UP_RIGHT) as any);
-    this.addAnimation([newNode.pointerTarget.animate().attr({ opacity: 1 })]);
+    this.addSingleAnimation(newNode.pointerTarget.animate().attr({ opacity: 1 }));
   }
 
   public pointToInsertedNode(node: GraphicalLinkedListNode) {
-    this.addAnimation([node.pointerTarget.animate().plot(getPointerPath(Style.DOWN_RIGHT) as any)]);
+    this.addSingleAnimation(
+      node.pointerTarget.animate().plot(getPointerPath(Style.DOWN_RIGHT) as any)
+    );
   }
 
   public createNodeAt(index: number, newNode: GraphicalLinkedListNode) {
@@ -25,7 +27,6 @@ export default class LinkedListInsertAnimationProducer extends LinkedListAnimati
       (index - 1) * nodePathWidth + actualNodeDiameter,
       insertedNodeTopOffset
     );
-    console.log(insertedNodeTopOffset);
-    this.addAnimation([newNode.nodeTarget.animate().attr({ opacity: 1 })]);
+    this.addSingleAnimation(newNode.nodeTarget.animate().attr({ opacity: 1 }));
   }
 }

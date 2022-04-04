@@ -1,11 +1,12 @@
 import { Box } from '@mui/material';
-import React, { useCallback, useEffect, useMemo, useState, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Notification from 'utils/Notification';
 import initLinkedListVisualiser from 'visualiser-src/linked-list-visualiser/initialiser';
 import initBSTVisualiser from 'visualiser-src/binary-search-tree-visualiser/initialiser';
+import CodeSnippet from 'components/CodeSnippet/CodeSnippet';
+import { Pane } from 'components/Panes';
 import { VisualiserController } from './Controller';
 import GUIMode from './Controller/GUIMode/GUIMode';
-import { Terminal } from './Controller/Terminal';
 import styles from './VisualiserDashboard.module.scss';
 import getCommandExecutor from './executableCommands';
 
@@ -33,11 +34,16 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
   /* ------------------------ Visualiser Initialisation ----------------------- */
 
   useEffect(() => {
-    switch (topicTitle) {
-      case 'Linked Lists':
+    const normalisedTitle: string = topicTitle.toLowerCase();
+    switch (normalisedTitle) {
+      case 'linked lists':
         setVisualiser(initLinkedListVisualiser());
         break;
-      case 'Binary Search Trees':
+      case 'binary search trees':
+        setVisualiser(initBSTVisualiser());
+        break;
+      case 'avl trees':
+        // TODO: invoke the AVL tree visualiser initialiser instead of BST:
         setVisualiser(initBSTVisualiser());
         break;
       default:
@@ -111,12 +117,13 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
         timelineComplete={timelineComplete}
         speed={speed}
       />
-      <Box sx={{ height: '100%' }}>
+      <Pane orientation="vertical" minSize={150.9}>
         {/* terminalMode ? (
           <Terminal executeCommand={executeCommand} topicTitle={topicTitle} />
         ) : ( */}
         <GUIMode executeCommand={executeCommand} topicTitle={topicTitle} />
-      </Box>
+        <CodeSnippet />
+      </Pane>
     </Box>
   );
 };

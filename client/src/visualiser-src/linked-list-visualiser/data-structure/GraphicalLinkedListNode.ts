@@ -1,11 +1,5 @@
 import { SVG, Path, Text, Circle, Svg } from '@svgdotjs/svg.js';
-import {
-  nodeAttributes,
-  shapeAttributes,
-  textAttributes,
-  pathAttributes,
-  RIGHT_ARROW_PATH,
-} from '../util/constants';
+import { nodeAttributes, shapeAttributes, textAttributes, pathAttributes } from '../util/constants';
 import { getPointerPath, Style } from '../util/util';
 import { markerLength, pathD } from '../../binary-search-tree-visualiser/util/settings';
 

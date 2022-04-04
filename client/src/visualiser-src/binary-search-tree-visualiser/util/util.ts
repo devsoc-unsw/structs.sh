@@ -14,7 +14,8 @@ export const getPointerStartEndCoordinates = (
   const theta: number = Math.atan(
     Math.abs(startCentreX - endCentreX) / Math.abs(startCentreY - endCentreY)
   );
-  let startX, endX;
+  let startX;
+  let endX;
   if (startCentreX < endCentreX) {
     startX = startCentreX + nodeRadius * Math.sin(theta);
     endX = endCentreX - (nodeRadius + markerLength / 2) * Math.sin(theta);
@@ -22,7 +23,8 @@ export const getPointerStartEndCoordinates = (
     startX = startCentreX - nodeRadius * Math.sin(theta);
     endX = endCentreX + (nodeRadius + markerLength / 2) * Math.sin(theta);
   }
-  let startY, endY;
+  let startY;
+  let endY;
   if (startCentreY < endCentreY) {
     startY = startCentreY + nodeRadius * Math.cos(theta);
     endY = endCentreY - (nodeRadius + markerLength / 2) * Math.cos(theta);

@@ -1,13 +1,34 @@
-FROM node:14-alpine
+FROM node:16.14-alpine as builder
+RUN apk add --no-cache make gcc g++ python3
 
 WORKDIR /app
 
 COPY package.json yarn.lock ./
-
 RUN yarn install
 
 COPY . . 
+RUN yarn build
 
-CMD ["yarn", "start"]
+# Required as bcrypt has extra dependencies we do not want to include in the
+# final image (to reduce image size)
+FROM node:16.14-alpine as bcrypt_builder
+RUN apk add --no-cache make gcc g++ python3
+WORKDIR /app
+COPY package.json yarn.lock ./
+RUN yarn install --production
 
-# TODO: Should add a production-grade server rather than using the dev server for production
+
+FROM node:16.14-alpine as runner
+WORKDIR /app
+
+COPY package.json yarn.lock ./
+COPY --from=bcrypt_builder /app/node_modules ./node_modules
+
+COPY --from=builder /app/build ./build
+
+ENV port 8080
+
+EXPOSE 8080
+
+CMD ["node", "build/server.js"]
+
