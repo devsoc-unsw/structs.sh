@@ -1,6 +1,7 @@
 import LinkedListAnimationProducer from './LinkedListAnimationProducer';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
 import { CANVAS, nodePathWidth } from '../util/constants';
+import { Path } from '@svgdotjs/svg.js';
 
 // Class that produces SVG.Runners animating linked list operations specific to appending
 export default class LinkedListAppendAnimationProducer extends LinkedListAnimationProducer {
@@ -10,7 +11,11 @@ export default class LinkedListAppendAnimationProducer extends LinkedListAnimati
 
   public addNodeAtEnd(length: number, newNode: GraphicalLinkedListNode) {
     newNode.nodeTarget.addTo(CANVAS);
-    newNode.nodeTarget.move((length - 1) * nodePathWidth, 0);
+    newNode.nodeTarget.move(length * nodePathWidth, 0);
     this.addSingleAnimation(newNode.nodeTarget.animate().attr({ opacity: 1 }));
+  }
+
+  public initialiseHead(headPointer: Path) {
+    this.addSingleAnimation(headPointer.animate().attr({ opacity: 1 }));
   }
 }

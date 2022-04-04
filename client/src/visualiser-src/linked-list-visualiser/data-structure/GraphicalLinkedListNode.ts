@@ -1,5 +1,11 @@
 import { SVG, Path, Text, Circle, Svg } from '@svgdotjs/svg.js';
-import { nodeAttributes, shapeAttributes, textAttributes, pathAttributes } from '../util/constants';
+import {
+  nodeAttributes,
+  shapeAttributes,
+  textAttributes,
+  pathAttributes,
+  CANVAS,
+} from '../util/constants';
 import { getPointerPath, Style } from '../util/util';
 import { markerLength, pathD } from '../../binary-search-tree-visualiser/util/settings';
 
@@ -14,7 +20,6 @@ interface GraphicalLinkedListNodeData {
   value: number;
   svgData: SVGData;
 }
-
 export default class GraphicalLinkedListNode {
   private _data: GraphicalLinkedListNodeData;
 
@@ -23,6 +28,25 @@ export default class GraphicalLinkedListNode {
   private constructor(data: GraphicalLinkedListNodeData) {
     this._data = data;
     this._next = null;
+  }
+
+  public static newHeadPointer() {
+    const headText = SVG()
+      .text('head')
+      .attr(textAttributes)
+      .attr({ 'font-size': 16 })
+      .addTo(CANVAS);
+    const headPointer = SVG()
+      .path()
+      .attr(pathAttributes)
+      .opacity(0)
+      .plot(getPointerPath(Style.RIGHT))
+      .addTo(CANVAS);
+    headPointer.marker('end', markerLength, markerLength, function (add) {
+      add.path(pathD);
+      this.attr('markerUnits', 'userSpaceOnUse');
+    });
+    return headPointer;
   }
 
   public static from(input: number) {

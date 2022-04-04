@@ -1,4 +1,3 @@
-import { Runner } from '@svgdotjs/svg.js';
 import LinkedListAnimationProducer from './LinkedListAnimationProducer';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
 
@@ -8,19 +7,22 @@ export default class LinkedListSearchAnimationProducer extends LinkedListAnimati
     this.addSequenceAnimation(node.boxTarget.animate().attr({ stroke: '#46B493' }));
     this.addSequenceAnimation(node.numberTarget.animate().attr({ stroke: '#46B493' }));
     this.finishSequence();
-    this.resetColor(node);
   }
 
   public indicateNotFound(node: GraphicalLinkedListNode) {
     this.addSequenceAnimation(node.boxTarget.animate().attr({ stroke: '#FF0000' }));
     this.addSequenceAnimation(node.numberTarget.animate().attr({ stroke: '#FF0000' }));
     this.finishSequence();
-    this.resetColor(node);
   }
 
-  private resetColor(node: GraphicalLinkedListNode) {
-    this.addSequenceAnimation(node.boxTarget.animate(200).attr({ stroke: '#000000' }));
-    this.addSequenceAnimation(node.numberTarget.animate(200).attr({ stroke: '#000000' }));
+  public resetColor(head: GraphicalLinkedListNode) {
+    this.resetPointers();
+    let curr = head;
+    while (curr != null) {
+      this.addSequenceAnimation(curr.boxTarget.animate().attr({ stroke: '#000000' }));
+      this.addSequenceAnimation(curr.numberTarget.animate().attr({ stroke: '#000000' }));
+      curr = curr.next;
+    }
     this.finishSequence();
   }
 }

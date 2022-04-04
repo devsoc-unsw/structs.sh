@@ -1,4 +1,4 @@
-import { SVG, Runner, Element } from '@svgdotjs/svg.js';
+import { SVG, Path, Element } from '@svgdotjs/svg.js';
 import { topOffset, nodePathWidth, CURRENT, PREV, actualNodeDiameter } from '../util/constants';
 import AnimationProducer from '../../common/AnimationProducer';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
@@ -8,7 +8,7 @@ import { getPointerPath, Style } from '../util/util';
 export default abstract class LinkedListAnimationProducer extends AnimationProducer {
   public initialisePointer(pointerId: string) {
     const pointerSvg: Element = SVG(pointerId);
-    pointerSvg.move(0, topOffset + actualNodeDiameter / 2);
+    pointerSvg.move(nodePathWidth, topOffset + actualNodeDiameter / 2);
     this.addSingleAnimation(pointerSvg.animate().attr({ opacity: 1 }));
   }
 
@@ -23,11 +23,12 @@ export default abstract class LinkedListAnimationProducer extends AnimationProdu
     this.finishSequence();
   }
 
-  public resetPositioning(head: GraphicalLinkedListNode) {
+  public resetPositioning(headPointer: Path, head: GraphicalLinkedListNode) {
     let curr: GraphicalLinkedListNode = head;
     let index: number = 0;
+    this.addSequenceAnimation(headPointer.animate().plot(getPointerPath(Style.RIGHT) as any));
     while (curr != null) {
-      this.addSequenceAnimation(curr.nodeTarget.animate().move(index * nodePathWidth, 0));
+      this.addSequenceAnimation(curr.nodeTarget.animate().move((index + 1) * nodePathWidth, 0));
       this.addSequenceAnimation(
         curr.pointerTarget.animate().plot(getPointerPath(Style.RIGHT) as any)
       );
@@ -37,8 +38,8 @@ export default abstract class LinkedListAnimationProducer extends AnimationProdu
     this.finishSequence();
   }
 
-  public resetList(head: GraphicalLinkedListNode) {
+  public resetList(headPointer: Path, head: GraphicalLinkedListNode) {
     this.resetPointers();
-    this.resetPositioning(head);
+    this.resetPositioning(headPointer, head);
   }
 }

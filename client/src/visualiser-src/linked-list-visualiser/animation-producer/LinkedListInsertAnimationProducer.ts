@@ -5,6 +5,7 @@ import {
   insertedNodeTopOffset,
   nodePathWidth,
   actualNodeDiameter,
+  topOffset,
 } from '../util/constants';
 import { getPointerPath, Style } from '../util/util';
 
@@ -24,8 +25,8 @@ export default class LinkedListInsertAnimationProducer extends LinkedListAnimati
   public createNodeAt(index: number, newNode: GraphicalLinkedListNode) {
     newNode.nodeTarget.addTo(CANVAS);
     newNode.nodeTarget.move(
-      (index - 1) * nodePathWidth + actualNodeDiameter,
-      insertedNodeTopOffset
+      index * nodePathWidth + actualNodeDiameter,
+      insertedNodeTopOffset - topOffset
     );
     this.addSingleAnimation(newNode.nodeTarget.animate().attr({ opacity: 1 }));
   }
