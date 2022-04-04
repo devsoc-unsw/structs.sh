@@ -8,9 +8,11 @@ export default class LinkedListDeleteAnimationProducer extends LinkedListAnimati
   public setNextToNull(node: GraphicalLinkedListNode) {
     this.addSingleAnimation(node.pointerTarget.animate().attr({ opacity: 0 }));
   }
+
   public setHeadToNull(headPointer: Path) {
     this.addSingleAnimation(headPointer.animate().attr({ opacity: 0 }));
   }
+
   public morphNextPointerToArc(node: GraphicalLinkedListNode) {
     this.addSingleAnimation(
       node.pointerTarget.animate().plot(getPointerPath(Style.CURVED_RIGHT) as any)

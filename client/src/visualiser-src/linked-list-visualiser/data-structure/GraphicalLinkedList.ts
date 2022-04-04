@@ -14,8 +14,11 @@ import { getPointerPath, Style } from '../util/util';
 // can then use to place SVG.Runners on a timeline to animate the operation.
 export default class GraphicalLinkedList {
   headPointer: Path;
+
   head: GraphicalLinkedListNode = null;
+
   length: number = 0;
+
   constructor() {
     this.headPointer = GraphicalLinkedListNode.newHeadPointer();
   }

@@ -1,6 +1,7 @@
 import { insertedNodeTopOffset, nodePathWidth, pathLength, topOffset } from './constants';
 import { actualNodeDiameter } from '../../common/constants';
 import { getPointerStartEndCoordinates } from '../../common/helpers';
+
 export enum Style {
   RIGHT,
   CURVED_RIGHT,
@@ -8,7 +9,10 @@ export enum Style {
   DOWN_RIGHT,
 }
 export const getPointerPath = (style: Style) => {
-  let startCentreX, startCentreY, endCentreX, endCentreY;
+  let startCentreX;
+  let startCentreY;
+  let endCentreX;
+  let endCentreY;
   switch (style) {
     case Style.RIGHT:
       startCentreX = actualNodeDiameter / 2;
@@ -32,6 +36,8 @@ export const getPointerPath = (style: Style) => {
       return `M ${actualNodeDiameter},${topOffset} Q ${
         pathLength + (3 * actualNodeDiameter) / 2
       },-10 ${2 * nodePathWidth},${topOffset}`;
+    default:
+      break;
   }
   const [[startX, startY], [endX, endY]] = getPointerStartEndCoordinates(
     startCentreX,

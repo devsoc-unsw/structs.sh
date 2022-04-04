@@ -1,4 +1,5 @@
 import { strokeWidth } from '../../common/constants';
+
 export const nodeStyle = {
   fill: '#ffffff',
   stroke: '#000',
