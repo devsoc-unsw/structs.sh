@@ -30,9 +30,11 @@ class AnimationController {
   ): void {
     this.resetTimeline(updateSlider);
 
+    if (animationProducer.allRunners.length === 0) return;
+
     animationProducer.allRunners.forEach((runners) => {
       runners.forEach((runner) => {
-        this.currentTimeline.schedule(runner, this.timelineDuration, 'absolute');
+        this.currentTimeline.schedule(runner, this.timelineDuration + 25, 'absolute');
       });
       runners[0].after(() => {
         if (this.isStepMode) {
@@ -40,7 +42,7 @@ class AnimationController {
         }
       });
       this.timestamps.push(this.timelineDuration);
-      this.timelineDuration += runners[0].duration();
+      this.timelineDuration += runners[0].duration() + 25;
     });
     this.timestamps.push(this.timelineDuration);
     this.currentTimeline.play();
@@ -49,7 +51,10 @@ class AnimationController {
   public resetTimeline(updateSlider: (val: number) => void) {
     this.currentTimeline = new Timeline().persist(true);
     this.currentTimeline.on('time', (e: CustomEvent) => {
-      updateSlider((Math.min(e.detail, this.timelineDuration) / this.timelineDuration) * 100);
+      // avoid division by 0
+      if (this.timelineDuration !== 0) {
+        updateSlider((Math.min(e.detail, this.timelineDuration) / this.timelineDuration) * 100);
+      }
     });
     this.isStepMode = false;
     this.currentTimeline.speed(this.speed);

@@ -22,8 +22,12 @@ const VisualiserDashboard: FC<Props> = () => {
   useEffect(() => {
     const topicTitleInUrl = params.topic;
     getTopic(urlToTitle(topicTitleInUrl))
-      .then((newTopic) => setTopic(newTopic))
-      .catch(() => Notification.error(`Couldn't find anything for topic: '${urlToTitle(topicTitleInUrl)}'`));
+      .then((newTopic) => {
+        setTopic(newTopic);
+      })
+      .catch((err) => {
+        Notification.error(`Couldn't find anything for topic: '${urlToTitle(topicTitleInUrl)}'`)
+      });
   }, [params]);
 
   // Note: hacky way of removing scrollability outside of the panes

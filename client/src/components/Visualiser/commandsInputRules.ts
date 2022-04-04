@@ -17,6 +17,8 @@
 // See react console emulator docs:
 //     https://www.npmjs.com/package/react-console-emulator
 
+// TODO: how can we more easily store the code snippets? (maybe move into database)
+
 /* -------------------------------------------------------------------------- */
 /*                              Terminal Commands                             */
 /* -------------------------------------------------------------------------- */

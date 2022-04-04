@@ -5,7 +5,7 @@ import { getDocumentation, getGUICommands } from './commandsInputRules';
 
 const isValidCommandArgs = (command: string, args: string[], topicTitle: string): boolean => {
   const currentOperation = getGUICommands(topicTitle).find(
-    (operation) => operation.command === command,
+    (operation) => operation.command === command
   );
 
   if (args.length !== currentOperation.args.length) return false;
@@ -28,6 +28,7 @@ const getLinkedListExecutor = (visualiser, updateTimeline) => (command: string, 
     );
     return `Invalid arguments. Usage: ${usage}`;
   }
+
   switch (command) {
     case 'append':
       visualiser.appendNode(Number(args[0]), updateTimeline);
@@ -57,6 +58,7 @@ const getBSTExecutor = (visualiser, updateTimeline) => (command: string, args: s
     );
     return `Invalid arguments. Usage: ${usage}`;
   }
+
   switch (command) {
     case 'insert':
       visualiser.insert(Number(args[0]), updateTimeline);
