@@ -18,6 +18,10 @@ class BST {
   public insert(input: number): BSTInsertAnimationProducer {
     const animationProducer: BSTInsertAnimationProducer = new BSTInsertAnimationProducer(this.visualiserCanvas, this.codeCanvas);
     animationProducer.renderInsertCode();
+
+    // return early if a node with the same value already exists
+    if (this.getNode(input) !== null) return animationProducer;
+
     const node: Node = {
       nodeTarget: null,
       textTarget: null,
