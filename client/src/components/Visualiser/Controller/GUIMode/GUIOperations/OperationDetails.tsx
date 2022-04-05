@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import { makeStyles, useTheme } from '@mui/styles';
 import { Operation } from 'components/Visualiser/commandsInputRules';
 import React, { FC, useState } from 'react';
+import Notification from 'utils/Notification';
 import { LastLink, Link } from './Links';
 
 export interface OperationsMenuState {
@@ -127,7 +128,9 @@ const OperationDetails: FC<Props> = ({
             variant="contained"
             color="primary"
             onClick={() => {
-              executeCommand(op.command, [...args]);
+              const msg = executeCommand(op.command, [...args]);
+              if (msg) Notification.error(msg);
+              
               clearArguments();
             }}
           >

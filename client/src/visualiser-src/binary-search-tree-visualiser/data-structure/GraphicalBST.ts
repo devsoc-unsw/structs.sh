@@ -1,4 +1,5 @@
 import { SVG, Container } from '@svgdotjs/svg.js';
+import Notification from 'utils/Notification';
 import BSTInsertAnimationProducer from '../animation-producer/BSTInsertAnimationProducer';
 import BSTRotateAnimationProducer from '../animation-producer/BSTRotateAnimationProducer';
 import BSTTraverseAnimationProducer from '../animation-producer/BSTTraverseAnimationProducer';
@@ -20,7 +21,10 @@ class BST {
     animationProducer.renderInsertCode();
 
     // return early if a node with the same value already exists
-    if (this.getNode(input) !== null) return animationProducer;
+    if (this.getNode(input) !== null) {
+      Notification.error("A node with the same value already exists!");
+      return animationProducer;
+    }
 
     const node: Node = {
       nodeTarget: null,
@@ -133,7 +137,10 @@ class BST {
     animationProducer.renderRotateLeftCode();
     const oldRoot: Node = this.getNode(input);
 
-    if (oldRoot === null) return animationProducer;
+    if (oldRoot === null) {
+      Notification.error(`The node with value ${input} does not exist!`);
+      return animationProducer;
+    }
 
     const newRoot: Node = oldRoot.right;
 
@@ -180,7 +187,10 @@ class BST {
     animationProducer.renderRotateRightCode();
     const oldRoot: Node = this.getNode(input);
 
-    if (oldRoot === null) return animationProducer;
+    if (oldRoot === null) {
+      Notification.error(`The node with value ${input} does not exist!`);
+      return animationProducer;
+    }
 
     const newRoot: Node = oldRoot.left;
 
