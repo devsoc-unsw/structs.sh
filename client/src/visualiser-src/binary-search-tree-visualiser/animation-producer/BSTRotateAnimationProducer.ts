@@ -1,25 +1,23 @@
 import { Line } from '@svgdotjs/svg.js';
 import BSTAnimationProducer from './BSTAnimationProducer';
 import { Node } from '../util/typedefs';
-import { getPointerStartEndCoordinates } from '../util/util';
+import { getPointerStartEndCoordinates } from '../../common/helpers';
 import { rotateLeftCodeSnippet, rotateRightCodeSnippet } from '../util/codeSnippets';
 
 export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
   public renderRotateLeftCode(): void {
-    this.renderCode(rotateLeftCodeSnippet);  
+    this.renderCode(rotateLeftCodeSnippet);
   }
 
   public renderRotateRightCode(): void {
-    this.renderCode(rotateRightCodeSnippet);  
+    this.renderCode(rotateRightCodeSnippet);
   }
 
   public movePointerToNewRootRightChild(oldRoot: Node, newRoot: Node): void {
     this.addSequenceAnimation(
       oldRoot.leftLineTarget
         .animate(400)
-        .plot(
-          getPointerStartEndCoordinates(oldRoot.x, oldRoot.y, newRoot.right.x, newRoot.right.y)
-        ),
+        .plot(getPointerStartEndCoordinates(oldRoot.x, oldRoot.y, newRoot.right.x, newRoot.right.y))
     );
   }
 
@@ -27,7 +25,7 @@ export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
     this.addSequenceAnimation(
       oldRoot.rightLineTarget
         .animate(400)
-        .plot(getPointerStartEndCoordinates(oldRoot.x, oldRoot.y, newRoot.left.x, newRoot.left.y)),
+        .plot(getPointerStartEndCoordinates(oldRoot.x, oldRoot.y, newRoot.left.x, newRoot.left.y))
     );
   }
 
@@ -35,7 +33,7 @@ export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
     this.addSequenceAnimation(
       newRoot.rightLineTarget
         .animate(400)
-        .plot(getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y)),
+        .plot(getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y))
     );
   }
 
@@ -43,7 +41,7 @@ export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
     this.addSequenceAnimation(
       newRoot.leftLineTarget
         .animate(400)
-        .plot(getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y)),
+        .plot(getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y))
     );
   }
 
@@ -52,15 +50,15 @@ export default class BSTRotateAnimationProducer extends BSTAnimationProducer {
       line.animate(400).attr({
         opacity: 0,
       })
-    )
-  } 
+    );
+  }
 
   public showLine(line: Line): void {
     this.addSequenceAnimation(
       line.animate(400).attr({
         opacity: 1,
       })
-    )
+    );
   }
 
   public assignNewRootRightPointerToOldRoot(oldRoot: Node, newRoot: Node): void {

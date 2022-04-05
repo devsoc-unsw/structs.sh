@@ -43,7 +43,7 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
         setVisualiser(initBSTVisualiser());
         break;
       case 'avl trees':
-        // TODO: invoke the AVL tree visualiser initialiser instead of BST: 
+        // TODO: invoke the AVL tree visualiser initialiser instead of BST:
         setVisualiser(initBSTVisualiser());
         break;
       default:

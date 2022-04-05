@@ -8,7 +8,7 @@ import { defaultSpeed } from './util/constants';
 const initialiser = (): any => {
   const linkedList: LinkedList = new LinkedList();
   const animationController = new Controller();
-
+  // TODO: Draw head pointer
   animationController.setSpeed(defaultSpeed);
 
   const appendNode = (val: number, updateSlider: (val: number) => void): void => {
