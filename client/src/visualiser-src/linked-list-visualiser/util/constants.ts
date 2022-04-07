@@ -54,5 +54,3 @@ export const pathAttributes = {
   class: 'path',
   opacity: 0,
 };
-
-// Animation attributes
