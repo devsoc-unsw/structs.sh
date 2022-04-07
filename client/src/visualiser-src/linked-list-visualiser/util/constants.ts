@@ -56,4 +56,3 @@ export const pathAttributes = {
 };
 
 // Animation attributes
-// export const defaultSpeed = 0.6;
