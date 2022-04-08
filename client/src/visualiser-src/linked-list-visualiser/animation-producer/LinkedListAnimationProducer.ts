@@ -1,4 +1,4 @@
-import { SVG, Path, Element } from '@svgdotjs/svg.js';
+import { SVG, Path, Element, Container } from '@svgdotjs/svg.js';
 import { topOffset, nodePathWidth, CURRENT, PREV } from '../util/constants';
 import { actualNodeDiameter } from '../../common/constants';
 import AnimationProducer from '../../common/AnimationProducer';
@@ -7,6 +7,13 @@ import { getPointerPath, Style } from '../util/util';
 
 // Class that produces SVG.Runners animating general linked list operations
 export default abstract class LinkedListAnimationProducer extends AnimationProducer {
+  public constructor(codeCanvas: Container) {
+    super();
+    this.codeCanvas = codeCanvas;
+
+    this.codeCanvas.clear();
+  }
+
   public initialisePointer(pointerId: string) {
     const pointerSvg: Element = SVG(pointerId);
     pointerSvg.move(nodePathWidth, topOffset + actualNodeDiameter / 2);

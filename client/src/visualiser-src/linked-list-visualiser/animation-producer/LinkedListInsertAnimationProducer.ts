@@ -3,9 +3,14 @@ import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
 import { CANVAS, insertedNodeTopOffset, nodePathWidth, topOffset } from '../util/constants';
 import { actualNodeDiameter } from '../../common/constants';
 import { getPointerPath, Style } from '../util/util';
+import { insertCodeSnippet } from '../util/codeSnippets';
 
 // Class that produces SVG.Runners animating linked list operations specific to inserting
 export default class LinkedListInsertAnimationProducer extends LinkedListAnimationProducer {
+  public renderInsertCode(): void {
+    this.renderCode(insertCodeSnippet);
+  }
+
   public insertedNodePointToNext(newNode: GraphicalLinkedListNode) {
     newNode.pointerTarget.plot(getPointerPath(Style.UP_RIGHT) as any);
     this.addSingleAnimation(newNode.pointerTarget.animate().attr({ opacity: 1 }));

@@ -1,23 +1,24 @@
 import AnimationProducer from 'visualiser-src/common/AnimationProducer';
-import { SVG, Path } from '@svgdotjs/svg.js';
-import { CANVAS, CURRENT, pathAttributes, PREV } from '../util/constants';
+import { SVG, Path, Container } from '@svgdotjs/svg.js';
+import { CURRENT, PREV } from '../util/constants';
 import GraphicalLinkedListNode from './GraphicalLinkedListNode';
 import LinkedListAppendAnimationProducer from '../animation-producer/LinkedListAppendAnimationProducer';
 import LinkedListDeleteAnimationProducer from '../animation-producer/LinkedListDeleteAnimationProducer';
 import LinkedListInsertAnimationProducer from '../animation-producer/LinkedListInsertAnimationProducer';
 import LinkedListSearchAnimationProducer from '../animation-producer/LinkedListSearchAnimationProducer';
 import LinkedListPrependAnimationProducer from '../animation-producer/LinkedListPrependAnimationProducer';
-import { getPointerPath, Style } from '../util/util';
 
 // An linked list data structure containing all linked list operations.
 // Every operation producers a LinkedListAnimationProducer, which an AnimationController
 // can then use to place SVG.Runners on a timeline to animate the operation.
 export default class GraphicalLinkedList {
-  headPointer: Path;
+  public headPointer: Path;
 
-  head: GraphicalLinkedListNode = null;
+  public head: GraphicalLinkedListNode = null;
 
-  length: number = 0;
+  public length: number = 0;
+
+  public codeCanvas: Container = SVG().addTo('#code-canvas').size('100%', 1000);
 
   constructor() {
     this.headPointer = GraphicalLinkedListNode.newHeadPointer();
@@ -25,7 +26,7 @@ export default class GraphicalLinkedList {
 
   append(input: number): AnimationProducer {
     this.length += 1;
-    const producer = new LinkedListAppendAnimationProducer();
+    const producer = new LinkedListAppendAnimationProducer(this.codeCanvas);
     // Create new node
     const newNode = GraphicalLinkedListNode.from(input);
     producer.addNodeAtEnd(this.length, newNode);
@@ -61,7 +62,7 @@ export default class GraphicalLinkedList {
       return this.append(input);
     }
     this.length += 1;
-    const producer = new LinkedListPrependAnimationProducer();
+    const producer = new LinkedListPrependAnimationProducer(this.codeCanvas);
     const newHead: GraphicalLinkedListNode = GraphicalLinkedListNode.from(input);
     producer.createNode(newHead);
     newHead.next = this.head;
@@ -74,7 +75,7 @@ export default class GraphicalLinkedList {
 
   delete(index: number): AnimationProducer {
     // Check index in range
-    const producer = new LinkedListDeleteAnimationProducer();
+    const producer = new LinkedListDeleteAnimationProducer(this.codeCanvas);
     if (index < 0 || index > this.length - 1) return producer;
     this.length -= 1;
 
@@ -114,7 +115,7 @@ export default class GraphicalLinkedList {
   }
 
   search(value: number): AnimationProducer {
-    const producer = new LinkedListSearchAnimationProducer();
+    const producer = new LinkedListSearchAnimationProducer(this.codeCanvas);
     if (this.head === null) {
       return producer;
     }
@@ -142,7 +143,8 @@ export default class GraphicalLinkedList {
       return this.append(value);
     }
     this.length += 1;
-    const producer: LinkedListInsertAnimationProducer = new LinkedListInsertAnimationProducer();
+    const producer: LinkedListInsertAnimationProducer = new LinkedListInsertAnimationProducer(this.codeCanvas);
+    producer.renderInsertCode();
     const newNode: GraphicalLinkedListNode = GraphicalLinkedListNode.from(value);
     producer.createNodeAt(index, newNode);
     let curr = this.head;
