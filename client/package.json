@@ -75,7 +75,7 @@
   "devDependencies": {
     "@babel/preset-typescript": "^7.16.0",
     "@cypress/react": "^5.10.3",
-    "@cypress/webpack-dev-server": "^1.7.0",
+    "@cypress/webpack-dev-server": "^1.8.4",
     "@testing-library/dom": "^8.11.1",
     "@types/react-router-dom": "^5.1.7",
     "@types/react-slick": "^0.23.7",
