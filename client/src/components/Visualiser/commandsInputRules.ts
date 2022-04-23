@@ -24,6 +24,10 @@
 /* -------------------------------------------------------------------------- */
 /* -------------------------- Linked List Commands -------------------------- */
 const getLinkedListTerminalCommands = (processCommand) => ({
+  prepend: {
+    usage: 'prepend <value>',
+    fn: (arg: string) => processCommand('prepend', [arg]),
+  },
   append: {
     usage: 'append <number>',
     fn: (arg: string) => processCommand('append', [arg]),
@@ -39,10 +43,6 @@ const getLinkedListTerminalCommands = (processCommand) => ({
   search: {
     usage: 'search <value>',
     fn: (arg: string) => processCommand('search', [arg]),
-  },
-  prepend: {
-    usage: 'prepend <value>',
-    fn: (arg: string) => processCommand('prepend', [arg]),
   },
 });
 
@@ -76,7 +76,7 @@ const getBstTerminalCommands = (processCommand) => ({
 
 export const getVisualiserTerminalCommands = (
   topicTitle: string,
-  processCommand: (command: string, args: string[]) => string,
+  processCommand: (command: string, args: string[]) => string
 ) => {
   let terminalCommands = {};
   switch (topicTitle) {

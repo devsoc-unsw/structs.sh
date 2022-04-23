@@ -1,4 +1,4 @@
-import { Timeline } from '@svgdotjs/svg.js';
+import { Timeline, Runner } from '@svgdotjs/svg.js';
 import AnimationProducer from '../common/AnimationProducer';
 
 // controls todo:
@@ -36,7 +36,11 @@ class AnimationController {
       runners.forEach((runner) => {
         this.currentTimeline.schedule(runner, this.timelineDuration + 25, 'absolute');
       });
-      runners[0].after(() => {
+      const maxRunner = runners.reduce(
+        (prev: Runner, curr: Runner) => (prev.duration() < curr.duration() ? curr : prev),
+        runners[0]
+      );
+      maxRunner.after(() => {
         if (this.isStepMode) {
           this.currentTimeline.pause();
         }
@@ -108,7 +112,7 @@ class AnimationController {
   private computePrevTimestamp(): number {
     let prevTimestamp = 0;
     this.timestamps.forEach((timestamp) => {
-      if (timestamp + 25 < this.currentTime) {
+      if (timestamp + 50 < this.currentTime) {
         prevTimestamp = timestamp;
       }
     });

@@ -21,24 +21,6 @@ export default class BSTAnimationProducer extends AnimationProducer {
     this.codeCanvas.clear();
   }
 
-  // these 2 functions are used to "decorate" animation function so each animation function doesn't
-  // have to do code highlighting itself or push an animation sequence itself, which gives us more flexibility.
-  // - fn: specifies an animation function and gets executed
-  // - args: allows us to pass a variable amount of arguments which then get passed as arguments
-  // to fn
-  public doAnimationAndHighlight(line: number, fn: any, ...args: any[]): void {
-    fn.apply(this, [...args]);
-    this.highlightCode(line);
-  }
-
-  public doAnimation(fn: any, ...args: any[]): void {
-    fn.apply(this, [...args]);
-
-    // make sure that the animation function finishes the sequence if it
-    // produced simultaneous animations
-    this.finishSequence();
-  }
-
   public halfHighlightNode(node: Node): void {
     this.addSequenceAnimation(
       node.nodeTarget.animate(500).attr({

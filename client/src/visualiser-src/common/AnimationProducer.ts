@@ -43,7 +43,6 @@ export default abstract class AnimationProducer {
   }
 
   public renderCode(code: string): void {
-    console.log(code);
     const lines: string[] = code.split('\n');
 
     // TODO: find simple way to vertically center text in svg rectangle
@@ -101,6 +100,24 @@ export default abstract class AnimationProducer {
     this.finishSequence();
   }
 
+  // these 2 functions are used to "decorate" animation function so each animation function doesn't
+  // have to do code highlighting itself or push an animation sequence itself, which gives us more flexibility.
+  // - fn: specifies an animation function and gets executed
+  // - args: allows us to pass a variable amount of arguments which then get passed as arguments
+  // to fn
+  public doAnimationAndHighlight(line: number, fn: any, ...args: any[]): void {
+    console.log(args);
+    fn.apply(this, args);
+    this.highlightCode(line);
+  }
+
+  public doAnimation(fn: any, ...args: any[]): void {
+    fn.apply(this, args);
+
+    // make sure that the animation function finishes the sequence if it
+    // produced simultaneous animations
+    this.finishSequence();
+  }
   public unhighlightCodeMultiple(): void {
     this.highlightedLines.forEach((line) => {
       this.addSequenceAnimation(
