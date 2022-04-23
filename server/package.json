@@ -20,7 +20,7 @@
     "express-jwt": "^7.4.3",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.2",
-    "swagger-jsdoc": "^6.1.0",
+    "swagger-jsdoc": "^6.2.1",
     "swagger-ui-express": "^4.1.6"
   },
   "devDependencies": {
