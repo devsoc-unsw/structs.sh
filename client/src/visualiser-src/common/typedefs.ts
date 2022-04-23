@@ -3,6 +3,6 @@ import {
 } from '@svgdotjs/svg.js';
 
 export interface CodeLine {
-  textTarget: Text;
   rectTarget: Rect;
+  textTarget: Text;
 }

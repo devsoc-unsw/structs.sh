@@ -42,6 +42,3 @@ export const pathAttributes = {
   class: 'path',
   opacity: 0,
 };
-
-// Animation attributes
-export const defaultSpeed = 0.6;

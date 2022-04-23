@@ -1,9 +1,10 @@
-import { Container, Line, Marker } from '@svgdotjs/svg.js';
+import { SVG, Container, Line, Marker } from '@svgdotjs/svg.js';
 import { Node } from '../util/typedefs';
 import { CodeLine } from '../../common/typedefs';
 import { canvasPadding } from '../util/settings';
 import { getPointerStartEndCoordinates } from '../../common/helpers';
 import AnimationProducer from '../../common/AnimationProducer';
+import { CODE_CANVAS } from 'utils/constants';
 
 export default class BSTAnimationProducer extends AnimationProducer {
   public visualiserCanvas: Container;
@@ -13,12 +14,9 @@ export default class BSTAnimationProducer extends AnimationProducer {
   // the problem with each BSTAnimationProducer having its own visualiser canvas created
   // is that svg.js uses an addTo method which would create an extra svg container
   // of max width and height. we don't want this
-  public constructor(visualiserCanvas: Container, codeCanvas: Container) {
+  public constructor(visualiserCanvas: Container) {
     super();
     this.visualiserCanvas = visualiserCanvas;
-    this.codeCanvas = codeCanvas;
-
-    this.codeCanvas.clear();
   }
 
   // these 2 functions are used to "decorate" animation function so each animation function doesn't

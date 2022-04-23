@@ -1,6 +1,7 @@
-import { Runner, Container } from '@svgdotjs/svg.js';
+import { SVG, Runner, Container } from '@svgdotjs/svg.js';
 import { CodeLine } from './typedefs';
 import { showLineNumbers } from './constants';
+import { CODE_CANVAS } from 'utils/constants';
 
 export default abstract class AnimationProducer {
   private _allRunners: Runner[][] = [];
@@ -10,8 +11,6 @@ export default abstract class AnimationProducer {
   // animations which are pushed to this array are performed
   // simulateously with all other animations in this array
   private _currentSequence: Runner[] = [];
-
-  public codeCanvas: Container;
 
   // TODO: move to AnimationProducer later
   private _codeTargets: CodeLine[] = [];
@@ -43,6 +42,12 @@ export default abstract class AnimationProducer {
   }
 
   public renderCode(code: string): void {
+    // clear the canvas
+    SVG(CODE_CANVAS).clear();
+    this.highlightedLines = [];
+    this.codeTargets = [];
+
+
     console.log(code);
     const lines: string[] = code.split('\n');
 
@@ -50,16 +55,17 @@ export default abstract class AnimationProducer {
     lines.forEach((line, i) => {
       console.log(line);
       const codeLine: CodeLine = {
-        textTarget: this.codeCanvas
+        rectTarget: SVG()
+          .rect(1000, 20)
+          .move(0, 18 * i)
+          .fill('#ebebeb')
+          .addTo(CODE_CANVAS),
+        textTarget: SVG()
           .text(showLineNumbers ? String(i + 1).padEnd(4, ' ') + line : line)
           .font({ family: 'CodeText', size: 10 })
           .attr('style', 'white-space: pre-wrap')
-          .move(0, 18 * i + 6),
-        rectTarget: this.codeCanvas
-          .rect(1000, 20)
-          .move(0, 18 * i)
-          .back()
-          .fill('#ebebeb'),
+          .move(0, 18 * i + 6)
+          .addTo(CODE_CANVAS),
       };
 
       this.codeTargets.push(codeLine);

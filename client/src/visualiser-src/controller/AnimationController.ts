@@ -1,5 +1,6 @@
 import { Timeline } from '@svgdotjs/svg.js';
 import AnimationProducer from '../common/AnimationProducer';
+import { defaultSpeed } from '../common/constants';
 
 // controls todo:
 // [x] play/pause
@@ -19,6 +20,10 @@ class AnimationController {
   private speed: number = 1;
 
   private isStepMode: boolean = false;
+
+  public constructor() {
+    this.setSpeed(defaultSpeed);
+  }
 
   public getCurrentTimeline(): Timeline {
     return this.currentTimeline;
