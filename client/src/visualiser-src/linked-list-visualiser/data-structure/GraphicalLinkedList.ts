@@ -7,7 +7,6 @@ import LinkedListDeleteAnimationProducer from '../animation-producer/LinkedListD
 import LinkedListInsertAnimationProducer from '../animation-producer/LinkedListInsertAnimationProducer';
 import LinkedListSearchAnimationProducer from '../animation-producer/LinkedListSearchAnimationProducer';
 import LinkedListPrependAnimationProducer from '../animation-producer/LinkedListPrependAnimationProducer';
-import { render } from '@testing-library/react';
 
 // An linked list data structure containing all linked list operations.
 // Every operation producers a LinkedListAnimationProducer, which an AnimationController
@@ -19,15 +18,13 @@ export default class GraphicalLinkedList {
 
   public length: number = 0;
 
-  public codeCanvas: Container = SVG().addTo('#code-canvas').size('100%', 1000);
-
   constructor() {
     this.headPointer = GraphicalLinkedListNode.newHeadPointer();
   }
 
   append(input: number): AnimationProducer {
     this.length += 1;
-    const producer = new LinkedListAppendAnimationProducer(this.codeCanvas);
+    const producer = new LinkedListAppendAnimationProducer();
     // Create new node
     const newNode = GraphicalLinkedListNode.from(input);
     producer.addNodeAtEnd(this.length, newNode);
@@ -59,12 +56,11 @@ export default class GraphicalLinkedList {
   }
 
   prepend(input: number): AnimationProducer {
-    this.codeCanvas.clear();
     if (this.length === 0) {
       return this.append(input);
     }
     this.length += 1;
-    const producer = new LinkedListPrependAnimationProducer(this.codeCanvas);
+    const producer = new LinkedListPrependAnimationProducer();
     const newHead: GraphicalLinkedListNode = GraphicalLinkedListNode.from(input);
     producer.createNodeAt(0, newHead, this.length);
     newHead.next = this.head;
@@ -76,9 +72,8 @@ export default class GraphicalLinkedList {
   }
 
   delete(index: number): AnimationProducer {
-    this.codeCanvas.clear();
     // Check index in range
-    const producer = new LinkedListDeleteAnimationProducer(this.codeCanvas);
+    const producer = new LinkedListDeleteAnimationProducer();
     if (index < 0 || index > this.length - 1) return producer;
     this.length -= 1;
 
@@ -118,7 +113,7 @@ export default class GraphicalLinkedList {
   }
 
   search(value: number): AnimationProducer {
-    const producer = new LinkedListSearchAnimationProducer(this.codeCanvas);
+    const producer = new LinkedListSearchAnimationProducer();
     if (this.head === null) {
       return producer;
     }
@@ -140,9 +135,7 @@ export default class GraphicalLinkedList {
 
   insert(value: number, index: number): AnimationProducer {
     this.length += 1;
-    const producer: LinkedListInsertAnimationProducer = new LinkedListInsertAnimationProducer(
-      this.codeCanvas
-    );
+    const producer: LinkedListInsertAnimationProducer = new LinkedListInsertAnimationProducer();
     producer.renderInsertCode();
 
     const newNode: GraphicalLinkedListNode = GraphicalLinkedListNode.from(value);
@@ -162,25 +155,19 @@ export default class GraphicalLinkedList {
     }
 
     let curr = this.head;
-    producer.doAnimationAndHighlight(10, producer.initialisePointer, CURRENT);
+    producer.doAnimationAndHighlight(12, producer.initialisePointer, CURRENT);
     for (let i = 0; i < index - 1 && curr.next !== null; i += 1) {
       curr = curr.next;
-      producer.doAnimationAndHighlight(13, producer.movePointerToNext, CURRENT);
+      producer.doAnimationAndHighlight(15, producer.movePointerToNext, CURRENT);
     }
     newNode.next = curr.next;
-    if (index < this.length - 1) {
-      producer.doAnimationAndHighlight(16, producer.insertedNodePointToNext, newNode);
-    }
     curr.next = newNode;
     if (index < this.length - 1) {
-      producer.doAnimationAndHighlight(17, producer.pointToInsertedNode, curr);
-    } else {
-      producer.doAnimationAndHighlight(17, producer.linkLastToNew, curr);
-    }
-
-    if (index < this.length - 1) {
+      producer.doAnimationAndHighlight(18, producer.insertedNodePointToNext, newNode);
+      producer.doAnimationAndHighlight(19, producer.pointToInsertedNode, curr);
       producer.doAnimation(producer.resetList, this.headPointer, this.head);
     } else {
+      producer.doAnimationAndHighlight(19, producer.linkLastToNew, curr);
       producer.doAnimation(producer.resetPointers);
     }
     return producer;

@@ -14,13 +14,6 @@ import { getPointerPath, Style } from '../util/util';
 
 // Class that produces SVG.Runners animating general linked list operations
 export default abstract class LinkedListAnimationProducer extends AnimationProducer {
-  public constructor(codeCanvas: Container) {
-    super();
-    this.codeCanvas = codeCanvas;
-
-    this.codeCanvas.clear();
-  }
-
   public createNodeAt(index: number, newNode: GraphicalLinkedListNode, length: number) {
     console.log(newNode);
     if (index < length - 1) {

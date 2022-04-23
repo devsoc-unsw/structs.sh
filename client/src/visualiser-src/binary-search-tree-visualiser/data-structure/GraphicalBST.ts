@@ -11,14 +11,11 @@ class BST {
 
   public visualiserCanvas: Container = SVG().addTo('#bst-canvas').size('100%', '100%');
 
-  public codeCanvas: Container = SVG().addTo('#code-canvas').size('100%', 1000);
-
   // inserts a node into the bst and produces an animation sequence
   // that is later handled by the animation controller
   public insert(input: number): BSTInsertAnimationProducer {
     const animationProducer: BSTInsertAnimationProducer = new BSTInsertAnimationProducer(
-      this.visualiserCanvas,
-      this.codeCanvas
+      this.visualiserCanvas
     );
     animationProducer.renderInsertCode();
 
@@ -165,8 +162,7 @@ class BST {
 
   public rotateLeft(input: number): BSTRotateAnimationProducer {
     const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer(
-      this.visualiserCanvas,
-      this.codeCanvas
+      this.visualiserCanvas
     );
     animationProducer.renderRotateLeftCode();
     const oldRoot: Node = this.getNode(input);
@@ -248,8 +244,7 @@ class BST {
 
   public rotateRight(input: number): BSTRotateAnimationProducer {
     const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer(
-      this.visualiserCanvas,
-      this.codeCanvas
+      this.visualiserCanvas
     );
     animationProducer.renderRotateRightCode();
     const oldRoot: Node = this.getNode(input);
@@ -331,8 +326,7 @@ class BST {
 
   public inorderTraversal(): BSTTraverseAnimationProducer {
     const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer(
-      this.visualiserCanvas,
-      this.codeCanvas
+      this.visualiserCanvas
     );
 
     animationProducer.renderInorderTraversalCode();
@@ -367,8 +361,7 @@ class BST {
 
   public preorderTraversal(): BSTTraverseAnimationProducer {
     const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer(
-      this.visualiserCanvas,
-      this.codeCanvas
+      this.visualiserCanvas
     );
 
     animationProducer.renderPreorderTraversalCode();
@@ -403,8 +396,7 @@ class BST {
 
   public postorderTraversal(): BSTTraverseAnimationProducer {
     const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer(
-      this.visualiserCanvas,
-      this.codeCanvas
+      this.visualiserCanvas
     );
 
     animationProducer.renderPostorderTraversalCode();
