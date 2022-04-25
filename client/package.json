@@ -8,7 +8,7 @@
     "@mui/base": "^5.0.0-alpha.67",
     "@mui/icons-material": "^5.1.1",
     "@mui/material": "^5.1.1",
-    "@mui/styles": "^5.1.1",
+    "@mui/styles": "^5.6.2",
     "@mui/system": "^5.4.0",
     "@svgdotjs/svg.js": "^3.1.1",
     "@testing-library/jest-dom": "^5.15.1",
