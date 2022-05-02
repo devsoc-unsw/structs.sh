@@ -1753,10 +1753,10 @@ expect@^27.5.1:
     jest-matcher-utils "^27.5.1"
     jest-message-util "^27.5.1"
 
-express-jwt@^7.4.3:
-  version "7.4.3"
-  resolved "https://registry.yarnpkg.com/express-jwt/-/express-jwt-7.4.3.tgz#27fca82bf0cb050d64699f197acd8c7324123bcf"
-  integrity sha512-sdRg9UiPW7QVywSlFl2cJALZWndxBM4HGyNqH7FyzDMYtboyBhssfLAD3ZYklraQz+wGR4Q3YsMipXZrNsQT5A==
+express-jwt@^7.6.2:
+  version "7.6.2"
+  resolved "https://registry.yarnpkg.com/express-jwt/-/express-jwt-7.6.2.tgz#fb82d46ab58c14be65efb9df3629b6b6472b7e9a"
+  integrity sha512-qvsvbr4oMhBAuSq/0I/CVzQWcXGuGZAxBGEI++kq4PaxEMgYCjYfHhUFtJQQlekiAL9CJtGgMFTEVIZegaKgEA==
   dependencies:
     express-unless "^1.0.0"
     jsonwebtoken "^8.5.1"
