@@ -34,7 +34,7 @@
     "@types/express-jwt": "^6.0.2",
     "jest": "^28.1.0",
     "nodemon": "^2.0.16",
-    "supertest": "^6.1.6",
+    "supertest": "^6.2.3",
     "ts-node": "^10.1.0",
     "typescript": "^4.6.4"
   },
