@@ -1822,10 +1822,10 @@ expect@^28.1.0:
     jest-message-util "^28.1.0"
     jest-util "^28.1.0"
 
-express-jwt@^7.4.3:
-  version "7.4.3"
-  resolved "https://registry.yarnpkg.com/express-jwt/-/express-jwt-7.4.3.tgz#27fca82bf0cb050d64699f197acd8c7324123bcf"
-  integrity sha512-sdRg9UiPW7QVywSlFl2cJALZWndxBM4HGyNqH7FyzDMYtboyBhssfLAD3ZYklraQz+wGR4Q3YsMipXZrNsQT5A==
+express-jwt@^7.7.0:
+  version "7.7.0"
+  resolved "https://registry.yarnpkg.com/express-jwt/-/express-jwt-7.7.0.tgz#f4b98e6c4c5bc94a88c7b7db316f3bb6799bbf0b"
+  integrity sha512-4W1N/wD1buyg5F1/IFi4hWMRwerHd1wl17PhfBrNnzMAb1MbAVDJiSoNByVrz2+NGThChIC+vuNaDwVLprkQzQ==
   dependencies:
     express-unless "^1.0.0"
     jsonwebtoken "^8.5.1"
