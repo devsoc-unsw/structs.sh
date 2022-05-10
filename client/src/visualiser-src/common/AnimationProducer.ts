@@ -12,7 +12,6 @@ export default abstract class AnimationProducer {
   // simulateously with all other animations in this array
   private _currentSequence: Runner[] = [];
 
-  // TODO: move to AnimationProducer later
   private _codeTargets: CodeLine[] = [];
 
   private _highlightedLines: number[] = [];
@@ -110,7 +109,6 @@ export default abstract class AnimationProducer {
   // - args: allows us to pass a variable amount of arguments which then get passed as arguments
   // to fn
   public doAnimationAndHighlight(line: number, fn: any, ...args: any[]): void {
-    console.log(args);
     fn.apply(this, args);
     this.highlightCode(line);
   }
