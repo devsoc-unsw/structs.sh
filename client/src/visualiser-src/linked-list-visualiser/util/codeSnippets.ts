@@ -16,5 +16,16 @@ while (curr_pos < index - 1 && curr->next != NULL) {
 }
 
 new_node->next = curr->next;
-curr->next = new_node;
-`;
+curr->next = new_node;`;
+
+export const appendCodeSnippet = `struct node *new_tail = create_node(input);
+if (list->head == NULL) {
+    list->head = new_tail;
+}
+
+struct node *curr = list->head;
+while (curr->next != NULL) {
+    curr = curr->next;
+}
+
+curr->next = new_tail`;
