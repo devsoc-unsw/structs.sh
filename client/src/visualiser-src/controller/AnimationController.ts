@@ -1,15 +1,6 @@
 import { Timeline, Runner } from '@svgdotjs/svg.js';
 import AnimationProducer from '../common/AnimationProducer';
 import { defaultSpeed } from '../common/constants';
-
-// controls todo:
-// [x] play/pause
-// [x] step to the next or previous timestamp in the current timeline
-// [ ] run a sequence in step mode or sequential mode
-// [ ] control to skip the animation of a sequence
-
-// eventually this file should be placed in a folder common for all data structures,
-// not just for the linked list
 class AnimationController {
   private currentTimeline: Timeline = new Timeline().persist(true);
 
