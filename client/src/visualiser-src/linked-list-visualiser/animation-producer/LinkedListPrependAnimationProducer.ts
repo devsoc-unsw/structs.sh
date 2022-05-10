@@ -4,6 +4,11 @@ import { CANVAS, insertedNodeTopOffset, topOffset } from '../util/constants';
 import { actualNodeDiameter } from '../../common/constants';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
 import { getPointerPath, Style } from '../util/util';
+import { prependCodeSnippet } from '../util/codeSnippets';
 
 // Class that produces SVG.Runners animating linked list operations specific to prepending
-export default class LinkedListPrependAnimationProducer extends LinkedListAnimationProducer {}
+export default class LinkedListPrependAnimationProducer extends LinkedListAnimationProducer {
+  public renderPrependCode() {
+    this.renderCode(prependCodeSnippet);
+  }
+}

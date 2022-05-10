@@ -48,7 +48,6 @@ export default abstract class LinkedListAnimationProducer extends AnimationProdu
   public resetPointers() {
     this.addSequenceAnimation(SVG(CURRENT).animate().attr({ opacity: 0 }));
     this.addSequenceAnimation(SVG(PREV).animate().attr({ opacity: 0 }));
-    this.finishSequence();
   }
 
   public resetPositioning(headPointer: Path, head: GraphicalLinkedListNode) {
@@ -63,7 +62,6 @@ export default abstract class LinkedListAnimationProducer extends AnimationProdu
       index += 1;
       curr = curr.next;
     }
-    this.finishSequence();
   }
 
   public resetList(headPointer: Path, head: GraphicalLinkedListNode) {

@@ -29,3 +29,29 @@ while (curr->next != NULL) {
 }
 
 curr->next = new_tail`;
+
+export const deleteCodeSnippet = `struct node *prev = NULL;
+struct node *curr = list->head;
+int curr_index = 0;
+while (curr_index < index) {
+    prev = curr;
+    curr = curr->next;
+    curr_index++;
+}
+
+if (prev == NULL) {
+    list->head = list->head->next;
+} else {
+    prev->next = curr->next;
+}
+free(curr);`;
+
+export const prependCodeSnippet = `struct node *new_head = create_node(input);
+new_head->next = list->head;
+list->head = new_head;`;
+
+export const searchCodeSnippet = `struct node *curr = list->head;
+while (curr != NULL && curr->data != input) {
+    curr = curr->next;
+}
+return curr != NULL;`;
