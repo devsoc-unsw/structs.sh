@@ -1,15 +1,15 @@
-import { SVG, Runner, Element } from '@svgdotjs/svg.js';
-import {
-  RIGHT_ARROW_PATH, topOffset, nodePathWidth, CURRENT, PREV,
-} from '../util/constants';
+import { SVG, Path, Element } from '@svgdotjs/svg.js';
+import { topOffset, nodePathWidth, CURRENT, PREV } from '../util/constants';
+import { actualNodeDiameter } from '../../common/constants';
 import AnimationProducer from '../../common/AnimationProducer';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
+import { getPointerPath, Style } from '../util/util';
 
 // Class that produces SVG.Runners animating general linked list operations
 export default abstract class LinkedListAnimationProducer extends AnimationProducer {
   public initialisePointer(pointerId: string) {
     const pointerSvg: Element = SVG(pointerId);
-    pointerSvg.move(0, topOffset);
+    pointerSvg.move(nodePathWidth, topOffset + actualNodeDiameter / 2);
     this.addSingleAnimation(pointerSvg.animate().attr({ opacity: 1 }));
   }
 
@@ -24,20 +24,23 @@ export default abstract class LinkedListAnimationProducer extends AnimationProdu
     this.finishSequence();
   }
 
-  public resetPositioning(head: GraphicalLinkedListNode) {
+  public resetPositioning(headPointer: Path, head: GraphicalLinkedListNode) {
     let curr: GraphicalLinkedListNode = head;
     let index: number = 0;
+    this.addSequenceAnimation(headPointer.animate().plot(getPointerPath(Style.RIGHT) as any));
     while (curr != null) {
-      this.addSequenceAnimation(curr.nodeTarget.animate().move(index * nodePathWidth, 0));
-      this.addSequenceAnimation(curr.pointerTarget.animate().plot(RIGHT_ARROW_PATH as any));
+      this.addSequenceAnimation(curr.nodeTarget.animate().move((index + 1) * nodePathWidth, 0));
+      this.addSequenceAnimation(
+        curr.pointerTarget.animate().plot(getPointerPath(Style.RIGHT) as any)
+      );
       index += 1;
       curr = curr.next;
     }
     this.finishSequence();
   }
 
-  public resetList(head: GraphicalLinkedListNode) {
+  public resetList(headPointer: Path, head: GraphicalLinkedListNode) {
     this.resetPointers();
-    this.resetPositioning(head);
+    this.resetPositioning(headPointer, head);
   }
 }

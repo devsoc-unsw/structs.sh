@@ -1,5 +1,4 @@
-// this file is used to store visual settings of the bst visualiser
-export const strokeWidth = 3;
+import { strokeWidth } from '../../common/constants';
 
 export const nodeStyle = {
   fill: '#ffffff',
@@ -25,4 +24,3 @@ export const lineStyle = {
 
 // we need this so that all svg elements have some padding
 export const canvasPadding = 75;
-export const markerLength = 15;

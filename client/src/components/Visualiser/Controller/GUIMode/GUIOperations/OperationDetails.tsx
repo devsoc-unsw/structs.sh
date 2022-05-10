@@ -77,6 +77,12 @@ const OperationDetails: FC<Props> = ({
     setArguments(newArgs);
   };
 
+  const clearArguments = () => {
+    const newArgs = [...args];
+    newArgs.fill('');
+    setArguments(newArgs);
+  };
+
   return (
     <Collapse
       in={showOp[op.command]}
@@ -105,6 +111,7 @@ const OperationDetails: FC<Props> = ({
             </ListItemIcon>
             <TextField
               label={eachArg}
+              value={args[idx]}
               variant="outlined"
               onChange={(e) => handleSetArguments(e, idx)}
               sx={{ background: theme.palette.background.paper, height: '100%' }}
@@ -119,7 +126,10 @@ const OperationDetails: FC<Props> = ({
             className={classes.opBtn}
             variant="contained"
             color="primary"
-            onClick={() => executeCommand(op.command, [...args])}
+            onClick={() => {
+              executeCommand(op.command, [...args]);
+              clearArguments();
+            }}
           >
             <Box className={classes.btnText}>Run</Box>
           </Button>

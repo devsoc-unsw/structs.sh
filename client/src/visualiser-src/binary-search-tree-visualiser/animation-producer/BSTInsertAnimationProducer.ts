@@ -1,13 +1,14 @@
 import { Marker } from '@svgdotjs/svg.js';
 import BSTAnimationProducer from './BSTAnimationProducer';
 import { Node } from '../util/typedefs';
-import { nodeStyle, nodeWidth, textStyle, lineStyle, markerLength } from '../util/settings';
-import { getPointerStartEndCoordinates } from '../util/util';
+import { nodeStyle, textStyle, lineStyle } from '../util/settings';
+import { markerLength, nodeDiameter, pathD } from '../../common/constants';
+import { getPointerStartEndCoordinates } from '../../common/helpers';
 import { insertCodeSnippet } from '../util/codeSnippets';
 
 export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
   public renderInsertCode(): void {
-    this.renderCode(insertCodeSnippet);  
+    this.renderCode(insertCodeSnippet);
   }
 
   public createNodeLeft(node: Node, parent: Node): void {
@@ -16,7 +17,7 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
     this.addSequenceAnimation(
       parent.leftLineTarget.animate(400).attr({
         opacity: 1,
-      }),
+      })
     );
   }
 
@@ -26,7 +27,7 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
     this.addSequenceAnimation(
       parent.rightLineTarget.animate(400).attr({
         opacity: 1,
-      }),
+      })
     );
   }
 
@@ -66,21 +67,24 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
       .attr(lineStyle);
 
     // Draw a triangle at the end of the line
-    const pathD = `M 0 0 L ${markerLength} ${markerLength / 2} L 0 ${markerLength} z`;
 
-    node.leftArrowTarget = this.visualiserCanvas.marker(markerLength, markerLength, (add: Marker) => {
-      add.path(pathD);
-    }).attr('markerUnits', 'userSpaceOnUse');
+    node.leftArrowTarget = this.visualiserCanvas
+      .marker(markerLength, markerLength, (add: Marker) => {
+        add.path(pathD);
+      })
+      .attr('markerUnits', 'userSpaceOnUse');
 
     node.leftLineTarget.marker('end', node.leftArrowTarget);
 
-    node.rightArrowTarget = this.visualiserCanvas.marker(markerLength, markerLength, (add: Marker) => {
-      add.path(pathD);
-    }).attr('markerUnits', 'userSpaceOnUse');
+    node.rightArrowTarget = this.visualiserCanvas
+      .marker(markerLength, markerLength, (add: Marker) => {
+        add.path(pathD);
+      })
+      .attr('markerUnits', 'userSpaceOnUse');
 
     node.rightLineTarget.marker('end', node.rightArrowTarget);
-    
-    node.nodeTarget = this.visualiserCanvas.circle(nodeWidth);
+
+    node.nodeTarget = this.visualiserCanvas.circle(nodeDiameter);
     node.nodeTarget.attr(nodeStyle);
     node.nodeTarget.cx(node.x).cy(node.y);
 

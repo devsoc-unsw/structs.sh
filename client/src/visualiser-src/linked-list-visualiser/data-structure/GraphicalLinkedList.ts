@@ -1,19 +1,27 @@
 import AnimationProducer from 'visualiser-src/common/AnimationProducer';
-import { CURRENT, PREV } from '../util/constants';
+import { SVG, Path } from '@svgdotjs/svg.js';
+import { CANVAS, CURRENT, pathAttributes, PREV } from '../util/constants';
 import GraphicalLinkedListNode from './GraphicalLinkedListNode';
 import LinkedListAppendAnimationProducer from '../animation-producer/LinkedListAppendAnimationProducer';
 import LinkedListDeleteAnimationProducer from '../animation-producer/LinkedListDeleteAnimationProducer';
 import LinkedListInsertAnimationProducer from '../animation-producer/LinkedListInsertAnimationProducer';
 import LinkedListSearchAnimationProducer from '../animation-producer/LinkedListSearchAnimationProducer';
 import LinkedListPrependAnimationProducer from '../animation-producer/LinkedListPrependAnimationProducer';
+import { getPointerPath, Style } from '../util/util';
 
 // An linked list data structure containing all linked list operations.
 // Every operation producers a LinkedListAnimationProducer, which an AnimationController
 // can then use to place SVG.Runners on a timeline to animate the operation.
 export default class GraphicalLinkedList {
+  headPointer: Path;
+
   head: GraphicalLinkedListNode = null;
 
   length: number = 0;
+
+  constructor() {
+    this.headPointer = GraphicalLinkedListNode.newHeadPointer();
+  }
 
   append(input: number): AnimationProducer {
     this.length += 1;
@@ -25,6 +33,7 @@ export default class GraphicalLinkedList {
     // Account for case when list is empty
     if (this.head === null) {
       this.head = newNode;
+      producer.initialiseHead(this.headPointer);
       return producer;
     }
 
@@ -58,7 +67,8 @@ export default class GraphicalLinkedList {
     newHead.next = this.head;
     producer.newHeadPointToOldHead(newHead);
     this.head = newHead;
-    producer.resetPositioning(this.head);
+    producer.pointHeadToPrependedNode(this.headPointer);
+    producer.resetPositioning(this.headPointer, this.head);
     return producer;
   }
 
@@ -90,9 +100,16 @@ export default class GraphicalLinkedList {
       } else {
         producer.morphNextPointerToArc(prev);
       }
+    } else {
+      this.head = this.head.next;
+      if (this.head !== null) {
+        producer.pointHeadToNext(this.headPointer);
+      } else {
+        producer.setHeadToNull(this.headPointer);
+      }
     }
     producer.deleteNode(curr);
-    producer.resetList(this.head);
+    producer.resetList(this.headPointer, this.head);
     return producer;
   }
 
@@ -113,7 +130,7 @@ export default class GraphicalLinkedList {
     if (curr !== null) {
       producer.indicateFound(curr);
     }
-    producer.resetPointers();
+    producer.resetColor(this.head);
     return producer;
   }
 
@@ -139,7 +156,7 @@ export default class GraphicalLinkedList {
     curr.next = newNode;
     producer.pointToInsertedNode(curr);
 
-    producer.resetList(this.head);
+    producer.resetList(this.headPointer, this.head);
     return producer;
   }
 }

@@ -1,7 +1,7 @@
 import { Container, Line, Marker } from '@svgdotjs/svg.js';
 import { Node, CodeLine } from '../util/typedefs';
 import { canvasPadding } from '../util/settings';
-import { getPointerStartEndCoordinates } from '../util/util';
+import { getPointerStartEndCoordinates } from '../../common/helpers';
 import AnimationProducer from '../../common/AnimationProducer';
 
 // just a constant used for developer with matching lines to code
@@ -9,14 +9,13 @@ const SHOW_LINE_NUMBERS = true;
 
 export default class BSTAnimationProducer extends AnimationProducer {
   public visualiserCanvas: Container;
-  
+
   public codeCanvas: Container;
 
   // TODO: move to AnimationProducer later
   private codeTargets: CodeLine[] = [];
 
   private highlightedLines: number[] = [];
-
 
   // TODO: change bst lines to be pointers instead
 
@@ -37,18 +36,20 @@ export default class BSTAnimationProducer extends AnimationProducer {
     // TODO: find simple way to vertically center text in svg rectangle
     lines.forEach((line, i) => {
       const codeLine: CodeLine = {
-        textTarget: this.codeCanvas.text(SHOW_LINE_NUMBERS ? String(i + 1).padEnd(4, ' ') + line : line)
-          .font({'family': 'CodeText', 'size': 10})
-          .attr('style','white-space: pre-wrap')
+        textTarget: this.codeCanvas
+          .text(SHOW_LINE_NUMBERS ? String(i + 1).padEnd(4, ' ') + line : line)
+          .font({ family: 'CodeText', size: 10 })
+          .attr('style', 'white-space: pre-wrap')
           .move(0, 18 * i + 6),
-        rectTarget: this.codeCanvas.rect(1000, 20)
+        rectTarget: this.codeCanvas
+          .rect(1000, 20)
           .move(0, 18 * i)
           .back()
-          .fill('#ebebeb')
-      }
+          .fill('#ebebeb'),
+      };
 
       this.codeTargets.push(codeLine);
-    })
+    });
   }
 
   // with highlightCode and highlightCodeMultiple
@@ -79,7 +80,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
           fill: '#4beb9b',
         })
       );
-    })
+    });
 
     this.highlightedLines = lines;
 
@@ -93,7 +94,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
           fill: '#ebebeb',
         })
       );
-    })
+    });
   }
 
   // these 2 functions are used to "decorate" animation function so each animation function doesn't
@@ -133,9 +134,9 @@ export default class BSTAnimationProducer extends AnimationProducer {
       this.addSequenceAnimation(
         lineTarget.animate(500).attr({
           stroke: '#4beb9b',
-        }),
+        })
       );
-      
+
       this.addSequenceAnimation(
         arrowTarget.animate(500).attr({
           fill: '#4beb9b',
@@ -160,13 +161,9 @@ export default class BSTAnimationProducer extends AnimationProducer {
   }
 
   public updateNode(node: Node, newX: number, newY: number): void {
-    this.addSequenceAnimation(
-      node.nodeTarget.animate(400).cx(newX).cy(newY)
-    );
+    this.addSequenceAnimation(node.nodeTarget.animate(400).cx(newX).cy(newY));
 
-    this.addSequenceAnimation(
-      node.textTarget.animate(400).cx(newX).cy(newY)
-    );
+    this.addSequenceAnimation(node.textTarget.animate(400).cx(newX).cy(newY));
   }
 
   public updateLinesRecursive(node: Node): void {
@@ -227,7 +224,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
       this.addSequenceAnimation(
         lineTarget.animate(500).attr({
           stroke: '#000000',
-        }),
+        })
       );
 
       this.addSequenceAnimation(
