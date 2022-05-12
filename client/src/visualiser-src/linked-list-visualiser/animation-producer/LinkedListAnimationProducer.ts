@@ -80,6 +80,7 @@ export default abstract class LinkedListAnimationProducer extends AnimationProdu
   public initialiseHead(headPointer: Path) {
     this.addSequenceAnimation(headPointer.animate().attr({ opacity: 1 }));
   }
+
   public linkLastToNew(last: GraphicalLinkedListNode) {
     this.addSequenceAnimation(last.pointerTarget.animate().attr({ opacity: 1 }));
   }

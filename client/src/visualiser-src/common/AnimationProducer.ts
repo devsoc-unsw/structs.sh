@@ -1,7 +1,7 @@
 import { SVG, Runner } from '@svgdotjs/svg.js';
+import { CODE_CANVAS } from 'utils/constants';
 import { CodeLine } from './typedefs';
 import { showLineNumbers } from './constants';
-import { CODE_CANVAS } from 'utils/constants';
 
 export default abstract class AnimationProducer {
   private _allRunners: Runner[][] = [];
@@ -28,12 +28,12 @@ export default abstract class AnimationProducer {
     return this._codeTargets;
   }
 
-  public get highlightedLines() {
-    return this._highlightedLines;
-  }
-
   public set codeTargets(value: CodeLine[]) {
     this._codeTargets = value;
+  }
+
+  public get highlightedLines() {
+    return this._highlightedLines;
   }
 
   public set highlightedLines(value: number[]) {
@@ -120,6 +120,7 @@ export default abstract class AnimationProducer {
     // produced simultaneous animations
     this.finishSequence();
   }
+
   public unhighlightCodeMultiple(): void {
     this.highlightedLines.forEach((line) => {
       this.addSequenceAnimation(

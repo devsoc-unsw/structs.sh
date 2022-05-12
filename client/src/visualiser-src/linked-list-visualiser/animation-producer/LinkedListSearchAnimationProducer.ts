@@ -7,6 +7,7 @@ export default class LinkedListSearchAnimationProducer extends LinkedListAnimati
   public renderSearchCode() {
     this.renderCode(searchCodeSnippet);
   }
+
   public indicateFound(node: GraphicalLinkedListNode) {
     this.addSequenceAnimation(node.boxTarget.animate().attr({ stroke: '#46B493' }));
     this.addSequenceAnimation(node.numberTarget.animate().attr({ stroke: '#46B493' }));

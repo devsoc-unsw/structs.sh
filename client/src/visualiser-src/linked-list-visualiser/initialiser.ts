@@ -1,8 +1,8 @@
 import { SVG } from '@svgdotjs/svg.js';
+import { CODE_CANVAS } from 'utils/constants';
 import AnimationProducer from '../common/AnimationProducer';
 import Controller from '../controller/AnimationController';
 import LinkedList from './data-structure/GraphicalLinkedList';
-import { CODE_CANVAS } from 'utils/constants';
 
 // for documentation read: https://compclub.atlassian.net/wiki/spaces/S/pages/2150892071/Documentation#Visualiser-Docs%3A
 

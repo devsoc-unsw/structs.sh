@@ -1,10 +1,10 @@
 import { SVG, Container, Line, Marker } from '@svgdotjs/svg.js';
+import { CODE_CANVAS } from 'utils/constants';
 import { Node } from '../util/typedefs';
 import { CodeLine } from '../../common/typedefs';
 import { canvasPadding } from '../util/settings';
 import { getPointerStartEndCoordinates } from '../../common/helpers';
 import AnimationProducer from '../../common/AnimationProducer';
-import { CODE_CANVAS } from 'utils/constants';
 
 export default class BSTAnimationProducer extends AnimationProducer {
   public visualiserCanvas: Container;

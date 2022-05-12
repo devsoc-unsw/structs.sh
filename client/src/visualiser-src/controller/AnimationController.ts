@@ -1,6 +1,7 @@
 import { Timeline, Runner } from '@svgdotjs/svg.js';
 import AnimationProducer from '../common/AnimationProducer';
 import { defaultSpeed } from '../common/constants';
+
 class AnimationController {
   private currentTimeline: Timeline = new Timeline().persist(true);
 

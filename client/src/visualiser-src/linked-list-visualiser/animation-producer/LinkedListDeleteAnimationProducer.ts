@@ -9,6 +9,7 @@ export default class LinkedListDeleteAnimationProducer extends LinkedListAnimati
   public renderDeleteCode() {
     this.renderCode(deleteCodeSnippet);
   }
+
   public setNextToNull(node: GraphicalLinkedListNode) {
     this.addSequenceAnimation(node.pointerTarget.animate().attr({ opacity: 0 }));
   }

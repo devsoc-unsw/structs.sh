@@ -1,9 +1,9 @@
 import { SVG } from '@svgdotjs/svg.js';
+import { CODE_CANVAS } from 'utils/constants';
 import AnimationController from '../controller/AnimationController';
 import { Visualiser } from '../typedefs';
 import BST from './data-structure/GraphicalBST';
 import BSTAnimationProducer from './animation-producer/BSTAnimationProducer';
-import { CODE_CANVAS } from 'utils/constants';
 
 // for documentation read: https://compclub.atlassian.net/wiki/spaces/S/pages/2150892071/Documentation#Visualiser-Docs%3A
 
