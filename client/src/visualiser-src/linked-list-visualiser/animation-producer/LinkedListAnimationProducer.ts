@@ -1,4 +1,4 @@
-import { SVG, Path, Element, Container } from '@svgdotjs/svg.js';
+import { SVG, Path, Element } from '@svgdotjs/svg.js';
 import {
   topOffset,
   nodePathWidth,
