@@ -4,7 +4,6 @@ import TextField from '@mui/material/TextField';
 import { makeStyles, useTheme } from '@mui/styles';
 import { Operation } from 'components/Visualiser/commandsInputRules';
 import React, { FC, useState } from 'react';
-import Notification from 'utils/Notification';
 import { LastLink, Link } from './Links';
 
 export interface OperationsMenuState {
@@ -75,12 +74,6 @@ const OperationDetails: FC<Props> = ({ op, isLast, showOp, executeCommand }) => 
     setArguments(newArgs);
   };
 
-  const handleExecuteCommand = async () => {
-    // setErrorMessage(executeCommand(op.command, [...args]));
-    // console.log(errorMessage);
-    const err = executeCommand(op.command, [...args]);
-    if (err) Notification.error(err);
-  };
   const clearArguments = () => {
     const newArgs = [...args];
     newArgs.fill('');
@@ -131,16 +124,15 @@ const OperationDetails: FC<Props> = ({ op, isLast, showOp, executeCommand }) => 
             variant="contained"
             color="primary"
             onClick={() => {
-              handleExecuteCommand();
-              // setErrorMessage(executeCommand(op.command, [...args]));
+              setErrorMessage(executeCommand(op.command, [...args]));
               clearArguments();
             }}
           >
             <Box className={classes.btnText}>Run</Box>
           </Button>
-          {/* <Typography color="red" style={{ marginLeft: '.5rem' }}>
+          <Typography color="red" style={{ marginLeft: '.5rem' }}>
             {errorMessage}
-          </Typography> */}
+          </Typography>
         </ListItem>
       </List>
     </Collapse>

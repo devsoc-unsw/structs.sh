@@ -15,6 +15,7 @@ const isValidCommandArgs = (command: string, args: string[], topicTitle: string)
     return `Invalid arguments. Usage: ${usage}`;
   }
 
+  if (args.includes('')) return 'Argument(s) missing';
   if (!args.every((value) => /^\d+$/.test(value))) return 'Argument(s) must be a positive integer';
 
   const valueIndex = currentOperation.args.indexOf('value');
@@ -32,12 +33,6 @@ const getLinkedListExecutor =
   (command: string, args: string[]): string => {
     const err = isValidCommandArgs(command, args, 'Linked Lists');
     if (err) return err;
-    // if (!isValidCommandArgs(command, args, 'Linked Lists')) {
-    //   // const { usage } = getDocumentation('Linked Lists').find(
-    //   //   (operation) => operation.command === command
-    //   // );
-    //   return `Invalid arguments. Usage: ${usage}`;
-    // }
 
     switch (command) {
       case 'append':
@@ -66,12 +61,6 @@ const getBSTExecutor =
   (command: string, args: string[]): string => {
     const err = isValidCommandArgs(command, args, 'Binary Search Trees');
     if (err) return err;
-    // if (!isValidCommandArgs(command, args, 'Binary Search Trees')) {
-    //   const { usage } = getDocumentation('Binary Search Trees').find(
-    //     (operation) => operation.command === command
-    //   );
-    //   return `Invalid arguments. Usage: ${usage}`;
-    // }
 
     switch (command) {
       case 'insert':
