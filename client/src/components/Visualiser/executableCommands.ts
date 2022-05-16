@@ -3,7 +3,11 @@
 
 import { getDocumentation, getGUICommands } from './commandsInputRules';
 
-const isValidCommandArgs = (command: string, args: string[], topicTitle: string): string => {
+const getErrorMessageIfInvalidInput = (
+  command: string,
+  args: string[],
+  topicTitle: string
+): string => {
   const currentOperation = getGUICommands(topicTitle).find(
     (operation) => operation.command === command
   );
@@ -31,8 +35,8 @@ const isValidCommandArgs = (command: string, args: string[], topicTitle: string)
 const getLinkedListExecutor =
   (visualiser, updateTimeline) =>
   (command: string, args: string[]): string => {
-    const err = isValidCommandArgs(command, args, 'Linked Lists');
-    if (err) return err;
+    const err = getErrorMessageIfInvalidInput(command, args, 'Linked Lists');
+    if (err !== '') return err;
 
     switch (command) {
       case 'append':
@@ -59,8 +63,8 @@ const getLinkedListExecutor =
 const getBSTExecutor =
   (visualiser, updateTimeline) =>
   (command: string, args: string[]): string => {
-    const err = isValidCommandArgs(command, args, 'Binary Search Trees');
-    if (err) return err;
+    const err = getErrorMessageIfInvalidInput(command, args, 'Binary Search Trees');
+    if (err !== '') return err;
 
     switch (command) {
       case 'insert':
