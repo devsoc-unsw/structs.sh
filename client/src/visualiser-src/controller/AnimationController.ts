@@ -1,14 +1,7 @@
-import { Timeline } from '@svgdotjs/svg.js';
+import { Timeline, Runner } from '@svgdotjs/svg.js';
 import AnimationProducer from '../common/AnimationProducer';
+import { defaultSpeed } from '../common/constants';
 
-// controls todo:
-// [x] play/pause
-// [x] step to the next or previous timestamp in the current timeline
-// [ ] run a sequence in step mode or sequential mode
-// [ ] control to skip the animation of a sequence
-
-// eventually this file should be placed in a folder common for all data structures,
-// not just for the linked list
 class AnimationController {
   private currentTimeline: Timeline = new Timeline().persist(true);
 
@@ -19,6 +12,10 @@ class AnimationController {
   private speed: number = 1;
 
   private isStepMode: boolean = false;
+
+  public constructor() {
+    this.setSpeed(defaultSpeed);
+  }
 
   public getCurrentTimeline(): Timeline {
     return this.currentTimeline;
@@ -36,7 +33,11 @@ class AnimationController {
       runners.forEach((runner) => {
         this.currentTimeline.schedule(runner, this.timelineDuration + 25, 'absolute');
       });
-      runners[0].after(() => {
+      const maxRunner = runners.reduce(
+        (prev: Runner, curr: Runner) => (prev.duration() < curr.duration() ? curr : prev),
+        runners[0]
+      );
+      maxRunner.after(() => {
         if (this.isStepMode) {
           this.currentTimeline.pause();
         }
@@ -108,7 +109,7 @@ class AnimationController {
   private computePrevTimestamp(): number {
     let prevTimestamp = 0;
     this.timestamps.forEach((timestamp) => {
-      if (timestamp + 25 < this.currentTime) {
+      if (timestamp < this.currentTime) {
         prevTimestamp = timestamp;
       }
     });
