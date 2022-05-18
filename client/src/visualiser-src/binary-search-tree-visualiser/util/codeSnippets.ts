@@ -1,49 +1,47 @@
 export const insertCodeSnippet =
 `if (root == NULL) {
-  root = createNode(val);
+  root = create_node(val);
   return;
 }
 while (curr != NULL) {
   if (val < curr->val) {
     if (curr->left == NULL) {
-      curr->left = createNode(val);
+      curr->left = create_node(val);
       return;
     }
-
     curr = curr->left;
   } else {
     if (curr->right == NULL) {
-      curr->right = createNode(val);
+      curr->right = create_node(val);
       return;
     }
-
     curr = curr->right;
   }
 }`;
 
 export const rotateLeftCodeSnippet =
 `if (val == node->val) {
-  Node* newRoot = node->right;
-  node->right = newRoot->left;
-  newRoot->left = node;
-  return newRoot;
+  struct node *new_root = node->right;
+  node->right = new_root->left;
+  new_root->left = node;
+  return new_root;
 } else if (val < node->val) {
-  node->left = rotateLeft(node->left, val);
+  node->left = rotate_left(node->left, val);
 } else {
-  node->right = rotateLeft(node->right, val);
+  node->right = rotate_left(node->right, val);
 }
 return node;`;
 
 export const rotateRightCodeSnippet =
 `if (val == node->val) {
-  Node* newRoot = node->left;
-  node->left = newRoot->right;
-  newRoot->right = node;
-  return newRoot;
+  struct node *new_root = node->left;
+  node->left = new_root->right;
+  new_root->right = node;
+  return new_root;
 } else if (val < node->val) {
-  node->left = rotateRight(node->left, val);
+  node->left = rotate_right(node->left, val);
 } else {
-  node->right = rotateRight(node->right, val);
+  node->right = rotate_right(node->right, val);
 }
 return node;`;
 
@@ -51,22 +49,22 @@ export const inorderTraversalCodeSnippet =
 `if (node == NULL) {
   return;
 }
-inorderTraversal(node->left);
+inorder_traversal(node->left);
 printf("%d ", node->val);
-inorderTraversal(node->right);`;
+inorder_traversal(node->right);`;
 
 export const preorderTraversalCodeSnippet =
 `if (node == NULL) {
   return;
 }
 printf("%d ", node->val);
-preorderTraversal(node->left);
-preorderTraversal(node->right);`;
+preorder_traversal(node->left);
+preorder_traversal(node->right);`;
 
 export const postorderTraversalCodeSnippet =
 `if (node == NULL) {
   return;
 }
-postorderTraversal(node->left);
-postorderTraversal(node->right);
+postorder_traversal(node->left);
+postorder_traversal(node->right);
 printf("%d ", node->val);`;
