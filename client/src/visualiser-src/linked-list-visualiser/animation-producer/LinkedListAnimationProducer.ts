@@ -1,6 +1,6 @@
 import { SVG, Path, Element } from '@svgdotjs/svg.js';
 import { topOffset, nodePathWidth, insertedNodeTopOffset, CURRENT, PREV } from '../util/constants';
-import { actualNodeDiameter, nodeDiameter } from '../../common/constants';
+import { actualNodeDiameter, strokeWidth, nodeDiameter } from '../../common/constants';
 import AnimationProducer from '../../common/AnimationProducer';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
 import { getPointerPath, Style } from '../util/util';
@@ -25,7 +25,7 @@ export default abstract class LinkedListAnimationProducer extends AnimationProdu
 
   public initialisePointer(pointerId: string) {
     const pointerSvg: Element = SVG(pointerId);
-    pointerSvg.move(nodePathWidth, topOffset + actualNodeDiameter / 2);
+    pointerSvg.move(nodePathWidth + strokeWidth / 2, topOffset + actualNodeDiameter / 2);
     this.addSequenceAnimation(pointerSvg.animate().attr({ opacity: 1 }));
   }
 
