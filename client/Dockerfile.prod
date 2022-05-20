@@ -1,5 +1,5 @@
 # ===== Stage 1: Producing Build Files =====
-FROM node:16.14-alpine AS build
+FROM node:16.14.2-alpine AS build
 
 WORKDIR /app
 
