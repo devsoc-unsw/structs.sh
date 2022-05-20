@@ -109,7 +109,7 @@ class AnimationController {
   private computePrevTimestamp(): number {
     let prevTimestamp = 0;
     this.timestamps.forEach((timestamp) => {
-      if (timestamp < this.currentTime) {
+      if (timestamp + 25 < this.currentTime) {
         prevTimestamp = timestamp;
       }
     });
