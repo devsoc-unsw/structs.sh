@@ -129,28 +129,6 @@ const VisualiserControls: FC<Props> = ({
                   }
                 }}
               />
-              {/* <Slider
-                    onChange={(_, newValue) => {
-                        if (userIsDraggingTimeline) {
-                            handleDragTimeline(Number(newValue));
-                        } else {
-                            handleUpdateTimeline(Number(newValue));
-                        }
-                    }}
-                    onMouseDown={() => {
-                        setUserIsDraggingTimeline(true);
-                        handlePause();
-                    }}
-                    onMouseUp={() => {
-                        setUserIsDraggingTimeline(false);
-                        handlePlay();
-                    }}
-                    value={animationProgress}
-                    disabled={!isPlaying}
-                    min={0}
-                    max={100}
-                    sx={{ ml: '10px' }}
-                /> */}
             </Stack>
             <Stack direction="row" sx={{ height: '32px' }}>
               <SpeedIcon className={styles.sliderIcon} sx={{ fill: theme.palette.text.primary }} />

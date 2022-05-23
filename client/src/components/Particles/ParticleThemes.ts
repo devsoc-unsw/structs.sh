@@ -12,11 +12,11 @@ export const lightParticleTheme: ParticleBackgroundTheme = {
 // Source: https://uigradients.com/#Royal
 export const darkParticleTheme: ParticleBackgroundTheme = {
   backgroundCss: `
-        linear-gradient(
-            to right,
-            #141E30,
-            #243B55
-        )
-    `,
+          linear-gradient(
+              to right,
+              #141E30,
+              #243B55
+          )
+      `,
   particleColor: '#FFFFFF',
 };
