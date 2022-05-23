@@ -131,6 +131,7 @@ const SidebarContents = ({ setShowSidebar }) => {
               key={idx}
               to={`/visualiser/${titleToUrl(topic.title)}`}
               style={{ color: 'inherit', textDecoration: 'none' }}
+              onClick={() => setShowSidebar(false)}
             >
               <ListItem key={idx} button>
                 <ListItemAvatar>

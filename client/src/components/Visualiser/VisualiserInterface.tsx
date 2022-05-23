@@ -30,7 +30,6 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
   const controller = useRef<VisualiserController>(new VisualiserController());
   /* ------------------------ Visualiser Initialisation ----------------------- */
   useEffect(() => {
-    console.log('Changing topic to ' + topicTitle);
     controller.current.applyTopicTitle(topicTitle);
   }, [topicTitle]);
 
@@ -44,11 +43,7 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
   }, []);
 
   const executeCommand = (command: string, args: string[]): string => {
-    return controller.current.doOperation(
-      command,
-      updateTimeline,
-      ...args.map((arg) => Number(arg))
-    );
+    return controller.current.doOperation(command, updateTimeline, ...args);
   };
 
   const handlePlay = useCallback(() => {

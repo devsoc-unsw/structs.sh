@@ -114,19 +114,36 @@ class VisualiserController {
     this.dataStructure = GraphicalDataStructureFactory.create(topicTitle);
     console.log('Data structure changed to ' + this.dataStructure);
   }
+  private getErrorMessageIfInvalidInput(command: string, args: string[]): string {
+    const expectedArgs = this.dataStructure.documentation[command].args;
+    if (args.length !== expectedArgs.length) {
+      return `Invalid arguments. Please provide ${args.join(', ')}`;
+    }
+
+    if (args.includes('')) return 'Argument(s) missing';
+    if (!args.every((value) => /^\d+$/.test(value)))
+      return 'Argument(s) must be a positive integer';
+
+    const valueIndex = expectedArgs.indexOf('value');
+
+    if (valueIndex !== -1) {
+      if (Number(args[valueIndex]) < 0 || Number(args[valueIndex]) > 999)
+        return 'Value must be between 0 and 999';
+    }
+
+    return '';
+  }
 
   public doOperation(
     command: string,
     updateSlider: (val: number) => void,
-    ...args: number[]
+    ...args: string[]
   ): string {
-    // if (!this.dataStructure.isValidCommandArgs(command, args)) {
-    //   const { usage } = this.dataStructure.getUsage(command);
-    //   return `Invalid arguments. Usage: ${usage}`;
-    // }
+    const errMessage = this.getErrorMessageIfInvalidInput(command, args);
+    if (errMessage !== '') {
+      return errMessage;
+    }
     this.finish();
-    // Make method think args is being used
-    args as any;
     const animationProducer = eval('this.dataStructure[command](...args)') as AnimationProducer;
     this.constructTimeline(animationProducer, updateSlider);
     return '';

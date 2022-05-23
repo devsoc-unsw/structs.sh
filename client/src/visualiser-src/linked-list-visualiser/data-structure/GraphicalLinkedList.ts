@@ -14,33 +14,28 @@ import { Documentation } from 'visualiser-src/common/typedefs';
 // Every operation producers a LinkedListAnimationProducer, which an VisualiserController
 // can then use to place SVG.Runners on a timeline to animate the operation.
 export default class GraphicalLinkedList implements GraphicalDataStructure {
-  private static documentation: Documentation[] = [
-    {
-      command: 'append',
+  private static documentation: Documentation = {
+    append: {
       args: ['value'],
       description: 'Append a node containing the value.',
     },
-    {
-      command: 'delete',
+    delete: {
       args: ['index'],
       description: 'Delete a node by the index given.',
     },
-    {
-      command: 'insert',
+    insert: {
       args: ['value', 'index'],
       description: 'Insert a value at the given index.',
     },
-    {
-      command: 'search',
+    search: {
       args: ['value'],
       description: 'Search for a value in the linked list.',
     },
-    {
-      command: 'prepend',
+    prepend: {
       args: ['value'],
       description: 'Prepend a node containing the value.',
     },
-  ];
+  };
 
   public headPointer: Path;
   public head: GraphicalLinkedListNode = null;

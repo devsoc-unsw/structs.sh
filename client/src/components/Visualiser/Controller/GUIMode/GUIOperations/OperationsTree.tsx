@@ -8,7 +8,7 @@ import { LastLink, Link } from './Links';
 import OperationDetails, { OperationsMenuState } from './OperationDetails';
 
 interface Props {
-  executeCommand: (command: string, args: string[]) => void;
+  executeCommand: (command: string, args: string[]) => string;
   topicTitle: string;
 }
 

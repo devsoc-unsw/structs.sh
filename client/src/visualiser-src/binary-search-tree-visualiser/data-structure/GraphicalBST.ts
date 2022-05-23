@@ -1,4 +1,5 @@
 import { SVG, Container } from '@svgdotjs/svg.js';
+import Notification from 'utils/Notification';
 import BSTInsertAnimationProducer from '../animation-producer/BSTInsertAnimationProducer';
 import BSTRotateAnimationProducer from '../animation-producer/BSTRotateAnimationProducer';
 import BSTTraverseAnimationProducer from '../animation-producer/BSTTraverseAnimationProducer';
@@ -9,39 +10,33 @@ import { Documentation } from 'visualiser-src/common/typedefs';
 
 // used for the actual implementation of the bst
 class GraphicalBST implements GraphicalDataStructure {
-  private static documentation: Documentation[] = [
-    {
-      command: 'insert',
+  private static documentation: Documentation = {
+    insert: {
       args: ['value'],
       description:
         'Executes standard BST insertion to add a new node with the given value into the tree.',
     },
-    {
-      command: 'rotateLeft',
+    rotateLeft: {
       args: ['value'],
       description: 'Executes a left rotation on the node with the given value.',
     },
-    {
-      command: 'rotateRight',
+    rotateRight: {
       args: ['value'],
       description: 'Executes a right rotation on the node with the given value.',
     },
-    {
-      command: 'inorderTraversal',
+    inorderTraversal: {
       args: [],
       description: 'Executes an inorder traversal on the tree.',
     },
-    {
-      command: 'preorderTraversal',
+    preorderTraversal: {
       args: [],
       description: 'Executes a preorder traversal on the tree.',
     },
-    {
-      command: 'postorderTraversal',
+    postorderTraversal: {
       args: [],
       description: 'Executes a postorder traversal on the tree.',
     },
-  ];
+  };
   public root: Node = null;
   public visualiserCanvas: Container = SVG().addTo('#bst-canvas').size('100%', '100%');
 
@@ -54,7 +49,9 @@ class GraphicalBST implements GraphicalDataStructure {
     animationProducer.renderInsertCode();
 
     // return early if a node with the same value already exists
-    if (this.getNode(input) !== null) return animationProducer;
+    if (this.getNode(input) !== null) {
+      return animationProducer;
+    }
 
     const node: Node = {
       nodeTarget: null,
@@ -104,7 +101,7 @@ class GraphicalBST implements GraphicalDataStructure {
           }
 
           animationProducer.doAnimationAndHighlight(
-            12,
+            11,
             animationProducer.highlightLine,
             currentNode.leftLineTarget,
             currentNode.leftArrowTarget
@@ -116,13 +113,13 @@ class GraphicalBST implements GraphicalDataStructure {
             currentNode.right = node;
             this.updateNodePositions();
             animationProducer.doAnimationAndHighlight(
-              15,
+              14,
               animationProducer.createNodeRight,
               node,
               currentNode
             );
             animationProducer.doAnimationAndHighlight(
-              16,
+              15,
               animationProducer.unhighlightBST,
               this.root
             );
@@ -131,7 +128,7 @@ class GraphicalBST implements GraphicalDataStructure {
           }
 
           animationProducer.doAnimationAndHighlight(
-            19,
+            17,
             animationProducer.highlightLine,
             currentNode.rightLineTarget,
             currentNode.rightArrowTarget

@@ -5,8 +5,11 @@ export interface CodeLine {
   textTarget: Text;
 }
 
-export interface Documentation {
-  command: string;
+export interface OperationUsage {
   args: string[];
   description: string;
+}
+
+export interface Documentation {
+  [command: string]: OperationUsage;
 }

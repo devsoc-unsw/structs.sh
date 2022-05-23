@@ -3,33 +3,40 @@
 
 import { getDocumentation, getGUICommands } from './commandsInputRules';
 
-const isValidCommandArgs = (command: string, args: string[], topicTitle: string): boolean => {
+const getErrorMessageIfInvalidInput = (
+  command: string,
+  args: string[],
+  topicTitle: string
+): string => {
   const currentOperation = getGUICommands(topicTitle).find(
     (operation) => operation.command === command
   );
 
-  if (args.length !== currentOperation.args.length) return false;
+  if (args.length !== currentOperation.args.length) {
+    const { usage } = getDocumentation(topicTitle).find(
+      (operation) => operation.command === command
+    );
+    return `Invalid arguments. Usage: ${usage}`;
+  }
 
-  if (!args.every((value) => /^\d+$/.test(value))) return false;
+  if (args.includes('')) return 'Argument(s) missing';
+  if (!args.every((value) => /^\d+$/.test(value))) return 'Argument(s) must be a positive integer';
 
   const valueIndex = currentOperation.args.indexOf('value');
 
   if (valueIndex !== -1) {
-    return Number(args[valueIndex]) >= 0 && Number(args[valueIndex]) <= 999;
+    if (Number(args[valueIndex]) < 0 || Number(args[valueIndex]) > 999)
+      return 'Value must be between 0 and 999';
   }
 
-  return true;
+  return '';
 };
 
 const getLinkedListExecutor =
   (visualiser, updateTimeline) =>
   (command: string, args: string[]): string => {
-    if (!isValidCommandArgs(command, args, 'Linked Lists')) {
-      const { usage } = getDocumentation('Linked Lists').find(
-        (operation) => operation.command === command
-      );
-      return `Invalid arguments. Usage: ${usage}`;
-    }
+    const err = getErrorMessageIfInvalidInput(command, args, 'Linked Lists');
+    if (err !== '') return err;
 
     switch (command) {
       case 'append':
@@ -56,12 +63,8 @@ const getLinkedListExecutor =
 const getBSTExecutor =
   (visualiser, updateTimeline) =>
   (command: string, args: string[]): string => {
-    if (!isValidCommandArgs(command, args, 'Binary Search Trees')) {
-      const { usage } = getDocumentation('Binary Search Trees').find(
-        (operation) => operation.command === command
-      );
-      return `Invalid arguments. Usage: ${usage}`;
-    }
+    const err = getErrorMessageIfInvalidInput(command, args, 'Binary Search Trees');
+    if (err !== '') return err;
 
     switch (command) {
       case 'insert':

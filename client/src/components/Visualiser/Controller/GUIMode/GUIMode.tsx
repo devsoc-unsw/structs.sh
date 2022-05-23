@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import OperationsTree from './GUIOperations/OperationsTree';
 
 interface Props {
-  executeCommand: (command: string, args: string[]) => void;
+  executeCommand: (command: string, args: string[]) => string;
   topicTitle: string;
 }
 
