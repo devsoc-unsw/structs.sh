@@ -35,22 +35,6 @@
       margin-right: 5px;
     }
   }
-
-  .modeSwitchContainer {
-    position: relative;
-
-    .switch {
-      left: 30px;
-      position: absolute;
-      top: 50%;
-      right: 0;
-      transform: translateY(-50%);
-
-      .label {
-        user-select: none;
-      }
-    }
-  }
 }
 
 .root svg {

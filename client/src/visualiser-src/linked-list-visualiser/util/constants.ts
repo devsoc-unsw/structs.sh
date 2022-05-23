@@ -16,22 +16,20 @@ export const nodeAttributes = {
 };
 
 export const shapeAttributes = {
-  cx: actualNodeDiameter / 2,
-  cy: topOffset,
   r: nodeDiameter / 2,
   'stroke-width': strokeWidth,
+  stroke: 'black',
   fill: 'white',
+  opacity: 0,
 };
 
 export const textAttributes = {
-  'font-size': 25,
-  'font-family': 'Courier',
-  'font-weight': 'bold',
   x: actualNodeDiameter / 2,
   y: topOffset,
   'dominant-baseline': 'middle',
   'text-anchor': 'middle',
   'stroke-width': 0,
+  opacity: 0,
 };
 
 export const pathAttributes = {

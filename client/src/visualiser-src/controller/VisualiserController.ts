@@ -1,20 +1,23 @@
 import { Timeline, Runner } from '@svgdotjs/svg.js';
 import AnimationProducer from '../common/AnimationProducer';
+import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { defaultSpeed } from '../common/constants';
+import GraphicalDataStructureFactory from 'visualiser-src/common/GraphicalDataStructureFactory';
+import { Documentation } from 'visualiser-src/common/typedefs';
 
-class AnimationController {
+class VisualiserController {
+  private dataStructure: GraphicalDataStructure;
   private currentTimeline: Timeline = new Timeline().persist(true);
-
   private timelineDuration: number = 0;
-
   private timestamps: number[] = [];
-
   private speed: number = 1;
-
   private isStepMode: boolean = false;
 
-  public constructor() {
+  public constructor(topicTitle?: string) {
     this.setSpeed(defaultSpeed);
+    if (topicTitle !== undefined) {
+      this.applyTopicTitle(topicTitle);
+    }
   }
 
   public getCurrentTimeline(): Timeline {
@@ -42,7 +45,7 @@ class AnimationController {
           this.currentTimeline.pause();
         }
       });
-      this.timestamps.push(this.timelineDuration);
+      this.timestamps.push(this.timelineDuration + 1);
       this.timelineDuration += runners[0].duration() + 25;
     });
     this.timestamps.push(this.timelineDuration);
@@ -106,10 +109,52 @@ class AnimationController {
     this.currentTimeline.play();
   }
 
+  public applyTopicTitle(topicTitle: string) {
+    this.dataStructure = GraphicalDataStructureFactory.create(topicTitle);
+  }
+  private getErrorMessageIfInvalidInput(command: string, args: string[]): string {
+    const expectedArgs = this.dataStructure.documentation[command].args;
+    if (args.length !== expectedArgs.length) {
+      return `Invalid arguments. Please provide ${args.join(', ')}`;
+    }
+
+    if (args.includes('')) return 'Argument(s) missing';
+    if (!args.every((value) => /^\d+$/.test(value)))
+      return 'Argument(s) must be a positive integer';
+
+    const valueIndex = expectedArgs.indexOf('value');
+
+    if (valueIndex !== -1) {
+      if (Number(args[valueIndex]) < 0 || Number(args[valueIndex]) > 999)
+        return 'Value must be between 0 and 999';
+    }
+
+    return '';
+  }
+
+  public doOperation(
+    command: string,
+    updateSlider: (val: number) => void,
+    ...args: string[]
+  ): string {
+    const errMessage = this.getErrorMessageIfInvalidInput(command, args);
+    if (errMessage !== '') {
+      return errMessage;
+    }
+    this.finish();
+    const animationProducer = eval('this.dataStructure[command](...args)') as AnimationProducer;
+    this.constructTimeline(animationProducer, updateSlider);
+    return '';
+  }
+
+  public get documentation(): Documentation {
+    return this.dataStructure?.documentation;
+  }
+
   private computePrevTimestamp(): number {
     let prevTimestamp = 0;
     this.timestamps.forEach((timestamp) => {
-      if (timestamp < this.currentTime) {
+      if (timestamp + 25 < this.currentTime) {
         prevTimestamp = timestamp;
       }
     });
@@ -121,4 +166,4 @@ class AnimationController {
   }
 }
 
-export default AnimationController;
+export default VisualiserController;
