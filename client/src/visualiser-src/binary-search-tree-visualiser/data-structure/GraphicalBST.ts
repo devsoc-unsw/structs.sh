@@ -1,4 +1,5 @@
 import { SVG, Container } from '@svgdotjs/svg.js';
+import Notification from 'utils/Notification';
 import BSTInsertAnimationProducer from '../animation-producer/BSTInsertAnimationProducer';
 import BSTRotateAnimationProducer from '../animation-producer/BSTRotateAnimationProducer';
 import BSTTraverseAnimationProducer from '../animation-producer/BSTTraverseAnimationProducer';
@@ -20,7 +21,9 @@ class BST {
     animationProducer.renderInsertCode();
 
     // return early if a node with the same value already exists
-    if (this.getNode(input) !== null) return animationProducer;
+    if (this.getNode(input) !== null) {
+      return animationProducer;
+    }
 
     const node: Node = {
       nodeTarget: null,

@@ -1,6 +1,4 @@
-import {
-  Box, Collapse, List, ListItem, ListItemIcon, Theme,
-} from '@mui/material';
+import { Box, Collapse, List, ListItem, ListItemIcon, Theme, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { makeStyles, useTheme } from '@mui/styles';
@@ -57,20 +55,19 @@ interface Props {
   executeCommand: (command: string, args: string[]) => string;
 }
 
-const OperationDetails: FC<Props> = ({
-  op, isLast, showOp, executeCommand,
-}) => {
+const OperationDetails: FC<Props> = ({ op, isLast, showOp, executeCommand }) => {
   const classes = useStyles();
   const [args, setArguments] = useState<string[]>(
-    Array((op && op.args && op.args.length) || 0).fill(''),
+    Array((op && op.args && op.args.length) || 0).fill('')
   );
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const theme: Theme = useTheme();
   const textPrimaryColour = theme.palette.text.primary;
 
   const handleSetArguments = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    index: number,
+    index: number
   ) => {
     const newArgs = [...args];
     newArgs[index] = String(e.target.value);
@@ -127,12 +124,15 @@ const OperationDetails: FC<Props> = ({
             variant="contained"
             color="primary"
             onClick={() => {
-              executeCommand(op.command, [...args]);
+              setErrorMessage(executeCommand(op.command, [...args]));
               clearArguments();
             }}
           >
             <Box className={classes.btnText}>Run</Box>
           </Button>
+          <Typography color="red" style={{ marginLeft: '.5rem' }}>
+            {errorMessage}
+          </Typography>
         </ListItem>
       </List>
     </Collapse>
