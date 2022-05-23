@@ -1,9 +1,9 @@
-// this file is used to store visual settings of the bst visualiser
+import { strokeWidth } from '../../common/constants';
 
 export const nodeStyle = {
   fill: '#ffffff',
   stroke: '#000',
-  'stroke-width': 3,
+  'stroke-width': strokeWidth,
   opacity: 0,
 };
 

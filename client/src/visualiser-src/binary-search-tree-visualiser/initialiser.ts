@@ -1,3 +1,5 @@
+import { SVG } from '@svgdotjs/svg.js';
+import { CODE_CANVAS } from 'utils/constants';
 import AnimationController from '../controller/AnimationController';
 import { Visualiser } from '../typedefs';
 import BST from './data-structure/GraphicalBST';
@@ -17,6 +19,8 @@ export interface BSTVisualiser extends Visualiser {
 const initialise = (): any => {
   const bst: BST = new BST();
   const controller: AnimationController = new AnimationController();
+
+  SVG(CODE_CANVAS).clear();
 
   const insert = (val: number, updateSlider: (val: number) => void) => {
     controller.finish();

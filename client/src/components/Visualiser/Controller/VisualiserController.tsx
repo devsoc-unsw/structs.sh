@@ -5,9 +5,7 @@ import ReplayIcon from '@mui/icons-material/Replay';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import SpeedIcon from '@mui/icons-material/Speed';
-import {
-  Box, IconButton, Stack, useTheme,
-} from '@mui/material';
+import { Box, IconButton, Stack, useTheme } from '@mui/material';
 import Slider from '@mui/material/Slider';
 import React, { FC, useEffect, useState } from 'react';
 import ModeSwitch from './GUIMode/ModeSwitch';
@@ -83,24 +81,22 @@ const VisualiserController: FC<Props> = ({
             />
           </IconButton>
         ) : isPlaying ? (
-          <IconButton>
-            <PauseIcon
-              onClick={() => {
-                handlePause();
-                setIsPlaying(false);
-              }}
-              sx={{ fill: theme.palette.text.primary }}
-            />
+          <IconButton
+            onClick={() => {
+              handlePause();
+              setIsPlaying(false);
+            }}
+          >
+            <PauseIcon sx={{ fill: theme.palette.text.primary }} />
           </IconButton>
         ) : (
-          <IconButton>
-            <PlayIcon
-              onClick={() => {
-                handlePlay();
-                setIsPlaying(true);
-              }}
-              sx={{ fill: theme.palette.text.primary }}
-            />
+          <IconButton
+            onClick={() => {
+              handlePlay();
+              setIsPlaying(true);
+            }}
+          >
+            <PlayIcon sx={{ fill: theme.palette.text.primary }} />
           </IconButton>
         )}
         <IconButton onClick={() => handleStepForward()}>
@@ -179,9 +175,9 @@ const VisualiserController: FC<Props> = ({
           </Stack>
         </Box>
 
-        <Box className={styles.modeSwitchContainer}>
+        {/* <Box className={styles.modeSwitchContainer}>
           <ModeSwitch switchMode={terminalMode} setSwitchMode={setTerminalMode} />
-        </Box>
+          </Box> */}
       </div>
     </Box>
   );

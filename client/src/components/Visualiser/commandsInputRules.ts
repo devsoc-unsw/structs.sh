@@ -17,11 +17,17 @@
 // See react console emulator docs:
 //     https://www.npmjs.com/package/react-console-emulator
 
+// TODO: how can we more easily store the code snippets? (maybe move into database)
+
 /* -------------------------------------------------------------------------- */
 /*                              Terminal Commands                             */
 /* -------------------------------------------------------------------------- */
 /* -------------------------- Linked List Commands -------------------------- */
 const getLinkedListTerminalCommands = (processCommand) => ({
+  prepend: {
+    usage: 'prepend <value>',
+    fn: (arg: string) => processCommand('prepend', [arg]),
+  },
   append: {
     usage: 'append <number>',
     fn: (arg: string) => processCommand('append', [arg]),
@@ -37,10 +43,6 @@ const getLinkedListTerminalCommands = (processCommand) => ({
   search: {
     usage: 'search <value>',
     fn: (arg: string) => processCommand('search', [arg]),
-  },
-  prepend: {
-    usage: 'prepend <value>',
-    fn: (arg: string) => processCommand('prepend', [arg]),
   },
 });
 
@@ -74,7 +76,7 @@ const getBstTerminalCommands = (processCommand) => ({
 
 export const getVisualiserTerminalCommands = (
   topicTitle: string,
-  processCommand: (command: string, args: string[]) => string,
+  processCommand: (command: string, args: string[]) => string
 ) => {
   let terminalCommands = {};
   switch (topicTitle) {
@@ -104,8 +106,8 @@ export interface CommandDocumentation {
 const linkedListCommandsDocumentation: CommandDocumentation[] = [
   {
     command: 'append',
-    usage: 'append <number>',
-    description: 'Append a node containing the number.',
+    usage: 'append <value [0-999]>',
+    description: 'Append a node containing the value.',
   },
   {
     command: 'delete',
@@ -114,18 +116,18 @@ const linkedListCommandsDocumentation: CommandDocumentation[] = [
   },
   {
     command: 'insert',
-    usage: 'insert <value> <index>',
+    usage: 'insert <value [0-999]> <index>',
     description: 'Insert a value at the given index.',
   },
   {
     command: 'search',
-    usage: 'search <value>',
+    usage: 'search <value [0-999]>',
     description: 'Search for a value in the linked list.',
   },
   {
     command: 'prepend',
-    usage: 'prepend <value>',
-    description: 'Prepend a node containing the number.',
+    usage: 'prepend <value [0-999]>',
+    description: 'Prepend a node containing the value.',
   },
 ];
 
@@ -133,18 +135,18 @@ const linkedListCommandsDocumentation: CommandDocumentation[] = [
 const bstCommandsDocumentation: CommandDocumentation[] = [
   {
     command: 'insert',
-    usage: 'insert <number>',
+    usage: 'insert <value [0-999]>',
     description:
       'Executes standard BST insertion to add a new node with the given value into the tree.',
   },
   {
     command: 'rotateLeft',
-    usage: 'rotateLeft <number>',
+    usage: 'rotateLeft <value [0-999]>',
     description: 'Executes a left rotation on the node with the given value.',
   },
   {
     command: 'rotateRight',
-    usage: 'rotateRight <number>',
+    usage: 'rotateRight <value [0-999]>',
     description: 'Executes a right rotation on the node with the given value.',
   },
   {

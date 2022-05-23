@@ -1,45 +1,87 @@
-import { SVG, Runner, Element } from '@svgdotjs/svg.js';
+import { SVG, Path, Element } from '@svgdotjs/svg.js';
 import {
-  RIGHT_ARROW_PATH, topOffset, nodePathWidth, CURRENT, PREV,
+  topOffset,
+  nodePathWidth,
+  insertedNodeTopOffset,
+  CANVAS,
+  CURRENT,
+  PREV,
 } from '../util/constants';
+import { actualNodeDiameter } from '../../common/constants';
 import AnimationProducer from '../../common/AnimationProducer';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
+import { getPointerPath, Style } from '../util/util';
 
 // Class that produces SVG.Runners animating general linked list operations
 export default abstract class LinkedListAnimationProducer extends AnimationProducer {
+  public createNodeAt(index: number, newNode: GraphicalLinkedListNode, length: number) {
+    if (index < length - 1) {
+      newNode.nodeTarget.addTo(CANVAS);
+      newNode.nodeTarget.move(
+        index * nodePathWidth + actualNodeDiameter,
+        insertedNodeTopOffset - topOffset
+      );
+      this.addSequenceAnimation(newNode.nodeTarget.animate().attr({ opacity: 1 }));
+    } else {
+      this.addNodeAtEnd(length, newNode);
+    }
+  }
+
+  public addNodeAtEnd(length: number, newNode: GraphicalLinkedListNode) {
+    newNode.nodeTarget.addTo(CANVAS);
+    newNode.nodeTarget.move(length * nodePathWidth, 0);
+    this.addSequenceAnimation(newNode.nodeTarget.animate().attr({ opacity: 1 }));
+  }
+
   public initialisePointer(pointerId: string) {
     const pointerSvg: Element = SVG(pointerId);
-    pointerSvg.move(0, topOffset);
-    this.allRunners.push([pointerSvg.animate().attr({ opacity: 1 })]);
+    pointerSvg.move(nodePathWidth, topOffset + actualNodeDiameter / 2);
+    this.addSequenceAnimation(pointerSvg.animate().attr({ opacity: 1 }));
   }
 
   public movePointerToNext(pointerId: string) {
     const pointerSvg: Element = SVG(pointerId);
-    this.allRunners.push([pointerSvg.animate().dx(nodePathWidth)]);
+    this.addSequenceAnimation(pointerSvg.animate().dx(nodePathWidth));
   }
 
   public resetPointers() {
-    const runners: Runner[] = [];
-    runners.push(SVG(CURRENT).animate().attr({ opacity: 0 }));
-    runners.push(SVG(PREV).animate().attr({ opacity: 0 }));
-    this.allRunners.push(runners);
+    this.addSequenceAnimation(SVG(CURRENT).animate().attr({ opacity: 0 }));
+    this.addSequenceAnimation(SVG(PREV).animate().attr({ opacity: 0 }));
   }
 
-  public resetPositioning(head: GraphicalLinkedListNode) {
-    const runners: Runner[] = [];
+  public resetPositioning(headPointer: Path, head: GraphicalLinkedListNode) {
     let curr: GraphicalLinkedListNode = head;
     let index: number = 0;
+    this.addSequenceAnimation(headPointer.animate().plot(getPointerPath(Style.RIGHT) as any));
     while (curr != null) {
-      runners.push(curr.nodeTarget.animate().move(index * nodePathWidth, 0));
-      runners.push(curr.pointerTarget.animate().plot(RIGHT_ARROW_PATH as any));
+      this.addSequenceAnimation(curr.nodeTarget.animate().move((index + 1) * nodePathWidth, 0));
+      this.addSequenceAnimation(
+        curr.pointerTarget.animate().plot(getPointerPath(Style.RIGHT) as any)
+      );
       index += 1;
       curr = curr.next;
     }
-    this.allRunners.push(runners);
   }
 
-  public resetList(head: GraphicalLinkedListNode) {
+  public resetList(headPointer: Path, head: GraphicalLinkedListNode) {
     this.resetPointers();
-    this.resetPositioning(head);
+    this.resetPositioning(headPointer, head);
+  }
+
+  public newHeadPointToOldHead(newHead: GraphicalLinkedListNode) {
+    newHead.pointerTarget.plot(getPointerPath(Style.UP_RIGHT) as any);
+    this.addSequenceAnimation(newHead.pointerTarget.animate().attr({ opacity: 1 }));
+  }
+
+  public pointHeadToPrependedNode(head: Path) {
+    this.addSequenceAnimation(head.animate().plot(getPointerPath(Style.DOWN_RIGHT) as any));
+  }
+
+  public initialiseHead(headPointer: Path) {
+    this.addSequenceAnimation(headPointer.animate().attr({ opacity: 1 }));
+  }
+
+  public linkLastToNew(last: GraphicalLinkedListNode) {
+    this.addSequenceAnimation(last.pointerTarget.animate().attr({ opacity: 1 }));
   }
 }

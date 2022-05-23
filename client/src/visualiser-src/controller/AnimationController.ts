@@ -1,14 +1,7 @@
-import { Timeline } from '@svgdotjs/svg.js';
+import { Timeline, Runner } from '@svgdotjs/svg.js';
 import AnimationProducer from '../common/AnimationProducer';
+import { defaultSpeed } from '../common/constants';
 
-// controls todo:
-// [x] play/pause
-// [x] step to the next or previous timestamp in the current timeline
-// [ ] run a sequence in step mode or sequential mode
-// [ ] control to skip the animation of a sequence
-
-// eventually this file should be placed in a folder common for all data structures,
-// not just for the linked list
 class AnimationController {
   private currentTimeline: Timeline = new Timeline().persist(true);
 
@@ -20,27 +13,37 @@ class AnimationController {
 
   private isStepMode: boolean = false;
 
+  public constructor() {
+    this.setSpeed(defaultSpeed);
+  }
+
   public getCurrentTimeline(): Timeline {
     return this.currentTimeline;
   }
 
   public constructTimeline(
     animationProducer: AnimationProducer,
-    updateSlider: (val: number) => void,
+    updateSlider: (val: number) => void
   ): void {
     this.resetTimeline(updateSlider);
 
+    if (animationProducer.allRunners.length === 0) return;
+
     animationProducer.allRunners.forEach((runners) => {
       runners.forEach((runner) => {
-        this.currentTimeline.schedule(runner, this.timelineDuration, 'absolute');
+        this.currentTimeline.schedule(runner, this.timelineDuration + 25, 'absolute');
       });
-      runners[0].after(() => {
+      const maxRunner = runners.reduce(
+        (prev: Runner, curr: Runner) => (prev.duration() < curr.duration() ? curr : prev),
+        runners[0]
+      );
+      maxRunner.after(() => {
         if (this.isStepMode) {
           this.currentTimeline.pause();
         }
       });
       this.timestamps.push(this.timelineDuration);
-      this.timelineDuration += runners[0].duration();
+      this.timelineDuration += runners[0].duration() + 25;
     });
     this.timestamps.push(this.timelineDuration);
     this.currentTimeline.play();
@@ -49,7 +52,10 @@ class AnimationController {
   public resetTimeline(updateSlider: (val: number) => void) {
     this.currentTimeline = new Timeline().persist(true);
     this.currentTimeline.on('time', (e: CustomEvent) => {
-      updateSlider((e.detail / this.timelineDuration) * 100);
+      // avoid division by 0
+      if (this.timelineDuration !== 0) {
+        updateSlider((Math.min(e.detail, this.timelineDuration) / this.timelineDuration) * 100);
+      }
     });
     this.isStepMode = false;
     this.currentTimeline.speed(this.speed);
@@ -102,8 +108,8 @@ class AnimationController {
 
   private computePrevTimestamp(): number {
     let prevTimestamp = 0;
-    [...this.timestamps].reverse().forEach((timestamp) => {
-      if (timestamp + 25 < this.currentTime) {
+    this.timestamps.forEach((timestamp) => {
+      if (timestamp < this.currentTime) {
         prevTimestamp = timestamp;
       }
     });

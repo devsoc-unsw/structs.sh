@@ -1,51 +1,36 @@
-import { Line } from '@svgdotjs/svg.js';
 import BSTAnimationProducer from './BSTAnimationProducer';
 import { Node } from '../util/typedefs';
 import {
-  nodeStyle, nodeWidth, textStyle, lineStyle,
-} from '../util/settings';
+  inorderTraversalCodeSnippet,
+  preorderTraversalCodeSnippet,
+  postorderTraversalCodeSnippet,
+} from '../util/codeSnippets';
 
 export default class BSTTraverseAnimationProducer extends BSTAnimationProducer {
-  public halfHighlightNode(node: Node): void {
-    this.allRunners.push([
-      node.nodeTarget
-        .animate(500)
-        .attr({
-          stroke: '#4beb9b',
-        }),
-      node.textTarget
-        .animate(500)
-        .attr({
-          fill: '#4beb9b',
-        }),
-    ]);
+  public renderInorderTraversalCode(): void {
+    this.renderCode(inorderTraversalCodeSnippet);
+  }
+
+  public renderPreorderTraversalCode(): void {
+    this.renderCode(preorderTraversalCodeSnippet);
+  }
+
+  public renderPostorderTraversalCode(): void {
+    this.renderCode(postorderTraversalCodeSnippet);
   }
 
   public highlightNode(node: Node): void {
-    this.allRunners.push([
-      node.nodeTarget
-        .animate(500)
-        .attr({
-          fill: '#4beb9b',
-          stroke: '#4beb9b',
-        }),
-      node.textTarget
-        .animate(500)
-        .attr({
-          fill: '#ffffff',
-        }),
-    ]);
-  }
+    this.addSequenceAnimation(
+      node.nodeTarget.animate(500).attr({
+        fill: '#4beb9b',
+        stroke: '#4beb9b',
+      })
+    );
 
-  public highlightLine(lineTarget: Line): void {
-    if (lineTarget != null) {
-      this.allRunners.push([
-        lineTarget
-          .animate(500)
-          .attr({
-            stroke: '#4beb9b',
-          }),
-      ]);
-    }
+    this.addSequenceAnimation(
+      node.textTarget.animate(500).attr({
+        fill: '#ffffff',
+      })
+    );
   }
 }
