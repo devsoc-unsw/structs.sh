@@ -7,15 +7,43 @@ import LinkedListDeleteAnimationProducer from '../animation-producer/LinkedListD
 import LinkedListInsertAnimationProducer from '../animation-producer/LinkedListInsertAnimationProducer';
 import LinkedListSearchAnimationProducer from '../animation-producer/LinkedListSearchAnimationProducer';
 import LinkedListPrependAnimationProducer from '../animation-producer/LinkedListPrependAnimationProducer';
+import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
+import { Documentation } from 'visualiser-src/common/typedefs';
 
 // An linked list data structure containing all linked list operations.
-// Every operation producers a LinkedListAnimationProducer, which an AnimationController
+// Every operation producers a LinkedListAnimationProducer, which an VisualiserController
 // can then use to place SVG.Runners on a timeline to animate the operation.
-export default class GraphicalLinkedList {
+export default class GraphicalLinkedList implements GraphicalDataStructure {
+  private static documentation: Documentation[] = [
+    {
+      command: 'append',
+      args: ['value'],
+      description: 'Append a node containing the value.',
+    },
+    {
+      command: 'delete',
+      args: ['index'],
+      description: 'Delete a node by the index given.',
+    },
+    {
+      command: 'insert',
+      args: ['value', 'index'],
+      description: 'Insert a value at the given index.',
+    },
+    {
+      command: 'search',
+      args: ['value'],
+      description: 'Search for a value in the linked list.',
+    },
+    {
+      command: 'prepend',
+      args: ['value'],
+      description: 'Prepend a node containing the value.',
+    },
+  ];
+
   public headPointer: Path;
-
   public head: GraphicalLinkedListNode = null;
-
   public length: number = 0;
 
   constructor() {
@@ -191,5 +219,9 @@ export default class GraphicalLinkedList {
       producer.doAnimation(producer.resetPointers);
     }
     return producer;
+  }
+
+  public get documentation() {
+    return GraphicalLinkedList.documentation;
   }
 }

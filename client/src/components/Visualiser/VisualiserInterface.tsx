@@ -1,14 +1,14 @@
 import { Box } from '@mui/material';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Notification from 'utils/Notification';
-import initLinkedListVisualiser from 'visualiser-src/linked-list-visualiser/initialiser';
-import initBSTVisualiser from 'visualiser-src/binary-search-tree-visualiser/initialiser';
 import CodeSnippet from 'components/CodeSnippet/CodeSnippet';
 import { Pane } from 'components/Panes';
-import { VisualiserController } from './Controller';
+import { VisualiserControls } from './Controller';
 import GUIMode from './Controller/GUIMode/GUIMode';
 import styles from './VisualiserDashboard.module.scss';
 import getCommandExecutor from './executableCommands';
+import { defaultSpeed } from 'visualiser-src/common/constants';
+import VisualiserController from 'visualiser-src/controller/VisualiserController';
 
 interface Props {
   topicTitle: string;
@@ -26,29 +26,12 @@ interface Props {
  */
 const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
   const [timelineComplete, setTimelineComplete] = useState<boolean>(false);
-  const [speed, setSpeed] = useState<number>(0.6);
-  const [terminalMode, setTerminalMode] = useState(true);
-
-  const [visualiser, setVisualiser] = useState<any>({});
-
+  const [speed, setSpeed] = useState<number>(defaultSpeed);
+  const controller = useRef<VisualiserController>(new VisualiserController());
   /* ------------------------ Visualiser Initialisation ----------------------- */
-
   useEffect(() => {
-    const normalisedTitle: string = topicTitle.toLowerCase();
-    switch (normalisedTitle) {
-      case 'linked lists':
-        setVisualiser(initLinkedListVisualiser());
-        break;
-      case 'binary search trees':
-        setVisualiser(initBSTVisualiser());
-        break;
-      case 'avl trees':
-        // TODO: invoke the AVL tree visualiser initialiser instead of BST:
-        setVisualiser(initBSTVisualiser());
-        break;
-      default:
-        Notification.info(`Couldn't find a visualiser to load for '${topicTitle}'`);
-    }
+    console.log('Changing topic to ' + topicTitle);
+    controller.current.applyTopicTitle(topicTitle);
   }, [topicTitle]);
 
   /* -------------------------- Visualiser Callbacks -------------------------- */
@@ -60,53 +43,50 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
     setTimelineComplete(val >= 100);
   }, []);
 
-  const executeCommand = useMemo(
-    () => getCommandExecutor(topicTitle, visualiser, updateTimeline),
-    [topicTitle, visualiser, updateTimeline]
-  );
+  const executeCommand = (command: string, args: string[]): string => {
+    return controller.current.doOperation(
+      command,
+      updateTimeline,
+      ...args.map((arg) => Number(arg))
+    );
+  };
 
   const handlePlay = useCallback(() => {
-    visualiser.play();
-  }, [visualiser]);
+    controller.current.play();
+  }, [controller]);
 
   const handlePause = useCallback(() => {
-    visualiser.pause();
-  }, [visualiser]);
+    controller.current.pause();
+  }, [controller]);
 
   const handleStepForward = useCallback(() => {
-    visualiser.stepForward();
-  }, [visualiser]);
+    controller.current.stepForwards();
+  }, [controller]);
 
   const handleStepBackward = useCallback(() => {
-    visualiser.stepBack();
-  }, [visualiser]);
+    controller.current.stepBackwards();
+  }, [controller]);
 
   const dragTimeline = useCallback(
     (val: number) => {
-      visualiser.setTimeline(val);
+      controller.current.seekPercent(val);
     },
-    [visualiser]
+    [controller]
   );
 
   const handleSpeedSliderDrag = useCallback(
     (val: number) => {
-      visualiser.setSpeed(val);
+      controller.current.setSpeed(val);
       setSpeed(val);
     },
-    [visualiser]
+    [controller]
   );
-
-  const handleSpeedSliderDragEnd = useCallback(() => {
-    visualiser.onFinishSetSpeed();
-  }, [visualiser]);
 
   /* -------------------------------------------------------------------------- */
 
   return (
     <Box className={styles.interactor}>
-      <VisualiserController
-        terminalMode={terminalMode}
-        setTerminalMode={setTerminalMode}
+      <VisualiserControls
         handlePlay={handlePlay}
         handlePause={handlePause}
         handleStepForward={handleStepForward}
@@ -118,9 +98,6 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
         speed={speed}
       />
       <Pane orientation="vertical" minSize={150.9}>
-        {/* terminalMode ? (
-          <Terminal executeCommand={executeCommand} topicTitle={topicTitle} />
-        ) : ( */}
         <GUIMode executeCommand={executeCommand} topicTitle={topicTitle} />
         <CodeSnippet />
       </Pane>

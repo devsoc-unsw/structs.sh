@@ -1,20 +1,24 @@
 import { Timeline, Runner } from '@svgdotjs/svg.js';
 import AnimationProducer from '../common/AnimationProducer';
+import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { defaultSpeed } from '../common/constants';
+import GraphicalDataStructureFactory from 'visualiser-src/common/GraphicalDataStructureFactory';
 
-class AnimationController {
+class VisualiserController {
+  private dataStructure: GraphicalDataStructure;
   private currentTimeline: Timeline = new Timeline().persist(true);
-
   private timelineDuration: number = 0;
-
   private timestamps: number[] = [];
-
   private speed: number = 1;
-
   private isStepMode: boolean = false;
 
-  public constructor() {
+  public constructor(topicTitle?: string) {
     this.setSpeed(defaultSpeed);
+    if (topicTitle !== undefined) {
+      console.log('Constructing data structure');
+      console.log(topicTitle);
+      this.applyTopicTitle(topicTitle);
+    }
   }
 
   public getCurrentTimeline(): Timeline {
@@ -106,6 +110,28 @@ class AnimationController {
     this.currentTimeline.play();
   }
 
+  public applyTopicTitle(topicTitle: string) {
+    this.dataStructure = GraphicalDataStructureFactory.create(topicTitle);
+    console.log('Data structure changed to ' + this.dataStructure);
+  }
+
+  public doOperation(
+    command: string,
+    updateSlider: (val: number) => void,
+    ...args: number[]
+  ): string {
+    // if (!this.dataStructure.isValidCommandArgs(command, args)) {
+    //   const { usage } = this.dataStructure.getUsage(command);
+    //   return `Invalid arguments. Usage: ${usage}`;
+    // }
+    this.finish();
+    // Make method think args is being used
+    args as any;
+    const animationProducer = eval('this.dataStructure[command](...args)') as AnimationProducer;
+    this.constructTimeline(animationProducer, updateSlider);
+    return '';
+  }
+
   private computePrevTimestamp(): number {
     let prevTimestamp = 0;
     this.timestamps.forEach((timestamp) => {
@@ -121,4 +147,4 @@ class AnimationController {
   }
 }
 
-export default AnimationController;
+export default VisualiserController;

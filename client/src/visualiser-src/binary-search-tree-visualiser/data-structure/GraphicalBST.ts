@@ -4,11 +4,45 @@ import BSTRotateAnimationProducer from '../animation-producer/BSTRotateAnimation
 import BSTTraverseAnimationProducer from '../animation-producer/BSTTraverseAnimationProducer';
 import { Node } from '../util/typedefs';
 import { canvasPadding } from '../util/settings';
+import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
+import { Documentation } from 'visualiser-src/common/typedefs';
 
 // used for the actual implementation of the bst
-class BST {
+class GraphicalBST implements GraphicalDataStructure {
+  private static documentation: Documentation[] = [
+    {
+      command: 'insert',
+      args: ['value'],
+      description:
+        'Executes standard BST insertion to add a new node with the given value into the tree.',
+    },
+    {
+      command: 'rotateLeft',
+      args: ['value'],
+      description: 'Executes a left rotation on the node with the given value.',
+    },
+    {
+      command: 'rotateRight',
+      args: ['value'],
+      description: 'Executes a right rotation on the node with the given value.',
+    },
+    {
+      command: 'inorderTraversal',
+      args: [],
+      description: 'Executes an inorder traversal on the tree.',
+    },
+    {
+      command: 'preorderTraversal',
+      args: [],
+      description: 'Executes a preorder traversal on the tree.',
+    },
+    {
+      command: 'postorderTraversal',
+      args: [],
+      description: 'Executes a postorder traversal on the tree.',
+    },
+  ];
   public root: Node = null;
-
   public visualiserCanvas: Container = SVG().addTo('#bst-canvas').size('100%', '100%');
 
   // inserts a node into the bst and produces an animation sequence
@@ -428,6 +462,10 @@ class BST {
     this.doPostorderTraversal(node.right, animationProducer);
     animationProducer.doAnimationAndHighlight(6, animationProducer.highlightNode, node);
   }
+
+  public get documentation() {
+    return GraphicalBST.documentation;
+  }
 }
 
-export default BST;
+export default GraphicalBST;

@@ -1,6 +1,4 @@
-import {
-  Box, Collapse, List, ListItem, ListItemIcon, Theme,
-} from '@mui/material';
+import { Box, Collapse, List, ListItem, ListItemIcon, Theme } from '@mui/material';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { makeStyles, useTheme } from '@mui/styles';
@@ -54,15 +52,13 @@ interface Props {
   op: Operation;
   isLast: boolean;
   showOp: OperationsMenuState;
-  executeCommand: (command: string, args: string[]) => string;
+  executeCommand: (command: string, args: string[]) => void;
 }
 
-const OperationDetails: FC<Props> = ({
-  op, isLast, showOp, executeCommand,
-}) => {
+const OperationDetails: FC<Props> = ({ op, isLast, showOp, executeCommand }) => {
   const classes = useStyles();
   const [args, setArguments] = useState<string[]>(
-    Array((op && op.args && op.args.length) || 0).fill(''),
+    Array((op && op.args && op.args.length) || 0).fill('')
   );
 
   const theme: Theme = useTheme();
@@ -70,7 +66,7 @@ const OperationDetails: FC<Props> = ({
 
   const handleSetArguments = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    index: number,
+    index: number
   ) => {
     const newArgs = [...args];
     newArgs[index] = String(e.target.value);

@@ -8,12 +8,9 @@ import SpeedIcon from '@mui/icons-material/Speed';
 import { Box, IconButton, Stack, useTheme } from '@mui/material';
 import Slider from '@mui/material/Slider';
 import React, { FC, useEffect, useState } from 'react';
-import ModeSwitch from './GUIMode/ModeSwitch';
 import styles from './Control.module.scss';
 
 interface Props {
-  terminalMode: boolean;
-  setTerminalMode: (mode: boolean) => void;
   handlePlay: () => void;
   handlePause: () => void;
   handleStepForward: () => void;
@@ -35,9 +32,7 @@ interface Props {
  * Eg. it receives a `handlePlay` callback and attaches it to the Play button's
  *     `onClick` handler.
  */
-const VisualiserController: FC<Props> = ({
-  terminalMode,
-  setTerminalMode,
+const VisualiserControls: FC<Props> = ({
   handlePlay,
   handlePause,
   handleStepForward,
@@ -174,13 +169,9 @@ const VisualiserController: FC<Props> = ({
             </Stack>
           </Stack>
         </Box>
-
-        {/* <Box className={styles.modeSwitchContainer}>
-          <ModeSwitch switchMode={terminalMode} setSwitchMode={setTerminalMode} />
-          </Box> */}
       </div>
     </Box>
   );
 };
 
-export default VisualiserController;
+export default VisualiserControls;
