@@ -3,6 +3,7 @@ import AnimationProducer from '../common/AnimationProducer';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { defaultSpeed } from '../common/constants';
 import GraphicalDataStructureFactory from 'visualiser-src/common/GraphicalDataStructureFactory';
+import { Documentation } from 'visualiser-src/common/typedefs';
 
 class VisualiserController {
   private dataStructure: GraphicalDataStructure;
@@ -15,8 +16,6 @@ class VisualiserController {
   public constructor(topicTitle?: string) {
     this.setSpeed(defaultSpeed);
     if (topicTitle !== undefined) {
-      console.log('Constructing data structure');
-      console.log(topicTitle);
       this.applyTopicTitle(topicTitle);
     }
   }
@@ -112,7 +111,6 @@ class VisualiserController {
 
   public applyTopicTitle(topicTitle: string) {
     this.dataStructure = GraphicalDataStructureFactory.create(topicTitle);
-    console.log('Data structure changed to ' + this.dataStructure);
   }
   private getErrorMessageIfInvalidInput(command: string, args: string[]): string {
     const expectedArgs = this.dataStructure.documentation[command].args;
@@ -147,6 +145,10 @@ class VisualiserController {
     const animationProducer = eval('this.dataStructure[command](...args)') as AnimationProducer;
     this.constructTimeline(animationProducer, updateSlider);
     return '';
+  }
+
+  public get documentation(): Documentation {
+    return this.dataStructure?.documentation;
   }
 
   private computePrevTimestamp(): number {

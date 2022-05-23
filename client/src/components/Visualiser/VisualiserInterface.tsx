@@ -6,8 +6,8 @@ import { Pane } from 'components/Panes';
 import { VisualiserControls } from './Controller';
 import GUIMode from './Controller/GUIMode/GUIMode';
 import styles from './VisualiserDashboard.module.scss';
-import getCommandExecutor from './executableCommands';
 import { defaultSpeed } from 'visualiser-src/common/constants';
+import { Documentation } from 'visualiser-src/common/typedefs';
 import VisualiserController from 'visualiser-src/controller/VisualiserController';
 
 interface Props {
@@ -28,9 +28,11 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
   const [timelineComplete, setTimelineComplete] = useState<boolean>(false);
   const [speed, setSpeed] = useState<number>(defaultSpeed);
   const controller = useRef<VisualiserController>(new VisualiserController());
+  const [documentation, setDocumentation] = useState<Documentation>({});
   /* ------------------------ Visualiser Initialisation ----------------------- */
   useEffect(() => {
     controller.current.applyTopicTitle(topicTitle);
+    setDocumentation(controller.current.documentation);
   }, [topicTitle]);
 
   /* -------------------------- Visualiser Callbacks -------------------------- */
@@ -93,7 +95,11 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
         speed={speed}
       />
       <Pane orientation="vertical" minSize={150.9}>
-        <GUIMode executeCommand={executeCommand} topicTitle={topicTitle} />
+        <GUIMode
+          documentation={documentation}
+          executeCommand={executeCommand}
+          topicTitle={topicTitle}
+        />
         <CodeSnippet />
       </Pane>
     </Box>

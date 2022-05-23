@@ -2,8 +2,8 @@ import { Box, Collapse, List, ListItem, ListItemIcon, Theme, Typography } from '
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { makeStyles, useTheme } from '@mui/styles';
-import { Operation } from 'components/Visualiser/commandsInputRules';
 import React, { FC, useState } from 'react';
+import { OperationUsage } from 'visualiser-src/common/typedefs';
 import { LastLink, Link } from './Links';
 
 export interface OperationsMenuState {
@@ -49,17 +49,16 @@ const useStyles = makeStyles({
 });
 
 interface Props {
-  op: Operation;
+  command: string;
+  op: OperationUsage;
   isLast: boolean;
   showOp: OperationsMenuState;
   executeCommand: (command: string, args: string[]) => string;
 }
 
-const OperationDetails: FC<Props> = ({ op, isLast, showOp, executeCommand }) => {
+const OperationDetails: FC<Props> = ({ command, op, isLast, showOp, executeCommand }) => {
   const classes = useStyles();
-  const [args, setArguments] = useState<string[]>(
-    Array((op && op.args && op.args.length) || 0).fill('')
-  );
+  const [args, setArguments] = useState<string[]>(Array(op?.args?.length || 0).fill(''));
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const theme: Theme = useTheme();
@@ -81,12 +80,7 @@ const OperationDetails: FC<Props> = ({ op, isLast, showOp, executeCommand }) => 
   };
 
   return (
-    <Collapse
-      in={showOp[op.command]}
-      timeout="auto"
-      unmountOnExit
-      className={classes.opListContainer}
-    >
+    <Collapse in={showOp[command]} timeout="auto" unmountOnExit className={classes.opListContainer}>
       {!isLast && (
         <svg width="10" height="166" className={classes.longLink}>
           <line
@@ -124,7 +118,7 @@ const OperationDetails: FC<Props> = ({ op, isLast, showOp, executeCommand }) => 
             variant="contained"
             color="primary"
             onClick={() => {
-              setErrorMessage(executeCommand(op.command, [...args]));
+              setErrorMessage(executeCommand(command, [...args]));
               clearArguments();
             }}
           >
