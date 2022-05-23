@@ -1,5 +1,5 @@
 import AnimationProducer from 'visualiser-src/common/AnimationProducer';
-import { SVG, Path, Container } from '@svgdotjs/svg.js';
+import { SVG, Path, Svg } from '@svgdotjs/svg.js';
 import { CURRENT, PREV } from '../util/constants';
 import GraphicalLinkedListNode from './GraphicalLinkedListNode';
 import LinkedListAppendAnimationProducer from '../animation-producer/LinkedListAppendAnimationProducer';
@@ -9,12 +9,16 @@ import LinkedListSearchAnimationProducer from '../animation-producer/LinkedListS
 import LinkedListPrependAnimationProducer from '../animation-producer/LinkedListPrependAnimationProducer';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { Documentation } from 'visualiser-src/common/typedefs';
+import { VISUALISER_CANVAS } from 'visualiser-src/common/constants';
+import curr from 'visualiser-src/linked-list-visualiser/assets/curr.svg';
+import prev from 'visualiser-src/linked-list-visualiser/assets/prev.svg';
+import { injectIds } from 'visualiser-src/common/helpers';
 
 // An linked list data structure containing all linked list operations.
 // Every operation producers a LinkedListAnimationProducer, which an VisualiserController
 // can then use to place SVG.Runners on a timeline to animate the operation.
-export default class GraphicalLinkedList implements GraphicalDataStructure {
-  private static documentation: Documentation = {
+export default class GraphicalLinkedList extends GraphicalDataStructure {
+  private static documentation: Documentation = injectIds({
     append: {
       args: ['value'],
       description: 'Append a node containing the value.',
@@ -35,14 +39,19 @@ export default class GraphicalLinkedList implements GraphicalDataStructure {
       args: ['value'],
       description: 'Prepend a node containing the value.',
     },
-  };
+  });
 
   public headPointer: Path;
   public head: GraphicalLinkedListNode = null;
   public length: number = 0;
 
   constructor() {
+    super();
     this.headPointer = GraphicalLinkedListNode.newHeadPointer();
+
+    // add prev and curr pointers to visualiser canvas
+    (SVG(VISUALISER_CANVAS) as Svg).image(curr).opacity(0).id("current");
+    (SVG(VISUALISER_CANVAS) as Svg).image(prev).opacity(0).id("prev");
   }
 
   append(input: number): AnimationProducer {

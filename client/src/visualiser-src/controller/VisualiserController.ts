@@ -141,8 +141,9 @@ class VisualiserController {
     if (errMessage !== '') {
       return errMessage;
     }
+
     this.finish();
-    const animationProducer = eval('this.dataStructure[command](...args)') as AnimationProducer;
+    const animationProducer = eval('this.dataStructure[command](...args.map(arg => Number(arg)))') as AnimationProducer;
     this.constructTimeline(animationProducer, updateSlider);
     return '';
   }

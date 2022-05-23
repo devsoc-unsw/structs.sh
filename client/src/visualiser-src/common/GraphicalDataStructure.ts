@@ -1,7 +1,13 @@
+import { SVG } from '@svgdotjs/svg.js';
 import { Documentation } from './typedefs';
-// Interface for data structures
-interface GraphicalDataStructure {
-  readonly documentation: Documentation;
+import { VISUALISER_CANVAS} from './constants';
+
+abstract class GraphicalDataStructure {
+  public constructor() {
+    SVG(VISUALISER_CANVAS).clear();
+  }
+
+  public abstract get documentation(): Documentation;
 }
 
 export default GraphicalDataStructure;

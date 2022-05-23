@@ -1,4 +1,6 @@
 import { actualNodeDiameter, markerLength } from './constants';
+import { Documentation } from './typedefs';
+
 /**
  * Calculates the starting and ending coordinates of a pointer, given the coordinates of the centres of the
  * originating nodes and target nodes.
@@ -37,3 +39,13 @@ export const getPointerStartEndCoordinates = (
     [endX, endY],
   ];
 };
+
+let operationId = 0;
+
+export const injectIds = (documentation: Documentation): Documentation => {
+  Object.values(documentation).forEach(operationUsage => {
+    operationUsage.id = operationId++;
+  });
+
+  return documentation;
+}
