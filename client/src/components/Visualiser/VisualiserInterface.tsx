@@ -3,12 +3,12 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Notification from 'utils/Notification';
 import CodeSnippet from 'components/CodeSnippet/CodeSnippet';
 import { Pane } from 'components/Panes';
-import { VisualiserControls } from './Controller';
-import GUIMode from './Controller/GUIMode/GUIMode';
-import styles from './VisualiserDashboard.module.scss';
 import { defaultSpeed } from 'visualiser-src/common/constants';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import VisualiserController from 'visualiser-src/controller/VisualiserController';
+import { VisualiserControls } from './Controller';
+import GUIMode from './Controller/GUIMode/GUIMode';
+import styles from './VisualiserDashboard.module.scss';
 
 interface Props {
   topicTitle: string;
@@ -44,9 +44,7 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
     setTimelineComplete(val >= 100);
   }, []);
 
-  const executeCommand = (command: string, args: string[]): string => {
-    return controller.current.doOperation(command, updateTimeline, ...args);
-  };
+  const executeCommand = (command: string, args: string[]): string => controller.current.doOperation(command, updateTimeline, ...args);
 
   const handlePlay = useCallback(() => {
     controller.current.play();

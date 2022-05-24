@@ -2,10 +2,9 @@ import { Marker, SVG, Svg } from '@svgdotjs/svg.js';
 import BSTAnimationProducer from './BSTAnimationProducer';
 import { Node } from '../util/typedefs';
 import { nodeStyle, textStyle, lineStyle } from '../util/settings';
-import { markerLength, nodeDiameter, pathD } from '../../common/constants';
+import { markerLength, nodeDiameter, pathD , VISUALISER_CANVAS } from '../../common/constants';
 import { getPointerStartEndCoordinates } from '../../common/helpers';
 import { insertCodeSnippet } from '../util/codeSnippets';
-import { VISUALISER_CANVAS } from '../../common/constants';
 
 export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
   public renderInsertCode(): void {

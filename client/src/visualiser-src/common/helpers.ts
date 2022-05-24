@@ -43,9 +43,10 @@ export const getPointerStartEndCoordinates = (
 let operationId = 0;
 
 export const injectIds = (documentation: Documentation): Documentation => {
-  Object.values(documentation).forEach(operationUsage => {
-    operationUsage.id = operationId++;
+  Object.values(documentation).forEach((operationUsage) => {
+    operationUsage.id = operationId;
+    operationId += 1;
   });
 
   return documentation;
-}
+};

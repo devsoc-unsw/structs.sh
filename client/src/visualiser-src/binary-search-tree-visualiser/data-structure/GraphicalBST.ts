@@ -1,12 +1,12 @@
 import { SVG, Container } from '@svgdotjs/svg.js';
+import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
+import { Documentation } from 'visualiser-src/common/typedefs';
+import { injectIds } from 'visualiser-src/common/helpers';
 import BSTInsertAnimationProducer from '../animation-producer/BSTInsertAnimationProducer';
 import BSTRotateAnimationProducer from '../animation-producer/BSTRotateAnimationProducer';
 import BSTTraverseAnimationProducer from '../animation-producer/BSTTraverseAnimationProducer';
 import { Node } from '../util/typedefs';
 import { canvasPadding } from '../util/settings';
-import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
-import { Documentation } from 'visualiser-src/common/typedefs';
-import { injectIds } from 'visualiser-src/common/helpers';
 
 // used for the actual implementation of the bst
 class GraphicalBST extends GraphicalDataStructure {
@@ -37,6 +37,7 @@ class GraphicalBST extends GraphicalDataStructure {
       description: 'Executes a postorder traversal on the tree.',
     },
   });
+
   public root: Node = null;
 
   // inserts a node into the bst and produces an animation sequence

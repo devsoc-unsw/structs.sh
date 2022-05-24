@@ -1,5 +1,11 @@
 import AnimationProducer from 'visualiser-src/common/AnimationProducer';
 import { SVG, Path, Svg } from '@svgdotjs/svg.js';
+import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
+import { Documentation } from 'visualiser-src/common/typedefs';
+import { VISUALISER_CANVAS } from 'visualiser-src/common/constants';
+import currSvg from 'visualiser-src/linked-list-visualiser/assets/curr.svg';
+import prevSvg from 'visualiser-src/linked-list-visualiser/assets/prev.svg';
+import { injectIds } from 'visualiser-src/common/helpers';
 import { CURRENT, PREV } from '../util/constants';
 import GraphicalLinkedListNode from './GraphicalLinkedListNode';
 import LinkedListAppendAnimationProducer from '../animation-producer/LinkedListAppendAnimationProducer';
@@ -7,12 +13,6 @@ import LinkedListDeleteAnimationProducer from '../animation-producer/LinkedListD
 import LinkedListInsertAnimationProducer from '../animation-producer/LinkedListInsertAnimationProducer';
 import LinkedListSearchAnimationProducer from '../animation-producer/LinkedListSearchAnimationProducer';
 import LinkedListPrependAnimationProducer from '../animation-producer/LinkedListPrependAnimationProducer';
-import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
-import { Documentation } from 'visualiser-src/common/typedefs';
-import { VISUALISER_CANVAS } from 'visualiser-src/common/constants';
-import curr from 'visualiser-src/linked-list-visualiser/assets/curr.svg';
-import prev from 'visualiser-src/linked-list-visualiser/assets/prev.svg';
-import { injectIds } from 'visualiser-src/common/helpers';
 
 // An linked list data structure containing all linked list operations.
 // Every operation producers a LinkedListAnimationProducer, which an VisualiserController
@@ -42,7 +42,9 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
   });
 
   public headPointer: Path;
+
   public head: GraphicalLinkedListNode = null;
+
   public length: number = 0;
 
   constructor() {
@@ -50,8 +52,8 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     this.headPointer = GraphicalLinkedListNode.newHeadPointer();
 
     // add prev and curr pointers to visualiser canvas
-    (SVG(VISUALISER_CANVAS) as Svg).image(curr).opacity(0).id("current");
-    (SVG(VISUALISER_CANVAS) as Svg).image(prev).opacity(0).id("prev");
+    (SVG(VISUALISER_CANVAS) as Svg).image(currSvg).opacity(0).id('current');
+    (SVG(VISUALISER_CANVAS) as Svg).image(prevSvg).opacity(0).id('prev');
   }
 
   append(input: number): AnimationProducer {
