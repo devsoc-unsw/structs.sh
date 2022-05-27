@@ -5,8 +5,9 @@ import TopNavbar from 'components/Navbars/TopNavbar';
 import { Theme } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import Box from '@mui/material/Box';
-import { Topic } from 'utils/apiRequests';
 import styles from './VisualiserDashboardLayout.module.scss';
+import { DataStructure } from 'visualiser-src/common/typedefs';
+import { toTitleCase } from 'utils/url';
 
 const containerVariants = {
   hidden: {
@@ -24,17 +25,11 @@ const containerVariants = {
 
 interface Props {
   children: React.ReactNode;
-  topic: Topic;
+  topicTitle: DataStructure;
 }
 
-const Dashboard: FC<Props> = ({ children, topic }) => {
+const VisualiserDashboardLayout: FC<Props> = ({ children, topicTitle }) => {
   const theme: Theme = useTheme();
-
-  useEffect(() => {
-    // Note: force scrolling to the top of the page so that the top navbar isn't hidden
-    window.scrollTo(0, 0);
-  }, []);
-
   return (
     <motion.div
       className={styles.container}
@@ -44,7 +39,7 @@ const Dashboard: FC<Props> = ({ children, topic }) => {
       exit="exit"
     >
       <Helmet>
-        <title>{topic ? topic.title : 'Structs.sh'}</title>
+        <title>{topicTitle !== undefined ? toTitleCase(topicTitle) : 'Structs.sh'}</title>
       </Helmet>
       <TopNavbar position="relative" enableOnScrollEffect={false} />
       <Box
@@ -60,4 +55,4 @@ const Dashboard: FC<Props> = ({ children, topic }) => {
   );
 };
 
-export default Dashboard;
+export default VisualiserDashboardLayout;

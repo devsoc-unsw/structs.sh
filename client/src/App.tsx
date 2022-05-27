@@ -1,14 +1,11 @@
 import { Theme, ThemeProvider } from '@mui/material';
 import { LIGHT_MODE_ON } from 'constants/cookies';
 import { AnimatePresence } from 'framer-motion';
-import React, {
-  createContext, useCallback, useState, useMemo,
-} from 'react';
+import React, { createContext, useCallback, useState, useMemo } from 'react';
 import { useCookies } from 'react-cookie';
 import { Route, Routes } from 'react-router-dom';
 import { darkTheme, lightTheme } from 'structsThemes';
 import AboutUs from 'views/AboutUs';
-import ContentManagementDashboard from 'views/ContentManagementDashboard';
 import Feedback from 'views/Feedback';
 import HomePage from 'views/HomePage';
 import Page404 from 'views/Page404';
@@ -23,7 +20,7 @@ export const ThemeMutationContext = createContext({
 const App = () => {
   const [cookies, setCookie] = useCookies([LIGHT_MODE_ON]);
   const [currTheme, setCurrTheme] = useState<Theme>(
-    cookies[LIGHT_MODE_ON] === 'true' ? lightTheme : darkTheme,
+    cookies[LIGHT_MODE_ON] === 'true' ? lightTheme : darkTheme
   );
 
   const toggleDarkMode = useCallback(() => {
@@ -36,17 +33,18 @@ const App = () => {
     }
   }, [currTheme, setCookie]);
 
-  const themeMutationContextProviderValue = useMemo(() => ({
-    toggleDarkMode,
-    isDarkMode: cookies[LIGHT_MODE_ON] !== 'true',
-  }), []);
+  const themeMutationContextProviderValue = useMemo(
+    () => ({
+      toggleDarkMode,
+      isDarkMode: cookies[LIGHT_MODE_ON] !== 'true',
+    }),
+    []
+  );
 
   return (
     <AnimatePresence>
       <ThemeProvider theme={currTheme}>
-        <ThemeMutationContext.Provider
-          value={themeMutationContextProviderValue}
-        >
+        <ThemeMutationContext.Provider value={themeMutationContextProviderValue}>
           <Routes>
             {/* Homepage */}
             <Route path="/" element={<HomePage />} />
@@ -59,9 +57,6 @@ const App = () => {
 
             {/* Feedback and feature request page */}
             <Route path="/feedback" element={<Feedback />} />
-
-            {/* Content management dashboard */}
-            <Route path="/content" element={<ContentManagementDashboard />} />
 
             {/* 404 page */}
             <Route path="*" element={<Page404 />} />

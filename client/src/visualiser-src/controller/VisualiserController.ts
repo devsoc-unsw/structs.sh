@@ -1,7 +1,7 @@
 import { Timeline, Runner } from '@svgdotjs/svg.js';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import GraphicalDataStructureFactory from 'visualiser-src/common/GraphicalDataStructureFactory';
-import { Documentation } from 'visualiser-src/common/typedefs';
+import { DataStructure, Documentation } from 'visualiser-src/common/typedefs';
 import { defaultSpeed } from '../common/constants';
 import AnimationProducer from '../common/AnimationProducer';
 
@@ -18,7 +18,7 @@ class VisualiserController {
 
   private isStepMode: boolean = false;
 
-  public constructor(topicTitle?: string) {
+  public constructor(topicTitle?: DataStructure) {
     this.setSpeed(defaultSpeed);
     if (topicTitle !== undefined) {
       this.applyTopicTitle(topicTitle);
@@ -114,7 +114,7 @@ class VisualiserController {
     this.currentTimeline.play();
   }
 
-  public applyTopicTitle(topicTitle: string) {
+  public applyTopicTitle(topicTitle: DataStructure) {
     this.dataStructure = GraphicalDataStructureFactory.create(topicTitle);
   }
 

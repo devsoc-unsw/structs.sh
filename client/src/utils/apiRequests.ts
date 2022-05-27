@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { ApiConstants } from 'constants/api';
+import { DataStructure } from 'visualiser-src/common/typedefs';
 
 // TODO: it could be a good idea to set up a yarn workspace, create a `common` directory
 // and put all these TypeScript definitions for data models in that directory so they can
@@ -25,7 +26,7 @@ export interface Lesson {
 
 export interface Topic {
   _id: string;
-  title: string;
+  title: DataStructure;
   description: string;
   courses: string[];
   videos: string[];
@@ -41,9 +42,9 @@ export interface SourceCode {
 }
 
 export type Quiz =
-    | Partial<MultipleChoiceQuiz>
-    | Partial<TrueFalseQuiz>
-    | Partial<QuestionAnswerQuiz>;
+  | Partial<MultipleChoiceQuiz>
+  | Partial<TrueFalseQuiz>
+  | Partial<QuestionAnswerQuiz>;
 
 interface BaseQuiz {
   _id: string;
@@ -112,9 +113,7 @@ export const getLessons: GetLessons = async (topicId: string) => {
 
 export const getQuizzes: GetQuizzes = async (lessonId: string) => {
   try {
-    const response = await axios.get(
-      `${ApiConstants.URL}/api/lessons/quiz?lessonId=${lessonId}`,
-    );
+    const response = await axios.get(`${ApiConstants.URL}/api/lessons/quiz?lessonId=${lessonId}`);
     const quizzes: Quiz[] = response.data.quizzes as Quiz[];
 
     // Note: boolean arrays are interpreted as string arrays when the response is extracted.
@@ -189,7 +188,7 @@ export const createQuiz: CreateQuiz = async (lessonId: string, quiz: QuizForm) =
       },
       {
         headers: { 'Content-Type': 'application/json' },
-      },
+      }
     );
     return response.data.quiz as Quiz;
   } catch (err) {
@@ -244,13 +243,9 @@ export const editQuiz: EditQuiz = async (quizId: string, newQuiz: QuizForm) => {
     if (!quizId) {
       throw new Error("Quiz ID mustn't be empty");
     }
-    const response = await axios.put(
-      `${ApiConstants.URL}/api/lessons/quiz/${quizId}`,
-      newQuiz,
-      {
-        headers: { 'Content-Type': 'application/json' },
-      },
-    );
+    const response = await axios.put(`${ApiConstants.URL}/api/lessons/quiz/${quizId}`, newQuiz, {
+      headers: { 'Content-Type': 'application/json' },
+    });
     return response.data.quiz as Quiz;
   } catch (err) {
     const errMessage: string = err.response.data.statusText;
@@ -275,7 +270,7 @@ export const editTopic: EditTopic = async (topicId: string, newTopic: TopicForm)
 
 export const editSourceCode: EditSourceCode = async (
   sourceCodeId: string,
-  newSourceCode: SourceCodeForm,
+  newSourceCode: SourceCodeForm
 ) => {
   try {
     const response = await axios.put(
@@ -283,7 +278,7 @@ export const editSourceCode: EditSourceCode = async (
       newSourceCode,
       {
         headers: { 'Content-Type': 'application/json' },
-      },
+      }
     );
     return response.data.sourceCode as SourceCode;
   } catch (err) {

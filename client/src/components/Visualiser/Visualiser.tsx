@@ -1,11 +1,12 @@
 import { CircularLoader } from 'components/Loader';
 import { Pane } from 'components/Panes';
 import React from 'react';
+import { DataStructure } from 'visualiser-src/common/typedefs';
 import VisualiserCanvas from './VisualiserCanvas';
 import VisualiserInterface from './VisualiserInterface';
 
-interface Props {
-  topicTitle: string;
+interface VisualiserProps {
+  topicTitle: DataStructure;
 }
 
 /**
@@ -17,7 +18,7 @@ interface Props {
  * Given the `topicTitle`, this component will render the corresponding
  * visualiser and load up the commands for that visualiser.
  */
-const Visualiser: React.FC<Props> = ({ topicTitle }) =>
+const Visualiser: React.FC<VisualiserProps> = ({ topicTitle }) =>
   topicTitle ? (
     <Pane orientation="horizontal" minSize={150.9}>
       <VisualiserCanvas />
