@@ -74,12 +74,12 @@ const VisualiserController: FC<Props> = ({
     setAnchorEl(null);
   };
 
-  const speedOptions: number[] = [1.0, 0.8, 0.6, 0.4, 0.2];
+  const speedOptions: string[] = ['1.0', '0.8', '0.6', '0.4', '0.2'];
   const [selectedIndex, setSelectedIndex] = useState<number>(2);
 
   const handleSelectSpeed = (event: React.MouseEvent<HTMLElement>, index: number) => {
     setSelectedIndex(index);
-    handleSpeedSliderDrag(speedOptions[index]);
+    handleSpeedSliderDrag(Number(speedOptions[index]));
     setAnchorEl(null);
   };
 
@@ -133,9 +133,14 @@ const VisualiserController: FC<Props> = ({
           <SkipNextIcon sx={{ fill: theme.palette.text.primary }} />
         </IconButton>
 
-        <Button onClick={handleClick}>
-          <SpeedIcon sx={{ fill: theme.palette.text.primary }} />
-          <Typography color="textPrimary">{speed}</Typography>
+        <Button onClick={handleClick} className={styles.setSpeedButton}>
+          <SpeedIcon
+            sx={{ fill: theme.palette.text.primary }}
+            className={styles.setSpeedButtonIcon}
+          />
+          <Typography color="textPrimary" className={styles.currSpeed}>
+            {speedOptions[selectedIndex]}
+          </Typography>
         </Button>
         <Menu
           open={speedMenuOpen}
@@ -243,8 +248,10 @@ const VisualiserController: FC<Props> = ({
           {/* <Box className={styles.modeSwitchContainer}>
           <ModeSwitch switchMode={terminalMode} setSwitchMode={setTerminalMode} /> */}
         </Box>
-        <Button>
-          <Typography color="textPrimary">Reset Data Structure</Typography>
+        <Button className={styles.resetButton}>
+          <Typography color="textPrimary" sx={{ whiteSpace: 'nowrap' }}>
+            Reset All
+          </Typography>
         </Button>
       </div>
     </Box>
