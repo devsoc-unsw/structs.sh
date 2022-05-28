@@ -42,7 +42,7 @@ class AnimationController {
           this.currentTimeline.pause();
         }
       });
-      this.timestamps.push(this.timelineDuration);
+      this.timestamps.push(this.timelineDuration + 1);
       this.timelineDuration += runners[0].duration() + 25;
     });
     this.timestamps.push(this.timelineDuration);
@@ -109,7 +109,7 @@ class AnimationController {
   private computePrevTimestamp(): number {
     let prevTimestamp = 0;
     this.timestamps.forEach((timestamp) => {
-      if (timestamp < this.currentTime) {
+      if (timestamp + 25 < this.currentTime) {
         prevTimestamp = timestamp;
       }
     });
