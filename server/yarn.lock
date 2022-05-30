@@ -844,7 +844,7 @@
     "@types/qs" "*"
     "@types/range-parser" "*"
 
-"@types/express-unless@*":
+"@types/express-unless@*", "@types/express-unless@^0.5.3":
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/@types/express-unless/-/express-unless-0.5.3.tgz#271f8603617445568ed0d6efe25a7d2f338544c1"
   integrity sha512-TyPLQaF6w8UlWdv4gj8i46B+INBVzURBNRahCozCSXfsK2VTlL1wNyTlMKw817VHygBtlcl5jfnPadlydr06Yw==
@@ -892,7 +892,7 @@
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.10.tgz#9b05b7896166cd00e9cbd59864853abf65d9ac23"
   integrity sha512-BLO9bBq59vW3fxCpD4o0N4U+DXsvwvIcl+jofw0frQo/GrBFC+/jRZj1E7kgp6dvTyNmA4y6JCV5Id/r3mNP5A==
 
-"@types/jsonwebtoken@^8.5.4":
+"@types/jsonwebtoken@^8.5.4", "@types/jsonwebtoken@^8.5.8":
   version "8.5.8"
   resolved "https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-8.5.8.tgz#01b39711eb844777b7af1d1f2b4cf22fda1c0c44"
   integrity sha512-zm6xBQpFDIDM6o9r6HSgDeIcLy82TKWctCXEPbJJcXb5AKmi5BNNdLXneixK4lplX3PqIVcwLBCGE/kAGnlD4A==
@@ -1835,11 +1835,13 @@ expect@^28.1.0:
     jest-message-util "^28.1.0"
     jest-util "^28.1.0"
 
-express-jwt@^7.7.0:
-  version "7.7.0"
-  resolved "https://registry.yarnpkg.com/express-jwt/-/express-jwt-7.7.0.tgz#f4b98e6c4c5bc94a88c7b7db316f3bb6799bbf0b"
-  integrity sha512-4W1N/wD1buyg5F1/IFi4hWMRwerHd1wl17PhfBrNnzMAb1MbAVDJiSoNByVrz2+NGThChIC+vuNaDwVLprkQzQ==
+express-jwt@^7.7.3:
+  version "7.7.3"
+  resolved "https://registry.yarnpkg.com/express-jwt/-/express-jwt-7.7.3.tgz#eb466e6e4943862df99207772d61a507a5bb7836"
+  integrity sha512-20J4jgcRK0JrUo81NHeOQnekDYWEuksNYxDSAmxNqX0XUGi2dubw3a6Y84+X4ReVWDbVpwH8qRRBDmHbXxW7Gw==
   dependencies:
+    "@types/express-unless" "^0.5.3"
+    "@types/jsonwebtoken" "^8.5.8"
     express-unless "^1.0.0"
     jsonwebtoken "^8.5.1"
 
