@@ -40,35 +40,38 @@ const OperationsTree: FC<Props> = ({ topicTitle, executeCommand }) => {
           const isLast = idx === ops.length - 1;
           return (
             <Box key={idx}>
-              <ListItem
-                button
-                sx={{
-                  paddingTop: '0px',
-                  paddingBottom: '0px',
-                  paddingLeft: '35px',
-                }}
-                onClick={() => handleClick(op.command)}
-              >
-                <ListItemIcon>
-                  {isLast ? (
-                    <LastLink colour={textPrimaryColour} />
+              <ListItem style={{ padding: "0px" }}>
+                <ListItem
+                  button
+                  sx={{
+                    paddingTop: '0px',
+                    paddingBottom: '0px',
+                    paddingLeft: '35px',
+                  }}
+                  onClick={() => handleClick(op.command)}
+                >
+                  <ListItemIcon>
+                    {isLast ? (
+                      <LastLink colour={textPrimaryColour} />
+                    ) : (
+                      <Link colour={textPrimaryColour} />
+                    )}
+                  </ListItemIcon>
+                  <Typography color="textPrimary">{op.command}</Typography>
+                  {showOp[op.command] ? (
+                    <ExpandLess sx={{ fill: theme.palette.text.primary }} />
                   ) : (
-                    <Link colour={textPrimaryColour} />
+                    <ExpandMore sx={{ fill: theme.palette.text.primary }} />
                   )}
-                </ListItemIcon>
-                <Typography color="textPrimary">{op.command}</Typography>
-                {showOp[op.command] ? (
-                  <ExpandLess sx={{ fill: theme.palette.text.primary }} />
-                ) : (
-                  <ExpandMore sx={{ fill: theme.palette.text.primary }} />
-                )}
+
+                </ListItem>
+                <OperationDetails
+                  op={op}
+                  isLast={isLast}
+                  showOp={showOp}
+                  executeCommand={executeCommand}
+                />
               </ListItem>
-              <OperationDetails
-                op={op}
-                isLast={isLast}
-                showOp={showOp}
-                executeCommand={executeCommand}
-              />
             </Box>
           );
         })}

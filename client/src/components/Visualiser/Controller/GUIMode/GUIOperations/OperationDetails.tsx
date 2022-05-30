@@ -56,6 +56,7 @@ interface Props {
 }
 
 const OperationDetails: FC<Props> = ({ op, isLast, showOp, executeCommand }) => {
+  isLast = false;
   const classes = useStyles();
   const [args, setArguments] = useState<string[]>(
     Array((op && op.args && op.args.length) || 0).fill('')
@@ -87,7 +88,7 @@ const OperationDetails: FC<Props> = ({ op, isLast, showOp, executeCommand }) => 
       unmountOnExit
       className={classes.opListContainer}
     >
-      {!isLast && (
+      {/* {!isLast && (
         <svg width="10" height="166" className={classes.longLink}>
           <line
             x1="5"
@@ -99,13 +100,13 @@ const OperationDetails: FC<Props> = ({ op, isLast, showOp, executeCommand }) => 
             strokeWidth="2"
           />
         </svg>
-      )}
-      <List className={isLast ? `${classes.opList} ${classes.last}` : classes.opList}>
+      )} */}
+      <List className={isLast ? `${classes.opList} ${classes.last}` : classes.opList} style={{ display: 'flex', paddingLeft: '0px' }}>
         {op.args.map((eachArg, idx) => (
-          <ListItem key={idx}>
-            <ListItemIcon>
+          <ListItem key={idx} style={{ paddingLeft: "0px", paddingRight: "10px", width: "140px" }}>
+            {/* <ListItemIcon>
               <Link colour={textPrimaryColour} />
-            </ListItemIcon>
+            </ListItemIcon> */}
             <TextField
               label={eachArg}
               value={args[idx]}
@@ -115,10 +116,10 @@ const OperationDetails: FC<Props> = ({ op, isLast, showOp, executeCommand }) => 
             />
           </ListItem>
         ))}
-        <ListItem>
-          <ListItemIcon>
+        <ListItem style={{ paddingLeft: "5px" }}>
+          {/* <ListItemIcon>
             <LastLink colour={textPrimaryColour} />
-          </ListItemIcon>
+          </ListItemIcon> */}
           <Button
             className={classes.opBtn}
             variant="contained"
@@ -135,7 +136,7 @@ const OperationDetails: FC<Props> = ({ op, isLast, showOp, executeCommand }) => 
           </Typography>
         </ListItem>
       </List>
-    </Collapse>
+    </Collapse >
   );
 };
 
