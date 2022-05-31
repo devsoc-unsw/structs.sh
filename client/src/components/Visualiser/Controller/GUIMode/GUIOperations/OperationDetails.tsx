@@ -101,9 +101,9 @@ const OperationDetails: FC<Props> = ({ op, isLast, showOp, executeCommand }) => 
           />
         </svg>
       )} */}
-      <List className={isLast ? `${classes.opList} ${classes.last}` : classes.opList} style={{ display: 'flex', paddingLeft: '0px' }}>
+      <List className={isLast ? `${classes.opList} ${classes.last}` : classes.opList} style={{ display: 'flex', padding: '0px' }}>
         {op.args.map((eachArg, idx) => (
-          <ListItem key={idx} style={{ paddingLeft: "0px", paddingRight: "10px", width: "140px" }}>
+          <ListItem key={idx} style={{ paddingLeft: "0px", paddingRight: "10px", width: "140px", minWidth: "100px" }}>
             {/* <ListItemIcon>
               <Link colour={textPrimaryColour} />
             </ListItemIcon> */}

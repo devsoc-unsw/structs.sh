@@ -47,6 +47,8 @@ const OperationsTree: FC<Props> = ({ topicTitle, executeCommand }) => {
                     paddingTop: '0px',
                     paddingBottom: '0px',
                     paddingLeft: '35px',
+                    width: 'auto',
+                    minWidth: '27%',
                   }}
                   onClick={() => handleClick(op.command)}
                 >
