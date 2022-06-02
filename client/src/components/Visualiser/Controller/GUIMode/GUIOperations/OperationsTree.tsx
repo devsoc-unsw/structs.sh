@@ -3,7 +3,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Alert, Box, List, ListItem, ListItemIcon, Theme, Typography } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import { keys } from '@mui/system';
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import { LastLink, Link } from './Links';
 import OperationDetails, { OperationsMenuState } from './OperationDetails';
@@ -25,6 +25,10 @@ const OperationsTree: FC<Props> = ({ documentation, topicTitle, executeCommand }
     setShowOp({ ...showOp, [command]: !showOp[command] });
   };
 
+  useEffect(() => {
+    setShowOp({});
+  }, [topicTitle]);
+
   return !documentation ? (
     <Alert severity="error">
       No operations are defined for the topicTitle &apos;
@@ -38,7 +42,7 @@ const OperationsTree: FC<Props> = ({ documentation, topicTitle, executeCommand }
         {Object.keys(documentation).map((command, idx) => {
           const isLast = idx === Object.keys(documentation).length - 1;
           return (
-            <Box key={idx}>
+            <Box key={documentation[command].id}>
               <ListItem
                 button
                 sx={{

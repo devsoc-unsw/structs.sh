@@ -8,6 +8,7 @@ export interface CodeLine {
 export interface OperationUsage {
   args: string[];
   description: string;
+  id?: number;
 }
 
 export interface Documentation {

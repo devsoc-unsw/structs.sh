@@ -8,7 +8,7 @@ export const insertedNodeTopOffset =
   topOffset + (actualNodeDiameter + pathLength) * Math.sin(Math.PI / 3);
 export const CURRENT = '#current';
 export const PREV = '#prev';
-export const CANVAS = '#canvas';
+export const CANVAS = '#visualiser-canvas';
 export const nodeAttributes = {
   class: 'node',
   stroke: 'black',

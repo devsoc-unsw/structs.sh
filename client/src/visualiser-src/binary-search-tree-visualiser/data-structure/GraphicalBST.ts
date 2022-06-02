@@ -1,16 +1,16 @@
 import { SVG, Container } from '@svgdotjs/svg.js';
-import Notification from 'utils/Notification';
+import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
+import { Documentation } from 'visualiser-src/common/typedefs';
+import { injectIds } from 'visualiser-src/common/helpers';
 import BSTInsertAnimationProducer from '../animation-producer/BSTInsertAnimationProducer';
 import BSTRotateAnimationProducer from '../animation-producer/BSTRotateAnimationProducer';
 import BSTTraverseAnimationProducer from '../animation-producer/BSTTraverseAnimationProducer';
 import { Node } from '../util/typedefs';
 import { canvasPadding } from '../util/settings';
-import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
-import { Documentation } from 'visualiser-src/common/typedefs';
 
 // used for the actual implementation of the bst
-class GraphicalBST implements GraphicalDataStructure {
-  private static documentation: Documentation = {
+class GraphicalBST extends GraphicalDataStructure {
+  private static documentation: Documentation = injectIds({
     insert: {
       args: ['value'],
       description:
@@ -36,16 +36,14 @@ class GraphicalBST implements GraphicalDataStructure {
       args: [],
       description: 'Executes a postorder traversal on the tree.',
     },
-  };
+  });
+
   public root: Node = null;
-  public visualiserCanvas: Container = SVG().addTo('#bst-canvas').size('100%', '100%');
 
   // inserts a node into the bst and produces an animation sequence
   // that is later handled by the animation controller
   public insert(input: number): BSTInsertAnimationProducer {
-    const animationProducer: BSTInsertAnimationProducer = new BSTInsertAnimationProducer(
-      this.visualiserCanvas
-    );
+    const animationProducer: BSTInsertAnimationProducer = new BSTInsertAnimationProducer();
     animationProducer.renderInsertCode();
 
     // return early if a node with the same value already exists
@@ -146,8 +144,7 @@ class GraphicalBST implements GraphicalDataStructure {
   // use this method after doing bst operations to update
   // x and y coordinates
   public updateNodePositions(): void {
-    const canvasWidth = document.getElementById('bst-canvas').offsetWidth;
-
+    const canvasWidth = document.getElementById('visualiser-container').offsetWidth;
     const low: number = 0;
     const high: number = Number(canvasWidth);
     const mid: number = (low + high) / 2;
@@ -192,9 +189,7 @@ class GraphicalBST implements GraphicalDataStructure {
   }
 
   public rotateLeft(input: number): BSTRotateAnimationProducer {
-    const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer(
-      this.visualiserCanvas
-    );
+    const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer();
     animationProducer.renderRotateLeftCode();
     const oldRoot: Node = this.getNode(input);
 
@@ -274,9 +269,7 @@ class GraphicalBST implements GraphicalDataStructure {
   }
 
   public rotateRight(input: number): BSTRotateAnimationProducer {
-    const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer(
-      this.visualiserCanvas
-    );
+    const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer();
     animationProducer.renderRotateRightCode();
     const oldRoot: Node = this.getNode(input);
 
@@ -356,9 +349,7 @@ class GraphicalBST implements GraphicalDataStructure {
   }
 
   public inorderTraversal(): BSTTraverseAnimationProducer {
-    const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer(
-      this.visualiserCanvas
-    );
+    const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer();
 
     animationProducer.renderInorderTraversalCode();
     this.doInorderTraversal(this.root, animationProducer);
@@ -391,9 +382,7 @@ class GraphicalBST implements GraphicalDataStructure {
   }
 
   public preorderTraversal(): BSTTraverseAnimationProducer {
-    const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer(
-      this.visualiserCanvas
-    );
+    const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer();
 
     animationProducer.renderPreorderTraversalCode();
     this.doPreorderTraversal(this.root, animationProducer);
@@ -426,9 +415,7 @@ class GraphicalBST implements GraphicalDataStructure {
   }
 
   public postorderTraversal(): BSTTraverseAnimationProducer {
-    const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer(
-      this.visualiserCanvas
-    );
+    const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer();
 
     animationProducer.renderPostorderTraversalCode();
     this.doPostorderTraversal(this.root, animationProducer);

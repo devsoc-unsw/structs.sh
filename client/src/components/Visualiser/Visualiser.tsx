@@ -20,7 +20,7 @@ interface Props {
 const Visualiser: React.FC<Props> = ({ topicTitle }) =>
   topicTitle ? (
     <Pane orientation="horizontal" minSize={150.9}>
-      <VisualiserCanvas topicTitle={topicTitle} />
+      <VisualiserCanvas />
       <VisualiserInterface topicTitle={topicTitle} />
     </Pane>
   ) : (

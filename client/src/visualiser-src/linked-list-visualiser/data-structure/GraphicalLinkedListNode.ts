@@ -3,12 +3,11 @@ import {
   shapeAttributes,
   textAttributes,
   pathAttributes,
-  CANVAS,
   topOffset,
   nodePathWidth,
 } from '../util/constants';
 import { getPointerPath, Style } from '../util/util';
-import { actualNodeDiameter, markerLength, nodeDiameter, pathD } from '../../common/constants';
+import { actualNodeDiameter, markerLength, nodeDiameter, pathD, VISUALISER_CANVAS } from '../../common/constants';
 
 function addMarker(add: Marker) {
   add.path(pathD);
@@ -35,7 +34,7 @@ export default class GraphicalLinkedListNode {
   }
 
   public static newHeadPointer() {
-    SVG().text('head').attr(textAttributes).opacity(1).attr({ 'font-size': 16 }).addTo(CANVAS);
+    SVG().text('head').attr(textAttributes).opacity(1).attr({ 'font-size': 16 }).addTo(VISUALISER_CANVAS);
     const headPointer = SVG()
       .path()
       .attr(pathAttributes)
@@ -49,13 +48,16 @@ export default class GraphicalLinkedListNode {
           Style.RIGHT
         )
       )
-      .addTo(CANVAS);
+      .addTo(VISUALISER_CANVAS);
+
+    console.log(headPointer);
+
     headPointer.marker('end', markerLength, markerLength, addMarker);
     return headPointer;
   }
 
   public static from(input: number) {
-    const canvas = SVG(CANVAS) as Svg;
+    const canvas = SVG(VISUALISER_CANVAS) as Svg;
     const nodeShape = canvas.circle().attr(shapeAttributes);
     const nodeValue = canvas.text(String(input)).attr(textAttributes);
     const newPointer = canvas.path().attr(pathAttributes);

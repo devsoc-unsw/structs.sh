@@ -1,16 +1,21 @@
 import { Timeline, Runner } from '@svgdotjs/svg.js';
-import AnimationProducer from '../common/AnimationProducer';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
-import { defaultSpeed } from '../common/constants';
 import GraphicalDataStructureFactory from 'visualiser-src/common/GraphicalDataStructureFactory';
 import { Documentation } from 'visualiser-src/common/typedefs';
+import { defaultSpeed } from '../common/constants';
+import AnimationProducer from '../common/AnimationProducer';
 
 class VisualiserController {
   private dataStructure: GraphicalDataStructure;
+
   private currentTimeline: Timeline = new Timeline().persist(true);
+
   private timelineDuration: number = 0;
+
   private timestamps: number[] = [];
+
   private speed: number = 1;
+
   private isStepMode: boolean = false;
 
   public constructor(topicTitle?: string) {
@@ -112,6 +117,7 @@ class VisualiserController {
   public applyTopicTitle(topicTitle: string) {
     this.dataStructure = GraphicalDataStructureFactory.create(topicTitle);
   }
+
   private getErrorMessageIfInvalidInput(command: string, args: string[]): string {
     const expectedArgs = this.dataStructure.documentation[command].args;
     if (args.length !== expectedArgs.length) {
@@ -141,8 +147,12 @@ class VisualiserController {
     if (errMessage !== '') {
       return errMessage;
     }
+
     this.finish();
-    const animationProducer = eval('this.dataStructure[command](...args)') as AnimationProducer;
+    // @ts-ignore
+    const animationProducer: AnimationProducer = this.dataStructure[command](
+      ...args.map((arg) => Number(arg))
+    );
     this.constructTimeline(animationProducer, updateSlider);
     return '';
   }
