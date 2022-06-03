@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useEffect, useRef, useState } from 'react';
 import Notification from 'utils/Notification';
 import CodeSnippet from 'components/CodeSnippet/CodeSnippet';
 import { Pane } from 'components/Panes';
@@ -9,7 +9,7 @@ import VisualiserController from 'visualiser-src/controller/VisualiserController
 import { VisualiserControls } from './Controller';
 import GUIMode from './Controller/GUIMode/GUIMode';
 import styles from './VisualiserDashboard.module.scss';
-import VisualiserContext from './VisualiserContext';
+import VisualiserContext, { VisualiserContextValues } from './VisualiserContext';
 
 interface VisualiserInterfaceProps {
   topicTitle: DataStructure;
@@ -26,31 +26,42 @@ interface VisualiserInterfaceProps {
  *     sliders, etc.).
  */
 const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle }) => {
-  const controllerRef = useRef<VisualiserController>(new VisualiserController());
+  const topicTitleRef = useRef<DataStructure>();
+  const controllerRef = useRef<VisualiserController>();
   const [isTimelineComplete, setIsTimelineComplete] = useState<boolean>(false);
   const [documentation, setDocumentation] = useState<Documentation>({});
 
   useEffect(() => {
+    controllerRef.current = controllerRef.current === undefined && new VisualiserController();
     controllerRef.current.applyTopicTitle(topicTitle);
+    topicTitleRef.current = topicTitle;
     setDocumentation(controllerRef.current.documentation);
   }, [topicTitle]);
 
   const handleTimelineUpdate = useCallback((val) => {
     const timelineSlider = document.querySelector('#timelineSlider') as HTMLInputElement;
     timelineSlider.value = String(val);
-
     setIsTimelineComplete(val >= 100);
   }, []);
 
+  const contextValues = useMemo(
+    () => ({
+      controller: controllerRef.current,
+      topicTitle: topicTitleRef.current,
+      documentation,
+      timeline: { isTimelineComplete, handleTimelineUpdate },
+    }),
+    [
+      controllerRef.current,
+      topicTitleRef.current,
+      documentation,
+      isTimelineComplete,
+      handleTimelineUpdate,
+    ]
+  );
+
   return (
-    <VisualiserContext.Provider
-      value={{
-        controller: controllerRef.current,
-        topicTitle,
-        documentation,
-        timeline: { isTimelineComplete, handleTimelineUpdate },
-      }}
-    >
+    <VisualiserContext.Provider value={contextValues}>
       <Box className={styles.interactor}>
         <VisualiserControls />
         <Pane orientation="vertical" minSize={150.9}>

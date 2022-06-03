@@ -2,7 +2,7 @@ import React from 'react';
 import { DataStructure, Documentation } from 'visualiser-src/common/typedefs';
 import VisualiserController from 'visualiser-src/controller/VisualiserController';
 
-interface VisualiserContextValues {
+export interface VisualiserContextValues {
   controller?: VisualiserController;
   topicTitle?: DataStructure;
   documentation?: Documentation;

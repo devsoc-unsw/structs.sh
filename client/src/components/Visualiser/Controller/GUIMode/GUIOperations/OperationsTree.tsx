@@ -15,16 +15,14 @@ const OperationsTree = () => {
     <Box sx={{ padding: 2 }}>
       <Typography color="textPrimary">{topicTitle}</Typography>
       <List>
-        {Object.keys(documentation).map((command, idx) => {
-          return (
+        {Object.keys(documentation).map((command, idx) => (
             <Box key={documentation[command].id}>
               <OperationDetails
                 command={command}
                 isLast={idx === Object.keys(documentation).length - 1}
               />
             </Box>
-          );
-        })}
+          ))}
       </List>
     </Box>
   );

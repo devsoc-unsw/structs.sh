@@ -5,9 +5,9 @@ import TopNavbar from 'components/Navbars/TopNavbar';
 import { Theme } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import Box from '@mui/material/Box';
-import styles from './VisualiserDashboardLayout.module.scss';
 import { DataStructure } from 'visualiser-src/common/typedefs';
 import { toTitleCase } from 'utils/url';
+import styles from './VisualiserDashboardLayout.module.scss';
 
 const containerVariants = {
   hidden: {

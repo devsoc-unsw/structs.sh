@@ -2,6 +2,7 @@ import GraphicalLinkedList from 'visualiser-src/linked-list-visualiser/data-stru
 import GraphicalBST from 'visualiser-src/binary-search-tree-visualiser/data-structure/GraphicalBST';
 import GraphicalDataStructure from './GraphicalDataStructure';
 import { DataStructure } from './typedefs';
+
 class GraphicalDataStructureFactory {
   public static create(topicTitle: DataStructure): GraphicalDataStructure {
     switch (topicTitle.toLowerCase()) {
