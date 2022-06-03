@@ -61,7 +61,7 @@ const OperationsTree: FC<Props> = ({ topicTitle, executeCommand }) => {
                   </ListItemIcon>
                   <Typography color="textPrimary">{op.command}</Typography>
                   {showOp[op.command] ? (
-                    <ExpandLess sx={{ fill: theme.palette.text.primary }} />
+                    <ExpandLess sx={{ fill: theme.palette.text.primary, transform: "rotate(90deg)" }} />
                   ) : (
                     <ExpandMore sx={{ fill: theme.palette.text.primary }} />
                   )}
