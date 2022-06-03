@@ -1,15 +1,13 @@
 import { Box } from '@mui/material';
 import React, { useCallback, useMemo, useEffect, useRef, useState } from 'react';
-import Notification from 'utils/Notification';
 import CodeSnippet from 'components/CodeSnippet/CodeSnippet';
 import { Pane } from 'components/Panes';
-import { defaultSpeed } from 'visualiser-src/common/constants';
 import { DataStructure, Documentation } from 'visualiser-src/common/typedefs';
 import VisualiserController from 'visualiser-src/controller/VisualiserController';
 import { VisualiserControls } from './Controller';
 import GUIMode from './Controller/GUIMode/GUIMode';
 import styles from './VisualiserDashboard.module.scss';
-import VisualiserContext, { VisualiserContextValues } from './VisualiserContext';
+import VisualiserContext from './VisualiserContext';
 
 interface VisualiserInterfaceProps {
   topicTitle: DataStructure;
