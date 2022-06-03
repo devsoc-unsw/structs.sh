@@ -140,12 +140,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
       if (this.head === null) {
         producer.doAnimationAndHighlight(11, producer.setHeadToNull, this.headPointer);
       } else {
-        producer.doAnimationAndHighlight(
-          11,
-          producer.pointHeadToNext,
-          this.headPointer,
-          this.head.next
-        );
+        producer.doAnimationAndHighlight(11, producer.pointHeadToNext, this.headPointer, this.head);
       }
     } else {
       prev.next = curr.next;
