@@ -21,21 +21,18 @@ import {
 } from '@mui/material';
 import Slider from '@mui/material/Slider';
 import React, { FC, useEffect, useState } from 'react';
-import ModeSwitch from './GUIMode/ModeSwitch';
 import styles from './Control.module.scss';
 
 interface Props {
-  terminalMode: boolean;
-  setTerminalMode: (mode: boolean) => void;
   handlePlay: () => void;
   handlePause: () => void;
   handleStepForward: () => void;
   handleStepBackward: () => void;
   handleUpdateTimeline: (val: number) => void;
   handleDragTimeline: (val: number) => void;
-  handleSpeedSliderDrag: (val: number) => void;
+  handleSetSpeed: (val: number) => void;
   timelineComplete: boolean;
-  speed: number;
+  handleReset: () => void;
 }
 
 /**
@@ -48,18 +45,16 @@ interface Props {
  * Eg. it receives a `handlePlay` callback and attaches it to the Play button's
  *     `onClick` handler.
  */
-const VisualiserController: FC<Props> = ({
-  terminalMode,
-  setTerminalMode,
+const VisualiserControls: FC<Props> = ({
   handlePlay,
   handlePause,
   handleStepForward,
   handleStepBackward,
   handleUpdateTimeline,
   handleDragTimeline,
-  handleSpeedSliderDrag,
+  handleSetSpeed,
   timelineComplete,
-  speed,
+  handleReset,
 }) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [userIsDraggingTimeline, setUserIsDraggingTimeline] = useState<boolean>(false);
@@ -79,7 +74,7 @@ const VisualiserController: FC<Props> = ({
 
   const handleSelectSpeed = (event: React.MouseEvent<HTMLElement>, index: number) => {
     setSelectedIndex(index);
-    handleSpeedSliderDrag(Number(speedOptions[index]));
+    handleSetSpeed(Number(speedOptions[index]));
     setAnchorEl(null);
   };
 
@@ -155,8 +150,7 @@ const VisualiserController: FC<Props> = ({
             horizontal: 'center',
           }}
         >
-          {speedOptions.map((speedOption, index) => {
-            return (
+          {speedOptions.map((speedOption, index) => (
               <MenuItem onClick={(event) => handleSelectSpeed(event, index)} key={index}>
                 {index === selectedIndex ? (
                   <>
@@ -169,8 +163,7 @@ const VisualiserController: FC<Props> = ({
                   <ListItemText inset>{speedOption}</ListItemText>
                 )}
               </MenuItem>
-            );
-          })}
+            ))}
         </Menu>
 
         <Box className={styles.sliderContainer}>
@@ -248,7 +241,7 @@ const VisualiserController: FC<Props> = ({
           {/* <Box className={styles.modeSwitchContainer}>
           <ModeSwitch switchMode={terminalMode} setSwitchMode={setTerminalMode} /> */}
         </Box>
-        <Button className={styles.resetButton}>
+        <Button className={styles.resetButton} onClick={handleReset}>
           <Typography color="textPrimary" sx={{ whiteSpace: 'nowrap' }}>
             Reset All
           </Typography>
@@ -258,4 +251,4 @@ const VisualiserController: FC<Props> = ({
   );
 };
 
-export default VisualiserController;
+export default VisualiserControls;

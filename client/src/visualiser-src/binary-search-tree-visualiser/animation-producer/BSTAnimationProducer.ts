@@ -7,18 +7,6 @@ import { getPointerStartEndCoordinates } from '../../common/helpers';
 import AnimationProducer from '../../common/AnimationProducer';
 
 export default class BSTAnimationProducer extends AnimationProducer {
-  public visualiserCanvas: Container;
-
-  // TODO: change bst lines to be pointers instead
-
-  // the problem with each BSTAnimationProducer having its own visualiser canvas created
-  // is that svg.js uses an addTo method which would create an extra svg container
-  // of max width and height. we don't want this
-  public constructor(visualiserCanvas: Container) {
-    super();
-    this.visualiserCanvas = visualiserCanvas;
-  }
-
   public halfHighlightNode(node: Node): void {
     this.addSequenceAnimation(
       node.nodeTarget.animate(500).attr({
@@ -100,7 +88,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
   // returns the difference in x coordinates with the node
   // and it's two child nodes
   public static getLineDiffX(node: Node): number {
-    const canvasWidth = document.getElementById('bst-canvas').offsetWidth;
+    const canvasWidth = document.getElementById('visualiser-container').offsetWidth;
     const depth: number = (node.y - canvasPadding) / 75;
     const baseDiff = canvasWidth / 4;
 

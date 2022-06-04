@@ -1,7 +1,6 @@
 import { SVG, Runner } from '@svgdotjs/svg.js';
-import { CODE_CANVAS } from 'utils/constants';
 import { CodeLine } from './typedefs';
-import { showLineNumbers } from './constants';
+import { showLineNumbers, CODE_CANVAS } from './constants';
 
 export default abstract class AnimationProducer {
   private _allRunners: Runner[][] = [];

@@ -1,8 +1,8 @@
-import { Marker } from '@svgdotjs/svg.js';
+import { Marker, SVG, Svg } from '@svgdotjs/svg.js';
 import BSTAnimationProducer from './BSTAnimationProducer';
 import { Node } from '../util/typedefs';
 import { nodeStyle, textStyle, lineStyle } from '../util/settings';
-import { markerLength, nodeDiameter, pathD } from '../../common/constants';
+import { markerLength, nodeDiameter, pathD , VISUALISER_CANVAS } from '../../common/constants';
 import { getPointerStartEndCoordinates } from '../../common/helpers';
 import { insertCodeSnippet } from '../util/codeSnippets';
 
@@ -33,6 +33,8 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
 
   // draws a node on the draw canvas and shows the node
   public createNode(node: Node): void {
+    const canvas = SVG(VISUALISER_CANVAS) as Svg;
+
     // based on the depth of the node we are able to create left and right svg line targets
     const lineDiffX = BSTAnimationProducer.getLineDiffX(node);
     const lineDiffY = 75;
@@ -42,7 +44,7 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
       node.x - lineDiffX,
       node.y + lineDiffY
     );
-    node.leftLineTarget = this.visualiserCanvas
+    node.leftLineTarget = canvas
       .line(
         leftChildCoordinates[0][0],
         leftChildCoordinates[0][1],
@@ -57,7 +59,8 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
       node.x + lineDiffX,
       node.y + lineDiffY
     );
-    node.rightLineTarget = this.visualiserCanvas
+
+    node.rightLineTarget = canvas
       .line(
         rightChildCoordinates[0][0],
         rightChildCoordinates[0][1],
@@ -68,7 +71,7 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
 
     // Draw a triangle at the end of the line
 
-    node.leftArrowTarget = this.visualiserCanvas
+    node.leftArrowTarget = canvas
       .marker(markerLength, markerLength, (add: Marker) => {
         add.path(pathD);
       })
@@ -76,7 +79,7 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
 
     node.leftLineTarget.marker('end', node.leftArrowTarget);
 
-    node.rightArrowTarget = this.visualiserCanvas
+    node.rightArrowTarget = canvas
       .marker(markerLength, markerLength, (add: Marker) => {
         add.path(pathD);
       })
@@ -84,11 +87,11 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
 
     node.rightLineTarget.marker('end', node.rightArrowTarget);
 
-    node.nodeTarget = this.visualiserCanvas.circle(nodeDiameter);
+    node.nodeTarget = canvas.circle(nodeDiameter);
     node.nodeTarget.attr(nodeStyle);
     node.nodeTarget.cx(node.x).cy(node.y);
 
-    node.textTarget = this.visualiserCanvas.text(node.value.toString());
+    node.textTarget = canvas.text(node.value.toString());
     node.textTarget.attr(textStyle);
     node.textTarget.cx(node.x).cy(node.y);
 
