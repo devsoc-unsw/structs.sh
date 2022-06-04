@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { ApiConstants } from 'constants/api';
-import { DataStructure } from 'visualiser-src/common/typedefs';
+import { isImplemented } from 'visualiser-src/common/helpers';
 
 // TODO: it could be a good idea to set up a yarn workspace, create a `common` directory
 // and put all these TypeScript definitions for data models in that directory so they can
@@ -26,7 +26,7 @@ export interface Lesson {
 
 export interface Topic {
   _id: string;
-  title: DataStructure;
+  title: string;
   description: string;
   courses: string[];
   videos: string[];
@@ -134,7 +134,8 @@ export const getQuizzes: GetQuizzes = async (lessonId: string) => {
 export const getTopics: GetTopics = async () => {
   try {
     const response = await axios.get(`${ApiConstants.URL}/api/topics`);
-    const { topics } = response.data;
+    let { topics } = response.data;
+    topics = topics.filter((topic) => isImplemented(topic.title));
     return topics;
   } catch (err) {
     const errMessage: string = err.response.data.statusText;
@@ -146,7 +147,10 @@ export const getTopic: GetTopic = async (title: string) => {
   try {
     const response = await axios.get(`${ApiConstants.URL}/api/topics?title=${title}`);
     const { topic } = response.data;
-    return topic as Topic;
+    if (isImplemented(topic.title)) {
+      return topic as Topic;
+    }
+    throw new Error('Topic not implemented');
   } catch (err) {
     const errMessage: string = err.response.data.statusText;
     throw new Error(errMessage);

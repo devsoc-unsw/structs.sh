@@ -1,12 +1,11 @@
 import { CircularLoader } from 'components/Loader';
 import { Pane } from 'components/Panes';
 import React from 'react';
-import { DataStructure } from 'visualiser-src/common/typedefs';
 import VisualiserCanvas from './VisualiserCanvas';
 import VisualiserInterface from './VisualiserInterface';
 
 interface VisualiserProps {
-  topicTitle: DataStructure;
+  topicTitle: string;
 }
 
 /**

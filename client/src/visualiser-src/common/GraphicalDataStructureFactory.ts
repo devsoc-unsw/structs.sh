@@ -4,7 +4,7 @@ import GraphicalDataStructure from './GraphicalDataStructure';
 import { DataStructure } from './typedefs';
 
 class GraphicalDataStructureFactory {
-  public static create(topicTitle: DataStructure): GraphicalDataStructure {
+  public static create(topicTitle: string): GraphicalDataStructure {
     switch (topicTitle.toLowerCase()) {
       case DataStructure.LINKED_LISTS:
         return new GraphicalLinkedList();
