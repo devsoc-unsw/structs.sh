@@ -166,7 +166,7 @@ class VisualiserController {
 
   public resetDataStructure(): void {
     this.dataStructure.clearCanvas();
-    this.dataStructure.reset();
+    this.dataStructure['reset']();
   }
 
   private computePrevTimestamp(): number {
