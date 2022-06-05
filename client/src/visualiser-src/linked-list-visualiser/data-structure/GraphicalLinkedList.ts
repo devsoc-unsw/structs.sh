@@ -223,6 +223,8 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
   }
 
   reset(): void {
+    SVG(VISUALISER_CANVAS).clear();
+
     this.head = null;
     this.length = 0;
 

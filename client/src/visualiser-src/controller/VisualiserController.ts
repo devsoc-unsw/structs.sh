@@ -6,8 +6,6 @@ import { defaultSpeed } from '../common/constants';
 import AnimationProducer from '../common/AnimationProducer';
 
 class VisualiserController {
-  private topicTitle: string;
-
   private dataStructure: GraphicalDataStructure;
 
   private currentTimeline: Timeline = new Timeline().persist(true);
@@ -23,7 +21,6 @@ class VisualiserController {
   public constructor(topicTitle?: string) {
     this.setSpeed(defaultSpeed);
     if (topicTitle !== undefined) {
-      this.topicTitle = topicTitle;
       this.applyTopicTitle(topicTitle);
     }
   }
@@ -165,8 +162,7 @@ class VisualiserController {
   }
 
   public resetDataStructure(): void {
-    this.dataStructure.clearCanvas();
-    this.dataStructure['reset']();
+    this.dataStructure.reset();
   }
 
   private computePrevTimestamp(): number {
