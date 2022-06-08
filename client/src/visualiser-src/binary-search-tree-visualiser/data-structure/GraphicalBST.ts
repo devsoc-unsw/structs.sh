@@ -41,10 +41,10 @@ class GraphicalBST extends GraphicalDataStructure {
   });
 
   public root: Node = null;
-
-  // WIP: ensure this is callable
-  // WIP: use the generateNumbers function to insert numbers
-  public randomInsert(){
+  constructor() {
+    super();
+    // WIP: ensure this is callable
+    // WIP: use the generateNumbers function to insert numbers
     const numbers = generateNumbers();
     for (let i = 0; i < numbers.length; i++) {
       this.insert(numbers[i]);
