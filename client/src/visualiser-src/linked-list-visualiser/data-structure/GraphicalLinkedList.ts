@@ -13,6 +13,18 @@ import LinkedListDeleteAnimationProducer from '../animation-producer/LinkedListD
 import LinkedListInsertAnimationProducer from '../animation-producer/LinkedListInsertAnimationProducer';
 import LinkedListSearchAnimationProducer from '../animation-producer/LinkedListSearchAnimationProducer';
 import LinkedListPrependAnimationProducer from '../animation-producer/LinkedListPrependAnimationProducer';
+import { appendFile } from 'fs';
+
+// TODO: change sequence to pseudo random range from 4-8 elements
+// TODO: link to append/ insert functions in linked list and BST data structures
+function generateNumbers(){
+  var result = [];
+    for (let i = 0; i < 5; i++) {
+      const num = Math.floor(Math.random() * 10);
+      result.push(num);
+    }
+  return result;
+}
 
 // An linked list data structure containing all linked list operations.
 // Every operation producers a LinkedListAnimationProducer, which an VisualiserController
@@ -54,12 +66,21 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     // add prev and curr pointers to visualiser canvas
     (SVG(VISUALISER_CANVAS) as Svg).image(currSvg).opacity(0).id('current');
     (SVG(VISUALISER_CANVAS) as Svg).image(prevSvg).opacity(0).id('prev');
+
+    // WIP: use the generateNumbers function to insert numbers
+    const numbers = generateNumbers();
+    for (let i = 0; i < numbers.length; i++) {
+      this.append(numbers[i]);
+    }
   }
 
   append(input: number): AnimationProducer {
     this.length += 1;
     const producer = new LinkedListAppendAnimationProducer();
     producer.renderAppendCode();
+
+
+    console.log("yay, you appended something to the linked list");
     // Create new node
     const newNode = GraphicalLinkedListNode.from(input);
     producer.doAnimationAndHighlight(1, producer.addNodeAtEnd, newNode, this.length);

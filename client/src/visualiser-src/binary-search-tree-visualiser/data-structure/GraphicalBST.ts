@@ -8,6 +8,15 @@ import BSTTraverseAnimationProducer from '../animation-producer/BSTTraverseAnima
 import { Node } from '../util/typedefs';
 import { canvasPadding } from '../util/settings';
 
+function generateNumbers(){
+  var result = [];
+    for (let i = 0; i < 5; i++) {
+      const num = Math.floor(Math.random() * 10);
+      result.push(num);
+    }
+  return result;
+}
+
 // used for the actual implementation of the bst
 class GraphicalBST extends GraphicalDataStructure {
   private static documentation: Documentation = injectIds({
@@ -39,6 +48,16 @@ class GraphicalBST extends GraphicalDataStructure {
   });
 
   public root: Node = null;
+
+  // WIP: ensure this is callable
+  // WIP: use the generateNumbers function to insert numbers
+  public randomInsert(){
+    const numbers = generateNumbers();
+    for (let i = 0; i < numbers.length; i++) {
+      this.insert(numbers[i]);
+    }
+  }
+
 
   // inserts a node into the bst and produces an animation sequence
   // that is later handled by the animation controller
