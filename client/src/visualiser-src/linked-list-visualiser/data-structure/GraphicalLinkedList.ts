@@ -7,6 +7,7 @@ import currSvg from 'visualiser-src/linked-list-visualiser/assets/curr.svg';
 import prevSvg from 'visualiser-src/linked-list-visualiser/assets/prev.svg';
 import { injectIds } from 'visualiser-src/common/helpers';
 import { CURRENT, PREV } from '../util/constants';
+import { generateNumbers } from 'visualiser-src/common/RandomNumGenerator';
 import GraphicalLinkedListNode from './GraphicalLinkedListNode';
 import LinkedListAppendAnimationProducer from '../animation-producer/LinkedListAppendAnimationProducer';
 import LinkedListDeleteAnimationProducer from '../animation-producer/LinkedListDeleteAnimationProducer';
@@ -15,16 +16,6 @@ import LinkedListSearchAnimationProducer from '../animation-producer/LinkedListS
 import LinkedListPrependAnimationProducer from '../animation-producer/LinkedListPrependAnimationProducer';
 import { appendFile } from 'fs';
 
-// TODO: change sequence to pseudo random range from 4-8 elements
-// TODO: link to append/ insert functions in linked list and BST data structures
-function generateNumbers(){
-  var result = [];
-    for (let i = 0; i < 5; i++) {
-      const num = Math.floor(Math.random() * 10);
-      result.push(num);
-    }
-  return result;
-}
 
 // An linked list data structure containing all linked list operations.
 // Every operation producers a LinkedListAnimationProducer, which an VisualiserController

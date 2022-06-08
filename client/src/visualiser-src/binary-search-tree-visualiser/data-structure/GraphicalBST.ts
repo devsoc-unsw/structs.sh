@@ -7,15 +7,8 @@ import BSTRotateAnimationProducer from '../animation-producer/BSTRotateAnimation
 import BSTTraverseAnimationProducer from '../animation-producer/BSTTraverseAnimationProducer';
 import { Node } from '../util/typedefs';
 import { canvasPadding } from '../util/settings';
+import { generateNumbers } from 'visualiser-src/common/RandomNumGenerator';
 
-function generateNumbers(){
-  var result = [];
-    for (let i = 0; i < 5; i++) {
-      const num = Math.floor(Math.random() * 10);
-      result.push(num);
-    }
-  return result;
-}
 
 // used for the actual implementation of the bst
 class GraphicalBST extends GraphicalDataStructure {
