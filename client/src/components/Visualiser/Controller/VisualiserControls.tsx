@@ -5,8 +5,18 @@ import ReplayIcon from '@mui/icons-material/Replay';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import SpeedIcon from '@mui/icons-material/Speed';
-import { Box, IconButton, Stack, useTheme } from '@mui/material';
-import Slider from '@mui/material/Slider';
+import CheckIcon from '@mui/icons-material/Check';
+import {
+  Box,
+  IconButton,
+  Typography,
+  useTheme,
+  Button,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+} from '@mui/material';
 import React, { EventHandler, FC, useCallback, useContext, useEffect, useState } from 'react';
 import { defaultSpeed } from 'visualiser-src/common/constants';
 import VisualiserContext from '../VisualiserContext';
@@ -27,7 +37,13 @@ const VisualiserControls = () => {
     controller,
     timeline: { isTimelineComplete, handleTimelineUpdate },
   } = useContext(VisualiserContext);
-  const [speed, setSpeed] = useState<number>(defaultSpeed);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [userIsDraggingTimeline, setUserIsDraggingTimeline] = useState<boolean>(false);
+  const theme = useTheme();
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number>(2);
+  const speedMenuOpen = Boolean(anchorEl);
+  const speedOptions: string[] = ['1.0', '0.8', '0.6', '0.4', '0.2'];
 
   const handlePlay = useCallback(() => {
     controller.play();
@@ -45,6 +61,13 @@ const VisualiserControls = () => {
     controller.stepBackwards();
   }, [controller]);
 
+  const handleSetSpeed = useCallback(
+    (val: number) => {
+      controller.setSpeed(val);
+    },
+    [controller]
+  );
+
   const handleDragTimeline = useCallback(
     (val: number) => {
       controller.seekPercent(val);
@@ -52,16 +75,23 @@ const VisualiserControls = () => {
     [controller]
   );
 
-  const handleSpeedSliderDrag = useCallback(
-    (val: number) => {
-      controller.setSpeed(val);
-      setSpeed(val);
-    },
-    [controller]
-  );
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [userIsDraggingTimeline, setUserIsDraggingTimeline] = useState<boolean>(false);
-  const theme = useTheme();
+  const handleReset = useCallback(() => {
+    controller.resetDataStructure();
+  }, [controller]);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseSpeedMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const handleSelectSpeed = (event: React.MouseEvent<HTMLElement>, index: number) => {
+    setSelectedIndex(index);
+    handleSetSpeed(Number(speedOptions[index]));
+    setAnchorEl(null);
+  };
 
   useEffect(() => {
     if (isTimelineComplete) {
@@ -81,15 +111,14 @@ const VisualiserControls = () => {
           <SkipPreviousIcon sx={{ fill: theme.palette.text.primary }} />
         </IconButton>
         {isTimelineComplete ? (
-          <IconButton>
-            <ReplayIcon
-              sx={{ fill: theme.palette.text.primary }}
-              onClick={() => {
-                handleDragTimeline(0);
-                handlePlay();
-                setIsPlaying(true);
-              }}
-            />
+          <IconButton
+            onClick={() => {
+              handleDragTimeline(0);
+              handlePlay();
+              setIsPlaying(true);
+            }}
+          >
+            <ReplayIcon sx={{ fill: theme.palette.text.primary }} />
           </IconButton>
         ) : isPlaying ? (
           <IconButton
@@ -114,55 +143,81 @@ const VisualiserControls = () => {
           <SkipNextIcon sx={{ fill: theme.palette.text.primary }} />
         </IconButton>
 
+        <Button onClick={handleClick} className={styles.setSpeedButton}>
+          <SpeedIcon
+            sx={{ fill: theme.palette.text.primary }}
+            className={styles.setSpeedButtonIcon}
+          />
+          <Typography color="textPrimary" className={styles.currSpeed}>
+            {speedOptions[selectedIndex]}
+          </Typography>
+        </Button>
+        <Menu
+          open={speedMenuOpen}
+          anchorEl={anchorEl}
+          onClose={handleCloseSpeedMenu}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          transformOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+        >
+          {speedOptions.map((speedOption, index) => (
+            <MenuItem onClick={(event) => handleSelectSpeed(event, index)} key={index}>
+              {index === selectedIndex ? (
+                <>
+                  <ListItemIcon>
+                    <CheckIcon sx={{ fill: theme.palette.text.primary }} />
+                  </ListItemIcon>
+                  {speedOption}
+                </>
+              ) : (
+                <ListItemText inset>{speedOption}</ListItemText>
+              )}
+            </MenuItem>
+          ))}
+        </Menu>
+
         <Box className={styles.sliderContainer}>
-          <Stack direction="column">
-            <Stack direction="row" sx={{ height: '32px' }}>
-              <TimeIcon className={styles.sliderIcon} sx={{ fill: theme.palette.text.primary }} />
-              <input
-                type="range"
-                id="timelineSlider"
-                name="volume"
-                min="0"
-                max="100"
-                defaultValue="0"
-                step="0.01"
-                className={styles.timelineSlider}
-                onChange={(event) => {
-                  if (userIsDraggingTimeline) {
-                    handleDragTimeline(Number(event.target.value));
-                  } else {
-                    handleTimelineUpdate(Number(event.target.value));
-                  }
-                }}
-                onMouseDown={() => {
-                  setUserIsDraggingTimeline(true);
-                  handlePause();
-                }}
-                onMouseUp={() => {
-                  setUserIsDraggingTimeline(false);
-                  if (isPlaying) {
-                    handlePlay();
-                  }
-                }}
-              />
-            </Stack>
-            <Stack direction="row" sx={{ height: '32px' }}>
-              <SpeedIcon className={styles.sliderIcon} sx={{ fill: theme.palette.text.primary }} />
-              <Slider
-                onChange={(_, newValue) => handleSpeedSliderDrag(Number(newValue))}
-                onMouseDown={() => handlePause()}
-                onMouseUp={() => handlePlay()}
-                value={speed}
-                min={0.2}
-                max={1}
-                step={0.2}
-                marks
-                sx={{ ml: '10px' }}
-                color="secondary"
-              />
-            </Stack>
-          </Stack>
+          {/* <Stack direction="column"> */}
+          {/* <Stack direction="row" sx={{ height: '32px' }}> */}
+          <TimeIcon className={styles.sliderIcon} sx={{ fill: theme.palette.text.primary }} />
+          <input
+            type="range"
+            id="timelineSlider"
+            name="volume"
+            min="0"
+            max="100"
+            defaultValue="0"
+            step="0.01"
+            className={styles.timelineSlider}
+            onChange={(event) => {
+              if (userIsDraggingTimeline) {
+                handleDragTimeline(Number(event.target.value));
+              } else {
+                handleTimelineUpdate(Number(event.target.value));
+              }
+            }}
+            onMouseDown={() => {
+              setUserIsDraggingTimeline(true);
+              handlePause();
+            }}
+            onMouseUp={() => {
+              setUserIsDraggingTimeline(false);
+              if (isPlaying) {
+                handlePlay();
+              }
+            }}
+          />
         </Box>
+        <Button className={styles.resetButton} onClick={handleReset}>
+          <Typography color="textPrimary" sx={{ whiteSpace: 'nowrap' }}>
+            Reset All
+          </Typography>
+        </Button>
       </div>
     </Box>
   );
