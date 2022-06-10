@@ -44,7 +44,8 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
     setTimelineComplete(val >= 100);
   }, []);
 
-  const executeCommand = (command: string, args: string[]): string => controller.current.doOperation(command, updateTimeline, ...args);
+  const executeCommand = (command: string, args: string[]): string =>
+    controller.current.doOperation(command, updateTimeline, ...args);
 
   const handlePlay = useCallback(() => {
     controller.current.play();
@@ -69,13 +70,17 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
     [controller]
   );
 
-  const handleSpeedSliderDrag = useCallback(
+  const handleSetSpeed = useCallback(
     (val: number) => {
       controller.current.setSpeed(val);
       setSpeed(val);
     },
     [controller]
   );
+
+  const handleReset = useCallback(() => {
+    controller.current.resetDataStructure();
+  }, [controller]);
 
   /* -------------------------------------------------------------------------- */
 
@@ -88,9 +93,9 @@ const VisualiserInterface: React.FC<Props> = ({ topicTitle }) => {
         handleStepBackward={handleStepBackward}
         handleUpdateTimeline={updateTimeline}
         handleDragTimeline={dragTimeline}
-        handleSpeedSliderDrag={handleSpeedSliderDrag}
+        handleSetSpeed={handleSetSpeed}
         timelineComplete={timelineComplete}
-        speed={speed}
+        handleReset={handleReset}
       />
       <Pane orientation="vertical" minSize={150.9}>
         <GUIMode

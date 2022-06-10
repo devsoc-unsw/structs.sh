@@ -5,7 +5,20 @@ import ReplayIcon from '@mui/icons-material/Replay';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import SpeedIcon from '@mui/icons-material/Speed';
-import { Box, IconButton, Stack, useTheme } from '@mui/material';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import CheckIcon from '@mui/icons-material/Check';
+import {
+  Box,
+  IconButton,
+  Stack,
+  Typography,
+  useTheme,
+  Button,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+} from '@mui/material';
 import Slider from '@mui/material/Slider';
 import React, { FC, useEffect, useState } from 'react';
 import styles from './Control.module.scss';
@@ -17,9 +30,9 @@ interface Props {
   handleStepBackward: () => void;
   handleUpdateTimeline: (val: number) => void;
   handleDragTimeline: (val: number) => void;
-  handleSpeedSliderDrag: (val: number) => void;
+  handleSetSpeed: (val: number) => void;
   timelineComplete: boolean;
-  speed: number;
+  handleReset: () => void;
 }
 
 /**
@@ -39,13 +52,31 @@ const VisualiserControls: FC<Props> = ({
   handleStepBackward,
   handleUpdateTimeline,
   handleDragTimeline,
-  handleSpeedSliderDrag,
+  handleSetSpeed,
   timelineComplete,
-  speed,
+  handleReset,
 }) => {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [userIsDraggingTimeline, setUserIsDraggingTimeline] = useState<boolean>(false);
   const theme = useTheme();
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const speedMenuOpen = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseSpeedMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const speedOptions: string[] = ['1.0', '0.8', '0.6', '0.4', '0.2'];
+  const [selectedIndex, setSelectedIndex] = useState<number>(2);
+
+  const handleSelectSpeed = (event: React.MouseEvent<HTMLElement>, index: number) => {
+    setSelectedIndex(index);
+    handleSetSpeed(Number(speedOptions[index]));
+    setAnchorEl(null);
+  };
 
   useEffect(() => {
     if (timelineComplete) {
@@ -65,15 +96,14 @@ const VisualiserControls: FC<Props> = ({
           <SkipPreviousIcon sx={{ fill: theme.palette.text.primary }} />
         </IconButton>
         {timelineComplete ? (
-          <IconButton>
-            <ReplayIcon
-              sx={{ fill: theme.palette.text.primary }}
-              onClick={() => {
-                handleDragTimeline(0);
-                handlePlay();
-                setIsPlaying(true);
-              }}
-            />
+          <IconButton
+            onClick={() => {
+              handleDragTimeline(0);
+              handlePlay();
+              setIsPlaying(true);
+            }}
+          >
+            <ReplayIcon sx={{ fill: theme.palette.text.primary }} />
           </IconButton>
         ) : isPlaying ? (
           <IconButton
@@ -98,40 +128,100 @@ const VisualiserControls: FC<Props> = ({
           <SkipNextIcon sx={{ fill: theme.palette.text.primary }} />
         </IconButton>
 
+        <Button onClick={handleClick} className={styles.setSpeedButton}>
+          <SpeedIcon
+            sx={{ fill: theme.palette.text.primary }}
+            className={styles.setSpeedButtonIcon}
+          />
+          <Typography color="textPrimary" className={styles.currSpeed}>
+            {speedOptions[selectedIndex]}
+          </Typography>
+        </Button>
+        <Menu
+          open={speedMenuOpen}
+          anchorEl={anchorEl}
+          onClose={handleCloseSpeedMenu}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          transformOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+        >
+          {speedOptions.map((speedOption, index) => (
+              <MenuItem onClick={(event) => handleSelectSpeed(event, index)} key={index}>
+                {index === selectedIndex ? (
+                  <>
+                    <ListItemIcon>
+                      <CheckIcon sx={{ fill: theme.palette.text.primary }} />
+                    </ListItemIcon>
+                    {speedOption}
+                  </>
+                ) : (
+                  <ListItemText inset>{speedOption}</ListItemText>
+                )}
+              </MenuItem>
+            ))}
+        </Menu>
+
         <Box className={styles.sliderContainer}>
-          <Stack direction="column">
-            <Stack direction="row" sx={{ height: '32px' }}>
-              <TimeIcon className={styles.sliderIcon} sx={{ fill: theme.palette.text.primary }} />
-              <input
-                type="range"
-                id="timelineSlider"
-                name="volume"
-                min="0"
-                max="100"
-                defaultValue="0"
-                step="0.01"
-                className={styles.timelineSlider}
-                onChange={(event) => {
-                  if (userIsDraggingTimeline) {
-                    handleDragTimeline(Number(event.target.value));
-                  } else {
-                    handleUpdateTimeline(Number(event.target.value));
-                  }
-                }}
-                onMouseDown={() => {
-                  setUserIsDraggingTimeline(true);
-                  handlePause();
-                }}
-                onMouseUp={() => {
-                  setUserIsDraggingTimeline(false);
-                  if (isPlaying) {
-                    handlePlay();
-                  }
-                }}
-              />
-            </Stack>
-            <Stack direction="row" sx={{ height: '32px' }}>
-              <SpeedIcon className={styles.sliderIcon} sx={{ fill: theme.palette.text.primary }} />
+          {/* <Stack direction="column"> */}
+          {/* <Stack direction="row" sx={{ height: '32px' }}> */}
+          <TimeIcon className={styles.sliderIcon} sx={{ fill: theme.palette.text.primary }} />
+          <input
+            type="range"
+            id="timelineSlider"
+            name="volume"
+            min="0"
+            max="100"
+            defaultValue="0"
+            step="0.01"
+            className={styles.timelineSlider}
+            onChange={(event) => {
+              if (userIsDraggingTimeline) {
+                handleDragTimeline(Number(event.target.value));
+              } else {
+                handleUpdateTimeline(Number(event.target.value));
+              }
+            }}
+            onMouseDown={() => {
+              setUserIsDraggingTimeline(true);
+              handlePause();
+            }}
+            onMouseUp={() => {
+              setUserIsDraggingTimeline(false);
+              if (isPlaying) {
+                handlePlay();
+              }
+            }}
+          />
+          {/* <Slider
+                    onChange={(_, newValue) => {
+                        if (userIsDraggingTimeline) {
+                            handleDragTimeline(Number(newValue));
+                        } else {
+                            handleUpdateTimeline(Number(newValue));
+                        }
+                    }}
+                    onMouseDown={() => {
+                        setUserIsDraggingTimeline(true);
+                        handlePause();
+                    }}
+                    onMouseUp={() => {
+                        setUserIsDraggingTimeline(false);
+                        handlePlay();
+                    }}
+                    value={animationProgress}
+                    disabled={!isPlaying}
+                    min={0}
+                    max={100}
+                    sx={{ ml: '10px' }}
+                /> */}
+          {/* </Stack> */}
+          {/* <Stack direction="row" sx={{ height: '32px' }}>
+              {/* <SpeedIcon className={styles.sliderIcon} sx={{ fill: theme.palette.text.primary }} />
               <Slider
                 onChange={(_, newValue) => handleSpeedSliderDrag(Number(newValue))}
                 onMouseDown={() => handlePause()}
@@ -144,9 +234,18 @@ const VisualiserControls: FC<Props> = ({
                 sx={{ ml: '10px' }}
                 color="secondary"
               />
-            </Stack>
-          </Stack>
+            </Stack> */}
+          {/* </Stack> */}
+          {/* </Box> */}
+
+          {/* <Box className={styles.modeSwitchContainer}>
+          <ModeSwitch switchMode={terminalMode} setSwitchMode={setTerminalMode} /> */}
         </Box>
+        <Button className={styles.resetButton} onClick={handleReset}>
+          <Typography color="textPrimary" sx={{ whiteSpace: 'nowrap' }}>
+            Reset All
+          </Typography>
+        </Button>
       </div>
     </Box>
   );
