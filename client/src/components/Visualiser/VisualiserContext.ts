@@ -1,10 +1,10 @@
 import React from 'react';
-import { DataStructure, Documentation } from 'visualiser-src/common/typedefs';
+import { Documentation } from 'visualiser-src/common/typedefs';
 import VisualiserController from 'visualiser-src/controller/VisualiserController';
 
 interface VisualiserContextValues {
   controller?: VisualiserController;
-  topicTitle?: DataStructure;
+  topicTitle?: string;
   documentation?: Documentation;
   timeline?: {
     isTimelineComplete: boolean;

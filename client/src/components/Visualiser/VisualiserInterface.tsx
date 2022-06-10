@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import React, { useCallback, useMemo, useEffect, useRef, useState } from 'react';
 import CodeSnippet from 'components/CodeSnippet/CodeSnippet';
 import { Pane } from 'components/Panes';
-import { DataStructure, Documentation } from 'visualiser-src/common/typedefs';
+import { Documentation } from 'visualiser-src/common/typedefs';
 import VisualiserController from 'visualiser-src/controller/VisualiserController';
 import { VisualiserControls } from './Controller';
 import GUIMode from './Controller/GUIMode/GUIMode';
@@ -10,7 +10,7 @@ import styles from './VisualiserDashboard.module.scss';
 import VisualiserContext from './VisualiserContext';
 
 interface VisualiserInterfaceProps {
-  topicTitle: DataStructure;
+  topicTitle: string;
 }
 
 /**
@@ -24,7 +24,7 @@ interface VisualiserInterfaceProps {
  *     sliders, etc.).
  */
 const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle }) => {
-  const topicTitleRef = useRef<DataStructure>();
+  const topicTitleRef = useRef<string>();
   const controllerRef = useRef<VisualiserController>();
   const [isTimelineComplete, setIsTimelineComplete] = useState<boolean>(false);
   const [documentation, setDocumentation] = useState<Documentation>({});
