@@ -6,14 +6,8 @@ import {
   topOffset,
   nodePathWidth,
 } from '../util/constants';
-import { getPointerPath, Style } from '../util/util';
-import {
-  actualNodeDiameter,
-  markerLength,
-  nodeDiameter,
-  pathD,
-  VISUALISER_CANVAS,
-} from '../../common/constants';
+import { getPointerPath } from '../util/util';
+import { actualNodeDiameter, markerLength, pathD, VISUALISER_CANVAS } from '../../common/constants';
 
 function addMarker(add: Marker) {
   add.path(pathD);
@@ -55,13 +49,10 @@ export default class GraphicalLinkedListNode {
           actualNodeDiameter / 2,
           topOffset,
           actualNodeDiameter / 2 + nodePathWidth,
-          topOffset,
-          Style.RIGHT
+          topOffset
         )
       )
       .addTo(VISUALISER_CANVAS);
-
-    console.log(headPointer);
 
     headPointer.marker('end', markerLength, markerLength, addMarker);
     return headPointer;

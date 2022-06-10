@@ -16,7 +16,7 @@ interface VisualiserInterfaceProps {
 /**
  * The component responsible for connecting the visualiser source code with the
  * React client.
- *   - Contains the controller, terminal and GUI form.
+ *   - Contains the controller and form.
  *   - Initialises the visualiser and 'puts' it onto the DOM. It relies on
  *     the corresponding <VisualiserCanvas /> component being there.
  *   - Defines a bunch of callbacks to that call visualiser methods and passes

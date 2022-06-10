@@ -16,6 +16,7 @@ export enum DataStructure {
   BINARY_SEARCH_TREE = 'binary search trees',
   AVL_TREES = 'avl trees',
 }
+
 export interface Documentation {
   [command: string]: OperationUsage;
 }
