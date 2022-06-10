@@ -7,8 +7,7 @@ abstract class GraphicalDataStructure {
     SVG(VISUALISER_CANVAS).clear();
   }
 
-  // This 'reset' method below won't execute: instead the child's 'reset' method executes. This exists solely to make TypeScript happy.
-  // Is there a better solution to this? pls figure out before merging k thanks
+  // Child classes will have their own reset method specific to the data structure
   public reset(): void {
     SVG(VISUALISER_CANVAS).clear();
   }
