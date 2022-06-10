@@ -5,12 +5,10 @@ import ReplayIcon from '@mui/icons-material/Replay';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import SpeedIcon from '@mui/icons-material/Speed';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import CheckIcon from '@mui/icons-material/Check';
 import {
   Box,
   IconButton,
-  Stack,
   Typography,
   useTheme,
   Button,
@@ -19,21 +17,10 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
-import Slider from '@mui/material/Slider';
-import React, { FC, useEffect, useState } from 'react';
+import React, { EventHandler, FC, useCallback, useContext, useEffect, useState } from 'react';
+import { defaultSpeed } from 'visualiser-src/common/constants';
+import VisualiserContext from '../VisualiserContext';
 import styles from './Control.module.scss';
-
-interface Props {
-  handlePlay: () => void;
-  handlePause: () => void;
-  handleStepForward: () => void;
-  handleStepBackward: () => void;
-  handleUpdateTimeline: (val: number) => void;
-  handleDragTimeline: (val: number) => void;
-  handleSetSpeed: (val: number) => void;
-  timelineComplete: boolean;
-  handleReset: () => void;
-}
 
 /**
  * Contains all the visualiser controller UI, ie. the play/pause buttons, the
@@ -45,32 +32,60 @@ interface Props {
  * Eg. it receives a `handlePlay` callback and attaches it to the Play button's
  *     `onClick` handler.
  */
-const VisualiserControls: FC<Props> = ({
-  handlePlay,
-  handlePause,
-  handleStepForward,
-  handleStepBackward,
-  handleUpdateTimeline,
-  handleDragTimeline,
-  handleSetSpeed,
-  timelineComplete,
-  handleReset,
-}) => {
+const VisualiserControls = () => {
+  const {
+    controller,
+    timeline: { isTimelineComplete, handleTimelineUpdate },
+  } = useContext(VisualiserContext);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [userIsDraggingTimeline, setUserIsDraggingTimeline] = useState<boolean>(false);
   const theme = useTheme();
-
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number>(2);
   const speedMenuOpen = Boolean(anchorEl);
+  const speedOptions: string[] = ['1.0', '0.8', '0.6', '0.4', '0.2'];
+
+  const handlePlay = useCallback(() => {
+    controller.play();
+  }, [controller]);
+
+  const handlePause = useCallback(() => {
+    controller.pause();
+  }, [controller]);
+
+  const handleStepForward = useCallback(() => {
+    controller.stepForwards();
+  }, [controller]);
+
+  const handleStepBackward = useCallback(() => {
+    controller.stepBackwards();
+  }, [controller]);
+
+  const handleSetSpeed = useCallback(
+    (val: number) => {
+      controller.setSpeed(val);
+    },
+    [controller]
+  );
+
+  const handleDragTimeline = useCallback(
+    (val: number) => {
+      controller.seekPercent(val);
+    },
+    [controller]
+  );
+
+  const handleReset = useCallback(() => {
+    controller.resetDataStructure();
+  }, [controller]);
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleCloseSpeedMenu = () => {
     setAnchorEl(null);
   };
-
-  const speedOptions: string[] = ['1.0', '0.8', '0.6', '0.4', '0.2'];
-  const [selectedIndex, setSelectedIndex] = useState<number>(2);
 
   const handleSelectSpeed = (event: React.MouseEvent<HTMLElement>, index: number) => {
     setSelectedIndex(index);
@@ -79,12 +94,12 @@ const VisualiserControls: FC<Props> = ({
   };
 
   useEffect(() => {
-    if (timelineComplete) {
+    if (isTimelineComplete) {
       setIsPlaying(false);
     } else if (!isPlaying) {
       setIsPlaying(true);
     }
-  }, [timelineComplete, handleUpdateTimeline]);
+  }, [isTimelineComplete, handleTimelineUpdate]);
 
   return (
     <Box
@@ -95,7 +110,7 @@ const VisualiserControls: FC<Props> = ({
         <IconButton onClick={() => handleStepBackward()}>
           <SkipPreviousIcon sx={{ fill: theme.palette.text.primary }} />
         </IconButton>
-        {timelineComplete ? (
+        {isTimelineComplete ? (
           <IconButton
             onClick={() => {
               handleDragTimeline(0);
@@ -151,19 +166,19 @@ const VisualiserControls: FC<Props> = ({
           }}
         >
           {speedOptions.map((speedOption, index) => (
-              <MenuItem onClick={(event) => handleSelectSpeed(event, index)} key={index}>
-                {index === selectedIndex ? (
-                  <>
-                    <ListItemIcon>
-                      <CheckIcon sx={{ fill: theme.palette.text.primary }} />
-                    </ListItemIcon>
-                    {speedOption}
-                  </>
-                ) : (
-                  <ListItemText inset>{speedOption}</ListItemText>
-                )}
-              </MenuItem>
-            ))}
+            <MenuItem onClick={(event) => handleSelectSpeed(event, index)} key={index}>
+              {index === selectedIndex ? (
+                <>
+                  <ListItemIcon>
+                    <CheckIcon sx={{ fill: theme.palette.text.primary }} />
+                  </ListItemIcon>
+                  {speedOption}
+                </>
+              ) : (
+                <ListItemText inset>{speedOption}</ListItemText>
+              )}
+            </MenuItem>
+          ))}
         </Menu>
 
         <Box className={styles.sliderContainer}>
@@ -183,7 +198,7 @@ const VisualiserControls: FC<Props> = ({
               if (userIsDraggingTimeline) {
                 handleDragTimeline(Number(event.target.value));
               } else {
-                handleUpdateTimeline(Number(event.target.value));
+                handleTimelineUpdate(Number(event.target.value));
               }
             }}
             onMouseDown={() => {
@@ -197,49 +212,6 @@ const VisualiserControls: FC<Props> = ({
               }
             }}
           />
-          {/* <Slider
-                    onChange={(_, newValue) => {
-                        if (userIsDraggingTimeline) {
-                            handleDragTimeline(Number(newValue));
-                        } else {
-                            handleUpdateTimeline(Number(newValue));
-                        }
-                    }}
-                    onMouseDown={() => {
-                        setUserIsDraggingTimeline(true);
-                        handlePause();
-                    }}
-                    onMouseUp={() => {
-                        setUserIsDraggingTimeline(false);
-                        handlePlay();
-                    }}
-                    value={animationProgress}
-                    disabled={!isPlaying}
-                    min={0}
-                    max={100}
-                    sx={{ ml: '10px' }}
-                /> */}
-          {/* </Stack> */}
-          {/* <Stack direction="row" sx={{ height: '32px' }}>
-              {/* <SpeedIcon className={styles.sliderIcon} sx={{ fill: theme.palette.text.primary }} />
-              <Slider
-                onChange={(_, newValue) => handleSpeedSliderDrag(Number(newValue))}
-                onMouseDown={() => handlePause()}
-                onMouseUp={() => handlePlay()}
-                value={speed}
-                min={0.2}
-                max={1}
-                step={0.2}
-                marks
-                sx={{ ml: '10px' }}
-                color="secondary"
-              />
-            </Stack> */}
-          {/* </Stack> */}
-          {/* </Box> */}
-
-          {/* <Box className={styles.modeSwitchContainer}>
-          <ModeSwitch switchMode={terminalMode} setSwitchMode={setTerminalMode} /> */}
         </Box>
         <Button className={styles.resetButton} onClick={handleReset}>
           <Typography color="textPrimary" sx={{ whiteSpace: 'nowrap' }}>
