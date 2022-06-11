@@ -34,7 +34,7 @@ const App = () => {
   //     setCookie(LIGHT_MODE_ON, 'true');
   //   }
   // }, [currTheme, setCookie]);
-
+  
   // const themeMutationContextProviderValue = useMemo(
   //   () => ({
   //     toggleDarkMode,
@@ -50,7 +50,6 @@ const App = () => {
         <Routes>
           {/* Homepage */}
           <Route path="/" element={<HomePage />} />
-
           {/* Visualiser routes */}
           <Route path="/visualiser/:topic" element={<VisualiserDashboard />} />
 
@@ -62,7 +61,6 @@ const App = () => {
 
           {/* Content management dashboard */}
           {/* <Route path="/content" element={<ContentManagementDashboard />} /> */}
-
           {/* 404 page */}
           <Route path="*" element={<Page404 />} />
         </Routes>

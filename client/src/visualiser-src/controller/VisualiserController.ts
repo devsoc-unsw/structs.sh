@@ -161,6 +161,10 @@ class VisualiserController {
     return this.dataStructure?.documentation;
   }
 
+  public resetDataStructure(): void {
+    this.dataStructure.reset();
+  }
+
   private computePrevTimestamp(): number {
     let prevTimestamp = 0;
     this.timestamps.forEach((timestamp) => {
