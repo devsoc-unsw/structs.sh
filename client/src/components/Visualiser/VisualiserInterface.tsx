@@ -30,7 +30,7 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
   const [documentation, setDocumentation] = useState<Documentation>({});
 
   useEffect(() => {
-    controllerRef.current = controllerRef.current === undefined && new VisualiserController();
+    controllerRef.current = controllerRef.current || new VisualiserController();
     controllerRef.current.applyTopicTitle(topicTitle);
     topicTitleRef.current = topicTitle;
     setDocumentation(controllerRef.current.documentation);
