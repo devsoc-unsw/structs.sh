@@ -23,7 +23,7 @@ const Topics: React.FC<Props> = () => {
 
   return topics && topics.length > 0 ? (
     <div
-      style={{display: 'flex', flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'center', marginTop: '5%', gap: '20px 20px'}}>
+      style={{display: 'flex', flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'center', marginTop: '5%', gap: '20px 50px'}}>
       {topics.map((topic, idx) => (
         <div
           key={idx}
