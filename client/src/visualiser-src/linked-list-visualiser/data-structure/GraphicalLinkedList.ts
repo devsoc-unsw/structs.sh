@@ -1,5 +1,11 @@
 import AnimationProducer from 'visualiser-src/common/AnimationProducer';
-import { SVG, Path, Container } from '@svgdotjs/svg.js';
+import { SVG, Path, Svg } from '@svgdotjs/svg.js';
+import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
+import { Documentation } from 'visualiser-src/common/typedefs';
+import { VISUALISER_CANVAS } from 'visualiser-src/common/constants';
+import currSvg from 'visualiser-src/linked-list-visualiser/assets/curr.svg';
+import prevSvg from 'visualiser-src/linked-list-visualiser/assets/prev.svg';
+import { injectIds } from 'visualiser-src/common/helpers';
 import { CURRENT, PREV } from '../util/constants';
 import GraphicalLinkedListNode from './GraphicalLinkedListNode';
 import LinkedListAppendAnimationProducer from '../animation-producer/LinkedListAppendAnimationProducer';
@@ -9,9 +15,32 @@ import LinkedListSearchAnimationProducer from '../animation-producer/LinkedListS
 import LinkedListPrependAnimationProducer from '../animation-producer/LinkedListPrependAnimationProducer';
 
 // An linked list data structure containing all linked list operations.
-// Every operation producers a LinkedListAnimationProducer, which an AnimationController
+// Every operation producers a LinkedListAnimationProducer, which an VisualiserController
 // can then use to place SVG.Runners on a timeline to animate the operation.
-export default class GraphicalLinkedList {
+export default class GraphicalLinkedList extends GraphicalDataStructure {
+  private static documentation: Documentation = injectIds({
+    append: {
+      args: ['value'],
+      description: 'Append a node containing the value.',
+    },
+    delete: {
+      args: ['index'],
+      description: 'Delete a node by the index given.',
+    },
+    insert: {
+      args: ['value', 'index'],
+      description: 'Insert a value at the given index.',
+    },
+    search: {
+      args: ['value'],
+      description: 'Search for a value in the linked list.',
+    },
+    prepend: {
+      args: ['value'],
+      description: 'Prepend a node containing the value.',
+    },
+  });
+
   public headPointer: Path;
 
   public head: GraphicalLinkedListNode = null;
@@ -19,7 +48,12 @@ export default class GraphicalLinkedList {
   public length: number = 0;
 
   constructor() {
+    super();
     this.headPointer = GraphicalLinkedListNode.newHeadPointer();
+
+    // add prev and curr pointers to visualiser canvas
+    (SVG(VISUALISER_CANVAS) as Svg).image(currSvg).opacity(0).id('current');
+    (SVG(VISUALISER_CANVAS) as Svg).image(prevSvg).opacity(0).id('prev');
   }
 
   append(input: number): AnimationProducer {
@@ -106,12 +140,7 @@ export default class GraphicalLinkedList {
       if (this.head === null) {
         producer.doAnimationAndHighlight(11, producer.setHeadToNull, this.headPointer);
       } else {
-        producer.doAnimationAndHighlight(
-          11,
-          producer.pointHeadToNext,
-          this.headPointer,
-          this.head.next
-        );
+        producer.doAnimationAndHighlight(11, producer.pointHeadToNext, this.headPointer, this.head);
       }
     } else {
       prev.next = curr.next;
@@ -191,5 +220,22 @@ export default class GraphicalLinkedList {
       producer.doAnimation(producer.resetPointers);
     }
     return producer;
+  }
+
+  reset(): void {
+    SVG(VISUALISER_CANVAS).clear();
+
+    this.head = null;
+    this.length = 0;
+
+    this.headPointer = GraphicalLinkedListNode.newHeadPointer();
+
+    // add prev and curr pointers to visualiser canvas
+    (SVG(VISUALISER_CANVAS) as Svg).image(currSvg).opacity(0).id('current');
+    (SVG(VISUALISER_CANVAS) as Svg).image(prevSvg).opacity(0).id('prev');
+  }
+
+  public get documentation() {
+    return GraphicalLinkedList.documentation;
   }
 }
