@@ -3,9 +3,7 @@ import VisualiserIcon from '@mui/icons-material/AutoFixHigh';
 import EditIcon from '@mui/icons-material/Edit';
 import EducationIcon from '@mui/icons-material/LocalLibrary';
 import GradCapIcon from '@mui/icons-material/School';
-import {
-  Box, Grid, Link, List, ListItem, ListItemIcon, Typography,
-} from '@mui/material';
+import { Box, Grid, Link, List, ListItem, ListItemIcon, Typography } from '@mui/material';
 import cmsScreen from 'assets/demos/cms.png';
 import visualiserDashboardCodeScreen from 'assets/demos/visualiser-dashboard-code.png';
 import visualiserDashboardLessonScreen from 'assets/demos/visualiser-dashboard-lesson.png';
@@ -67,9 +65,7 @@ const Features: React.FC<Props> = () => {
       <HorizontalRule />
       <FeatureItem>
         <Typography color="textPrimary" variant="h6">
-          <VisualiserIcon />
-          {' '}
-          Algorithm Visualisation
+          <VisualiserIcon /> Algorithm Visualisation
         </Typography>
         <Grid container>
           <Grid item xs={12} sm={12} md={8}>
@@ -106,7 +102,7 @@ const Features: React.FC<Props> = () => {
           </Grid>
         </Grid>
       </FeatureItem>
-      <FeatureItem fromDirection="left">
+      {/* <FeatureItem fromDirection="left">
         <Typography color="textPrimary" variant="h6" sx={{ textAlign: 'left' }}>
           <EducationIcon />
           {' '}
@@ -148,7 +144,7 @@ const Features: React.FC<Props> = () => {
             <LaptopFrame imageUrl={visualiserDashboardLessonScreen} />
           </Grid>
         </Grid>
-      </FeatureItem>
+      </FeatureItem> */}
       {/* <FeatureItem fromDirection="left">
         <Typography color="textPrimary" variant="h6" sx={{ textAlign: 'left' }}>
           <EditIcon /> Content Management
@@ -183,9 +179,7 @@ const Features: React.FC<Props> = () => {
       </FeatureItem> */}
       <FeatureItem fromDirection="right">
         <Typography color="textPrimary" variant="h6">
-          <GradCapIcon />
-          {' '}
-          Open source
+          <GradCapIcon /> Open source
         </Typography>
         <Typography color="textSecondary" variant="body1">
           Developed and maintained by passionate CS and engineering students at UNSW.
@@ -210,9 +204,7 @@ const Features: React.FC<Props> = () => {
               <BulletIcon color="primary" />
             </ListItemIcon>
             <Typography color="textSecondary">
-              The Structs.sh
-              {' '}
-              <RouterLink to="/about">team</RouterLink>
+              The Structs.sh <RouterLink to="/about">team</RouterLink>
             </Typography>
           </ListItem>
         </List>

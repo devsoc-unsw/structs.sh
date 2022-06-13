@@ -1,15 +1,13 @@
-import { Timeline } from '@svgdotjs/svg.js';
+import { Timeline, Runner } from '@svgdotjs/svg.js';
+import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
+import GraphicalDataStructureFactory from 'visualiser-src/common/GraphicalDataStructureFactory';
+import { Documentation } from 'visualiser-src/common/typedefs';
+import { defaultSpeed } from '../common/constants';
 import AnimationProducer from '../common/AnimationProducer';
 
-// controls todo:
-// [x] play/pause
-// [x] step to the next or previous timestamp in the current timeline
-// [ ] run a sequence in step mode or sequential mode
-// [ ] control to skip the animation of a sequence
+class VisualiserController {
+  private dataStructure: GraphicalDataStructure;
 
-// eventually this file should be placed in a folder common for all data structures,
-// not just for the linked list
-class AnimationController {
   private currentTimeline: Timeline = new Timeline().persist(true);
 
   private timelineDuration: number = 0;
@@ -19,6 +17,13 @@ class AnimationController {
   private speed: number = 1;
 
   private isStepMode: boolean = false;
+
+  public constructor(topicTitle?: string) {
+    this.setSpeed(defaultSpeed);
+    if (topicTitle !== undefined) {
+      this.applyTopicTitle(topicTitle);
+    }
+  }
 
   public getCurrentTimeline(): Timeline {
     return this.currentTimeline;
@@ -36,12 +41,16 @@ class AnimationController {
       runners.forEach((runner) => {
         this.currentTimeline.schedule(runner, this.timelineDuration + 25, 'absolute');
       });
-      runners[0].after(() => {
+      const maxRunner = runners.reduce(
+        (prev: Runner, curr: Runner) => (prev.duration() < curr.duration() ? curr : prev),
+        runners[0]
+      );
+      maxRunner.after(() => {
         if (this.isStepMode) {
           this.currentTimeline.pause();
         }
       });
-      this.timestamps.push(this.timelineDuration);
+      this.timestamps.push(this.timelineDuration + 1);
       this.timelineDuration += runners[0].duration() + 25;
     });
     this.timestamps.push(this.timelineDuration);
@@ -105,6 +114,57 @@ class AnimationController {
     this.currentTimeline.play();
   }
 
+  public applyTopicTitle(topicTitle: string) {
+    this.dataStructure = GraphicalDataStructureFactory.create(topicTitle);
+  }
+
+  private getErrorMessageIfInvalidInput(command: string, args: string[]): string {
+    const expectedArgs = this.dataStructure.documentation[command].args;
+    if (args.length !== expectedArgs.length) {
+      return `Invalid arguments. Please provide ${args.join(', ')}`;
+    }
+
+    if (args.includes('')) return 'Argument(s) missing';
+    if (!args.every((value) => /^\d+$/.test(value)))
+      return 'Argument(s) must be a positive integer';
+
+    const valueIndex = expectedArgs.indexOf('value');
+
+    if (valueIndex !== -1) {
+      if (Number(args[valueIndex]) < 0 || Number(args[valueIndex]) > 999)
+        return 'Value must be between 0 and 999';
+    }
+
+    return '';
+  }
+
+  public doOperation(
+    command: string,
+    updateSlider: (val: number) => void,
+    ...args: string[]
+  ): string {
+    const errMessage = this.getErrorMessageIfInvalidInput(command, args);
+    if (errMessage !== '') {
+      return errMessage;
+    }
+
+    this.finish();
+    // @ts-ignore
+    const animationProducer: AnimationProducer = this.dataStructure[command](
+      ...args.map((arg) => Number(arg))
+    );
+    this.constructTimeline(animationProducer, updateSlider);
+    return '';
+  }
+
+  public get documentation(): Documentation {
+    return this.dataStructure?.documentation;
+  }
+
+  public resetDataStructure(): void {
+    this.dataStructure.reset();
+  }
+
   private computePrevTimestamp(): number {
     let prevTimestamp = 0;
     this.timestamps.forEach((timestamp) => {
@@ -120,4 +180,4 @@ class AnimationController {
   }
 }
 
-export default AnimationController;
+export default VisualiserController;

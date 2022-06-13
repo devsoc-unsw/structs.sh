@@ -1,28 +1,28 @@
 import LinkedListAnimationProducer from './LinkedListAnimationProducer';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
-import { CANVAS, insertedNodeTopOffset, nodePathWidth, topOffset } from '../util/constants';
-import { actualNodeDiameter } from '../../common/constants';
-import { getPointerPath, Style } from '../util/util';
+import { getPointerPath } from '../util/util';
+import { insertCodeSnippet } from '../util/codeSnippets';
 
 // Class that produces SVG.Runners animating linked list operations specific to inserting
 export default class LinkedListInsertAnimationProducer extends LinkedListAnimationProducer {
+  public renderInsertCode(): void {
+    this.renderCode(insertCodeSnippet);
+  }
+
   public insertedNodePointToNext(newNode: GraphicalLinkedListNode) {
-    newNode.pointerTarget.plot(getPointerPath(Style.UP_RIGHT) as any);
-    this.addSingleAnimation(newNode.pointerTarget.animate().attr({ opacity: 1 }));
+    if (newNode.next !== null) {
+      newNode.pointerTarget.plot(
+        getPointerPath(newNode.x, newNode.y, newNode.next.x, newNode.next.y) as any
+      );
+      this.addSequenceAnimation(newNode.pointerTarget.animate().attr({ opacity: 1 }));
+    }
   }
 
   public pointToInsertedNode(node: GraphicalLinkedListNode) {
-    this.addSingleAnimation(
-      node.pointerTarget.animate().plot(getPointerPath(Style.DOWN_RIGHT) as any)
+    this.addSequenceAnimation(
+      node.pointerTarget
+        .animate()
+        .plot(getPointerPath(node.x, node.y, node.next.x, node.next.y) as any)
     );
-  }
-
-  public createNodeAt(index: number, newNode: GraphicalLinkedListNode) {
-    newNode.nodeTarget.addTo(CANVAS);
-    newNode.nodeTarget.move(
-      index * nodePathWidth + actualNodeDiameter,
-      insertedNodeTopOffset - topOffset
-    );
-    this.addSingleAnimation(newNode.nodeTarget.animate().attr({ opacity: 1 }));
   }
 }

@@ -8,7 +8,7 @@ export const insertedNodeTopOffset =
   topOffset + (actualNodeDiameter + pathLength) * Math.sin(Math.PI / 3);
 export const CURRENT = '#current';
 export const PREV = '#prev';
-export const CANVAS = '#canvas';
+export const CANVAS = '#visualiser-canvas';
 export const nodeAttributes = {
   class: 'node',
   stroke: 'black',
@@ -16,22 +16,20 @@ export const nodeAttributes = {
 };
 
 export const shapeAttributes = {
-  cx: actualNodeDiameter / 2,
-  cy: topOffset,
   r: nodeDiameter / 2,
   'stroke-width': strokeWidth,
+  stroke: 'black',
   fill: 'white',
+  opacity: 0,
 };
 
 export const textAttributes = {
-  'font-size': 25,
-  'font-family': 'Courier',
-  'font-weight': 'bold',
   x: actualNodeDiameter / 2,
   y: topOffset,
   'dominant-baseline': 'middle',
   'text-anchor': 'middle',
   'stroke-width': 0,
+  opacity: 0,
 };
 
 export const pathAttributes = {
@@ -42,6 +40,3 @@ export const pathAttributes = {
   class: 'path',
   opacity: 0,
 };
-
-// Animation attributes
-export const defaultSpeed = 0.6;

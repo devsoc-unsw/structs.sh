@@ -1,16 +1,19 @@
-import { SVG, Path, Text, Circle, Svg } from '@svgdotjs/svg.js';
+import { SVG, Path, Text, Circle, Svg, Marker } from '@svgdotjs/svg.js';
 import {
-  nodeAttributes,
   shapeAttributes,
   textAttributes,
   pathAttributes,
-  CANVAS,
+  topOffset,
+  nodePathWidth,
 } from '../util/constants';
-import { getPointerPath, Style } from '../util/util';
-import { markerLength, pathD } from '../../common/constants';
+import { getPointerPath } from '../util/util';
+import { actualNodeDiameter, markerLength, pathD, VISUALISER_CANVAS } from '../../common/constants';
 
+function addMarker(add: Marker) {
+  add.path(pathD);
+  this.attr('markerUnits', 'userSpaceOnUse');
+}
 interface SVGData {
-  nodeTarget: Svg;
   pointerTarget: Path;
   boxTarget: Circle;
   numberTarget: Text;
@@ -31,35 +34,41 @@ export default class GraphicalLinkedListNode {
   }
 
   public static newHeadPointer() {
-    SVG().text('head').attr(textAttributes).attr({ 'font-size': 16 }).addTo(CANVAS);
+    SVG()
+      .text('head')
+      .attr(textAttributes)
+      .opacity(1)
+      .attr({ 'font-size': 16 })
+      .addTo(VISUALISER_CANVAS);
     const headPointer = SVG()
       .path()
       .attr(pathAttributes)
       .opacity(0)
-      .plot(getPointerPath(Style.RIGHT))
-      .addTo(CANVAS);
-    headPointer.marker('end', markerLength, markerLength, function (add) {
-      add.path(pathD);
-      this.attr('markerUnits', 'userSpaceOnUse');
-    });
+      .plot(
+        getPointerPath(
+          actualNodeDiameter / 2,
+          topOffset,
+          actualNodeDiameter / 2 + nodePathWidth,
+          topOffset
+        )
+      )
+      .addTo(VISUALISER_CANVAS);
+
+    headPointer.marker('end', markerLength, markerLength, addMarker);
     return headPointer;
   }
 
   public static from(input: number) {
-    const newNode = SVG().attr(nodeAttributes);
-    const nodeShape = newNode.circle().attr(shapeAttributes);
-    const nodeValue = newNode.text(String(input)).attr(textAttributes);
-    const newPointer = newNode.path().attr(pathAttributes).plot(getPointerPath(Style.RIGHT));
-    newPointer.marker('end', markerLength, markerLength, function (add) {
-      add.path(pathD);
-      this.attr('markerUnits', 'userSpaceOnUse');
-    });
+    const canvas = SVG(VISUALISER_CANVAS) as Svg;
+    const newPointer = canvas.path().attr(pathAttributes);
+    const nodeShape = canvas.circle().attr(shapeAttributes);
+    const nodeValue = canvas.text(String(input)).attr(textAttributes);
+    newPointer.marker('end', markerLength, markerLength, addMarker);
     return new GraphicalLinkedListNode({
       value: input,
       svgData: {
         numberTarget: nodeValue,
         boxTarget: nodeShape,
-        nodeTarget: newNode,
         pointerTarget: newPointer,
       },
     });
@@ -81,10 +90,6 @@ export default class GraphicalLinkedListNode {
     return this._data.value;
   }
 
-  public get nodeTarget() {
-    return this._data.svgData.nodeTarget;
-  }
-
   public get pointerTarget() {
     return this._data.svgData.pointerTarget;
   }
@@ -95,5 +100,13 @@ export default class GraphicalLinkedListNode {
 
   public get numberTarget() {
     return this._data.svgData.numberTarget;
+  }
+
+  public get x(): number {
+    return this.boxTarget.attr('cx');
+  }
+
+  public get y(): number {
+    return this.boxTarget.attr('cy');
   }
 }

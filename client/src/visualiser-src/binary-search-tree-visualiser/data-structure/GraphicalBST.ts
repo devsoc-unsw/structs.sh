@@ -1,4 +1,8 @@
 import { SVG, Container } from '@svgdotjs/svg.js';
+import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
+import { Documentation } from 'visualiser-src/common/typedefs';
+import { VISUALISER_CANVAS } from 'visualiser-src/common/constants';
+import { injectIds } from 'visualiser-src/common/helpers';
 import BSTInsertAnimationProducer from '../animation-producer/BSTInsertAnimationProducer';
 import BSTRotateAnimationProducer from '../animation-producer/BSTRotateAnimationProducer';
 import BSTTraverseAnimationProducer from '../animation-producer/BSTTraverseAnimationProducer';
@@ -6,24 +10,47 @@ import { Node } from '../util/typedefs';
 import { canvasPadding } from '../util/settings';
 
 // used for the actual implementation of the bst
-class BST {
+class GraphicalBST extends GraphicalDataStructure {
+  private static documentation: Documentation = injectIds({
+    insert: {
+      args: ['value'],
+      description:
+        'Executes standard BST insertion to add a new node with the given value into the tree.',
+    },
+    rotateLeft: {
+      args: ['value'],
+      description: 'Executes a left rotation on the node with the given value.',
+    },
+    rotateRight: {
+      args: ['value'],
+      description: 'Executes a right rotation on the node with the given value.',
+    },
+    inorderTraversal: {
+      args: [],
+      description: 'Executes an inorder traversal on the tree.',
+    },
+    preorderTraversal: {
+      args: [],
+      description: 'Executes a preorder traversal on the tree.',
+    },
+    postorderTraversal: {
+      args: [],
+      description: 'Executes a postorder traversal on the tree.',
+    },
+  });
+
   public root: Node = null;
-
-  public visualiserCanvas: Container = SVG().addTo('#bst-canvas').size('100%', '100%');
-
-  public codeCanvas: Container = SVG().addTo('#code-canvas').size('100%', 1000);
 
   // inserts a node into the bst and produces an animation sequence
   // that is later handled by the animation controller
   public insert(input: number): BSTInsertAnimationProducer {
-    const animationProducer: BSTInsertAnimationProducer = new BSTInsertAnimationProducer(
-      this.visualiserCanvas,
-      this.codeCanvas
-    );
+    const animationProducer: BSTInsertAnimationProducer = new BSTInsertAnimationProducer();
     animationProducer.renderInsertCode();
 
     // return early if a node with the same value already exists
-    if (this.getNode(input) !== null) return animationProducer;
+    if (this.getNode(input) !== null) {
+      return animationProducer;
+    }
 
     const node: Node = {
       nodeTarget: null,
@@ -73,7 +100,7 @@ class BST {
           }
 
           animationProducer.doAnimationAndHighlight(
-            12,
+            11,
             animationProducer.highlightLine,
             currentNode.leftLineTarget,
             currentNode.leftArrowTarget
@@ -85,13 +112,13 @@ class BST {
             currentNode.right = node;
             this.updateNodePositions();
             animationProducer.doAnimationAndHighlight(
-              15,
+              14,
               animationProducer.createNodeRight,
               node,
               currentNode
             );
             animationProducer.doAnimationAndHighlight(
-              16,
+              15,
               animationProducer.unhighlightBST,
               this.root
             );
@@ -100,7 +127,7 @@ class BST {
           }
 
           animationProducer.doAnimationAndHighlight(
-            19,
+            17,
             animationProducer.highlightLine,
             currentNode.rightLineTarget,
             currentNode.rightArrowTarget
@@ -118,8 +145,7 @@ class BST {
   // use this method after doing bst operations to update
   // x and y coordinates
   public updateNodePositions(): void {
-    const canvasWidth = document.getElementById('bst-canvas').offsetWidth;
-
+    const canvasWidth = document.getElementById('visualiser-container').offsetWidth;
     const low: number = 0;
     const high: number = Number(canvasWidth);
     const mid: number = (low + high) / 2;
@@ -164,10 +190,7 @@ class BST {
   }
 
   public rotateLeft(input: number): BSTRotateAnimationProducer {
-    const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer(
-      this.visualiserCanvas,
-      this.codeCanvas
-    );
+    const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer();
     animationProducer.renderRotateLeftCode();
     const oldRoot: Node = this.getNode(input);
 
@@ -247,10 +270,7 @@ class BST {
   }
 
   public rotateRight(input: number): BSTRotateAnimationProducer {
-    const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer(
-      this.visualiserCanvas,
-      this.codeCanvas
-    );
+    const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer();
     animationProducer.renderRotateRightCode();
     const oldRoot: Node = this.getNode(input);
 
@@ -330,10 +350,7 @@ class BST {
   }
 
   public inorderTraversal(): BSTTraverseAnimationProducer {
-    const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer(
-      this.visualiserCanvas,
-      this.codeCanvas
-    );
+    const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer();
 
     animationProducer.renderInorderTraversalCode();
     this.doInorderTraversal(this.root, animationProducer);
@@ -366,10 +383,7 @@ class BST {
   }
 
   public preorderTraversal(): BSTTraverseAnimationProducer {
-    const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer(
-      this.visualiserCanvas,
-      this.codeCanvas
-    );
+    const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer();
 
     animationProducer.renderPreorderTraversalCode();
     this.doPreorderTraversal(this.root, animationProducer);
@@ -402,10 +416,7 @@ class BST {
   }
 
   public postorderTraversal(): BSTTraverseAnimationProducer {
-    const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer(
-      this.visualiserCanvas,
-      this.codeCanvas
-    );
+    const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer();
 
     animationProducer.renderPostorderTraversalCode();
     this.doPostorderTraversal(this.root, animationProducer);
@@ -436,6 +447,15 @@ class BST {
     this.doPostorderTraversal(node.right, animationProducer);
     animationProducer.doAnimationAndHighlight(6, animationProducer.highlightNode, node);
   }
+
+  public reset(): void {
+    SVG(VISUALISER_CANVAS).clear();
+    this.root = null;
+  }
+
+  public get documentation() {
+    return GraphicalBST.documentation;
+  }
 }
 
-export default BST;
+export default GraphicalBST;

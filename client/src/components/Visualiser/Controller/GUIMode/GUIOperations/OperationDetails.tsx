@@ -1,16 +1,12 @@
-import {
-  Box, Collapse, List, ListItem, ListItemIcon, Theme,
-} from '@mui/material';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import { Box, Collapse, List, ListItem, ListItemIcon, Theme, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { makeStyles, useTheme } from '@mui/styles';
-import { Operation } from 'components/Visualiser/commandsInputRules';
-import React, { FC, useState } from 'react';
+import VisualiserContext from 'components/Visualiser/VisualiserContext';
+import React, { FC, useContext, useState } from 'react';
 import { LastLink, Link } from './Links';
-
-export interface OperationsMenuState {
-  [k: string]: boolean;
-}
 
 const useStyles = makeStyles({
   opListContainer: {
@@ -50,92 +46,120 @@ const useStyles = makeStyles({
   },
 });
 
-interface Props {
-  op: Operation;
+interface OperationDetailsProps {
+  command: string;
   isLast: boolean;
-  showOp: OperationsMenuState;
-  executeCommand: (command: string, args: string[]) => string;
 }
 
-const OperationDetails: FC<Props> = ({
-  op, isLast, showOp, executeCommand,
-}) => {
+const OperationDetails: FC<OperationDetailsProps> = ({ command, isLast }) => {
+  const {
+    documentation,
+    controller,
+    timeline: { handleTimelineUpdate },
+  } = useContext(VisualiserContext);
   const classes = useStyles();
-  const [args, setArguments] = useState<string[]>(
-    Array((op && op.args && op.args.length) || 0).fill(''),
+  const [shouldDisplay, setShouldDisplay] = useState<boolean>(false);
+  const [currentInputs, setCurrentInputs] = useState<string[]>(
+    Array(documentation[command]?.args?.length || 0).fill('')
   );
-
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const theme: Theme = useTheme();
   const textPrimaryColour = theme.palette.text.primary;
 
+  const handleToggleDisplay = () => {
+    setShouldDisplay(!shouldDisplay);
+  };
+
   const handleSetArguments = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    index: number,
+    index: number
   ) => {
-    const newArgs = [...args];
+    const newArgs = [...currentInputs];
     newArgs[index] = String(e.target.value);
-    setArguments(newArgs);
+    setCurrentInputs(newArgs);
   };
 
   const clearArguments = () => {
-    const newArgs = [...args];
+    const newArgs = [...currentInputs];
     newArgs.fill('');
-    setArguments(newArgs);
+    setCurrentInputs(newArgs);
   };
 
+  const executeCommand = (args: string[]): string =>
+    controller.doOperation(command, handleTimelineUpdate, ...args);
+
   return (
-    <Collapse
-      in={showOp[op.command]}
-      timeout="auto"
-      unmountOnExit
-      className={classes.opListContainer}
-    >
-      {!isLast && (
-        <svg width="10" height="166" className={classes.longLink}>
-          <line
-            x1="5"
-            y1="1"
-            x2="5"
-            y2="166"
-            stroke={textPrimaryColour}
-            strokeDasharray="50 4"
-            strokeWidth="2"
-          />
-        </svg>
-      )}
-      <List className={isLast ? `${classes.opList} ${classes.last}` : classes.opList}>
-        {op.args.map((eachArg, idx) => (
-          <ListItem key={idx}>
-            <ListItemIcon>
-              <Link colour={textPrimaryColour} />
-            </ListItemIcon>
-            <TextField
-              label={eachArg}
-              value={args[idx]}
-              variant="outlined"
-              onChange={(e) => handleSetArguments(e, idx)}
-              sx={{ background: theme.palette.background.paper, height: '100%' }}
+    <>
+      <ListItem
+        button
+        sx={{
+          paddingTop: '0px',
+          paddingBottom: '0px',
+          paddingLeft: '35px',
+        }}
+        onClick={handleToggleDisplay}
+      >
+        <ListItemIcon>
+          {isLast ? <LastLink colour={textPrimaryColour} /> : <Link colour={textPrimaryColour} />}
+        </ListItemIcon>
+        <Typography color="textPrimary">{command}</Typography>
+        {shouldDisplay ? (
+          <ExpandLess sx={{ fill: textPrimaryColour }} />
+        ) : (
+          <ExpandMore sx={{ fill: textPrimaryColour }} />
+        )}
+      </ListItem>
+      <Collapse in={shouldDisplay} timeout="auto" unmountOnExit className={classes.opListContainer}>
+        {!isLast && (
+          <svg width="10" height="166" className={classes.longLink}>
+            <line
+              x1="5"
+              y1="1"
+              x2="5"
+              y2="166"
+              stroke={textPrimaryColour}
+              strokeDasharray="50 4"
+              strokeWidth="2"
             />
+          </svg>
+        )}
+        <List className={isLast ? `${classes.opList} ${classes.last}` : classes.opList}>
+          {documentation[command].args.map((eachArg, idx) => (
+            <ListItem key={idx}>
+              <ListItemIcon>
+                <Link colour={textPrimaryColour} />
+              </ListItemIcon>
+              <TextField
+                label={eachArg}
+                value={currentInputs[idx]}
+                variant="outlined"
+                onChange={(e) => handleSetArguments(e, idx)}
+                sx={{ background: theme.palette.background.paper, height: '100%' }}
+              />
+            </ListItem>
+          ))}
+          <ListItem>
+            <ListItemIcon>
+              <LastLink colour={textPrimaryColour} />
+            </ListItemIcon>
+            <Button
+              className={classes.opBtn}
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                setErrorMessage(executeCommand(currentInputs));
+                clearArguments();
+              }}
+            >
+              <Box className={classes.btnText}>Run</Box>
+            </Button>
+            <Typography color="red" style={{ marginLeft: '.5rem' }}>
+              {errorMessage}
+            </Typography>
           </ListItem>
-        ))}
-        <ListItem>
-          <ListItemIcon>
-            <LastLink colour={textPrimaryColour} />
-          </ListItemIcon>
-          <Button
-            className={classes.opBtn}
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              executeCommand(op.command, [...args]);
-              clearArguments();
-            }}
-          >
-            <Box className={classes.btnText}>Run</Box>
-          </Button>
-        </ListItem>
-      </List>
-    </Collapse>
+        </List>
+      </Collapse>
+    </>
   );
 };
 
