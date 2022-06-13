@@ -97,7 +97,6 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command, isLast }) => {
           paddingBottom: '0px',
           paddingLeft: '35px',
           width: 'auto',
-          minWidth: '196px',
         }}
         onClick={handleToggleDisplay}
       >
