@@ -7,6 +7,8 @@ import { makeStyles, useTheme } from '@mui/styles';
 import VisualiserContext from 'components/Visualiser/VisualiserContext';
 import React, { FC, useContext, useState } from 'react';
 import { LastLink, Link } from './Links';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+
 
 const useStyles = makeStyles({
   opListContainer: {
@@ -105,7 +107,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command, isLast }) => {
         </ListItemIcon>
         <Typography color="textPrimary">{command}</Typography>
         {shouldDisplay ? (
-          <ExpandLess sx={{ fill: textPrimaryColour, transform: "rotate(90deg)" }} />
+          <ChevronRightIcon sx={{ fill: textPrimaryColour }} />
         ) : (
           <ExpandMore sx={{ fill: textPrimaryColour }} />
         )}
