@@ -238,9 +238,9 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
             </Link>
           </Box>
 
-          <IconButton className={styles.darkModeButton} onClick={() => context.toggleDarkMode()}>
+          {/* <IconButton className={styles.darkModeButton} onClick={() => context.toggleDarkMode()}>
             {context.isDarkMode ? <MoonIcon /> : <SunIcon />}
-          </IconButton>
+          </IconButton> */}
           {/* <Modal
             Button={() => (
               <Button color="info" sx={{ display: { xs: 'none', md: 'flex' } }}>
