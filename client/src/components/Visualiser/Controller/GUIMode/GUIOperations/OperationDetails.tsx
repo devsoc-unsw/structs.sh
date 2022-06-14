@@ -4,10 +4,10 @@ import { Box, Collapse, List, ListItem, ListItemIcon, Theme, Typography } from '
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { makeStyles, useTheme } from '@mui/styles';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import VisualiserContext from 'components/Visualiser/VisualiserContext';
 import React, { FC, useContext, useState } from 'react';
 import { LastLink, Link } from './Links';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 
 const useStyles = makeStyles({
