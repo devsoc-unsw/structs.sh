@@ -45,11 +45,32 @@ class GraphicalBST extends GraphicalDataStructure {
     super();
     // WIP: ensure this is callable
     // WIP: use the generateNumbers function to insert numbers
-    const numbers = generateNumbers();
-    for (let i = 0; i < numbers.length; i++) {
-      this.insert(numbers[i]);
+    
+    var arr = generateNumbers().sort();
+    var num = [];
+    this.recurseArrInsert(arr, 0, arr.length, num);
+    num.forEach(element => {this.insert(element)});
+
+    
+  }
+  // given a sorted array arr, inserts elements to num such that its linear insertion order
+  // will lead to a reasonably balanced BST
+  private recurseArrInsert(arr, start, end, num): void {
+    // the base case is array length <=1
+    if (end - start === 0) {
+      return;
+    } else {
+      // insert midpoint
+      const mid = Math.floor((end + start)/ 2);
+      num.push(arr[mid]);
+      // set up for recursion
+      // recurse left
+      this.recurseArrInsert(arr, start, mid, num);
+      // recurse right
+      this.recurseArrInsert(arr, mid + 1, end, num);
     }
   }
+
 
 
   // inserts a node into the bst and produces an animation sequence
