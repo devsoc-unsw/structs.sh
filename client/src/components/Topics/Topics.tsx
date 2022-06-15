@@ -27,7 +27,10 @@ const Topics: React.FC<Props> = () => {
       {topics.map((topic, idx) => (
         <div
           key={idx}
+          role = "button"
+          tabIndex={idx}
           onClick={() => handleClick(topic)}
+          onKeyDown={() => handleClick(topic)}
         >
           <TopicCard topic={topic} index={idx} />
         </div>
