@@ -14,7 +14,6 @@ import LinkedListDeleteAnimationProducer from '../animation-producer/LinkedListD
 import LinkedListInsertAnimationProducer from '../animation-producer/LinkedListInsertAnimationProducer';
 import LinkedListSearchAnimationProducer from '../animation-producer/LinkedListSearchAnimationProducer';
 import LinkedListPrependAnimationProducer from '../animation-producer/LinkedListPrependAnimationProducer';
-import { appendFile } from 'fs';
 
 
 // An linked list data structure containing all linked list operations.
@@ -70,8 +69,6 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     const producer = new LinkedListAppendAnimationProducer();
     producer.renderAppendCode();
 
-
-    console.log("yay, you appended something to the linked list");
     // Create new node
     const newNode = GraphicalLinkedListNode.from(input);
     producer.doAnimationAndHighlight(1, producer.addNodeAtEnd, newNode, this.length);
