@@ -1,11 +1,10 @@
 import { motion } from 'framer-motion';
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import Helmet from 'react-helmet';
 import TopNavbar from 'components/Navbars/TopNavbar';
 import { Theme } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import Box from '@mui/material/Box';
-import { Topic } from 'utils/apiRequests';
 import styles from './VisualiserDashboardLayout.module.scss';
 
 const containerVariants = {
@@ -24,17 +23,11 @@ const containerVariants = {
 
 interface Props {
   children: React.ReactNode;
-  topic: Topic;
+  topicTitle: string;
 }
 
-const Dashboard: FC<Props> = ({ children, topic }) => {
+const VisualiserDashboardLayout: FC<Props> = ({ children, topicTitle }) => {
   const theme: Theme = useTheme();
-
-  useEffect(() => {
-    // Note: force scrolling to the top of the page so that the top navbar isn't hidden
-    window.scrollTo(0, 0);
-  }, []);
-
   return (
     <motion.div
       className={styles.container}
@@ -44,7 +37,7 @@ const Dashboard: FC<Props> = ({ children, topic }) => {
       exit="exit"
     >
       <Helmet>
-        <title>{topic ? topic.title : 'Structs.sh'}</title>
+        <title>{topicTitle !== undefined ? topicTitle : 'Structs.sh'}</title>
       </Helmet>
       <TopNavbar position="relative" enableOnScrollEffect={false} />
       <Box
@@ -60,4 +53,4 @@ const Dashboard: FC<Props> = ({ children, topic }) => {
   );
 };
 
-export default Dashboard;
+export default VisualiserDashboardLayout;

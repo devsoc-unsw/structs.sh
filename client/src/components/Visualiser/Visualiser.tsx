@@ -4,7 +4,7 @@ import React from 'react';
 import VisualiserCanvas from './VisualiserCanvas';
 import VisualiserInterface from './VisualiserInterface';
 
-interface Props {
+interface VisualiserProps {
   topicTitle: string;
 }
 
@@ -17,7 +17,7 @@ interface Props {
  * Given the `topicTitle`, this component will render the corresponding
  * visualiser and load up the commands for that visualiser.
  */
-const Visualiser: React.FC<Props> = ({ topicTitle }) =>
+const Visualiser: React.FC<VisualiserProps> = ({ topicTitle }) =>
   topicTitle ? (
     <Pane orientation="horizontal" minSize={150.9}>
       <VisualiserCanvas />
