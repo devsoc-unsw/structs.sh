@@ -1,7 +1,7 @@
 import GraphicalLinkedList from 'visualiser-src/linked-list-visualiser/data-structure/GraphicalLinkedList';
 import GraphicalBST from 'visualiser-src/binary-search-tree-visualiser/data-structure/GraphicalBST';
-import GraphicalDataStructure from './GraphicalDataStructure';
 import GraphicalSorts from 'visualiser-src/sorting-visualiser/data-structure/GraphicalSorts';
+import GraphicalDataStructure from './GraphicalDataStructure';
 
 class GraphicalDataStructureFactory {
   public static create(topicTitle: string): GraphicalDataStructure {

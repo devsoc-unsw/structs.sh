@@ -3,7 +3,7 @@ import { topOffset, nodePathWidth, insertedNodeTopOffset, CURRENT, PREV } from '
 import { actualNodeDiameter, strokeWidth, nodeDiameter } from '../../common/constants';
 import AnimationProducer from '../../common/AnimationProducer';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
-import { getPointerPath, Style } from '../util/util';
+import { getPointerPath } from '../util/util';
 
 // Class that produces SVG.Runners animating general linked list operations
 export default abstract class LinkedListAnimationProducer extends AnimationProducer {
@@ -50,8 +50,7 @@ export default abstract class LinkedListAnimationProducer extends AnimationProdu
             actualNodeDiameter / 2,
             topOffset,
             nodePathWidth + actualNodeDiameter / 2,
-            topOffset,
-            Style.RIGHT
+            topOffset
           ) as any
         )
     );
@@ -62,7 +61,7 @@ export default abstract class LinkedListAnimationProducer extends AnimationProdu
       this.addSequenceAnimation(
         curr.pointerTarget
           .animate()
-          .plot(getPointerPath(cx, topOffset, cx + nodePathWidth, topOffset, Style.RIGHT) as any)
+          .plot(getPointerPath(cx, topOffset, cx + nodePathWidth, topOffset) as any)
       );
       index += 1;
       curr = curr.next;
@@ -76,18 +75,14 @@ export default abstract class LinkedListAnimationProducer extends AnimationProdu
 
   public newHeadPointToOldHead(newHead: GraphicalLinkedListNode) {
     newHead.pointerTarget.plot(
-      getPointerPath(newHead.x, newHead.y, newHead.next.x, newHead.next.y, Style.UP_RIGHT) as any
+      getPointerPath(newHead.x, newHead.y, newHead.next.x, newHead.next.y) as any
     );
     this.addSequenceAnimation(newHead.pointerTarget.animate().attr({ opacity: 1 }));
   }
 
   public pointHeadToPrependedNode(head: Path, newHead: GraphicalLinkedListNode) {
     this.addSequenceAnimation(
-      head
-        .animate()
-        .plot(
-          getPointerPath(nodeDiameter / 2, topOffset, newHead.x, newHead.y, Style.DOWN_RIGHT) as any
-        )
+      head.animate().plot(getPointerPath(nodeDiameter / 2, topOffset, newHead.x, newHead.y) as any)
     );
   }
 
@@ -96,9 +91,7 @@ export default abstract class LinkedListAnimationProducer extends AnimationProdu
   }
 
   public linkLastToNew(last: GraphicalLinkedListNode) {
-    last.pointerTarget.plot(
-      getPointerPath(last.x, last.y, last.next.x, last.next.y, Style.RIGHT) as any
-    );
+    last.pointerTarget.plot(getPointerPath(last.x, last.y, last.next.x, last.next.y) as any);
     this.addSequenceAnimation(last.pointerTarget.animate().attr({ opacity: 1 }));
   }
 }

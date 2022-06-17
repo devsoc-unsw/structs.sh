@@ -8,13 +8,11 @@ import Notification from 'utils/Notification';
 import { urlToTitle } from 'utils/url';
 import 'visualiser-src/linked-list-visualiser/styles/visualiser.css';
 
-interface Props {}
-
 /**
  * Defines the layout and contents of the visualiser pages.
  * Notably, we're using a split-pane layout here.
  */
-const VisualiserDashboard: FC<Props> = () => {
+const VisualiserDashboard = () => {
   const [topic, setTopic] = useState<Topic>();
   const params = useParams();
 
@@ -26,20 +24,12 @@ const VisualiserDashboard: FC<Props> = () => {
         setTopic(newTopic);
       })
       .catch((err) => {
-        Notification.error(`Couldn't find anything for topic: '${urlToTitle(topicTitleInUrl)}'`)
+        Notification.error(`Couldn't find anything for topic: '${urlToTitle(topicTitleInUrl)}'`);
       });
   }, [params]);
 
-  // Note: hacky way of removing scrollability outside of the panes
-  useEffect(() => {
-    document.querySelector('html').style.overflow = 'hidden';
-    return () => {
-      document.querySelector('html').style.overflow = 'auto';
-    };
-  });
-
   return topic ? (
-    <VisualiserDashboardLayout topic={topic}>
+    <VisualiserDashboardLayout topicTitle={topic.title}>
       <Visualiser topicTitle={topic.title} />
     </VisualiserDashboardLayout>
   ) : (
