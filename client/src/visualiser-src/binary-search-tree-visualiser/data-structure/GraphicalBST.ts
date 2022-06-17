@@ -8,7 +8,7 @@ import BSTRotateAnimationProducer from '../animation-producer/BSTRotateAnimation
 import BSTTraverseAnimationProducer from '../animation-producer/BSTTraverseAnimationProducer';
 import { Node } from '../util/typedefs';
 import { canvasPadding } from '../util/settings';
-import { generateNumbers } from 'visualiser-src/common/RandomNumGenerator';
+import { insertBalancedBSTNumbers } from 'visualiser-src/common/RandomNumGenerator';
 
 
 // used for the actual implementation of the bst
@@ -44,35 +44,11 @@ class GraphicalBST extends GraphicalDataStructure {
   public root: Node = null;
   constructor() {
     super();
-    // WIP: ensure this is callable
-    // WIP: use the generateNumbers function to insert numbers
+    // WIP: extract function and remove constructor
     
-    var arr = generateNumbers().sort();
-    var num = [];
-    this.recurseArrInsert(arr, 0, arr.length, num);
+    var num = insertBalancedBSTNumbers();
     num.forEach(element => {this.insert(element)});
-
-    
   }
-  // given a sorted array arr, inserts elements to num such that its linear insertion order
-  // will lead to a reasonably balanced BST
-  private recurseArrInsert(arr, start, end, num): void {
-    // the base case is array length <=1
-    if (end - start === 0) {
-      return;
-    } else {
-      // insert midpoint
-      const mid = Math.floor((end + start)/ 2);
-      num.push(arr[mid]);
-      // set up for recursion
-      // recurse left
-      this.recurseArrInsert(arr, start, mid, num);
-      // recurse right
-      this.recurseArrInsert(arr, mid + 1, end, num);
-    }
-  }
-
-
 
   // inserts a node into the bst and produces an animation sequence
   // that is later handled by the animation controller
