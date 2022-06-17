@@ -3,12 +3,12 @@ import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure
 import { Documentation } from 'visualiser-src/common/typedefs';
 import { VISUALISER_CANVAS } from 'visualiser-src/common/constants';
 import { injectIds } from 'visualiser-src/common/helpers';
+import { insertBalancedBSTNumbers } from 'visualiser-src/common/RandomNumGenerator';
 import BSTInsertAnimationProducer from '../animation-producer/BSTInsertAnimationProducer';
 import BSTRotateAnimationProducer from '../animation-producer/BSTRotateAnimationProducer';
 import BSTTraverseAnimationProducer from '../animation-producer/BSTTraverseAnimationProducer';
 import { Node } from '../util/typedefs';
 import { canvasPadding } from '../util/settings';
-import { insertBalancedBSTNumbers } from 'visualiser-src/common/RandomNumGenerator';
 
 
 // used for the actual implementation of the bst
