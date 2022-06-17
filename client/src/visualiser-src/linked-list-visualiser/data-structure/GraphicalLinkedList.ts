@@ -6,8 +6,8 @@ import { VISUALISER_CANVAS } from 'visualiser-src/common/constants';
 import currSvg from 'visualiser-src/linked-list-visualiser/assets/curr.svg';
 import prevSvg from 'visualiser-src/linked-list-visualiser/assets/prev.svg';
 import { injectIds } from 'visualiser-src/common/helpers';
-import { CURRENT, PREV } from '../util/constants';
 import { generateNumbers } from 'visualiser-src/common/RandomNumGenerator';
+import { CURRENT, PREV } from '../util/constants';
 import GraphicalLinkedListNode from './GraphicalLinkedListNode';
 import LinkedListAppendAnimationProducer from '../animation-producer/LinkedListAppendAnimationProducer';
 import LinkedListDeleteAnimationProducer from '../animation-producer/LinkedListDeleteAnimationProducer';
@@ -57,11 +57,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     (SVG(VISUALISER_CANVAS) as Svg).image(currSvg).opacity(0).id('current');
     (SVG(VISUALISER_CANVAS) as Svg).image(prevSvg).opacity(0).id('prev');
 
-    // WIP: use the generateNumbers function to insert numbers
-    const numbers = generateNumbers();
-    for (let i = 0; i < numbers.length; i++) {
-      this.append(numbers[i]);
-    }
+
   }
 
   append(input: number): AnimationProducer {
@@ -229,6 +225,13 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
       producer.doAnimation(producer.resetPointers);
     }
     return producer;
+  }
+
+  public insertRandomGeneratedNodes(): void {
+    const numbers = generateNumbers();
+    for (let i = 0; i < numbers.length; i += 1) {
+      this.append(numbers[i]);
+    }
   }
 
   reset(): void {

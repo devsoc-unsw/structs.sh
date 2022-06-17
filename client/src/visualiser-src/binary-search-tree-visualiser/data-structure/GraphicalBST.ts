@@ -42,13 +42,6 @@ class GraphicalBST extends GraphicalDataStructure {
   });
 
   public root: Node = null;
-  constructor() {
-    super();
-    // WIP: extract function and remove constructor
-    
-    var num = insertBalancedBSTNumbers();
-    num.forEach(element => {this.insert(element)});
-  }
 
   // inserts a node into the bst and produces an animation sequence
   // that is later handled by the animation controller
@@ -149,6 +142,11 @@ class GraphicalBST extends GraphicalDataStructure {
 
     animationProducer.doAnimation(animationProducer.unhighlightBST, this.root);
     return animationProducer;
+  }
+
+  public insertRandomGeneratedNodes(): void {
+      const num = insertBalancedBSTNumbers();
+      num.forEach(element => {this.insert(element)});
   }
 
   // use this method after doing bst operations to update
