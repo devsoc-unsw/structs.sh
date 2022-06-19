@@ -24,8 +24,8 @@ export default class SortsAnimationProducer extends AnimationProducer {
         const xTo = (fromIndex + 1) * (boxWidth + whitespace) + whitespace;
         const cxTo = (fromIndex + 1) * (boxWidth + whitespace) + (boxWidth/2 + whitespace);
 
-        //this.addSequenceAnimation(from.boxTarget.animate().attr({fill: "blue"}));
-        //this.addSequenceAnimation(to.boxTarget.animate().attr({fill: "blue"}));
+        //this.addSequenceAnimation(from.boxTarget.animate().attr({ fill: '#f03' }));
+        //this.addSequenceAnimation(to.boxTarget.animate().attr({ fill: '#f03' }));
 
         this.addSequenceAnimation(from.boxTarget.animate().x(xTo));
         this.addSequenceAnimation(from.numberTarget.animate().cx(cxTo));
@@ -33,8 +33,8 @@ export default class SortsAnimationProducer extends AnimationProducer {
         this.addSequenceAnimation(to.numberTarget.animate().cx(cxFrom));
 
 
-        //this.addSequenceAnimation(from.boxTarget.animate().attr({fill: "white"}));
-        //this.addSequenceAnimation(to.boxTarget.animate().attr({fill: "white"}));
+        //this.addSequenceAnimation(from.boxTarget.animate().attr({ fill: '#fff' }));
+        //this.addSequenceAnimation(to.boxTarget.animate().attr({ fill: '#fff' }));
         
     }
 
