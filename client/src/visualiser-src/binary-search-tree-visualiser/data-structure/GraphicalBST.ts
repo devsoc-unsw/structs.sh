@@ -1,7 +1,7 @@
 import { SVG, Container } from '@svgdotjs/svg.js';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { Documentation } from 'visualiser-src/common/typedefs';
-import { VISUALISER_CANVAS } from 'visualiser-src/common/constants';
+import { CODE_CANVAS, VISUALISER_CANVAS } from 'visualiser-src/common/constants';
 import { injectIds } from 'visualiser-src/common/helpers';
 import BSTInsertAnimationProducer from '../animation-producer/BSTInsertAnimationProducer';
 import BSTRotateAnimationProducer from '../animation-producer/BSTRotateAnimationProducer';
@@ -449,6 +449,7 @@ class GraphicalBST extends GraphicalDataStructure {
   }
 
   public reset(): void {
+    SVG(CODE_CANVAS).clear();
     SVG(VISUALISER_CANVAS).clear();
     this.root = null;
   }

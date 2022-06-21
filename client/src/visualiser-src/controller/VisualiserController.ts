@@ -58,6 +58,7 @@ class VisualiserController {
   }
 
   public resetTimeline(updateSlider: (val: number) => void) {
+    this.currentTimeline.time(0);
     this.currentTimeline = new Timeline().persist(true);
     this.currentTimeline.on('time', (e: CustomEvent) => {
       // avoid division by 0
@@ -116,6 +117,7 @@ class VisualiserController {
 
   public applyTopicTitle(topicTitle: string) {
     this.dataStructure = GraphicalDataStructureFactory.create(topicTitle);
+    this.resetTimeline(null);
   }
 
   private getErrorMessageIfInvalidInput(command: string, args: string[]): string {
@@ -163,6 +165,7 @@ class VisualiserController {
 
   public resetDataStructure(): void {
     this.dataStructure.reset();
+    this.resetTimeline(null);
   }
 
   private computePrevTimestamp(): number {

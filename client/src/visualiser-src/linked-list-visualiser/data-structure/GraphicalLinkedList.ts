@@ -2,7 +2,7 @@ import AnimationProducer from 'visualiser-src/common/AnimationProducer';
 import { SVG, Path, Svg } from '@svgdotjs/svg.js';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { Documentation } from 'visualiser-src/common/typedefs';
-import { VISUALISER_CANVAS } from 'visualiser-src/common/constants';
+import { CODE_CANVAS, VISUALISER_CANVAS } from 'visualiser-src/common/constants';
 import currSvg from 'visualiser-src/linked-list-visualiser/assets/curr.svg';
 import prevSvg from 'visualiser-src/linked-list-visualiser/assets/prev.svg';
 import { injectIds } from 'visualiser-src/common/helpers';
@@ -223,6 +223,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
   }
 
   reset(): void {
+    SVG(CODE_CANVAS).clear();
     SVG(VISUALISER_CANVAS).clear();
 
     this.head = null;
