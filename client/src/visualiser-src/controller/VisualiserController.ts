@@ -4,6 +4,7 @@ import GraphicalDataStructureFactory from 'visualiser-src/common/GraphicalDataSt
 import { Documentation } from 'visualiser-src/common/typedefs';
 import { defaultSpeed } from '../common/constants';
 import AnimationProducer from '../common/AnimationProducer';
+import { time } from 'console';
 
 class VisualiserController {
   private dataStructure: GraphicalDataStructure;
@@ -58,7 +59,6 @@ class VisualiserController {
   }
 
   public resetTimeline(updateSlider: (val: number) => void) {
-    this.currentTimeline.time(0);
     this.currentTimeline = new Timeline().persist(true);
     this.currentTimeline.on('time', (e: CustomEvent) => {
       // avoid division by 0
@@ -117,7 +117,9 @@ class VisualiserController {
 
   public applyTopicTitle(topicTitle: string) {
     this.dataStructure = GraphicalDataStructureFactory.create(topicTitle);
-    this.resetTimeline(null);
+    this.currentTimeline.finish();
+    this.currentTimeline.time(0);
+    this.currentTimeline = new Timeline().persist(true);
   }
 
   private getErrorMessageIfInvalidInput(command: string, args: string[]): string {
@@ -165,7 +167,9 @@ class VisualiserController {
 
   public resetDataStructure(): void {
     this.dataStructure.reset();
-    this.resetTimeline(null);
+    this.currentTimeline.finish();
+    this.currentTimeline.time(0);
+    this.currentTimeline = new Timeline().persist(true);
   }
 
   private computePrevTimestamp(): number {
