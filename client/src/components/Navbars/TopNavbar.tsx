@@ -16,7 +16,6 @@ import Typography from '@mui/material/Typography';
 import { SxProps } from '@mui/system';
 // import { ThemeMutationContext } from 'App';
 import logo from 'assets/img/logo.png';
-import { Modal } from 'components/Modal';
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getTopics, Topic } from 'utils/apiRequests';
