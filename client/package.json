@@ -50,7 +50,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "set DISABLE_ESLINT_PLUGIN=true&& set REACT_APP_DEV_OR_PROD=dev&& react-scripts start",
+    "start": "set DISABLE_ESLINT_PLUGIN=true && set REACT_APP_DEV_OR_PROD=dev && react-scripts start",
     "startprod": "REACT_APP_DEV_OR_PROD=prod react-scripts start",
     "build": "REACT_APP_DEV_OR_PROD=prod react-scripts build",
     "test-unit": "jest",

@@ -23,7 +23,7 @@ export default class LinkedListDeleteAnimationProducer extends LinkedListAnimati
     this.addSequenceAnimation(
       node.pointerTarget
         .animate()
-        .plot(getPointerPath(node.x, node.y, node.next.x, node.next.y, Style.CURVED_RIGHT) as any)
+        .plot(getPointerPath(node.x, node.y, node.next.x, node.next.y, Style.CURVED) as any)
     );
   }
 
@@ -35,9 +35,7 @@ export default class LinkedListDeleteAnimationProducer extends LinkedListAnimati
 
   public pointHeadToNext(headPointer: Path, next: GraphicalLinkedListNode) {
     this.addSequenceAnimation(
-      headPointer
-        .animate()
-        .plot(getPointerPath(0, topOffset, next.x, next.y, Style.CURVED_RIGHT) as any)
+      headPointer.animate().plot(getPointerPath(0, topOffset, next.x, next.y, Style.CURVED) as any)
     );
   }
 }

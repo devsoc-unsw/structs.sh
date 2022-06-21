@@ -140,12 +140,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
       if (this.head === null) {
         producer.doAnimationAndHighlight(11, producer.setHeadToNull, this.headPointer);
       } else {
-        producer.doAnimationAndHighlight(
-          11,
-          producer.pointHeadToNext,
-          this.headPointer,
-          this.head.next
-        );
+        producer.doAnimationAndHighlight(11, producer.pointHeadToNext, this.headPointer, this.head);
       }
     } else {
       prev.next = curr.next;
@@ -225,6 +220,19 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
       producer.doAnimation(producer.resetPointers);
     }
     return producer;
+  }
+
+  reset(): void {
+    SVG(VISUALISER_CANVAS).clear();
+
+    this.head = null;
+    this.length = 0;
+
+    this.headPointer = GraphicalLinkedListNode.newHeadPointer();
+
+    // add prev and curr pointers to visualiser canvas
+    (SVG(VISUALISER_CANVAS) as Svg).image(currSvg).opacity(0).id('current');
+    (SVG(VISUALISER_CANVAS) as Svg).image(prevSvg).opacity(0).id('prev');
   }
 
   public get documentation() {

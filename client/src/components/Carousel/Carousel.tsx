@@ -5,12 +5,11 @@ import Slider from 'react-slick';
 import { getTopics, Topic } from 'utils/apiRequests';
 import Notification from 'utils/Notification';
 import { titleToUrl } from 'utils/url';
+import { DataStructure } from 'visualiser-src/common/typedefs';
 import './Carousel.scss';
 import TopicCard from './TopicCard';
 
-interface Props {}
-
-const Carousel: React.FC<Props> = () => {
+const Carousel: React.FC = () => {
   const [currImageIndex, setImageIndex] = useState<number>(0);
   const [topics, setTopics] = useState<Topic[]>([]);
 
@@ -46,11 +45,11 @@ const Carousel: React.FC<Props> = () => {
           onMouseUp={() => handleClick(topic)}
           key={idx}
           className={`slide ${idx === currImageIndex && 'activeSlide'} ${
-            topics.length > 2
-            && (Math.abs(idx - currImageIndex) === 1
-            || (idx === 0 && currImageIndex === topics.length - 1)
-            || (idx === topics.length - 1 && currImageIndex === 0))
-            && 'adjacentSlide'
+            topics.length > 2 &&
+            (Math.abs(idx - currImageIndex) === 1 ||
+              (idx === 0 && currImageIndex === topics.length - 1) ||
+              (idx === topics.length - 1 && currImageIndex === 0)) &&
+            'adjacentSlide'
           }`}
         >
           <TopicCard topic={topic} isActive={idx === currImageIndex} />
