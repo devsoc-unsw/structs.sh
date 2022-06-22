@@ -448,9 +448,8 @@ class GraphicalBST extends GraphicalDataStructure {
     animationProducer.doAnimationAndHighlight(6, animationProducer.highlightNode, node);
   }
 
-  public reset(): void {
-    SVG(CODE_CANVAS).clear();
-    SVG(VISUALISER_CANVAS).clear();
+  public resetDataStructure(): void {
+    super.reset();
     this.root = null;
   }
 

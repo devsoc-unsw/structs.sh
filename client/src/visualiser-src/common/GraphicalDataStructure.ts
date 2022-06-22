@@ -8,7 +8,8 @@ abstract class GraphicalDataStructure {
     SVG(CODE_CANVAS).clear();
   }
 
-  // Child classes will have their own reset method specific to the data structure
+  // The child classes calls this base class method to reset the canvas
+  // The actual data structure is reset in the child class
   public reset(): void {
     SVG(VISUALISER_CANVAS).clear();
     SVG(CODE_CANVAS).clear();
