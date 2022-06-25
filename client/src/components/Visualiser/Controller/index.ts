@@ -1,1 +1,1 @@
-export { default as VisualiserController } from './VisualiserController';
+export { default as VisualiserControls } from './VisualiserControls';
