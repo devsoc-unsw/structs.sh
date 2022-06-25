@@ -4,9 +4,11 @@ import { Box, Collapse, List, ListItem, ListItemIcon, Theme, Typography } from '
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { makeStyles, useTheme } from '@mui/styles';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import VisualiserContext from 'components/Visualiser/VisualiserContext';
 import React, { FC, useContext, useState } from 'react';
 import { LastLink, Link } from './Links';
+
 
 const useStyles = makeStyles({
   opListContainer: {
@@ -89,13 +91,14 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command, isLast }) => {
     controller.doOperation(command, handleTimelineUpdate, ...args);
 
   return (
-    <>
+    <ListItem sx={{ padding: "0px" }}>
       <ListItem
         button
         sx={{
           paddingTop: '0px',
           paddingBottom: '0px',
           paddingLeft: '35px',
+          width: 'auto',
         }}
         onClick={handleToggleDisplay}
       >
@@ -104,31 +107,20 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command, isLast }) => {
         </ListItemIcon>
         <Typography color="textPrimary">{command}</Typography>
         {shouldDisplay ? (
-          <ExpandLess sx={{ fill: textPrimaryColour }} />
+          <ChevronRightIcon sx={{ fill: textPrimaryColour }} />
         ) : (
           <ExpandMore sx={{ fill: textPrimaryColour }} />
         )}
       </ListItem>
-      <Collapse in={shouldDisplay} timeout="auto" unmountOnExit className={classes.opListContainer}>
-        {!isLast && (
-          <svg width="10" height="166" className={classes.longLink}>
-            <line
-              x1="5"
-              y1="1"
-              x2="5"
-              y2="166"
-              stroke={textPrimaryColour}
-              strokeDasharray="50 4"
-              strokeWidth="2"
-            />
-          </svg>
-        )}
-        <List className={isLast ? `${classes.opList} ${classes.last}` : classes.opList}>
+      <Collapse
+        in={shouldDisplay}
+        timeout="auto"
+        unmountOnExit
+        className={classes.opListContainer}
+      >
+        <List className={isLast ? `${classes.opList} ${classes.last}` : classes.opList} style={{ display: 'flex', padding: '0px' }}>
           {documentation[command].args.map((eachArg, idx) => (
-            <ListItem key={idx}>
-              <ListItemIcon>
-                <Link colour={textPrimaryColour} />
-              </ListItemIcon>
+            <ListItem key={idx} style={{ paddingLeft: "0px", paddingRight: "10px", width: "140px", minWidth: "100px" }}>
               <TextField
                 label={eachArg}
                 value={currentInputs[idx]}
@@ -138,10 +130,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command, isLast }) => {
               />
             </ListItem>
           ))}
-          <ListItem>
-            <ListItemIcon>
-              <LastLink colour={textPrimaryColour} />
-            </ListItemIcon>
+          <ListItem style={{ paddingLeft: "5px" }}>
             <Button
               className={classes.opBtn}
               variant="contained"
@@ -158,8 +147,8 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command, isLast }) => {
             </Typography>
           </ListItem>
         </List>
-      </Collapse>
-    </>
+      </Collapse >
+    </ListItem>
   );
 };
 
