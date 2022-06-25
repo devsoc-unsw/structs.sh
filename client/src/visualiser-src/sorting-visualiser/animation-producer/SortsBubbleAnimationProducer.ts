@@ -1,5 +1,5 @@
 import { bubbleCodeSnippet } from '../util/codeSnippets';
-import helpers from '../util/helpers'
+import { getX, getCx } from '../util/helpers'
 import GraphicalSortsElement from '../data-structure/GraphicalSortsElement';
 import SortsAnimationProducer from './SortsAnimationProducer';
 
@@ -14,10 +14,10 @@ export default class SortsBubbleAnimationProducer extends SortsAnimationProducer
     to: GraphicalSortsElement,
     isLast: boolean
   ) {
-    const xFrom = helpers.getX(fromIndex);
-    const cxFrom = helpers.getCx(fromIndex);
-    const xTo = helpers.getX(fromIndex + 1);
-    const cxTo = helpers.getCx(fromIndex + 1) ;
+    const xFrom = getX(fromIndex);
+    const cxFrom = getCx(fromIndex);
+    const xTo = getX(fromIndex + 1);
+    const cxTo = getCx(fromIndex + 1) ;
 
     this.addSequenceAnimation(from.boxTarget.animate().x(xTo));
     this.addSequenceAnimation(from.numberTarget.animate().cx(cxTo));
