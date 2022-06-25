@@ -5,7 +5,6 @@ import { Carousel } from 'components/Carousel';
 import { Footer } from 'components/Footer';
 import { ParticleHeader } from 'components/Particles';
 import { Features } from 'components/Features';
-import { SplashScreen } from 'components/SplashScreen';
 import { HomepageLayout } from 'layout';
 import React from 'react';
 import styles from './HomePage.module.scss';
@@ -15,24 +14,17 @@ const HomePage = () => {
 
   return (
     <HomepageLayout disableBackground>
-      <SplashScreen stillDuration={2.5} disappearDuration={1.5} waitIntervalMinutes={5} />
       <ParticleHeader />
       <Box className={styles.header}>
         <Box
           className={styles.headerContent}
           sx={{
             background: 'rgba(0, 0, 0, 0.5)',
-            boxShadow:
-                            'rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px',
+            boxShadow: 'rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px',
             paddingTop: 3,
           }}
         >
-          <Typography
-            color="white"
-            className={styles.title}
-            variant="h4"
-            sx={{ padding: 2 }}
-          >
+          <Typography color="white" className={styles.title} variant="h4" sx={{ padding: 2 }}>
             <strong>Welcome to Structs.sh</strong>
           </Typography>
           <Typography
@@ -41,8 +33,7 @@ const HomePage = () => {
             variant="body1"
             sx={{ padding: 2 }}
           >
-            An interactive learning platform for computer science, tailored to UNSW CSE
-            students.
+            An interactive learning platform for computer science, tailored to UNSW CSE students.
           </Typography>
           <Box sx={{ width: '80%', margin: '0 auto', height: '300px' }}>
             <Carousel />
@@ -53,8 +44,7 @@ const HomePage = () => {
         sx={{
           background: theme.palette.background.paper,
           position: 'relative',
-          boxShadow:
-                        'rgba(0, 0, 0, 0.4) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px',
+          boxShadow: 'rgba(0, 0, 0, 0.4) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px',
         }}
         className={styles.features}
       >
