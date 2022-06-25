@@ -4,7 +4,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getTopic, Topic } from 'utils/apiRequests';
 import Notification from 'utils/Notification';
-import { urlToTitle } from 'utils/url';
+import { toTitleCase, urlToTitle } from 'utils/url';
 import 'visualiser-src/linked-list-visualiser/styles/visualiser.css';
 import { motion } from 'framer-motion';
 import Helmet from 'react-helmet';
@@ -34,7 +34,7 @@ const containerVariants = {
  * Notably, we're using a split-pane layout here.
  */
 const VisualiserDashboard = () => {
-  const topic = urlToTitle(useParams().topic);
+  const topic = toTitleCase(urlToTitle(useParams().topic));
   const theme: Theme = useTheme();
 
   return topic ? (
