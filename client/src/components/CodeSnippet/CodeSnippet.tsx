@@ -4,9 +4,11 @@ interface Props {}
 
 const CodeSnippet: FC<Props> = () => (
   <div
+    id="code-container"
     style={{
-      height: '650px',
+      height: '100%',
       width: '100%',
+      minHeight: '100%',
       background: 'rgba(235, 235, 235)',
       overflowY: 'scroll',
       padding: 15,

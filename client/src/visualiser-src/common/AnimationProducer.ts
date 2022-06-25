@@ -1,6 +1,6 @@
 import { SVG, Runner } from '@svgdotjs/svg.js';
 import { CodeLine } from './typedefs';
-import { showLineNumbers, CODE_CANVAS } from './constants';
+import { showLineNumbers, CODE_CANVAS, CODE_CONTAINER } from './constants';
 
 interface RunnerInfo {
   runners: Runner[];
@@ -69,6 +69,7 @@ export default abstract class AnimationProducer {
 
       this.codeTargets.push(codeLine);
     });
+    this.setContainerHeight();
   }
 
   // with highlightCode and highlightCodeMultiple
@@ -156,5 +157,9 @@ export default abstract class AnimationProducer {
     }
 
     this._currentSequence = [];
+  }
+
+  private setContainerHeight(): void {
+    document.getElementById(CODE_CONTAINER).style.height = `${20 * this.codeTargets.length + 30}px`;
   }
 }
