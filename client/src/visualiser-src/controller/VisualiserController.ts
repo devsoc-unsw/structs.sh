@@ -148,9 +148,7 @@ class VisualiserController {
     valueIndex = valueIndex === -1 ? expectedArgs.indexOf('values') : valueIndex;
     if (
       valueIndex !== -1 &&
-      !args[valueIndex].split(/,|\s+/g).every((arg) => {
-        return Number(arg) >= 0 && Number(arg) <= 999;
-      })
+      !args[valueIndex].split(/,|\s+/g).every((arg) => Number(arg) >= 0 && Number(arg) <= 999)
     ) {
       return 'Values must be between 0 and 999';
     }
