@@ -15,6 +15,7 @@ export enum DataStructure {
   LINKED_LISTS = 'linked lists',
   BINARY_SEARCH_TREE = 'binary search trees',
   AVL_TREES = 'avl trees',
+  SORTING = 'sorting algorithms',
 }
 
 export interface Documentation {
