@@ -159,8 +159,9 @@ export default abstract class AnimationProducer {
     this._currentSequence = [];
   }
 
+  // Modifies the height of the code snippet container to be
+  // responsive to the number of lines of code required for the operation
   private setContainerHeight(): void {
-    console.log(this.codeTargets.length);
     document.getElementById(CODE_CONTAINER).style.height = `${20 * this.codeTargets.length + 15}px`;
   }
 }
