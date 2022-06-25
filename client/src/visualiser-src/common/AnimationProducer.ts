@@ -160,6 +160,7 @@ export default abstract class AnimationProducer {
   }
 
   private setContainerHeight(): void {
-    document.getElementById(CODE_CONTAINER).style.height = `${20 * this.codeTargets.length + 30}px`;
+    console.log(this.codeTargets.length);
+    document.getElementById(CODE_CONTAINER).style.height = `${20 * this.codeTargets.length + 15}px`;
   }
 }
