@@ -1,6 +1,5 @@
 import { Button } from '@mui/material';
 import React from 'react';
-import { Topic } from 'utils/apiRequests';
 import { useNavigate } from 'react-router-dom';
 import { titleToUrl } from 'utils/url';
 import styles from './TopicCard.module.scss';
