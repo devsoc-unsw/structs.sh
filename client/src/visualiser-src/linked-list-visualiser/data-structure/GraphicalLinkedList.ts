@@ -222,19 +222,6 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     return producer;
   }
 
-  reset(): void {
-    super.reset();
-
-    this.head = null;
-    this.length = 0;
-
-    this.headPointer = GraphicalLinkedListNode.newHeadPointer();
-
-    // add prev and curr pointers to visualiser canvas
-    (SVG(VISUALISER_CANVAS) as Svg).image(currSvg).opacity(0).id('current');
-    (SVG(VISUALISER_CANVAS) as Svg).image(prevSvg).opacity(0).id('prev');
-  }
-
   public get documentation() {
     return GraphicalLinkedList.documentation;
   }

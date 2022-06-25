@@ -448,11 +448,6 @@ class GraphicalBST extends GraphicalDataStructure {
     animationProducer.doAnimationAndHighlight(6, animationProducer.highlightNode, node);
   }
 
-  public resetDataStructure(): void {
-    super.reset();
-    this.root = null;
-  }
-
   public get documentation() {
     return GraphicalBST.documentation;
   }

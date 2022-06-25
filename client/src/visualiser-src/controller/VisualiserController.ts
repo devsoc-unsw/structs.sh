@@ -19,6 +19,8 @@ class VisualiserController {
 
   private isStepMode: boolean = false;
 
+  private topicTitle: string;
+
   public constructor(topicTitle?: string) {
     this.setSpeed(defaultSpeed);
     if (topicTitle !== undefined) {
@@ -116,6 +118,7 @@ class VisualiserController {
   }
 
   public applyTopicTitle(topicTitle: string) {
+    this.topicTitle = topicTitle;
     this.dataStructure = GraphicalDataStructureFactory.create(topicTitle);
     this.currentTimeline.finish();
     this.currentTimeline.time(0);
@@ -166,7 +169,7 @@ class VisualiserController {
   }
 
   public resetDataStructure(): void {
-    this.dataStructure.reset();
+    this.dataStructure = GraphicalDataStructureFactory.create(this.topicTitle);
     this.currentTimeline.finish();
     this.currentTimeline.time(0);
     this.currentTimeline = new Timeline().persist(true);
