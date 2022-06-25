@@ -1,6 +1,5 @@
+import React from 'react';
 import { Box } from '@mui/material';
-import React, { FC } from 'react';
-import { DataStructure, Documentation } from 'visualiser-src/common/typedefs';
 import OperationsTree from './GUIOperations/OperationsTree';
 /**
  * The GUI form that lets users input arguments to a menu of commands and then

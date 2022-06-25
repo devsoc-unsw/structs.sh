@@ -1,4 +1,3 @@
-import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Box, Collapse, List, ListItem, ListItemIcon, Theme, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -8,7 +7,6 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import VisualiserContext from 'components/Visualiser/VisualiserContext';
 import React, { FC, useContext, useState } from 'react';
 import { LastLink, Link } from './Links';
-
 
 const useStyles = makeStyles({
   opListContainer: {
@@ -91,7 +89,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command, isLast }) => {
     controller.doOperation(command, handleTimelineUpdate, ...args);
 
   return (
-    <ListItem sx={{ padding: "0px" }}>
+    <ListItem sx={{ padding: '0px' }}>
       <ListItem
         button
         sx={{
@@ -112,15 +110,21 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command, isLast }) => {
           <ExpandMore sx={{ fill: textPrimaryColour }} />
         )}
       </ListItem>
-      <Collapse
-        in={shouldDisplay}
-        timeout="auto"
-        unmountOnExit
-        className={classes.opListContainer}
-      >
-        <List className={isLast ? `${classes.opList} ${classes.last}` : classes.opList} style={{ display: 'flex', padding: '0px' }}>
+      <Collapse in={shouldDisplay} timeout="auto" unmountOnExit className={classes.opListContainer}>
+        <List
+          className={isLast ? `${classes.opList} ${classes.last}` : classes.opList}
+          style={{ display: 'flex', padding: '0px' }}
+        >
           {documentation[command].args.map((eachArg, idx) => (
-            <ListItem key={idx} style={{ paddingLeft: "0px", paddingRight: "10px", width: "140px", minWidth: "100px" }}>
+            <ListItem
+              key={idx}
+              style={{
+                paddingLeft: '0px',
+                paddingRight: '10px',
+                width: '140px',
+                minWidth: '100px',
+              }}
+            >
               <TextField
                 label={eachArg}
                 value={currentInputs[idx]}
@@ -130,7 +134,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command, isLast }) => {
               />
             </ListItem>
           ))}
-          <ListItem style={{ paddingLeft: "5px" }}>
+          <ListItem style={{ paddingLeft: '5px' }}>
             <Button
               className={classes.opBtn}
               variant="contained"
@@ -147,7 +151,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command, isLast }) => {
             </Typography>
           </ListItem>
         </List>
-      </Collapse >
+      </Collapse>
     </ListItem>
   );
 };
