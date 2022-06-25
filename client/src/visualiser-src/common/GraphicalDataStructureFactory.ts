@@ -10,8 +10,6 @@ class GraphicalDataStructureFactory {
         return new GraphicalLinkedList();
       case 'binary search trees':
         return new GraphicalBST();
-      case 'avl trees':
-        return new GraphicalBST();
       case 'sorting algorithms':
         return new GraphicalSorts();
       default:

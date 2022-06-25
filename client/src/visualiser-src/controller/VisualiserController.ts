@@ -18,6 +18,8 @@ class VisualiserController {
 
   private isStepMode: boolean = false;
 
+  private topicTitle: string;
+
   public constructor(topicTitle?: string) {
     this.setSpeed(defaultSpeed);
     if (topicTitle !== undefined) {
@@ -118,7 +120,11 @@ class VisualiserController {
   }
 
   public applyTopicTitle(topicTitle: string) {
+    this.topicTitle = topicTitle;
     this.dataStructure = GraphicalDataStructureFactory.create(topicTitle);
+    this.currentTimeline.finish();
+    this.currentTimeline.time(0);
+    this.currentTimeline = new Timeline().persist(true);
   }
 
   private getErrorMessageIfInvalidInput(command: string, args: string[]): string {
@@ -142,10 +148,7 @@ class VisualiserController {
     valueIndex = valueIndex === -1 ? expectedArgs.indexOf('values') : valueIndex;
     if (
       valueIndex !== -1 &&
-      !args[valueIndex].split(/,|\s+/g).every((arg) => {
-        console.log(arg);
-        return Number(arg) >= 0 && Number(arg) <= 999;
-      })
+      !args[valueIndex].split(/,|\s+/g).every((arg) => Number(arg) >= 0 && Number(arg) <= 999)
     ) {
       return 'Values must be between 0 and 999';
     }
@@ -181,7 +184,10 @@ class VisualiserController {
   }
 
   public resetDataStructure(): void {
-    this.dataStructure.reset();
+    this.dataStructure = GraphicalDataStructureFactory.create(this.topicTitle);
+    this.currentTimeline.finish();
+    this.currentTimeline.time(0);
+    this.currentTimeline = new Timeline().persist(true);
   }
 
   private computePrevTimestamp(): number {
