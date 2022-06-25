@@ -37,13 +37,11 @@ const TopicCard: React.FC<Props> = ({ topic, index }) => {
       onClick={() => handleClick(topic)}
       onKeyDown={() => handleClick(topic)}
     >
-      <div>
-        <img 
-          src={`${images[index]}`} 
-          alt={`data structure svg: ${images[index]}`}
-          style={{height: '100px', objectFit: 'contain'}}
-        />
-      </div>
+      <img 
+        src={`${images[index]}`} 
+        alt={`data structure svg: ${images[index]}`}
+        style={{height: '100px', objectFit: 'contain'}}
+      />
       <div>
         <Button
           className={`${styles.button}`}
