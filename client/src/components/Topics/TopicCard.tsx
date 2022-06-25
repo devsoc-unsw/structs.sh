@@ -39,18 +39,16 @@ const TopicCard: React.FC<Props> = ({ topic, index }) => {
     >
       <img 
         src={`${images[index]}`} 
-        alt={`data structure svg: ${images[index]}`}
+        alt={`${topic.title} svg snapshot`}
         style={{height: '100px', objectFit: 'contain'}}
       />
-      <div>
-        <Button
-          className={`${styles.button}`}
-          id={styles[`button${index}`]}
-          variant="contained"
-        >
-          {topic.title}
-        </Button>
-      </div>
+      <Button
+        className={`${styles.button}`}
+        id={styles[`button${index}`]}
+        variant="contained"
+      >
+        {topic.title}
+      </Button>
     </div>
   );
   
