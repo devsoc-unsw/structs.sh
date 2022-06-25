@@ -34,21 +34,8 @@ const containerVariants = {
  * Notably, we're using a split-pane layout here.
  */
 const VisualiserDashboard = () => {
-  const [topic, setTopic] = useState<Topic>();
-  const params = useParams();
+  const topic = urlToTitle(useParams().topic);
   const theme: Theme = useTheme();
-
-  // Fetching the topic based on the URL parameter in `/visualiser/:topic`
-  useEffect(() => {
-    const topicTitleInUrl = params.topic;
-    getTopic(urlToTitle(topicTitleInUrl))
-      .then((newTopic) => {
-        setTopic(newTopic);
-      })
-      .catch((err) => {
-        Notification.error(`Couldn't find anything for topic: '${urlToTitle(topicTitleInUrl)}'`);
-      });
-  }, [params]);
 
   return topic ? (
     <motion.div
@@ -59,7 +46,7 @@ const VisualiserDashboard = () => {
       exit="exit"
     >
       <Helmet>
-        <title>{topic.title !== undefined ? topic.title : 'Structs.sh'}</title>
+        <title>{topic !== undefined ? topic : 'Structs.sh'}</title>
       </Helmet>
       <TopNavbar position="relative" enableOnScrollEffect={false} />
       <Box
@@ -69,7 +56,7 @@ const VisualiserDashboard = () => {
           width: '100vw',
         }}
       >
-        <Visualiser topicTitle={topic.title} />
+        <Visualiser topicTitle={topic} />
       </Box>
     </motion.div>
   ) : (
