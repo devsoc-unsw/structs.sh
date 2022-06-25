@@ -22,11 +22,6 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     },
   });
 
-  public reset() {
-    super.reset();
-    this.elementList = [];
-  }
-
   public create(values: number[]): AnimationProducer {
     SVG(CANVAS).clear();
     const producer = new SortsCreateAnimationProducer();

@@ -34,7 +34,7 @@ const App = () => {
   //     setCookie(LIGHT_MODE_ON, 'true');
   //   }
   // }, [currTheme, setCookie]);
-  
+
   // const themeMutationContextProviderValue = useMemo(
   //   () => ({
   //     toggleDarkMode,
