@@ -129,6 +129,13 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command, isLast }) => {
                 label={eachArg}
                 value={currentInputs[idx]}
                 variant="outlined"
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    setErrorMessage(executeCommand(currentInputs));
+                    clearArguments();
+                  }
+                }}
                 onChange={(e) => handleSetArguments(e, idx)}
                 sx={{ background: theme.palette.background.paper, height: '100%' }}
               />

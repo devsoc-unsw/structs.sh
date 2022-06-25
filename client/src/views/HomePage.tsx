@@ -5,7 +5,6 @@ import { Topics } from 'components/Topics';
 import { Footer } from 'components/Footer';
 import { ParticleHeader } from 'components/Particles';
 import { Features } from 'components/Features';
-import { SplashScreen } from 'components/SplashScreen';
 import { HomepageLayout } from 'layout';
 import React from 'react';
 import styles from './HomePage.module.scss';
@@ -15,7 +14,6 @@ const HomePage = () => {
 
   return (
     <HomepageLayout disableBackground>
-      <SplashScreen stillDuration={2.5} disappearDuration={1.5} waitIntervalMinutes={5} />
       <ParticleHeader />
       <Box className={styles.header}>
         <Typography
@@ -32,8 +30,7 @@ const HomePage = () => {
             variant="body1"
             sx={{ padding: 2 }}
           >
-            An interactive learning platform for computer science, tailored to UNSW CSE
-            students.
+            An interactive learning platform for computer science, tailored to UNSW CSE students.
           </Typography>
           <Box sx={{ width: '85%', margin: '0 auto', height: 'auto' }}>
             <Topics />
