@@ -8,17 +8,17 @@ export const textCy = 360;
 export const CANVAS = '#canvas';
 
 export const shapeAttributes = {
-    'stroke-width': strokeWidth,
-    stroke: 'black',
-    fill: 'white',
-    opacity: 0,
+  'stroke-width': strokeWidth,
+  stroke: 'black',
+  fill: 'black',
+  opacity: 0,
 };
-  
+
 export const textAttributes = {
-    x: boxWidth / 2,
-    y: topOffset,
-    'dominant-baseline': 'middle',
-    'text-anchor': 'middle',
-    'stroke-width': 0,
-    opacity: 0,
+  x: boxWidth / 2,
+  y: topOffset,
+  'dominant-baseline': 'middle',
+  'text-anchor': 'middle',
+  'stroke-width': 0,
+  opacity: 0,
 };
