@@ -1,4 +1,4 @@
-import { SVG, Container } from '@svgdotjs/svg.js';
+import { SVG } from '@svgdotjs/svg.js';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import { CODE_CANVAS, VISUALISER_CANVAS } from 'visualiser-src/common/constants';

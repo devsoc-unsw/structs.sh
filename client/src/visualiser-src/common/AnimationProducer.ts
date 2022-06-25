@@ -2,8 +2,12 @@ import { SVG, Runner } from '@svgdotjs/svg.js';
 import { CodeLine } from './typedefs';
 import { showLineNumbers, CODE_CANVAS } from './constants';
 
+interface RunnerInfo {
+  runners: Runner[];
+  isTimestamped: boolean;
+}
 export default abstract class AnimationProducer {
-  private _allRunners: Runner[][] = [];
+  private _allRunners: RunnerInfo[] = [];
 
   // this is the current sequence of runners,
   // which gets pushed to allRunners when we call complete.
@@ -81,8 +85,6 @@ export default abstract class AnimationProducer {
     );
 
     this.highlightedLines = [line];
-
-    this.finishSequence();
   }
 
   public highlightCodeMultiple(lines: number[]): void {
@@ -108,8 +110,18 @@ export default abstract class AnimationProducer {
   // - args: allows us to pass a variable amount of arguments which then get passed as arguments
   // to fn
   public doAnimationAndHighlight(line: number, fn: any, ...args: any[]): void {
-    fn.apply(this, args);
+    this.doAnimationAndHighlightTimestamp(line, true, fn, ...args);
+  }
+
+  public doAnimationAndHighlightTimestamp(
+    line: number,
+    isTimestamped: boolean,
+    fn: any,
+    ...args: any[]
+  ): void {
     this.highlightCode(line);
+    fn.apply(this, args);
+    this.finishSequence(isTimestamped);
   }
 
   public doAnimation(fn: any, ...args: any[]): void {
@@ -131,16 +143,16 @@ export default abstract class AnimationProducer {
   }
 
   public addSingleAnimation(animation: Runner): void {
-    this._allRunners.push([animation]);
+    this._allRunners.push({ runners: [animation], isTimestamped: true });
   }
 
   public addSequenceAnimation(animation: Runner): void {
     this.currentSequence.push(animation);
   }
 
-  public finishSequence(): void {
+  public finishSequence(isTimestamped: boolean = true): void {
     if (this.currentSequence.length > 0) {
-      this.allRunners.push(this.currentSequence);
+      this.allRunners.push({ runners: this.currentSequence, isTimestamped });
     }
 
     this._currentSequence = [];

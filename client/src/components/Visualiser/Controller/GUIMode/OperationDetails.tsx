@@ -1,4 +1,3 @@
-import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Box, Collapse, List, ListItem, ListItemIcon, Theme, Typography } from '@mui/material';
 import Button from '@mui/material/Button';

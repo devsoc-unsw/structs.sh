@@ -1,7 +1,9 @@
 .header {
     width: 100vw;
-    height: 100vh;
-
+    min-height: 100vh;
+    max-width: 100%;
+    text-align: center;
+    
     .headerContent {
         position: absolute;
         display: block;

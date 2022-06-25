@@ -1,5 +1,6 @@
 import GraphicalLinkedList from 'visualiser-src/linked-list-visualiser/data-structure/GraphicalLinkedList';
 import GraphicalBST from 'visualiser-src/binary-search-tree-visualiser/data-structure/GraphicalBST';
+import GraphicalSorts from 'visualiser-src/sorting-visualiser/data-structure/GraphicalSorts';
 import GraphicalDataStructure from './GraphicalDataStructure';
 
 class GraphicalDataStructureFactory {
@@ -9,8 +10,8 @@ class GraphicalDataStructureFactory {
         return new GraphicalLinkedList();
       case 'binary search trees':
         return new GraphicalBST();
-      case 'avl trees':
-        return new GraphicalBST();
+      case 'sorting algorithms':
+        return new GraphicalSorts();
       default:
         throw Error('Invalid Topic Title');
     }

@@ -4,7 +4,6 @@ import GraphicalDataStructureFactory from 'visualiser-src/common/GraphicalDataSt
 import { Documentation } from 'visualiser-src/common/typedefs';
 import { defaultSpeed } from '../common/constants';
 import AnimationProducer from '../common/AnimationProducer';
-import { time } from 'console';
 
 class VisualiserController {
   private dataStructure: GraphicalDataStructure;
@@ -40,21 +39,24 @@ class VisualiserController {
 
     if (animationProducer.allRunners.length === 0) return;
 
-    animationProducer.allRunners.forEach((runners) => {
-      runners.forEach((runner) => {
+    animationProducer.allRunners.forEach((runnerInfo) => {
+      if (runnerInfo.runners.length === 0) return;
+      runnerInfo.runners.forEach((runner) => {
         this.currentTimeline.schedule(runner, this.timelineDuration + 25, 'absolute');
       });
-      const maxRunner = runners.reduce(
+      const maxRunner = runnerInfo.runners.reduce(
         (prev: Runner, curr: Runner) => (prev.duration() < curr.duration() ? curr : prev),
-        runners[0]
+        runnerInfo.runners[0]
       );
-      maxRunner.after(() => {
-        if (this.isStepMode) {
-          this.currentTimeline.pause();
-        }
-      });
-      this.timestamps.push(this.timelineDuration + 1);
-      this.timelineDuration += runners[0].duration() + 25;
+      this.timelineDuration += maxRunner.duration() + 25;
+      if (runnerInfo.isTimestamped) {
+        maxRunner.after(() => {
+          if (this.isStepMode) {
+            this.currentTimeline.pause();
+          }
+        });
+        this.timestamps.push(this.timelineDuration + 1);
+      }
     });
     this.timestamps.push(this.timelineDuration);
     this.currentTimeline.play();
@@ -130,18 +132,28 @@ class VisualiserController {
     if (args.length !== expectedArgs.length) {
       return `Invalid arguments. Please provide ${args.join(', ')}`;
     }
-
-    if (args.includes('')) return 'Argument(s) missing';
-    if (!args.every((value) => /^\d+$/.test(value)))
-      return 'Argument(s) must be a positive integer';
-
-    const valueIndex = expectedArgs.indexOf('value');
-
-    if (valueIndex !== -1) {
-      if (Number(args[valueIndex]) < 0 || Number(args[valueIndex]) > 999)
-        return 'Value must be between 0 and 999';
+    if (args.includes('')) {
+      return 'Argument(s) missing';
     }
-
+    if (
+      !args.every((value, idx) =>
+        expectedArgs[idx].endsWith('s')
+          ? value.split(/,| /g).every((el) => /^\d+$/.test(el))
+          : /^\d+$/.test(value)
+      )
+    ) {
+      return 'Argument(s) must be a positive integer';
+    }
+    let valueIndex = expectedArgs.indexOf('value');
+    valueIndex = valueIndex === -1 ? expectedArgs.indexOf('values') : valueIndex;
+    if (
+      valueIndex !== -1 &&
+      !args[valueIndex].split(/,|\s+/g).every((arg) => {
+        return Number(arg) >= 0 && Number(arg) <= 999;
+      })
+    ) {
+      return 'Values must be between 0 and 999';
+    }
     return '';
   }
 
@@ -158,7 +170,12 @@ class VisualiserController {
     this.finish();
     // @ts-ignore
     const animationProducer: AnimationProducer = this.dataStructure[command](
-      ...args.map((arg) => Number(arg))
+      ...args.map((arg, idx) => {
+        if (this.documentation[command].args[idx].endsWith('s')) {
+          return arg.split(/,| /g).map((el) => Number(el));
+        }
+        return Number(arg);
+      })
     );
     this.constructTimeline(animationProducer, updateSlider);
     return '';
