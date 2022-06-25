@@ -1,5 +1,5 @@
-import { boxWidth, whitespace } from '../util/constants';
 import { bubbleCodeSnippet } from '../util/codeSnippets';
+import helpers from '../util/helpers'
 import GraphicalSortsElement from '../data-structure/GraphicalSortsElement';
 import SortsAnimationProducer from './SortsAnimationProducer';
 
@@ -14,10 +14,10 @@ export default class SortsBubbleAnimationProducer extends SortsAnimationProducer
     to: GraphicalSortsElement,
     isLast: boolean
   ) {
-    const xFrom = fromIndex * (boxWidth + whitespace) + whitespace;
-    const cxFrom = fromIndex * (boxWidth + whitespace) + (boxWidth / 2 + whitespace);
-    const xTo = (fromIndex + 1) * (boxWidth + whitespace) + whitespace;
-    const cxTo = (fromIndex + 1) * (boxWidth + whitespace) + (boxWidth / 2 + whitespace);
+    const xFrom = helpers.getX(fromIndex);
+    const cxFrom = helpers.getCx(fromIndex);
+    const xTo = helpers.getX(fromIndex + 1);
+    const cxTo = helpers.getCx(fromIndex + 1) ;
 
     this.addSequenceAnimation(from.boxTarget.animate().x(xTo));
     this.addSequenceAnimation(from.numberTarget.animate().cx(cxTo));

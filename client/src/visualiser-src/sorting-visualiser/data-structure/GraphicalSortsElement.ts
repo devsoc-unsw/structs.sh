@@ -21,17 +21,17 @@ export default class GraphicalSortsElement {
 
   public static from(input: number) {
     const canvas = SVG(VISUALISER_CANVAS) as Svg;
-    const nodeShape = canvas
+    const blockShape = canvas
       .rect()
       .attr(shapeAttributes)
       .width(boxWidth)
       .height(Math.sqrt(input * 90));
-    const nodeValue = canvas.text(String(input)).attr(textAttributes);
+    const elementValue = canvas.text(String(input)).attr(textAttributes);
     return new GraphicalSortsElement({
       value: input,
       svgData: {
-        numberTarget: nodeValue,
-        boxTarget: nodeShape,
+        numberTarget: elementValue,
+        boxTarget: blockShape,
       },
     });
   }

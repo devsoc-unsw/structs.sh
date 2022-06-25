@@ -38,13 +38,6 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     return producer;
   }
 
-  // delete(value: number): AnimationProducer {
-  //     const producer = new SortsAppendAnimationProducer();
-
-  //     this.valueList()
-  //     return producer;
-  // }
-
   public bubble(): AnimationProducer {
     const producer = new SortsBubbleAnimationProducer();
 

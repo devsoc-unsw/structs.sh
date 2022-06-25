@@ -1,13 +1,13 @@
-import { boxWidth, whitespace } from '../util/constants';
+import { boxWidth, whitespace, textCy } from '../util/constants';
+import helpers from '../util/helpers';
 import GraphicalSortsElement from '../data-structure/GraphicalSortsElement';
 import SortsAnimationProducer from './SortsAnimationProducer';
 
 export default class SortsCreateAnimationProducer extends SortsAnimationProducer {
   public addBlock(value: number, length: number, newBlock: GraphicalSortsElement) {
-    const rectX = length * (boxWidth + whitespace) + whitespace;
-    const rectY = 350 - Math.sqrt(value * 90);
-    const textCx = length * (boxWidth + whitespace) + (boxWidth / 2 + whitespace);
-    const textCy = 360;
+    const rectX = helpers.getX(length);
+    const rectY = helpers.getY(value);
+    const textCx = helpers.getCx(length);
 
     newBlock.boxTarget.x(rectX).y(rectY);
     newBlock.numberTarget.cx(textCx).cy(textCy);
