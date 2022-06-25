@@ -1,9 +1,7 @@
 import { LineLoader } from 'components/Loader';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { getTopics, Topic } from 'utils/apiRequests';
 import Notification from 'utils/Notification';
-import { titleToUrl } from 'utils/url';
 import TopicCard from './TopicCard';
 
 interface Props {}
@@ -11,15 +9,10 @@ interface Props {}
 const Topics: React.FC<Props> = () => {
 
   const [topics, setTopics] = useState<Topic[]>([]);
-  const navigate = useNavigate();
-
+  
   useEffect(() => {
     getTopics().then(setTopics).catch(Notification.error);
   }, []);
-
-  const handleClick = (topic: Topic) => {
-    navigate(`/visualiser/${titleToUrl(topic.title)}`);
-  };
 
   return topics && topics.length > 0 ? (
     <div
@@ -27,10 +20,6 @@ const Topics: React.FC<Props> = () => {
       {topics.map((topic, idx) => (
         <div
           key={idx}
-          role = "button"
-          tabIndex={idx}
-          onClick={() => handleClick(topic)}
-          onKeyDown={() => handleClick(topic)}
         >
           <TopicCard topic={topic} index={idx} />
         </div>

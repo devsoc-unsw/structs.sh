@@ -11,6 +11,7 @@
     transition: -webkit-transform 0.2s;
     transition: transform 0.2s;
     transition: transform 0.2s, -webkit-transform 0.2s;
+    cursor: pointer;
 
     .button {
       border-radius: 22px;
@@ -18,12 +19,17 @@
       min-width: 230px;
       min-height: 50px;
       font-size: 16px;
+      box-shadow: none;
+      font-weight: 500;
     }
 
     .button:hover {
-      background-color:#122b70;
+      background-color: inherit;
       transition: 0.5s;
+      border: 1px solid #141C35;
+      box-shadow: none;
     }
+
 }
 
 .card:hover {
