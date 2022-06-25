@@ -1,9 +1,9 @@
 import { Button } from '@mui/material';
 import React from 'react';
 import { Topic } from 'utils/apiRequests';
-import styles from './TopicCard.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { titleToUrl } from 'utils/url';
+import styles from './TopicCard.module.scss';
 import binary from './topic-images/binary-search-tree-nobg.png'
 import linked from './topic-images/linked-list-nobg.png';
 import graph from './topic-images/graph-nobg.png';
@@ -22,8 +22,8 @@ const TopicCard: React.FC<Props> = ({ topic, index }) => {
 
   const navigate = useNavigate();
 
-  const handleClick = (topic: Topic) => {
-    navigate(`/visualiser/${titleToUrl(topic.title)}`);
+  const handleClick = (top: Topic) => {
+    navigate(`/visualiser/${titleToUrl(top.title)}`);
   };
 
   return (
