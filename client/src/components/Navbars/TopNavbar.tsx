@@ -159,10 +159,13 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
     >
       {getTopics() &&
         getTopics().map((topic, idx) => (
-          <MenuItem key={idx} className={styles.item}>
-            <Link to={`/visualiser/${titleToUrl(topic)}`}>
-              <span>{topic}</span>
-            </Link>
+          <MenuItem
+            key={idx}
+            className={styles.item}
+            component={Link}
+            to={`/visualiser/${titleToUrl(topic)}`}
+          >
+            {topic}
           </MenuItem>
         ))}
     </Menu>
