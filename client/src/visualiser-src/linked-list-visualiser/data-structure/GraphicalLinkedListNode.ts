@@ -38,7 +38,7 @@ export default class GraphicalLinkedListNode {
       .text('head')
       .attr(textAttributes)
       .opacity(1)
-      .attr({ 'font-size': 16 })
+      .attr({ 'font-size': 16, 'font-family': 'CodeText' })
       .addTo(VISUALISER_CANVAS);
     const headPointer = SVG()
       .path()

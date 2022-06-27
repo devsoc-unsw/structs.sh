@@ -81,7 +81,7 @@ export default abstract class AnimationProducer {
 
     this.addSequenceAnimation(
       this.codeTargets[line - 1].rectTarget.animate(1).attr({
-        fill: '#4beb9b',
+        fill: '#39AF8E',
       })
     );
 
@@ -95,7 +95,7 @@ export default abstract class AnimationProducer {
     lines.forEach((line) => {
       this.addSequenceAnimation(
         this.codeTargets[line - 1].rectTarget.animate(1).attr({
-          fill: '#4beb9b',
+          fill: '#39AF8E',
         })
       );
     });

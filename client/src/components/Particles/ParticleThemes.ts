@@ -13,9 +13,9 @@ export const lightParticleTheme: ParticleBackgroundTheme = {
 export const darkParticleTheme: ParticleBackgroundTheme = {
   backgroundCss: `
           linear-gradient(
-              to right,
-              #141E30,
-              #243B55
+              to bottom,
+              #14113C,
+              #242059
           )
       `,
   particleColor: '#FFFFFF',

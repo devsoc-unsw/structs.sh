@@ -30,10 +30,10 @@ const GUIMode = () => {
         overflow: 'auto',
         background: theme.palette.background.default,
         position: 'absolute',
-        bottom: '10vh',
+        bottom: '7vh',
         padding: 2,
-        width: '30vw',
-        height: '40vh',
+        minWidth: '30vw',
+        minHeight: '40vh',
       }}
     >
       <Typography color="textPrimary">{topicTitle}</Typography>

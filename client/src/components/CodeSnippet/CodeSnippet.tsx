@@ -7,13 +7,13 @@ const CodeSnippet: FC<Props> = () => (
   <Box
     sx={{
       background: '#14113C',
-      overflowY: 'scroll',
+      overflowY: 'auto',
       position: 'absolute',
       right: '0',
-      height: '40%',
-      bottom: '10vh',
+      minHeight: '40vh',
+      bottom: '7vh',
       padding: 2,
-      width: '30vw',
+      minWidth: '30vw',
     }}
   >
     <svg id="code-canvas" />

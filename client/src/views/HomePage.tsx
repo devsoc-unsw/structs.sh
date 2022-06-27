@@ -17,24 +17,24 @@ const HomePage = () => {
       <ParticleHeader />
       <Box className={styles.header}>
         <Typography
-            color="white"
-            className={styles.title}
-            variant="h4"
-            sx={{ padding: '2', marginTop: '5%' }}
-          >
-            <strong>Welcome to Structs.sh</strong>
-          </Typography>
-          <Typography
-            color="white"
-            className={styles.description}
-            variant="body1"
-            sx={{ padding: 2 }}
-          >
-            An interactive learning platform for computer science, tailored to UNSW CSE students.
-          </Typography>
-          <Box sx={{ width: '85%', margin: '0 auto', height: 'auto' }}>
-            <Topics />
-          </Box>
+          color="white"
+          className={styles.title}
+          variant="h4"
+          sx={{ padding: '2', marginTop: '5%' }}
+        >
+          <strong>Welcome to Structs.sh</strong>
+        </Typography>
+        <Typography
+          color="white"
+          className={styles.description}
+          variant="body1"
+          sx={{ padding: 2 }}
+        >
+          An interactive learning platform for computer science, tailored to UNSW CSE students.
+        </Typography>
+        <Box sx={{ width: '85%', margin: '0 auto', height: 'auto' }}>
+          <Topics />
+        </Box>
       </Box>
       <Box
         sx={{
