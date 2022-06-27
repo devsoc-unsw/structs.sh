@@ -1,5 +1,5 @@
 import React from 'react';
-import VisualiserCreateNewResetMenu from './VisualiserCreateNewResetMenu';
+
 /* -------------------------------------------------------------------------- */
 /*                        Visualiser-Specific Canvases                        */
 /* -------------------------------------------------------------------------- */
@@ -13,7 +13,6 @@ const VisualiserCanvas: React.FC = () => (
       id="visualiser-container"
       style={{ position: 'relative', height: '100%', width: '100%', background: 'rgba(235, 235, 235)'}}
     >
-      <VisualiserCreateNewResetMenu />
       <svg id="visualiser-canvas" />
     </div>
   );
