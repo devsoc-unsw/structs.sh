@@ -1,0 +1,40 @@
+ .card {
+    width: 260px;
+    height: 210px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    border-radius: 35px;
+    filter: drop-shadow(0px 4px 20px #141C35);
+    margin: 5px 5px 5px 5px;
+    -webkit-transition: -webkit-transform 0.2s;
+    transition: -webkit-transform 0.2s;
+    transition: transform 0.2s;
+    transition: transform 0.2s, -webkit-transform 0.2s;
+    cursor: pointer;
+
+    .button {
+      border-radius: 22px;
+      background-color: #141C35;
+      min-width: 230px;
+      min-height: 50px;
+      font-size: 16px;
+      box-shadow: none;
+      font-weight: 500;
+    }
+
+    .button:hover {
+      background-color: inherit;
+      transition: 0.5s;
+      border: 1px solid #141C35;
+      box-shadow: none;
+    }
+
+}
+
+.card:hover {
+  -ms-transform: scale(1.1); /* IE 9 */
+  -webkit-transform: scale(1.1); /* Safari 3-8 */
+  transform: scale(1.1); 
+}

@@ -2,7 +2,7 @@ import AnimationProducer from 'visualiser-src/common/AnimationProducer';
 import { SVG, Path, Svg } from '@svgdotjs/svg.js';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { Documentation } from 'visualiser-src/common/typedefs';
-import { VISUALISER_CANVAS } from 'visualiser-src/common/constants';
+import { CODE_CANVAS, VISUALISER_CANVAS } from 'visualiser-src/common/constants';
 import currSvg from 'visualiser-src/linked-list-visualiser/assets/curr.svg';
 import prevSvg from 'visualiser-src/linked-list-visualiser/assets/prev.svg';
 import { injectIds } from 'visualiser-src/common/helpers';
@@ -191,6 +191,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     producer.doAnimationAndHighlight(1, producer.createNodeAt, index, newNode, this.length);
     if (index === 0 && this.head !== null) {
       newNode.next = this.head;
+      this.head = newNode;
       producer.doAnimationAndHighlight(3, producer.newHeadPointToOldHead, newNode);
       producer.doAnimationAndHighlight(
         7,
@@ -227,6 +228,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     return producer;
   }
 
+<<<<<<< HEAD
   public insertRandomGeneratedNodes(): void {
     const numbers = generateNumbers();
     for (let i = 0; i < numbers.length; i += 1) {
@@ -247,6 +249,8 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     (SVG(VISUALISER_CANVAS) as Svg).image(prevSvg).opacity(0).id('prev');
   }
 
+=======
+>>>>>>> master
   public get documentation() {
     return GraphicalLinkedList.documentation;
   }
