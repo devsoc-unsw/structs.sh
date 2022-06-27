@@ -60,13 +60,9 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
 
   return (
     <VisualiserContext.Provider value={contextValues}>
-      <Box className={styles.interactor}>
-        <VisualiserControls />
-        <Pane orientation="vertical" minSize={150.9}>
-          <GUIMode />
-          <CodeSnippet />
-        </Pane>
-      </Box>
+      <GUIMode />
+      <CodeSnippet />
+      <VisualiserControls />
     </VisualiserContext.Provider>
   );
 };

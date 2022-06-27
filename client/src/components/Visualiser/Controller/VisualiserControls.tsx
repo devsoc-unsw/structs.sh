@@ -102,11 +102,8 @@ const VisualiserControls = () => {
   }, [isTimelineComplete, handleTimelineUpdate]);
 
   return (
-    <Box
-      className={styles.container}
-      sx={{ height: '64px', width: '100%', backgroundColor: theme.palette.background.paper }}
-    >
-      <div className={styles.root}>
+    <Box className={styles.container} sx={{ width: '100%' }}>
+      <div className={styles.root} style={{ backgroundColor: theme.palette.background.default }}>
         <IconButton onClick={() => handleStepBackward()}>
           <SkipPreviousIcon sx={{ fill: theme.palette.text.primary }} />
         </IconButton>

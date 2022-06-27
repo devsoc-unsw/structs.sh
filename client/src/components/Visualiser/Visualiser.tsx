@@ -1,4 +1,5 @@
 import { CircularLoader } from 'components/Loader';
+import { Box, Grid } from '@mui/material';
 import { Pane } from 'components/Panes';
 import React from 'react';
 import VisualiserCanvas from './VisualiserCanvas';
@@ -19,10 +20,14 @@ interface VisualiserProps {
  */
 const Visualiser: React.FC<VisualiserProps> = ({ topicTitle }) =>
   topicTitle ? (
-    <Pane orientation="horizontal" minSize={150.9}>
+    <>
+      {/* <Box sx={{ height: '60%' }}> */}
       <VisualiserCanvas />
+      {/* </Box> */}
+      {/* <Box sx={{ height: '40%' }}> */}
       <VisualiserInterface topicTitle={topicTitle} />
-    </Pane>
+      {/* </Box> */}
+    </>
   ) : (
     <CircularLoader />
   );

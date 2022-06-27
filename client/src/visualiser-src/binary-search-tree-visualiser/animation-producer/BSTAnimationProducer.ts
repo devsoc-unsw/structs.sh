@@ -153,7 +153,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
   public unhighlightNode(node: Node): void {
     this.addSequenceAnimation(
       node.nodeTarget.animate(500).attr({
-        fill: '#ffffff',
+        fill: '#EBE8F4',
         stroke: '#000000',
       })
     );

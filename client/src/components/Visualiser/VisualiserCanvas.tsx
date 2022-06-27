@@ -1,4 +1,5 @@
 import React from 'react';
+import { Box } from '@mui/material';
 
 /* -------------------------------------------------------------------------- */
 /*                        Visualiser-Specific Canvases                        */
@@ -9,12 +10,9 @@ import React from 'react';
  * attaches itself to.
  */
 const VisualiserCanvas: React.FC = () => (
-    <div
-      id="visualiser-container"
-      style={{ height: '100%', width: '100%', background: 'rgba(235, 235, 235)'}}
-    >
-      <svg id="visualiser-canvas" />
-    </div>
-  );
+  <Box id="visualiser-container" sx={{ height: '95vh', background: '#EBE8F4' }}>
+    <svg id="visualiser-canvas" />
+  </Box>
+);
 
 export default VisualiserCanvas;

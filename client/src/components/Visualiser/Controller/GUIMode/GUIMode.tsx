@@ -1,6 +1,6 @@
 import React, { FC, useContext } from 'react';
 // import OperationsTree from './GUIOperations/OperationsTree';
-import { Alert, Box, List, Typography } from '@mui/material';
+import { Alert, Box, List, Typography, useTheme } from '@mui/material';
 import VisualiserContext from 'components/Visualiser/VisualiserContext';
 import OperationDetails from './OperationDetails';
 
@@ -16,6 +16,7 @@ import OperationDetails from './OperationDetails';
  */
 const GUIMode = () => {
   const { documentation, topicTitle } = useContext(VisualiserContext);
+  const theme = useTheme();
 
   return !documentation ? (
     <Alert severity="error">
@@ -24,7 +25,17 @@ const GUIMode = () => {
       &apos;
     </Alert>
   ) : (
-    <Box sx={{ padding: 2, overflow: 'auto', height: 'calc(100% - 64px)' }}>
+    <Box
+      sx={{
+        overflow: 'auto',
+        background: theme.palette.background.default,
+        position: 'absolute',
+        bottom: '10vh',
+        padding: 2,
+        width: '30vw',
+        height: '40vh',
+      }}
+    >
       <Typography color="textPrimary">{topicTitle}</Typography>
       <List>
         {Object.keys(documentation).map((command, idx) => (

@@ -57,11 +57,12 @@ export default abstract class AnimationProducer {
         rectTarget: SVG()
           .rect(1000, 20)
           .move(0, 18 * i)
-          .fill('#ebebeb')
+          .fill('#14113C')
           .addTo(CODE_CANVAS),
         textTarget: SVG()
           .text(showLineNumbers ? String(i + 1).padEnd(4, ' ') + line : line)
           .font({ family: 'CodeText', size: 10 })
+          .fill('#FFFFFF')
           .attr('style', 'white-space: pre-wrap')
           .move(0, 18 * i + 6)
           .addTo(CODE_CANVAS),
@@ -136,7 +137,7 @@ export default abstract class AnimationProducer {
     this.highlightedLines.forEach((line) => {
       this.addSequenceAnimation(
         this.codeTargets[line - 1].rectTarget.animate(1).attr({
-          fill: '#ebebeb',
+          fill: '#14113C',
         })
       );
     });

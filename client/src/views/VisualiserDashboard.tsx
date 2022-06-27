@@ -35,7 +35,7 @@ const containerVariants = {
  */
 const VisualiserDashboard = () => {
   const topic = toTitleCase(urlToTitle(useParams().topic));
-  const theme: Theme = useTheme();
+  // const theme: Theme = useTheme();
 
   return topic ? (
     <motion.div
@@ -48,16 +48,9 @@ const VisualiserDashboard = () => {
       <Helmet>
         <title>{topic !== undefined ? topic : 'Structs.sh'}</title>
       </Helmet>
-      <TopNavbar position="relative" enableOnScrollEffect={false} />
-      <Box
-        sx={{
-          backgroundColor: theme.palette.background.default,
-          height: 'calc(100vh - 64px)',
-          width: '100vw',
-        }}
-      >
-        <Visualiser topicTitle={topic} />
-      </Box>
+
+      <TopNavbar position="absolute" />
+      <Visualiser topicTitle={topic} />
     </motion.div>
   ) : (
     <LineLoader fullViewport />

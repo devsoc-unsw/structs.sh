@@ -1,4 +1,4 @@
-export const strokeWidth = 3;
+export const strokeWidth = 2;
 export const nodeDiameter = 50;
 export const actualNodeDiameter = nodeDiameter + strokeWidth;
 

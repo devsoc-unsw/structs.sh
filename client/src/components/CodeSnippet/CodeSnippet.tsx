@@ -1,13 +1,23 @@
 import React, { FC } from 'react';
+import { Box } from '@mui/material';
 
 interface Props {}
-  
+
 const CodeSnippet: FC<Props> = () => (
-  <div
-    style={{ height: '100%', width: '100%', background: 'rgba(235, 235, 235)', overflowY: 'scroll', padding: 15}}
+  <Box
+    sx={{
+      background: '#14113C',
+      overflowY: 'scroll',
+      position: 'absolute',
+      right: '0',
+      height: '40%',
+      bottom: '10vh',
+      padding: 2,
+      width: '30vw',
+    }}
   >
-    <svg id="code-canvas" style={{ height: '100%', width: 1000 }}/>
-  </div>
+    <svg id="code-canvas" />
+  </Box>
 );
 
 export default CodeSnippet;

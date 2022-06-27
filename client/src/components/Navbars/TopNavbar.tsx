@@ -5,7 +5,7 @@ import GoogleIcon from '@mui/icons-material/Google';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import MoonIcon from '@mui/icons-material/NightsStay';
-import { Button, FormControl, TextField } from '@mui/material';
+import { Button, FormControl, TextField, useTheme } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -26,13 +26,14 @@ import Drawer from './Drawer';
 import styles from './TopNavbar.module.scss';
 
 interface Props {
-  position?: 'fixed' | 'static' | 'relative';
+  position?: 'fixed' | 'static' | 'relative' | 'absolute';
   enableOnScrollEffect?: boolean;
 }
 
 const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true }) => {
   // const context = useContext(ThemeMutationContext);
   // const [topics, setTopics] = useState<Topic[]>([]);
+  const theme = useTheme();
 
   const [hasScrolledDown, setHasScrolledDown] = useState<boolean>(false);
 
@@ -191,12 +192,13 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
     : hasScrolledDownStyle;
 
   return (
-    <Box sx={{ flexGrow: 1, height: '64px' }}>
+    <Box sx={{ flexGrow: 1, height: '5vh' }}>
       <AppBar
         position={position}
         sx={{
           transition: '0.5s all ease-in-out',
           ...appliedStyle,
+          backgroundColor: theme.palette.background.default,
         }}
       >
         <Toolbar>
