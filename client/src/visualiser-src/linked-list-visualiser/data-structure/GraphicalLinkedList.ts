@@ -228,7 +228,6 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     return producer;
   }
 
-<<<<<<< HEAD
   public insertRandomGeneratedNodes(): void {
     const numbers = generateNumbers();
     for (let i = 0; i < numbers.length; i += 1) {
@@ -249,8 +248,6 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     (SVG(VISUALISER_CANVAS) as Svg).image(prevSvg).opacity(0).id('prev');
   }
 
-=======
->>>>>>> master
   public get documentation() {
     return GraphicalLinkedList.documentation;
   }
