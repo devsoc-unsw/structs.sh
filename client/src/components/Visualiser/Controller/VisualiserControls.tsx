@@ -79,6 +79,8 @@ const VisualiserControls = () => {
     controller.resetDataStructure();
   }, [controller]);
 
+  // TODO: add handleCreateNew equivalent 
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };

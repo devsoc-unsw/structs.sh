@@ -4,6 +4,8 @@ import React from 'react';
  * A space for buttons which call higher level operatons on the data structure, currently reset or create new randomly generated.
  */
 
+// TODO: pass down the VisualiserController & call methods
+
  const VisualiserCreateNewResetMenu = () =>
     <span
     id="visualiser-create-new-reset-menu"
