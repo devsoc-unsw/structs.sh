@@ -10,13 +10,13 @@ export default class BSTAnimationProducer extends AnimationProducer {
   public halfHighlightNode(node: Node): void {
     this.addSequenceAnimation(
       node.nodeTarget.animate(500).attr({
-        stroke: '#4beb9b',
+        stroke: '#39AF8E',
       })
     );
 
     this.addSequenceAnimation(
       node.textTarget.animate(500).attr({
-        fill: '#4beb9b',
+        fill: '#39AF8E',
       })
     );
   }
@@ -25,13 +25,13 @@ export default class BSTAnimationProducer extends AnimationProducer {
     if (lineTarget != null) {
       this.addSequenceAnimation(
         lineTarget.animate(500).attr({
-          stroke: '#4beb9b',
+          stroke: '#39AF8E',
         })
       );
 
       this.addSequenceAnimation(
         arrowTarget.animate(500).attr({
-          fill: '#4beb9b',
+          fill: '#39AF8E',
         })
       );
     }

@@ -22,8 +22,8 @@ export default class BSTTraverseAnimationProducer extends BSTAnimationProducer {
   public highlightNode(node: Node): void {
     this.addSequenceAnimation(
       node.nodeTarget.animate(500).attr({
-        fill: '#4beb9b',
-        stroke: '#4beb9b',
+        fill: '#39AF8E',
+        stroke: '#39AF8E',
       })
     );
 

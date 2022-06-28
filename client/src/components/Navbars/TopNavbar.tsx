@@ -165,6 +165,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
             className={styles.item}
             component={Link}
             to={`/visualiser/${titleToUrl(topic)}`}
+            onClick={handleLearnMenuClose}
           >
             {topic}
           </MenuItem>
