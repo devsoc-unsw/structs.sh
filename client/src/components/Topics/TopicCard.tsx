@@ -35,7 +35,7 @@ const TopicCard: React.FC<Props> = ({ topic, index }) => {
       role = "button"
       tabIndex={index}
       onClick={() => handleClick(topic)}
-      onKeyDown={() => handleClick(topic)}
+      onKeyPress={() => handleClick(topic)}
     >
       <img 
         src={`${images[index]}`} 
