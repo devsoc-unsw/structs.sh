@@ -144,7 +144,7 @@ class GraphicalBST extends GraphicalDataStructure {
     return animationProducer;
   }
 
-  public insertRandomGeneratedNodes(): void {
+  public generate(): void {
       const num = insertBalancedBSTNumbers();
       num.forEach(element => {this.insert(element)});
   }

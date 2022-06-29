@@ -190,6 +190,13 @@ class VisualiserController {
     this.currentTimeline = new Timeline().persist(true);
   }
 
+  public generateDataStructure(): void {
+    this.dataStructure = GraphicalDataStructureFactory.generate(this.topicTitle);
+    this.currentTimeline.finish();
+    this.currentTimeline.time(10);
+    this.currentTimeline = new Timeline().persist(true);
+  }
+
   private computePrevTimestamp(): number {
     let prevTimestamp = 0;
     this.timestamps.forEach((timestamp) => {

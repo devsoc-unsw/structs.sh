@@ -2,7 +2,6 @@ import React, { FC, useContext } from 'react';
 // import OperationsTree from './GUIOperations/OperationsTree';
 import { Alert, Box, List, Typography } from '@mui/material';
 import VisualiserContext from 'components/Visualiser/VisualiserContext';
-import VisualiserCreateNewResetMenu from 'components/Visualiser/VisualiserCreateNewResetMenu';
 import OperationDetails from './OperationDetails';
 
 
@@ -27,7 +26,6 @@ const GUIMode = () => {
     </Alert>
   ) : (
       <Box sx={{ padding: 2, overflow: 'auto', height: 'calc(100% - 64px)' }}>
-      <VisualiserCreateNewResetMenu />
         <Typography color="textPrimary">{topicTitle}</Typography>
         <List>
           {Object.keys(documentation).map((command, idx) => (

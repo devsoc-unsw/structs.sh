@@ -228,7 +228,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     return producer;
   }
 
-  public insertRandomGeneratedNodes(): void {
+  public generate(): void {
     const numbers = generateNumbers();
     for (let i = 0; i < numbers.length; i += 1) {
       this.append(numbers[i]);
