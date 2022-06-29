@@ -12,9 +12,9 @@ export interface OperationUsage {
 }
 
 export enum DataStructure {
-  LINKED_LISTS = 'linked lists',
-  BINARY_SEARCH_TREE = 'binary search trees',
-  SORTING = 'sorting algorithms',
+  LINKED_LISTS = 'Linked Lists',
+  BINARY_SEARCH_TREE = 'Binary Search Trees',
+  SORTING = 'Sorting Algorithms',
 }
 
 export interface Documentation {

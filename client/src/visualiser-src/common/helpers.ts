@@ -53,3 +53,5 @@ export const injectIds = (documentation: Documentation): Documentation => {
 
 export const isImplemented = (topicTitle: string): boolean =>
   Object.values(DataStructure).includes(topicTitle.toLowerCase() as DataStructure);
+
+export const getTopics = (): string[] => Object.values(DataStructure);

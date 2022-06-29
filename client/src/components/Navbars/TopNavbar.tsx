@@ -18,9 +18,9 @@ import { SxProps } from '@mui/system';
 import logo from 'assets/img/logo.png';
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getTopics, Topic } from 'utils/apiRequests';
 import Notification from 'utils/Notification';
 import { titleToUrl } from 'utils/url';
+import { getTopics } from '../../visualiser-src/common/helpers';
 import Drawer from './Drawer';
 // import SidebarContents from './SidebarContents';
 import styles from './TopNavbar.module.scss';
@@ -32,8 +32,7 @@ interface Props {
 
 const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true }) => {
   // const context = useContext(ThemeMutationContext);
-
-  const [topics, setTopics] = useState<Topic[]>([]);
+  // const [topics, setTopics] = useState<Topic[]>([]);
 
   const [hasScrolledDown, setHasScrolledDown] = useState<boolean>(false);
 
@@ -61,11 +60,11 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
 
   /* ------------------------------ Data Fetching ----------------------------- */
 
-  useEffect(() => {
-    getTopics()
-      .then((newTopics) => setTopics(newTopics))
-      .catch(() => console.log('TopNav: failed to get topics'));
-  }, []);
+  // useEffect(() => {
+  //   getTopics()
+  //     .then((newTopics) => setTopics(newTopics))
+  //     .catch(() => console.log('TopNav: failed to get topics'));
+  // }, []);
 
   /* --------------------------- Dropdown Callbacks --------------------------- */
 
@@ -158,12 +157,15 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
       onClose={handleLearnMenuClose}
       className={styles.visualiserMenu}
     >
-      {topics &&
-        topics.map((topic, idx) => (
-          <MenuItem key={idx} className={styles.item}>
-            <Link to={`/visualiser/${titleToUrl(topic.title)}`}>
-              <span>{topic.title}</span>
-            </Link>
+      {getTopics() &&
+        getTopics().map((topic, idx) => (
+          <MenuItem
+            key={idx}
+            className={styles.item}
+            component={Link}
+            to={`/visualiser/${titleToUrl(topic)}`}
+          >
+            {topic}
           </MenuItem>
         ))}
     </Menu>
