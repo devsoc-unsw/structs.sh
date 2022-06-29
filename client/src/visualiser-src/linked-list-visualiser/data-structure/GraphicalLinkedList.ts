@@ -186,6 +186,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     producer.doAnimationAndHighlight(1, producer.createNodeAt, index, newNode, this.length);
     if (index === 0 && this.head !== null) {
       newNode.next = this.head;
+      this.head = newNode;
       producer.doAnimationAndHighlight(3, producer.newHeadPointToOldHead, newNode);
       producer.doAnimationAndHighlight(
         7,
@@ -213,7 +214,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     curr.next = newNode;
     if (index < this.length - 1) {
       producer.doAnimationAndHighlight(18, producer.insertedNodePointToNext, newNode);
-      producer.doAnimationAndHighlight(19, producer.pointToInsertedNode, curr);
+      producer.doAnimationAndHighlight(19, producer.pointToInsertedNode, curr);      
       producer.doAnimation(producer.resetList, this.headPointer, this.head);
     } else {
       producer.doAnimationAndHighlight(19, producer.linkLastToNew, curr);

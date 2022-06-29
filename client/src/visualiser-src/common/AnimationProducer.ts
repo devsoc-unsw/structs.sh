@@ -51,15 +51,15 @@ export default abstract class AnimationProducer {
     lines.forEach((line, i) => {
       const codeLine: CodeLine = {
         rectTarget: SVG()
-          .rect(1000, 20)
-          .move(0, 18 * i)
+          .rect(2000, 20)
+          .move(-5, 18 * i)
           .fill('#ebebeb')
           .addTo(CODE_CANVAS),
         textTarget: SVG()
           .text(showLineNumbers ? String(i + 1).padEnd(4, ' ') + line : line)
           .font({ family: 'CodeText', size: 10 })
           .attr('style', 'white-space: pre-wrap')
-          .move(0, 18 * i + 6)
+          .move(0, 18 * i + 2)
           .addTo(CODE_CANVAS),
       };
 
@@ -76,7 +76,9 @@ export default abstract class AnimationProducer {
 
     this.addSequenceAnimation(
       this.codeTargets[line - 1].rectTarget.animate(1).attr({
-        fill: '#4beb9b',
+        fill: '#00FFFF',
+        rx: "10",
+        ry: "10",
       })
     );
 
@@ -92,7 +94,9 @@ export default abstract class AnimationProducer {
     lines.forEach((line) => {
       this.addSequenceAnimation(
         this.codeTargets[line - 1].rectTarget.animate(1).attr({
-          fill: '#4beb9b',
+          fill: '#00FFFF',
+          rx: "10",
+          ry: "10",
         })
       );
     });
