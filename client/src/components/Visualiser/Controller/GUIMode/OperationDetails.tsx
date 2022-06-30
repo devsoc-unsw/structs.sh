@@ -110,7 +110,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command, isLast }) => {
           <ExpandMore sx={{ fill: textPrimaryColour }} />
         )}
       </ListItem>
-      <Collapse in={shouldDisplay} timeout="auto" unmountOnExit className={classes.opListContainer}>
+      <Collapse in={shouldDisplay} timeout="auto" orientation="horizontal">
         <List
           className={isLast ? `${classes.opList} ${classes.last}` : classes.opList}
           style={{ display: 'flex', padding: '0px' }}
