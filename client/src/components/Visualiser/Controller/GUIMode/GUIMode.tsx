@@ -41,7 +41,7 @@ const GUIMode = () => {
         position: 'absolute',
         bottom: '7vh',
         // padding: 2,
-        height: '45vh',
+        height: '44vh',
         display: 'flex',
         alignItems: 'stretch',
         // justifyContent: 'center',
@@ -61,7 +61,7 @@ const GUIMode = () => {
           <ExpandMore sx={{ fill: textPrimaryColour }} />
         )}
       </Box>
-      <Collapse in={shouldDisplay} unmountOnExit timeout="auto" orientation="horizontal">
+      <Collapse in={shouldDisplay} timeout="auto" orientation="horizontal">
         <Box sx={{ padding: 2 }}>
           <Typography color="textPrimary">{topicTitle}</Typography>
           <List>

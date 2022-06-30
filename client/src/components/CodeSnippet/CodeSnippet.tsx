@@ -19,17 +19,14 @@ const CodeSnippet: FC<Props> = () => {
       sx={{
         background: '#14113C',
 
-        // overflowY : 'auto',
-        paddingLeft: 2,
-        paddingTop: 2,
-        paddingBottom: 2,
+        // overflow: 'auto',
         position: 'absolute',
         right: '0',
-        minHeight: '40vh',
+        minHeight: '44vh',
         bottom: '7vh',
         display: 'flex',
         flexDirection: 'row-reverse',
-        // alignItems: 'stretch',
+        // justifyContent: 'stretch',
       }}
     >
       <Box
@@ -42,13 +39,14 @@ const CodeSnippet: FC<Props> = () => {
           <ExpandMore sx={{ fill: theme.palette.text.primary }} />
         )}
       </Box>
-      <Collapse in={shouldDisplay} unmountOnExit orientation="horizontal">
+      <Collapse in={shouldDisplay} orientation="horizontal">
         <Box
           sx={{
             minWidth: '30vw',
+            padding: 2,
           }}
         >
-          <svg id="code-canvas" />
+          <svg id="code-canvas" style={{ maxWidth: '80%' }} />
         </Box>
       </Collapse>
     </Box>

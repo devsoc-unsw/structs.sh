@@ -185,7 +185,7 @@ const VisualiserControls = () => {
           <input
             type="range"
             id="timelineSlider"
-            name="volume"
+            // name="volume"
             min="0"
             max="100"
             defaultValue="0"
