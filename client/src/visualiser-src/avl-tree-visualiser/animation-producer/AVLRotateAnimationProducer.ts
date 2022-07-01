@@ -2,17 +2,8 @@ import { Line } from '@svgdotjs/svg.js';
 import AVLAnimationProducer from './AVLAnimationProducer';
 import { Node } from '../util/typedefs';
 import { getPointerStartEndCoordinates } from '../../common/helpers';
-import { rotateLeftCodeSnippet, rotateRightCodeSnippet } from '../util/codeSnippets';
 
 export default class AVLRotateAnimationProducer extends AVLAnimationProducer {
-  public renderRotateLeftCode(): void {
-    this.renderCode(rotateLeftCodeSnippet);
-  }
-
-  public renderRotateRightCode(): void {
-    this.renderCode(rotateRightCodeSnippet);
-  }
-
   public movePointerToNewRootRightChild(oldRoot: Node, newRoot: Node): void {
     this.addSequenceAnimation(
       oldRoot.leftLineTarget
