@@ -85,8 +85,15 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command, isLast }) => {
     setCurrentInputs(newArgs);
   };
 
-  const executeCommand = (args: string[]): string =>
-    controller.doOperation(command, handleTimelineUpdate, ...args);
+  const executeCommand = (args: string[]) => {
+    const err = controller.doOperation(command, handleTimelineUpdate, ...args);
+    setErrorMessage(err);
+    if (err !== '') {
+      setTimeout(() => setErrorMessage(''), 2000);
+    } else {
+      clearArguments();
+    }
+  };
 
   return (
     <ListItem sx={{ padding: '0px' }}>
@@ -131,9 +138,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command, isLast }) => {
                 variant="outlined"
                 onKeyPress={(e) => {
                   if (e.key === 'Enter') {
-                    e.preventDefault();
-                    setErrorMessage(executeCommand(currentInputs));
-                    clearArguments();
+                    executeCommand(currentInputs);
                   }
                 }}
                 onChange={(e) => handleSetArguments(e, idx)}
@@ -147,8 +152,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command, isLast }) => {
               variant="contained"
               color="primary"
               onClick={() => {
-                setErrorMessage(executeCommand(currentInputs));
-                clearArguments();
+                executeCommand(currentInputs);
               }}
             >
               <Box className={classes.btnText}>Run</Box>

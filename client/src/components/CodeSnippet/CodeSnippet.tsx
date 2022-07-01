@@ -42,8 +42,10 @@ const CodeSnippet: FC<Props> = () => {
       <Collapse in={shouldDisplay} orientation="horizontal">
         <Box
           sx={{
-            minWidth: '30vw',
-            padding: 2,
+            width: '400px',
+            paddingLeft: 2,
+            paddingTop: 2,
+            paddingBottom: 2,
           }}
         >
           <svg id="code-canvas" style={{ maxWidth: '80%' }} />
