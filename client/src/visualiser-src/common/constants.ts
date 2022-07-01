@@ -13,4 +13,3 @@ export const defaultSpeed = 0.6;
 
 export const VISUALISER_CANVAS = '#visualiser-canvas';
 export const CODE_CANVAS = '#code-canvas';
-export const CODE_CONTAINER = 'code-container';
