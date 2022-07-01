@@ -10,12 +10,14 @@ while (curr != NULL) {
       return;
     }
     curr = curr->left;
-  } else {
+  } else if (val > curr->val) {
     if (curr->right == NULL) {
       curr->right = create_node(val);
       return;
     }
     curr = curr->right;
+  } else if (val == curr->val) {
+    return;
   }
 }`;
 

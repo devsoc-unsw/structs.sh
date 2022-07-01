@@ -47,10 +47,10 @@ class GraphicalBST extends GraphicalDataStructure {
     const animationProducer: BSTInsertAnimationProducer = new BSTInsertAnimationProducer();
     animationProducer.renderInsertCode();
 
-    // return early if a node with the same value already exists
-    if (this.getNode(input) !== null) {
-      return animationProducer;
-    }
+    // // return early if a node with the same value already exists
+    // if (this.getNode(input) !== null) {
+    //   return animationProducer;
+    // }
 
     const node: Node = {
       nodeTarget: null,
@@ -79,6 +79,21 @@ class GraphicalBST extends GraphicalDataStructure {
           animationProducer.halfHighlightNode,
           currentNode
         );
+
+        if (node.value === currentNode.value) {
+          animationProducer.doAnimationAndHighlight(
+            18,
+            animationProducer.halfHighlightNodeRed,
+            currentNode
+          );
+          animationProducer.doAnimationAndHighlight(
+            19,
+            animationProducer.unhighlightBST,
+            this.root
+          );
+
+          return animationProducer;
+        }
 
         if (node.value < currentNode.value) {
           if (currentNode.left == null) {
