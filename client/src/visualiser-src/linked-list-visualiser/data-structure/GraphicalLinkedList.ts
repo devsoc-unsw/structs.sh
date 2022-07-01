@@ -2,7 +2,7 @@ import AnimationProducer from 'visualiser-src/common/AnimationProducer';
 import { SVG, Path, Svg } from '@svgdotjs/svg.js';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { Documentation } from 'visualiser-src/common/typedefs';
-import { VISUALISER_CANVAS } from 'visualiser-src/common/constants';
+import { CODE_CANVAS, VISUALISER_CANVAS } from 'visualiser-src/common/constants';
 import currSvg from 'visualiser-src/linked-list-visualiser/assets/curr.svg';
 import prevSvg from 'visualiser-src/linked-list-visualiser/assets/prev.svg';
 import { injectIds } from 'visualiser-src/common/helpers';
@@ -186,6 +186,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     producer.doAnimationAndHighlight(1, producer.createNodeAt, index, newNode, this.length);
     if (index === 0 && this.head !== null) {
       newNode.next = this.head;
+      this.head = newNode;
       producer.doAnimationAndHighlight(3, producer.newHeadPointToOldHead, newNode);
       producer.doAnimationAndHighlight(
         7,
@@ -220,19 +221,6 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
       producer.doAnimation(producer.resetPointers);
     }
     return producer;
-  }
-
-  reset(): void {
-    SVG(VISUALISER_CANVAS).clear();
-
-    this.head = null;
-    this.length = 0;
-
-    this.headPointer = GraphicalLinkedListNode.newHeadPointer();
-
-    // add prev and curr pointers to visualiser canvas
-    (SVG(VISUALISER_CANVAS) as Svg).image(currSvg).opacity(0).id('current');
-    (SVG(VISUALISER_CANVAS) as Svg).image(prevSvg).opacity(0).id('prev');
   }
 
   public get documentation() {
