@@ -9,8 +9,6 @@ import GraphicalSortsElement from './GraphicalSortsElement';
 export default class GraphicalSortList extends GraphicalDataStructure {
   public elementList: GraphicalSortsElement[] = [];
 
-  public valueList: number[] = [];
-
   private static documentation: Documentation = injectIds({
     append: {
       args: ['value'],
@@ -20,6 +18,10 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       args: [],
       description: 'Bubble sort',
     },
+    insertion: {
+      args: [],
+      description: 'Insertion Sort'
+    }
   });
 
   append(value: number): AnimationProducer {
@@ -28,7 +30,6 @@ export default class GraphicalSortList extends GraphicalDataStructure {
 
     producer.addElement(value, this.elementList.length, newElement);
     this.elementList.push(newElement);
-    this.valueList.push(value);
     return producer;
   }
 
@@ -63,6 +64,23 @@ export default class GraphicalSortList extends GraphicalDataStructure {
           ];
         }
       }
+    }
+
+    return producer;
+  }
+
+  insertion(): AnimationProducer {
+    const producer = new SortsAnimationProducer();
+
+    const length = this.elementList.length;
+    let i, j, val;
+    for (let i = 0; i < length; i++) {
+      let val = this.elementList[i];
+      for (let j = i; j >= 0; j--) {
+        if (val < this.elementList[j - 1]) break;
+        this.elementList[j] = this.elementList[j - 1];
+      }
+      this.elementList[j] = val;
     }
 
     return producer;
