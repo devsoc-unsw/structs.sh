@@ -33,32 +33,6 @@ if (LHeight - RHeight > 1) {
 }
 return root;`;
 
-export const rotateLeftCodeSnippet =
-`if (val == node->val) {
-  struct node *new_root = node->right;
-  node->right = new_root->left;
-  new_root->left = node;
-  return new_root;
-} else if (val < node->val) {
-  node->left = rotate_left(node->left, val);
-} else {
-  node->right = rotate_left(node->right, val);
-}
-return node;`;
-
-export const rotateRightCodeSnippet =
-`if (val == node->val) {
-  struct node *new_root = node->left;
-  node->left = new_root->right;
-  new_root->right = node;
-  return new_root;
-} else if (val < node->val) {
-  node->left = rotate_right(node->left, val);
-} else {
-  node->right = rotate_right(node->right, val);
-}
-return node;`;
-
 export const inorderTraversalCodeSnippet =
 `if (node == NULL) {
   return;

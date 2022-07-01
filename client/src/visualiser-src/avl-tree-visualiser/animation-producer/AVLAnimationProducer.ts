@@ -54,7 +54,6 @@ export default class AVLAnimationProducer extends AnimationProducer {
 
   public updateNode(node: Node, newX: number, newY: number): void {
     this.addSequenceAnimation(node.nodeTarget.animate(400).cx(newX).cy(newY));
-
     this.addSequenceAnimation(node.textTarget.animate(400).cx(newX).cy(newY));
   }
 
