@@ -25,4 +25,4 @@ export const lineStyle = {
 };
 
 // we need this so that all svg elements have some padding
-export const canvasPadding = 75;
+export const canvasPadding = 40;

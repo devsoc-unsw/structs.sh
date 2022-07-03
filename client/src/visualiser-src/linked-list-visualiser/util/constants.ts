@@ -3,7 +3,7 @@ import { nodeDiameter, strokeWidth, actualNodeDiameter } from '../../common/cons
 
 export const pathLength = 50;
 export const nodePathWidth = actualNodeDiameter + pathLength;
-export const topOffset = 60;
+export const topOffset = 120;
 export const insertedNodeTopOffset =
   topOffset + (actualNodeDiameter + pathLength) * Math.sin(Math.PI / 3);
 export const CURRENT = '#current';

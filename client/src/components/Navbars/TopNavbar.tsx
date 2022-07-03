@@ -193,7 +193,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
     : hasScrolledDownStyle;
 
   return (
-    <Box sx={{ flexGrow: 1, height: '5vh' }}>
+    <Box sx={{ flexGrow: 1, height: '8vh' }}>
       <AppBar
         position={position}
         sx={{
