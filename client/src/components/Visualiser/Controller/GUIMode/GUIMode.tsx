@@ -40,11 +40,9 @@ const GUIMode = () => {
         background: theme.palette.background.default,
         position: 'absolute',
         bottom: '7vh',
-        // padding: 2,
         height: '44vh',
         display: 'flex',
         alignItems: 'stretch',
-        // justifyContent: 'center',
       }}
     >
       <Box

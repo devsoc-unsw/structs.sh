@@ -18,11 +18,12 @@ const CodeSnippet: FC<Props> = () => {
     <Box
       sx={{
         background: '#14113C',
-
-        // overflow: 'auto',
         position: 'absolute',
         right: '0',
-        minHeight: '44vh',
+        height: '40vh',
+        paddingLeft: 2,
+        paddingTop: 2,
+        paddingBottom: 2,
         bottom: '7vh',
         display: 'flex',
         flexDirection: 'row-reverse',
@@ -42,13 +43,14 @@ const CodeSnippet: FC<Props> = () => {
       <Collapse in={shouldDisplay} orientation="horizontal">
         <Box
           sx={{
+            height: '100%',
             width: '400px',
-            paddingLeft: 2,
-            paddingTop: 2,
-            paddingBottom: 2,
+            overflowY: 'auto',
           }}
         >
-          <svg id="code-canvas" style={{ maxWidth: '80%' }} />
+          <Box id="code-container">
+            <svg id="code-canvas" style={{ maxWidth: '80%' }} />
+          </Box>
         </Box>
       </Collapse>
     </Box>
