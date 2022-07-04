@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { makeStyles, useTheme } from '@mui/styles';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import VisualiserContext from 'components/Visualiser/VisualiserContext';
 import React, { FC, useContext, useState } from 'react';
 
@@ -105,7 +106,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
             shouldDisplay ? (
               <ChevronRightIcon sx={{ fill: textPrimaryColour }} />
             ) : (
-              <ExpandMore sx={{ fill: textPrimaryColour }} />
+              <ChevronLeftIcon sx={{ fill: textPrimaryColour }} />
             )
           }
           fullWidth
@@ -116,13 +117,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
       <Collapse in={shouldDisplay} timeout="auto" orientation="horizontal">
         <Box display="flex" alignItems="center">
           {documentation[command].args.map((eachArg, idx) => (
-            <Box
-              key={idx}
-              style={{
-                margin: 5,
-                width: 80,
-              }}
-            >
+            <Box key={idx} margin="5px" width="100px">
               <TextField
                 size="small"
                 label={eachArg}

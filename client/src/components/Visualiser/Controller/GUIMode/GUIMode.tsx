@@ -3,6 +3,7 @@ import React, { FC, useContext, useState } from 'react';
 import { Alert, Box, List, Typography, useTheme, Collapse } from '@mui/material';
 import VisualiserContext from 'components/Visualiser/VisualiserContext';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import OperationDetails from './OperationDetails';
 
@@ -56,11 +57,11 @@ const GUIMode = () => {
         {shouldDisplay ? (
           <ChevronRightIcon sx={{ fill: textPrimaryColour }} />
         ) : (
-          <ExpandMore sx={{ fill: textPrimaryColour }} />
+          <ChevronLeftIcon sx={{ fill: textPrimaryColour }} />
         )}
       </Box>
       <Collapse in={shouldDisplay} timeout="auto" orientation="horizontal">
-        <Box sx={{ padding: 2 }}>
+        <Box sx={{ padding: 2 }} minWidth="30vw">
           <Typography color="textPrimary">{topicTitle}</Typography>
           <List>
             {Object.keys(documentation).map((command, idx) => (

@@ -1,6 +1,7 @@
 import React, { FC, useState } from 'react';
 import { Box, Collapse, useTheme } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 import ExpandMore from '@mui/icons-material/ExpandMore';
 
@@ -34,7 +35,7 @@ const CodeSnippet: FC<Props> = () => {
         {shouldDisplay ? (
           <ChevronLeftIcon sx={{ fill: theme.palette.text.primary }} />
         ) : (
-          <ExpandMore sx={{ fill: theme.palette.text.primary }} />
+          <ChevronRightIcon sx={{ fill: theme.palette.text.primary }} />
         )}
       </Box>
       <Collapse in={shouldDisplay} orientation="horizontal">

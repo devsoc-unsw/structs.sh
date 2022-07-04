@@ -1,6 +1,5 @@
 import { CircularLoader } from 'components/Loader';
 import { Box, Grid } from '@mui/material';
-import { Pane } from 'components/Panes';
 import React from 'react';
 import VisualiserCanvas from './VisualiserCanvas';
 import VisualiserInterface from './VisualiserInterface';
