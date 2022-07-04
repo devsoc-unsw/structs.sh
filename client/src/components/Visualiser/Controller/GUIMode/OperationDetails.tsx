@@ -6,7 +6,6 @@ import { makeStyles, useTheme } from '@mui/styles';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import VisualiserContext from 'components/Visualiser/VisualiserContext';
 import React, { FC, useContext, useState } from 'react';
-import { LastLink, Link } from './Links';
 
 const useStyles = makeStyles({
   opListContainer: {
@@ -96,20 +95,14 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command, isLast }) => {
   };
 
   return (
-    <ListItem sx={{ padding: '0px' }}>
+    <ListItem sx={{ height: 50, padding: '0px' }}>
       <ListItem
         button
         sx={{
-          paddingTop: '0px',
-          paddingBottom: '0px',
-          paddingLeft: '35px',
           width: 'auto',
         }}
         onClick={handleToggleDisplay}
       >
-        <ListItemIcon>
-          {isLast ? <LastLink colour={textPrimaryColour} /> : <Link colour={textPrimaryColour} />}
-        </ListItemIcon>
         <Typography color="textPrimary">{command}</Typography>
         {shouldDisplay ? (
           <ChevronRightIcon sx={{ fill: textPrimaryColour }} />
