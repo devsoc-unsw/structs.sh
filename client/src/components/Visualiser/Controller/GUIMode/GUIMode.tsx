@@ -65,10 +65,7 @@ const GUIMode = () => {
           <List>
             {Object.keys(documentation).map((command, idx) => (
               <Box key={documentation[command].id}>
-                <OperationDetails
-                  command={command}
-                  isLast={idx === Object.keys(documentation).length - 1}
-                />
+                <OperationDetails command={command} />
               </Box>
             ))}
           </List>

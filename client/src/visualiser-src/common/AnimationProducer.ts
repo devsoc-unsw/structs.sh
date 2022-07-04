@@ -55,7 +55,7 @@ export default abstract class AnimationProducer {
     lines.forEach((line, i) => {
       const codeLine: CodeLine = {
         rectTarget: SVG()
-          .rect(1000, 20)
+          .rect(1000, 18)
           .move(0, 18 * i)
           .fill('#14113C')
           .addTo(CODE_CANVAS),
@@ -163,6 +163,6 @@ export default abstract class AnimationProducer {
   // Modifies the height of the code snippet container to be
   // responsive to the number of lines of code required for the operation
   private setContainerHeight(): void {
-    document.getElementById(CODE_CONTAINER).style.height = `${20 * this.codeTargets.length + 15}px`;
+    document.getElementById(CODE_CONTAINER).style.height = `${18 * this.codeTargets.length}px`;
   }
 }
