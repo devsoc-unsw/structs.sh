@@ -128,7 +128,6 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
         }}
       >
         <Toolbar>
-          {/* <Drawer Contents={(props) => <SidebarContents {...props} />} /> */}
           <Button
             color="info"
             onClick={handleLearnMenuOpen}
@@ -137,11 +136,6 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
           >
             <strong>Topics</strong>
           </Button>
-          <Box sx={{ flexGrow: 1 }}>
-            {/* <Link className={styles.link} to="/content">
-              <Button color="info">Content</Button>
-            </Link> */}
-          </Box>
           <Box className={styles.centralBox}>
             <Link to="/">
               <Box sx={{ display: { xs: 'none', lg: 'inline-block' } }}>
@@ -164,99 +158,9 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
               </Typography>
             </Link>
           </Box>
-
-          {/* <IconButton className={styles.darkModeButton} onClick={() => context.toggleDarkMode()}>
-            {context.isDarkMode ? <MoonIcon /> : <SunIcon />}
-          </IconButton> */}
-          {/* <Modal
-            Button={() => (
-              <Button color="info" sx={{ display: { xs: 'none', md: 'flex' } }}>
-                Login
-              </Button>
-            )}
-          >
-            <Typography color="textPrimary" variant="h4" sx={{ textAlign: 'center' }}>
-              Login
-            </Typography>
-            <FormControl fullWidth>
-              <TextField label="Email" sx={{ mt: 2 }} />
-              <TextField label="Password" sx={{ mt: 2 }} />
-            </FormControl>
-            <Box sx={{ textAlign: 'center', mt: 2 }}>
-              <FacebookIcon />
-              <GoogleIcon />
-            </Box>
-            <Box sx={{ textAlign: 'center' }}>
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{ mt: 2 }}
-                onClick={() => Notification.error('Unimplemented')}
-              >
-                Submit
-              </Button>
-            </Box>
-          </Modal>
-          <Modal
-            Button={() => (
-              <Button color="info" sx={{ display: { xs: 'none', md: 'flex' } }}>
-                Register
-              </Button>
-            )}
-          >
-            <Typography color="textPrimary" variant="h4" sx={{ textAlign: 'center' }}>
-              Register
-            </Typography>
-            <FormControl fullWidth>
-              <TextField label="Email" sx={{ mt: 2 }} />
-              <TextField label="Username" sx={{ mt: 2 }} />
-              <TextField label="Password" sx={{ mt: 2 }} />
-            </FormControl>
-            <Box sx={{ textAlign: 'center', mt: 2 }}>
-              <FacebookIcon />
-              <GoogleIcon />
-            </Box>
-            <Box sx={{ textAlign: 'center' }}>
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{ mt: 2 }}
-                onClick={() => Notification.error('Unimplemented')}
-              >
-                Submit
-              </Button>
-            </Box>
-          </Modal> */}
-          {/* <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-          </Box> */}
-          {/* <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </Box> */}
         </Toolbar>
       </AppBar>
-      {/* {renderMobileMenu} */}
       {renderLearnMenu}
-      {/* {renderMenu} */}
     </Box>
   );
 };

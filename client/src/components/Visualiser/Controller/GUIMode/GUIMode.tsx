@@ -1,10 +1,7 @@
-import React, { FC, useContext, useState } from 'react';
+import React, { useContext } from 'react';
 // import OperationsTree from './GUIOperations/OperationsTree';
 import { Alert, Box, List, Typography, useTheme, Collapse } from '@mui/material';
 import VisualiserContext from 'components/Visualiser/VisualiserContext';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ExpandMore from '@mui/icons-material/ExpandMore';
 import FloatingWindow from 'components/FloatingWindow/FloatingWindow';
 import OperationDetails from './OperationDetails';
 
