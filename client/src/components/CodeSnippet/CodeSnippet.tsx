@@ -37,15 +37,14 @@ const CodeSnippet: FC<Props> = () => {
       </Box>
       <Collapse in={shouldDisplay} orientation="horizontal">
         <Box
-          sx={{
-            boxSizing: 'border-box',
-            paddingLeft: '10px',
-            paddingTop: '10px',
-            paddingBottom: '10px',
-            height: '100%',
-            width: '30vw',
-            overflowY: 'auto',
-          }}
+          boxSizing="border-box"
+          paddingLeft="10px"
+          paddingTop="10px"
+          paddingBottom="10px"
+          height="100%"
+          width="30vw"
+          maxWidth="50vw"
+          overflow="auto"
         >
           <Box id="code-container">
             <svg id="code-canvas" />

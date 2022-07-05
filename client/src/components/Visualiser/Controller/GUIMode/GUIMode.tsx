@@ -57,7 +57,14 @@ const GUIMode = () => {
         )}
       </Box>
       <Collapse in={shouldDisplay} orientation="horizontal">
-        <Box boxSizing="border-box" padding="10px" minWidth="30vw" overflow="auto">
+        <Box
+          boxSizing="border-box"
+          padding="10px"
+          minWidth="30vw"
+          maxWidth="50vw"
+          height="100%"
+          overflow="auto"
+        >
           <List>
             {Object.keys(documentation).map((command) => (
               <OperationDetails command={command} key={documentation[command].id} />

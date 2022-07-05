@@ -20,12 +20,8 @@ interface VisualiserProps {
 const Visualiser: React.FC<VisualiserProps> = ({ topicTitle }) =>
   topicTitle ? (
     <>
-      {/* <Box sx={{ height: '60%' }}> */}
       <VisualiserCanvas />
-      {/* </Box> */}
-      {/* <Box sx={{ height: '40%' }}> */}
       <VisualiserInterface topicTitle={topicTitle} />
-      {/* </Box> */}
     </>
   ) : (
     <CircularLoader />

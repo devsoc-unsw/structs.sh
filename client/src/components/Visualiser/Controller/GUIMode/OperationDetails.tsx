@@ -57,7 +57,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
 
   return (
     <ListItem sx={{ height: 50, padding: 0 }}>
-      <Box sx={{ width: 180 }}>
+      <Box width="180px">
         <Button
           sx={{
             textTransform: 'none',
