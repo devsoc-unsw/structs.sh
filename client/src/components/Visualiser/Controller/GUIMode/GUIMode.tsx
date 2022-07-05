@@ -38,9 +38,11 @@ const GUIMode = () => {
     <Box
       bgcolor={theme.palette.background.default}
       position="absolute"
+      left="0"
       bottom="7vh"
-      height="40vh"
+      maxHeight="40vh"
       display="flex"
+      flexDirection="row"
     >
       <Box
         onClick={handleToggleDisplay}

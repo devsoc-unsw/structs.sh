@@ -46,6 +46,7 @@ const CodeSnippet: FC<Props> = () => {
           maxWidth="50vw"
           overflow="auto"
         >
+          {/* The code-container box is being resized by code snippets, and is scrollable upon overflow */}
           <Box id="code-container">
             <svg id="code-canvas" />
           </Box>

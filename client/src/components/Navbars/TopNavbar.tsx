@@ -31,8 +31,6 @@ interface Props {
 }
 
 const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true }) => {
-  // const context = useContext(ThemeMutationContext);
-  // const [topics, setTopics] = useState<Topic[]>([]);
   const theme = useTheme();
 
   const [hasScrolledDown, setHasScrolledDown] = useState<boolean>(false);
@@ -96,59 +94,6 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
 
   /* ------------------------ Dropdown Menu Components ------------------------ */
 
-  const menuId = 'topnav-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
-    </Menu>
-  );
-
-  const mobileMenuId = 'topnav-menu-mobile';
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="topnav-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
-  );
-
   const learnMenuId = 'topnav-menu-learn';
   const renderLearnMenu = (
     <Menu
@@ -173,32 +118,12 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
     </Menu>
   );
 
-  /* -------------------------------- Topnav --------------------------------- */
-
-  const hasScrolledDownStyle: SxProps = {
-    backgroundColor: 'rgba(0, 0, 0, 0.85)',
-    backdropFilter: 'blur(7px)',
-  };
-
-  const atTopStyle: SxProps = {
-    boxShadow: 'none',
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-    backdropFilter: 'blur(3px)',
-  };
-
-  const appliedStyle = enableOnScrollEffect
-    ? hasScrolledDown
-      ? hasScrolledDownStyle
-      : atTopStyle
-    : hasScrolledDownStyle;
-
   return (
     <Box sx={{ flexGrow: 1, height: '8vh' }}>
       <AppBar
         position={position}
         sx={{
           transition: '0.5s all ease-in-out',
-          ...appliedStyle,
           backgroundColor: theme.palette.background.default,
         }}
       >
@@ -331,7 +256,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
       </AppBar>
       {/* {renderMobileMenu} */}
       {renderLearnMenu}
-      {renderMenu}
+      {/* {renderMenu} */}
     </Box>
   );
 };
