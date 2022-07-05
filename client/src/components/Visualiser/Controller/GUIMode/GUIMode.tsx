@@ -5,6 +5,7 @@ import VisualiserContext from 'components/Visualiser/VisualiserContext';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ExpandMore from '@mui/icons-material/ExpandMore';
+import FloatingWindow from 'components/FloatingWindow/FloatingWindow';
 import OperationDetails from './OperationDetails';
 
 /**
@@ -19,14 +20,6 @@ import OperationDetails from './OperationDetails';
  */
 const GUIMode = () => {
   const { documentation, topicTitle } = useContext(VisualiserContext);
-  const theme = useTheme();
-
-  const [shouldDisplay, setShouldDisplay] = useState<boolean>(true);
-  const handleToggleDisplay = () => {
-    setShouldDisplay(!shouldDisplay);
-  };
-
-  const textPrimaryColour = theme.palette.text.primary;
 
   return !documentation ? (
     <Alert severity="error">
@@ -35,46 +28,13 @@ const GUIMode = () => {
       &apos;
     </Alert>
   ) : (
-    <Box
-      bgcolor={theme.palette.background.default}
-      position="absolute"
-      left="0"
-      bottom="7vh"
-      maxHeight="40vh"
-      display="flex"
-      flexDirection="row"
-    >
-      <Box
-        onClick={handleToggleDisplay}
-        sx={{
-          background: theme.palette.background.paper,
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
-        {shouldDisplay ? (
-          <ChevronRightIcon sx={{ fill: textPrimaryColour }} />
-        ) : (
-          <ChevronLeftIcon sx={{ fill: textPrimaryColour }} />
-        )}
-      </Box>
-      <Collapse in={shouldDisplay} orientation="horizontal">
-        <Box
-          boxSizing="border-box"
-          padding="10px"
-          minWidth="30vw"
-          maxWidth="50vw"
-          height="100%"
-          overflow="auto"
-        >
-          <List>
-            {Object.keys(documentation).map((command) => (
-              <OperationDetails command={command} key={documentation[command].id} />
-            ))}
-          </List>
-        </Box>
-      </Collapse>
-    </Box>
+    <FloatingWindow flexDirection="row">
+      <List>
+        {Object.keys(documentation).map((command) => (
+          <OperationDetails command={command} key={documentation[command].id} />
+        ))}
+      </List>
+    </FloatingWindow>
   );
 };
 

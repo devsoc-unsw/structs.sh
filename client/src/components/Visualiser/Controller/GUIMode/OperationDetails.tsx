@@ -80,7 +80,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
       <Collapse in={shouldDisplay} timeout="auto" orientation="horizontal">
         <Box display="flex" alignItems="center">
           {documentation[command].args.map((eachArg, idx) => (
-            <Box key={idx} margin="5px" width="100px">
+            <Box key={idx} boxSizing="border-box" padding="5px" width="110px">
               <TextField
                 size="small"
                 label={eachArg}
@@ -96,7 +96,13 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
               />
             </Box>
           ))}
-          <Box display="flex" alignItems="center" marginLeft="5px">
+          <Box
+            boxSizing="border-box"
+            display="flex"
+            alignItems="center"
+            paddingRight="10px"
+            paddingLeft="5px"
+          >
             <Button
               variant="contained"
               // color="primary"

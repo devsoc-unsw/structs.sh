@@ -2,58 +2,17 @@ import React, { FC, useState } from 'react';
 import { Box, Collapse, useTheme } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-
+import FloatingWindow from 'components/FloatingWindow/FloatingWindow';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 
 interface Props {}
 
-const CodeSnippet: FC<Props> = () => {
-  const [shouldDisplay, setShouldDisplay] = useState<boolean>(true);
-  const theme = useTheme();
-
-  const handleToggleDisplay = () => {
-    setShouldDisplay(!shouldDisplay);
-  };
-
-  return (
-    <Box
-      bgcolor={theme.palette.background.default}
-      position="absolute"
-      right="0"
-      bottom="7vh"
-      height="40vh"
-      display="flex"
-      flexDirection="row-reverse"
-    >
-      <Box
-        onClick={handleToggleDisplay}
-        sx={{ background: theme.palette.background.paper, display: 'flex', alignItems: 'center' }}
-      >
-        {shouldDisplay ? (
-          <ChevronLeftIcon sx={{ fill: theme.palette.text.primary }} />
-        ) : (
-          <ChevronRightIcon sx={{ fill: theme.palette.text.primary }} />
-        )}
-      </Box>
-      <Collapse in={shouldDisplay} orientation="horizontal">
-        <Box
-          boxSizing="border-box"
-          paddingLeft="10px"
-          paddingTop="10px"
-          paddingBottom="10px"
-          height="100%"
-          width="30vw"
-          maxWidth="50vw"
-          overflow="auto"
-        >
-          {/* The code-container box is being resized by code snippets, and is scrollable upon overflow */}
-          <Box id="code-container">
-            <svg id="code-canvas" />
-          </Box>
-        </Box>
-      </Collapse>
+const CodeSnippet: FC<Props> = () => (
+  <FloatingWindow flexDirection="row-reverse" height="40vh">
+    <Box id="code-container">
+      <svg id="code-canvas" />
     </Box>
-  );
-};
+  </FloatingWindow>
+);
 
 export default CodeSnippet;
