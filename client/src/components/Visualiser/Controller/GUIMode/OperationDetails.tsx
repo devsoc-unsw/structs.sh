@@ -8,44 +8,6 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import VisualiserContext from 'components/Visualiser/VisualiserContext';
 import React, { FC, useContext, useState } from 'react';
 
-// const useStyles = makeStyles({
-//   opListContainer: {
-//     display: 'flex',
-//     '& div': {
-//       display: 'flex',
-//     },
-//   },
-//   longLink: {
-//     marginLeft: '31px',
-//     flex: '1',
-//   },
-//   opList: {
-//     flex: '8',
-//     paddingLeft: '40px',
-//     '& > li': {
-//       paddingTop: '0px',
-//       paddingBottom: '0px',
-//     },
-//     '& input': {
-//       height: '7px',
-//     },
-//   },
-//   last: {
-//     paddingLeft: '110px',
-//   },
-//   outline: {
-//     borderColor: 'black',
-//   },
-//   opBtn: {
-//     height: '30px',
-//     width: '60px',
-//   },
-//   btnText: {
-//     fontSize: '16px',
-//     color: '#fff',
-//   },
-// });
-
 interface OperationDetailsProps {
   command: string;
 }
@@ -89,17 +51,18 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
     setErrorMessage(err);
     if (err !== '') {
       setTimeout(() => setErrorMessage(''), 2000);
-    } else {
-      clearArguments();
     }
+    clearArguments();
   };
 
   return (
-    <ListItem sx={{ height: 50, padding: '0px' }}>
+    <ListItem sx={{ height: 50, padding: 0 }}>
       <Box sx={{ width: 180 }}>
         <Button
           sx={{
             textTransform: 'none',
+            display: 'flex',
+            justifyContent: 'space-between',
           }}
           onClick={handleToggleDisplay}
           endIcon={

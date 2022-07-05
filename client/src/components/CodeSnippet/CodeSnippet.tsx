@@ -17,16 +17,13 @@ const CodeSnippet: FC<Props> = () => {
 
   return (
     <Box
-      sx={{
-        background: '#14113C',
-        position: 'absolute',
-        right: '0',
-        height: '44vh',
-        bottom: '7vh',
-        display: 'flex',
-        flexDirection: 'row-reverse',
-        // justifyContent: 'stretch',
-      }}
+      bgcolor={theme.palette.background.default}
+      position="absolute"
+      right="0"
+      bottom="7vh"
+      height="40vh"
+      display="flex"
+      flexDirection="row-reverse"
     >
       <Box
         onClick={handleToggleDisplay}
@@ -42,9 +39,9 @@ const CodeSnippet: FC<Props> = () => {
         <Box
           sx={{
             boxSizing: 'border-box',
-            paddingLeft: 2,
-            paddingTop: 2,
-            paddingBottom: 2,
+            paddingLeft: '10px',
+            paddingTop: '10px',
+            paddingBottom: '10px',
             height: '100%',
             width: '30vw',
             overflowY: 'auto',

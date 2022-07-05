@@ -36,15 +36,11 @@ const GUIMode = () => {
     </Alert>
   ) : (
     <Box
-      sx={{
-        overflow: 'auto',
-        background: theme.palette.background.default,
-        position: 'absolute',
-        bottom: '7vh',
-        height: '44vh',
-        display: 'flex',
-        alignItems: 'stretch',
-      }}
+      bgcolor={theme.palette.background.default}
+      position="absolute"
+      bottom="7vh"
+      height="40vh"
+      display="flex"
     >
       <Box
         onClick={handleToggleDisplay}
@@ -60,44 +56,16 @@ const GUIMode = () => {
           <ChevronLeftIcon sx={{ fill: textPrimaryColour }} />
         )}
       </Box>
-      <Collapse in={shouldDisplay} timeout="auto" orientation="horizontal">
-        <Box sx={{ padding: 2 }} minWidth="30vw">
-          <Typography color="textPrimary">{topicTitle}</Typography>
+      <Collapse in={shouldDisplay} orientation="horizontal">
+        <Box boxSizing="border-box" padding="10px" minWidth="30vw" overflow="auto">
           <List>
-            {Object.keys(documentation).map((command, idx) => (
-              <Box key={documentation[command].id}>
-                <OperationDetails command={command} />
-              </Box>
+            {Object.keys(documentation).map((command) => (
+              <OperationDetails command={command} key={documentation[command].id} />
             ))}
           </List>
         </Box>
       </Collapse>
     </Box>
-    // <Collapse>
-    // <Box
-    //   sx={{
-    //     overflow: 'auto',
-    //     background: theme.palette.background.default,
-    //     position: 'absolute',
-    //     bottom: '7vh',
-    //     padding: 2,
-    //     minWidth: '30vw',
-    //     minHeight: '40vh',
-    //   }}
-    // >
-    //   <Typography color="textPrimary">{topicTitle}</Typography>
-    //   <List>
-    //     {Object.keys(documentation).map((command, idx) => (
-    //       <Box key={documentation[command].id}>
-    //         <OperationDetails
-    //           command={command}
-    //           isLast={idx === Object.keys(documentation).length - 1}
-    //         />
-    //       </Box>
-    //     ))}
-    //   </List>
-    // </Box>
-    // </Collapse>
   );
 };
 
