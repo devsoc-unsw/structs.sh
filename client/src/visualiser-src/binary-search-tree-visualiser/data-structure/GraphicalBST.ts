@@ -45,11 +45,11 @@ class GraphicalBST extends GraphicalDataStructure {
     if (this.root === null) {
       this.root = GraphicalBSTNode.from(input);
       updateNodePositions(this.root);
-      animationProducer.doAnimationAndHighlight(3, animationProducer.createNode, this.root);
+      animationProducer.doAnimationAndHighlight(9, animationProducer.createNode, this.root);
     } else {
       this.doInsert(this.root, input, animationProducer);
     }
-    animationProducer.doAnimationAndHighlight(3, animationProducer.unhighlightBST, this.root);
+    animationProducer.doAnimationAndHighlight(9, animationProducer.unhighlightBST, this.root);
     return animationProducer;
   }
 
@@ -254,12 +254,12 @@ class GraphicalBST extends GraphicalDataStructure {
     animationProducer: BSTInsertAnimationProducer
   ) {
     if (root.value > input) {
-      animationProducer.doAnimationAndHighlight(5, animationProducer.halfHighlightNode, root);
+      animationProducer.doAnimationAndHighlight(6, animationProducer.halfHighlightNode, root);
       if (root.left == null) {
         root.left = GraphicalBSTNode.from(input);
         updateNodePositions(this.root);
         animationProducer.doAnimationAndHighlight(
-          6,
+          3,
           animationProducer.createNodeLeft,
           root.left,
           root
@@ -274,12 +274,12 @@ class GraphicalBST extends GraphicalDataStructure {
         this.doInsert(root.left, input, animationProducer);
       }
     } else if (root.value < input) {
-      animationProducer.doAnimationAndHighlight(7, animationProducer.halfHighlightNode, root);
+      animationProducer.doAnimationAndHighlight(8, animationProducer.halfHighlightNode, root);
       if (root.right == null) {
         root.right = GraphicalBSTNode.from(input);
         updateNodePositions(this.root);
         animationProducer.doAnimationAndHighlight(
-          8,
+          3,
           animationProducer.createNodeRight,
           root.right,
           root
