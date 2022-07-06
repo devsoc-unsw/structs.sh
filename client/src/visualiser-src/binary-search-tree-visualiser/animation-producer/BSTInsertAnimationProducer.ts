@@ -1,8 +1,6 @@
-import { Marker, SVG, Svg } from '@svgdotjs/svg.js';
 import BSTAnimationProducer from './BSTAnimationProducer';
 import { Node as GraphicalBSTNode } from '../util/typedefs';
-import { nodeStyle, textStyle, lineStyle, lineDiffY } from '../util/settings';
-import { markerLength, nodeDiameter, pathD, VISUALISER_CANVAS } from '../../common/constants';
+import { lineDiffY } from '../util/settings';
 import { getPointerStartEndCoordinates } from '../../common/helpers';
 import { insertCodeSnippet } from '../util/codeSnippets';
 

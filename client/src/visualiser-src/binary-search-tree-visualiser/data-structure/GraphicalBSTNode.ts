@@ -26,9 +26,9 @@ interface GraphicalBSTNodeData {
 export default class GraphicalBSTNode {
   private _data: GraphicalBSTNodeData;
 
-  private _left: GraphicalBSTNode;
+  protected _left: GraphicalBSTNode;
 
-  private _right: GraphicalBSTNode;
+  protected _right: GraphicalBSTNode;
 
   protected constructor(data: GraphicalBSTNodeData) {
     this._data = data;
