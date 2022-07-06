@@ -20,17 +20,17 @@ export default class GraphicalTreeTraversal {
       return;
     }
 
-    animationProducer.doAnimationAndHighlight(1, animationProducer.halfHighlightNode, node);
+    animationProducer.doAnimationAndHighlight(2, animationProducer.halfHighlightNode, node);
     animationProducer.doAnimationAndHighlight(
-      4,
+      5,
       animationProducer.highlightLine,
       node.leftLineTarget,
       node.leftArrowTarget
     );
     GraphicalTreeTraversal.doInorderTraversal(node.left, animationProducer);
-    animationProducer.doAnimationAndHighlight(5, animationProducer.highlightNode, node);
+    animationProducer.doAnimationAndHighlight(6, animationProducer.highlightNode, node);
     animationProducer.doAnimationAndHighlight(
-      6,
+      7,
       animationProducer.highlightLine,
       node.rightLineTarget,
       node.rightArrowTarget
@@ -56,17 +56,17 @@ export default class GraphicalTreeTraversal {
       return;
     }
 
-    animationProducer.doAnimationAndHighlight(1, animationProducer.halfHighlightNode, node);
-    animationProducer.doAnimationAndHighlight(4, animationProducer.highlightNode, node);
+    animationProducer.doAnimationAndHighlight(2, animationProducer.halfHighlightNode, node);
+    animationProducer.doAnimationAndHighlight(5, animationProducer.highlightNode, node);
     animationProducer.doAnimationAndHighlight(
-      5,
+      6,
       animationProducer.highlightLine,
       node.leftLineTarget,
       node.leftArrowTarget
     );
     GraphicalTreeTraversal.doPreorderTraversal(node.left, animationProducer);
     animationProducer.doAnimationAndHighlight(
-      6,
+      7,
       animationProducer.highlightLine,
       node.rightLineTarget,
       node.rightArrowTarget
@@ -92,21 +92,21 @@ export default class GraphicalTreeTraversal {
       return;
     }
 
-    animationProducer.doAnimationAndHighlight(1, animationProducer.halfHighlightNode, node);
+    animationProducer.doAnimationAndHighlight(2, animationProducer.halfHighlightNode, node);
     animationProducer.doAnimationAndHighlight(
-      4,
+      5,
       animationProducer.highlightLine,
       node.leftLineTarget,
       node.leftArrowTarget
     );
     GraphicalTreeTraversal.doPostorderTraversal(node.left, animationProducer);
     animationProducer.doAnimationAndHighlight(
-      5,
+      6,
       animationProducer.highlightLine,
       node.rightLineTarget,
       node.rightArrowTarget
     );
     GraphicalTreeTraversal.doPostorderTraversal(node.right, animationProducer);
-    animationProducer.doAnimationAndHighlight(6, animationProducer.highlightNode, node);
+    animationProducer.doAnimationAndHighlight(7, animationProducer.highlightNode, node);
   }
 }
