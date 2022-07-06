@@ -21,7 +21,7 @@ const FloatingWindow: FC<Props> = ({ children, height = undefined, flexDirection
     <Box
       bgcolor={theme.palette.background.default}
       position="absolute"
-      bottom="52px"
+      bottom="54px"
       height={height}
       maxHeight="40vh"
       display="flex"
