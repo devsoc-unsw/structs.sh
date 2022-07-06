@@ -30,43 +30,14 @@ export default class GraphicalBSTNode {
 
   private _right: GraphicalBSTNode;
 
-  private constructor(data: GraphicalBSTNodeData) {
+  protected constructor(data: GraphicalBSTNodeData) {
     this._data = data;
     this._left = null;
     this._right = null;
   }
 
   public static from(input: number): GraphicalBSTNode {
-    const canvas = SVG(VISUALISER_CANVAS) as Svg;
-    const leftArrowTarget = canvas
-      .marker(markerLength, markerLength, (add: Marker) => {
-        add.path(pathD);
-      })
-      .attr('markerUnits', 'userSpaceOnUse');
-    const rightArrowTarget = canvas
-      .marker(markerLength, markerLength, (add: Marker) => {
-        add.path(pathD);
-      })
-      .attr('markerUnits', 'userSpaceOnUse');
-    const leftLineTarget = canvas.line().attr(lineStyle);
-    leftLineTarget.marker('end', leftArrowTarget);
-    const rightLineTarget = canvas.line().attr(lineStyle);
-    rightLineTarget.marker('end', rightArrowTarget);
-    const nodeTarget = canvas.circle(nodeDiameter).attr(nodeStyle);
-    const textTarget = canvas.text(String(input)).attr(textStyle);
-    return new GraphicalBSTNode({
-      svgData: {
-        nodeTarget,
-        textTarget,
-        leftLineTarget,
-        rightLineTarget,
-        leftArrowTarget,
-        rightArrowTarget,
-      },
-      value: input,
-      x: 0,
-      y: 0,
-    });
+    return new GraphicalBSTNode(GraphicalBSTNode.createData(input));
   }
 
   public get nodeTarget() {
@@ -127,5 +98,38 @@ export default class GraphicalBSTNode {
 
   public set right(right: GraphicalBSTNode) {
     this._right = right;
+  }
+
+  protected static createData(input: number) {
+    const canvas = SVG(VISUALISER_CANVAS) as Svg;
+    const leftArrowTarget = canvas
+      .marker(markerLength, markerLength, (add: Marker) => {
+        add.path(pathD);
+      })
+      .attr('markerUnits', 'userSpaceOnUse');
+    const rightArrowTarget = canvas
+      .marker(markerLength, markerLength, (add: Marker) => {
+        add.path(pathD);
+      })
+      .attr('markerUnits', 'userSpaceOnUse');
+    const leftLineTarget = canvas.line().attr(lineStyle);
+    leftLineTarget.marker('end', leftArrowTarget);
+    const rightLineTarget = canvas.line().attr(lineStyle);
+    rightLineTarget.marker('end', rightArrowTarget);
+    const nodeTarget = canvas.circle(nodeDiameter).attr(nodeStyle);
+    const textTarget = canvas.text(String(input)).attr(textStyle);
+    return {
+      svgData: {
+        nodeTarget,
+        textTarget,
+        leftLineTarget,
+        rightLineTarget,
+        leftArrowTarget,
+        rightArrowTarget,
+      },
+      value: input,
+      x: 0,
+      y: 0,
+    };
   }
 }

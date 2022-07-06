@@ -1,13 +1,11 @@
-import { SVG } from '@svgdotjs/svg.js';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { Documentation } from 'visualiser-src/common/typedefs';
-import { CODE_CANVAS, VISUALISER_CANVAS } from 'visualiser-src/common/constants';
 import { injectIds } from 'visualiser-src/common/helpers';
 import BSTInsertAnimationProducer from '../animation-producer/BSTInsertAnimationProducer';
 import BSTRotateAnimationProducer from '../animation-producer/BSTRotateAnimationProducer';
-import BSTTraverseAnimationProducer from '../animation-producer/BSTTraverseAnimationProducer';
-import { canvasPadding } from '../util/settings';
 import GraphicalBSTNode from './GraphicalBSTNode';
+import GraphicalTreeTraversal from './GraphicalTreeTraversal';
+import updateNodePositions from '../util/helpers';
 
 // used for the actual implementation of the bst
 class GraphicalBST extends GraphicalDataStructure {
@@ -45,13 +43,25 @@ class GraphicalBST extends GraphicalDataStructure {
     const animationProducer: BSTInsertAnimationProducer = new BSTInsertAnimationProducer();
     if (this.root === null) {
       this.root = GraphicalBSTNode.from(input);
-      this.updateNodePositions();
+      updateNodePositions(this.root);
       animationProducer.doAnimation(animationProducer.createNode, this.root);
     } else {
       this.doInsert(this.root, input, animationProducer);
     }
     animationProducer.doAnimation(animationProducer.unhighlightBST, this.root);
     return animationProducer;
+  }
+
+  public inorderTraversal() {
+    return GraphicalTreeTraversal.inorderTraversal(this.root);
+  }
+
+  public preorderTraversal() {
+    return GraphicalTreeTraversal.preorderTraversal(this.root);
+  }
+
+  public postorderTraversal() {
+    return GraphicalTreeTraversal.postorderTraversal(this.root);
   }
 
   // returns a node corresponding to the input
@@ -85,7 +95,7 @@ class GraphicalBST extends GraphicalDataStructure {
     if (newRoot === null) return animationProducer;
 
     this.root = this.doRotateLeft(this.root, input, animationProducer);
-    this.updateNodePositions();
+    updateNodePositions(this.root);
     animationProducer.doAnimationAndHighlight(
       5,
       animationProducer.updateAndUnhighlightBST,
@@ -165,7 +175,7 @@ class GraphicalBST extends GraphicalDataStructure {
     if (newRoot === null) return animationProducer;
 
     this.root = this.doRotateRight(this.root, input, animationProducer);
-    this.updateNodePositions();
+    updateNodePositions(this.root);
     animationProducer.doAnimationAndHighlight(
       5,
       animationProducer.updateAndUnhighlightBST,
@@ -233,114 +243,6 @@ class GraphicalBST extends GraphicalDataStructure {
     return node;
   }
 
-  public inorderTraversal(): BSTTraverseAnimationProducer {
-    const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer();
-
-    animationProducer.renderInorderTraversalCode();
-    this.doInorderTraversal(this.root, animationProducer);
-    animationProducer.doAnimation(animationProducer.unhighlightBST, this.root);
-
-    return animationProducer;
-  }
-
-  public doInorderTraversal(
-    node: GraphicalBSTNode,
-    animationProducer: BSTTraverseAnimationProducer
-  ) {
-    if (node === null) {
-      return;
-    }
-
-    animationProducer.doAnimationAndHighlight(1, animationProducer.halfHighlightNode, node);
-    animationProducer.doAnimationAndHighlight(
-      4,
-      animationProducer.highlightLine,
-      node.leftLineTarget,
-      node.leftArrowTarget
-    );
-    this.doInorderTraversal(node.left, animationProducer);
-    animationProducer.doAnimationAndHighlight(5, animationProducer.highlightNode, node);
-    animationProducer.doAnimationAndHighlight(
-      6,
-      animationProducer.highlightLine,
-      node.rightLineTarget,
-      node.rightArrowTarget
-    );
-    this.doInorderTraversal(node.right, animationProducer);
-  }
-
-  public preorderTraversal(): BSTTraverseAnimationProducer {
-    const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer();
-
-    animationProducer.renderPreorderTraversalCode();
-    this.doPreorderTraversal(this.root, animationProducer);
-    animationProducer.doAnimation(animationProducer.unhighlightBST, this.root);
-
-    return animationProducer;
-  }
-
-  public doPreorderTraversal(
-    node: GraphicalBSTNode,
-    animationProducer: BSTTraverseAnimationProducer
-  ) {
-    if (node === null) {
-      return;
-    }
-
-    animationProducer.doAnimationAndHighlight(1, animationProducer.halfHighlightNode, node);
-    animationProducer.doAnimationAndHighlight(4, animationProducer.highlightNode, node);
-    animationProducer.doAnimationAndHighlight(
-      5,
-      animationProducer.highlightLine,
-      node.leftLineTarget,
-      node.leftArrowTarget
-    );
-    this.doPreorderTraversal(node.left, animationProducer);
-    animationProducer.doAnimationAndHighlight(
-      6,
-      animationProducer.highlightLine,
-      node.rightLineTarget,
-      node.rightArrowTarget
-    );
-    this.doPreorderTraversal(node.right, animationProducer);
-  }
-
-  public postorderTraversal(): BSTTraverseAnimationProducer {
-    const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer();
-
-    animationProducer.renderPostorderTraversalCode();
-    this.doPostorderTraversal(this.root, animationProducer);
-    animationProducer.doAnimation(animationProducer.unhighlightBST, this.root);
-
-    return animationProducer;
-  }
-
-  public doPostorderTraversal(
-    node: GraphicalBSTNode,
-    animationProducer: BSTTraverseAnimationProducer
-  ) {
-    if (node === null) {
-      return;
-    }
-
-    animationProducer.doAnimationAndHighlight(1, animationProducer.halfHighlightNode, node);
-    animationProducer.doAnimationAndHighlight(
-      4,
-      animationProducer.highlightLine,
-      node.leftLineTarget,
-      node.leftArrowTarget
-    );
-    this.doPostorderTraversal(node.left, animationProducer);
-    animationProducer.doAnimationAndHighlight(
-      5,
-      animationProducer.highlightLine,
-      node.rightLineTarget,
-      node.rightArrowTarget
-    );
-    this.doPostorderTraversal(node.right, animationProducer);
-    animationProducer.doAnimationAndHighlight(6, animationProducer.highlightNode, node);
-  }
-
   public get documentation() {
     return GraphicalBST.documentation;
   }
@@ -354,7 +256,7 @@ class GraphicalBST extends GraphicalDataStructure {
     if (root.value > input) {
       if (root.left == null) {
         root.left = GraphicalBSTNode.from(input);
-        this.updateNodePositions();
+        updateNodePositions(this.root);
         animationProducer.doAnimation(animationProducer.createNodeLeft, root.left, root);
       } else {
         animationProducer.doAnimation(
@@ -367,7 +269,7 @@ class GraphicalBST extends GraphicalDataStructure {
     } else if (root.value < input) {
       if (root.right == null) {
         root.right = GraphicalBSTNode.from(input);
-        this.updateNodePositions();
+        updateNodePositions(this.root);
         animationProducer.doAnimation(animationProducer.createNodeRight, root.right, root);
       } else {
         animationProducer.doAnimation(
@@ -380,34 +282,6 @@ class GraphicalBST extends GraphicalDataStructure {
     } else {
       // highlight root red
     }
-  }
-
-  // use this method after doing bst operations to update
-  // x and y coordinates
-  private updateNodePositions(): void {
-    const canvasWidth = document.getElementById('visualiser-container').offsetWidth;
-    const low: number = 0;
-    const high: number = Number(canvasWidth);
-    const mid: number = (low + high) / 2;
-    this.updateNodePositionsRecursive(this.root, low, high, mid, canvasPadding);
-  }
-
-  private updateNodePositionsRecursive(
-    node: GraphicalBSTNode,
-    low: number,
-    high: number,
-    mid: number,
-    y: number
-  ): void {
-    if (node === null) {
-      return;
-    }
-
-    node.x = mid;
-    node.y = y;
-
-    this.updateNodePositionsRecursive(node.left, low, mid, (low + mid) / 2, y + 75);
-    this.updateNodePositionsRecursive(node.right, mid, high, (mid + high) / 2, y + 75);
   }
 }
 
