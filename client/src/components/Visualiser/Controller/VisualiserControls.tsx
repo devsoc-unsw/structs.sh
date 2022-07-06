@@ -102,9 +102,9 @@ const VisualiserControls = () => {
   }, [isTimelineComplete, handleTimelineUpdate]);
 
   return (
-    <Box className={styles.root} style={{ backgroundColor: theme.palette.background.default }}>
+    <Box className={styles.root} bgcolor={theme.palette.background.default}>
       <IconButton onClick={() => handleStepBackward()}>
-        <SkipPreviousIcon sx={{ fill: theme.palette.text.primary }} />
+        <SkipPreviousIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
       </IconButton>
       {isTimelineComplete ? (
         <IconButton
@@ -114,7 +114,7 @@ const VisualiserControls = () => {
             setIsPlaying(true);
           }}
         >
-          <ReplayIcon sx={{ fill: theme.palette.text.primary }} />
+          <ReplayIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
         </IconButton>
       ) : isPlaying ? (
         <IconButton
@@ -123,7 +123,7 @@ const VisualiserControls = () => {
             setIsPlaying(false);
           }}
         >
-          <PauseIcon sx={{ fill: theme.palette.text.primary }} />
+          <PauseIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
         </IconButton>
       ) : (
         <IconButton
@@ -132,17 +132,18 @@ const VisualiserControls = () => {
             setIsPlaying(true);
           }}
         >
-          <PlayIcon sx={{ fill: theme.palette.text.primary }} />
+          <PlayIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
         </IconButton>
       )}
       <IconButton onClick={() => handleStepForward()}>
-        <SkipNextIcon sx={{ fill: theme.palette.text.primary }} />
+        <SkipNextIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
       </IconButton>
 
       <Button onClick={handleClick} className={styles.setSpeedButton}>
         <SpeedIcon
           sx={{ fill: theme.palette.text.primary }}
           className={styles.setSpeedButtonIcon}
+          fontSize="large"
         />
         <Typography color="textPrimary" className={styles.currSpeed}>
           {speedOptions[selectedIndex]}
@@ -178,13 +179,14 @@ const VisualiserControls = () => {
       </Menu>
 
       <Box className={styles.sliderContainer}>
-        {/* <Stack direction="column"> */}
-        {/* <Stack direction="row" sx={{ height: '32px' }}> */}
-        <TimeIcon className={styles.sliderIcon} sx={{ fill: theme.palette.text.primary }} />
+        <TimeIcon
+          className={styles.sliderIcon}
+          fontSize="small"
+          sx={{ fill: theme.palette.text.primary }}
+        />
         <input
           type="range"
           id="timelineSlider"
-          // name="volume"
           min="0"
           max="100"
           defaultValue="0"
@@ -210,7 +212,7 @@ const VisualiserControls = () => {
         />
       </Box>
       <Button className={styles.resetButton} onClick={handleReset}>
-        <Typography color="textPrimary" sx={{ whiteSpace: 'nowrap' }}>
+        <Typography color="textPrimary" whiteSpace="nowrap">
           Reset All
         </Typography>
       </Button>

@@ -10,7 +10,8 @@ import { Box } from '@mui/material';
  * attaches itself to.
  */
 const VisualiserCanvas: React.FC = () => (
-  <Box id="visualiser-container" height="92vh" bgcolor="#EBE8F4">
+  // 64px is reserved for the top navbar, 48+ is reserved for the controller
+  <Box id="visualiser-container" height="calc(100vh - 64px)" bgcolor="#EBE8F4">
     <svg id="visualiser-canvas" />
   </Box>
 );

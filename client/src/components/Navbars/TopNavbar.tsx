@@ -119,7 +119,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
   );
 
   return (
-    <Box sx={{ flexGrow: 1, height: '8vh' }}>
+    <Box>
       <AppBar
         position={position}
         sx={{
@@ -128,35 +128,30 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
         }}
       >
         <Toolbar>
-          <Button
-            color="info"
-            onClick={handleLearnMenuOpen}
-            endIcon={<KeyboardArrowDownIcon />}
-            sx={{ fontSize: '100%' }}
-          >
-            <strong>Topics</strong>
-          </Button>
-          <Box className={styles.centralBox}>
-            <Link to="/">
-              <Box sx={{ display: { xs: 'none', lg: 'inline-block' } }}>
-                <img src={logo} draggable={false} alt="logo" />
-              </Box>
-              <Typography
-                variant="h4"
-                noWrap
-                component="div"
-                sx={{
-                  display: {
-                    xs: 'none',
-                    lg: 'inline-block',
-                    marginLeft: '10px',
-                    fontFamily: 'CodeText',
-                  },
-                }}
-              >
-                Structs.sh
+          <Box display="flex" alignItems="center" width="100%">
+            <Button color="info" onClick={handleLearnMenuOpen} endIcon={<KeyboardArrowDownIcon />}>
+              <Typography>
+                <strong>Topics</strong>
               </Typography>
-            </Link>
+            </Button>
+            <Box className={styles.centralBox}>
+              <Button component={Link} to="/">
+                <img src={logo} draggable={false} alt="logo" />
+                <Typography
+                  variant="h4"
+                  noWrap
+                  component="div"
+                  sx={{
+                    fontFamily: 'CodeText',
+                    textTransform: 'none',
+                  }}
+                  color="white"
+                >
+                  Structs.sh
+                </Typography>
+              </Button>
+            </Box>
+            <Box />
           </Box>
         </Toolbar>
       </AppBar>
