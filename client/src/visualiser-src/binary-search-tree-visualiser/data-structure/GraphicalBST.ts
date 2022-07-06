@@ -6,8 +6,8 @@ import { injectIds } from 'visualiser-src/common/helpers';
 import BSTInsertAnimationProducer from '../animation-producer/BSTInsertAnimationProducer';
 import BSTRotateAnimationProducer from '../animation-producer/BSTRotateAnimationProducer';
 import BSTTraverseAnimationProducer from '../animation-producer/BSTTraverseAnimationProducer';
-import { Node } from '../util/typedefs';
 import { canvasPadding } from '../util/settings';
+import GraphicalBSTNode from './GraphicalBSTNode';
 
 // used for the actual implementation of the bst
 class GraphicalBST extends GraphicalDataStructure {
@@ -39,139 +39,23 @@ class GraphicalBST extends GraphicalDataStructure {
     },
   });
 
-  public root: Node = null;
+  public root: GraphicalBSTNode = null;
 
-  // inserts a node into the bst and produces an animation sequence
-  // that is later handled by the animation controller
   public insert(input: number): BSTInsertAnimationProducer {
     const animationProducer: BSTInsertAnimationProducer = new BSTInsertAnimationProducer();
-    animationProducer.renderInsertCode();
-
-    // return early if a node with the same value already exists
-    if (this.getNode(input) !== null) {
-      return animationProducer;
-    }
-
-    const node: Node = {
-      nodeTarget: null,
-      textTarget: null,
-      leftLineTarget: null,
-      rightLineTarget: null,
-      leftArrowTarget: null,
-      rightArrowTarget: null,
-      left: null,
-      right: null,
-      value: input,
-      x: 0,
-      y: 0,
-    };
-
-    if (this.root == null) {
-      this.root = node;
+    if (this.root === null) {
+      this.root = GraphicalBSTNode.from(input);
       this.updateNodePositions();
-      animationProducer.doAnimationAndHighlight(2, animationProducer.createNode, node);
+      animationProducer.doAnimation(animationProducer.createNode, this.root);
     } else {
-      let currentNode: Node = this.root;
-
-      while (currentNode) {
-        animationProducer.doAnimationAndHighlight(
-          6,
-          animationProducer.halfHighlightNode,
-          currentNode
-        );
-
-        if (node.value < currentNode.value) {
-          if (currentNode.left == null) {
-            currentNode.left = node;
-            this.updateNodePositions();
-            animationProducer.doAnimationAndHighlight(
-              8,
-              animationProducer.createNodeLeft,
-              node,
-              currentNode
-            );
-            animationProducer.doAnimationAndHighlight(
-              9,
-              animationProducer.unhighlightBST,
-              this.root
-            );
-
-            return animationProducer;
-          }
-
-          animationProducer.doAnimationAndHighlight(
-            11,
-            animationProducer.highlightLine,
-            currentNode.leftLineTarget,
-            currentNode.leftArrowTarget
-          );
-
-          currentNode = currentNode.left;
-        } else {
-          if (currentNode.right == null) {
-            currentNode.right = node;
-            this.updateNodePositions();
-            animationProducer.doAnimationAndHighlight(
-              14,
-              animationProducer.createNodeRight,
-              node,
-              currentNode
-            );
-            animationProducer.doAnimationAndHighlight(
-              15,
-              animationProducer.unhighlightBST,
-              this.root
-            );
-
-            return animationProducer;
-          }
-
-          animationProducer.doAnimationAndHighlight(
-            17,
-            animationProducer.highlightLine,
-            currentNode.rightLineTarget,
-            currentNode.rightArrowTarget
-          );
-
-          currentNode = currentNode.right;
-        }
-      }
+      this.doInsert(this.root, input, animationProducer);
     }
-
     animationProducer.doAnimation(animationProducer.unhighlightBST, this.root);
     return animationProducer;
   }
 
-  // use this method after doing bst operations to update
-  // x and y coordinates
-  public updateNodePositions(): void {
-    const canvasWidth = document.getElementById('visualiser-container').offsetWidth;
-    const low: number = 0;
-    const high: number = Number(canvasWidth);
-    const mid: number = (low + high) / 2;
-    this.updateNodePositionsRecursive(this.root, low, high, mid, canvasPadding);
-  }
-
-  public updateNodePositionsRecursive(
-    node: Node,
-    low: number,
-    high: number,
-    mid: number,
-    y: number
-  ): void {
-    if (node === null) {
-      return;
-    }
-
-    node.x = mid;
-    node.y = y;
-
-    this.updateNodePositionsRecursive(node.left, low, mid, (low + mid) / 2, y + 75);
-    this.updateNodePositionsRecursive(node.right, mid, high, (mid + high) / 2, y + 75);
-  }
-
   // returns a node corresponding to the input
-  public getNode(input: number): Node {
+  public getNode(input: number): GraphicalBSTNode {
     // handle edgecase where no nodes are present
     if (this.root === null) return null;
 
@@ -179,7 +63,7 @@ class GraphicalBST extends GraphicalDataStructure {
   }
 
   // TODO: remove this
-  public getNodeRecursive(input: number, node: Node): Node {
+  public getNodeRecursive(input: number, node: GraphicalBSTNode): GraphicalBSTNode {
     if (node === null) return null;
     if (input === node.value) return node;
 
@@ -192,11 +76,11 @@ class GraphicalBST extends GraphicalDataStructure {
   public rotateLeft(input: number): BSTRotateAnimationProducer {
     const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer();
     animationProducer.renderRotateLeftCode();
-    const oldRoot: Node = this.getNode(input);
+    const oldRoot: GraphicalBSTNode = this.getNode(input);
 
     if (oldRoot === null) return animationProducer;
 
-    const newRoot: Node = oldRoot.right;
+    const newRoot: GraphicalBSTNode = oldRoot.right;
 
     if (newRoot === null) return animationProducer;
 
@@ -212,13 +96,13 @@ class GraphicalBST extends GraphicalDataStructure {
   }
 
   public doRotateLeft(
-    node: Node,
+    node: GraphicalBSTNode,
     input: number,
     animationProducer: BSTRotateAnimationProducer
-  ): Node {
+  ): GraphicalBSTNode {
     animationProducer.doAnimationAndHighlight(1, animationProducer.halfHighlightNode, node);
     if (input === node.value) {
-      const newRoot: Node = node.right;
+      const newRoot: GraphicalBSTNode = node.right;
 
       if (newRoot.left != null) {
         animationProducer.doAnimationAndHighlight(
@@ -272,11 +156,11 @@ class GraphicalBST extends GraphicalDataStructure {
   public rotateRight(input: number): BSTRotateAnimationProducer {
     const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer();
     animationProducer.renderRotateRightCode();
-    const oldRoot: Node = this.getNode(input);
+    const oldRoot: GraphicalBSTNode = this.getNode(input);
 
     if (oldRoot === null) return animationProducer;
 
-    const newRoot: Node = oldRoot.left;
+    const newRoot: GraphicalBSTNode = oldRoot.left;
 
     if (newRoot === null) return animationProducer;
 
@@ -292,13 +176,13 @@ class GraphicalBST extends GraphicalDataStructure {
   }
 
   public doRotateRight(
-    node: Node,
+    node: GraphicalBSTNode,
     input: number,
     animationProducer: BSTRotateAnimationProducer
-  ): Node {
+  ): GraphicalBSTNode {
     animationProducer.doAnimationAndHighlight(1, animationProducer.halfHighlightNode, node);
     if (input === node.value) {
-      const newRoot: Node = node.left;
+      const newRoot: GraphicalBSTNode = node.left;
 
       if (newRoot.right != null) {
         animationProducer.doAnimationAndHighlight(
@@ -359,7 +243,10 @@ class GraphicalBST extends GraphicalDataStructure {
     return animationProducer;
   }
 
-  public doInorderTraversal(node: Node, animationProducer: BSTTraverseAnimationProducer) {
+  public doInorderTraversal(
+    node: GraphicalBSTNode,
+    animationProducer: BSTTraverseAnimationProducer
+  ) {
     if (node === null) {
       return;
     }
@@ -392,7 +279,10 @@ class GraphicalBST extends GraphicalDataStructure {
     return animationProducer;
   }
 
-  public doPreorderTraversal(node: Node, animationProducer: BSTTraverseAnimationProducer) {
+  public doPreorderTraversal(
+    node: GraphicalBSTNode,
+    animationProducer: BSTTraverseAnimationProducer
+  ) {
     if (node === null) {
       return;
     }
@@ -425,7 +315,10 @@ class GraphicalBST extends GraphicalDataStructure {
     return animationProducer;
   }
 
-  public doPostorderTraversal(node: Node, animationProducer: BSTTraverseAnimationProducer) {
+  public doPostorderTraversal(
+    node: GraphicalBSTNode,
+    animationProducer: BSTTraverseAnimationProducer
+  ) {
     if (node === null) {
       return;
     }
@@ -450,6 +343,71 @@ class GraphicalBST extends GraphicalDataStructure {
 
   public get documentation() {
     return GraphicalBST.documentation;
+  }
+
+  private doInsert(
+    root: GraphicalBSTNode,
+    input: number,
+    animationProducer: BSTInsertAnimationProducer
+  ) {
+    animationProducer.doAnimation(animationProducer.halfHighlightNode, root);
+    if (root.value > input) {
+      if (root.left == null) {
+        root.left = GraphicalBSTNode.from(input);
+        this.updateNodePositions();
+        animationProducer.doAnimation(animationProducer.createNodeLeft, root.left, root);
+      } else {
+        animationProducer.doAnimation(
+          animationProducer.highlightLine,
+          root.leftLineTarget,
+          root.leftArrowTarget
+        );
+        this.doInsert(root.left, input, animationProducer);
+      }
+    } else if (root.value < input) {
+      if (root.right == null) {
+        root.right = GraphicalBSTNode.from(input);
+        this.updateNodePositions();
+        animationProducer.doAnimation(animationProducer.createNodeRight, root.right, root);
+      } else {
+        animationProducer.doAnimation(
+          animationProducer.highlightLine,
+          root.rightLineTarget,
+          root.rightArrowTarget
+        );
+        this.doInsert(root.right, input, animationProducer);
+      }
+    } else {
+      // highlight root red
+    }
+  }
+
+  // use this method after doing bst operations to update
+  // x and y coordinates
+  private updateNodePositions(): void {
+    const canvasWidth = document.getElementById('visualiser-container').offsetWidth;
+    const low: number = 0;
+    const high: number = Number(canvasWidth);
+    const mid: number = (low + high) / 2;
+    this.updateNodePositionsRecursive(this.root, low, high, mid, canvasPadding);
+  }
+
+  private updateNodePositionsRecursive(
+    node: GraphicalBSTNode,
+    low: number,
+    high: number,
+    mid: number,
+    y: number
+  ): void {
+    if (node === null) {
+      return;
+    }
+
+    node.x = mid;
+    node.y = y;
+
+    this.updateNodePositionsRecursive(node.left, low, mid, (low + mid) / 2, y + 75);
+    this.updateNodePositionsRecursive(node.right, mid, high, (mid + high) / 2, y + 75);
   }
 }
 

@@ -1,5 +1,4 @@
-export const insertCodeSnippet =
-`if (root == NULL) {
+export const insertCodeSnippet = `if (root == NULL) {
   root = create_node(val);
   return;
 }
@@ -19,8 +18,7 @@ while (curr != NULL) {
   }
 }`;
 
-export const rotateLeftCodeSnippet =
-`if (val == node->val) {
+export const rotateLeftCodeSnippet = `if (val == node->val) {
   struct node *new_root = node->right;
   node->right = new_root->left;
   new_root->left = node;
@@ -32,8 +30,7 @@ export const rotateLeftCodeSnippet =
 }
 return node;`;
 
-export const rotateRightCodeSnippet =
-`if (val == node->val) {
+export const rotateRightCodeSnippet = `if (val == node->val) {
   struct node *new_root = node->left;
   node->left = new_root->right;
   new_root->right = node;
@@ -45,24 +42,21 @@ export const rotateRightCodeSnippet =
 }
 return node;`;
 
-export const inorderTraversalCodeSnippet =
-`if (node == NULL) {
+export const inorderTraversalCodeSnippet = `if (node == NULL) {
   return;
 }
 inorder_traversal(node->left);
 printf("%d ", node->val);
 inorder_traversal(node->right);`;
 
-export const preorderTraversalCodeSnippet =
-`if (node == NULL) {
+export const preorderTraversalCodeSnippet = `if (node == NULL) {
   return;
 }
 printf("%d ", node->val);
 preorder_traversal(node->left);
 preorder_traversal(node->right);`;
 
-export const postorderTraversalCodeSnippet =
-`if (node == NULL) {
+export const postorderTraversalCodeSnippet = `if (node == NULL) {
   return;
 }
 postorder_traversal(node->left);
