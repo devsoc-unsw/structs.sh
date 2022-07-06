@@ -13,7 +13,7 @@ interface Props {
 const FloatingWindow: FC<Props> = ({
   children,
   minHeight = undefined,
-  maxHeight = undefined,
+  maxHeight = '80vh',
   flexDirection = 'row',
 }) => {
   const [shouldDisplay, setShouldDisplay] = useState<boolean>(true);
