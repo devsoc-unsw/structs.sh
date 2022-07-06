@@ -5,7 +5,6 @@ import GraphicalTreeTraversal from 'visualiser-src/binary-search-tree-visualiser
 import BSTTraverseAnimationProducer from 'visualiser-src/binary-search-tree-visualiser/animation-producer/BSTTraverseAnimationProducer';
 import updateNodePositions from 'visualiser-src/binary-search-tree-visualiser/util/helpers';
 import AVLAnimationProducer from '../animation-producer/AVLAnimationProducer';
-import { Node } from '../util/typedefs';
 import GraphicalAVLNode from './GraphicalAVLNode';
 
 // used for the actual implementation of the bst
@@ -34,17 +33,18 @@ class GraphicalAVL extends GraphicalDataStructure {
 
   public insert(input: number): AVLAnimationProducer {
     const animationProducer: AVLAnimationProducer = new AVLAnimationProducer();
+    animationProducer.renderInsertCode();
     if (this.root === null) {
+      // Early return if inserting into an empty tree
       this.root = GraphicalAVLNode.from(input);
       updateNodePositions(this.root);
-      animationProducer.doAnimation(animationProducer.createNode, this.root);
+      animationProducer.doAnimationAndHighlight(10, animationProducer.createNode, this.root);
     } else {
+      // Recursively inserting
       this.doInsert(null, this.root, false, input, animationProducer);
     }
     return animationProducer;
   }
-
-  public balanceTree(node: Node, input: number, animationProducer: AVLAnimationProducer): void {}
 
   public inorderTraversal(): BSTTraverseAnimationProducer {
     return GraphicalTreeTraversal.inorderTraversal(this.root);
@@ -69,14 +69,22 @@ class GraphicalAVL extends GraphicalDataStructure {
     input: number,
     animationProducer: AVLAnimationProducer
   ) {
-    animationProducer.doAnimation(animationProducer.halfHighlightNode, root);
+    // animationProducer.doAnimation(animationProducer.halfHighlightNode, root);
+    // First, insert to leaf of BST
     if (root.value > input) {
+      animationProducer.doAnimationAndHighlight(7, animationProducer.halfHighlightNode, root);
       if (root.left == null) {
         root.left = GraphicalAVLNode.from(input);
         updateNodePositions(this.root);
-        animationProducer.doAnimation(animationProducer.createNodeLeft, root.left, root);
+        animationProducer.doAnimationAndHighlight(
+          4,
+          animationProducer.createNodeLeft,
+          root.left,
+          root
+        );
       } else {
-        animationProducer.doAnimation(
+        animationProducer.doAnimationAndHighlight(
+          7,
           animationProducer.highlightLine,
           root.leftLineTarget,
           root.leftArrowTarget
@@ -84,12 +92,19 @@ class GraphicalAVL extends GraphicalDataStructure {
         this.doInsert(root, root.left, true, input, animationProducer);
       }
     } else if (root.value < input) {
+      animationProducer.doAnimationAndHighlight(9, animationProducer.halfHighlightNode, root);
       if (root.right == null) {
         root.right = GraphicalAVLNode.from(input);
         updateNodePositions(this.root);
-        animationProducer.doAnimation(animationProducer.createNodeRight, root.right, root);
+        animationProducer.doAnimationAndHighlight(
+          4,
+          animationProducer.createNodeRight,
+          root.right,
+          root
+        );
       } else {
-        animationProducer.doAnimation(
+        animationProducer.doAnimationAndHighlight(
+          9,
           animationProducer.highlightLine,
           root.rightLineTarget,
           root.rightArrowTarget
@@ -101,20 +116,31 @@ class GraphicalAVL extends GraphicalDataStructure {
     }
     // Begin rebalancing
     root.updateHeight();
-    console.log(root.height, root.balance);
     if (root.balance > 1) {
-      console.log('left');
       if (input > root.left.value) {
+        // Left Right Case
+        animationProducer.highlightCode(19);
         this.rotateLeft(root, root.left, true, animationProducer);
       }
+      // Left Left Case
+      animationProducer.highlightCode(22);
       this.rotateRight(parent, root, isInsertLeft, animationProducer);
     } else if (root.balance < -1) {
       if (input < root.right.value) {
+        // Right Left Case
+        animationProducer.highlightCode(26);
         this.rotateRight(root, root.right, false, animationProducer);
       }
+      // Right Right Case
+      animationProducer.highlightCode(29);
       this.rotateLeft(parent, root, isInsertLeft, animationProducer);
     } else {
-      animationProducer.doAnimation(animationProducer.unhighlightNodeAndPointers, root);
+      // Case where node is already balanced
+      animationProducer.doAnimationAndHighlight(
+        33,
+        animationProducer.unhighlightNodeAndPointers,
+        root
+      );
     }
   }
 
@@ -146,8 +172,6 @@ class GraphicalAVL extends GraphicalDataStructure {
           node.rightLineTarget
         );
       }
-      console.log('node: ', node.value, node.x, node.y);
-      console.log('newRoot: ', newRoot.value, newRoot.x, newRoot.y);
       animationProducer.doAnimationWithoutTimestamp(
         animationProducer.assignNewRootLeftPointerToOldRoot,
         node,
