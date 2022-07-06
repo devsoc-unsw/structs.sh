@@ -5,7 +5,7 @@ import FloatingWindow from 'components/FloatingWindow/FloatingWindow';
 interface Props {}
 
 const CodeSnippet: FC<Props> = () => (
-  <FloatingWindow flexDirection="row-reverse" height="40vh">
+  <FloatingWindow flexDirection="row-reverse" minHeight="30vh">
     <Box id="code-container">
       <svg id="code-canvas" />
     </Box>

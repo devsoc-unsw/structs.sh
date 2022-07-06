@@ -5,11 +5,17 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 interface Props {
   children: React.ReactNode;
-  height?: string;
-  flexDirection: 'row' | 'row-reverse';
+  minHeight?: string;
+  maxHeight?: string;
+  flexDirection?: 'row' | 'row-reverse';
 }
 
-const FloatingWindow: FC<Props> = ({ children, height = undefined, flexDirection }) => {
+const FloatingWindow: FC<Props> = ({
+  children,
+  minHeight = undefined,
+  maxHeight = undefined,
+  flexDirection = 'row',
+}) => {
   const [shouldDisplay, setShouldDisplay] = useState<boolean>(true);
   const theme = useTheme();
 
@@ -22,12 +28,14 @@ const FloatingWindow: FC<Props> = ({ children, height = undefined, flexDirection
       bgcolor={theme.palette.background.default}
       position="absolute"
       bottom="54px"
-      height={height}
-      maxHeight="40vh"
+      // height={height}
+      // maxHeight="80vh"
+      minHeight={minHeight}
+      maxHeight={maxHeight}
       display="flex"
       flexDirection={flexDirection}
-      left={flexDirection === 'row' ? '0' : undefined}
-      right={flexDirection === 'row-reverse' ? '0' : undefined}
+      left={flexDirection === 'row' && '0'}
+      right={flexDirection === 'row-reverse' && '0'}
     >
       <Box
         onClick={handleToggleDisplay}
