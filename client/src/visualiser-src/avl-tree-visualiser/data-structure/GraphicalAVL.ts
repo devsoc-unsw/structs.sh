@@ -38,7 +38,7 @@ class GraphicalAVL extends GraphicalDataStructure {
       // Early return if inserting into an empty tree
       this.root = GraphicalAVLNode.from(input);
       updateNodePositions(this.root);
-      animationProducer.doAnimationAndHighlight(10, animationProducer.createNode, this.root);
+      animationProducer.doAnimationAndHighlight(3, animationProducer.createNode, this.root);
     } else {
       // Recursively inserting
       this.doInsert(null, this.root, false, input, animationProducer);
@@ -72,19 +72,19 @@ class GraphicalAVL extends GraphicalDataStructure {
     // animationProducer.doAnimation(animationProducer.halfHighlightNode, root);
     // First, insert to leaf of BST
     if (root.value > input) {
-      animationProducer.doAnimationAndHighlight(7, animationProducer.halfHighlightNode, root);
+      animationProducer.doAnimationAndHighlight(6, animationProducer.halfHighlightNode, root);
       if (root.left == null) {
         root.left = GraphicalAVLNode.from(input);
         updateNodePositions(this.root);
         animationProducer.doAnimationAndHighlight(
-          4,
+          3,
           animationProducer.createNodeLeft,
           root.left,
           root
         );
       } else {
         animationProducer.doAnimationAndHighlight(
-          7,
+          6,
           animationProducer.highlightLine,
           root.leftLineTarget,
           root.leftArrowTarget
@@ -92,19 +92,19 @@ class GraphicalAVL extends GraphicalDataStructure {
         this.doInsert(root, root.left, true, input, animationProducer);
       }
     } else if (root.value < input) {
-      animationProducer.doAnimationAndHighlight(9, animationProducer.halfHighlightNode, root);
+      animationProducer.doAnimationAndHighlight(8, animationProducer.halfHighlightNode, root);
       if (root.right == null) {
         root.right = GraphicalAVLNode.from(input);
         updateNodePositions(this.root);
         animationProducer.doAnimationAndHighlight(
-          4,
+          3,
           animationProducer.createNodeRight,
           root.right,
           root
         );
       } else {
         animationProducer.doAnimationAndHighlight(
-          9,
+          8,
           animationProducer.highlightLine,
           root.rightLineTarget,
           root.rightArrowTarget
@@ -119,25 +119,25 @@ class GraphicalAVL extends GraphicalDataStructure {
     if (root.balance > 1) {
       if (input > root.left.value) {
         // Left Right Case
-        animationProducer.highlightCode(19);
+        animationProducer.highlightCode(15);
         this.rotateLeft(root, root.left, true, animationProducer);
       }
       // Left Left Case
-      animationProducer.highlightCode(22);
+      animationProducer.highlightCode(17);
       this.rotateRight(parent, root, isInsertLeft, animationProducer);
     } else if (root.balance < -1) {
       if (input < root.right.value) {
         // Right Left Case
-        animationProducer.highlightCode(26);
+        animationProducer.highlightCode(20);
         this.rotateRight(root, root.right, false, animationProducer);
       }
       // Right Right Case
-      animationProducer.highlightCode(29);
+      animationProducer.highlightCode(22);
       this.rotateLeft(parent, root, isInsertLeft, animationProducer);
     } else {
       // Case where node is already balanced
       animationProducer.doAnimationAndHighlight(
-        33,
+        24,
         animationProducer.unhighlightNodeAndPointers,
         root
       );

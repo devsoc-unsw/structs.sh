@@ -1,5 +1,4 @@
 export const insertCodeSnippet = `struct node *insert(struct node *node, int value) {
-    /* First perform a normal BST insertion */
     if (node == null)
         return create_new_node(value);
 
@@ -10,27 +9,20 @@ export const insertCodeSnippet = `struct node *insert(struct node *node, int val
     return node;
 
     node->height = height(node);
-    
-    /* Balance the current node */
     int balance = height(node->left) - height(node->right);
-    if (balance > 1 && value > node->left->value) {
+    if (balance > 1) {
         if (value > node->left->value) {
-            // Left Right Case
             node->left =  rotate_left(node->left);
         }
-        // Left Left Case
         return rotate_right(node);
     } else if (balance < -1) {
         if (value < node->right->value) {
-            // Right Left Case
             node->right = rotate_right(node->right);
         }
-        // Right Right Case
         return rotate_left(node);
+    } else {
+        return node;
     }
-    
-    /* Return unchanged node if it is already balanced */
-    return node;
 }`;
 
 export const inorderTraversalCodeSnippet = `void inorder_traversal(struct node *node) {
