@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import { useTheme } from '@mui/styles';
 import { Topics } from 'components/Topics';
 import { Footer } from 'components/Footer';
-import { ParticleHeader } from 'components/Particles';
 import { Features } from 'components/Features';
 import { HomepageLayout } from 'layout';
 import React from 'react';
@@ -14,13 +13,12 @@ const HomePage = () => {
 
   return (
     <HomepageLayout disableBackground>
-      <ParticleHeader />
       <Box className={styles.header}>
         <Typography
           color="white"
           className={styles.title}
           variant="h4"
-          sx={{ padding: '2', marginTop: '5%' }}
+          sx={{ padding: '2', paddingTop: '10%' }}
         >
           <strong>Welcome to Structs.sh</strong>
         </Typography>
