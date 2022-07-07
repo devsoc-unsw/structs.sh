@@ -111,7 +111,7 @@ class GraphicalBST extends GraphicalDataStructure {
     input: number,
     animationProducer: BSTRotateAnimationProducer
   ): GraphicalBSTNode {
-    animationProducer.doAnimationAndHighlight(2, animationProducer.halfHighlightNode, node);
+    animationProducer.doAnimationAndHighlight(3, animationProducer.halfHighlightNode, node);
     if (input === node.value) {
       const newRoot: GraphicalBSTNode = node.right;
 
@@ -191,7 +191,7 @@ class GraphicalBST extends GraphicalDataStructure {
     input: number,
     animationProducer: BSTRotateAnimationProducer
   ): GraphicalBSTNode {
-    animationProducer.doAnimationAndHighlight(1, animationProducer.halfHighlightNode, node);
+    animationProducer.doAnimationAndHighlight(3, animationProducer.halfHighlightNode, node);
     if (input === node.value) {
       const newRoot: GraphicalBSTNode = node.left;
 
