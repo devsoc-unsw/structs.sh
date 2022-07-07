@@ -134,6 +134,11 @@ export default abstract class AnimationProducer {
     this.finishSequence();
   }
 
+  public doAnimationWithoutTimestamp(fn: any, ...args: any[]) {
+    fn.apply(this, args);
+    this.finishSequence(false);
+  }
+
   public unhighlightCodeMultiple(): void {
     this.highlightedLines.forEach((line) => {
       this.addSequenceAnimation(
