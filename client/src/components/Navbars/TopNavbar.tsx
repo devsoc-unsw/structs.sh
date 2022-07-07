@@ -122,6 +122,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
     <Box>
       <AppBar
         position={position}
+        elevation={0}
         sx={{
           transition: '0.5s all ease-in-out',
           backgroundColor: theme.palette.background.default,

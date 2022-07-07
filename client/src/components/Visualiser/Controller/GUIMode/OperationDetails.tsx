@@ -83,7 +83,6 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
             <Box key={idx} boxSizing="border-box" padding="5px" width="110px">
               <TextField
                 size="small"
-                label={eachArg}
                 value={currentInputs[idx]}
                 variant="outlined"
                 onKeyPress={(e) => {
@@ -92,7 +91,8 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
                   }
                 }}
                 onChange={(e) => handleSetArguments(e, idx)}
-                sx={{ background: theme.palette.background.paper }}
+                placeholder={eachArg}
+                sx={{ backgroundColor: theme.palette.background.paper }}
               />
             </Box>
           ))}

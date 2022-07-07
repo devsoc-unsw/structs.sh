@@ -1,5 +1,5 @@
-export const insertCodeSnippet = `void insert(index, struct list *list) {
-    struct node *new_node = create_new_node(input);
+export const insertCodeSnippet = `void insert(int data, int index, struct list *list) {
+    struct node *new_node = create_new_node(data);
     if (index == 0) {
         new_node->next = list->head;
     }
