@@ -1,8 +1,6 @@
-import { SVG, Container, Line, Marker } from '@svgdotjs/svg.js';
-import { CODE_CANVAS } from 'utils/constants';
+import { Line, Marker } from '@svgdotjs/svg.js';
 import { Node } from '../util/typedefs';
-import { CodeLine } from '../../common/typedefs';
-import { canvasPadding } from '../util/settings';
+import { lineDiffY, canvasPadding } from '../util/settings';
 import { getPointerStartEndCoordinates } from '../../common/helpers';
 import AnimationProducer from '../../common/AnimationProducer';
 
@@ -70,7 +68,6 @@ export default class BSTAnimationProducer extends AnimationProducer {
 
   public updateNodeLines(node: Node): void {
     const lineDiffX = BSTAnimationProducer.getLineDiffX(node);
-    const lineDiffY = 75;
 
     this.addSequenceAnimation(
       node.leftLineTarget
@@ -124,12 +121,6 @@ export default class BSTAnimationProducer extends AnimationProducer {
           fill: '#000000',
         })
       );
-
-      this.addSequenceAnimation(
-        arrowTarget.animate(500).attr({
-          fill: '#000000',
-        })
-      );
     }
   }
 
@@ -163,5 +154,73 @@ export default class BSTAnimationProducer extends AnimationProducer {
         fill: '#000000',
       })
     );
+  }
+
+  public movePointerToNewRootRightChild(oldRoot: Node, newRoot: Node): void {
+    this.addSequenceAnimation(
+      oldRoot.leftLineTarget
+        .animate(400)
+        .plot(getPointerStartEndCoordinates(oldRoot.x, oldRoot.y, newRoot.right.x, newRoot.right.y))
+    );
+  }
+
+  public movePointerToNewRootLeftChild(oldRoot: Node, newRoot: Node): void {
+    this.addSequenceAnimation(
+      oldRoot.rightLineTarget
+        .animate(400)
+        .plot(getPointerStartEndCoordinates(oldRoot.x, oldRoot.y, newRoot.left.x, newRoot.left.y))
+    );
+  }
+
+  public moveRightPointerToOldRoot(oldRoot: Node, newRoot: Node): void {
+    this.addSequenceAnimation(
+      newRoot.rightLineTarget
+        .animate(400)
+        .plot(getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y))
+    );
+  }
+
+  public moveLeftPointerToOldRoot(oldRoot: Node, newRoot: Node): void {
+    this.addSequenceAnimation(
+      newRoot.leftLineTarget
+        .animate(400)
+        .plot(getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y))
+    );
+  }
+
+  public hideLine(line: Line): void {
+    this.addSequenceAnimation(
+      line.animate(400).attr({
+        opacity: 0,
+      })
+    );
+  }
+
+  public showLine(line: Line): void {
+    this.addSequenceAnimation(
+      line.animate(400).attr({
+        opacity: 1,
+      })
+    );
+  }
+
+  public assignNewRootRightPointerToOldRoot(oldRoot: Node, newRoot: Node): void {
+    this.addSequenceAnimation(
+      newRoot.rightLineTarget
+        .animate(1)
+        .plot(getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y))
+    );
+    this.finishSequence(false);
+    this.showLine(newRoot.rightLineTarget);
+  }
+
+  public assignNewRootLeftPointerToOldRoot(oldRoot: Node, newRoot: Node): void {
+    this.addSequenceAnimation(
+      newRoot.leftLineTarget
+        .animate(1)
+        .plot(getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y))
+    );
+    this.finishSequence(false);
+    this.showLine(newRoot.leftLineTarget);
   }
 }

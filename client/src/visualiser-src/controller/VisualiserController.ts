@@ -132,13 +132,16 @@ class VisualiserController {
     if (args.length !== expectedArgs.length) {
       return `Invalid arguments. Please provide ${args.join(', ')}`;
     }
-    if (args.includes('')) {
+    if (args.includes('') || (expectedArgs.length > 0 && args.some((arg) => !arg.match(/\d/)))) {
       return 'Argument(s) missing';
     }
     if (
       !args.every((value, idx) =>
         expectedArgs[idx].endsWith('s')
-          ? value.split(/,| /g).every((el) => /^\d+$/.test(el))
+          ? value
+              .split(/,| /g)
+              .filter((str) => str !== '')
+              .every((el) => /^\d+$/.test(el))
           : /^\d+$/.test(value)
       )
     ) {
@@ -148,7 +151,10 @@ class VisualiserController {
     valueIndex = valueIndex === -1 ? expectedArgs.indexOf('values') : valueIndex;
     if (
       valueIndex !== -1 &&
-      !args[valueIndex].split(/,|\s+/g).every((arg) => Number(arg) >= 0 && Number(arg) <= 999)
+      !args[valueIndex]
+        .split(/,|\s+/g)
+        .filter((str) => str !== '')
+        .every((arg) => Number(arg) >= 0 && Number(arg) <= 999)
     ) {
       return 'Values must be between 0 and 999';
     }
@@ -170,7 +176,10 @@ class VisualiserController {
     const animationProducer: AnimationProducer = this.dataStructure[command](
       ...args.map((arg, idx) => {
         if (this.documentation[command].args[idx].endsWith('s')) {
-          return arg.split(/,| /g).map((el) => Number(el));
+          return arg
+            .split(/,| /g)
+            .filter((str) => str !== '')
+            .map((el) => Number(el));
         }
         return Number(arg);
       })
