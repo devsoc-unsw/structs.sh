@@ -1,8 +1,6 @@
-import { SVG, Container, Line, Marker } from '@svgdotjs/svg.js';
-import { CODE_CANVAS } from 'utils/constants';
+import { Line, Marker } from '@svgdotjs/svg.js';
 import { Node } from '../util/typedefs';
-import { CodeLine } from '../../common/typedefs';
-import { canvasPadding } from '../util/settings';
+import { lineDiffY, canvasPadding } from '../util/settings';
 import { getPointerStartEndCoordinates } from '../../common/helpers';
 import AnimationProducer from '../../common/AnimationProducer';
 
@@ -70,7 +68,6 @@ export default class BSTAnimationProducer extends AnimationProducer {
 
   public updateNodeLines(node: Node): void {
     const lineDiffX = BSTAnimationProducer.getLineDiffX(node);
-    const lineDiffY = 75;
 
     this.addSequenceAnimation(
       node.leftLineTarget
@@ -116,12 +113,6 @@ export default class BSTAnimationProducer extends AnimationProducer {
       this.addSequenceAnimation(
         lineTarget.animate(500).attr({
           stroke: '#000000',
-        })
-      );
-
-      this.addSequenceAnimation(
-        arrowTarget.animate(500).attr({
-          fill: '#000000',
         })
       );
 

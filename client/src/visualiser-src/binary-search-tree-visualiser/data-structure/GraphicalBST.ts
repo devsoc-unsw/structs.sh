@@ -111,7 +111,7 @@ class GraphicalBST extends GraphicalDataStructure {
     input: number,
     animationProducer: BSTRotateAnimationProducer
   ): GraphicalBSTNode {
-    animationProducer.doAnimationAndHighlight(3, animationProducer.halfHighlightNode, node);
+    animationProducer.doAnimationAndHighlight(2, animationProducer.halfHighlightNode, node);
     if (input === node.value) {
       const newRoot: GraphicalBSTNode = node.right;
 
@@ -129,7 +129,11 @@ class GraphicalBST extends GraphicalDataStructure {
           newRoot
         );
       } else {
-        animationProducer.doAnimation(animationProducer.hideLine, node.rightLineTarget);
+        animationProducer.doAnimationAndHighlight(
+          4,
+          animationProducer.hideLine,
+          node.rightLineTarget
+        );
         animationProducer.doAnimationAndHighlight(
           5,
           animationProducer.assignNewRootLeftPointerToOldRoot,
@@ -191,7 +195,7 @@ class GraphicalBST extends GraphicalDataStructure {
     input: number,
     animationProducer: BSTRotateAnimationProducer
   ): GraphicalBSTNode {
-    animationProducer.doAnimationAndHighlight(3, animationProducer.halfHighlightNode, node);
+    animationProducer.doAnimationAndHighlight(2, animationProducer.halfHighlightNode, node);
     if (input === node.value) {
       const newRoot: GraphicalBSTNode = node.left;
 
@@ -209,7 +213,11 @@ class GraphicalBST extends GraphicalDataStructure {
           newRoot
         );
       } else {
-        animationProducer.doAnimation(animationProducer.hideLine, node.leftLineTarget);
+        animationProducer.doAnimationAndHighlight(
+          4,
+          animationProducer.hideLine,
+          node.leftLineTarget
+        );
         animationProducer.doAnimationAndHighlight(
           5,
           animationProducer.assignNewRootRightPointerToOldRoot,
