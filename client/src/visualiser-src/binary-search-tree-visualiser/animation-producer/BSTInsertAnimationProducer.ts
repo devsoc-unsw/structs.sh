@@ -31,7 +31,6 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
 
   // draws a node on the draw canvas and shows the node
   public createNode(node: GraphicalBSTNode): void {
-    console.log(node.x, node.y);
     // based on the depth of the node we are able to create left and right svg line targets
     const lineDiffX = BSTAnimationProducer.getLineDiffX(node);
     const leftChildCoordinates = getPointerStartEndCoordinates(
