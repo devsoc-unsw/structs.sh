@@ -11,7 +11,7 @@ export const insertCodeSnippet = `struct node *insert(struct node *node, int val
 
     node->height = height(node);
     
-    /* Balance the current node in the four cases where the current node is unbalanced */
+    /* Balance the current node */
     int balance = height(node->left) - height(node->right);
     if (balance > 1 && value > node->left->value) {
         if (value > node->left->value) {
@@ -29,7 +29,7 @@ export const insertCodeSnippet = `struct node *insert(struct node *node, int val
         return rotate_left(node);
     }
     
-    /* Return unchanged node if it is balanced */
+    /* Return unchanged node if it is already balanced */
     return node;
 }`;
 
