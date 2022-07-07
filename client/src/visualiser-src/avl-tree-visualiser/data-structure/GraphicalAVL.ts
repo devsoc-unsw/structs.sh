@@ -119,25 +119,25 @@ class GraphicalAVL extends GraphicalDataStructure {
     if (root.balance > 1) {
       if (input > root.left.value) {
         // Left Right Case
-        animationProducer.highlightCode(15);
+        animationProducer.highlightCode(14);
         this.rotateLeft(root, root.left, true, animationProducer);
       }
       // Left Left Case
-      animationProducer.highlightCode(17);
+      animationProducer.highlightCode(16);
       this.rotateRight(parent, root, isInsertLeft, animationProducer);
     } else if (root.balance < -1) {
       if (input < root.right.value) {
         // Right Left Case
-        animationProducer.highlightCode(20);
+        animationProducer.highlightCode(19);
         this.rotateRight(root, root.right, false, animationProducer);
       }
       // Right Right Case
-      animationProducer.highlightCode(22);
+      animationProducer.highlightCode(21);
       this.rotateLeft(parent, root, isInsertLeft, animationProducer);
     } else {
       // Case where node is already balanced
       animationProducer.doAnimationAndHighlight(
-        24,
+        23,
         animationProducer.unhighlightNodeAndPointers,
         root
       );

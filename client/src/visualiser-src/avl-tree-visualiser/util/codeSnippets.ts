@@ -6,7 +6,6 @@ export const insertCodeSnippet = `struct node *insert(struct node *node, int val
         node->left = insert(node->left, value);
     if (value > node->value)
         node->right = insert(node->right, value);
-    return node;
 
     node->height = height(node);
     int balance = height(node->left) - height(node->right);
