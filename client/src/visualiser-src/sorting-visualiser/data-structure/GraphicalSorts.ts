@@ -43,7 +43,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     for (let i = 0; i < len; i += 1) {
       for (let j = 1; j < len - i; j += 1) {
         producer.doAnimationAndHighlightTimestamp(
-          6,
+          5,
           false,
           producer.compare,
           this.elementList[j - 1],
@@ -52,7 +52,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         );
         if (this.elementList[j].data.value < this.elementList[j - 1].data.value) {
           producer.doAnimationAndHighlightTimestamp(
-            7,
+            6,
             false,
             producer.swap,
             this.elementList[j - 1],
@@ -68,7 +68,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         }
       }
       if (numSwaps === 0) {
-        producer.doAnimationAndHighlight(13, producer.finishSequence, false);
+        producer.doAnimationAndHighlight(12, producer.finishSequence, false);
         return producer;
       }
       numSwaps = 0;
