@@ -23,30 +23,3 @@ export const insertCodeSnippet = `struct node *insert(struct node *node, int val
         return node;
     }
 }`;
-
-export const inorderTraversalCodeSnippet = `void inorder_traversal(struct node *node) {
-    if (node == NULL) 
-        return;
-
-    inorder_traversal(node->left);
-    printf("%d ", node->value);
-    inorder_traversal(node->right);
-}`;
-
-export const preorderTraversalCodeSnippet = `void preorder_traversal(struct node *node) {
-    if (node == NULL) 
-        return;
-
-    printf("%d ", node->value);
-    preorder_traversal(node->left);
-    preorder_traversal(node->right);
-}`;
-
-export const postorderTraversalCodeSnippet = `void postorder_traversal(struct node *node) {
-    if (node == NULL) 
-        return;
-
-    postorder_traversal(node->left);
-    postorder_traversal(node->right);
-    printf("%d ", node->value);
-}`;
