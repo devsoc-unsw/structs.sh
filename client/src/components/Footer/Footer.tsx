@@ -82,7 +82,7 @@ const Footer: React.FC<Props> = () => {
               <Typography color="textSecondary">
                 <a
                   className={styles.link}
-                  href="https://media.csesoc.org.au/tag/csesoc/"
+                  href="https://www.csesoc.unsw.edu.au/"
                 >
                   CSESoc Website
                 </a>
