@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-// import OperationsTree from './GUIOperations/OperationsTree';
 import { Alert, Box, List, Typography, useTheme, Collapse } from '@mui/material';
 import VisualiserContext from 'components/Visualiser/VisualiserContext';
 import FloatingWindow from 'components/FloatingWindow/FloatingWindow';

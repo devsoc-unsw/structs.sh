@@ -20,10 +20,7 @@ import './App.scss';
 
 const App = () => {
   // removed light/dark mode hooks for now
-  const [cookies, setCookie] = useCookies([LIGHT_MODE_ON]);
-  const [currTheme, setCurrTheme] = useState<Theme>(
-    cookies[LIGHT_MODE_ON] === 'true' ? lightTheme : darkTheme
-  );
+  const [currTheme, setCurrTheme] = useState<Theme>(darkTheme);
 
   // const toggleDarkMode = useCallback(() => {
   //   if (currTheme === lightTheme) {

@@ -19,7 +19,6 @@ const Footer: React.FC<Props> = () => {
       className={styles.footer}
       style={{
         background: theme.palette.background.default,
-        // opacity: 0.75,
       }}
     >
       <Box>

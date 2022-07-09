@@ -1,11 +1,11 @@
 import { Line, Marker } from '@svgdotjs/svg.js';
-import { Node } from '../util/typedefs';
 import { lineDiffY, canvasPadding } from '../util/settings';
 import { getPointerStartEndCoordinates } from '../../common/helpers';
 import AnimationProducer from '../../common/AnimationProducer';
+import GraphicalBSTNode from '../data-structure/GraphicalBSTNode';
 
 export default class BSTAnimationProducer extends AnimationProducer {
-  public halfHighlightNode(node: Node): void {
+  public halfHighlightNode(node: GraphicalBSTNode): void {
     this.addSequenceAnimation(
       node.nodeTarget.animate(500).attr({
         stroke: '#39AF8E',
@@ -35,12 +35,12 @@ export default class BSTAnimationProducer extends AnimationProducer {
     }
   }
 
-  public updateBST(root: Node): void {
+  public updateBST(root: GraphicalBSTNode): void {
     this.updateNodesRecursive(root);
     this.updateLinesRecursive(root);
   }
 
-  public updateNodesRecursive(node: Node): void {
+  public updateNodesRecursive(node: GraphicalBSTNode): void {
     if (node === null) {
       return;
     }
@@ -50,13 +50,13 @@ export default class BSTAnimationProducer extends AnimationProducer {
     this.updateNodesRecursive(node.right);
   }
 
-  public updateNode(node: Node, newX: number, newY: number): void {
+  public updateNode(node: GraphicalBSTNode, newX: number, newY: number): void {
     this.addSequenceAnimation(node.nodeTarget.animate(400).cx(newX).cy(newY));
 
     this.addSequenceAnimation(node.textTarget.animate(400).cx(newX).cy(newY));
   }
 
-  public updateLinesRecursive(node: Node): void {
+  public updateLinesRecursive(node: GraphicalBSTNode): void {
     if (node === null) {
       return;
     }
@@ -66,7 +66,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
     this.updateLinesRecursive(node.right);
   }
 
-  public updateNodeLines(node: Node): void {
+  public updateNodeLines(node: GraphicalBSTNode): void {
     const lineDiffX = BSTAnimationProducer.getLineDiffX(node);
 
     this.addSequenceAnimation(
@@ -84,7 +84,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
 
   // returns the difference in x coordinates with the node
   // and it's two child nodes
-  public static getLineDiffX(node: Node): number {
+  public static getLineDiffX(node: GraphicalBSTNode): number {
     const canvasWidth = document.getElementById('visualiser-container').offsetWidth;
     const depth: number = (node.y - canvasPadding) / 75;
     const baseDiff = canvasWidth / 4;
@@ -92,12 +92,12 @@ export default class BSTAnimationProducer extends AnimationProducer {
     return baseDiff / 2 ** depth;
   }
 
-  public unhighlightBST(root: Node): void {
+  public unhighlightBST(root: GraphicalBSTNode): void {
     this.unhighlightLinesRecursive(root);
     this.unhighlightNodesRecursive(root);
   }
 
-  public unhighlightLinesRecursive(node: Node): void {
+  public unhighlightLinesRecursive(node: GraphicalBSTNode): void {
     if (node === null) {
       return;
     }
@@ -124,7 +124,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
     }
   }
 
-  public unhighlightNodesRecursive(node: Node): void {
+  public unhighlightNodesRecursive(node: GraphicalBSTNode): void {
     if (node === null) {
       return;
     }
@@ -134,14 +134,14 @@ export default class BSTAnimationProducer extends AnimationProducer {
     this.unhighlightNodesRecursive(node.right);
   }
 
-  public updateAndUnhighlightBST(root: Node): void {
+  public updateAndUnhighlightBST(root: GraphicalBSTNode): void {
     this.updateNodesRecursive(root);
     this.updateLinesRecursive(root);
     this.unhighlightLinesRecursive(root);
     this.unhighlightNodesRecursive(root);
   }
 
-  public unhighlightNode(node: Node): void {
+  public unhighlightNode(node: GraphicalBSTNode): void {
     this.addSequenceAnimation(
       node.nodeTarget.animate(500).attr({
         fill: '#EBE8F4',
@@ -156,7 +156,10 @@ export default class BSTAnimationProducer extends AnimationProducer {
     );
   }
 
-  public movePointerToNewRootRightChild(oldRoot: Node, newRoot: Node): void {
+  public movePointerToNewRootRightChild(
+    oldRoot: GraphicalBSTNode,
+    newRoot: GraphicalBSTNode
+  ): void {
     this.addSequenceAnimation(
       oldRoot.leftLineTarget
         .animate(400)
@@ -164,7 +167,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
     );
   }
 
-  public movePointerToNewRootLeftChild(oldRoot: Node, newRoot: Node): void {
+  public movePointerToNewRootLeftChild(oldRoot: GraphicalBSTNode, newRoot: GraphicalBSTNode): void {
     this.addSequenceAnimation(
       oldRoot.rightLineTarget
         .animate(400)
@@ -172,7 +175,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
     );
   }
 
-  public moveRightPointerToOldRoot(oldRoot: Node, newRoot: Node): void {
+  public moveRightPointerToOldRoot(oldRoot: GraphicalBSTNode, newRoot: GraphicalBSTNode): void {
     this.addSequenceAnimation(
       newRoot.rightLineTarget
         .animate(400)
@@ -180,7 +183,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
     );
   }
 
-  public moveLeftPointerToOldRoot(oldRoot: Node, newRoot: Node): void {
+  public moveLeftPointerToOldRoot(oldRoot: GraphicalBSTNode, newRoot: GraphicalBSTNode): void {
     this.addSequenceAnimation(
       newRoot.leftLineTarget
         .animate(400)
@@ -204,7 +207,10 @@ export default class BSTAnimationProducer extends AnimationProducer {
     );
   }
 
-  public assignNewRootRightPointerToOldRoot(oldRoot: Node, newRoot: Node): void {
+  public assignNewRootRightPointerToOldRoot(
+    oldRoot: GraphicalBSTNode,
+    newRoot: GraphicalBSTNode
+  ): void {
     this.addSequenceAnimation(
       newRoot.rightLineTarget
         .animate(1)
@@ -214,7 +220,10 @@ export default class BSTAnimationProducer extends AnimationProducer {
     this.showLine(newRoot.rightLineTarget);
   }
 
-  public assignNewRootLeftPointerToOldRoot(oldRoot: Node, newRoot: Node): void {
+  public assignNewRootLeftPointerToOldRoot(
+    oldRoot: GraphicalBSTNode,
+    newRoot: GraphicalBSTNode
+  ): void {
     this.addSequenceAnimation(
       newRoot.leftLineTarget
         .animate(1)

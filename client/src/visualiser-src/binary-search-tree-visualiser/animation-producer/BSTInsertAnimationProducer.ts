@@ -1,5 +1,5 @@
 import BSTAnimationProducer from './BSTAnimationProducer';
-import { Node as GraphicalBSTNode } from '../util/typedefs';
+import GraphicalBSTNode from '../data-structure/GraphicalBSTNode';
 import { lineDiffY } from '../util/settings';
 import { getPointerStartEndCoordinates } from '../../common/helpers';
 import { insertCodeSnippet } from '../util/codeSnippets';

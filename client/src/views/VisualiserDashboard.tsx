@@ -35,7 +35,6 @@ const containerVariants = {
  */
 const VisualiserDashboard = () => {
   const topic = toTitleCase(urlToTitle(useParams().topic));
-  // const theme: Theme = useTheme();
 
   return topic ? (
     <motion.div
