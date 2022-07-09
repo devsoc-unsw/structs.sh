@@ -1,10 +1,10 @@
 import BSTAnimationProducer from './BSTAnimationProducer';
-import { Node } from '../util/typedefs';
 import {
   inorderTraversalCodeSnippet,
   preorderTraversalCodeSnippet,
   postorderTraversalCodeSnippet,
 } from '../util/codeSnippets';
+import GraphicalBSTNode from '../data-structure/GraphicalBSTNode';
 
 export default class BSTTraverseAnimationProducer extends BSTAnimationProducer {
   public renderInorderTraversalCode(): void {
@@ -19,11 +19,11 @@ export default class BSTTraverseAnimationProducer extends BSTAnimationProducer {
     this.renderCode(postorderTraversalCodeSnippet);
   }
 
-  public highlightNode(node: Node): void {
+  public highlightNode(node: GraphicalBSTNode): void {
     this.addSequenceAnimation(
       node.nodeTarget.animate(500).attr({
-        fill: '#4beb9b',
-        stroke: '#4beb9b',
+        fill: '#39AF8E',
+        stroke: '#39AF8E',
       })
     );
 

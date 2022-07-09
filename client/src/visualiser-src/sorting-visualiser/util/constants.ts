@@ -20,5 +20,6 @@ export const textAttributes = {
   'dominant-baseline': 'middle',
   'text-anchor': 'middle',
   'stroke-width': 0,
+  'font-family': 'CodeText',
   opacity: 0,
 };

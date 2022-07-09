@@ -1,7 +1,6 @@
 import { Box } from '@mui/material';
 import React, { useCallback, useMemo, useEffect, useRef, useState } from 'react';
 import CodeSnippet from 'components/CodeSnippet/CodeSnippet';
-import { Pane } from 'components/Panes';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import VisualiserController from 'visualiser-src/controller/VisualiserController';
 import { VisualiserControls } from './Controller';
@@ -60,13 +59,9 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
 
   return (
     <VisualiserContext.Provider value={contextValues}>
-      <Box className={styles.interactor}>
-        <VisualiserControls />
-        <Pane orientation="vertical" minSize={150.9}>
-          <GUIMode />
-          <CodeSnippet />
-        </Pane>
-      </Box>
+      <GUIMode />
+      <CodeSnippet />
+      <VisualiserControls />
     </VisualiserContext.Provider>
   );
 };
