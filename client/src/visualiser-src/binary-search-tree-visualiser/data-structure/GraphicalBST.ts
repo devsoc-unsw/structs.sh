@@ -1,12 +1,13 @@
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import { injectIds } from 'visualiser-src/common/helpers';
-import { insertBalancedBSTNumbers } from 'visualiser-src/common/RandomNumGenerator';
+import { generateNumbers } from 'visualiser-src/common/RandomNumGenerator';
 import BSTInsertAnimationProducer from '../animation-producer/BSTInsertAnimationProducer';
 import BSTRotateAnimationProducer from '../animation-producer/BSTRotateAnimationProducer';
 import GraphicalBSTNode from './GraphicalBSTNode';
 import GraphicalTreeTraversal from './GraphicalTreeTraversal';
 import updateNodePositions from '../util/helpers';
+import BSTCreateAnimationProducer from '../animation-producer/BSTCreateAnimationProducer';
 
 
 // used for the actual implementation of the bst
@@ -55,9 +56,34 @@ class GraphicalBST extends GraphicalDataStructure {
     return animationProducer;
   }
 
+  // given a sorted array arr, inserts elements to num such that its linear insertion order
+  // will lead to a reasonably balanced BST
+  private recurseArrInsert(arr, start, end): GraphicalBSTNode {
+    // the base case is array length <=1
+    if (end - start === 0) {
+      return null
+    }
+    // insert midpoint
+    const mid = Math.floor((end + start)/ 2);
+    const newNode = GraphicalBSTNode.from(arr[mid]);
+    // set up for recursion
+    // recurse left
+    newNode.left = this.recurseArrInsert(arr, start, mid);
+    // recurse right
+    newNode.right = this.recurseArrInsert(arr, mid + 1, end);
+    return newNode;
+  }
+
+  private create(): void{
+    const producer = new BSTCreateAnimationProducer()
+    producer.createTree(this.root)
+  }
+
   public generate(): void {
-      const num = insertBalancedBSTNumbers();
-      num.forEach(element => {this.insert(element)});
+      const num = generateNumbers().sort();
+      this.root = this.recurseArrInsert(num, 0, num.length - 1);
+      updateNodePositions(this.root);
+      this.create()
   }
 
   public inorderTraversal() {
