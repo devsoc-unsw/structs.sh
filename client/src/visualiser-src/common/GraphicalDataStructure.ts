@@ -9,6 +9,8 @@ abstract class GraphicalDataStructure {
   }
 
   public abstract get documentation(): Documentation;
+
+  public abstract generate(): void;
 }
 
 export default GraphicalDataStructure;

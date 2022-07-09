@@ -1,3 +1,4 @@
+import GraphicalTreeGenerate from 'visualiser-src/binary-search-tree-visualiser/data-structure/GraphicalTreeGenerate';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import { injectIds } from 'visualiser-src/common/helpers';
@@ -240,6 +241,10 @@ class GraphicalAVL extends GraphicalDataStructure {
     }
     updateNodePositions(this.root);
     animationProducer.doAnimation(animationProducer.updateAndUnhighlightBST, newRoot);
+  }
+
+  public generate(): void {
+    this.root = GraphicalTreeGenerate.generate(GraphicalAVLNode.from);
   }
 }
 
