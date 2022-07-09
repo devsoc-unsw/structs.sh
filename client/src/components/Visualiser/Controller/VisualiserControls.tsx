@@ -79,6 +79,10 @@ const VisualiserControls = () => {
     controller.resetDataStructure();
   }, [controller]);
 
+  const handleGenerate = useCallback(() => {
+    controller.generateDataStructure();
+  }, [controller]);
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -211,6 +215,11 @@ const VisualiserControls = () => {
           }}
         />
       </Box>
+      <Button className={styles.resetButton} onClick={handleGenerate}>
+        <Typography color="textPrimary" sx={{ whiteSpace: 'nowrap' }}>
+          Create New
+        </Typography>
+      </Button>
       <Button className={styles.resetButton} onClick={handleReset}>
         <Typography color="textPrimary" whiteSpace="nowrap">
           Reset All

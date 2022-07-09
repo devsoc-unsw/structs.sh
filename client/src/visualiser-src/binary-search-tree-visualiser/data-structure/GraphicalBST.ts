@@ -1,11 +1,14 @@
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import { injectIds } from 'visualiser-src/common/helpers';
+import { generateNumbers } from 'visualiser-src/common/RandomNumGenerator';
 import BSTInsertAnimationProducer from '../animation-producer/BSTInsertAnimationProducer';
 import BSTRotateAnimationProducer from '../animation-producer/BSTRotateAnimationProducer';
 import GraphicalBSTNode from './GraphicalBSTNode';
 import GraphicalTreeTraversal from './GraphicalTreeTraversal';
 import updateNodePositions from '../util/helpers';
+import BSTCreateAnimationProducer from '../animation-producer/BSTCreateAnimationProducer';
+import GraphicalTreeGenerate from './GraphicalTreeGenerate';
 
 // used for the actual implementation of the bst
 class GraphicalBST extends GraphicalDataStructure {
@@ -51,6 +54,10 @@ class GraphicalBST extends GraphicalDataStructure {
     }
     animationProducer.doAnimationAndHighlight(9, animationProducer.unhighlightBST, this.root);
     return animationProducer;
+  }
+
+  public generate(): void {
+    this.root = GraphicalTreeGenerate.generate<GraphicalBSTNode>(GraphicalBSTNode.from);
   }
 
   public inorderTraversal() {

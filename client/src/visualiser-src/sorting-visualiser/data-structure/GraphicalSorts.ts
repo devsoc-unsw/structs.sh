@@ -4,6 +4,7 @@ import { Documentation } from 'visualiser-src/common/typedefs';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { injectIds } from 'visualiser-src/common/helpers';
 import { CANVAS } from 'visualiser-src/linked-list-visualiser/util/constants';
+import { generateNumbers } from 'visualiser-src/common/RandomNumGenerator';
 import GraphicalSortsElement from './GraphicalSortsElement';
 import SortsBubbleAnimationProducer from '../animation-producer/SortsBubbleAnimationProducer';
 import SortsCreateAnimationProducer from '../animation-producer/SortsCreateAnimationProducer';
@@ -79,5 +80,10 @@ export default class GraphicalSortList extends GraphicalDataStructure {
 
   public get documentation(): Documentation {
     return GraphicalSortList.documentation;
+  }
+
+  public generate(): void {
+    const numbers = generateNumbers();
+    this.create(numbers);
   }
 }

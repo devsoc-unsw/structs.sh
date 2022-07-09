@@ -6,6 +6,7 @@ import { CODE_CANVAS, VISUALISER_CANVAS } from 'visualiser-src/common/constants'
 import currSvg from 'visualiser-src/linked-list-visualiser/assets/curr.svg';
 import prevSvg from 'visualiser-src/linked-list-visualiser/assets/prev.svg';
 import { injectIds } from 'visualiser-src/common/helpers';
+import { generateNumbers } from 'visualiser-src/common/RandomNumGenerator';
 import { CURRENT, PREV } from '../util/constants';
 import GraphicalLinkedListNode from './GraphicalLinkedListNode';
 import LinkedListAppendAnimationProducer from '../animation-producer/LinkedListAppendAnimationProducer';
@@ -13,6 +14,7 @@ import LinkedListDeleteAnimationProducer from '../animation-producer/LinkedListD
 import LinkedListInsertAnimationProducer from '../animation-producer/LinkedListInsertAnimationProducer';
 import LinkedListSearchAnimationProducer from '../animation-producer/LinkedListSearchAnimationProducer';
 import LinkedListPrependAnimationProducer from '../animation-producer/LinkedListPrependAnimationProducer';
+import LinkedListAnimationProducer from '../animation-producer/LinkedListAnimationProducer';
 
 // An linked list data structure containing all linked list operations.
 // Every operation producers a LinkedListAnimationProducer, which an VisualiserController
@@ -60,6 +62,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     this.length += 1;
     const producer = new LinkedListAppendAnimationProducer();
     producer.renderAppendCode();
+
     // Create new node
     const newNode = GraphicalLinkedListNode.from(input);
     producer.doAnimationAndHighlight(2, producer.addNodeAtEnd, newNode, this.length);
@@ -223,6 +226,38 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
       producer.doAnimation(producer.resetPointers);
     }
     return producer;
+  }
+
+  public generate(): void {
+    const numbers = generateNumbers();
+    this.length = numbers.length;
+    const producer = new LinkedListAnimationProducer();
+    let currNode = null;
+    producer.initialiseHead(this.headPointer);
+    for (let i = 0; i < numbers.length; i += 1) {
+      const newNode = GraphicalLinkedListNode.from(numbers[i]);
+      producer.createNodeAt(i, newNode, i + 1);
+      if (currNode === null) {
+        this.head = newNode;
+      } else {
+        currNode.next = newNode;
+        producer.linkLastToNew(currNode);
+      }
+      currNode = newNode;
+    }
+  }
+
+  public reset(): void {
+    SVG(VISUALISER_CANVAS).clear();
+
+    this.head = null;
+    this.length = 0;
+
+    this.headPointer = GraphicalLinkedListNode.newHeadPointer();
+
+    // add prev and curr pointers to visualiser canvas
+    (SVG(VISUALISER_CANVAS) as Svg).image(currSvg).opacity(0).id('current');
+    (SVG(VISUALISER_CANVAS) as Svg).image(prevSvg).opacity(0).id('prev');
   }
 
   public get documentation() {
