@@ -1,7 +1,7 @@
 import { strokeWidth } from '../../common/constants';
 
 export const nodeStyle = {
-  fill: '#ffffff',
+  fill: '#EBE8F4',
   stroke: '#000',
   'stroke-width': strokeWidth,
   opacity: 0,
@@ -12,6 +12,8 @@ export const nodeWidth = 50;
 export const textStyle = {
   'dominant-baseline': 'middle',
   'text-anchor': 'middle',
+  'font-family': 'CodeText',
+  'font-size': '24',
   opacity: 0,
 };
 
@@ -23,5 +25,5 @@ export const lineStyle = {
 };
 
 // we need this so that all svg elements have some padding
-export const canvasPadding = 75;
+export const canvasPadding = 40;
 export const lineDiffY = 75;

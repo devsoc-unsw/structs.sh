@@ -1,9 +1,8 @@
-import React, { FC, useContext } from 'react';
-// import OperationsTree from './GUIOperations/OperationsTree';
-import { Alert, Box, List, Typography } from '@mui/material';
+import React, { useContext } from 'react';
+import { Alert, Box, List, Typography, useTheme, Collapse } from '@mui/material';
 import VisualiserContext from 'components/Visualiser/VisualiserContext';
+import FloatingWindow from 'components/FloatingWindow/FloatingWindow';
 import OperationDetails from './OperationDetails';
-
 
 /**
  * The GUI form that lets users input arguments to a menu of commands and then
@@ -25,19 +24,13 @@ const GUIMode = () => {
       &apos;
     </Alert>
   ) : (
-      <Box sx={{ padding: 2, overflow: 'auto', height: 'calc(100% - 64px)' }}>
-        <Typography color="textPrimary">{topicTitle}</Typography>
-        <List>
-          {Object.keys(documentation).map((command, idx) => (
-            <Box key={documentation[command].id}>
-              <OperationDetails
-                command={command}
-                isLast={idx === Object.keys(documentation).length - 1}
-              />
-            </Box>
-          ))}
-        </List>
-      </Box>
+    <FloatingWindow flexDirection="row">
+      <List>
+        {Object.keys(documentation).map((command) => (
+          <OperationDetails command={command} key={documentation[command].id} />
+        ))}
+      </List>
+    </FloatingWindow>
   );
 };
 

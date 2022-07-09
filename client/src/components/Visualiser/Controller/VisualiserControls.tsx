@@ -106,128 +106,125 @@ const VisualiserControls = () => {
   }, [isTimelineComplete, handleTimelineUpdate]);
 
   return (
-    <Box
-      className={styles.container}
-      sx={{ height: '64px', width: '100%', backgroundColor: theme.palette.background.paper }}
-    >
-      <div className={styles.root}>
-        <IconButton onClick={() => handleStepBackward()}>
-          <SkipPreviousIcon sx={{ fill: theme.palette.text.primary }} />
-        </IconButton>
-        {isTimelineComplete ? (
-          <IconButton
-            onClick={() => {
-              handleDragTimeline(0);
-              handlePlay();
-              setIsPlaying(true);
-            }}
-          >
-            <ReplayIcon sx={{ fill: theme.palette.text.primary }} />
-          </IconButton>
-        ) : isPlaying ? (
-          <IconButton
-            onClick={() => {
-              handlePause();
-              setIsPlaying(false);
-            }}
-          >
-            <PauseIcon sx={{ fill: theme.palette.text.primary }} />
-          </IconButton>
-        ) : (
-          <IconButton
-            onClick={() => {
-              handlePlay();
-              setIsPlaying(true);
-            }}
-          >
-            <PlayIcon sx={{ fill: theme.palette.text.primary }} />
-          </IconButton>
-        )}
-        <IconButton onClick={() => handleStepForward()}>
-          <SkipNextIcon sx={{ fill: theme.palette.text.primary }} />
-        </IconButton>
-
-        <Button onClick={handleClick} className={styles.setSpeedButton}>
-          <SpeedIcon
-            sx={{ fill: theme.palette.text.primary }}
-            className={styles.setSpeedButtonIcon}
-          />
-          <Typography color="textPrimary" className={styles.currSpeed}>
-            {speedOptions[selectedIndex]}
-          </Typography>
-        </Button>
-        <Menu
-          open={speedMenuOpen}
-          anchorEl={anchorEl}
-          onClose={handleCloseSpeedMenu}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-          }}
-          transformOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
+    <Box className={styles.root} bgcolor={theme.palette.background.default}>
+      <IconButton onClick={() => handleStepBackward()}>
+        <SkipPreviousIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
+      </IconButton>
+      {isTimelineComplete ? (
+        <IconButton
+          onClick={() => {
+            handleDragTimeline(0);
+            handlePlay();
+            setIsPlaying(true);
           }}
         >
-          {speedOptions.map((speedOption, index) => (
-            <MenuItem onClick={(event) => handleSelectSpeed(event, index)} key={index}>
-              {index === selectedIndex ? (
-                <>
-                  <ListItemIcon>
-                    <CheckIcon sx={{ fill: theme.palette.text.primary }} />
-                  </ListItemIcon>
-                  {speedOption}
-                </>
-              ) : (
-                <ListItemText inset>{speedOption}</ListItemText>
-              )}
-            </MenuItem>
-          ))}
-        </Menu>
+          <ReplayIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
+        </IconButton>
+      ) : isPlaying ? (
+        <IconButton
+          onClick={() => {
+            handlePause();
+            setIsPlaying(false);
+          }}
+        >
+          <PauseIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
+        </IconButton>
+      ) : (
+        <IconButton
+          onClick={() => {
+            handlePlay();
+            setIsPlaying(true);
+          }}
+        >
+          <PlayIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
+        </IconButton>
+      )}
+      <IconButton onClick={() => handleStepForward()}>
+        <SkipNextIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
+      </IconButton>
 
-        <Box className={styles.sliderContainer}>
-          {/* <Stack direction="column"> */}
-          {/* <Stack direction="row" sx={{ height: '32px' }}> */}
-          <TimeIcon className={styles.sliderIcon} sx={{ fill: theme.palette.text.primary }} />
-          <input
-            type="range"
-            id="timelineSlider"
-            name="volume"
-            min="0"
-            max="100"
-            defaultValue="0"
-            step="0.01"
-            className={styles.timelineSlider}
-            onChange={(event) => {
-              if (userIsDraggingTimeline) {
-                handleDragTimeline(Number(event.target.value));
-              } else {
-                handleTimelineUpdate(Number(event.target.value));
-              }
-            }}
-            onMouseDown={() => {
-              setUserIsDraggingTimeline(true);
-              handlePause();
-            }}
-            onMouseUp={() => {
-              setUserIsDraggingTimeline(false);
-              if (isPlaying) {
-                handlePlay();
-              }
-            }}
-          />
-        </Box>
-        <Button className={styles.resetButton} onClick={handleGenerate}>
-          <Typography color="textPrimary" sx={{ whiteSpace: 'nowrap' }}>
-            Create New
-          </Typography>
-        </Button>
-        <Button className={styles.resetButton} onClick={handleReset}>
-          <Typography color="textPrimary" sx={{ whiteSpace: 'nowrap' }}>
-            Reset All
-          </Typography>
-        </Button>
-      </div>
+      <Button onClick={handleClick} className={styles.setSpeedButton}>
+        <SpeedIcon
+          sx={{ fill: theme.palette.text.primary }}
+          className={styles.setSpeedButtonIcon}
+          fontSize="large"
+        />
+        <Typography color="textPrimary" className={styles.currSpeed}>
+          {speedOptions[selectedIndex]}
+        </Typography>
+      </Button>
+      <Menu
+        open={speedMenuOpen}
+        anchorEl={anchorEl}
+        onClose={handleCloseSpeedMenu}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+      >
+        {speedOptions.map((speedOption, index) => (
+          <MenuItem onClick={(event) => handleSelectSpeed(event, index)} key={index}>
+            {index === selectedIndex ? (
+              <>
+                <ListItemIcon>
+                  <CheckIcon sx={{ fill: theme.palette.text.primary }} />
+                </ListItemIcon>
+                {speedOption}
+              </>
+            ) : (
+              <ListItemText inset>{speedOption}</ListItemText>
+            )}
+          </MenuItem>
+        ))}
+      </Menu>
+
+      <Box className={styles.sliderContainer}>
+        <TimeIcon
+          className={styles.sliderIcon}
+          fontSize="small"
+          sx={{ fill: theme.palette.text.primary }}
+        />
+        <input
+          type="range"
+          id="timelineSlider"
+          min="0"
+          max="100"
+          defaultValue="0"
+          step="0.01"
+          className={styles.timelineSlider}
+          onChange={(event) => {
+            if (userIsDraggingTimeline) {
+              handleDragTimeline(Number(event.target.value));
+            } else {
+              handleTimelineUpdate(Number(event.target.value));
+            }
+          }}
+          onMouseDown={() => {
+            setUserIsDraggingTimeline(true);
+            handlePause();
+          }}
+          onMouseUp={() => {
+            setUserIsDraggingTimeline(false);
+            if (isPlaying) {
+              handlePlay();
+            }
+          }}
+        />
+      </Box>
+      <Button className={styles.resetButton} onClick={handleGenerate}>
+        <Typography color="textPrimary" sx={{ whiteSpace: 'nowrap' }}>
+          Create New
+        </Typography>
+      </Button>
+      <Button className={styles.resetButton} onClick={handleReset}>
+        <Typography color="textPrimary" whiteSpace="nowrap">
+          Reset All
+        </Typography>
+      </Button>
     </Box>
   );
 };

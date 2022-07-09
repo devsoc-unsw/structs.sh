@@ -36,12 +36,12 @@ export default class SortsBubbleAnimationProducer extends SortsAnimationProducer
   }
 
   public compare(item1: GraphicalSortsElement, item2: GraphicalSortsElement, isLast: boolean) {
-    this.addSequenceAnimation(item1.boxTarget.animate(10).attr({ stroke: '#4beb9b' }));
-    this.addSequenceAnimation(item2.boxTarget.animate(10).attr({ stroke: '#4beb9b' }));
-    this.addSequenceAnimation(item1.boxTarget.animate(10).attr({ fill: '#4beb9b' }));
-    this.addSequenceAnimation(item2.boxTarget.animate(10).attr({ fill: '#4beb9b' }));
-    this.addSequenceAnimation(item1.numberTarget.animate(10).attr({ fill: '#4beb9b' }));
-    this.addSequenceAnimation(item2.numberTarget.animate(10).attr({ fill: '#4beb9b' }));
+    this.addSequenceAnimation(item1.boxTarget.animate(10).attr({ stroke: '#39AF8E' }));
+    this.addSequenceAnimation(item2.boxTarget.animate(10).attr({ stroke: '#39AF8E' }));
+    this.addSequenceAnimation(item1.boxTarget.animate(10).attr({ fill: '#39AF8E' }));
+    this.addSequenceAnimation(item2.boxTarget.animate(10).attr({ fill: '#39AF8E' }));
+    this.addSequenceAnimation(item1.numberTarget.animate(10).attr({ fill: '#39AF8E' }));
+    this.addSequenceAnimation(item2.numberTarget.animate(10).attr({ fill: '#39AF8E' }));
     this.addSequenceAnimation(item1.numberTarget.animate().attr({ opacity: 1 }));
     this.finishSequence();
     if (item1.data.value <= item2.data.value) {

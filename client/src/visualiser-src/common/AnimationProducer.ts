@@ -55,13 +55,14 @@ export default abstract class AnimationProducer {
     lines.forEach((line, i) => {
       const codeLine: CodeLine = {
         rectTarget: SVG()
-          .rect(1000, 20)
+          .rect(1000, 18)
           .move(0, 18 * i)
-          .fill('#ebebeb')
+          .fill('#14113C')
           .addTo(CODE_CANVAS),
         textTarget: SVG()
           .text(showLineNumbers ? String(i + 1).padEnd(4, ' ') + line : line)
           .font({ family: 'CodeText', size: 10 })
+          .fill('#FFFFFF')
           .attr('style', 'white-space: pre-wrap')
           .move(0, 18 * i + 6)
           .addTo(CODE_CANVAS),
@@ -81,7 +82,7 @@ export default abstract class AnimationProducer {
 
     this.addSequenceAnimation(
       this.codeTargets[line - 1].rectTarget.animate(1).attr({
-        fill: '#4beb9b',
+        fill: '#39AF8E',
       })
     );
 
@@ -95,7 +96,7 @@ export default abstract class AnimationProducer {
     lines.forEach((line) => {
       this.addSequenceAnimation(
         this.codeTargets[line - 1].rectTarget.animate(1).attr({
-          fill: '#4beb9b',
+          fill: '#39AF8E',
         })
       );
     });
@@ -142,7 +143,7 @@ export default abstract class AnimationProducer {
     this.highlightedLines.forEach((line) => {
       this.addSequenceAnimation(
         this.codeTargets[line - 1].rectTarget.animate(1).attr({
-          fill: '#ebebeb',
+          fill: '#14113C',
         })
       );
     });
@@ -167,6 +168,6 @@ export default abstract class AnimationProducer {
   // Modifies the height of the code snippet container to be
   // responsive to the number of lines of code required for the operation
   private setContainerHeight(): void {
-    document.getElementById(CODE_CONTAINER).style.height = `${20 * this.codeTargets.length + 15}px`;
+    document.getElementById(CODE_CONTAINER).style.height = `${18 * this.codeTargets.length}px`;
   }
 }

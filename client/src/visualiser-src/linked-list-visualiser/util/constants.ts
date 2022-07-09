@@ -19,7 +19,7 @@ export const shapeAttributes = {
   r: nodeDiameter / 2,
   'stroke-width': strokeWidth,
   stroke: 'black',
-  fill: 'white',
+  fill: '#EBE8F4',
   opacity: 0,
 };
 
@@ -29,6 +29,8 @@ export const textAttributes = {
   'dominant-baseline': 'middle',
   'text-anchor': 'middle',
   'stroke-width': 0,
+  'font-family': 'CodeText',
+  'font-size': '24',
   opacity: 0,
 };
 

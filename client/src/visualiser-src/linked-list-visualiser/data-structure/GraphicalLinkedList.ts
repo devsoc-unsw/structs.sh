@@ -16,7 +16,6 @@ import LinkedListSearchAnimationProducer from '../animation-producer/LinkedListS
 import LinkedListPrependAnimationProducer from '../animation-producer/LinkedListPrependAnimationProducer';
 import LinkedListAnimationProducer from '../animation-producer/LinkedListAnimationProducer';
 
-
 // An linked list data structure containing all linked list operations.
 // Every operation producers a LinkedListAnimationProducer, which an VisualiserController
 // can then use to place SVG.Runners on a timeline to animate the operation.
@@ -57,8 +56,6 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     // add prev and curr pointers to visualiser canvas
     (SVG(VISUALISER_CANVAS) as Svg).image(currSvg).opacity(0).id('current');
     (SVG(VISUALISER_CANVAS) as Svg).image(prevSvg).opacity(0).id('prev');
-
-
   }
 
   append(input: number): AnimationProducer {
@@ -232,21 +229,21 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
   }
 
   public generate(): void {
-    this.reset()
     const numbers = generateNumbers();
+    this.length = numbers.length;
     const producer = new LinkedListAnimationProducer();
-    let currNode = null
-    producer.initialiseHead(this.headPointer)
+    let currNode = null;
+    producer.initialiseHead(this.headPointer);
     for (let i = 0; i < numbers.length; i += 1) {
-      const newNode = GraphicalLinkedListNode.from(numbers[i])
-      producer.createNodeAt(i, newNode, i + 1)
+      const newNode = GraphicalLinkedListNode.from(numbers[i]);
+      producer.createNodeAt(i, newNode, i + 1);
       if (currNode === null) {
-        this.head = newNode
+        this.head = newNode;
       } else {
-        currNode.next = newNode
-        producer.linkLastToNew(currNode)
+        currNode.next = newNode;
+        producer.linkLastToNew(currNode);
       }
-      currNode = newNode
+      currNode = newNode;
     }
   }
 
