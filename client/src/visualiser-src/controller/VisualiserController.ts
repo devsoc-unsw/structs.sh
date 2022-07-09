@@ -191,10 +191,8 @@ class VisualiserController {
   }
 
   public generateDataStructure(): void {
-    this.dataStructure = GraphicalDataStructureFactory.generate(this.topicTitle);
-    this.currentTimeline.finish();
-    this.currentTimeline.time(10);
-    this.currentTimeline = new Timeline().persist(true);
+    this.resetDataStructure();
+    this.dataStructure.generate();
   }
 
   private computePrevTimestamp(): number {

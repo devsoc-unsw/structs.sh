@@ -17,25 +17,6 @@ class GraphicalDataStructureFactory {
         throw Error('Invalid Topic Title');
     }
   }
-
-  public static generate(topicTitle: string): GraphicalDataStructure {
-    switch (topicTitle.toLowerCase()) {
-      case DataStructure.LINKED_LISTS.toLowerCase(): {
-        const result = new GraphicalLinkedList();
-        result.generate();
-        return result;
-      }
-      case DataStructure.BINARY_SEARCH_TREE.toLowerCase(): {
-        const result = new GraphicalBST();
-        result.generate();
-        return result;
-      }
-      case DataStructure.SORTING.toLowerCase():
-          return new GraphicalSorts();
-      default:
-        throw Error('Invalid Topic Title');
-    }
-  }
 }
 
 export default GraphicalDataStructureFactory;
