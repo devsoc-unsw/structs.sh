@@ -14,6 +14,7 @@ import LinkedListDeleteAnimationProducer from '../animation-producer/LinkedListD
 import LinkedListInsertAnimationProducer from '../animation-producer/LinkedListInsertAnimationProducer';
 import LinkedListSearchAnimationProducer from '../animation-producer/LinkedListSearchAnimationProducer';
 import LinkedListPrependAnimationProducer from '../animation-producer/LinkedListPrependAnimationProducer';
+import LinkedListAnimationProducer from '../animation-producer/LinkedListAnimationProducer';
 
 
 // An linked list data structure containing all linked list operations.
@@ -231,9 +232,21 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
   }
 
   public generate(): void {
+    this.reset()
     const numbers = generateNumbers();
+    const producer = new LinkedListAnimationProducer();
+    let currNode = null
+    producer.initialiseHead(this.headPointer)
     for (let i = 0; i < numbers.length; i += 1) {
-      this.append(numbers[i]);
+      const newNode = GraphicalLinkedListNode.from(numbers[i])
+      producer.createNodeAt(i, newNode, i + 1)
+      if (currNode === null) {
+        this.head = newNode
+      } else {
+        currNode.next = newNode
+        producer.linkLastToNew(currNode)
+      }
+      currNode = newNode
     }
   }
 
