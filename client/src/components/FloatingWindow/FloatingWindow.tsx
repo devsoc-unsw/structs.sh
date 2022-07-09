@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import { Box, Collapse, useTheme } from '@mui/material';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ChevronLeft from '@mui/icons-material/ChevronLeft';
+import ChevronRight from '@mui/icons-material/ChevronRight';
 
 interface Props {
   children: React.ReactNode;
@@ -40,9 +40,15 @@ const FloatingWindow: FC<Props> = ({
         sx={{ background: theme.palette.background.paper, display: 'flex', alignItems: 'center' }}
       >
         {shouldDisplay ? (
-          <ChevronLeftIcon sx={{ fill: theme.palette.text.primary }} />
+          flexDirection === 'row' ? (
+            <ChevronRight sx={{ fill: theme.palette.text.primary }} />
+          ) : (
+            <ChevronLeft sx={{ fill: theme.palette.text.primary }} />
+          )
+        ) : flexDirection === 'row' ? (
+          <ChevronLeft sx={{ fill: theme.palette.text.primary }} />
         ) : (
-          <ChevronRightIcon sx={{ fill: theme.palette.text.primary }} />
+          <ChevronRight sx={{ fill: theme.palette.text.primary }} />
         )}
       </Box>
       <Collapse in={shouldDisplay} orientation="horizontal">
