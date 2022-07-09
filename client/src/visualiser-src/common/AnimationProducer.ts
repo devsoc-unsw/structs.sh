@@ -60,11 +60,12 @@ export default abstract class AnimationProducer {
           .fill('#14113C')
           .addTo(CODE_CANVAS),
         textTarget: SVG()
-          .text(showLineNumbers ? String(i + 1).padEnd(4, ' ') + line : line)
+          .text(showLineNumbers ? String(i + 1).padEnd(4, ' ') + line : line.trim())
           .font({ family: 'CodeText', size: 10 })
           .fill('#FFFFFF')
           .attr('style', 'white-space: pre-wrap')
           .move(0, 18 * i + 6)
+          .x(line.search(/\S/) > 0 ? line.search(/\S/) * 5 : 0)
           .addTo(CODE_CANVAS),
       };
 
