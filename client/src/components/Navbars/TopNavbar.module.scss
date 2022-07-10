@@ -8,10 +8,11 @@
 }
 
 .centralBox {
+    display: flex;
+    height: 100%;
     position: absolute;
     left: 50%;
     transform: translate(-50%);
-    user-select: none;
 
     a {
         @include reset-link;
@@ -22,18 +23,11 @@
         }
     }
 
+
     img {
         height: 48px;
-        display: block;
     }
-}
 
-.visualiserMenu {
-    .item {
-        a {
-            @include reset-link;
-        }
-    }
 }
 
 .darkModeButton {

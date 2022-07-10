@@ -15,9 +15,8 @@ const options: Option[] = [{ label: 'COMP1511' }, { label: 'COMP2521' }, { label
 
 const CoursesSelector: FC<Props> = ({ addValue, courses }) => {
   const optionsWithoutDuplicates = options.filter((option) => !courses.includes(option.label));
-  const optionExistsInChoices = (
-    e: any,
-  ) => options.some((option) => option.label === String(e.target.value));
+  const optionExistsInChoices = (e: any) =>
+    options.some((option) => option.label === String(e.target.value));
   const optionNotSelectedYet = (e: any) => !courses.includes(String(e.target.value));
 
   return (
@@ -32,11 +31,7 @@ const CoursesSelector: FC<Props> = ({ addValue, courses }) => {
           label="Course"
           color="info"
           onKeyDown={(e: any) => {
-            if (
-              e.keyCode === 13
-              && optionExistsInChoices(e)
-              && optionNotSelectedYet(e)
-            ) {
+            if (e.keyCode === 13 && optionExistsInChoices(e) && optionNotSelectedYet(e)) {
               addValue(String(e.target.value));
             }
           }}

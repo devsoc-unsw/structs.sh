@@ -19,7 +19,6 @@ const Footer: React.FC<Props> = () => {
       className={styles.footer}
       style={{
         background: theme.palette.background.default,
-        opacity: 0.75,
       }}
     >
       <Box>
@@ -49,10 +48,7 @@ const Footer: React.FC<Props> = () => {
                 </Link>
               </Typography>
               <Typography color="textSecondary">
-                <a
-                  className={styles.link}
-                  href="https://github.com/csesoc/Structs.sh"
-                >
+                <a className={styles.link} href="https://github.com/csesoc/Structs.sh">
                   GitHub Repository
                 </a>
               </Typography>
@@ -70,8 +66,7 @@ const Footer: React.FC<Props> = () => {
                 <address>
                   <a href="mailto:projects@csesoc.org.au" className={styles.link}>
                     Email Us
-                  </a>
-                  {' '}
+                  </a>{' '}
                 </address>
               </Typography>
             </Grid>
@@ -80,10 +75,7 @@ const Footer: React.FC<Props> = () => {
                 Social
               </Typography>
               <Typography color="textSecondary">
-                <a
-                  className={styles.link}
-                  href="https://www.csesoc.unsw.edu.au/"
-                >
+                <a className={styles.link} href="https://csesoc.unsw.edu.au/">
                   CSESoc Website
                 </a>
               </Typography>
@@ -105,7 +97,7 @@ const Footer: React.FC<Props> = () => {
         </Container>
       </Box>
       <Box className={styles.bottomSection}>
-        <Typography color="textSecondary">©2021 CSESoc</Typography>
+        <Typography color="textSecondary">© {new Date().getFullYear()} — CSESoc UNSW</Typography>
       </Box>
     </footer>
   );

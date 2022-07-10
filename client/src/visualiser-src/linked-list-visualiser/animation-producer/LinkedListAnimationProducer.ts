@@ -6,7 +6,7 @@ import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
 import { getPointerPath } from '../util/util';
 
 // Class that produces SVG.Runners animating general linked list operations
-export default abstract class LinkedListAnimationProducer extends AnimationProducer {
+export default class LinkedListAnimationProducer extends AnimationProducer {
   public createNodeAt(index: number, newNode: GraphicalLinkedListNode, length: number) {
     let cx;
     let cy;
