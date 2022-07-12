@@ -3,8 +3,8 @@ import { Box, Collapse, List, ListItem, ListItemIcon, Theme, Typography } from '
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { makeStyles, useTheme } from '@mui/styles';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRight from '@mui/icons-material/ChevronRight';
+import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import VisualiserContext from 'components/Visualiser/VisualiserContext';
 import React, { FC, useContext, useState } from 'react';
 
@@ -67,9 +67,9 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
           onClick={handleToggleDisplay}
           endIcon={
             shouldDisplay ? (
-              <ChevronRightIcon sx={{ fill: textPrimaryColour }} />
+              <ChevronRight sx={{ fill: textPrimaryColour }} />
             ) : (
-              <ChevronLeftIcon sx={{ fill: textPrimaryColour }} />
+              <ChevronLeft sx={{ fill: textPrimaryColour }} />
             )
           }
           fullWidth
