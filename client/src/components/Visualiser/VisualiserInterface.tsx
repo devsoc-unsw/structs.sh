@@ -27,12 +27,14 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
   const controllerRef = useRef<VisualiserController>();
   const [isTimelineComplete, setIsTimelineComplete] = useState<boolean>(false);
   const [documentation, setDocumentation] = useState<Documentation>({});
+  const [isCodeSnippetExpanded, setIsCodeSnippetExpanded] = useState<boolean>(false);
 
   useEffect(() => {
     controllerRef.current = controllerRef.current || new VisualiserController();
     controllerRef.current.applyTopicTitle(topicTitle);
     topicTitleRef.current = topicTitle;
     setDocumentation(controllerRef.current.documentation);
+    setIsCodeSnippetExpanded(false);
   }, [topicTitle]);
 
   const handleTimelineUpdate = useCallback((val) => {
@@ -41,12 +43,17 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
     setIsTimelineComplete(val >= 100);
   }, []);
 
+  const handleSetCodeSnippetExpansion = useCallback((val) => {
+    setIsCodeSnippetExpanded(val);
+  }, []);
+
   const contextValues = useMemo(
     () => ({
       controller: controllerRef.current,
       topicTitle: topicTitleRef.current,
       documentation,
       timeline: { isTimelineComplete, handleTimelineUpdate },
+      codeSnippet: { isCodeSnippetExpanded, handleSetCodeSnippetExpansion },
     }),
     [
       controllerRef.current,
@@ -54,6 +61,8 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
       documentation,
       isTimelineComplete,
       handleTimelineUpdate,
+      isCodeSnippetExpanded,
+      handleSetCodeSnippetExpansion,
     ]
   );
 

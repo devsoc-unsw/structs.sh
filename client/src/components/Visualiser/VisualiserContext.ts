@@ -10,6 +10,10 @@ interface VisualiserContextValues {
     isTimelineComplete: boolean;
     handleTimelineUpdate: (val: string | number) => void;
   };
+  codeSnippet?: {
+    isCodeSnippetExpanded: boolean;
+    handleSetCodeSnippetExpansion: (val: boolean) => void;
+  };
 }
 
 const VisualiserContext = React.createContext<VisualiserContextValues>({});
