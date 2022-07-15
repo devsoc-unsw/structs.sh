@@ -19,6 +19,20 @@ export default class BSTAnimationProducer extends AnimationProducer {
     );
   }
 
+  public halfHighlightNodeRed(node: GraphicalBSTNode): void {
+    this.addSequenceAnimation(
+      node.nodeTarget.animate(500).attr({
+        stroke: '#AF3939',
+      })
+    );
+
+    this.addSequenceAnimation(
+      node.textTarget.animate(500).attr({
+        fill: '#AF3939',
+      })
+    );
+  }
+
   public highlightLine(lineTarget: Line, arrowTarget: Marker): void {
     if (lineTarget != null) {
       this.addSequenceAnimation(

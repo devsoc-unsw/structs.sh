@@ -69,8 +69,7 @@ class GraphicalAVL extends GraphicalDataStructure {
     isInsertLeft: boolean,
     input: number,
     animationProducer: AVLAnimationProducer
-  ) {
-    // animationProducer.doAnimation(animationProducer.halfHighlightNode, root);
+  ): boolean {
     // First, insert to leaf of BST
     if (root.value > input) {
       animationProducer.doAnimationAndHighlight(6, animationProducer.halfHighlightNode, root);
@@ -90,7 +89,7 @@ class GraphicalAVL extends GraphicalDataStructure {
           root.leftLineTarget,
           root.leftArrowTarget
         );
-        this.doInsert(root, root.left, true, input, animationProducer);
+        if (!this.doInsert(root, root.left, true, input, animationProducer)) return false;
       }
     } else if (root.value < input) {
       animationProducer.doAnimationAndHighlight(8, animationProducer.halfHighlightNode, root);
@@ -110,10 +109,22 @@ class GraphicalAVL extends GraphicalDataStructure {
           root.rightLineTarget,
           root.rightArrowTarget
         );
-        this.doInsert(root, root.right, false, input, animationProducer);
+        if (!this.doInsert(root, root.right, false, input, animationProducer)) return false;
       }
     } else {
       // highlight root red
+      animationProducer.doAnimation(
+        animationProducer.halfHighlightNodeRed,
+        root
+      );
+      animationProducer.doAnimationAndHighlight(
+        10,
+        animationProducer.unhighlightBST,
+        this.root
+      );
+
+      // return value corresponds to whether to continue or exit the operation
+      return false;
     }
     // Begin rebalancing
     root.updateHeight();
@@ -143,6 +154,8 @@ class GraphicalAVL extends GraphicalDataStructure {
         root
       );
     }
+
+    return true;
   }
 
   private rotateLeft(

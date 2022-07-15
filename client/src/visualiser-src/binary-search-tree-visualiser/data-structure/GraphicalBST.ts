@@ -310,6 +310,15 @@ class GraphicalBST extends GraphicalDataStructure {
       }
     } else {
       // highlight root red
+      animationProducer.doAnimation(
+        animationProducer.halfHighlightNodeRed,
+        root
+      );
+      animationProducer.doAnimationAndHighlight(
+        9,
+        animationProducer.unhighlightBST,
+        this.root
+      );
     }
   }
 }
