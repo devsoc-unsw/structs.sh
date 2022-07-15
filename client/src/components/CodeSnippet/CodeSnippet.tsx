@@ -1,13 +1,15 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
+import { Box, Collapse, useTheme } from '@mui/material';
+import FloatingWindow from 'components/FloatingWindow/FloatingWindow';
 
 interface Props {}
-  
+
 const CodeSnippet: FC<Props> = () => (
-  <div
-    style={{ height: '100%', width: '100%', background: 'rgba(235, 235, 235)', overflowY: 'scroll', padding: 15}}
-  >
-    <svg id="code-canvas" style={{ height: '100%', width: 1000 }}/>
-  </div>
+  <FloatingWindow flexDirection="row-reverse" minHeight="30vh">
+    <Box id="code-container">
+      <svg id="code-canvas" />
+    </Box>
+  </FloatingWindow>
 );
 
 export default CodeSnippet;

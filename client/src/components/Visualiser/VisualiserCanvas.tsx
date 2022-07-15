@@ -1,4 +1,5 @@
 import React from 'react';
+import { Box } from '@mui/material';
 
 /* -------------------------------------------------------------------------- */
 /*                        Visualiser-Specific Canvases                        */
@@ -9,12 +10,10 @@ import React from 'react';
  * attaches itself to.
  */
 const VisualiserCanvas: React.FC = () => (
-    <div
-      id="visualiser-container"
-      style={{ height: '100%', width: '100%', background: 'rgba(235, 235, 235)'}}
-    >
-      <svg id="visualiser-canvas" />
-    </div>
-  );
+  // 64px is reserved for the top navbar, 48+ is reserved for the controller
+  <Box id="visualiser-container" height="calc(100vh - 64px)" bgcolor="#EBE8F4">
+    <svg id="visualiser-canvas" />
+  </Box>
+);
 
 export default VisualiserCanvas;
