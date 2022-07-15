@@ -65,6 +65,7 @@ export default abstract class AnimationProducer {
           .fill('#FFFFFF')
           .attr('style', 'white-space: pre-wrap')
           .move(0, 18 * i + 2)
+          .x(line.search(/\S/) > 0 ? line.search(/\S/) * 5 : 0)
           .addTo(CODE_CANVAS),
       };
 
