@@ -219,7 +219,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     curr.next = newNode;
     if (index < this.length - 1) {
       producer.doAnimationAndHighlight(19, producer.insertedNodePointToNext, newNode);
-      producer.doAnimationAndHighlight(20, producer.pointToInsertedNode, curr);      
+      producer.doAnimationAndHighlight(20, producer.pointToInsertedNode, curr);
       producer.doAnimation(producer.resetList, this.headPointer, this.head);
     } else {
       producer.doAnimationAndHighlight(20, producer.linkLastToNew, curr);
