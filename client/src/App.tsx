@@ -1,10 +1,8 @@
 import { Theme, ThemeProvider } from '@mui/material';
-import { LIGHT_MODE_ON } from 'constants/cookies';
 import { AnimatePresence } from 'framer-motion';
 import React, { createContext, useCallback, useState, useMemo } from 'react';
-import { useCookies } from 'react-cookie';
 import { Route, Routes } from 'react-router-dom';
-import { darkTheme, lightTheme } from 'structsThemes';
+import { darkTheme } from 'structsThemes';
 import AboutUs from 'views/AboutUs';
 // import ContentManagementDashboard from 'views/ContentManagementDashboard';
 import Feedback from 'views/Feedback';
@@ -13,33 +11,10 @@ import Page404 from 'views/Page404';
 import VisualiserDashboard from 'views/VisualiserDashboard';
 import './App.scss';
 
-// export const ThemeMutationContext = createContext({
-//   toggleDarkMode: () => {},
-//   isDarkMode: false,
-// });
 
 const App = () => {
   // removed light/dark mode hooks for now
   const [currTheme, setCurrTheme] = useState<Theme>(darkTheme);
-
-  // const toggleDarkMode = useCallback(() => {
-  //   if (currTheme === lightTheme) {
-  //     setCurrTheme(darkTheme);
-  //     setCookie(LIGHT_MODE_ON, 'false');
-  //   } else {
-  //     setCurrTheme(lightTheme);
-  //     setCookie(LIGHT_MODE_ON, 'true');
-  //   }
-  // }, [currTheme, setCookie]);
-
-  // const themeMutationContextProviderValue = useMemo(
-  //   () => ({
-  //     toggleDarkMode,
-  //     isDarkMode: cookies[LIGHT_MODE_ON] !== 'true',
-  //   }),
-  //   []
-  // );
-
   return (
     <AnimatePresence>
       <ThemeProvider theme={currTheme}>
