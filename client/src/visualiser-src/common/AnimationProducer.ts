@@ -55,8 +55,8 @@ export default abstract class AnimationProducer {
     lines.forEach((line, i) => {
       const codeLine: CodeLine = {
         rectTarget: SVG()
-          .rect(1000, 18)
-          .move(0, 18 * i)
+          .rect(2000, 20)
+          .move(-5, 18 * i)
           .fill('#14113C')
           .addTo(CODE_CANVAS),
         textTarget: SVG()
@@ -64,7 +64,7 @@ export default abstract class AnimationProducer {
           .font({ family: 'CodeText', size: 10 })
           .fill('#FFFFFF')
           .attr('style', 'white-space: pre-wrap')
-          .move(0, 18 * i + 6)
+          .move(0, 18 * i + 2)
           .x(line.search(/\S/) > 0 ? line.search(/\S/) * 5 : 0)
           .addTo(CODE_CANVAS),
       };
@@ -84,27 +84,12 @@ export default abstract class AnimationProducer {
     this.addSequenceAnimation(
       this.codeTargets[line - 1].rectTarget.animate(1).attr({
         fill: '#39AF8E',
+        rx: "10",
+        ry: "10",
       })
     );
 
     this.highlightedLines = [line];
-  }
-
-  public highlightCodeMultiple(lines: number[]): void {
-    // unhighlight previously highlighted lines
-    this.unhighlightCodeMultiple();
-
-    lines.forEach((line) => {
-      this.addSequenceAnimation(
-        this.codeTargets[line - 1].rectTarget.animate(1).attr({
-          fill: '#39AF8E',
-        })
-      );
-    });
-
-    this.highlightedLines = lines;
-
-    this.finishSequence();
   }
 
   // these 2 functions are used to "decorate" animation function so each animation function doesn't

@@ -17,6 +17,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
     documentation,
     controller,
     timeline: { handleTimelineUpdate },
+    codeSnippet: { handleSetCodeSnippetExpansion },
   } = useContext(VisualiserContext);
   // const classes = useStyles();
   const [shouldDisplay, setShouldDisplay] = useState<boolean>(false);
@@ -51,6 +52,8 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
     setErrorMessage(err);
     if (err !== '') {
       setTimeout(() => setErrorMessage(''), 2000);
+    } else {
+      handleSetCodeSnippetExpansion(true);
     }
     clearArguments();
   };
