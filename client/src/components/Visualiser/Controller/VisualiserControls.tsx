@@ -21,7 +21,6 @@ import React, { EventHandler, FC, useCallback, useContext, useEffect, useState }
 import { defaultSpeed } from 'visualiser-src/common/constants';
 import VisualiserContext from '../VisualiserContext';
 import styles from './Control.module.scss';
-import VisualiserCreateNewReset from './VisualiserCreateNewReset';
 
 /**
  * Contains all the visualiser controller UI, ie. the play/pause buttons, the
@@ -208,7 +207,6 @@ const VisualiserControls = () => {
           }}
         />
       </Box>
-      <VisualiserCreateNewReset />
     </Box>
   );
 };

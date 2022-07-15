@@ -7,6 +7,7 @@ import { VisualiserControls } from './Controller';
 import GUIMode from './Controller/GUIMode/GUIMode';
 import styles from './VisualiserDashboard.module.scss';
 import VisualiserContext from './VisualiserContext';
+import VisualiserCreateNewReset from './Controller/VisualiserCreateNewReset';
 
 interface VisualiserInterfaceProps {
   topicTitle: string;
@@ -60,6 +61,7 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
   return (
     <VisualiserContext.Provider value={contextValues}>
       {/* TODO: add addditional component with absolute positions: addtional create new/ reset buttons here */}
+      <VisualiserCreateNewReset />
       <GUIMode />
       <CodeSnippet />
       <VisualiserControls />

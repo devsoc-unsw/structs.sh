@@ -6,6 +6,7 @@ import {
 } from '@mui/material';
 import React, { useCallback, useContext } from 'react';
 import VisualiserContext from '../VisualiserContext';
+
 import styles from './Control.module.scss';
 
 /**
@@ -31,7 +32,7 @@ const VisualiserCreateNewReset = () => {
   }, [controller]);
 
   return (
-    <Box className={styles.root} bgcolor={theme.palette.background.default}>
+    <Box className={styles.root} bgcolor={theme.palette.background.default} position='absolute' top='80px' right='10px' width='300px'>
       <Button className={styles.resetButton} onClick={handleGenerate}>
         <Typography color="textPrimary" sx={{ whiteSpace: 'nowrap' }}>
           Create New
