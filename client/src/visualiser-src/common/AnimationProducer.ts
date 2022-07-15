@@ -57,7 +57,7 @@ export default abstract class AnimationProducer {
         rectTarget: SVG()
           .rect(2000, 20)
           .move(-5, 18 * i)
-          .fill('#ebebeb')
+          .fill('#14113C')
           .addTo(CODE_CANVAS),
         textTarget: SVG()
           .text(showLineNumbers ? String(i + 1).padEnd(4, ' ') + line : line.trim())
@@ -65,6 +65,7 @@ export default abstract class AnimationProducer {
           .fill('#FFFFFF')
           .attr('style', 'white-space: pre-wrap')
           .move(0, 18 * i + 2)
+          .x(line.search(/\S/) > 0 ? line.search(/\S/) * 5 : 0)
           .addTo(CODE_CANVAS),
       };
 
@@ -82,7 +83,7 @@ export default abstract class AnimationProducer {
 
     this.addSequenceAnimation(
       this.codeTargets[line - 1].rectTarget.animate(1).attr({
-        fill: '#00FFFF',
+        fill: '#39AF8E',
         rx: "10",
         ry: "10",
       })
@@ -98,7 +99,7 @@ export default abstract class AnimationProducer {
     lines.forEach((line) => {
       this.addSequenceAnimation(
         this.codeTargets[line - 1].rectTarget.animate(1).attr({
-          fill: '#00FFFF',
+          fill: '#39AF8E',
           rx: "10",
           ry: "10",
         })
