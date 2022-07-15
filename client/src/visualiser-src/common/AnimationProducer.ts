@@ -65,7 +65,6 @@ export default abstract class AnimationProducer {
           .fill('#FFFFFF')
           .attr('style', 'white-space: pre-wrap')
           .move(0, 18 * i + 2)
-          .x(line.search(/\S/) > 0 ? line.search(/\S/) * 5 : 0)
           .addTo(CODE_CANVAS),
       };
 
@@ -90,25 +89,6 @@ export default abstract class AnimationProducer {
     );
 
     this.highlightedLines = [line];
-  }
-
-  public highlightCodeMultiple(lines: number[]): void {
-    // unhighlight previously highlighted lines
-    this.unhighlightCodeMultiple();
-
-    lines.forEach((line) => {
-      this.addSequenceAnimation(
-        this.codeTargets[line - 1].rectTarget.animate(1).attr({
-          fill: '#39AF8E',
-          rx: "10",
-          ry: "10",
-        })
-      );
-    });
-
-    this.highlightedLines = lines;
-
-    this.finishSequence();
   }
 
   // these 2 functions are used to "decorate" animation function so each animation function doesn't
