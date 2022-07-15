@@ -1,6 +1,6 @@
 import { Theme, ThemeProvider } from '@mui/material';
 import { AnimatePresence } from 'framer-motion';
-import React, { createContext, useCallback, useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { darkTheme } from 'structsThemes';
 import AboutUs from 'views/AboutUs';
