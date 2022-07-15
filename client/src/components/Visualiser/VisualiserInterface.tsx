@@ -59,6 +59,7 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
 
   return (
     <VisualiserContext.Provider value={contextValues}>
+      {/* TODO: add addditional component with absolute positions: addtional create new/ reset buttons here */}
       <GUIMode />
       <CodeSnippet />
       <VisualiserControls />
