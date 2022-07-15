@@ -13,7 +13,7 @@ interface Props {
   index: number;
 }
 
-const images = [linked, binary, sort, binary];
+const images = [linked, binary, binary, sort];
 const colours = [
   'rgba(248, 79, 121, 1)',
   'rgba(20, 201, 150, 1)',

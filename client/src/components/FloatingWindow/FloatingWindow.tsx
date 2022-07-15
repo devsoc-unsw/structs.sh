@@ -8,6 +8,8 @@ interface Props {
   minHeight?: string;
   maxHeight?: string;
   flexDirection?: 'row' | 'row-reverse';
+  isExpanded: boolean;
+  handleToggleExpansion: () => void;
 }
 
 const FloatingWindow: FC<Props> = ({
@@ -15,13 +17,10 @@ const FloatingWindow: FC<Props> = ({
   minHeight = undefined,
   maxHeight = '80vh',
   flexDirection = 'row',
+  isExpanded,
+  handleToggleExpansion,
 }) => {
-  const [shouldDisplay, setShouldDisplay] = useState<boolean>(true);
   const theme = useTheme();
-
-  const handleToggleDisplay = () => {
-    setShouldDisplay(!shouldDisplay);
-  };
 
   return (
     <Box
@@ -36,10 +35,10 @@ const FloatingWindow: FC<Props> = ({
       right={flexDirection === 'row-reverse' && '0'}
     >
       <Box
-        onClick={handleToggleDisplay}
+        onClick={handleToggleExpansion}
         sx={{ background: theme.palette.background.paper, display: 'flex', alignItems: 'center' }}
       >
-        {shouldDisplay ? (
+        {isExpanded ? (
           flexDirection === 'row' ? (
             <ChevronRight sx={{ fill: theme.palette.text.primary }} />
           ) : (
@@ -51,7 +50,7 @@ const FloatingWindow: FC<Props> = ({
           <ChevronRight sx={{ fill: theme.palette.text.primary }} />
         )}
       </Box>
-      <Collapse in={shouldDisplay} orientation="horizontal">
+      <Collapse in={isExpanded} orientation="horizontal">
         <Box
           boxSizing="border-box"
           paddingLeft="10px"

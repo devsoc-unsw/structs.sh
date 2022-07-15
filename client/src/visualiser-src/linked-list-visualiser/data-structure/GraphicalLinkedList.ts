@@ -22,13 +22,13 @@ import LinkedListAnimationProducer from '../animation-producer/LinkedListAnimati
 export default class GraphicalLinkedList extends GraphicalDataStructure {
   // this is the documentation shows up in the input section
   private static documentation: Documentation = injectIds({
+    prepend: {
+      args: ['value'],
+      description: 'Prepend a node containing the value.',
+    },
     append: {
       args: ['value'],
       description: 'Append a node containing the value.',
-    },
-    delete: {
-      args: ['index'],
-      description: 'Delete a node by the index given.',
     },
     insert: {
       args: ['value', 'index'],
@@ -38,9 +38,9 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
       args: ['value'],
       description: 'Search for a value in the linked list.',
     },
-    prepend: {
-      args: ['value'],
-      description: 'Prepend a node containing the value.',
+    delete: {
+      args: ['index'],
+      description: 'Delete a node by the index given.',
     },
   });
 
