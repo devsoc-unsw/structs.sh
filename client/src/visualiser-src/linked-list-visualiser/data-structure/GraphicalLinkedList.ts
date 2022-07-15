@@ -20,6 +20,7 @@ import LinkedListAnimationProducer from '../animation-producer/LinkedListAnimati
 // Every operation producers a LinkedListAnimationProducer, which an VisualiserController
 // can then use to place SVG.Runners on a timeline to animate the operation.
 export default class GraphicalLinkedList extends GraphicalDataStructure {
+  // this is the documentation shows up in the input section
   private static documentation: Documentation = injectIds({
     append: {
       args: ['value'],
@@ -59,6 +60,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
   }
 
   append(input: number): AnimationProducer {
+    // now increment the length of list by 1
     this.length += 1;
     const producer = new LinkedListAppendAnimationProducer();
     producer.renderAppendCode();
@@ -71,7 +73,10 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     if (this.head === null) {
       this.head = newNode;
       producer.doAnimationAndHighlight(4, producer.initialiseHead, this.headPointer);
-      producer.doAnimationAndHighlight(5, producer.resetPointers);
+      producer.doAnimationAndHighlight(5, producer.resetColor, this.head);
+      // producer.doAnimationAndHighlight(5, producer.resetPointers);
+
+      // producer.removeHighlightNode(this.head);
 
       return producer;
     }
@@ -90,7 +95,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     curr.next = newNode;
     producer.doAnimationAndHighlight(13, producer.linkLastToNew, curr);
 
-    producer.doAnimation(producer.resetPointers);
+    producer.doAnimation(producer.resetColor, curr.next);
     return producer;
   }
 

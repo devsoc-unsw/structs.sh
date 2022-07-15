@@ -90,22 +90,22 @@ export default abstract class AnimationProducer {
     this.highlightedLines = [line];
   }
 
-  public highlightCodeMultiple(lines: number[]): void {
-    // unhighlight previously highlighted lines
-    this.unhighlightCodeMultiple();
+  // public highlightCodeMultiple(lines: number[]): void {
+  //   // unhighlight previously highlighted lines
+  //   this.unhighlightCodeMultiple();
 
-    lines.forEach((line) => {
-      this.addSequenceAnimation(
-        this.codeTargets[line - 1].rectTarget.animate(1).attr({
-          fill: '#39AF8E',
-        })
-      );
-    });
+  //   lines.forEach((line) => {
+  //     this.addSequenceAnimation(
+  //       this.codeTargets[line - 1].rectTarget.animate(1).attr({
+  //         fill: '#39AF8E',
+  //       })
+  //     );
+  //   });
 
-    this.highlightedLines = lines;
+  //   this.highlightedLines = lines;
 
-    this.finishSequence();
-  }
+  //   this.finishSequence();
+  // }
 
   // these 2 functions are used to "decorate" animation function so each animation function doesn't
   // have to do code highlighting itself or push an animation sequence itself, which gives us more flexibility.

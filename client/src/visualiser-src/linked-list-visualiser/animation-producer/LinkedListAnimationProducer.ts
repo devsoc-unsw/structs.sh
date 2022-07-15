@@ -23,6 +23,16 @@ export default class LinkedListAnimationProducer extends AnimationProducer {
     this.addSequenceAnimation(newNode.numberTarget.animate().attr({ opacity: 1 }));
   }
 
+  public highlightNode(node: GraphicalLinkedListNode) {
+    this.addSequenceAnimation(node.boxTarget.animate().attr({ stroke: '#46B493' }));
+    this.addSequenceAnimation(node.numberTarget.animate().attr({ fill: '#46B493' }));
+  }
+
+  public removeHighlightNode(node: GraphicalLinkedListNode) {
+    this.addSequenceAnimation(node.boxTarget.animate().attr({ stroke: '#000000' }));
+    this.addSequenceAnimation(node.numberTarget.animate().attr({ fill: '#000000' }));
+  }
+
   public initialisePointer(pointerId: string) {
     const pointerSvg: Element = SVG(pointerId);
     pointerSvg.move(nodePathWidth + strokeWidth / 2, topOffset + actualNodeDiameter / 2);
@@ -37,6 +47,11 @@ export default class LinkedListAnimationProducer extends AnimationProducer {
   public resetPointers() {
     this.addSequenceAnimation(SVG(CURRENT).animate().attr({ opacity: 0 }));
     this.addSequenceAnimation(SVG(PREV).animate().attr({ opacity: 0 }));
+  }
+
+  public resetColorNode(head: GraphicalLinkedListNode) {
+    this.addSequenceAnimation(head.boxTarget.animate().attr({ stroke: '#000000' }));
+      this.addSequenceAnimation(head.numberTarget.animate().attr({ fill: '#000000' }));
   }
 
   public resetPositioning(headPointer: Path, head: GraphicalLinkedListNode) {

@@ -8,7 +8,16 @@ export default class LinkedListAppendAnimationProducer extends LinkedListAnimati
     this.renderCode(appendCodeSnippet);
   }
 
+  // public removeHighlightNode(node: GraphicalLinkedListNode) {
+  //   this.removeHighlightNode(node);
+  // }
+  public resetColor(head: GraphicalLinkedListNode) {
+    this.resetPointers();
+    this.resetColorNode(head);
+  }
+
   public addNodeAtEnd(newNode: GraphicalLinkedListNode, length: number) {
     this.createNodeAt(length, newNode, length);
+    this.highlightNode(newNode);
   }
 }
