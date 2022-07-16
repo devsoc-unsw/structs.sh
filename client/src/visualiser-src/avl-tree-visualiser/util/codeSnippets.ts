@@ -1,7 +1,7 @@
 export const insertCodeSnippet = `struct node *insert(struct node *node, int value) {
     if (node == null)
         return create_new_node(value);
-    else if (value < node->value)
+    if (value < node->value)
         node->left = insert(node->left, value);
     else if (value > node->value)
         node->right = insert(node->right, value);
