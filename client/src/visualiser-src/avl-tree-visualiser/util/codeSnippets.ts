@@ -1,9 +1,9 @@
 export const insertCodeSnippet = `struct node *insert(struct node *node, int value) {
     if (node == null)
         return create_new_node(value);
-    if (value < node->value)
+    else if (value < node->value)
         node->left = insert(node->left, value);
-    if (value > node->value)
+    else if (value > node->value)
         node->right = insert(node->right, value);
     else
         return node;
@@ -18,7 +18,6 @@ export const insertCodeSnippet = `struct node *insert(struct node *node, int val
         if (value < node->right->value) 
             node->right = rotate_right(node->right);
         return rotate_left(node);
-    } else {
-        return node;
-    }
+    } 
+    return node;
 }`;
