@@ -7,6 +7,7 @@ export const bubbleCodeSnippet = `void bubble_sort(int arr[], int arr_size) {
                 num_swaps++;
             }
         }
-        if (num_swaps == 0) break;
+        if (num_swaps == 0) 
+            break;
     }
 }`;
