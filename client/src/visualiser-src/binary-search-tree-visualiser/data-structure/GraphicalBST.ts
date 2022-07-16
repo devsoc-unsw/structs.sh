@@ -51,8 +51,8 @@ class GraphicalBST extends GraphicalDataStructure {
       animationProducer.doAnimationAndHighlight(3, animationProducer.createNode, this.root);
     } else {
       this.doInsert(this.root, input, animationProducer);
+      animationProducer.doAnimationAndHighlight(9, animationProducer.unhighlightBST, this.root);
     }
-    animationProducer.doAnimationAndHighlight(9, animationProducer.unhighlightBST, this.root);
     return animationProducer;
   }
 
