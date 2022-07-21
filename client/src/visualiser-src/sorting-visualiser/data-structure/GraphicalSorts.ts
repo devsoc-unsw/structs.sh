@@ -4,6 +4,7 @@ import { Documentation } from 'visualiser-src/common/typedefs';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { injectIds } from 'visualiser-src/common/helpers';
 import { CANVAS } from 'visualiser-src/linked-list-visualiser/util/constants';
+import { generateNumbers } from 'visualiser-src/common/RandomNumGenerator';
 import GraphicalSortsElement from './GraphicalSortsElement';
 import SortsBubbleAnimationProducer from '../animation-producer/SortsBubbleAnimationProducer';
 import SortsInsertionAnimationProducer from '../animation-producer/SortsInsertionAnimationProducer';
@@ -13,7 +14,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
   public elementList: GraphicalSortsElement[] = [];
 
   private static documentation: Documentation = injectIds({
-    create: {
+    insert: {
       args: ['values'],
       description: 'Add element to list of elements to sort',
     },
@@ -27,13 +28,12 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     }
   });
 
-  public create(values: number[]): AnimationProducer {
-    SVG(CANVAS).clear();
+  public insert(values: number[]): AnimationProducer {
     const producer = new SortsCreateAnimationProducer();
-    this.elementList = values.map((value, idx) => {
+    values.forEach((value) => {
       const element = GraphicalSortsElement.from(value);
-      producer.addBlock(value, idx, element);
-      return element;
+      producer.addBlock(value, this.elementList.length, element);
+      this.elementList.push(element);
     });
     return producer;
   }
@@ -48,7 +48,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     for (let i = 0; i < len; i += 1) {
       for (let j = 1; j < len - i; j += 1) {
         producer.doAnimationAndHighlightTimestamp(
-          4,
+          5,
           false,
           producer.compare,
           this.elementList[j - 1],
@@ -57,7 +57,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         );
         if (this.elementList[j].data.value < this.elementList[j - 1].data.value) {
           producer.doAnimationAndHighlightTimestamp(
-            5,
+            6,
             false,
             producer.swap,
             this.elementList[j - 1],
@@ -74,7 +74,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         }
       }
       if (numSwaps === 0) {
-        producer.doAnimationAndHighlight(10, producer.finishSequence, false);
+        producer.doAnimationAndHighlight(11, producer.finishSequence, false);
         return producer;
       }
       numSwaps = 0;
@@ -136,5 +136,10 @@ export default class GraphicalSortList extends GraphicalDataStructure {
 
   public get documentation(): Documentation {
     return GraphicalSortList.documentation;
+  }
+
+  public generate(): void {
+    const numbers = generateNumbers();
+    this.insert(numbers);
   }
 }

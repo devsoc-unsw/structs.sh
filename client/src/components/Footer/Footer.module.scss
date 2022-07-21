@@ -1,5 +1,5 @@
 .footer {
-    height: 300px;
+    height: 260px;
     padding-top: 8px;
     position: relative;
 
@@ -40,5 +40,11 @@
         bottom: 10px;
         width: 100%;
         text-align: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .footer {
+        height: 470px;
     }
 }

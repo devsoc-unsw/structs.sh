@@ -1,7 +1,6 @@
 import { Box } from '@mui/material';
 import React, { useCallback, useMemo, useEffect, useRef, useState } from 'react';
 import CodeSnippet from 'components/CodeSnippet/CodeSnippet';
-import { Pane } from 'components/Panes';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import VisualiserController from 'visualiser-src/controller/VisualiserController';
 import { VisualiserControls } from './Controller';
@@ -28,12 +27,14 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
   const controllerRef = useRef<VisualiserController>();
   const [isTimelineComplete, setIsTimelineComplete] = useState<boolean>(false);
   const [documentation, setDocumentation] = useState<Documentation>({});
+  const [isCodeSnippetExpanded, setIsCodeSnippetExpanded] = useState<boolean>(false);
 
   useEffect(() => {
     controllerRef.current = controllerRef.current || new VisualiserController();
     controllerRef.current.applyTopicTitle(topicTitle);
     topicTitleRef.current = topicTitle;
     setDocumentation(controllerRef.current.documentation);
+    setIsCodeSnippetExpanded(false);
   }, [topicTitle]);
 
   const handleTimelineUpdate = useCallback((val) => {
@@ -42,12 +43,17 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
     setIsTimelineComplete(val >= 100);
   }, []);
 
+  const handleSetCodeSnippetExpansion = useCallback((val) => {
+    setIsCodeSnippetExpanded(val);
+  }, []);
+
   const contextValues = useMemo(
     () => ({
       controller: controllerRef.current,
       topicTitle: topicTitleRef.current,
       documentation,
       timeline: { isTimelineComplete, handleTimelineUpdate },
+      codeSnippet: { isCodeSnippetExpanded, handleSetCodeSnippetExpansion },
     }),
     [
       controllerRef.current,
@@ -55,18 +61,16 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
       documentation,
       isTimelineComplete,
       handleTimelineUpdate,
+      isCodeSnippetExpanded,
+      handleSetCodeSnippetExpansion,
     ]
   );
 
   return (
     <VisualiserContext.Provider value={contextValues}>
-      <Box className={styles.interactor}>
-        <VisualiserControls />
-        <Pane orientation="vertical" minSize={150.9}>
-          <GUIMode />
-          <CodeSnippet />
-        </Pane>
-      </Box>
+      <GUIMode />
+      <CodeSnippet />
+      <VisualiserControls />
     </VisualiserContext.Provider>
   );
 };

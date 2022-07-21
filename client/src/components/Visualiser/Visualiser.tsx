@@ -1,5 +1,4 @@
 import { CircularLoader } from 'components/Loader';
-import { Pane } from 'components/Panes';
 import React from 'react';
 import VisualiserCanvas from './VisualiserCanvas';
 import VisualiserInterface from './VisualiserInterface';
@@ -19,10 +18,10 @@ interface VisualiserProps {
  */
 const Visualiser: React.FC<VisualiserProps> = ({ topicTitle }) =>
   topicTitle ? (
-    <Pane orientation="horizontal" minSize={150.9}>
+    <>
       <VisualiserCanvas />
       <VisualiserInterface topicTitle={topicTitle} />
-    </Pane>
+    </>
   ) : (
     <CircularLoader />
   );

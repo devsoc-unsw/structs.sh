@@ -1,6 +1,6 @@
 import { SVG, Runner } from '@svgdotjs/svg.js';
 import { CodeLine } from './typedefs';
-import { showLineNumbers, CODE_CANVAS } from './constants';
+import { showLineNumbers, CODE_CANVAS, CODE_CONTAINER } from './constants';
 
 interface RunnerInfo {
   runners: Runner[];
@@ -55,20 +55,23 @@ export default abstract class AnimationProducer {
     lines.forEach((line, i) => {
       const codeLine: CodeLine = {
         rectTarget: SVG()
-          .rect(1000, 20)
-          .move(0, 18 * i)
-          .fill('#ebebeb')
+          .rect(2000, 18)
+          .move(-5, 18 * i)
+          .fill('#14113C')
           .addTo(CODE_CANVAS),
         textTarget: SVG()
-          .text(showLineNumbers ? String(i + 1).padEnd(4, ' ') + line : line)
+          .text(showLineNumbers ? String(i + 1).padEnd(4, ' ') + line : line.trim())
           .font({ family: 'CodeText', size: 10 })
+          .fill('#FFFFFF')
           .attr('style', 'white-space: pre-wrap')
-          .move(0, 18 * i + 6)
+          .move(0, 18 * i + 2)
+          .x(line.search(/\S/) > 0 ? line.search(/\S/) * 5 : 0)
           .addTo(CODE_CANVAS),
       };
 
       this.codeTargets.push(codeLine);
     });
+    this.setContainerHeight();
   }
 
   // with highlightCode and highlightCodeMultiple
@@ -80,28 +83,13 @@ export default abstract class AnimationProducer {
 
     this.addSequenceAnimation(
       this.codeTargets[line - 1].rectTarget.animate(1).attr({
-        fill: '#4beb9b',
+        fill: '#39AF8E',
+        rx: '10',
+        ry: '10',
       })
     );
 
     this.highlightedLines = [line];
-  }
-
-  public highlightCodeMultiple(lines: number[]): void {
-    // unhighlight previously highlighted lines
-    this.unhighlightCodeMultiple();
-
-    lines.forEach((line) => {
-      this.addSequenceAnimation(
-        this.codeTargets[line - 1].rectTarget.animate(1).attr({
-          fill: '#4beb9b',
-        })
-      );
-    });
-
-    this.highlightedLines = lines;
-
-    this.finishSequence();
   }
 
   // these 2 functions are used to "decorate" animation function so each animation function doesn't
@@ -132,11 +120,16 @@ export default abstract class AnimationProducer {
     this.finishSequence();
   }
 
+  public doAnimationWithoutTimestamp(fn: any, ...args: any[]) {
+    fn.apply(this, args);
+    this.finishSequence(false);
+  }
+
   public unhighlightCodeMultiple(): void {
     this.highlightedLines.forEach((line) => {
       this.addSequenceAnimation(
         this.codeTargets[line - 1].rectTarget.animate(1).attr({
-          fill: '#ebebeb',
+          fill: '#14113C',
         })
       );
     });
@@ -156,5 +149,11 @@ export default abstract class AnimationProducer {
     }
 
     this._currentSequence = [];
+  }
+
+  // Modifies the height of the code snippet container to be
+  // responsive to the number of lines of code required for the operation
+  private setContainerHeight(): void {
+    document.getElementById(CODE_CONTAINER).style.height = `${18 * this.codeTargets.length}px`;
   }
 }

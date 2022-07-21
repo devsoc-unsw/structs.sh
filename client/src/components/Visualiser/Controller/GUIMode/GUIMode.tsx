@@ -1,7 +1,7 @@
-import React, { FC, useContext } from 'react';
-// import OperationsTree from './GUIOperations/OperationsTree';
-import { Alert, Box, List, Typography } from '@mui/material';
+import React, { useContext, useState } from 'react';
+import { Alert, Box, List, Typography, useTheme, Collapse } from '@mui/material';
 import VisualiserContext from 'components/Visualiser/VisualiserContext';
+import FloatingWindow from 'components/FloatingWindow/FloatingWindow';
 import OperationDetails from './OperationDetails';
 
 /**
@@ -16,6 +16,10 @@ import OperationDetails from './OperationDetails';
  */
 const GUIMode = () => {
   const { documentation, topicTitle } = useContext(VisualiserContext);
+  const [isExpanded, setIsExpanded] = useState<boolean>(true);
+  const handleToggleExpansion = () => {
+    setIsExpanded(!isExpanded);
+  };
 
   return !documentation ? (
     <Alert severity="error">
@@ -24,19 +28,17 @@ const GUIMode = () => {
       &apos;
     </Alert>
   ) : (
-    <Box sx={{ padding: 2, overflow: 'auto', height: 'calc(100% - 64px)' }}>
-      <Typography color="textPrimary">{topicTitle}</Typography>
+    <FloatingWindow
+      flexDirection="row"
+      isExpanded={isExpanded}
+      handleToggleExpansion={handleToggleExpansion}
+    >
       <List>
-        {Object.keys(documentation).map((command, idx) => (
-          <Box key={documentation[command].id}>
-            <OperationDetails
-              command={command}
-              isLast={idx === Object.keys(documentation).length - 1}
-            />
-          </Box>
+        {Object.keys(documentation).map((command) => (
+          <OperationDetails command={command} key={documentation[command].id} />
         ))}
       </List>
-    </Box>
+    </FloatingWindow>
   );
 };
 

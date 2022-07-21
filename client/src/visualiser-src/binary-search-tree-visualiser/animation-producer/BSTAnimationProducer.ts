@@ -1,22 +1,34 @@
-import { SVG, Container, Line, Marker } from '@svgdotjs/svg.js';
-import { CODE_CANVAS } from 'utils/constants';
-import { Node } from '../util/typedefs';
-import { CodeLine } from '../../common/typedefs';
-import { canvasPadding } from '../util/settings';
+import { Line, Marker } from '@svgdotjs/svg.js';
+import { lineDiffY, canvasPadding } from '../util/settings';
 import { getPointerStartEndCoordinates } from '../../common/helpers';
 import AnimationProducer from '../../common/AnimationProducer';
+import GraphicalBSTNode from '../data-structure/GraphicalBSTNode';
 
 export default class BSTAnimationProducer extends AnimationProducer {
-  public halfHighlightNode(node: Node): void {
+  public halfHighlightNode(node: GraphicalBSTNode): void {
     this.addSequenceAnimation(
       node.nodeTarget.animate(500).attr({
-        stroke: '#4beb9b',
+        stroke: '#39AF8E',
       })
     );
 
     this.addSequenceAnimation(
       node.textTarget.animate(500).attr({
-        fill: '#4beb9b',
+        fill: '#39AF8E',
+      })
+    );
+  }
+
+  public halfHighlightNodeRed(node: GraphicalBSTNode): void {
+    this.addSequenceAnimation(
+      node.nodeTarget.animate(500).attr({
+        stroke: '#AF3939',
+      })
+    );
+
+    this.addSequenceAnimation(
+      node.textTarget.animate(500).attr({
+        fill: '#AF3939',
       })
     );
   }
@@ -25,24 +37,24 @@ export default class BSTAnimationProducer extends AnimationProducer {
     if (lineTarget != null) {
       this.addSequenceAnimation(
         lineTarget.animate(500).attr({
-          stroke: '#4beb9b',
+          stroke: '#39AF8E',
         })
       );
 
       this.addSequenceAnimation(
         arrowTarget.animate(500).attr({
-          fill: '#4beb9b',
+          fill: '#39AF8E',
         })
       );
     }
   }
 
-  public updateBST(root: Node): void {
+  public updateBST(root: GraphicalBSTNode): void {
     this.updateNodesRecursive(root);
     this.updateLinesRecursive(root);
   }
 
-  public updateNodesRecursive(node: Node): void {
+  public updateNodesRecursive(node: GraphicalBSTNode): void {
     if (node === null) {
       return;
     }
@@ -52,13 +64,13 @@ export default class BSTAnimationProducer extends AnimationProducer {
     this.updateNodesRecursive(node.right);
   }
 
-  public updateNode(node: Node, newX: number, newY: number): void {
+  public updateNode(node: GraphicalBSTNode, newX: number, newY: number): void {
     this.addSequenceAnimation(node.nodeTarget.animate(400).cx(newX).cy(newY));
 
     this.addSequenceAnimation(node.textTarget.animate(400).cx(newX).cy(newY));
   }
 
-  public updateLinesRecursive(node: Node): void {
+  public updateLinesRecursive(node: GraphicalBSTNode): void {
     if (node === null) {
       return;
     }
@@ -68,9 +80,8 @@ export default class BSTAnimationProducer extends AnimationProducer {
     this.updateLinesRecursive(node.right);
   }
 
-  public updateNodeLines(node: Node): void {
+  public updateNodeLines(node: GraphicalBSTNode): void {
     const lineDiffX = BSTAnimationProducer.getLineDiffX(node);
-    const lineDiffY = 75;
 
     this.addSequenceAnimation(
       node.leftLineTarget
@@ -87,7 +98,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
 
   // returns the difference in x coordinates with the node
   // and it's two child nodes
-  public static getLineDiffX(node: Node): number {
+  public static getLineDiffX(node: GraphicalBSTNode): number {
     const canvasWidth = document.getElementById('visualiser-container').offsetWidth;
     const depth: number = (node.y - canvasPadding) / 75;
     const baseDiff = canvasWidth / 4;
@@ -95,12 +106,12 @@ export default class BSTAnimationProducer extends AnimationProducer {
     return baseDiff / 2 ** depth;
   }
 
-  public unhighlightBST(root: Node): void {
+  public unhighlightBST(root: GraphicalBSTNode): void {
     this.unhighlightLinesRecursive(root);
     this.unhighlightNodesRecursive(root);
   }
 
-  public unhighlightLinesRecursive(node: Node): void {
+  public unhighlightLinesRecursive(node: GraphicalBSTNode): void {
     if (node === null) {
       return;
     }
@@ -124,16 +135,10 @@ export default class BSTAnimationProducer extends AnimationProducer {
           fill: '#000000',
         })
       );
-
-      this.addSequenceAnimation(
-        arrowTarget.animate(500).attr({
-          fill: '#000000',
-        })
-      );
     }
   }
 
-  public unhighlightNodesRecursive(node: Node): void {
+  public unhighlightNodesRecursive(node: GraphicalBSTNode): void {
     if (node === null) {
       return;
     }
@@ -143,17 +148,17 @@ export default class BSTAnimationProducer extends AnimationProducer {
     this.unhighlightNodesRecursive(node.right);
   }
 
-  public updateAndUnhighlightBST(root: Node): void {
+  public updateAndUnhighlightBST(root: GraphicalBSTNode): void {
     this.updateNodesRecursive(root);
     this.updateLinesRecursive(root);
     this.unhighlightLinesRecursive(root);
     this.unhighlightNodesRecursive(root);
   }
 
-  public unhighlightNode(node: Node): void {
+  public unhighlightNode(node: GraphicalBSTNode): void {
     this.addSequenceAnimation(
       node.nodeTarget.animate(500).attr({
-        fill: '#ffffff',
+        fill: '#EBE8F4',
         stroke: '#000000',
       })
     );
@@ -163,5 +168,82 @@ export default class BSTAnimationProducer extends AnimationProducer {
         fill: '#000000',
       })
     );
+  }
+
+  public movePointerToNewRootRightChild(
+    oldRoot: GraphicalBSTNode,
+    newRoot: GraphicalBSTNode
+  ): void {
+    this.addSequenceAnimation(
+      oldRoot.leftLineTarget
+        .animate(400)
+        .plot(getPointerStartEndCoordinates(oldRoot.x, oldRoot.y, newRoot.right.x, newRoot.right.y))
+    );
+  }
+
+  public movePointerToNewRootLeftChild(oldRoot: GraphicalBSTNode, newRoot: GraphicalBSTNode): void {
+    this.addSequenceAnimation(
+      oldRoot.rightLineTarget
+        .animate(400)
+        .plot(getPointerStartEndCoordinates(oldRoot.x, oldRoot.y, newRoot.left.x, newRoot.left.y))
+    );
+  }
+
+  public moveRightPointerToOldRoot(oldRoot: GraphicalBSTNode, newRoot: GraphicalBSTNode): void {
+    this.addSequenceAnimation(
+      newRoot.rightLineTarget
+        .animate(400)
+        .plot(getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y))
+    );
+  }
+
+  public moveLeftPointerToOldRoot(oldRoot: GraphicalBSTNode, newRoot: GraphicalBSTNode): void {
+    this.addSequenceAnimation(
+      newRoot.leftLineTarget
+        .animate(400)
+        .plot(getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y))
+    );
+  }
+
+  public hideLine(line: Line): void {
+    this.addSequenceAnimation(
+      line.animate(400).attr({
+        opacity: 0,
+      })
+    );
+  }
+
+  public showLine(line: Line): void {
+    this.addSequenceAnimation(
+      line.animate(400).attr({
+        opacity: 1,
+      })
+    );
+  }
+
+  public assignNewRootRightPointerToOldRoot(
+    oldRoot: GraphicalBSTNode,
+    newRoot: GraphicalBSTNode
+  ): void {
+    this.addSequenceAnimation(
+      newRoot.rightLineTarget
+        .animate(1)
+        .plot(getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y))
+    );
+    this.finishSequence(false);
+    this.showLine(newRoot.rightLineTarget);
+  }
+
+  public assignNewRootLeftPointerToOldRoot(
+    oldRoot: GraphicalBSTNode,
+    newRoot: GraphicalBSTNode
+  ): void {
+    this.addSequenceAnimation(
+      newRoot.leftLineTarget
+        .animate(1)
+        .plot(getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y))
+    );
+    this.finishSequence(false);
+    this.showLine(newRoot.leftLineTarget);
   }
 }
