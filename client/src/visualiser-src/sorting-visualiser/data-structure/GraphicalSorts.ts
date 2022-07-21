@@ -6,6 +6,7 @@ import { injectIds } from 'visualiser-src/common/helpers';
 import { CANVAS } from 'visualiser-src/linked-list-visualiser/util/constants';
 import GraphicalSortsElement from './GraphicalSortsElement';
 import SortsBubbleAnimationProducer from '../animation-producer/SortsBubbleAnimationProducer';
+import SortsInsertionAnimationProducer from '../animation-producer/SortsInsertionAnimationProducer';
 import SortsCreateAnimationProducer from '../animation-producer/SortsCreateAnimationProducer';
 
 export default class GraphicalSortList extends GraphicalDataStructure {
@@ -62,7 +63,8 @@ export default class GraphicalSortList extends GraphicalDataStructure {
             this.elementList[j - 1],
             j - 1,
             this.elementList[j],
-            j === len - i - 1
+            j === len - i - 1,
+            j
           );
           [this.elementList[j], this.elementList[j - 1]] = [
             this.elementList[j - 1],
@@ -82,21 +84,53 @@ export default class GraphicalSortList extends GraphicalDataStructure {
   }
 
   insertion(): AnimationProducer {
-    const producer = new SortsBubbleAnimationProducer();
+    const producer = new SortsInsertionAnimationProducer();
+
+    producer.renderInsertionCode();
 
     const { length } = this.elementList;
 
-    let val;
-    let j = 0;
-    for (let i = 0; i < length; i += 1) {
-      val = this.elementList[i];
-      for (j = i; j >= 0; j -= 1) {
-        if (val < this.elementList[j - 1]) break;
-        this.elementList[j] = this.elementList[j - 1];
-      }
-      this.elementList[j] = val;
+    // console.log("before");
+    // for (let k = 0; k < length; k += 1) {
+    //   console.log(this.elementList[k].data.value);
+    // }
 
+
+    for (let i = 1; i < length; i += 1) {
+
+      // Choosing the first element in our unsorted subarray
+      const current = this.elementList[i];
+      // The last element of our sorted subarray
+      let j = i - 1;
+      if (current.data.value >= this.elementList[j].data.value) {
+        producer.compare(this.elementList[j], this.elementList[j + 1], i === length - 1);
+      }
+      while ((j > -1) && (current.data.value < this.elementList[j].data.value)) {
+        [this.elementList[j + 1], this.elementList[j]] = [this.elementList[j], this.elementList[j + 1]];
+
+        producer.compare(this.elementList[j], this.elementList[j + 1], j === length - 1);
+        producer.swap(this.elementList[j], j + 1, this.elementList[j + 1], true, j);
+        j -= 1;
+      }
+      this.elementList[j + 1] = current;
     }
+
+    // let val;
+    // let j = 0;
+    // for (let i = 0; i < length; i += 1) {
+    //   val = this.elementList[i];
+    //   for (j = i; j > 0; j -= 1) {
+    //     if (val >= this.elementList[j - 1]) break;
+    //     this.elementList[j] = this.elementList[j - 1];
+    //   }
+    //   this.elementList[j] = val;
+    // }
+
+
+    // console.log("after");
+    // for (let k = 0; k < length; k += 1) {
+    //   console.log(this.elementList[k].data.value);
+    // }
     return producer;
   }
 
