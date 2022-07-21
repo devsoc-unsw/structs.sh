@@ -58,7 +58,6 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
       id={learnMenuId}
       open={isLearnMenuOpen}
       onClose={handleLearnMenuClose}
-      className={styles.visualiserMenu}
     >
       {getTopics() &&
         getTopics().map((topic, idx) => (
@@ -94,7 +93,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
         }}
       >
         <Toolbar>
-          <Box display="flex" alignItems="center" width="100%">
+          <Box display="flex" alignItems="center">
             <Button color="info" onClick={handleLearnMenuOpen} endIcon={<KeyboardArrowDownIcon />}>
               <Typography>
                 Topic: <strong>{currTopic}</strong>
@@ -117,7 +116,6 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
                 </Typography>
               </Button>
             </Box>
-            <Box />
           </Box>
         </Toolbar>
       </AppBar>

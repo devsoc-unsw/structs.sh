@@ -48,7 +48,6 @@ const Layout: FC<Props> = ({
       <Box
         sx={{
           backgroundColor: !disableBackground && theme.palette.background.default,
-          overflowX: 'hidden',
         }}
       >
         {children}
