@@ -58,6 +58,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
       id={learnMenuId}
       open={isLearnMenuOpen}
       onClose={handleLearnMenuClose}
+      disableScrollLock
     >
       {getTopics() &&
         getTopics().map((topic, idx) => (

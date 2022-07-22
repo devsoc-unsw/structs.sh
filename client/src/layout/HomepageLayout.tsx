@@ -35,6 +35,7 @@ const Layout: FC<Props> = ({
   const theme: Theme = useTheme();
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     document.body.classList.toggle('index-page');
     // Specify how to clean up after this effect:
     return function cleanup() {
@@ -44,7 +45,7 @@ const Layout: FC<Props> = ({
 
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="exit">
-      <TopNavbar position={topNavPosition} enableOnScrollEffect />
+      <TopNavbar position={topNavPosition} enableOnScrollEffect={enableOnScrollEffect} />
       <Box
         sx={{
           backgroundColor: !disableBackground && theme.palette.background.default,
