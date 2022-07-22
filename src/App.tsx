@@ -4,13 +4,11 @@ import React, { useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { darkTheme } from 'structsThemes';
 import AboutUs from 'views/AboutUs';
-// import ContentManagementDashboard from 'views/ContentManagementDashboard';
 import Feedback from 'views/Feedback';
 import HomePage from 'views/HomePage';
 import Page404 from 'views/Page404';
 import VisualiserDashboard from 'views/VisualiserDashboard';
 import './App.scss';
-
 
 const App = () => {
   // removed light/dark mode hooks for now
@@ -18,7 +16,6 @@ const App = () => {
   return (
     <AnimatePresence>
       <ThemeProvider theme={currTheme}>
-        {/* <ThemeMutationContext.Provider value={themeMutationContextProviderValue}> */}
         <Routes>
           {/* Homepage */}
           <Route path="/" element={<HomePage />} />
@@ -31,12 +28,9 @@ const App = () => {
           {/* Feedback and feature request page */}
           <Route path="/feedback" element={<Feedback />} />
 
-          {/* Content management dashboard */}
-          {/* <Route path="/content" element={<ContentManagementDashboard />} /> */}
           {/* 404 page */}
           <Route path="*" element={<Page404 />} />
         </Routes>
-        {/* </ThemeMutationContext.Provider> */}
       </ThemeProvider>
     </AnimatePresence>
   );

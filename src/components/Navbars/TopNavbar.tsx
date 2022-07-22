@@ -1,28 +1,16 @@
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import SunIcon from '@mui/icons-material/Brightness7';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import GoogleIcon from '@mui/icons-material/Google';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import MoreIcon from '@mui/icons-material/MoreVert';
-import MoonIcon from '@mui/icons-material/NightsStay';
-import { Button, FormControl, TextField, useTheme } from '@mui/material';
+import { Button, useTheme } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { SxProps } from '@mui/system';
-// import { ThemeMutationContext } from 'App';
 import logo from 'assets/img/logo.png';
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Notification from 'utils/Notification';
 import { titleToUrl } from 'utils/url';
 import { getTopics } from '../../visualiser-src/common/helpers';
-import Drawer from './Drawer';
-// import SidebarContents from './SidebarContents';
 import styles from './TopNavbar.module.scss';
 
 interface Props {
@@ -56,14 +44,6 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
       window.removeEventListener('scroll', detectUserHasScrolledDown);
     };
   }, [setHasScrolledDown]);
-
-  /* ------------------------------ Data Fetching ----------------------------- */
-
-  // useEffect(() => {
-  //   getTopics()
-  //     .then((newTopics) => setTopics(newTopics))
-  //     .catch(() => console.log('TopNav: failed to get topics'));
-  // }, []);
 
   /* --------------------------- Dropdown Callbacks --------------------------- */
 

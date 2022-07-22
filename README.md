@@ -38,22 +38,6 @@ Structs.sh is an interactive data structure and algorithm visualiser and educati
 -   Content management system
     -   Create new topics, source code snippets, lessons and quizzes
 
-### Structs.sh Team
-
-Structs.sh is a project developed by passionate computer science students at the University of New South Wales!
-
-- [Your name], [hyperlinked GitHub username]
-- Tim Zhang, [@Tymotex](https://github.com/Tymotex/)
-
----
-
-## Why Structs.sh Exists
-
-Structs.sh is a project that aims to be a comprehensive educational resource for data structures and algorithms, developed by passionate computer science and engineering students at UNSW. Structs.sh was inspired by a previous project, <a href="https://github.com/Tymotex/Tactile-DS">Tactile-DS</a>, an earlier project developed in 2020 as a tutoring tool and reference implementation for students to use in <a href="https://www.handbook.unsw.edu.au/undergraduate/courses/2022/COMP2521/?year=2022">COMP2521</a>.
-
-Structs.sh exists to help bridge the gap between a student's high-level understanding of computer science concepts and how real code would accomplish a certain task. The project was started by students who felt there was a lack in tools/resources that focus on helping people develop a proper visual intuition for algorithmic thinking.
-
-
 # Documentation
 
 For everything architecture, endpoints documentation, style guide, etc. see

@@ -1,17 +1,12 @@
+import React from 'react';
 import { LineLoader } from 'components/Loader';
+import TopNavbar from 'components/Navbars/TopNavbar';
 import { Visualiser } from 'components/Visualiser';
-import React, { FC, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { getTopic, Topic } from 'utils/apiRequests';
-import Notification from 'utils/Notification';
-import { toTitleCase, urlToTitle } from 'utils/url';
-import 'visualiser-src/linked-list-visualiser/styles/visualiser.css';
 import { motion } from 'framer-motion';
 import Helmet from 'react-helmet';
-import TopNavbar from 'components/Navbars/TopNavbar';
-import { useTheme } from '@mui/styles';
-import { Theme } from '@mui/material';
-import Box from '@mui/material/Box';
+import { useParams } from 'react-router-dom';
+import { toTitleCase, urlToTitle } from 'utils/url';
+import 'visualiser-src/linked-list-visualiser/styles/visualiser.css';
 
 import styles from './VisualiserDashboard.module.scss';
 
