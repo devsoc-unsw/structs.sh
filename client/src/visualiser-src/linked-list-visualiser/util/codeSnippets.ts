@@ -53,7 +53,7 @@ export const deleteCodeSnippet = `void delete(int index, struct list *list) {
     free(curr);
 }`;
 
-export const prependCodeSnippet = `void prepend(int value, struct list *list)
+export const prependCodeSnippet = `void prepend(int value, struct list *list) {
     struct node *new_head = create_new_node(value);
     new_head->next = list->head;
     list->head = new_head;
