@@ -2,11 +2,11 @@ name: Docker
 on:
   push:
     branches:
-      - "master"
+      - 'master'
 
 jobs:
   build:
-    name: "Build (${{ matrix.component }})"
+    name: 'Build (${{ matrix.component }})'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        component: [client, server]
+        component: [client]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -36,7 +36,7 @@ jobs:
           context: ${{ matrix.component }}
           push: ${{ github.event_name != 'pull_request' }}
           platforms: linux/amd64
-          file: ${{ matrix.component }}/Dockerfile.prod
+          file: Dockerfile.prod
           tags: |
             ghcr.io/csesoc/structs-${{ matrix.component }}:${{ github.sha }}
             ghcr.io/csesoc/structs-${{ matrix.component }}:latest
