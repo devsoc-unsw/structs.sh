@@ -13,7 +13,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
   public elementList: GraphicalSortsElement[] = [];
 
   private static documentation: Documentation = injectIds({
-    insert: {
+    append: {
       args: ['values'],
       description: 'Add element to list of elements to sort',
     },
@@ -27,7 +27,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     },
   });
 
-  public insert(values: number[]): AnimationProducer {
+  public append(values: number[]): AnimationProducer {
     const producer = new SortsCreateAnimationProducer();
     values.forEach((value) => {
       const element = GraphicalSortsElement.from(value);
@@ -53,7 +53,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     });
     // Clear the canvas, and re-insert the existing values in the list into the canvas
     SVG(CANVAS).clear();
-    this.insert(listValues);
+    this.append(listValues);
 
     return producer;
   }
@@ -108,6 +108,6 @@ export default class GraphicalSortList extends GraphicalDataStructure {
 
   public generate(): void {
     const numbers = generateNumbers();
-    this.insert(numbers);
+    this.append(numbers);
   }
 }
