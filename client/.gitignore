@@ -3,3 +3,5 @@ build-storybook
 storybook-static
 build
 .jest-test-results.json
+cypress/downloads
+cypress/videos

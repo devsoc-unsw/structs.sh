@@ -76,6 +76,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
             )
           }
           fullWidth
+          aria-label={`${command} operation`}
         >
           <Typography color="textPrimary">{command}</Typography>
         </Button>
@@ -96,6 +97,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
                 onChange={(e) => handleSetArguments(e, idx)}
                 placeholder={eachArg}
                 sx={{ backgroundColor: theme.palette.background.paper }}
+                data-testid={`${command} ${eachArg}`}
               />
             </Box>
           ))}
@@ -108,10 +110,10 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
           >
             <Button
               variant="contained"
-              // color="primary"
               onClick={() => {
                 executeCommand(currentInputs);
               }}
+              aria-label={`run ${command}`}
             >
               Run
             </Button>
