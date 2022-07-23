@@ -74,9 +74,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
       this.head = newNode;
       producer.doAnimationAndHighlight(4, producer.initialiseHead, this.headPointer);
       producer.doAnimationAndHighlight(5, producer.resetPointersAndColor, this.head);
-      // producer.doAnimationAndHighlight(5, producer.resetPointers);
-
-      // producer.removeHighlightNode(this.head);
+      
 
       return producer;
     }
