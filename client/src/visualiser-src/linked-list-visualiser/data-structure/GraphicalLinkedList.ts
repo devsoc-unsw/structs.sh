@@ -165,7 +165,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
       }
     }
     producer.doAnimationAndHighlight(16, producer.deleteNode, curr);
-    producer.doAnimation(producer.resetColor, this.headPointer, this.head);
+    producer.doAnimation(producer.resetListAndColor, this.headPointer, this.head);
     return producer;
   }
 
@@ -187,7 +187,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     if (curr !== null) {
       producer.doAnimationAndHighlight(3, producer.indicateFound, curr);
     }
-    producer.doAnimationAndHighlight(6, producer.resetColor, this.head);
+    producer.doAnimationAndHighlight(6, producer.resetPointersAndColor, this.head);
     return producer;
   }
 

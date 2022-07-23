@@ -16,7 +16,7 @@ export default class LinkedListSearchAnimationProducer extends LinkedListAnimati
     this.highlightNotRightNode(node);
   }
 
-  public resetColor(head: GraphicalLinkedListNode) {
+  public resetPointersAndColor(head: GraphicalLinkedListNode) {
     this.resetPointers();
     let curr = head;
     while (curr != null) {
