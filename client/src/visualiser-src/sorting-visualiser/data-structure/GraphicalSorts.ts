@@ -88,49 +88,29 @@ export default class GraphicalSortList extends GraphicalDataStructure {
 
     producer.renderInsertionCode();
 
-    const { length } = this.elementList;
+    const len = this.elementList.length;
+    producer.highlightUnsortedArray(this.elementList, len);
 
-    // console.log("before");
-    // for (let k = 0; k < length; k += 1) {
-    //   console.log(this.elementList[k].data.value);
-    // }
-
-
-    for (let i = 1; i < length; i += 1) {
-
+    // >> 4 > 5 3 2 1
+    for (let currIndex = 1; currIndex < len; currIndex += 1) {
+      // currIndex is the next unsorted index
       // Choosing the first element in our unsorted subarray
-      const current = this.elementList[i];
+      const current = this.elementList[currIndex];
       // The last element of our sorted subarray
-      let j = i - 1;
-      if (current.data.value >= this.elementList[j].data.value) {
-        producer.compare(this.elementList[j], this.elementList[j + 1], i === length - 1);
-      }
-      while ((j > -1) && (current.data.value < this.elementList[j].data.value)) {
-        [this.elementList[j + 1], this.elementList[j]] = [this.elementList[j], this.elementList[j + 1]];
+      let srtedEndIdx = currIndex - 1;
 
-        producer.compare(this.elementList[j], this.elementList[j + 1], j === length - 1);
-        producer.swap(this.elementList[j], j + 1, this.elementList[j + 1], true, j);
-        j -= 1;
+      if (current.data.value >= this.elementList[srtedEndIdx].data.value) {
+        producer.compare(this.elementList[srtedEndIdx], this.elementList[srtedEndIdx + 1], true);
       }
-      this.elementList[j + 1] = current;
+
+      while ((srtedEndIdx > -1) && (current.data.value < this.elementList[srtedEndIdx].data.value)) {
+        producer.compare(this.elementList[srtedEndIdx], this.elementList[srtedEndIdx + 1], (srtedEndIdx === 0 || current.data.value >= this.elementList[srtedEndIdx - 1].data.value) && currIndex === len - 1);
+        producer.swap(this.elementList[srtedEndIdx], srtedEndIdx, this.elementList[srtedEndIdx + 1], true);
+        [this.elementList[srtedEndIdx + 1], this.elementList[srtedEndIdx]] = [this.elementList[srtedEndIdx], this.elementList[srtedEndIdx + 1]];
+        srtedEndIdx -= 1;
+      }
     }
-
-    // let val;
-    // let j = 0;
-    // for (let i = 0; i < length; i += 1) {
-    //   val = this.elementList[i];
-    //   for (j = i; j > 0; j -= 1) {
-    //     if (val >= this.elementList[j - 1]) break;
-    //     this.elementList[j] = this.elementList[j - 1];
-    //   }
-    //   this.elementList[j] = val;
-    // }
-
-
-    // console.log("after");
-    // for (let k = 0; k < length; k += 1) {
-    //   console.log(this.elementList[k].data.value);
-    // }
+    producer.finishSequence();
     return producer;
   }
 
