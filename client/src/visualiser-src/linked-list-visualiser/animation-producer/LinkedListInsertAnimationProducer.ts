@@ -1,3 +1,4 @@
+import { Path } from '@svgdotjs/svg.js';
 import LinkedListAnimationProducer from './LinkedListAnimationProducer';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
 import { getPointerPath } from '../util/util';
@@ -7,6 +8,13 @@ import { insertCodeSnippet } from '../util/codeSnippets';
 export default class LinkedListInsertAnimationProducer extends LinkedListAnimationProducer {
   public renderInsertCode(): void {
     this.renderCode(insertCodeSnippet);
+  }
+
+  public addNodeAt(index: number, newNode: GraphicalLinkedListNode, length: number) {
+    // create a new node at the end of the list
+    this.createNodeAt(index, newNode, length);
+    // then highlight the new node
+    this.highlightRightNode(newNode);
   }
 
   public insertedNodePointToNext(newNode: GraphicalLinkedListNode) {
