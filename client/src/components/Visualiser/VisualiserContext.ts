@@ -9,6 +9,8 @@ interface VisualiserContextValues {
   timeline?: {
     isTimelineComplete: boolean;
     handleTimelineUpdate: (val: string | number) => void;
+    isPlaying: boolean;
+    handleUpdateIsPlaying: (val: boolean) => void;
   };
   codeSnippet?: {
     isCodeSnippetExpanded: boolean;
