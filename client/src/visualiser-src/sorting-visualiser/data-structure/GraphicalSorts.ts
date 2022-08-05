@@ -39,20 +39,13 @@ export default class GraphicalSortList extends GraphicalDataStructure {
 
   public delete(values: number[]): AnimationProducer {
     const producer = new SortsCreateAnimationProducer();
-    // Create a new list of values
-    const listValues = this.elementList.map((element) => element.data.value);
-    // Empty current list: values will be re-inserted
-    this.elementList = [];
+    const listValues = this.elementList
+      .map((element) => element.data.value)
+      .filter((x) => !values.includes(x));
 
-    // Remove each value the user inputs from the list
-    values.forEach((value) => {
-      const index = listValues.indexOf(value);
-      if (index >= 0) {
-        listValues.splice(index, 1);
-      }
-    });
     // Clear the canvas, and re-insert the existing values in the list into the canvas
     SVG(CANVAS).clear();
+    this.elementList = [];
     this.append(listValues);
 
     return producer;
