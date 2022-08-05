@@ -10,8 +10,9 @@ export default class SortsInsertionAnimationProducer extends SortsAnimationProdu
 
     public highlightUnsortedArray(array: GraphicalSortsElement[], length: number) {
         for (let i = 1; i < length; i += 1) {
-            this.addSequenceAnimation(array[i].boxTarget.animate(1).attr({ stroke: '#cc3131', fill: '#cc3131' }));
-            this.addSequenceAnimation(array[i].numberTarget.animate(1).attr({ fill: '#cc3131' }));
+            this.addSequenceAnimation(array[i].boxTarget.animate(400).attr({ stroke: '#cc3131' }));
+            this.addSequenceAnimation(array[i].boxTarget.animate(400).attr({ fill: '#cc3131' }));
+            this.addSequenceAnimation(array[i].numberTarget.animate(500).attr({ fill: '#cc3131' }));
         }
         this.finishSequence();
     }
@@ -31,32 +32,37 @@ export default class SortsInsertionAnimationProducer extends SortsAnimationProdu
         this.addSequenceAnimation(from.numberTarget.animate().cx(cxTo));
         this.addSequenceAnimation(to.boxTarget.animate().x(xFrom));
         this.addSequenceAnimation(to.numberTarget.animate().cx(cxFrom));
-        this.finishSequence();
-        this.addSequenceAnimation(to.boxTarget.animate(1).attr({ stroke: '#000000', fill: '#000000' }));
-        this.addSequenceAnimation(to.numberTarget.animate(1).attr({ fill: '#000000' }));
 
+
+        this.addSequenceAnimation(
+            from.boxTarget.animate(1).attr({ stroke: '#000000', fill: '#000000' })
+        );
+        this.addSequenceAnimation(from.numberTarget.animate(1).attr({ fill: '#000000' }));
         if (isLast) {
-            this.addSequenceAnimation(
-                from.boxTarget.animate(1).attr({ stroke: '#000000', fill: '#000000' })
-            );
-            this.addSequenceAnimation(from.numberTarget.animate(1).attr({ fill: '#000000' }));
+            this.addSequenceAnimation(to.boxTarget.animate(300).attr({ stroke: '#000000', fill: '#000000' }));
+            this.addSequenceAnimation(to.numberTarget.animate(300).attr({ fill: '#000000' }));
         }
+        this.finishSequence();
     }
 
     public compare(item1: GraphicalSortsElement, item2: GraphicalSortsElement, isLast: boolean) {
-        this.addSequenceAnimation(item1.boxTarget.animate(10).attr({ stroke: '#c4c274' }));
-        this.addSequenceAnimation(item2.boxTarget.animate(10).attr({ stroke: '#c4c274' }));
-        this.addSequenceAnimation(item1.boxTarget.animate(10).attr({ fill: '#c4c274' }));
-        this.addSequenceAnimation(item2.boxTarget.animate(10).attr({ fill: '#c4c274' }));
-        this.addSequenceAnimation(item1.numberTarget.animate(10).attr({ fill: '#c4c274' }));
-        this.addSequenceAnimation(item2.numberTarget.animate(10).attr({ fill: '#c4c274' }));
-        this.addSequenceAnimation(item1.numberTarget.animate().attr({ opacity: 1 }));
+
+
+
+        if (item2.boxTarget.fill() !== '#39AF8E') {
+            this.addSequenceAnimation(item2.boxTarget.animate(200).attr({ stroke: '#39AF8E' }));
+            this.addSequenceAnimation(item2.boxTarget.animate(200).attr({ fill: '#39AF8E' }));
+            this.addSequenceAnimation(item2.numberTarget.animate(200).attr({ fill: '#39AF8E' }));
+            this.addSequenceAnimation(item1.numberTarget.animate().attr({ opacity: 1 }));
+            this.finishSequence();
+        }
+
+        this.addSequenceAnimation(item1.boxTarget.animate(100).attr({ stroke: '#bfbf84' }));
+        this.addSequenceAnimation(item1.numberTarget.animate(100).attr({ fill: '#bfbf84' }));
+        this.addSequenceAnimation(item1.boxTarget.animate(100).attr({ fill: '#bfbf84' }));
         this.finishSequence();
-        // if (item1.data.value <= item2.data.value) {
-        //     this.addSequenceAnimation(item1.boxTarget.animate(1).attr({ stroke: '#000000' }));
-        //     this.addSequenceAnimation(item1.boxTarget.animate(1).attr({ fill: '#000000' }));
-        //     this.addSequenceAnimation(item1.numberTarget.animate(1).attr({ fill: '#000000' }));
-        // }
+
+        // TODO pause for a bit and highlight while loop
 
         // Unhighlights the comparison of the last two boxes
         if (isLast) {

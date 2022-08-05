@@ -89,9 +89,14 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     producer.renderInsertionCode();
 
     const len = this.elementList.length;
-    producer.highlightUnsortedArray(this.elementList, len);
+    producer.doAnimationAndHighlightTimestamp(
+      4,
+      false,
+      producer.highlightUnsortedArray,
+      this.elementList,
+      len
+    );
 
-    // >> 4 > 5 3 2 1
     for (let currIndex = 1; currIndex < len; currIndex += 1) {
       // currIndex is the next unsorted index
       // Choosing the first element in our unsorted subarray
@@ -100,16 +105,40 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       let srtedEndIdx = currIndex - 1;
 
       if (current.data.value >= this.elementList[srtedEndIdx].data.value) {
-        producer.compare(this.elementList[srtedEndIdx], this.elementList[srtedEndIdx + 1], true);
+        producer.doAnimationAndHighlightTimestamp(
+          8,
+          false,
+          producer.compare,
+          this.elementList[srtedEndIdx],
+          this.elementList[srtedEndIdx + 1],
+          true
+        );
       }
 
       while ((srtedEndIdx > -1) && (current.data.value < this.elementList[srtedEndIdx].data.value)) {
-        producer.compare(this.elementList[srtedEndIdx], this.elementList[srtedEndIdx + 1], (srtedEndIdx === 0 || current.data.value >= this.elementList[srtedEndIdx - 1].data.value) && currIndex === len - 1);
-        producer.swap(this.elementList[srtedEndIdx], srtedEndIdx, this.elementList[srtedEndIdx + 1], true);
+        producer.doAnimationAndHighlightTimestamp(
+          10,
+          false,
+          producer.compare,
+          this.elementList[srtedEndIdx],
+          this.elementList[srtedEndIdx + 1],
+          ((srtedEndIdx === 0 || current.data.value >= this.elementList[srtedEndIdx - 1].data.value) && currIndex === len - 1)
+        );
+
+        producer.doAnimationAndHighlightTimestamp(
+          9,
+          false,
+          producer.swap,
+          this.elementList[srtedEndIdx],
+          srtedEndIdx, this.elementList[srtedEndIdx + 1],
+          (srtedEndIdx === 0 || current.data.value >= this.elementList[srtedEndIdx - 1].data.value)
+        );
+
         [this.elementList[srtedEndIdx + 1], this.elementList[srtedEndIdx]] = [this.elementList[srtedEndIdx], this.elementList[srtedEndIdx + 1]];
         srtedEndIdx -= 1;
       }
     }
+    producer.highlightCode(13);
     producer.finishSequence();
     return producer;
   }
