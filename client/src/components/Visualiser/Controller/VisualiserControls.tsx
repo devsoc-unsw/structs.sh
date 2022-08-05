@@ -4,6 +4,8 @@ import PlayIcon from '@mui/icons-material/PlayCircleOutline';
 import ReplayIcon from '@mui/icons-material/Replay';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import FastForwardIcon from '@mui/icons-material/FastForward';
+import FastRewindIcon from '@mui/icons-material/FastRewind';
 import SpeedIcon from '@mui/icons-material/Speed';
 import CheckIcon from '@mui/icons-material/Check';
 import {
@@ -35,9 +37,8 @@ import styles from './Control.module.scss';
 const VisualiserControls = () => {
   const {
     controller,
-    timeline: { isTimelineComplete, handleTimelineUpdate },
+    timeline: { isTimelineComplete, handleTimelineUpdate, isPlaying, handleUpdateIsPlaying },
   } = useContext(VisualiserContext);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [userIsDraggingTimeline, setUserIsDraggingTimeline] = useState<boolean>(false);
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -47,18 +48,34 @@ const VisualiserControls = () => {
 
   const handlePlay = useCallback(() => {
     controller.play();
+    handleUpdateIsPlaying(true);
   }, [controller]);
 
   const handlePause = useCallback(() => {
     controller.pause();
+    handleUpdateIsPlaying(false);
   }, [controller]);
 
   const handleStepForward = useCallback(() => {
-    controller.stepForwards();
-  }, [controller]);
+    if (isPlaying) {
+      controller.skipForwards();
+    } else {
+      controller.stepForwards();
+    }
+  }, [controller, isPlaying]);
 
   const handleStepBackward = useCallback(() => {
+    handlePause();
     controller.stepBackwards();
+  }, [controller]);
+
+  const handleFastRewind = useCallback(() => {
+    handlePause();
+    controller.seekPercent(0);
+  }, [controller]);
+
+  const handleFastForward = useCallback(() => {
+    controller.seekPercent(100);
   }, [controller]);
 
   const handleSetSpeed = useCallback(
@@ -97,25 +114,19 @@ const VisualiserControls = () => {
     setAnchorEl(null);
   };
 
-  useEffect(() => {
-    if (isTimelineComplete) {
-      setIsPlaying(false);
-    } else if (!isPlaying) {
-      setIsPlaying(true);
-    }
-  }, [isTimelineComplete, handleTimelineUpdate]);
-
   return (
     <Box className={styles.root} bgcolor={theme.palette.background.default}>
+      <IconButton onClick={() => handleFastRewind()}>
+        <FastRewindIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
+      </IconButton>
       <IconButton onClick={() => handleStepBackward()}>
         <SkipPreviousIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
       </IconButton>
       {isTimelineComplete ? (
         <IconButton
           onClick={() => {
-            handleDragTimeline(0);
+            controller.seekPercent(0);
             handlePlay();
-            setIsPlaying(true);
           }}
         >
           <ReplayIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
@@ -124,7 +135,6 @@ const VisualiserControls = () => {
         <IconButton
           onClick={() => {
             handlePause();
-            setIsPlaying(false);
           }}
         >
           <PauseIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
@@ -133,7 +143,6 @@ const VisualiserControls = () => {
         <IconButton
           onClick={() => {
             handlePlay();
-            setIsPlaying(true);
           }}
         >
           <PlayIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
@@ -141,6 +150,9 @@ const VisualiserControls = () => {
       )}
       <IconButton onClick={() => handleStepForward()}>
         <SkipNextIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
+      </IconButton>
+      <IconButton onClick={() => handleFastForward()}>
+        <FastForwardIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
       </IconButton>
 
       <Button onClick={handleClick} className={styles.setSpeedButton}>
@@ -205,7 +217,7 @@ const VisualiserControls = () => {
           }}
           onMouseDown={() => {
             setUserIsDraggingTimeline(true);
-            handlePause();
+            controller.pause();
           }}
           onMouseUp={() => {
             setUserIsDraggingTimeline(false);
