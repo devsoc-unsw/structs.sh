@@ -3,11 +3,11 @@
 export const generateNumbers = () =>{
   const result = [];
   const set = new Set();
-  const min = 4;
-  const max = 9;
+  const min = 8;
+  const max = 12;
   const totalNodes = Math.floor(Math.random() * (max - min + 1) + min);
   for (let i = 0; i < totalNodes; i += 1) {
-    const num = Math.ceil(Math.random() * 10);
+    const num = Math.ceil(Math.random() * 99);
     set.add(num);
   }
   set.forEach(num => result.push(num));
