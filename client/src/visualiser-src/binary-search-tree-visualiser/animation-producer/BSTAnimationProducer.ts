@@ -5,6 +5,21 @@ import AnimationProducer from '../../common/AnimationProducer';
 import GraphicalBSTNode from '../data-structure/GraphicalBSTNode';
 
 export default class BSTAnimationProducer extends AnimationProducer {
+  public highlightNode(node: GraphicalBSTNode): void {
+    this.addSequenceAnimation(
+      node.nodeTarget.animate(500).attr({
+        fill: '#39AF8E',
+        stroke: '#39AF8E',
+      })
+    );
+
+    this.addSequenceAnimation(
+      node.textTarget.animate(500).attr({
+        fill: '#ffffff',
+      })
+    );
+  }
+
   public halfHighlightNode(node: GraphicalBSTNode): void {
     this.addSequenceAnimation(
       node.nodeTarget.animate(500).attr({

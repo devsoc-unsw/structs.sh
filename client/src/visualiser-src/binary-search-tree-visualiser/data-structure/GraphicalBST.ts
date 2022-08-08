@@ -118,9 +118,10 @@ class GraphicalBST extends GraphicalDataStructure {
     input: number,
     animationProducer: BSTRotateAnimationProducer
   ): GraphicalBSTNode {
-    animationProducer.doAnimationAndHighlight(2, animationProducer.halfHighlightNode, node);
     if (input === node.value) {
+      animationProducer.doAnimationAndHighlight(2, animationProducer.highlightNode, node);
       const newRoot: GraphicalBSTNode = node.right;
+      animationProducer.doAnimationAndHighlight(3, animationProducer.highlightNode, newRoot);
 
       if (newRoot.left != null) {
         animationProducer.doAnimationAndHighlight(
@@ -155,6 +156,7 @@ class GraphicalBST extends GraphicalDataStructure {
       return newRoot;
     }
     if (input < node.value) {
+      animationProducer.doAnimationAndHighlight(7, animationProducer.halfHighlightNode, node);
       animationProducer.doAnimationAndHighlight(
         8,
         animationProducer.highlightLine,
@@ -163,6 +165,7 @@ class GraphicalBST extends GraphicalDataStructure {
       );
       node.left = this.doRotateLeft(node.left, input, animationProducer);
     } else {
+      animationProducer.doAnimationAndHighlight(9, animationProducer.halfHighlightNode, node);
       animationProducer.doAnimationAndHighlight(
         10,
         animationProducer.highlightLine,
@@ -202,9 +205,10 @@ class GraphicalBST extends GraphicalDataStructure {
     input: number,
     animationProducer: BSTRotateAnimationProducer
   ): GraphicalBSTNode {
-    animationProducer.doAnimationAndHighlight(2, animationProducer.halfHighlightNode, node);
     if (input === node.value) {
+      animationProducer.doAnimationAndHighlight(2, animationProducer.highlightNode, node);
       const newRoot: GraphicalBSTNode = node.left;
+      animationProducer.doAnimationAndHighlight(3, animationProducer.highlightNode, newRoot);
 
       if (newRoot.right != null) {
         animationProducer.doAnimationAndHighlight(
@@ -239,6 +243,7 @@ class GraphicalBST extends GraphicalDataStructure {
       return newRoot;
     }
     if (input < node.value) {
+      animationProducer.doAnimationAndHighlight(7, animationProducer.halfHighlightNode, node);
       animationProducer.doAnimationAndHighlight(
         8,
         animationProducer.highlightLine,
@@ -247,6 +252,7 @@ class GraphicalBST extends GraphicalDataStructure {
       );
       node.left = this.doRotateRight(node.left, input, animationProducer);
     } else {
+      animationProducer.doAnimationAndHighlight(9, animationProducer.halfHighlightNode, node);
       animationProducer.doAnimationAndHighlight(
         10,
         animationProducer.highlightLine,
