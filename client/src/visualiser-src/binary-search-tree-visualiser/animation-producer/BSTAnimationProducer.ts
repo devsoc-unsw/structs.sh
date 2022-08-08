@@ -53,12 +53,14 @@ export default class BSTAnimationProducer extends AnimationProducer {
       this.addSequenceAnimation(
         lineTarget.animate(500).attr({
           stroke: '#39AF8E',
+          opacity: 1,
         })
       );
 
       this.addSequenceAnimation(
         arrowTarget.animate(500).attr({
           fill: '#39AF8E',
+          opacity: 1,
         })
       );
     }

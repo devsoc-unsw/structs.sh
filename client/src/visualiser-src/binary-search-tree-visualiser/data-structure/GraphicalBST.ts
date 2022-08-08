@@ -48,7 +48,8 @@ class GraphicalBST extends GraphicalDataStructure {
     if (this.root === null) {
       this.root = GraphicalBSTNode.from(input);
       updateNodePositions(this.root);
-      animationProducer.doAnimationAndHighlight(3, animationProducer.createNode, this.root);
+      animationProducer.doAnimationAndHighlight(3, animationProducer.createNode, this.root, true);
+      animationProducer.doAnimation(animationProducer.unhighlightBST, this.root);
     } else {
       this.doInsert(this.root, input, animationProducer);
       animationProducer.doAnimationAndHighlight(9, animationProducer.unhighlightBST, this.root);
@@ -275,43 +276,38 @@ class GraphicalBST extends GraphicalDataStructure {
     animationProducer: BSTInsertAnimationProducer
   ) {
     if (root.value > input) {
-      animationProducer.doAnimationAndHighlight(6, animationProducer.halfHighlightNode, root);
+      animationProducer.doAnimationAndHighlight(5, animationProducer.halfHighlightNode, root);
+      animationProducer.doAnimationAndHighlight(
+        6,
+        animationProducer.highlightLine,
+        root.leftLineTarget,
+        root.leftArrowTarget
+      );
       if (root.left == null) {
         root.left = GraphicalBSTNode.from(input);
         updateNodePositions(this.root);
-        animationProducer.doAnimationAndHighlight(
-          3,
-          animationProducer.createNodeLeft,
-          root.left,
-          root
-        );
+        animationProducer.doAnimationAndHighlight(3, animationProducer.createNode, root.left, true);
       } else {
-        animationProducer.doAnimationAndHighlight(
-          6,
-          animationProducer.highlightLine,
-          root.leftLineTarget,
-          root.leftArrowTarget
-        );
         this.doInsert(root.left, input, animationProducer);
       }
     } else if (root.value < input) {
-      animationProducer.doAnimationAndHighlight(8, animationProducer.halfHighlightNode, root);
+      animationProducer.doAnimationAndHighlight(7, animationProducer.halfHighlightNode, root);
+      animationProducer.doAnimationAndHighlight(
+        8,
+        animationProducer.highlightLine,
+        root.rightLineTarget,
+        root.rightArrowTarget
+      );
       if (root.right == null) {
         root.right = GraphicalBSTNode.from(input);
         updateNodePositions(this.root);
         animationProducer.doAnimationAndHighlight(
           3,
-          animationProducer.createNodeRight,
+          animationProducer.createNode,
           root.right,
-          root
+          true
         );
       } else {
-        animationProducer.doAnimationAndHighlight(
-          8,
-          animationProducer.highlightLine,
-          root.rightLineTarget,
-          root.rightArrowTarget
-        );
         this.doInsert(root.right, input, animationProducer);
       }
     } else {

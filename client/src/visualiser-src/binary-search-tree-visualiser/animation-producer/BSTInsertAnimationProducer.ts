@@ -30,7 +30,7 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
   }
 
   // draws a node on the draw canvas and shows the node
-  public createNode(node: GraphicalBSTNode): void {
+  public createNode(node: GraphicalBSTNode, highlight: boolean = false): void {
     // based on the depth of the node we are able to create left and right svg line targets
     const lineDiffX = BSTAnimationProducer.getLineDiffX(node);
     const leftChildCoordinates = getPointerStartEndCoordinates(
@@ -61,16 +61,33 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
     node.nodeTarget.cx(node.x).cy(node.y);
     node.textTarget.cx(node.x).cy(node.y);
 
-    this.addSequenceAnimation(
-      node.nodeTarget.animate(400).attr({
-        opacity: 1,
-      })
-    );
+    if (highlight) {
+      this.addSequenceAnimation(
+        node.nodeTarget.animate(400).attr({
+          opacity: 1,
+          fill: '#39AF8E',
+          stroke: '#39AF8E',
+        })
+      );
 
-    this.addSequenceAnimation(
-      node.textTarget.animate(400).attr({
-        opacity: 1,
-      })
-    );
+      this.addSequenceAnimation(
+        node.textTarget.animate(400).attr({
+          opacity: 1,
+          fill: '#ffffff',
+        })
+      );
+    } else {
+      this.addSequenceAnimation(
+        node.nodeTarget.animate(400).attr({
+          opacity: 1,
+        })
+      );
+
+      this.addSequenceAnimation(
+        node.textTarget.animate(400).attr({
+          opacity: 1,
+        })
+      );
+    }
   }
 }
