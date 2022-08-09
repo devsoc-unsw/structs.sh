@@ -105,11 +105,7 @@ class GraphicalAVL extends GraphicalDataStructure {
           root.right,
           true
         );
-        animationProducer.doAnimationAndHighlight(
-          22,
-          animationProducer.unhighlightNode,
-          root.right
-        );
+        animationProducer.doAnimation(animationProducer.unhighlightNode, root.right);
       } else if (!this.doInsert(root, root.right, false, input, animationProducer)) {
         return false;
       }
@@ -124,8 +120,10 @@ class GraphicalAVL extends GraphicalDataStructure {
     // Begin rebalancing
     root.updateHeight();
     if (root.balance > 1) {
+      animationProducer.doAnimationAndHighlight(13, animationProducer.highlightNode, root);
       if (input > root.left.value) {
         // Left Right Case
+        animationProducer.doAnimationAndHighlight(14, animationProducer.highlightNode, root.left);
         animationProducer.highlightCode(15);
         this.rotateLeft(root, root.left, true, animationProducer);
       }
@@ -133,8 +131,10 @@ class GraphicalAVL extends GraphicalDataStructure {
       animationProducer.highlightCode(16);
       this.rotateRight(parent, root, isInsertLeft, animationProducer);
     } else if (root.balance < -1) {
+      animationProducer.doAnimationAndHighlight(17, animationProducer.highlightNode, root);
       if (input < root.right.value) {
         // Right Left Case
+        animationProducer.doAnimationAndHighlight(18, animationProducer.highlightNode, root.right);
         animationProducer.highlightCode(19);
         this.rotateRight(root, root.right, false, animationProducer);
       }
@@ -143,6 +143,7 @@ class GraphicalAVL extends GraphicalDataStructure {
       this.rotateLeft(parent, root, isInsertLeft, animationProducer);
     } else {
       // Case where node is already balanced
+      animationProducer.doAnimationAndHighlight(21, animationProducer.highlightNode, root);
       animationProducer.doAnimationAndHighlight(
         22,
         animationProducer.unhighlightNodeAndPointers,
