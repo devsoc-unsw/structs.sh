@@ -84,7 +84,7 @@ class GraphicalAVL extends GraphicalDataStructure {
         root.left = GraphicalAVLNode.from(input);
         updateNodePositions(this.root);
         animationProducer.doAnimationAndHighlight(3, animationProducer.createNode, root.left, true);
-        animationProducer.doAnimationAndHighlight(22, animationProducer.unhighlightNode, root.left);
+        animationProducer.doAnimation(animationProducer.unhighlightNode, root.left);
       } else if (!this.doInsert(root, root.left, true, input, animationProducer)) {
         return false;
       }
@@ -111,7 +111,7 @@ class GraphicalAVL extends GraphicalDataStructure {
       }
     } else {
       // highlight root red
-      animationProducer.doAnimation(animationProducer.halfHighlightNodeRed, root);
+      animationProducer.doAnimationAndHighlight(8, animationProducer.halfHighlightNodeRed, root);
       animationProducer.doAnimationAndHighlight(9, animationProducer.unhighlightBST, this.root);
 
       // return value corresponds to whether to continue or exit the operation
