@@ -43,9 +43,19 @@
       cursor: pointer;
     }
 
+    // Chrome/Opera/Safari/Edge slider thumb
     .timelineSlider::-webkit-slider-thumb {
       appearance: none;
-      height: 15px;
+      height: 12px;
+      width: 5px;
+      background: #FAFAFA;
+    }
+
+    // Firefox Slider Thumb
+    .timelineSlider::-moz-range-thumb {
+      border-radius: 0;
+      border: none;
+      height: 100%;
       width: 5px;
       background: #FAFAFA;
     }
