@@ -40,7 +40,7 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
   const handleTimelineUpdate = useCallback((val) => {
     const timelineSlider = document.querySelector('#timelineSlider') as HTMLInputElement;
     timelineSlider.value = String(val);
-    timelineSlider.style.background = `linear-gradient(to right, #39AF8E ${val}%, #EBE8F4 ${val}%)`;
+    timelineSlider.style.background = `linear-gradient(to right, #39AF8E ${val}%, #aeabba ${val}%)`;
     setIsTimelineComplete(val >= 100);
   }, []);
 
