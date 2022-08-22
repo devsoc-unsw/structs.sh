@@ -5,6 +5,7 @@ import { Topics } from 'components/Topics';
 import { Footer } from 'components/Footer';
 import { Features } from 'components/Features';
 import { HomepageLayout } from 'layout';
+import Helmet from 'react-helmet';
 import React from 'react';
 import styles from './HomePage.module.scss';
 
@@ -13,6 +14,9 @@ const HomePage = () => {
 
   return (
     <HomepageLayout disableBackground>
+      <Helmet>
+        <title>Structs.sh</title>
+      </Helmet>
       <Box className={styles.header}>
         <Typography
           color="white"
