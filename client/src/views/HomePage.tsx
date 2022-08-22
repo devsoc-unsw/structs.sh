@@ -30,9 +30,7 @@ const HomePage = () => {
         >
           An interactive learning platform for computer science, tailored to UNSW CSE students.
         </Typography>
-        {/* <Box> */}
         <Topics />
-        {/* </Box> */}
       </Box>
       <Box
         sx={{
