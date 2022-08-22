@@ -8,13 +8,11 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
 import Check from '@mui/icons-material/Check';
-// import { ThemeMutationContext } from 'App';
 import logo from 'assets/img/logo.png';
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { titleToUrl, toTitleCase, urlToTitle } from 'utils/url';
 import { getTopics } from '../../visualiser-src/common/helpers';
-// import SidebarContents from './SidebarContents';
 import styles from './TopNavbar.module.scss';
 
 interface Props {
@@ -97,7 +95,8 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
           <Box display="flex" alignItems="center">
             <Button color="info" onClick={handleLearnMenuOpen} endIcon={<KeyboardArrowDownIcon />}>
               <Typography>
-                Topic: <strong>{currTopic}</strong>
+                <strong>{currTopic ? 'Topic: ' : 'Topics'}</strong>
+                {currTopic}
               </Typography>
             </Button>
             <Box className={styles.centralBox}>
