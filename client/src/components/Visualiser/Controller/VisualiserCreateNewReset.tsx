@@ -32,14 +32,14 @@ const VisualiserCreateNewReset = () => {
   }, [controller]);
 
   return (
-    <Box className={styles.root} bgcolor={theme.palette.background.default} position='absolute' top='80px' right='10px' width='300px'>
-      <Button className={styles.resetButton} onClick={handleGenerate}>
-        <Typography color="textPrimary" sx={{ whiteSpace: 'nowrap' }}>
+    <Box className={styles.createResetMenu}>
+      <Button className={styles.resetButton} onClick={handleGenerate}  sx={{ backgroundColor: 'F03D6A' }}>
+        <Typography color="#14113C" sx={{ whiteSpace: 'nowrap' }}>
           Create New
         </Typography>
       </Button>
       <Button className={styles.resetButton} onClick={handleReset}>
-        <Typography color="textPrimary" whiteSpace="nowrap">
+        <Typography color="#14113C" whiteSpace="nowrap">
           Reset All
         </Typography>
       </Button>
