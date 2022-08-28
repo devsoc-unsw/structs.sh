@@ -78,7 +78,8 @@ class GraphicalAVL extends GraphicalDataStructure {
         5,
         animationProducer.highlightLine,
         root.leftLineTarget,
-        root.leftArrowTarget
+        root.leftArrowTarget,
+        true
       );
       if (root.left == null) {
         root.left = GraphicalAVLNode.from(input);
@@ -94,7 +95,8 @@ class GraphicalAVL extends GraphicalDataStructure {
         7,
         animationProducer.highlightLine,
         root.rightLineTarget,
-        root.rightArrowTarget
+        root.rightArrowTarget,
+        true
       );
       if (root.right == null) {
         root.right = GraphicalAVLNode.from(input);
