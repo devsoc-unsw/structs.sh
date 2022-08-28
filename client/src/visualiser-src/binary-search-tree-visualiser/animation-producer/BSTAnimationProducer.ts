@@ -48,21 +48,35 @@ export default class BSTAnimationProducer extends AnimationProducer {
     );
   }
 
-  public highlightLine(lineTarget: Line, arrowTarget: Marker): void {
+  public highlightLine(lineTarget: Line, arrowTarget: Marker, create: boolean = false): void {
     if (lineTarget != null) {
-      this.addSequenceAnimation(
-        lineTarget.animate(500).attr({
-          stroke: '#39AF8E',
-          opacity: 1,
-        })
-      );
+      if (create) {
+        this.addSequenceAnimation(
+          lineTarget.animate(500).attr({
+            stroke: '#39AF8E',
+            opacity: 1,
+          })
+        );
 
-      this.addSequenceAnimation(
-        arrowTarget.animate(500).attr({
-          fill: '#39AF8E',
-          opacity: 1,
-        })
-      );
+        this.addSequenceAnimation(
+          arrowTarget.animate(500).attr({
+            fill: '#39AF8E',
+            opacity: 1,
+          })
+        );
+      } else {
+        this.addSequenceAnimation(
+          lineTarget.animate(500).attr({
+            stroke: '#39AF8E',
+          })
+        );
+
+        this.addSequenceAnimation(
+          arrowTarget.animate(500).attr({
+            fill: '#39AF8E',
+          })
+        );
+      }
     }
   }
 
