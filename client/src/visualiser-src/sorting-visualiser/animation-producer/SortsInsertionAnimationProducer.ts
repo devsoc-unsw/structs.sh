@@ -64,7 +64,7 @@ export default class SortsInsertionAnimationProducer extends SortsAnimationProdu
         this.addSequenceAnimation(item1.boxTarget.animate(100).attr({ fill: '#bfbf84' }));
         this.finishSequence();
 
-        // TODO pause for a bit and highlight while loop
+        // pause for a bit
         this.addSequenceAnimation(item1.boxTarget.animate(200).attr({ stroke: '#bfbf84' }));
         this.addSequenceAnimation(item1.numberTarget.animate(200).attr({ fill: '#bfbf84' }));
         this.addSequenceAnimation(item1.boxTarget.animate(200).attr({ fill: '#bfbf84' }));
