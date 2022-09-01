@@ -106,11 +106,12 @@ export default class GraphicalSortList extends GraphicalDataStructure {
 
       if (current.data.value >= this.elementList[srtedEndIdx].data.value) {
         producer.doAnimationAndHighlightTimestamp(
-          8,
+          3,
           false,
-          producer.compare,
+          producer.comparei,
           this.elementList[srtedEndIdx],
           this.elementList[srtedEndIdx + 1],
+          true,
           true
         );
       }
@@ -119,14 +120,15 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         producer.doAnimationAndHighlightTimestamp(
           10,
           false,
-          producer.compare,
+          producer.comparei,
           this.elementList[srtedEndIdx],
           this.elementList[srtedEndIdx + 1],
-          ((srtedEndIdx === 0 || current.data.value >= this.elementList[srtedEndIdx - 1].data.value) && currIndex === len - 1)
+          ((srtedEndIdx === 0 || current.data.value >= this.elementList[srtedEndIdx - 1].data.value) && currIndex === len - 1),
+          ((srtedEndIdx === currIndex - 1))
         );
 
         producer.doAnimationAndHighlightTimestamp(
-          9,
+          8,
           false,
           producer.swap,
           this.elementList[srtedEndIdx],
