@@ -89,58 +89,64 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     producer.renderInsertionCode();
 
     const len = this.elementList.length;
+
+    let j = 0;
     producer.doAnimationAndHighlightTimestamp(
-      4,
+      3,
       false,
-      producer.highlightUnsortedArray,
-      this.elementList,
-      len
+      producer.highlightBoxes,
+      this.elementList.slice(-(len - 1)),
+      1
     );
 
-    for (let currIndex = 1; currIndex < len; currIndex += 1) {
-      // currIndex is the next unsorted index
-      // Choosing the first element in our unsorted subarray
-      const current = this.elementList[currIndex];
-      // The last element of our sorted subarray
-      let srtedEndIdx = currIndex - 1;
+    for (let i = 1; i < len; i += 1) {
+      const val = this.elementList[i];
 
-      if (current.data.value >= this.elementList[srtedEndIdx].data.value) {
+      producer.doAnimationAndHighlightTimestamp(
+        4,
+        false,
+        producer.highlightBoxes,
+        [this.elementList[i]],
+        2
+      );
+
+      for (j = i; j > 0; j -= 1) {
         producer.doAnimationAndHighlightTimestamp(
-          3,
+          6,
           false,
-          producer.comparei,
-          this.elementList[srtedEndIdx],
-          this.elementList[srtedEndIdx + 1],
-          true,
-          true
+          producer.highlightBoxes,
+          [this.elementList[j - 1]],
+          3
         );
+        if (val.data.value >= this.elementList[j - 1].data.value) {
+          producer.doAnimationAndHighlightTimestamp(
+            7,
+            false,
+            producer.highlightBoxes,
+            [this.elementList[j - 1]],
+            0
+          );
+          break;
+        }
+        producer.doAnimationAndHighlightTimestamp(
+          9,
+          false,
+          producer.swapi,
+          this.elementList[j - 1],
+          j - 1, this.elementList[j],
+          false
+        );
+        [this.elementList[j], this.elementList[j - 1]] = [this.elementList[j - 1], this.elementList[j]];
       }
-
-      while ((srtedEndIdx > -1) && (current.data.value < this.elementList[srtedEndIdx].data.value)) {
-        producer.doAnimationAndHighlightTimestamp(
-          10,
-          false,
-          producer.comparei,
-          this.elementList[srtedEndIdx],
-          this.elementList[srtedEndIdx + 1],
-          ((srtedEndIdx === 0 || current.data.value >= this.elementList[srtedEndIdx - 1].data.value) && currIndex === len - 1),
-          ((srtedEndIdx === currIndex - 1))
-        );
-
-        producer.doAnimationAndHighlightTimestamp(
-          8,
-          false,
-          producer.swap,
-          this.elementList[srtedEndIdx],
-          srtedEndIdx, this.elementList[srtedEndIdx + 1],
-          (srtedEndIdx === 0 || current.data.value >= this.elementList[srtedEndIdx - 1].data.value)
-        );
-
-        [this.elementList[srtedEndIdx + 1], this.elementList[srtedEndIdx]] = [this.elementList[srtedEndIdx], this.elementList[srtedEndIdx + 1]];
-        srtedEndIdx -= 1;
-      }
+      producer.doAnimationAndHighlightTimestamp(
+        3,
+        false,
+        producer.highlightBoxes,
+        [this.elementList[j]],
+        0
+      );
     }
-    producer.highlightCode(13);
+    producer.highlightCode(11);
     producer.finishSequence();
     return producer;
   }

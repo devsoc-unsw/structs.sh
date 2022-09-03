@@ -8,106 +8,45 @@ export default class SortsInsertionAnimationProducer extends SortsAnimationProdu
         this.renderCode(insertionCodeSnippet);
     }
 
-    public highlightUnsortedArray(array: GraphicalSortsElement[], length: number) {
-        for (let i = 1; i < length; i += 1) {
-            this.addSequenceAnimation(array[i].boxTarget.animate(400).attr({ stroke: '#cc3131' }));
-            this.addSequenceAnimation(array[i].boxTarget.animate(400).attr({ fill: '#cc3131' }));
-            this.addSequenceAnimation(array[i].numberTarget.animate(500).attr({ fill: '#cc3131' }));
+    public highlightBoxes(array: GraphicalSortsElement[], colourCode: number) {
+        let colour = '#000000';
+        if (colourCode === 1) {
+            colour = '#E22B4F';
+        } else if (colourCode === 2) {
+            colour = '#39AF8E';
+        } else if (colourCode === 3) {
+            colour = '#FFBC53';
         }
+        array.forEach((x) => {
+            this.addSequenceAnimation(x.boxTarget.animate(400).attr({ stroke: colour }));
+            this.addSequenceAnimation(x.boxTarget.animate(400).attr({ fill: colour }));
+            this.addSequenceAnimation(x.numberTarget.animate(400).attr({ fill: colour }));
+        })
         this.finishSequence();
     }
 
-    public swap(
+    public swapi(
         from: GraphicalSortsElement,
         fromIndex: number,
-        to: GraphicalSortsElement,
-        isLast: boolean
+        to: GraphicalSortsElement
     ) {
         const xFrom = getX(fromIndex);
         const cxFrom = getCx(fromIndex);
         const xTo = getX(fromIndex + 1);
         const cxTo = getCx(fromIndex + 1);
 
-        // flicker
         this.addSequenceAnimation(to.boxTarget.animate(10).attr({ stroke: '#39AF8E' }));
         this.addSequenceAnimation(to.boxTarget.animate(10).attr({ fill: '#39AF8E' }));
         this.addSequenceAnimation(to.numberTarget.animate(10).attr({ fill: '#39AF8E' }));
         this.finishSequence();
-        // this.addSequenceAnimation(from.boxTarget.animate(10).attr({ stroke: '#000000' }));
-        // this.addSequenceAnimation(from.boxTarget.animate(10).attr({ fill: '#000000' }));
-        // this.addSequenceAnimation(from.numberTarget.animate(10).attr({ fill: '#000000' }));
-        // this.finishSequence();
-        // this.addSequenceAnimation(from.boxTarget.animate(10).attr({ stroke: '#39AF8E' }));
-        // this.addSequenceAnimation(from.boxTarget.animate(10).attr({ fill: '#39AF8E' }));
-        // this.addSequenceAnimation(from.numberTarget.animate(10).attr({ fill: '#39AF8E' }));
-        // this.finishSequence();
-        // this.addSequenceAnimation(from.boxTarget.animate(10).attr({ stroke: '#000000' }));
-        // this.addSequenceAnimation(from.boxTarget.animate(10).attr({ fill: '#000000' }));
-        // this.addSequenceAnimation(from.numberTarget.animate(10).attr({ fill: '#000000' }));
-        // this.finishSequence();
-        // this.addSequenceAnimation(from.boxTarget.animate(10).attr({ stroke: '#39AF8E' }));
-        // this.addSequenceAnimation(from.boxTarget.animate(10).attr({ fill: '#39AF8E' }));
-        // this.addSequenceAnimation(from.numberTarget.animate(10).attr({ fill: '#39AF8E' }));
-        // this.finishSequence();
-        // end flicker
 
-        this.highlightCode(9);
         this.addSequenceAnimation(from.boxTarget.animate().x(xTo));
         this.addSequenceAnimation(from.numberTarget.animate().cx(cxTo));
         this.addSequenceAnimation(to.boxTarget.animate().x(xFrom));
         this.addSequenceAnimation(to.numberTarget.animate().cx(cxFrom));
 
-        this.addSequenceAnimation(
-            from.boxTarget.animate(1).attr({ stroke: '#000000', fill: '#000000' })
-        );
+        this.addSequenceAnimation(from.boxTarget.animate(1).attr({ stroke: '#000000', fill: '#000000' }));
         this.addSequenceAnimation(from.numberTarget.animate(1).attr({ fill: '#000000' }));
-
-
-        if (isLast) {
-            this.highlightCode(8);
-            this.addSequenceAnimation(to.boxTarget.animate(300).attr({ stroke: '#000000', fill: '#000000' }));
-            this.addSequenceAnimation(to.numberTarget.animate(300).attr({ fill: '#000000' }));
-        }
         this.finishSequence();
-    }
-
-    // I named it comparei because I added a isFirst parameter
-    public comparei(item1: GraphicalSortsElement, item2: GraphicalSortsElement, isLast: boolean, isFirst: boolean) {
-        if (item2.boxTarget.fill() !== '#39AF8E') {
-            if (isFirst) {
-                this.highlightCode(3);
-            }
-            this.addSequenceAnimation(item2.boxTarget.animate(200).attr({ stroke: '#39AF8E' }));
-            this.addSequenceAnimation(item2.boxTarget.animate(200).attr({ fill: '#39AF8E' }));
-            this.addSequenceAnimation(item2.numberTarget.animate(200).attr({ fill: '#39AF8E' }));
-            this.addSequenceAnimation(item1.numberTarget.animate().attr({ opacity: 1 }));
-            this.finishSequence();
-        }
-        if (!isFirst) {
-            this.highlightCode(10);
-            this.addSequenceAnimation(item1.boxTarget.animate(100).attr({ stroke: '#bfbf84' }));
-            this.addSequenceAnimation(item1.numberTarget.animate(100).attr({ fill: '#bfbf84' }));
-            this.addSequenceAnimation(item1.boxTarget.animate(100).attr({ fill: '#bfbf84' }));
-            this.finishSequence();
-        }
-
-        // pause for comparing
-        this.highlightCode(8);
-        this.addSequenceAnimation(item1.boxTarget.animate(300).attr({ stroke: '#bfbf84' }));
-        this.addSequenceAnimation(item1.numberTarget.animate(300).attr({ fill: '#bfbf84' }));
-        this.addSequenceAnimation(item1.boxTarget.animate(300).attr({ fill: '#bfbf84' }));
-        this.finishSequence();
-
-        // Unhighlights the comparison of the last two boxes
-        if (isLast) {
-            this.addSequenceAnimation(item2.boxTarget.animate(1).attr({ stroke: '#000000' }));
-            this.addSequenceAnimation(item2.boxTarget.animate(1).attr({ fill: '#000000' }));
-            this.addSequenceAnimation(item2.numberTarget.animate(1).attr({ fill: '#000000' }));
-
-            this.addSequenceAnimation(item1.boxTarget.animate(1).attr({ stroke: '#000000' }));
-            this.addSequenceAnimation(item1.boxTarget.animate(1).attr({ fill: '#000000' }));
-            this.addSequenceAnimation(item1.numberTarget.animate(1).attr({ fill: '#000000' }));
-            this.finishSequence();
-        }
     }
 }

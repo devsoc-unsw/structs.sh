@@ -12,16 +12,15 @@ export const bubbleCodeSnippet = `void bubble_sort(int arr[], int arr_size) {
     }
 }`;
 
-export const insertionCodeSnippet = `void sort(int arr[], int arr_size) {
-    // Loop through unsorted partition of the array
+export const insertionCodeSnippet = `void insertionSort(int a[], int arr_size)
+{
     for (int i = 1; i < arr_size; i++) {
-        int j = i;
-
-        // Keep swapping the jth element with the element below
-        // Until it is in the correct position of sorted partition
-        while (j > 0 && arr[j] < arr[j - 1]) {
-            swap(&arr[j], &arr[j - 1]);
-            j--;
+        int val = a[i];
+        for (int j = i; j > 0; j--) {
+            if (val >= a[j-1])) {
+            break;
+            }
+            swap(a[j], a[j-1]);
         }
     }
 }
