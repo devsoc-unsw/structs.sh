@@ -43,11 +43,6 @@ const Footer: React.FC<Props> = () => {
                 Information
               </Typography>
               <Typography color="textSecondary">
-                <Link to="/about" className={styles.link}>
-                  About Us
-                </Link>
-              </Typography>
-              <Typography color="textSecondary">
                 <a className={styles.link} href="https://github.com/csesoc/Structs.sh">
                   GitHub Repository
                 </a>
