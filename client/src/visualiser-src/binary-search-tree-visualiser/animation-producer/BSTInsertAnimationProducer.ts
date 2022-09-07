@@ -62,6 +62,7 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
     node.textTarget.cx(node.x).cy(node.y);
 
     if (highlight) {
+      // If node should be highligted during creation
       this.addSequenceAnimation(
         node.nodeTarget.animate(400).attr({
           opacity: 1,
