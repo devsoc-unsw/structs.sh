@@ -29,6 +29,7 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
   const [isTimelineComplete, setIsTimelineComplete] = useState<boolean>(false);
   const [documentation, setDocumentation] = useState<Documentation>({});
   const [isCodeSnippetExpanded, setIsCodeSnippetExpanded] = useState<boolean>(false);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   useEffect(() => {
     controllerRef.current = controllerRef.current || new VisualiserController();
@@ -48,12 +49,16 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
     setIsCodeSnippetExpanded(val);
   }, []);
 
+  const handleUpdateIsPlaying = useCallback((val) => {
+    setIsPlaying(val);
+  }, []);
+
   const contextValues = useMemo(
     () => ({
       controller: controllerRef.current,
       topicTitle: topicTitleRef.current,
       documentation,
-      timeline: { isTimelineComplete, handleTimelineUpdate },
+      timeline: { isTimelineComplete, handleTimelineUpdate, isPlaying, handleUpdateIsPlaying },
       codeSnippet: { isCodeSnippetExpanded, handleSetCodeSnippetExpansion },
     }),
     [
@@ -62,6 +67,8 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
       documentation,
       isTimelineComplete,
       handleTimelineUpdate,
+      isPlaying,
+      handleUpdateIsPlaying,
       isCodeSnippetExpanded,
       handleSetCodeSnippetExpansion,
     ]
