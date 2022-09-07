@@ -48,11 +48,11 @@ class GraphicalBST extends GraphicalDataStructure {
     if (this.root === null) {
       this.root = GraphicalBSTNode.from(input);
       updateNodePositions(this.root);
-      animationProducer.doAnimationAndHighlight(9, animationProducer.createNode, this.root);
+      animationProducer.doAnimationAndHighlight(3, animationProducer.createNode, this.root);
     } else {
       this.doInsert(this.root, input, animationProducer);
+      animationProducer.doAnimationAndHighlight(9, animationProducer.unhighlightBST, this.root);
     }
-    animationProducer.doAnimationAndHighlight(9, animationProducer.unhighlightBST, this.root);
     return animationProducer;
   }
 
@@ -310,6 +310,8 @@ class GraphicalBST extends GraphicalDataStructure {
       }
     } else {
       // highlight root red
+      animationProducer.doAnimation(animationProducer.halfHighlightNodeRed, root);
+      animationProducer.doAnimationAndHighlight(9, animationProducer.unhighlightBST, this.root);
     }
   }
 }

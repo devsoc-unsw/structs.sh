@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        component: [client, server]
+        component: [client]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -55,7 +55,7 @@ jobs:
           repository: csesoc/deployment
           token: ${{ secrets.GH_TOKEN }}
       - name: Install yq
-        uses: mikefarah/yq@v4.25.1
+        uses: mikefarah/yq@v4.27.2
       - name: Update deployment
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -64,9 +64,8 @@ jobs:
           git config user.email "technical@csesoc.org.au"
           git checkout -b update/structs/${{ github.sha }}
           yq -i '.items[0].spec.template.spec.containers[0].image = "ghcr.io/csesoc/structs-client:${{ github.sha }}"' apps/projects/structs/deploy-frontend.yml
-          yq -i '.items[0].spec.template.spec.containers[0].image = "ghcr.io/csesoc/structs-server:${{ github.sha }}"' apps/projects/structs/deploy-backend.yml
           git add . 
-          git commit -m "feat(structs): update images" 
+          git commit -m "feat(structs): update image" 
           git push -u origin update/structs/${{ github.sha }}
-          gh pr create --title "feat(structs): update image" --body "Updates the images for the structs deployment to commit csesoc/Structs.sh@${{ github.sha }}." > URL
+          gh pr create --title "feat(structs): update image" --body "Updates the image for the structs deployment to commit csesoc/Structs.sh@${{ github.sha }}." > URL
           gh pr merge $(cat URL) --squash -d
