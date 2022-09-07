@@ -57,11 +57,9 @@ const VisualiserControls = () => {
   }, [controller]);
 
   const handleStepForward = useCallback(() => {
-    if (isPlaying) {
-      controller.skipForwards();
-    } else {
-      controller.stepForwards();
-    }
+    controller.stepForwards();
+    // Stepforward pauses when animation is complete, so set state of isPlaying to false
+    handleUpdateIsPlaying(false);
   }, [controller, isPlaying]);
 
   const handleStepBackward = useCallback(() => {

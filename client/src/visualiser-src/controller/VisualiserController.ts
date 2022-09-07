@@ -118,10 +118,6 @@ class VisualiserController {
     this.currentTimeline.play();
   }
 
-  public skipForwards(): void {
-    this.currentTimeline.time(this.computeNextTimestamp());
-  }
-
   public applyTopicTitle(topicTitle: string) {
     this.topicTitle = topicTitle;
     this.dataStructure = GraphicalDataStructureFactory.create(topicTitle);
@@ -217,18 +213,6 @@ class VisualiserController {
       }
     }
     return prevTimestamp;
-  }
-
-  private computeNextTimestamp(): number {
-    const sortedTimestamps = [...this.timestamps].sort((x, y) => x - y);
-    let nextTimestamp = 0;
-    for (let i = 0; i < this.timestamps.length; i += 1) {
-      if (sortedTimestamps[i] > this.currentTime) {
-        nextTimestamp = sortedTimestamps[i];
-        break;
-      }
-    }
-    return nextTimestamp;
   }
 
   private get currentTime() {
