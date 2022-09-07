@@ -4,19 +4,16 @@ import React from 'react';
 import Container from '@mui/material/Container';
 
 const Feedback = () => (
-  <HomepageLayout topNavPosition="fixed" enableOnScrollEffect>
-    <Box sx={{ marginTop: '80px', textAlign: 'center', height: 'calc(100vh - 80px)' }}>
+  <HomepageLayout topNavPosition="fixed">
+    <Box paddingTop="100px" textAlign="center" height="100%">
       <Container maxWidth="md">
         <Typography color="textPrimary" variant="h3">
           Feedback for Structs.sh
         </Typography>
         <br />
         <Typography color="textPrimary" variant="body1">
-          <strong>Structs.sh</strong>
-          {' '}
-          is maintained by passionate computer science and
-          engineering students at UNSW. We rely heavily on community feedback to
-          improve our project!
+          <strong>Structs.sh</strong> is maintained by passionate computer science and engineering
+          students at UNSW. We rely heavily on community feedback to improve our project!
         </Typography>
         <br />
         <Typography color="textPrimary" variant="body2">
@@ -32,7 +29,8 @@ const Feedback = () => (
         marginWidth={0}
         style={{
           width: '100%',
-          height: '100%',
+          height: '100vh',
+          // height: '100%',
         }}
       >
         Loading…

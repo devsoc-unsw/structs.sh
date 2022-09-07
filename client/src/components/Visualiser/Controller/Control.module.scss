@@ -40,12 +40,18 @@
     
   }
 
-  .resetButton {
-    margin-left: 10px;
-    margin-right: 10px;
-  }
-
-
+}
+.createResetMenu {
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+  width: 200px;
+  position:absolute;
+  top:80px;
+  right:10px;
+  gap: 10px
 }
 
-
+.resetButton {
+  width: 100%;
+}
