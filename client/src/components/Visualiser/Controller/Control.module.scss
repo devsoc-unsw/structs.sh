@@ -8,7 +8,7 @@
 
   .setSpeedButton {
     margin-left: 5px;
-    margin-right: 5px;
+    margin-right: 10px;
     position: relative;
 
     .setSpeedButtonIcon {
@@ -19,6 +19,7 @@
 
     .currSpeed {
       left: 50%;
+      margin-left: 5px;
       position: absolute;
     }
   }
@@ -28,7 +29,7 @@
     display: flex;
     justify-content: center;
     margin-right: 5px;
-    
+
     .sliderIcon {
       align-self: center;
       margin-right: 5px;
@@ -48,7 +49,7 @@
       appearance: none;
       height: 12px;
       width: 5px;
-      background: #FAFAFA;
+      background: #fafafa;
     }
 
     // Firefox Slider Thumb
@@ -57,20 +58,19 @@
       border: none;
       height: 100%;
       width: 5px;
-      background: #FAFAFA;
+      background: #fafafa;
     }
   }
-
 }
 .createResetMenu {
   display: flex;
   flex-direction: column;
   background-color: transparent;
   width: 200px;
-  position:absolute;
-  top:80px;
-  right:10px;
-  gap: 10px
+  position: absolute;
+  top: 80px;
+  right: 10px;
+  gap: 10px;
 }
 
 .resetButton {
