@@ -29,6 +29,7 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
   const [isTimelineComplete, setIsTimelineComplete] = useState<boolean>(false);
   const [documentation, setDocumentation] = useState<Documentation>({});
   const [isCodeSnippetExpanded, setIsCodeSnippetExpanded] = useState<boolean>(false);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   useEffect(() => {
     controllerRef.current = controllerRef.current || new VisualiserController();
@@ -41,6 +42,7 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
   const handleTimelineUpdate = useCallback((val) => {
     const timelineSlider = document.querySelector('#timelineSlider') as HTMLInputElement;
     timelineSlider.value = String(val);
+    timelineSlider.style.background = `linear-gradient(to right, #39AF8E ${val}%, #aeabba ${val}%)`;
     setIsTimelineComplete(val >= 100);
   }, []);
 
@@ -48,12 +50,16 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
     setIsCodeSnippetExpanded(val);
   }, []);
 
+  const handleUpdateIsPlaying = useCallback((val) => {
+    setIsPlaying(val);
+  }, []);
+
   const contextValues = useMemo(
     () => ({
       controller: controllerRef.current,
       topicTitle: topicTitleRef.current,
       documentation,
-      timeline: { isTimelineComplete, handleTimelineUpdate },
+      timeline: { isTimelineComplete, handleTimelineUpdate, isPlaying, handleUpdateIsPlaying },
       codeSnippet: { isCodeSnippetExpanded, handleSetCodeSnippetExpansion },
     }),
     [
@@ -62,6 +68,8 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
       documentation,
       isTimelineComplete,
       handleTimelineUpdate,
+      isPlaying,
+      handleUpdateIsPlaying,
       isCodeSnippetExpanded,
       handleSetCodeSnippetExpansion,
     ]
