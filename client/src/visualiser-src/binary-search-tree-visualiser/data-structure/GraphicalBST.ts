@@ -281,7 +281,8 @@ class GraphicalBST extends GraphicalDataStructure {
         6,
         animationProducer.highlightLine,
         root.leftLineTarget,
-        root.leftArrowTarget
+        root.leftArrowTarget,
+        true
       );
       if (root.left == null) {
         root.left = GraphicalBSTNode.from(input);
@@ -296,7 +297,8 @@ class GraphicalBST extends GraphicalDataStructure {
         8,
         animationProducer.highlightLine,
         root.rightLineTarget,
-        root.rightArrowTarget
+        root.rightArrowTarget,
+        true
       );
       if (root.right == null) {
         root.right = GraphicalBSTNode.from(input);
