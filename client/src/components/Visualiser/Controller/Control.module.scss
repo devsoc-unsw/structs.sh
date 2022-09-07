@@ -1,34 +1,15 @@
 .root {
-  height: 48px;
   display: flex;
   justify-content: center;
   position: fixed;
   bottom: 0;
   width: 100vw;
 
-  .setSpeedButton {
-    margin-left: 5px;
-    margin-right: 10px;
-    position: relative;
-
-    .setSpeedButtonIcon {
-      left: 0;
-      width: 50%;
-      position: absolute;
-    }
-
-    .currSpeed {
-      left: 50%;
-      margin-left: 5px;
-      position: absolute;
-    }
-  }
-
   .sliderContainer {
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-right: 5px;
+    margin-left: 5px;
 
     .sliderIcon {
       align-self: center;
@@ -61,7 +42,16 @@
       background: #fafafa;
     }
   }
+
+  .setSpeedButton {
+    margin-left: 5px;
+    margin-right: 5px;
+    display: flex;
+    justify-content: space-between;
+    width: 110px;
+  }
 }
+
 .createResetMenu {
   display: flex;
   flex-direction: column;
