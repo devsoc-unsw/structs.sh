@@ -47,7 +47,6 @@ const VisualiserDashboard = () => {
       <Helmet>
         <title>{topic !== undefined ? topic : 'Structs.sh'}</title>
       </Helmet>
-
       <TopNavbar position="static" />
       <Visualiser topicTitle={topic} />
     </motion.div>

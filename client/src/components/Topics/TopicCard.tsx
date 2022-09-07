@@ -13,18 +13,20 @@ interface Props {
   index: number;
 }
 
-const images = [linked, binary, binary, sort];
+const images = [linked, binary, binary, sort, graph];
 const colours = [
   'rgba(248, 79, 121, 1)',
   'rgba(20, 201, 150, 1)',
   'rgba(120, 110, 243, 1)',
   'rgba(76, 201, 240, 1)',
+  'rgba(255, 215, 0, 1)',
 ];
 const coloursFaded = [
   'rgba(248, 79, 121, 0.8)',
   'rgba(20, 201, 150, 0.8)',
   'rgba(120, 110, 243, 0.8)',
   'rgba(76, 201, 240, 0.8)',
+  'rgba(255, 215, 0, 0.8)',
 ];
 
 const TopicCard: React.FC<Props> = ({ topic, index }) => {

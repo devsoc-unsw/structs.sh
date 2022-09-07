@@ -16,6 +16,7 @@ export enum DataStructure {
   BINARY_SEARCH_TREE = 'Binary Search Trees',
   AVL_TREE = 'AVL Trees',
   SORTING = 'Sorting Algorithms',
+  GRAPHS = 'Graphs',
 }
 
 export interface Documentation {

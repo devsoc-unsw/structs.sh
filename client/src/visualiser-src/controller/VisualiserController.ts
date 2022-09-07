@@ -171,6 +171,7 @@ class VisualiserController {
     }
 
     this.finish();
+
     // @ts-ignore
     const animationProducer: AnimationProducer = this.dataStructure[command](
       ...args.map((arg, idx) => {

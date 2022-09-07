@@ -21,6 +21,7 @@
     "animejs": "^3.2.1",
     "axios": "^0.26.1",
     "cogo-toast": "^4.2.3",
+    "d3": "^7.6.1",
     "date-fns": "^2.26.0",
     "framer-motion": "^4.1.17",
     "identity-obj-proxy": "^3.0.0",

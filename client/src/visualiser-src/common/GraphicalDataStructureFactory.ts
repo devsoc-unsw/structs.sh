@@ -2,6 +2,7 @@ import GraphicalLinkedList from 'visualiser-src/linked-list-visualiser/data-stru
 import GraphicalBST from 'visualiser-src/binary-search-tree-visualiser/data-structure/GraphicalBST';
 import GraphicalAVL from 'visualiser-src/avl-tree-visualiser/data-structure/GraphicalAVL';
 import GraphicalSorts from 'visualiser-src/sorting-visualiser/data-structure/GraphicalSorts';
+import GraphicalGraph from 'visualiser-src/graph-visualiser/data-structure/GraphicalGraph';
 import GraphicalDataStructure from './GraphicalDataStructure';
 import { DataStructure } from './typedefs';
 
@@ -16,6 +17,8 @@ class GraphicalDataStructureFactory {
         return new GraphicalSorts();
       case DataStructure.AVL_TREE.toLowerCase():
         return new GraphicalAVL();
+      case DataStructure.GRAPHS.toLowerCase():
+        return new GraphicalGraph();
       default:
         throw Error('Invalid Topic Title');
     }
