@@ -144,7 +144,39 @@ const VisualiserControls = () => {
       <IconButton onClick={() => handleFastForward()}>
         <FastForwardIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
       </IconButton>
-
+      <Box className={styles.sliderContainer}>
+        <TimeIcon
+          className={styles.sliderIcon}
+          fontSize="small"
+          sx={{ fill: theme.palette.text.primary }}
+        />
+        <input
+          type="range"
+          id="timelineSlider"
+          min="0"
+          max="100"
+          defaultValue="0"
+          step="0.01"
+          className={styles.timelineSlider}
+          onChange={(event) => {
+            if (userIsDraggingTimeline) {
+              handleDragTimeline(Number(event.target.value));
+            } else {
+              handleTimelineUpdate(Number(event.target.value));
+            }
+          }}
+          onMouseDown={() => {
+            setUserIsDraggingTimeline(true);
+            controller.pause();
+          }}
+          onMouseUp={() => {
+            setUserIsDraggingTimeline(false);
+            if (isPlaying) {
+              handlePlay();
+            }
+          }}
+        />
+      </Box>
       <Button onClick={handleClick} className={styles.setSpeedButton}>
         <SpeedIcon
           sx={{ fill: theme.palette.text.primary }}
@@ -183,40 +215,6 @@ const VisualiserControls = () => {
           </MenuItem>
         ))}
       </Menu>
-
-      <Box className={styles.sliderContainer}>
-        <TimeIcon
-          className={styles.sliderIcon}
-          fontSize="small"
-          sx={{ fill: theme.palette.text.primary }}
-        />
-        <input
-          type="range"
-          id="timelineSlider"
-          min="0"
-          max="100"
-          defaultValue="0"
-          step="0.01"
-          className={styles.timelineSlider}
-          onChange={(event) => {
-            if (userIsDraggingTimeline) {
-              handleDragTimeline(Number(event.target.value));
-            } else {
-              handleTimelineUpdate(Number(event.target.value));
-            }
-          }}
-          onMouseDown={() => {
-            setUserIsDraggingTimeline(true);
-            controller.pause();
-          }}
-          onMouseUp={() => {
-            setUserIsDraggingTimeline(false);
-            if (isPlaying) {
-              handlePlay();
-            }
-          }}
-        />
-      </Box>
     </Box>
   );
 };
