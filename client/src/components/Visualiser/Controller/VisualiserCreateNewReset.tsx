@@ -33,12 +33,12 @@ const VisualiserCreateNewReset = () => {
 
   return (
     <Box className={styles.createResetMenu}>
-      <Button className={styles.resetButton} onClick={handleGenerate}  sx={{ backgroundColor: '#F03D6A' }}>
+      <Button className={styles.resetButton} onClick={handleGenerate}  sx={{ backgroundColor: '#46B493' }}>
         <Typography color="textPrimary" sx={{ whiteSpace: 'nowrap' }}>
           Create New
         </Typography>
       </Button>
-      <Button className={styles.resetButton} onClick={handleReset} sx={{ backgroundColor: '#F03D6A' }}>
+      <Button className={styles.resetButton} onClick={handleReset} sx={{ backgroundColor: '#46B493' }}>
         <Typography color="textPrimary" whiteSpace="nowrap">
           Reset All
         </Typography>
