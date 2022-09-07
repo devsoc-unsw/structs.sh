@@ -3,6 +3,14 @@
 
 import * as d3 from 'd3';
 import { VISUALISER_CANVAS } from 'visualiser-src/common/constants';
+import {
+  ARROWHEAD_SIZE_FACTOR,
+  EDGE_WIDTH,
+  INTER_VERTEX_FORCE,
+  NODE_RADIUS,
+  VERTEX_NUMBER_SIZE,
+  WEIGHT_LABEL_SIZE,
+} from './constants';
 
 function getPrimitiveVal(value) {
   return value !== null && typeof value === 'object' ? value.valueOf() : value;
@@ -18,15 +26,18 @@ function defineArrowheads() {
     .append('defs')
     .append('marker')
     .attr('id', 'end-arrowhead')
-    .attr('viewBox', '-0 -5 10 10')
-    .attr('refX', 13)
+    .attr('viewBox', '-0 -10 20 20')
+    .attr('refX', NODE_RADIUS) // The offset of the arrowhead.
     .attr('refY', 0)
     .attr('orient', 'auto')
-    .attr('markerWidth', 5)
-    .attr('markerHeight', 5)
+    .attr('markerWidth', ARROWHEAD_SIZE_FACTOR * 1.6)
+    .attr('markerHeight', ARROWHEAD_SIZE_FACTOR * 1.6)
     .attr('xoverflow', 'visible')
     .append('svg:path')
-    .attr('d', 'M 0,-3 L 6 ,0 L 0,3')
+    .attr(
+      'd',
+      `M 0,-${ARROWHEAD_SIZE_FACTOR} L ${ARROWHEAD_SIZE_FACTOR * 2} ,0 L 0,${ARROWHEAD_SIZE_FACTOR}`
+    )
     .attr('fill', '#999')
     .style('stroke', 'none');
 
@@ -34,15 +45,18 @@ function defineArrowheads() {
     .select('defs')
     .append('marker')
     .attr('id', 'start-arrowhead')
-    .attr('viewBox', '-0 -5 10 10')
-    .attr('refX', 13)
+    .attr('viewBox', '-0 -10 20 20')
+    .attr('refX', NODE_RADIUS) // The offset of the arrowhead.
     .attr('refY', 0)
     .attr('orient', 'auto-start-reverse') // Reverses the direction of 'end-arrowhead'. See: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/orient.
-    .attr('markerWidth', 5)
-    .attr('markerHeight', 5)
+    .attr('markerWidth', ARROWHEAD_SIZE_FACTOR * 1.6)
+    .attr('markerHeight', ARROWHEAD_SIZE_FACTOR * 1.6)
     .attr('xoverflow', 'visible')
     .append('svg:path')
-    .attr('d', 'M 0,-3 L 6 ,0 L 0,3')
+    .attr(
+      'd',
+      `M 0,-${ARROWHEAD_SIZE_FACTOR} L ${ARROWHEAD_SIZE_FACTOR * 2} ,0 L 0,${ARROWHEAD_SIZE_FACTOR}`
+    )
     .attr('fill', '#999')
     .style('stroke', 'none');
 
@@ -53,15 +67,18 @@ function defineArrowheads() {
     .select('defs')
     .append('marker')
     .attr('id', 'highlighted-start-arrowhead')
-    .attr('viewBox', '-0 -5 10 10')
-    .attr('refX', 9)
+    .attr('viewBox', '-0 -10 20 20')
+    .attr('refX', NODE_RADIUS) // The offset of the arrowhead.
     .attr('refY', 0)
     .attr('orient', 'auto-start-reverse')
     .attr('markerWidth', 5)
     .attr('markerHeight', 5)
     .attr('xoverflow', 'visible')
     .append('svg:path')
-    .attr('d', 'M 0,-3 L 6 ,0 L 0,3')
+    .attr(
+      'd',
+      `M 0,-${ARROWHEAD_SIZE_FACTOR} L ${ARROWHEAD_SIZE_FACTOR * 2} ,0 L 0,${ARROWHEAD_SIZE_FACTOR}`
+    )
     .attr('fill', 'gold')
     .style('stroke', 'none');
 
@@ -69,15 +86,18 @@ function defineArrowheads() {
     .select('defs')
     .append('marker')
     .attr('id', 'highlighted-end-arrowhead')
-    .attr('viewBox', '-0 -5 10 10')
-    .attr('refX', 9)
+    .attr('viewBox', '-0 -10 20 20')
+    .attr('refX', NODE_RADIUS) // The offset of the arrowhead.
     .attr('refY', 0)
     .attr('orient', 'auto')
     .attr('markerWidth', 5)
     .attr('markerHeight', 5)
     .attr('xoverflow', 'visible')
     .append('svg:path')
-    .attr('d', 'M 0,-3 L 6 ,0 L 0,3')
+    .attr(
+      'd',
+      `M 0,-${ARROWHEAD_SIZE_FACTOR} L ${ARROWHEAD_SIZE_FACTOR * 2} ,0 L 0,${ARROWHEAD_SIZE_FACTOR}`
+    )
     .attr('fill', 'gold')
     .style('stroke', 'none');
 }
@@ -92,7 +112,7 @@ export function renderForceGraph(
     nodeStroke = '#fff', // node stroke color
     nodeStrokeWidth = 1.5, // node stroke width, in pixels
     nodeStrokeOpacity = 1, // node stroke opacity
-    nodeRadius = 8, // node radius, in pixels
+    nodeRadius = NODE_RADIUS, // node radius, in pixels
     getEdgeSource = ({ source }) => source, // given d in links, returns a node identifier string
     getEdgeDest = ({ target }) => target, // given d in links, returns a node identifier string
     linkStroke = '#111111', // link stroke color
@@ -157,16 +177,6 @@ export function renderForceGraph(
     .attr('viewBox', [-width / 2, -height / 2, width, height]); // Setting the origin to be at the center of the SVG container.
   defineArrowheads();
 
-  // Construct the forces.
-  const forceNode = d3
-    .forceManyBody()
-    .strength(5) // This sets a close-range repulsive force between vertices.
-    .distanceMax(15);
-  const forceLink = d3
-    .forceLink(simEdges)
-    .id(({ index: i }) => verticesMap[i])
-    .strength(0.5); // Magnitude of the attractive force exerted by edges on the vertices.
-
   // Drag callback.
   function handleDrag(simulation) {
     function dragstarted(event) {
@@ -189,6 +199,11 @@ export function renderForceGraph(
     return d3.drag().on('start', dragstarted).on('drag', dragged).on('end', dragended);
   }
 
+  // Construct the forces. Nodes must strongly repel each other and links must
+  // attract them together.
+  const forceNode = d3.forceManyBody().strength(INTER_VERTEX_FORCE);
+  const forceLink = d3.forceLink(simEdges).id(({ index: i }) => verticesMap[i]);
+
   // Set the force directed layout simulation parameters.
   const simulation = d3
     .forceSimulation(simVertices)
@@ -200,7 +215,7 @@ export function renderForceGraph(
       d3
         .forceManyBody()
         .strength(-200) // A really negative force tends to space out nodes better.
-        .distanceMax(100)
+        .distanceMax(700)
     ); // This prevents forces from pushing out isolated subgraphs/vertices to the far edge.
 
   // Add the edges to the graph and set their properties.
@@ -208,7 +223,7 @@ export function renderForceGraph(
     .append('g')
     .attr('stroke', typeof linkStroke !== 'function' ? linkStroke : null)
     .attr('stroke-opacity', linkStrokeOpacity)
-    .attr('stroke-width', typeof linkStrokeWidth !== 'function' ? linkStrokeWidth : '2px')
+    .attr('stroke-width', typeof linkStrokeWidth !== 'function' ? linkStrokeWidth : EDGE_WIDTH)
     .attr('stroke-linecap', linkStrokeLinecap)
     .attr('id', 'edges')
     .selectAll('line')
@@ -235,9 +250,9 @@ export function renderForceGraph(
         `weight-${edge.source.id}-${edge.target.id} weight-${edge.target.id}-${edge.source.id}`
     )
     .text((edge) => `${edge.weight}`)
-    .style('font-size', '8px')
-    .attr('fill', 'white')
-    .attr('stroke', 'brown')
+    .style('font-size', WEIGHT_LABEL_SIZE)
+    .attr('fill', 'black')
+    // .attr('stroke', 'brown')
     .attr('x', (link) => link.x1)
     .attr('y', (link) => link.y1)
     .attr('text-anchor', 'middle')
@@ -270,9 +285,7 @@ export function renderForceGraph(
     .join('text')
     .style('pointer-events', 'none')
     .attr('id', (node) => `text-${node.id}`)
-    .attr('font-size', '8px')
-    .attr('stroke', 'black')
-    .attr('stroke-width', '0.5')
+    .attr('font-size', VERTEX_NUMBER_SIZE)
     .attr('alignment-baseline', 'middle') // Centering text inside a circle: https://stackoverflow.com/questions/28128491/svg-center-text-in-circle.
     .attr('text-anchor', 'middle')
     .text((_, i) => i);
