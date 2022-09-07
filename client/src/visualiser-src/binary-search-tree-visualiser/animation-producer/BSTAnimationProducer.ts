@@ -51,6 +51,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
   public highlightLine(lineTarget: Line, arrowTarget: Marker, create: boolean = false): void {
     if (lineTarget != null) {
       if (create) {
+        // If line should be created and highlighted
         this.addSequenceAnimation(
           lineTarget.animate(500).attr({
             stroke: '#39AF8E',
@@ -65,6 +66,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
           })
         );
       } else {
+        // Line will not be highlighted if it doesn't already exist
         this.addSequenceAnimation(
           lineTarget.animate(500).attr({
             stroke: '#39AF8E',
