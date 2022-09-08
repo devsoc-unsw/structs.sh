@@ -28,38 +28,36 @@ function defineArrowheads() {
     .append('marker')
     .attr('id', 'end-arrowhead')
     .attr('viewBox', '-0 -10 20 20')
-    .attr('refX', NODE_RADIUS) // The offset of the arrowhead.
+    .attr('refX', NODE_RADIUS - parseInt(EDGE_WIDTH) * 0.5) // The offset of the arrowhead.
     .attr('refY', 0)
     .attr('orient', 'auto')
-    .attr('markerWidth', ARROWHEAD_SIZE_FACTOR * 1.6)
-    .attr('markerHeight', ARROWHEAD_SIZE_FACTOR * 1.6)
+    .attr('markerWidth', (ARROWHEAD_SIZE_FACTOR * 1.6) / (parseInt(EDGE_WIDTH) / 5))
+    .attr('markerHeight', (ARROWHEAD_SIZE_FACTOR * 1.6) / (parseInt(EDGE_WIDTH) / 5))
     .attr('xoverflow', 'visible')
     .append('svg:path')
     .attr(
       'd',
       `M 0,-${ARROWHEAD_SIZE_FACTOR} L ${ARROWHEAD_SIZE_FACTOR * 2} ,0 L 0,${ARROWHEAD_SIZE_FACTOR}`
     )
-    .attr('fill', '#999')
-    .style('stroke', 'none');
+    .style('fill', '#999999');
 
   graph
     .select('defs')
     .append('marker')
     .attr('id', 'start-arrowhead')
     .attr('viewBox', '-0 -10 20 20')
-    .attr('refX', NODE_RADIUS) // The offset of the arrowhead.
+    .attr('refX', NODE_RADIUS - parseInt(EDGE_WIDTH) * 0.5) // The offset of the arrowhead.
     .attr('refY', 0)
     .attr('orient', 'auto-start-reverse') // Reverses the direction of 'end-arrowhead'. See: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/orient.
-    .attr('markerWidth', ARROWHEAD_SIZE_FACTOR * 1.6)
-    .attr('markerHeight', ARROWHEAD_SIZE_FACTOR * 1.6)
+    .attr('markerWidth', (ARROWHEAD_SIZE_FACTOR * 1.6) / (parseInt(EDGE_WIDTH) / 5))
+    .attr('markerHeight', (ARROWHEAD_SIZE_FACTOR * 1.6) / (parseInt(EDGE_WIDTH) / 5))
     .attr('xoverflow', 'visible')
     .append('svg:path')
     .attr(
       'd',
       `M 0,-${ARROWHEAD_SIZE_FACTOR} L ${ARROWHEAD_SIZE_FACTOR * 2} ,0 L 0,${ARROWHEAD_SIZE_FACTOR}`
     )
-    .attr('fill', '#999')
-    .style('stroke', 'none');
+    .style('fill', '#999999');
 
   // Unfortunately, there is no way for the <marker> element to inherit the
   // styling of the parent <line>. The workaround is to define these highlighted
@@ -69,18 +67,18 @@ function defineArrowheads() {
     .append('marker')
     .attr('id', 'highlighted-start-arrowhead')
     .attr('viewBox', '-0 -10 20 20')
-    .attr('refX', NODE_RADIUS) // The offset of the arrowhead.
+    .attr('refX', NODE_RADIUS - parseInt(EDGE_WIDTH) * 0.5) // The offset of the arrowhead.
     .attr('refY', 0)
     .attr('orient', 'auto-start-reverse')
-    .attr('markerWidth', 5)
-    .attr('markerHeight', 5)
+    .attr('markerWidth', (ARROWHEAD_SIZE_FACTOR * 1.6) / (parseInt(EDGE_WIDTH) / 5))
+    .attr('markerHeight', (ARROWHEAD_SIZE_FACTOR * 1.6) / (parseInt(EDGE_WIDTH) / 5))
     .attr('xoverflow', 'visible')
     .append('svg:path')
     .attr(
       'd',
       `M 0,-${ARROWHEAD_SIZE_FACTOR} L ${ARROWHEAD_SIZE_FACTOR * 2} ,0 L 0,${ARROWHEAD_SIZE_FACTOR}`
     )
-    .attr('fill', 'gold')
+    .attr('fill', 'blue')
     .style('stroke', 'none');
 
   graph
@@ -88,18 +86,18 @@ function defineArrowheads() {
     .append('marker')
     .attr('id', 'highlighted-end-arrowhead')
     .attr('viewBox', '-0 -10 20 20')
-    .attr('refX', NODE_RADIUS) // The offset of the arrowhead.
+    .attr('refX', NODE_RADIUS - parseInt(EDGE_WIDTH) * 0.5) // The offset of the arrowhead.
     .attr('refY', 0)
     .attr('orient', 'auto')
-    .attr('markerWidth', 5)
-    .attr('markerHeight', 5)
+    .attr('markerWidth', (ARROWHEAD_SIZE_FACTOR * 1.6) / (parseInt(EDGE_WIDTH) / 5))
+    .attr('markerHeight', (ARROWHEAD_SIZE_FACTOR * 1.6) / (parseInt(EDGE_WIDTH) / 5))
     .attr('xoverflow', 'visible')
     .append('svg:path')
     .attr(
       'd',
       `M 0,-${ARROWHEAD_SIZE_FACTOR} L ${ARROWHEAD_SIZE_FACTOR * 2} ,0 L 0,${ARROWHEAD_SIZE_FACTOR}`
     )
-    .attr('fill', 'gold')
+    .attr('fill', 'blue')
     .style('stroke', 'none');
 }
 
@@ -116,7 +114,7 @@ export function renderForceGraph(
     nodeRadius = NODE_RADIUS, // node radius, in pixels
     getEdgeSource = ({ source }) => source, // given d in links, returns a node identifier string
     getEdgeDest = ({ target }) => target, // given d in links, returns a node identifier string
-    linkStroke = '#111111', // link stroke color
+    linkStroke = '#999999', // link stroke color
     linkStrokeOpacity = 0.4, // link stroke opacity
     linkStrokeWidth = (d) => d.weight, // given d in links, returns a stroke width in pixels
     linkStrokeLinecap = 'round', // link stroke linecap
@@ -174,8 +172,6 @@ export function renderForceGraph(
     .attr('height', height)
     .attr('width', width)
     .attr('height', height)
-    .style('border', '1px solid black')
-    .style('overflow', 'hidden')
     .attr('viewBox', [-width / 2, -height / 2, width, height]); // Setting the origin to be at the center of the SVG container.
   defineArrowheads();
 
@@ -228,8 +224,8 @@ export function renderForceGraph(
   const edgeGroup = graph
     .append('g')
     .attr('stroke', typeof linkStroke !== 'function' ? linkStroke : null)
-    .attr('stroke-opacity', linkStrokeOpacity)
-    .attr('stroke-width', typeof linkStrokeWidth !== 'function' ? linkStrokeWidth : EDGE_WIDTH)
+    // .attr('stroke-opacity', linkStrokeOpacity)
+    .attr('stroke-width', EDGE_WIDTH)
     .attr('stroke-linecap', linkStrokeLinecap)
     .attr('id', 'edges')
     .selectAll('line')

@@ -90,58 +90,89 @@ export default class GraphicalGraph extends GraphicalDataStructure {
     return new GraphAddVertexAnimationProducer();
   }
 
-  dfs(src: number): AnimationProducer {
-    /*
-    // now increment the length of the list by 1
-    this.length += 1;
-    const producer = new LinkedListAppendAnimationProducer();
-    producer.renderAppendCode();
+  // TODO: Figure out how the BST resets the styling after the animation concludes. Bonus: figure out why the attribute animates from black.
+  /**
+   * TODO: document
+   * @remarks
+   * This method wraps around the recursive helper, `dfsRecurse`.
+   * @param src
+   * @returns
+   */
+  public dfs(src: number): AnimationProducer {
+    const producer = new GraphDfsAnimationProducer();
+    producer.renderDfsCode();
 
-    // Create new node
-    const newNode = GraphicalLinkedListNode.from(input);
-    producer.doAnimationAndHighlight(2, producer.addNodeAtEnd, newNode, this.length);
+    const visited = new Set<number>();
+    this.dfsRecurse(producer, src, visited);
 
-    // Account for case when list is empty
-    if (this.head === null) {
-      this.head = newNode;
-      producer.doAnimationAndHighlight(4, producer.initialiseHead, this.headPointer);
-      producer.doAnimationAndHighlight(5, producer.resetPointersAndColor, this.head);
-
-      return producer;
-    }
-
-    // Initialise curr
-    let curr: GraphicalLinkedListNode = this.head;
-    producer.doAnimationAndHighlight(8, producer.initialisePointer, CURRENT);
-
-    // Traverse to last node
-    while (curr.next !== null) {
-      curr = curr.next;
-      producer.doAnimationAndHighlight(10, producer.movePointerToNext, CURRENT);
-    }
-
-    // Link last node to new node
-    curr.next = newNode;
-    producer.doAnimationAndHighlight(13, producer.linkLastToNew, curr);
-
-    producer.doAnimation(producer.resetPointersAndColor, curr.next);
     return producer;
-    */
-    return new GraphDfsAnimationProducer();
+  }
+
+  /**
+   * Tells the animation producer to produce the sequence of vertex and edge
+   * highlighting necessary to animate a DFS traversal of the current graph.
+   * @remarks
+   * Assumes that `visited` does not contain `src`.
+   * @param TODO: document
+   */
+  private dfsRecurse(
+    animationProducer: GraphDfsAnimationProducer,
+    src: number,
+    visited: Set<number>
+  ): void {
+    // Mark the current vertex as visited.
+    visited.add(src);
+    const vertexElem = this.getDomVertex(src);
+    animationProducer.doAnimationAndHighlight(2, animationProducer.highlightVertex, vertexElem);
+
+    // For each unvisited neighbour, highlight the edge to that neighbour and
+    // launch DFS on them.
+    for (let neighbour = 0; neighbour < this.vertices.length; neighbour += 1) {
+      if (this.isAdjacent(src, neighbour) && !visited.has(neighbour)) {
+        animationProducer.doAnimationAndHighlight(
+          4,
+          animationProducer.highlightEdge,
+          this.getDomEdge(src, neighbour)
+        );
+        this.dfsRecurse(animationProducer, neighbour, visited);
+      }
+    }
+  }
+
+  /**
+   * Determines whether the edge from `v` to `w` exists.
+   * @param v Source vertex.
+   * @param w Destination vertex.
+   * @returns existence of edge v-w.
+   */
+  private isAdjacent(v: number, w: number): boolean {
+    return this.edges.some(
+      (edge) =>
+        (edge.source === String(v) && edge.target === String(w)) ||
+        (edge.source === String(w) && edge.target === String(v) && edge.isBidirectional)
+    );
   }
 
   public generate(): void {
     // TODO: IMPLEMENT ME
+    alert('NOT IMPLEMENTED');
   }
 
   public reset(): void {
-    SVG(VISUALISER_CANVAS).clear();
-
     // Reset state.
     // TODO: IMPLEMENT ME
+    alert('NOT IMPLEMENTED');
   }
 
   public get documentation() {
     return GraphicalGraph.documentation;
+  }
+
+  private getDomVertex(vertex: number) {
+    return SVG(`#vertex-${vertex}`);
+  }
+
+  private getDomEdge(from: number, to: number) {
+    return SVG(`.edge-${from}-${to}`);
   }
 }

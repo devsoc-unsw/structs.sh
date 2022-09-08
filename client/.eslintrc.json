@@ -57,6 +57,6 @@
             }
         ],
         "jsx-a11y/anchor-is-valid": "off",
-        "class-methods-use-this": "off",
+        "class-methods-use-this": "off"
     }
 }
