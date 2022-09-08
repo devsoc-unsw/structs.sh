@@ -5,6 +5,7 @@ import * as d3 from 'd3';
 import { VISUALISER_CANVAS } from 'visualiser-src/common/constants';
 import {
   ARROWHEAD_SIZE_FACTOR,
+  EDGE_ATTRACTIVE_FORCE_MULTIPLIER,
   EDGE_WIDTH,
   INTER_VERTEX_FORCE,
   NODE_RADIUS,
@@ -149,21 +150,20 @@ export function renderForceGraph(
   d3.select(VISUALISER_CANVAS).selectAll('g').remove();
 
   function ticked(edgeGroup: any, vertexGroup: any, weightLabelGroup: any, vertexTextGroup: any) {
+    const clampX = (x) => Math.max(-width / 2 + nodeRadius, Math.min(width / 2 - nodeRadius, x));
+    const clampY = (y) => Math.max(-height / 2 + nodeRadius, Math.min(height / 2 - nodeRadius, y));
+
     // On each tick of the simulation, update the coordinates of everything.
     edgeGroup
-      .attr('x1', (d) => d.source.x)
-      .attr('y1', (d) => d.source.y)
-      .attr('x2', (d) => d.target.x)
-      .attr('y2', (d) => d.target.y);
-    vertexGroup
-      .attr('cx', (d) => Math.max(-width / 2 + nodeRadius, Math.min(width / 2 - nodeRadius, d.x)))
-      .attr('cy', (d) => Math.max(-width / 2 + nodeRadius, Math.min(width / 2 - nodeRadius, d.y)));
+      .attr('x1', (d) => clampX(d.source.x))
+      .attr('y1', (d) => clampY(d.source.y))
+      .attr('x2', (d) => clampX(d.target.x))
+      .attr('y2', (d) => clampY(d.target.y));
+    vertexGroup.attr('cx', (d) => clampX(d.x)).attr('cy', (d) => clampY(d.y));
     weightLabelGroup
-      .attr('x', (d) => (d.source.x + d.target.x) / 2)
-      .attr('y', (d) => (d.source.y + d.target.y) / 2);
-    vertexTextGroup
-      .attr('x', (d) => Math.max(-width / 2 + nodeRadius, Math.min(width / 2 - nodeRadius, d.x)))
-      .attr('y', (d) => Math.max(-width / 2 + nodeRadius, Math.min(width / 2 - nodeRadius, d.y)));
+      .attr('x', (d) => (clampX(d.source.x) + clampX(d.target.x)) / 2)
+      .attr('y', (d) => (clampY(d.source.y) + clampY(d.target.y)) / 2);
+    vertexTextGroup.attr('x', (d) => clampX(d.x)).attr('y', (d) => clampY(d.y));
   }
 
   // Setting the dimensions of the graph SVG container.
@@ -174,6 +174,8 @@ export function renderForceGraph(
     .attr('height', height)
     .attr('width', width)
     .attr('height', height)
+    .style('border', '1px solid black')
+    .style('overflow', 'hidden')
     .attr('viewBox', [-width / 2, -height / 2, width, height]); // Setting the origin to be at the center of the SVG container.
   defineArrowheads();
 
@@ -201,21 +203,25 @@ export function renderForceGraph(
 
   // Construct the forces. Nodes must strongly repel each other and links must
   // attract them together.
-  const forceNode = d3.forceManyBody().strength(INTER_VERTEX_FORCE);
-  const forceLink = d3.forceLink(simEdges).id(({ index: i }) => verticesMap[i]);
+  const forceNode = d3.forceManyBody().strength(INTER_VERTEX_FORCE).distanceMax(400);
+  const forceLink = d3
+    .forceLink(simEdges)
+    .id(({ index: i }) => verticesMap[i])
+    .strength(EDGE_ATTRACTIVE_FORCE_MULTIPLIER);
+  const centralForce = d3.forceCenter().strength(1);
 
   // Set the force directed layout simulation parameters.
   const simulation = d3
     .forceSimulation(simVertices)
     .force('link', forceLink)
     .force('charge', forceNode)
-    .force('center', d3.forceCenter())
+    .force('center', centralForce)
     .force(
       'manyBody',
       d3
         .forceManyBody()
-        .strength(-200) // A really negative force tends to space out nodes better.
-        .distanceMax(700)
+        .strength(1000) // A really negative force tends to space out nodes better.
+        .distanceMax(200)
     ); // This prevents forces from pushing out isolated subgraphs/vertices to the far edge.
 
   // Add the edges to the graph and set their properties.

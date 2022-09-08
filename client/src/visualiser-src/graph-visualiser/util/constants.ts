@@ -1,5 +1,6 @@
-// Apply a strong repulsion force between vertices.
-export const INTER_VERTEX_FORCE = -3000;
+// Force parameters.
+export const INTER_VERTEX_FORCE = -2000;
+export const EDGE_ATTRACTIVE_FORCE_MULTIPLIER = 0.2;
 
 // Size parameters.
 export const EDGE_WIDTH = '4px';
