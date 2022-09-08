@@ -1,18 +1,28 @@
-import { SVG } from '@svgdotjs/svg.js';
+import { Circle, Path, SVG } from '@svgdotjs/svg.js';
 import AnimationProducer from 'visualiser-src/common/AnimationProducer';
-import { VISUALISER_CANVAS } from 'visualiser-src/common/constants';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { injectIds } from 'visualiser-src/common/helpers';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import GraphAddVertexAnimationProducer from '../animation-producer/GraphAddVertexAnimationProducer';
 import GraphDfsAnimationProducer from '../animation-producer/GraphDfsAnimationProducer';
+import { Edge, Vertex } from '../util/typedefs';
 import { renderForceGraph } from '../util/util';
 
-// An linked list data structure containing all linked list operations.
-// Every operation producers a LinkedListAnimationProducer, which an VisualiserController
-// can then use to place SVG.Runners on a timeline to animate the operation.
+/**
+ * Exposes animation-producing graph algorithms that are stateful, meaning that
+ * this class also manages the underlying data structures for representing a
+ * graph.
+ *
+ * Note to developers: This class relies on using D3 and D3-force to simulate
+ * forces between vertices and edges to produce an aesthetic graph layout.
+ * See force-directed graph drawing: https://en.wikipedia.org/wiki/Force-directed_graph_drawing.
+ *
+ * @remarks
+ * Expects that the visualiser canvas is already mounted on the DOM in order
+ * to initialise the graph.
+ */
 export default class GraphicalGraph extends GraphicalDataStructure {
-  // What to show on the user input menu.
+  // Commands to be shown on the client menu.
   private static documentation: Documentation = injectIds({
     dfs: {
       args: ['src'],
@@ -28,8 +38,7 @@ export default class GraphicalGraph extends GraphicalDataStructure {
     },
   });
 
-  // TODO: add types to vertices and edges.
-  private vertices = [
+  private vertices: Vertex[] = [
     { id: '0' },
     { id: '1' },
     { id: '2' },
@@ -40,25 +49,29 @@ export default class GraphicalGraph extends GraphicalDataStructure {
     { id: '7' },
   ];
 
-  private edges = [
-    { source: '0', target: '1', weight: 5, isBidirectional: true },
-    { source: '0', target: '2', weight: 3, isBidirectional: false },
-    { source: '2', target: '5', weight: 5, isBidirectional: false },
-    { source: '3', target: '5', weight: 3, isBidirectional: false },
-    { source: '3', target: '2', weight: 2, isBidirectional: false },
-    { source: '1', target: '4', weight: 1, isBidirectional: true },
-    { source: '3', target: '4', weight: 8, isBidirectional: false },
-    { source: '5', target: '6', weight: 2, isBidirectional: false },
-    { source: '7', target: '2', weight: 4, isBidirectional: true },
+  private edges: Edge[] = [
+    { source: 0, target: 1, weight: 5, isBidirectional: true },
+    { source: 0, target: 2, weight: 3, isBidirectional: false },
+    { source: 2, target: 5, weight: 5, isBidirectional: false },
+    { source: 3, target: 5, weight: 3, isBidirectional: false },
+    { source: 3, target: 2, weight: 2, isBidirectional: false },
+    { source: 1, target: 4, weight: 1, isBidirectional: true },
+    { source: 3, target: 4, weight: 8, isBidirectional: false },
+    { source: 5, target: 6, weight: 2, isBidirectional: false },
+    { source: 7, target: 2, weight: 4, isBidirectional: true },
   ];
 
   constructor() {
     super();
     this.loadGraph();
+
+    // TODO: initialise the graph with randomly generated vertices and edges, sparsely.
   }
 
+  /**
+   * Renders or re-renders the graph SVG elements into the visualiser canvas.
+   */
   loadGraph() {
-    // Draw the initial graph onto the visualiser canvas.
     renderForceGraph(
       { vertices: this.vertices, edges: this.edges },
       {
@@ -71,32 +84,42 @@ export default class GraphicalGraph extends GraphicalDataStructure {
     );
   }
 
+  /**
+   * Increases the number of vertices in the graph by 1.
+   * TODO: currently unanimated. Does this need an animation?
+   */
   addVertex(): AnimationProducer {
     this.vertices = [...this.vertices, { id: `${this.vertices.length}` }];
 
-    // Reload the graph.
+    // Reload the graph to sync the change in `this.edges` with what's shown
+    // in the visualiser canvas.
     this.loadGraph();
     return new GraphAddVertexAnimationProducer();
   }
 
-  addEdge(from: number, to: number): AnimationProducer {
-    this.edges = [
-      ...this.edges,
-      { source: `${from}`, target: `${to}`, weight: 5, isBidirectional: false },
-    ];
-
-    // Reload the graph.
-    this.loadGraph();
-    return new GraphAddVertexAnimationProducer();
-  }
-
-  // TODO: Figure out how the BST resets the styling after the animation concludes. Bonus: figure out why the attribute animates from black.
   /**
-   * TODO: document
+   * Inserts the edge from `from` to `to`.
+   * Assumes that `from` and `to` are valid vertex numbers.
+   * TODO: currently unanimated. Does this need an animation?
+   * @param from
+   * @param to
+   * @returns
+   */
+  addEdge(from: number, to: number): AnimationProducer {
+    this.edges = [...this.edges, { source: from, target: to, weight: 5, isBidirectional: false }];
+
+    // Reload the graph to sync the change in `this.edges` with what's shown
+    // in the visualiser canvas.
+    this.loadGraph();
+    return new GraphAddVertexAnimationProducer();
+  }
+
+  /**
+   * Produces a sequence of animations for visualising DFS.
    * @remarks
    * This method wraps around the recursive helper, `dfsRecurse`.
-   * @param src
-   * @returns
+   * @param src The vertex to start DFS from.
+   * @returns Animation producer with the steps necessary for visualising DFS.
    */
   public dfs(src: number): AnimationProducer {
     const producer = new GraphDfsAnimationProducer();
@@ -113,7 +136,9 @@ export default class GraphicalGraph extends GraphicalDataStructure {
    * highlighting necessary to animate a DFS traversal of the current graph.
    * @remarks
    * Assumes that `visited` does not contain `src`.
-   * @param TODO: document
+   * @param animationProducer
+   * @param src
+   * @param visited A set of all vertices that have been visited through DFS.
    */
   private dfsRecurse(
     animationProducer: GraphDfsAnimationProducer,
@@ -148,8 +173,8 @@ export default class GraphicalGraph extends GraphicalDataStructure {
   private isAdjacent(v: number, w: number): boolean {
     return this.edges.some(
       (edge) =>
-        (edge.source === String(v) && edge.target === String(w)) ||
-        (edge.source === String(w) && edge.target === String(v) && edge.isBidirectional)
+        (edge.source === v && edge.target === w) ||
+        (edge.source === w && edge.target === v && edge.isBidirectional)
     );
   }
 
@@ -168,11 +193,11 @@ export default class GraphicalGraph extends GraphicalDataStructure {
     return GraphicalGraph.documentation;
   }
 
-  private getDomVertex(vertex: number) {
-    return SVG(`#vertex-${vertex}`);
+  private getDomVertex(vertex: number): Circle {
+    return SVG(`#vertex-${vertex}`) as Circle;
   }
 
-  private getDomEdge(from: number, to: number) {
-    return SVG(`.edge-${from}-${to}`);
+  private getDomEdge(from: number, to: number): Path {
+    return SVG(`.edge-${from}-${to}`) as Path;
   }
 }

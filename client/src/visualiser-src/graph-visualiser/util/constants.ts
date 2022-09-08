@@ -1,3 +1,6 @@
+/* -------------------------------------------------------------------------- */
+/*                           Graph Drawing Constants                          */
+/* -------------------------------------------------------------------------- */
 // Force parameters.
 export const INTER_VERTEX_FORCE = -2000;
 export const EDGE_ATTRACTIVE_FORCE_MULTIPLIER = 0.2;
