@@ -39,12 +39,12 @@ const VisualiserControls = () => {
     controller,
     timeline: { isTimelineComplete, handleTimelineUpdate, isPlaying, handleUpdateIsPlaying },
   } = useContext(VisualiserContext);
-  const [userIsDraggingTimeline, setUserIsDraggingTimeline] = useState<boolean>(false);
   const theme = useTheme();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [selectedIndex, setSelectedIndex] = useState<number>(2);
-  const speedMenuOpen = Boolean(anchorEl);
-  const speedOptions: string[] = ['1.0', '0.8', '0.6', '0.4', '0.2'];
+  const [userIsDraggingTimeline, setUserIsDraggingTimeline] = useState<boolean>(false);
+  const [speedMenuAnchorEl, setSpeedMenuAnchorEl] = React.useState<null | HTMLElement>(null);
+  const speedMenuOpen = Boolean(speedMenuAnchorEl);
+  const speedOptions: string[] = ['0.25', '0.5', '0.75', '1', '1.25', '1.5', '1.75', '2'];
+  const [selectedIndex, setSelectedIndex] = useState<number>(speedOptions.indexOf('1'));
 
   const handlePlay = useCallback(() => {
     controller.play();
@@ -91,58 +91,67 @@ const VisualiserControls = () => {
   );
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
+    setSpeedMenuAnchorEl(event.currentTarget);
   };
 
   const handleCloseSpeedMenu = () => {
-    setAnchorEl(null);
+    setSpeedMenuAnchorEl(null);
   };
 
   const handleSelectSpeed = (event: React.MouseEvent<HTMLElement>, index: number) => {
     setSelectedIndex(index);
-    handleSetSpeed(Number(speedOptions[index]));
-    setAnchorEl(null);
+    // if (speedOptions[index] === 'Normal') {
+    //   handleSetSpeed(0.5);
+    // } else {
+    //   handleSetSpeed(Number(speedOptions[index]));
+    // }
+    handleSetSpeed(Number(speedOptions[index]) / 2);
+
+    setSpeedMenuAnchorEl(null);
   };
 
   return (
     <Box className={styles.root} bgcolor={theme.palette.background.default}>
-      <IconButton onClick={() => handleFastRewind()}>
-        <FastRewindIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
+      <IconButton onClick={() => handleFastRewind()} color="inherit">
+        <FastRewindIcon fontSize="large" />
       </IconButton>
-      <IconButton onClick={() => handleStepBackward()}>
-        <SkipPreviousIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
+      <IconButton onClick={() => handleStepBackward()} color="inherit">
+        <SkipPreviousIcon fontSize="large" />
       </IconButton>
       {isTimelineComplete ? (
         <IconButton
+          color="inherit"
           onClick={() => {
             controller.seekPercent(0);
             handlePlay();
           }}
         >
-          <ReplayIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
+          <ReplayIcon fontSize="large" />
         </IconButton>
       ) : isPlaying ? (
         <IconButton
+          color="inherit"
           onClick={() => {
             handlePause();
           }}
         >
-          <PauseIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
+          <PauseIcon fontSize="large" />
         </IconButton>
       ) : (
         <IconButton
           onClick={() => {
             handlePlay();
           }}
+          color="inherit"
         >
-          <PlayIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
+          <PlayIcon fontSize="large" />
         </IconButton>
       )}
-      <IconButton onClick={() => handleStepForward()}>
-        <SkipNextIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
+      <IconButton onClick={() => handleStepForward()} color="inherit">
+        <SkipNextIcon fontSize="large" />
       </IconButton>
-      <IconButton onClick={() => handleFastForward()}>
-        <FastForwardIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
+      <IconButton onClick={() => handleFastForward()} color="inherit">
+        <FastForwardIcon fontSize="large" />
       </IconButton>
       <Box className={styles.sliderContainer}>
         <TimeIcon
@@ -177,19 +186,13 @@ const VisualiserControls = () => {
           }}
         />
       </Box>
-      <Button onClick={handleClick} className={styles.setSpeedButton}>
-        <SpeedIcon
-          sx={{ fill: theme.palette.text.primary }}
-          className={styles.setSpeedButtonIcon}
-          fontSize="large"
-        />
-        <Typography color="textPrimary" className={styles.currSpeed}>
-          {speedOptions[selectedIndex]}
-        </Typography>
+      <Button onClick={handleClick} className={styles.setSpeedButton} color="inherit">
+        <SpeedIcon className={styles.setSpeedButtonIcon} fontSize="large" />
+        <Typography className={styles.currSpeed}>{speedOptions[selectedIndex]}</Typography>
       </Button>
       <Menu
         open={speedMenuOpen}
-        anchorEl={anchorEl}
+        anchorEl={speedMenuAnchorEl}
         onClose={handleCloseSpeedMenu}
         anchorOrigin={{
           vertical: 'top',
@@ -204,8 +207,8 @@ const VisualiserControls = () => {
           <MenuItem onClick={(event) => handleSelectSpeed(event, index)} key={index}>
             {index === selectedIndex ? (
               <>
-                <ListItemIcon>
-                  <CheckIcon sx={{ fill: theme.palette.text.primary }} />
+                <ListItemIcon sx={{ color: 'inherit' }}>
+                  <CheckIcon />
                 </ListItemIcon>
                 {speedOption}
               </>

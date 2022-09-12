@@ -1,24 +1,24 @@
 .header {
-    min-height: 100vh;
-    text-align: center;
-    background-image: linear-gradient(to bottom, #18154f, #2e2064);
-    
-    .headerContent {
-        position: absolute;
-        display: block;
-        width: 100%;
-        margin: 0 auto;
-        top: 20%;
-        text-align: center;
+  min-height: 100vh;
+  text-align: center;
+  background-image: linear-gradient(to bottom, #18154f, #14113c);
 
-        .description {
-            max-width: 400px;
-            display: block;
-            margin: 0 auto;
-        }
+  .headerContent {
+    position: absolute;
+    display: block;
+    width: 100%;
+    margin: 0 auto;
+    top: 20%;
+    text-align: center;
+
+    .description {
+      max-width: 400px;
+      display: block;
+      margin: 0 auto;
     }
+  }
 }
 
 .features {
-    padding: 24px;
+  padding: 24px;
 }

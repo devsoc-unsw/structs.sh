@@ -8,7 +8,7 @@
 
   .setSpeedButton {
     margin-left: 5px;
-    margin-right: 10px;
+    margin-right: 15px;
     position: relative;
 
     .setSpeedButtonIcon {
@@ -62,10 +62,11 @@
     }
   }
 }
+
 .createResetMenu {
   display: flex;
   flex-direction: column;
-  background-color: transparent;
+  // background-color: transparent;
   width: 200px;
   position: absolute;
   top: 80px;

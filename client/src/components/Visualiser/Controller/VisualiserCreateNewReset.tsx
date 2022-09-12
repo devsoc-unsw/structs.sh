@@ -1,9 +1,4 @@
-import {
-  Box,
-  Typography,
-  useTheme,
-  Button,
-} from '@mui/material';
+import { Box, Typography, useTheme, Button } from '@mui/material';
 import React, { useCallback, useContext } from 'react';
 import VisualiserContext from '../VisualiserContext';
 
@@ -33,15 +28,19 @@ const VisualiserCreateNewReset = () => {
 
   return (
     <Box className={styles.createResetMenu}>
-      <Button className={styles.resetButton} onClick={handleGenerate}  sx={{ backgroundColor: '#46B493' }}>
-        <Typography color="textPrimary" sx={{ whiteSpace: 'nowrap' }}>
-          Create New
-        </Typography>
+      <Button
+        className={styles.resetButton}
+        onClick={handleGenerate}
+        sx={{ backgroundColor: '#46B493' }}
+      >
+        <Typography whiteSpace="nowrap">Create New</Typography>
       </Button>
-      <Button className={styles.resetButton} onClick={handleReset} sx={{ backgroundColor: '#46B493' }}>
-        <Typography color="textPrimary" whiteSpace="nowrap">
-          Reset All
-        </Typography>
+      <Button
+        className={styles.resetButton}
+        onClick={handleReset}
+        sx={{ backgroundColor: '#46B493' }}
+      >
+        <Typography whiteSpace="nowrap">Reset All</Typography>
       </Button>
     </Box>
   );

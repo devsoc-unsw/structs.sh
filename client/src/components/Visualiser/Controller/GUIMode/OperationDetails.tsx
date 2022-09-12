@@ -69,16 +69,11 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
             justifyContent: 'space-between',
           }}
           onClick={handleToggleDisplay}
-          endIcon={
-            shouldDisplay ? (
-              <ChevronRight sx={{ fill: textPrimaryColour }} />
-            ) : (
-              <ChevronLeft sx={{ fill: textPrimaryColour }} />
-            )
-          }
+          color="inherit"
+          endIcon={shouldDisplay ? <ChevronRight /> : <ChevronLeft />}
           fullWidth
         >
-          <Typography color="textPrimary">{command}</Typography>
+          <Typography>{command}</Typography>
         </Button>
       </Box>
       <Collapse in={shouldDisplay} timeout="auto" orientation="horizontal">
@@ -88,7 +83,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
               <TextField
                 size="small"
                 value={currentInputs[idx]}
-                variant="outlined"
+                // variant="outlined"
                 onKeyPress={(e) => {
                   if (e.key === 'Enter') {
                     executeCommand(currentInputs);
@@ -96,7 +91,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
                 }}
                 onChange={(e) => handleSetArguments(e, idx)}
                 placeholder={eachArg}
-                sx={{ backgroundColor: theme.palette.background.paper }}
+                sx={{ backgroundColor: theme.palette.primary.main }}
               />
             </Box>
           ))}

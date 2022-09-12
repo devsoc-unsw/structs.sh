@@ -7,7 +7,7 @@ const baseOptions: ThemeOptions = {
   },
   palette: {
     primary: {
-      main: '#3C415C', // Note: `light`, `dark` and `contrastText` properties will be calculated from `main`
+      main: '#2E2054',
     },
     secondary: {
       main: '#916BBF',
@@ -15,34 +15,23 @@ const baseOptions: ThemeOptions = {
   },
 };
 
-export const darkTheme = createTheme({
+export const structsTheme = createTheme({
+  typography: {
+    ...baseOptions.typography,
+    // allVariants: {
+    //   color: '#FFFFFF',
+    // },
+  },
   palette: {
     ...baseOptions.palette,
     background: {
       default: '#14113C',
-      paper: '#2e2064',
+      paper: '#14113C',
     },
     text: {
-      primary: '#FEFEFE',
+      primary: '#FFFFFF',
       secondary: 'rgba(255, 255, 255, 0.7)',
       disabled: 'rgba(255, 255, 255, 0.5)',
     },
-  },
-  typography: {
-    ...baseOptions.typography,
-  },
-});
-
-export const lightTheme = createTheme({
-  ...baseOptions,
-  palette: {
-    ...baseOptions.palette,
-    background: {
-      default: '#EEEEEE',
-      paper: '#FDFAFF',
-    },
-  },
-  typography: {
-    ...baseOptions.typography,
   },
 });

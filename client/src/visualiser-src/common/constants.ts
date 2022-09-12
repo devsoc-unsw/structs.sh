@@ -9,7 +9,7 @@ export const pathD = `M 0 0 L ${markerLength} ${markerLength / 2} L 0 ${markerLe
 export const showLineNumbers = false;
 
 // Animation attributes
-export const defaultSpeed = 0.6;
+export const defaultSpeed = 1;
 
 export const VISUALISER_CANVAS = '#visualiser-canvas';
 export const CODE_CANVAS = '#code-canvas';
