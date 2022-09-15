@@ -1,8 +1,16 @@
 import { Box, Typography, useTheme, Button } from '@mui/material';
+import { styled } from '@mui/system';
 import React, { useCallback, useContext } from 'react';
 import VisualiserContext from '../VisualiserContext';
 
 import styles from './Control.module.scss';
+
+const MenuButton = styled(Button)({
+  backgroundColor: '#46B693',
+  '&:hover': {
+    backgroundColor: '#4f8f7b',
+  },
+});
 
 /**
  * Contains all the visualiser controller UI, ie. the play/pause buttons, the
@@ -27,21 +35,33 @@ const VisualiserCreateNewReset = () => {
   }, [controller]);
 
   return (
-    <Box className={styles.createResetMenu}>
-      <Button
-        className={styles.resetButton}
+    <Box
+      display="flex"
+      flexDirection="column"
+      position="absolute"
+      width="200px"
+      top="80px"
+      right="10px"
+      gap="10px"
+    >
+      <MenuButton
+        // className={styles.resetButton}
         onClick={handleGenerate}
-        sx={{ backgroundColor: '#46B493' }}
+        // sx={{ backgroundColor: '#46B493' }}
       >
-        <Typography whiteSpace="nowrap">Create New</Typography>
-      </Button>
-      <Button
-        className={styles.resetButton}
+        <Typography color="textPrimary" whiteSpace="nowrap">
+          Create New
+        </Typography>
+      </MenuButton>
+      <MenuButton
+        // className={styles.resetButton}
         onClick={handleReset}
-        sx={{ backgroundColor: '#46B493' }}
+        // sx={{ backgroundColor: '#46B493' }}
       >
-        <Typography whiteSpace="nowrap">Reset All</Typography>
-      </Button>
+        <Typography color="textPrimary" whiteSpace="nowrap">
+          Reset All
+        </Typography>
+      </MenuButton>
     </Box>
   );
 };
