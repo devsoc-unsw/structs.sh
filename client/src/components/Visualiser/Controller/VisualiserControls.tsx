@@ -19,10 +19,32 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
+import { styled } from '@mui/system';
 import React, { EventHandler, FC, useCallback, useContext, useEffect, useState } from 'react';
 import { defaultSpeed } from 'visualiser-src/common/constants';
 import VisualiserContext from '../VisualiserContext';
 import styles from './Control.module.scss';
+
+const TimelineSlider = styled('input')({
+  appearance: 'none',
+  width: '100%',
+  alignSelf: 'center',
+  background: '#aeabba',
+  cursor: 'pointer',
+  '&::-webkit-slider-thumb': {
+    appearance: 'none',
+    height: '12px',
+    width: '5px',
+    background: '#fafafa',
+  },
+  '&::-moz-range-thumb': {
+    borderRadius: '0',
+    border: 'none',
+    height: '100%',
+    width: '5px',
+    background: '#fafafa',
+  },
+});
 
 /**
  * Contains all the visualiser controller UI, ie. the play/pause buttons, the
@@ -40,11 +62,13 @@ const VisualiserControls = () => {
     timeline: { isTimelineComplete, handleTimelineUpdate, isPlaying, handleUpdateIsPlaying },
   } = useContext(VisualiserContext);
   const theme = useTheme();
+
   const [userIsDraggingTimeline, setUserIsDraggingTimeline] = useState<boolean>(false);
+
   const [speedMenuAnchorEl, setSpeedMenuAnchorEl] = React.useState<null | HTMLElement>(null);
   const speedMenuOpen = Boolean(speedMenuAnchorEl);
-  const speedOptions: string[] = ['0.25', '0.5', '0.75', '1', '1.25', '1.5', '1.75', '2'];
-  const [selectedIndex, setSelectedIndex] = useState<number>(speedOptions.indexOf('1'));
+  const speedOptions: number[] = [0.25, 0.5, 1.0, 1.25, 1.5, 1.75, 2];
+  const [selectedIndex, setSelectedIndex] = useState<number>(speedOptions.indexOf(defaultSpeed));
 
   const handlePlay = useCallback(() => {
     controller.play();
@@ -90,7 +114,7 @@ const VisualiserControls = () => {
     [controller]
   );
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClickSpeedMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setSpeedMenuAnchorEl(event.currentTarget);
   };
 
@@ -100,18 +124,19 @@ const VisualiserControls = () => {
 
   const handleSelectSpeed = (event: React.MouseEvent<HTMLElement>, index: number) => {
     setSelectedIndex(index);
-    // if (speedOptions[index] === 'Normal') {
-    //   handleSetSpeed(0.5);
-    // } else {
-    //   handleSetSpeed(Number(speedOptions[index]));
-    // }
-    handleSetSpeed(Number(speedOptions[index]) / 2);
-
+    handleSetSpeed(speedOptions[index] / 2);
     setSpeedMenuAnchorEl(null);
   };
 
   return (
-    <Box className={styles.root} bgcolor={theme.palette.background.default}>
+    <Box
+      display="flex"
+      justifyContent="center"
+      position="fixed"
+      bottom="0"
+      width="100vw"
+      bgcolor={theme.palette.background.default}
+    >
       <IconButton onClick={() => handleFastRewind()} color="inherit">
         <FastRewindIcon fontSize="large" />
       </IconButton>
@@ -153,20 +178,16 @@ const VisualiserControls = () => {
       <IconButton onClick={() => handleFastForward()} color="inherit">
         <FastForwardIcon fontSize="large" />
       </IconButton>
-      <Box className={styles.sliderContainer}>
-        <TimeIcon
-          className={styles.sliderIcon}
-          fontSize="small"
-          sx={{ fill: theme.palette.text.primary }}
-        />
-        <input
+      <Box width="100%" display="flex" justifyContent="center" alignItems="center">
+        <TimeIcon fontSize="small" />
+        <TimelineSlider
           type="range"
           id="timelineSlider"
           min="0"
           max="100"
           defaultValue="0"
           step="0.01"
-          className={styles.timelineSlider}
+          // className={styles.timelineSlider}
           onChange={(event) => {
             if (userIsDraggingTimeline) {
               handleDragTimeline(Number(event.target.value));
@@ -186,9 +207,9 @@ const VisualiserControls = () => {
           }}
         />
       </Box>
-      <Button onClick={handleClick} className={styles.setSpeedButton} color="inherit">
-        <SpeedIcon className={styles.setSpeedButtonIcon} fontSize="large" />
-        <Typography className={styles.currSpeed}>{speedOptions[selectedIndex]}</Typography>
+      <Button onClick={handleClickSpeedMenu} color="inherit">
+        <SpeedIcon fontSize="large" />
+        <Typography>{speedOptions[selectedIndex]}</Typography>
       </Button>
       <Menu
         open={speedMenuOpen}
