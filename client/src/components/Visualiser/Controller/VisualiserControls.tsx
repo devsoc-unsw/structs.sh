@@ -187,7 +187,6 @@ const VisualiserControls = () => {
           max="100"
           defaultValue="0"
           step="0.01"
-          // className={styles.timelineSlider}
           onChange={(event) => {
             if (userIsDraggingTimeline) {
               handleDragTimeline(Number(event.target.value));

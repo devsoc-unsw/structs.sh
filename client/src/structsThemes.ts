@@ -18,9 +18,6 @@ const baseOptions: ThemeOptions = {
 export const structsTheme = createTheme({
   typography: {
     ...baseOptions.typography,
-    // allVariants: {
-    //   color: '#FFFFFF',
-    // },
   },
   palette: {
     ...baseOptions.palette,
