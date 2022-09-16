@@ -1,5 +1,5 @@
 import { Line, Marker } from '@svgdotjs/svg.js';
-import { lineDiffY, canvasPadding } from '../util/settings';
+import { lineDiffY, canvasPadding } from '../../common/settings';
 import { getPointerStartEndCoordinates } from '../../common/helpers';
 import AnimationProducer from '../../common/AnimationProducer';
 import GraphicalBSTNode from '../data-structure/GraphicalBSTNode';
