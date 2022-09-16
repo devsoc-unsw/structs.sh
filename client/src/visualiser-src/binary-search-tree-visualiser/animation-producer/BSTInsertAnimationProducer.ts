@@ -1,6 +1,6 @@
 import BSTAnimationProducer from './BSTAnimationProducer';
 import GraphicalBSTNode from '../data-structure/GraphicalBSTNode';
-import { lineDiffY } from '../util/settings';
+import { lineDiffY } from '../../common/settings';
 import { getPointerStartEndCoordinates } from '../../common/helpers';
 import { insertCodeSnippet } from '../util/codeSnippets';
 
