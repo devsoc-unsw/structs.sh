@@ -1,27 +1,27 @@
 /* --------------------------- Global Style Rules --------------------------- */
 
 html {
-    scroll-behavior: smooth;
+  scroll-behavior: smooth;
 }
 
 // MUI Image List Item Bar override styles
 .MuiImageListItemBar-subtitle {
-    white-space: normal !important;
+  white-space: normal !important;
 }
 
 // Scrollbar style
 ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-    background-color: #f5f5f5;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #f5f5f5;
 }
 
 ::-webkit-scrollbar {
-    width: 6px;
-    background-color: #f5f5f5;
+  width: 6px;
+  background-color: #f5f5f5;
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #141414;
+  background-color: #141414;
 }
 
 /* ------------------------------ Custom Fonts ------------------------------ */
@@ -29,68 +29,68 @@ html {
 // Using Atlassian's font: https://atlassian.design/foundations/typography
 
 @font-face {
-    font-family: AtlassianText;
-    src: local('AtlassianText'),
-        url(./assets/fonts/atlassian/CharlieText-Regular.ttf) format('truetype');
-    font-weight: normal;
-    font-style: normal;
+  font-family: AtlassianText;
+  src: local('AtlassianText'),
+    url(./assets/fonts/atlassian/CharlieText-Regular.ttf) format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: AtlassianText;
-    src: local('AtlassianText'),
-        url(./assets/fonts/atlassian/CharlieText-Bold.ttf) format('truetype');
-    font-weight: bold;
-    font-style: normal;
+  font-family: AtlassianText;
+  src: local('AtlassianText'), url(./assets/fonts/atlassian/CharlieText-Bold.ttf) format('truetype');
+  font-weight: bold;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: AtlassianText;
-    src: local('AtlassianText'),
-        url(./assets/fonts/atlassian/CharlieText-Italic.ttf) format('truetype');
-    font-weight: normal;
-    font-style: italic;
+  font-family: AtlassianText;
+  src: local('AtlassianText'),
+    url(./assets/fonts/atlassian/CharlieText-Italic.ttf) format('truetype');
+  font-weight: normal;
+  font-style: italic;
 }
 
 @font-face {
-    font-family: AtlassianText;
-    src: local('AtlassianText'),
-        url(./assets/fonts/atlassian/CharlieText-BoldItalic.ttf) format('truetype');
-    font-weight: bold;
-    font-style: italic;
+  font-family: AtlassianText;
+  src: local('AtlassianText'),
+    url(./assets/fonts/atlassian/CharlieText-BoldItalic.ttf) format('truetype');
+  font-weight: bold;
+  font-style: italic;
 }
 
 // Using JetBrains monospace font: https://fonts.google.com/specimen/JetBrains+Mono
 
 @font-face {
-    font-family: CodeText;
-    src: local('CodeText'), url(./assets/fonts/code/JetBrainsMono-Regular.ttf) format('truetype');
-    font-weight: normal;
-    font-style: normal;
+  font-family: CodeText;
+  src: local('CodeText'), url(./assets/fonts/code/JetBrainsMono-Regular.ttf) format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: CodeText;
-    src: local('CodeText'), url(./assets/fonts/code/JetBrainsMono-Bold.ttf) format('truetype');
-    font-weight: bold;
-    font-style: normal;
+  font-family: CodeText;
+  src: local('CodeText'), url(./assets/fonts/code/JetBrainsMono-Bold.ttf) format('truetype');
+  font-weight: bold;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: CodeText;
-    src: local('CodeText'), url(./assets/fonts/code/JetBrainsMono-Italic.ttf) format('truetype');
-    font-weight: normal;
-    font-style: italic;
+  font-family: CodeText;
+  src: local('CodeText'), url(./assets/fonts/code/JetBrainsMono-Italic.ttf) format('truetype');
+  font-weight: normal;
+  font-style: italic;
 }
 
 @font-face {
-    font-family: CodeText;
-    src: local('CodeText'), url(./assets/fonts/code/JetBrainsMono-BoldItalic.ttf) format('truetype');
-    font-weight: bold;
-    font-style: italic;
+  font-family: CodeText;
+  src: local('CodeText'), url(./assets/fonts/code/JetBrainsMono-BoldItalic.ttf) format('truetype');
+  font-weight: bold;
+  font-style: italic;
 }
 
 body {
-    font-family: 'AtlassianText';
-    margin: 0;
+  font-family: 'AtlassianText';
+  margin: 0;
+  background-color: #ebe8f4;
 }

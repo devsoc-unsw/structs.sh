@@ -37,20 +37,17 @@ const VisualiserDashboard = () => {
   const topic = toTitleCase(urlToTitle(useParams().topic));
 
   return topic ? (
-    <motion.div
-      className={styles.container}
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-    >
-      <Helmet>
-        <title>{topic !== undefined ? topic : 'Structs.sh'}</title>
-      </Helmet>
-
+    <>
       <TopNavbar position="static" />
-      <Visualiser topicTitle={topic} />
-    </motion.div>
+      <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="exit">
+        <Helmet>
+          <title>{topic !== undefined ? topic : 'Structs.sh'}</title>
+        </Helmet>
+
+        {/* <TopNavbar position="static" /> */}
+        <Visualiser topicTitle={topic} />
+      </motion.div>
+    </>
   ) : (
     <LineLoader fullViewport />
   );

@@ -1,4 +1,5 @@
 import { Theme, ThemeProvider, Box } from '@mui/material';
+import TopNavbar from 'components/Navbars/TopNavbar';
 import { AnimatePresence } from 'framer-motion';
 import React, { useState } from 'react';
 import { Route, Routes } from 'react-router-dom';

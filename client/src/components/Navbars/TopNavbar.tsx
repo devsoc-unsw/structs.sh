@@ -29,14 +29,6 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
 
   const currTopic = toTitleCase(urlToTitle(useParams().topic || ''));
 
-  /* ------------------------------ Data Fetching ----------------------------- */
-
-  // useEffect(() => {
-  //   getTopics()
-  //     .then((newTopics) => setTopics(newTopics))
-  //     .catch(() => console.log('TopNav: failed to get topics'));
-  // }, []);
-
   /* --------------------------- Dropdown Callbacks --------------------------- */
 
   const handleLearnMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {

@@ -72,7 +72,7 @@ const Features: React.FC<Props> = () => {
             <List>
               <ListItem>
                 <ListItemIcon>
-                  <BulletIcon color="primary" />
+                  <BulletIcon />
                 </ListItemIcon>
                 <Typography color="textSecondary">
                   Visualise algorithms for fundamental operations on classic data structures such as
@@ -81,7 +81,7 @@ const Features: React.FC<Props> = () => {
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <BulletIcon color="primary" />
+                  <BulletIcon />
                 </ListItemIcon>
                 <Typography color="textSecondary">
                   Granular animation control with play/pause, stepping, slider and speed control
@@ -89,7 +89,7 @@ const Features: React.FC<Props> = () => {
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <BulletIcon color="primary" />
+                  <BulletIcon />
                 </ListItemIcon>
                 <Typography color="textSecondary">
                   Control the visualiser through an integrated terminal or through a simple menu
@@ -112,7 +112,7 @@ const Features: React.FC<Props> = () => {
         <List>
           <ListItem>
             <ListItemIcon>
-              <BulletIcon color="primary" />
+              <BulletIcon />
             </ListItemIcon>
             <Typography color="textSecondary">
               <Link
@@ -126,7 +126,7 @@ const Features: React.FC<Props> = () => {
           </ListItem>
           <ListItem>
             <ListItemIcon>
-              <BulletIcon color="primary" />
+              <BulletIcon />
             </ListItemIcon>
             <Typography color="textSecondary">
               The Structs.sh <RouterLink to="/about">team</RouterLink>

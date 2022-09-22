@@ -19,13 +19,13 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
     timeline: { handleTimelineUpdate, handleUpdateIsPlaying },
     codeSnippet: { handleSetCodeSnippetExpansion },
   } = useContext(VisualiserContext);
-  // const classes = useStyles();
+  const theme: Theme = useTheme();
+
   const [shouldDisplay, setShouldDisplay] = useState<boolean>(false);
   const [currentInputs, setCurrentInputs] = useState<string[]>(
     Array(documentation[command]?.args?.length || 0).fill('')
   );
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const theme: Theme = useTheme();
   const textPrimaryColour = theme.palette.text.primary;
 
   const handleToggleDisplay = () => {
@@ -83,7 +83,6 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
               <TextField
                 size="small"
                 value={currentInputs[idx]}
-                // variant="outlined"
                 onKeyPress={(e) => {
                   if (e.key === 'Enter') {
                     executeCommand(currentInputs);
@@ -104,7 +103,6 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
           >
             <Button
               variant="contained"
-              // color="primary"
               onClick={() => {
                 executeCommand(currentInputs);
               }}

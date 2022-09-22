@@ -45,18 +45,14 @@ const VisualiserCreateNewReset = () => {
       gap="10px"
     >
       <MenuButton
-        // className={styles.resetButton}
         onClick={handleGenerate}
-        // sx={{ backgroundColor: '#46B493' }}
       >
         <Typography color="textPrimary" whiteSpace="nowrap">
           Create New
         </Typography>
       </MenuButton>
       <MenuButton
-        // className={styles.resetButton}
         onClick={handleReset}
-        // sx={{ backgroundColor: '#46B493' }}
       >
         <Typography color="textPrimary" whiteSpace="nowrap">
           Reset All

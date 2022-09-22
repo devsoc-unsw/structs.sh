@@ -26,13 +26,7 @@ const HomePage = () => {
         </Typography>
         <Topics />
       </Box>
-      <Box
-        sx={{
-          background: theme.palette.background.paper,
-          position: 'relative',
-        }}
-        className={styles.features}
-      >
+      <Box position="relative" bgcolor={theme.palette.primary.main} className={styles.features}>
         <Container maxWidth="md">
           <Features />
         </Container>

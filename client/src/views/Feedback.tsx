@@ -30,7 +30,6 @@ const Feedback = () => (
         style={{
           width: '100%',
           height: '100vh',
-          // height: '100%',
         }}
       >
         Loading…
