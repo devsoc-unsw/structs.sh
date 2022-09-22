@@ -9,7 +9,7 @@ export const insertCodeSnippet = `struct node *insert(struct node *node, int val
     return node;
   }`;
 
-export const rotateLeftCodeSnippet = `struct node *rotate_left(struct node *node, value) {
+export const rotateLeftCodeSnippet = `struct node *rotate_left(struct node *node, int value) {
     if (value == node->value) {
         struct node *new_root = node->right;
         node->right = new_root->left;
@@ -17,13 +17,13 @@ export const rotateLeftCodeSnippet = `struct node *rotate_left(struct node *node
         return new_root;
     } else if (value < node->value) {
         node->left = rotate_left(node->left, value);
-    } else {
+    } else if (value > node->value) {
         node->right = rotate_left(node->right, value);
     }
     return node;
 }`;
 
-export const rotateRightCodeSnippet = `struct node *rotate_right(struce node *node, value) {
+export const rotateRightCodeSnippet = `struct node *rotate_right(struce node *node, int value) {
     if (value == node->value) {
         struct node *new_root = node->left;
         node->left = new_root->right;
@@ -31,7 +31,7 @@ export const rotateRightCodeSnippet = `struct node *rotate_right(struce node *no
         return new_root;
     } else if (value < node->value) {
         node->left = rotate_right(node->left, value);
-    } else {
+    } else if (value > node->value) {
         node->right = rotate_right(node->right, value);
     }
     return node;

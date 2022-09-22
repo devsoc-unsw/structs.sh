@@ -6,6 +6,7 @@ import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import FastForwardIcon from '@mui/icons-material/FastForward';
 import FastRewindIcon from '@mui/icons-material/FastRewind';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import SpeedIcon from '@mui/icons-material/Speed';
 import CheckIcon from '@mui/icons-material/Check';
 import {
@@ -80,6 +81,11 @@ const VisualiserControls = () => {
     handleUpdateIsPlaying(false);
   }, [controller]);
 
+  const handleReplay = useCallback(() => {
+    controller.seekPercent(0);
+    handlePlay();
+  }, [controller]);
+
   const handleStepForward = useCallback(() => {
     controller.stepForwards();
     // Stepforward pauses when animation is complete, so set state of isPlaying to false
@@ -137,45 +143,29 @@ const VisualiserControls = () => {
       width="100vw"
       bgcolor={theme.palette.background.default}
     >
-      <IconButton onClick={() => handleFastRewind()} color="inherit">
+      <IconButton onClick={handleFastRewind} color="inherit">
         <FastRewindIcon fontSize="large" />
       </IconButton>
-      <IconButton onClick={() => handleStepBackward()} color="inherit">
+      <IconButton onClick={handleStepBackward} color="inherit">
         <SkipPreviousIcon fontSize="large" />
       </IconButton>
       {isTimelineComplete ? (
-        <IconButton
-          color="inherit"
-          onClick={() => {
-            controller.seekPercent(0);
-            handlePlay();
-          }}
-        >
+        <IconButton color="inherit" onClick={handleReplay}>
           <ReplayIcon fontSize="large" />
         </IconButton>
       ) : isPlaying ? (
-        <IconButton
-          color="inherit"
-          onClick={() => {
-            handlePause();
-          }}
-        >
+        <IconButton color="inherit" onClick={handlePause}>
           <PauseIcon fontSize="large" />
         </IconButton>
       ) : (
-        <IconButton
-          onClick={() => {
-            handlePlay();
-          }}
-          color="inherit"
-        >
+        <IconButton onClick={handlePlay} color="inherit">
           <PlayIcon fontSize="large" />
         </IconButton>
       )}
-      <IconButton onClick={() => handleStepForward()} color="inherit">
+      <IconButton onClick={handleStepForward} color="inherit">
         <SkipNextIcon fontSize="large" />
       </IconButton>
-      <IconButton onClick={() => handleFastForward()} color="inherit">
+      <IconButton onClick={handleFastForward} color="inherit">
         <FastForwardIcon fontSize="large" />
       </IconButton>
       <Box width="100%" display="flex" justifyContent="center" alignItems="center">
