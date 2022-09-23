@@ -18,19 +18,4 @@ export default class BSTTraverseAnimationProducer extends BSTAnimationProducer {
   public renderPostorderTraversalCode(): void {
     this.renderCode(postorderTraversalCodeSnippet);
   }
-
-  public highlightNode(node: GraphicalBSTNode): void {
-    this.addSequenceAnimation(
-      node.nodeTarget.animate(500).attr({
-        fill: '#39AF8E',
-        stroke: '#39AF8E',
-      })
-    );
-
-    this.addSequenceAnimation(
-      node.textTarget.animate(500).attr({
-        fill: '#ffffff',
-      })
-    );
-  }
 }

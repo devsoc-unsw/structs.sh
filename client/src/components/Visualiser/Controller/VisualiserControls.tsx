@@ -6,6 +6,7 @@ import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import FastForwardIcon from '@mui/icons-material/FastForward';
 import FastRewindIcon from '@mui/icons-material/FastRewind';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import SpeedIcon from '@mui/icons-material/Speed';
 import CheckIcon from '@mui/icons-material/Check';
 import {
@@ -177,44 +178,44 @@ const VisualiserControls = () => {
           }}
         />
       </Box>
-      <Button onClick={handleClick} className={styles.setSpeedButton}>
-        <SpeedIcon
-          sx={{ fill: theme.palette.text.primary }}
-          className={styles.setSpeedButtonIcon}
-          fontSize="large"
-        />
-        <Typography color="textPrimary" className={styles.currSpeed}>
-          {speedOptions[selectedIndex]}
-        </Typography>
-      </Button>
-      <Menu
-        open={speedMenuOpen}
-        anchorEl={anchorEl}
-        onClose={handleCloseSpeedMenu}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-        transformOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-      >
-        {speedOptions.map((speedOption, index) => (
-          <MenuItem onClick={(event) => handleSelectSpeed(event, index)} key={index}>
-            {index === selectedIndex ? (
-              <>
-                <ListItemIcon>
-                  <CheckIcon sx={{ fill: theme.palette.text.primary }} />
-                </ListItemIcon>
-                {speedOption}
-              </>
-            ) : (
-              <ListItemText inset>{speedOption}</ListItemText>
-            )}
-          </MenuItem>
-        ))}
-      </Menu>
+      <Box>
+        <Button
+          onClick={handleClick}
+          className={styles.setSpeedButton}
+          endIcon={<KeyboardArrowUpIcon sx={{ fill: theme.palette.text.primary }} />}
+        >
+          <SpeedIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
+          <Typography color="textPrimary">{speedOptions[selectedIndex]}</Typography>
+        </Button>
+        <Menu
+          open={speedMenuOpen}
+          anchorEl={anchorEl}
+          onClose={handleCloseSpeedMenu}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          transformOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+        >
+          {speedOptions.map((speedOption, index) => (
+            <MenuItem onClick={(event) => handleSelectSpeed(event, index)} key={index}>
+              {index === selectedIndex ? (
+                <>
+                  <ListItemIcon>
+                    <CheckIcon sx={{ fill: theme.palette.text.primary }} />
+                  </ListItemIcon>
+                  {speedOption}
+                </>
+              ) : (
+                <ListItemText inset>{speedOption}</ListItemText>
+              )}
+            </MenuItem>
+          ))}
+        </Menu>
+      </Box>
     </Box>
   );
 };
