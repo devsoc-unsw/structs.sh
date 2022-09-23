@@ -63,12 +63,14 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
 
     this.addSequenceAnimation(
       node.nodeTarget.animate(400).attr({
+        stroke: '#39AF8E',
         opacity: 1,
       })
     );
 
     this.addSequenceAnimation(
       node.textTarget.animate(400).attr({
+        fill: '#39AF8E',
         opacity: 1,
       })
     );

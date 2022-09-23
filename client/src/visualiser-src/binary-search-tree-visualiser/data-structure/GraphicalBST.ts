@@ -48,7 +48,9 @@ class GraphicalBST extends GraphicalDataStructure {
     if (this.root === null) {
       this.root = GraphicalBSTNode.from(input);
       updateNodePositions(this.root);
+      // animationProducer.createNode(this.root);
       animationProducer.doAnimationAndHighlight(3, animationProducer.createNode, this.root);
+      animationProducer.doAnimationAndHighlight(3, animationProducer.unhighlightBST, this.root);
     } else {
       this.doInsert(this.root, input, animationProducer);
       animationProducer.doAnimationAndHighlight(9, animationProducer.unhighlightBST, this.root);
@@ -314,6 +316,15 @@ class GraphicalBST extends GraphicalDataStructure {
       animationProducer.doAnimationAndHighlight(9, animationProducer.unhighlightBST, this.root);
     }
   }
+
+  // private doInsertWhenNull(
+  // input: number,
+  //   animationProducer: BSTInsertAnimationProducer
+  // ) {
+  //   this.root = GraphicalBSTNode.from(input);
+  //   updateNodePositions(this.root);
+  //   animationProducer.createNode(this.root);
+  // }
 }
 
 export default GraphicalBST;

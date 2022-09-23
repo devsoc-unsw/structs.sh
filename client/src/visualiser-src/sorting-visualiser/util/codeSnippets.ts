@@ -11,3 +11,7 @@ export const bubbleCodeSnippet = `void bubble_sort(int arr[], int arr_size) {
             break;
     }
 }`;
+
+export const mergeCodeSnippet = `
+merge sort
+`;
