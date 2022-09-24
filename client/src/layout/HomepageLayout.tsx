@@ -21,14 +21,14 @@ const containerVariants = {
 // TODO: check if it's fine for children to be required
 interface Props {
   children: React.ReactNode;
-  topNavPosition?: 'fixed' | 'static';
+  // topNavPosition?: 'fixed' | 'static';
   enableOnScrollEffect?: boolean;
   disableBackground?: boolean;
 }
 
 const Layout: FC<Props> = ({
   children,
-  topNavPosition = 'fixed',
+  // topNavPosition = 'fixed',
   enableOnScrollEffect = true,
   disableBackground = false,
 }) => {
@@ -45,7 +45,7 @@ const Layout: FC<Props> = ({
 
   return (
     <>
-      <TopNavbar position={topNavPosition} enableOnScrollEffect={enableOnScrollEffect} />
+      <TopNavbar enableOnScrollEffect={enableOnScrollEffect} />
       <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="exit">
         <Box bgcolor={!disableBackground && theme.palette.background.default}>{children}</Box>
       </motion.div>

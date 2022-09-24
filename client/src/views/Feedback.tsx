@@ -4,7 +4,7 @@ import React from 'react';
 import Container from '@mui/material/Container';
 
 const Feedback = () => (
-  <HomepageLayout topNavPosition="fixed">
+  <HomepageLayout>
     <Box paddingTop="100px" textAlign="center" height="100%">
       <Container maxWidth="md">
         <Typography color="textPrimary" variant="h3">

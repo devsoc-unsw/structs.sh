@@ -16,11 +16,11 @@ import { getTopics } from '../../visualiser-src/common/helpers';
 import styles from './TopNavbar.module.scss';
 
 interface Props {
-  position?: 'fixed' | 'static' | 'relative' | 'absolute';
+  // position?: 'fixed' | 'static' | 'relative' | 'absolute';
   enableOnScrollEffect?: boolean;
 }
 
-const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true }) => {
+const TopNavbar: FC<Props> = ({ enableOnScrollEffect = true }) => {
   const theme = useTheme();
 
   const [learnAnchorEl, setLearnAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -77,7 +77,6 @@ const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true 
   return (
     <Box>
       <AppBar
-        position={position}
         sx={{
           transition: '0.5s all ease-in-out',
           backgroundColor: theme.palette.background.default,
