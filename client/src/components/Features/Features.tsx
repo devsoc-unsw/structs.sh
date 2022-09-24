@@ -15,7 +15,6 @@ import React, { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { Link as RouterLink } from 'react-router-dom';
 import FeatureItem from './FeatureItem';
-import styles from './Features.module.scss';
 
 interface Props {}
 
@@ -51,17 +50,13 @@ const Features: React.FC<Props> = () => {
   }, []);
 
   return (
-    <motion.div
-      className={styles.featureSection}
-      variants={variants}
-      initial="hidden"
-      animate={controls}
-      ref={ref}
-    >
-      <img src={structsLogo} className={styles.logo} alt="Structs.sh logo" />
-      <Typography className={styles.title} color="textPrimary" variant="h4">
-        Structs.sh
-      </Typography>
+    <motion.div variants={variants} initial="hidden" animate={controls} ref={ref}>
+      <Box display="flex" flexDirection="column" alignItems="center">
+        <img src={structsLogo} alt="logo" width={100} />
+        <Typography color="textPrimary" variant="h4">
+          Structs.sh
+        </Typography>
+      </Box>
       <HorizontalRule />
       <FeatureItem>
         <Typography color="textPrimary" variant="h6">
@@ -133,7 +128,7 @@ const Features: React.FC<Props> = () => {
             </Typography>
           </ListItem>
         </List>
-        <Box sx={{ mt: 4 }}>
+        <Box padding="20px">
           <div
             className="github-card"
             data-github="csesoc/structs.sh"

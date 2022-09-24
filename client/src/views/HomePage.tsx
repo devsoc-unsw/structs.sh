@@ -17,16 +17,23 @@ const HomePage = () => {
       <Helmet>
         <title>Structs.sh</title>
       </Helmet>
-      <Box className={styles.header}>
-        <Typography className={styles.title} variant="h4" sx={{ padding: '2', paddingTop: '10%' }}>
+      <Box
+        minHeight="100vh"
+        paddingBottom="20px"
+        textAlign="center"
+        sx={{
+          backgroundImage: `linear-gradient(to bottom, #18154f, ${theme.palette.primary.main})`,
+        }}
+      >
+        <Typography variant="h4" sx={{ padding: '2', paddingTop: '10%' }}>
           <strong>Welcome to Structs.sh</strong>
         </Typography>
-        <Typography className={styles.description} variant="body1" sx={{ padding: 2 }}>
+        <Typography variant="body1" sx={{ padding: 2 }}>
           An interactive learning platform for computer science, tailored to UNSW CSE students.
         </Typography>
         <Topics />
       </Box>
-      <Box position="relative" bgcolor={theme.palette.primary.main} className={styles.features}>
+      <Box position="relative" bgcolor={theme.palette.primary.main}>
         <Container maxWidth="md">
           <Features />
         </Container>

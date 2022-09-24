@@ -16,7 +16,6 @@ import { getTopics } from '../../visualiser-src/common/helpers';
 import styles from './TopNavbar.module.scss';
 
 interface Props {
-  // position?: 'fixed' | 'static' | 'relative' | 'absolute';
   enableOnScrollEffect?: boolean;
 }
 
