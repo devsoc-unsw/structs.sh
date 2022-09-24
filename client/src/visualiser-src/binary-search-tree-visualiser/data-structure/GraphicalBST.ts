@@ -9,6 +9,7 @@ import GraphicalTreeTraversal from './GraphicalTreeTraversal';
 import updateNodePositions from '../util/helpers';
 import BSTCreateAnimationProducer from '../animation-producer/BSTCreateAnimationProducer';
 import GraphicalTreeGenerate from './GraphicalTreeGenerate';
+import BSTDeleteAnimationProducer from '../animation-producer/BSTDeleteAnimationProducer';
 
 // used for the actual implementation of the bst
 class GraphicalBST extends GraphicalDataStructure {
@@ -16,7 +17,12 @@ class GraphicalBST extends GraphicalDataStructure {
     insert: {
       args: ['value'],
       description:
-        'Executes standard BST insertion to add a new node with the given value into the tree.',
+        'Executes standard insertion to add a new node with the given value into the tree.',
+    },
+    delete: {
+      args: ['value'],
+      description:
+        'Executes a deletion on the node with the given value'
     },
     rotateLeft: {
       args: ['value'],
@@ -54,6 +60,13 @@ class GraphicalBST extends GraphicalDataStructure {
       this.doInsert(this.root, input, animationProducer);
       animationProducer.doAnimationAndHighlight(9, animationProducer.unhighlightBST, this.root);
     }
+    return animationProducer;
+  }
+
+  public delete(input: number): BSTDeleteAnimationProducer {
+    const animationProducer: BSTDeleteAnimationProducer = new BSTDeleteAnimationProducer();
+    animationProducer.renderDeleteCode();
+
     return animationProducer;
   }
 
