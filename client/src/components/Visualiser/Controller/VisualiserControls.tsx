@@ -4,6 +4,9 @@ import PlayIcon from '@mui/icons-material/PlayCircleOutline';
 import ReplayIcon from '@mui/icons-material/Replay';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import FastForwardIcon from '@mui/icons-material/FastForward';
+import FastRewindIcon from '@mui/icons-material/FastRewind';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import SpeedIcon from '@mui/icons-material/Speed';
 import CheckIcon from '@mui/icons-material/Check';
 import {
@@ -35,9 +38,8 @@ import styles from './Control.module.scss';
 const VisualiserControls = () => {
   const {
     controller,
-    timeline: { isTimelineComplete, handleTimelineUpdate },
+    timeline: { isTimelineComplete, handleTimelineUpdate, isPlaying, handleUpdateIsPlaying },
   } = useContext(VisualiserContext);
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [userIsDraggingTimeline, setUserIsDraggingTimeline] = useState<boolean>(false);
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -47,18 +49,32 @@ const VisualiserControls = () => {
 
   const handlePlay = useCallback(() => {
     controller.play();
+    handleUpdateIsPlaying(true);
   }, [controller]);
 
   const handlePause = useCallback(() => {
     controller.pause();
+    handleUpdateIsPlaying(false);
   }, [controller]);
 
   const handleStepForward = useCallback(() => {
     controller.stepForwards();
-  }, [controller]);
+    // Stepforward pauses when animation is complete, so set state of isPlaying to false
+    handleUpdateIsPlaying(false);
+  }, [controller, isPlaying]);
 
   const handleStepBackward = useCallback(() => {
+    handlePause();
     controller.stepBackwards();
+  }, [controller]);
+
+  const handleFastRewind = useCallback(() => {
+    handlePause();
+    controller.seekPercent(0);
+  }, [controller]);
+
+  const handleFastForward = useCallback(() => {
+    controller.seekPercent(100);
   }, [controller]);
 
   const handleSetSpeed = useCallback(
@@ -75,14 +91,6 @@ const VisualiserControls = () => {
     [controller]
   );
 
-  const handleReset = useCallback(() => {
-    controller.resetDataStructure();
-  }, [controller]);
-
-  const handleGenerate = useCallback(() => {
-    controller.generateDataStructure();
-  }, [controller]);
-
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -97,25 +105,19 @@ const VisualiserControls = () => {
     setAnchorEl(null);
   };
 
-  useEffect(() => {
-    if (isTimelineComplete) {
-      setIsPlaying(false);
-    } else if (!isPlaying) {
-      setIsPlaying(true);
-    }
-  }, [isTimelineComplete, handleTimelineUpdate]);
-
   return (
     <Box className={styles.root} bgcolor={theme.palette.background.default}>
+      <IconButton onClick={() => handleFastRewind()}>
+        <FastRewindIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
+      </IconButton>
       <IconButton onClick={() => handleStepBackward()}>
         <SkipPreviousIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
       </IconButton>
       {isTimelineComplete ? (
         <IconButton
           onClick={() => {
-            handleDragTimeline(0);
+            controller.seekPercent(0);
             handlePlay();
-            setIsPlaying(true);
           }}
         >
           <ReplayIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
@@ -124,7 +126,6 @@ const VisualiserControls = () => {
         <IconButton
           onClick={() => {
             handlePause();
-            setIsPlaying(false);
           }}
         >
           <PauseIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
@@ -133,7 +134,6 @@ const VisualiserControls = () => {
         <IconButton
           onClick={() => {
             handlePlay();
-            setIsPlaying(true);
           }}
         >
           <PlayIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
@@ -142,46 +142,9 @@ const VisualiserControls = () => {
       <IconButton onClick={() => handleStepForward()}>
         <SkipNextIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
       </IconButton>
-
-      <Button onClick={handleClick} className={styles.setSpeedButton}>
-        <SpeedIcon
-          sx={{ fill: theme.palette.text.primary }}
-          className={styles.setSpeedButtonIcon}
-          fontSize="large"
-        />
-        <Typography color="textPrimary" className={styles.currSpeed}>
-          {speedOptions[selectedIndex]}
-        </Typography>
-      </Button>
-      <Menu
-        open={speedMenuOpen}
-        anchorEl={anchorEl}
-        onClose={handleCloseSpeedMenu}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-        transformOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-      >
-        {speedOptions.map((speedOption, index) => (
-          <MenuItem onClick={(event) => handleSelectSpeed(event, index)} key={index}>
-            {index === selectedIndex ? (
-              <>
-                <ListItemIcon>
-                  <CheckIcon sx={{ fill: theme.palette.text.primary }} />
-                </ListItemIcon>
-                {speedOption}
-              </>
-            ) : (
-              <ListItemText inset>{speedOption}</ListItemText>
-            )}
-          </MenuItem>
-        ))}
-      </Menu>
-
+      <IconButton onClick={() => handleFastForward()}>
+        <FastForwardIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
+      </IconButton>
       <Box className={styles.sliderContainer}>
         <TimeIcon
           className={styles.sliderIcon}
@@ -205,7 +168,7 @@ const VisualiserControls = () => {
           }}
           onMouseDown={() => {
             setUserIsDraggingTimeline(true);
-            handlePause();
+            controller.pause();
           }}
           onMouseUp={() => {
             setUserIsDraggingTimeline(false);
@@ -215,16 +178,44 @@ const VisualiserControls = () => {
           }}
         />
       </Box>
-      <Button className={styles.resetButton} onClick={handleGenerate}>
-        <Typography color="textPrimary" sx={{ whiteSpace: 'nowrap' }}>
-          Create New
-        </Typography>
-      </Button>
-      <Button className={styles.resetButton} onClick={handleReset}>
-        <Typography color="textPrimary" whiteSpace="nowrap">
-          Reset All
-        </Typography>
-      </Button>
+      <Box>
+        <Button
+          onClick={handleClick}
+          className={styles.setSpeedButton}
+          endIcon={<KeyboardArrowUpIcon sx={{ fill: theme.palette.text.primary }} />}
+        >
+          <SpeedIcon sx={{ fill: theme.palette.text.primary }} fontSize="large" />
+          <Typography color="textPrimary">{speedOptions[selectedIndex]}</Typography>
+        </Button>
+        <Menu
+          open={speedMenuOpen}
+          anchorEl={anchorEl}
+          onClose={handleCloseSpeedMenu}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          transformOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+        >
+          {speedOptions.map((speedOption, index) => (
+            <MenuItem onClick={(event) => handleSelectSpeed(event, index)} key={index}>
+              {index === selectedIndex ? (
+                <>
+                  <ListItemIcon>
+                    <CheckIcon sx={{ fill: theme.palette.text.primary }} />
+                  </ListItemIcon>
+                  {speedOption}
+                </>
+              ) : (
+                <ListItemText inset>{speedOption}</ListItemText>
+              )}
+            </MenuItem>
+          ))}
+        </Menu>
+      </Box>
     </Box>
   );
 };

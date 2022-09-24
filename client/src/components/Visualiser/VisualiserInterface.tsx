@@ -7,6 +7,7 @@ import { VisualiserControls } from './Controller';
 import GUIMode from './Controller/GUIMode/GUIMode';
 import styles from './VisualiserDashboard.module.scss';
 import VisualiserContext from './VisualiserContext';
+import VisualiserCreateNewReset from './Controller/VisualiserCreateNewReset';
 
 interface VisualiserInterfaceProps {
   topicTitle: string;
@@ -27,18 +28,30 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
   const controllerRef = useRef<VisualiserController>();
   const [isTimelineComplete, setIsTimelineComplete] = useState<boolean>(false);
   const [documentation, setDocumentation] = useState<Documentation>({});
+  const [isCodeSnippetExpanded, setIsCodeSnippetExpanded] = useState<boolean>(false);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   useEffect(() => {
     controllerRef.current = controllerRef.current || new VisualiserController();
     controllerRef.current.applyTopicTitle(topicTitle);
     topicTitleRef.current = topicTitle;
     setDocumentation(controllerRef.current.documentation);
+    setIsCodeSnippetExpanded(false);
   }, [topicTitle]);
 
   const handleTimelineUpdate = useCallback((val) => {
     const timelineSlider = document.querySelector('#timelineSlider') as HTMLInputElement;
     timelineSlider.value = String(val);
+    timelineSlider.style.background = `linear-gradient(to right, #39AF8E ${val}%, #aeabba ${val}%)`;
     setIsTimelineComplete(val >= 100);
+  }, []);
+
+  const handleSetCodeSnippetExpansion = useCallback((val) => {
+    setIsCodeSnippetExpanded(val);
+  }, []);
+
+  const handleUpdateIsPlaying = useCallback((val) => {
+    setIsPlaying(val);
   }, []);
 
   const contextValues = useMemo(
@@ -46,7 +59,8 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
       controller: controllerRef.current,
       topicTitle: topicTitleRef.current,
       documentation,
-      timeline: { isTimelineComplete, handleTimelineUpdate },
+      timeline: { isTimelineComplete, handleTimelineUpdate, isPlaying, handleUpdateIsPlaying },
+      codeSnippet: { isCodeSnippetExpanded, handleSetCodeSnippetExpansion },
     }),
     [
       controllerRef.current,
@@ -54,11 +68,16 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
       documentation,
       isTimelineComplete,
       handleTimelineUpdate,
+      isPlaying,
+      handleUpdateIsPlaying,
+      isCodeSnippetExpanded,
+      handleSetCodeSnippetExpansion,
     ]
   );
 
   return (
     <VisualiserContext.Provider value={contextValues}>
+      <VisualiserCreateNewReset />
       <GUIMode />
       <CodeSnippet />
       <VisualiserControls />

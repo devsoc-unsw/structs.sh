@@ -55,7 +55,7 @@ export default abstract class AnimationProducer {
     lines.forEach((line, i) => {
       const codeLine: CodeLine = {
         rectTarget: SVG()
-          .rect(2000, 20)
+          .rect(2000, 18)
           .move(-5, 18 * i)
           .fill('#14113C')
           .addTo(CODE_CANVAS),

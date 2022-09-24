@@ -1,6 +1,6 @@
-import GraphicalBSTNode from 'visualiser-src/binary-search-tree-visualiser/data-structure/GraphicalBSTNode';
+import GenericGraphicalTreeNode from 'visualiser-src/common/GenericGraphicalTreeNode';
 
-export default class GraphicalAVLNode extends GraphicalBSTNode {
+export default class GraphicalAVLNode extends GenericGraphicalTreeNode {
   private _height: number;
 
   private constructor(data) {
@@ -9,7 +9,7 @@ export default class GraphicalAVLNode extends GraphicalBSTNode {
   }
 
   public static from(input: number): GraphicalAVLNode {
-    return new GraphicalAVLNode(GraphicalBSTNode.createData(input));
+    return new GraphicalAVLNode(GenericGraphicalTreeNode.createData(input));
   }
 
   public updateHeight() {

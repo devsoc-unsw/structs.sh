@@ -14,7 +14,7 @@ RUN yarn build
 
 # ===== Stage 2: Setting up NGINX =====
 
-FROM nginx:1.21.6-alpine
+FROM nginx:1.23.1-alpine
 
 # From stage 1, copy the build files into the default directory that NGINX serves files from.
 # The project will serve requests inbound at port 80 in the container

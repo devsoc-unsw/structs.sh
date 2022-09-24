@@ -1,4 +1,4 @@
-import { lineDiffY, canvasPadding } from './settings';
+import { lineDiffY, canvasPadding } from '../../common/settings';
 import GraphicalBSTNode from '../data-structure/GraphicalBSTNode';
 
 // Updates node positions of a tree

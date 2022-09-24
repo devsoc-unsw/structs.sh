@@ -9,21 +9,19 @@ export default class LinkedListSearchAnimationProducer extends LinkedListAnimati
   }
 
   public indicateFound(node: GraphicalLinkedListNode) {
-    this.addSequenceAnimation(node.boxTarget.animate().attr({ stroke: '#46B493' }));
-    this.addSequenceAnimation(node.numberTarget.animate().attr({ stroke: '#46B493' }));
+    this.highlightRightNode(node);
   }
 
   public indicateNotFound(node: GraphicalLinkedListNode) {
-    this.addSequenceAnimation(node.boxTarget.animate().attr({ stroke: '#FF0000' }));
-    this.addSequenceAnimation(node.numberTarget.animate().attr({ stroke: '#FF0000' }));
+    this.highlightNotRightNode(node);
   }
 
-  public resetColor(head: GraphicalLinkedListNode) {
+  public resetPointersAndColor(head: GraphicalLinkedListNode) {
     this.resetPointers();
     let curr = head;
     while (curr != null) {
       this.addSequenceAnimation(curr.boxTarget.animate().attr({ stroke: '#000000' }));
-      this.addSequenceAnimation(curr.numberTarget.animate().attr({ stroke: '#000000' }));
+      this.addSequenceAnimation(curr.numberTarget.animate().attr({ fill: '#000000' }));
       curr = curr.next;
     }
   }

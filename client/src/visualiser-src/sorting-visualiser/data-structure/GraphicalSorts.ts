@@ -13,9 +13,13 @@ export default class GraphicalSortList extends GraphicalDataStructure {
   public elementList: GraphicalSortsElement[] = [];
 
   private static documentation: Documentation = injectIds({
-    create: {
+    append: {
       args: ['values'],
       description: 'Add element to list of elements to sort',
+    },
+    delete: {
+      args: ['values'],
+      description: 'Delete elements from list of elements to sort',
     },
     bubble: {
       args: [],
@@ -23,14 +27,27 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     },
   });
 
-  public create(values: number[]): AnimationProducer {
-    SVG(CANVAS).clear();
+  public append(values: number[]): AnimationProducer {
     const producer = new SortsCreateAnimationProducer();
-    this.elementList = values.map((value, idx) => {
+    values.forEach((value) => {
       const element = GraphicalSortsElement.from(value);
-      producer.addBlock(value, idx, element);
-      return element;
+      producer.addBlock(value, this.elementList.length, element);
+      this.elementList.push(element);
     });
+    return producer;
+  }
+
+  public delete(values: number[]): AnimationProducer {
+    const producer = new SortsCreateAnimationProducer();
+    const listValues = this.elementList
+      .map((element) => element.data.value)
+      .filter((x) => !values.includes(x));
+
+    // Clear the canvas, and re-insert the existing values in the list into the canvas
+    SVG(CANVAS).clear();
+    this.elementList = [];
+    this.append(listValues);
+
     return producer;
   }
 
@@ -69,7 +86,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         }
       }
       if (numSwaps === 0) {
-        producer.doAnimationAndHighlight(12, producer.finishSequence, false);
+        producer.doAnimationAndHighlight(11, producer.finishSequence, false);
         return producer;
       }
       numSwaps = 0;
@@ -84,6 +101,6 @@ export default class GraphicalSortList extends GraphicalDataStructure {
 
   public generate(): void {
     const numbers = generateNumbers();
-    this.create(numbers);
+    this.append(numbers);
   }
 }

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Alert, Box, List, Typography, useTheme, Collapse } from '@mui/material';
 import VisualiserContext from 'components/Visualiser/VisualiserContext';
 import FloatingWindow from 'components/FloatingWindow/FloatingWindow';
@@ -16,6 +16,10 @@ import OperationDetails from './OperationDetails';
  */
 const GUIMode = () => {
   const { documentation, topicTitle } = useContext(VisualiserContext);
+  const [isExpanded, setIsExpanded] = useState<boolean>(true);
+  const handleToggleExpansion = () => {
+    setIsExpanded(!isExpanded);
+  };
 
   return !documentation ? (
     <Alert severity="error">
@@ -24,7 +28,11 @@ const GUIMode = () => {
       &apos;
     </Alert>
   ) : (
-    <FloatingWindow flexDirection="row">
+    <FloatingWindow
+      flexDirection="row"
+      isExpanded={isExpanded}
+      handleToggleExpansion={handleToggleExpansion}
+    >
       <List>
         {Object.keys(documentation).map((command) => (
           <OperationDetails command={command} key={documentation[command].id} />

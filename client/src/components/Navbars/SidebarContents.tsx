@@ -104,7 +104,7 @@ const SidebarContents = ({ setShowSidebar }) => {
           </ListItemButton>
         </a>
         <a
-          href="https://media.csesoc.org.au/tag/csesoc/"
+          href="https://www.csesoc.unsw.edu.au/"
           target="_blank"
           rel="noreferrer"
           onClick={() => setShowSidebar(false)}

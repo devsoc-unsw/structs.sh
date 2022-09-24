@@ -39,7 +39,8 @@ class GraphicalAVL extends GraphicalDataStructure {
       // Early return if inserting into an empty tree
       this.root = GraphicalAVLNode.from(input);
       updateNodePositions(this.root);
-      animationProducer.doAnimationAndHighlight(3, animationProducer.createNode, this.root);
+      animationProducer.doAnimationAndHighlight(3, animationProducer.createNode, this.root, true);
+      animationProducer.doAnimation(animationProducer.unhighlightBST, this.root);
     } else {
       // Recursively inserting
       this.doInsert(null, this.root, false, input, animationProducer);
@@ -69,80 +70,90 @@ class GraphicalAVL extends GraphicalDataStructure {
     isInsertLeft: boolean,
     input: number,
     animationProducer: AVLAnimationProducer
-  ) {
-    // animationProducer.doAnimation(animationProducer.halfHighlightNode, root);
+  ): boolean {
     // First, insert to leaf of BST
     if (root.value > input) {
-      animationProducer.doAnimationAndHighlight(6, animationProducer.halfHighlightNode, root);
+      animationProducer.doAnimationAndHighlight(4, animationProducer.halfHighlightNode, root);
+      animationProducer.doAnimationAndHighlight(
+        5,
+        animationProducer.highlightLine,
+        root.leftLineTarget,
+        root.leftArrowTarget,
+        true
+      );
       if (root.left == null) {
         root.left = GraphicalAVLNode.from(input);
         updateNodePositions(this.root);
-        animationProducer.doAnimationAndHighlight(
-          3,
-          animationProducer.createNodeLeft,
-          root.left,
-          root
-        );
-      } else {
-        animationProducer.doAnimationAndHighlight(
-          6,
-          animationProducer.highlightLine,
-          root.leftLineTarget,
-          root.leftArrowTarget
-        );
-        this.doInsert(root, root.left, true, input, animationProducer);
+        animationProducer.doAnimationAndHighlight(3, animationProducer.createNode, root.left, true);
+        animationProducer.doAnimation(animationProducer.unhighlightNode, root.left);
+      } else if (!this.doInsert(root, root.left, true, input, animationProducer)) {
+        return false;
       }
     } else if (root.value < input) {
-      animationProducer.doAnimationAndHighlight(8, animationProducer.halfHighlightNode, root);
+      animationProducer.doAnimationAndHighlight(6, animationProducer.halfHighlightNode, root);
+      animationProducer.doAnimationAndHighlight(
+        7,
+        animationProducer.highlightLine,
+        root.rightLineTarget,
+        root.rightArrowTarget,
+        true
+      );
       if (root.right == null) {
         root.right = GraphicalAVLNode.from(input);
         updateNodePositions(this.root);
         animationProducer.doAnimationAndHighlight(
           3,
-          animationProducer.createNodeRight,
+          animationProducer.createNode,
           root.right,
-          root
+          true
         );
-      } else {
-        animationProducer.doAnimationAndHighlight(
-          8,
-          animationProducer.highlightLine,
-          root.rightLineTarget,
-          root.rightArrowTarget
-        );
-        this.doInsert(root, root.right, false, input, animationProducer);
+        animationProducer.doAnimation(animationProducer.unhighlightNode, root.right);
+      } else if (!this.doInsert(root, root.right, false, input, animationProducer)) {
+        return false;
       }
     } else {
       // highlight root red
+      animationProducer.doAnimationAndHighlight(8, animationProducer.halfHighlightNodeRed, root);
+      animationProducer.doAnimationAndHighlight(9, animationProducer.unhighlightBST, this.root);
+
+      // return value corresponds to whether to continue or exit the operation
+      return false;
     }
     // Begin rebalancing
     root.updateHeight();
     if (root.balance > 1) {
+      animationProducer.doAnimationAndHighlight(13, animationProducer.highlightNode, root);
       if (input > root.left.value) {
         // Left Right Case
-        animationProducer.highlightCode(14);
+        animationProducer.doAnimationAndHighlight(14, animationProducer.highlightNode, root.left);
+        animationProducer.highlightCode(15);
         this.rotateLeft(root, root.left, true, animationProducer);
       }
       // Left Left Case
       animationProducer.highlightCode(16);
       this.rotateRight(parent, root, isInsertLeft, animationProducer);
     } else if (root.balance < -1) {
+      animationProducer.doAnimationAndHighlight(17, animationProducer.highlightNode, root);
       if (input < root.right.value) {
         // Right Left Case
+        animationProducer.doAnimationAndHighlight(18, animationProducer.highlightNode, root.right);
         animationProducer.highlightCode(19);
         this.rotateRight(root, root.right, false, animationProducer);
       }
       // Right Right Case
-      animationProducer.highlightCode(21);
+      animationProducer.highlightCode(20);
       this.rotateLeft(parent, root, isInsertLeft, animationProducer);
     } else {
       // Case where node is already balanced
+      animationProducer.doAnimationAndHighlight(21, animationProducer.highlightNode, root);
       animationProducer.doAnimationAndHighlight(
-        23,
+        22,
         animationProducer.unhighlightNodeAndPointers,
         root
       );
     }
+
+    return true;
   }
 
   private rotateLeft(
