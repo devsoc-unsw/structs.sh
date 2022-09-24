@@ -1,13 +1,11 @@
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import { injectIds } from 'visualiser-src/common/helpers';
-import { generateNumbers } from 'visualiser-src/common/RandomNumGenerator';
 import BSTInsertAnimationProducer from '../animation-producer/BSTInsertAnimationProducer';
 import BSTRotateAnimationProducer from '../animation-producer/BSTRotateAnimationProducer';
 import GraphicalBSTNode from './GraphicalBSTNode';
 import GraphicalTreeTraversal from './GraphicalTreeTraversal';
 import updateNodePositions from '../util/helpers';
-import BSTCreateAnimationProducer from '../animation-producer/BSTCreateAnimationProducer';
 import GraphicalTreeGenerate from './GraphicalTreeGenerate';
 import BSTDeleteAnimationProducer from '../animation-producer/BSTDeleteAnimationProducer';
 
@@ -66,8 +64,34 @@ class GraphicalBST extends GraphicalDataStructure {
   public delete(input: number): BSTDeleteAnimationProducer {
     const animationProducer: BSTDeleteAnimationProducer = new BSTDeleteAnimationProducer();
     animationProducer.renderDeleteCode();
-
+    GraphicalBST.deleteRecursive(this.root, input, animationProducer);
     return animationProducer;
+  }
+
+  private static deleteRecursive(root: GraphicalBSTNode, input: number, animationProducer: BSTDeleteAnimationProducer): GraphicalBSTNode {
+    if (root == null) {
+      animationProducer.highlightCode(3);
+      return null;
+    }
+
+    let newRoot: GraphicalBSTNode = root;
+
+    if (input < root.value) {
+      root.left = GraphicalBST.deleteRecursive(root.left, input, animationProducer);
+    } else if (input > root.value) {
+      root.right = GraphicalBST.deleteRecursive(root.right, input, animationProducer);
+    } else {
+      console.log("hi")
+      if (root.left == null && root.right == null) {
+        newRoot = null;
+      } else if (root.left == null) {
+        newRoot = newRoot.right
+      } else if (root.right == null) {
+        newRoot = newRoot.left
+      } 
+      animationProducer.doAnimationAndHighlight(20, animationProducer.freeNode, root);
+    }
+    return newRoot;
   }
 
   public generate(): void {
@@ -331,6 +355,8 @@ class GraphicalBST extends GraphicalDataStructure {
       animationProducer.doAnimationAndHighlight(9, animationProducer.unhighlightBST, this.root);
     }
   }
+  
+
 }
 
 export default GraphicalBST;
