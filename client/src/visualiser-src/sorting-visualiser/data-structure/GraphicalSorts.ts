@@ -7,6 +7,7 @@ import { CANVAS } from 'visualiser-src/linked-list-visualiser/util/constants';
 import { generateNumbers } from 'visualiser-src/common/RandomNumGenerator';
 import GraphicalSortsElement from './GraphicalSortsElement';
 import SortsBubbleAnimationProducer from '../animation-producer/SortsBubbleAnimationProducer';
+import SortsMergeAnimationProducer from '../animation-producer/SortsMergeAnimationProducer';
 import SortsCreateAnimationProducer from '../animation-producer/SortsCreateAnimationProducer';
 
 export default class GraphicalSortList extends GraphicalDataStructure {
@@ -24,6 +25,10 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     bubble: {
       args: [],
       description: 'Bubble sort',
+    },
+    merge: {
+      args: [],
+      description: 'Merge sort',
     },
   });
 
@@ -93,6 +98,118 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     }
 
     return producer;
+  }
+
+  public merge(): AnimationProducer {
+    const producer = new SortsMergeAnimationProducer();
+
+    producer.renderMergeCode();
+
+    const low = 0;
+    const high = this.elementList.length - 1;
+
+    const p = 0;
+
+    const tmpList = [...this.elementList];
+
+    this.mergeSort(producer, low, high, low, tmpList);
+
+    return producer;
+  }
+
+  public mergeSort(producer: SortsMergeAnimationProducer, low: number, high: number, position: number, tmpList: GraphicalSortsElement[]) {
+    if (high <= low) {
+      return;
+    }
+
+    const mid = Math.floor((low + high) / 2);
+
+    let p = position;
+
+    this.mergeSort(producer, low, mid, low, tmpList);
+    this.mergeSort(producer, mid+1, high, mid+1, tmpList);
+
+    let pointerLeft = low;
+    let pointerRight = mid + 1;
+    
+    // compare the value on the pointerLeft and value on the pointerRight
+    // move down the column with smaller value
+    // and change the index to the next
+    // do not change the index of column with larger value
+    // if either left or right is finished, then move all the other parts down
+    // finally move all the columns up
+
+    while (pointerLeft <= mid && pointerRight <= high) {
+      // compare this.elemensList[pointerLeft] and this.elementList[pointerRight]
+      // move down the column with smaller value
+
+      if (producer.compareLowerandEqual(this.elementList[pointerLeft], this.elementList[pointerRight])) {
+        // move down pointerLeft
+        producer.doAnimationAndHighlightTimestamp(
+          6,
+          false,
+          producer.moveDown,
+          this.elementList[pointerLeft]
+        );
+        tmpList[p] = this.elementList[pointerLeft];
+        p += 1;
+        pointerLeft += 1;
+      } else {
+        // move down pointerRight
+        producer.doAnimationAndHighlightTimestamp(
+          6,
+          false,
+          producer.moveDown,
+          this.elementList[pointerRight]
+        );
+        tmpList[p] = this.elementList[pointerRight];
+        p += 1;
+        pointerRight += 1;
+      }
+    }
+
+    if (pointerLeft === mid + 1) {
+      while (pointerRight <= high) {
+        // move down this.elementList[pointerRight]
+        producer.doAnimationAndHighlightTimestamp(
+          6,
+          false,
+          producer.moveDown,
+          this.elementList[pointerRight]
+        );
+        tmpList[p] = this.elementList[pointerRight];
+        p += 1;
+        pointerRight += 1;
+      }
+    } else {
+      while (pointerLeft <= mid) {
+        // move down this.elementList[pointerLeft]
+        producer.doAnimationAndHighlightTimestamp(
+          6,
+          false,
+          producer.moveDown,
+          this.elementList[pointerLeft]
+        );
+        tmpList[p] = this.elementList[pointerLeft];
+        p += 1;
+        pointerLeft += 1;
+      }
+    }
+
+    for (let i = low; i <= high; i += 1) {
+      this.elementList[i] = tmpList[i];
+    }
+
+    for (let i = low; i <= high; i += 1) {
+      // move up this.elementsList[i]
+      producer.doAnimationAndHighlightTimestamp(
+        6,
+        false,
+        producer.moveUp,
+        this.elementList[i],
+        i
+      );
+    }
   }
 
   public get documentation(): Documentation {

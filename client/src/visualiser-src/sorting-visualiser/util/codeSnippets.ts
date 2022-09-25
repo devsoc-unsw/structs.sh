@@ -12,6 +12,35 @@ export const bubbleCodeSnippet = `void bubble_sort(int arr[], int arr_size) {
     }
 }`;
 
-export const mergeCodeSnippet = `
-merge sort
-`;
+export const mergeCodeSnippet = `void merge_sort(int arr[], int low, int high, int tmp[]) {
+    if (high <= low) {
+        return;
+    }
+    int mid = (low + high) / 2;
+    int size = 9;
+    
+    merge_sort(arr, low, mid, tmp);
+    merge_sort(arr, mid + 1, high, tmp);
+    int pointer_left = low;
+    int pointer_right = mid + 1;
+    int k;
+    
+    for (k = low; k <= high; k++) {
+        if (pointer_left == mid + 1) {
+            tmp[k] = arr[pointer_right];
+            pointer_right++;
+        } else if (pointer_right == high + 1) {
+            tmp[k] = arr[pointer_left];
+            pointer_left++;
+        } else if (arr[pointer_left] < arr[pointer_right]) {
+            tmp[k] = arr[pointer_left];
+            pointer_left++;
+        } else {
+            tmp[k] = arr[pointer_right];
+            pointer_right++;
+        }
+    }
+    for (k = low; k <= high; k++) {
+        arr[k] = tmp[k];
+    }
+}`;
