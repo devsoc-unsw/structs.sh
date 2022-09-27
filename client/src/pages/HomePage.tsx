@@ -13,7 +13,7 @@ const HomePage = () => {
   const theme: Theme = useTheme();
 
   return (
-    <HomepageLayout disableBackground>
+    <HomepageLayout>
       <Helmet>
         <title>Structs.sh</title>
       </Helmet>

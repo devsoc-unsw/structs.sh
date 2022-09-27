@@ -23,15 +23,9 @@ interface Props {
   children: React.ReactNode;
   // topNavPosition?: 'fixed' | 'static';
   enableOnScrollEffect?: boolean;
-  disableBackground?: boolean;
 }
 
-const Layout: FC<Props> = ({
-  children,
-  // topNavPosition = 'fixed',
-  enableOnScrollEffect = true,
-  disableBackground = false,
-}) => {
+const Layout: FC<Props> = ({ children, enableOnScrollEffect = true }) => {
   const theme: Theme = useTheme();
 
   useEffect(() => {
@@ -47,7 +41,7 @@ const Layout: FC<Props> = ({
     <>
       <TopNavbar enableOnScrollEffect={enableOnScrollEffect} />
       <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="exit">
-        <Box bgcolor={!disableBackground && theme.palette.background.default}>{children}</Box>
+        <Box bgcolor={theme.palette.primary.main}>{children}</Box>
       </motion.div>
     </>
   );
