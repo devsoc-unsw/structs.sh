@@ -34,7 +34,7 @@ const Page404 = () => {
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="exit">
       <Box sx={{ overflow: 'hidden', height: '100vh', background: '#261C2C' }}>
-        <TopNavbar enableOnScrollEffect />
+        <TopNavbar />
         <Box
           sx={{
             width: '100vw',

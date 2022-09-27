@@ -9,17 +9,13 @@ import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
 import Check from '@mui/icons-material/Check';
 import logo from 'assets/img/logo.png';
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { titleToUrl, toTitleCase, urlToTitle } from 'utils/url';
 import { getTopics } from '../../visualiser-src/common/helpers';
 import styles from './TopNavbar.module.scss';
 
-interface Props {
-  enableOnScrollEffect?: boolean;
-}
-
-const TopNavbar: FC<Props> = ({ enableOnScrollEffect = true }) => {
+const TopNavbar = () => {
   const theme = useTheme();
 
   const [learnAnchorEl, setLearnAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -90,17 +86,15 @@ const TopNavbar: FC<Props> = ({ enableOnScrollEffect = true }) => {
               </Typography>
             </Button>
             <Box className={styles.centralBox}>
-              <Button component={Link} to="/">
+              <Button color="inherit" component={Link} to="/">
                 <img src={logo} draggable={false} alt="logo" />
                 <Typography
                   variant="h4"
                   noWrap
-                  component="div"
                   sx={{
                     fontFamily: 'CodeText',
                     textTransform: 'none',
                   }}
-                  color="white"
                 >
                   Structs.sh
                 </Typography>
