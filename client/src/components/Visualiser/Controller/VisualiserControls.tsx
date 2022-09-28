@@ -68,8 +68,10 @@ const VisualiserControls = () => {
 
   const [speedMenuAnchorEl, setSpeedMenuAnchorEl] = React.useState<null | HTMLElement>(null);
   const speedMenuOpen = Boolean(speedMenuAnchorEl);
-  const speedOptions: number[] = [0.25, 0.5, 1.0, 1.25, 1.5, 1.75, 2];
-  const [selectedIndex, setSelectedIndex] = useState<number>(speedOptions.indexOf(defaultSpeed));
+  const speedOptions: number[] = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2];
+  const [selectedIndex, setSelectedIndex] = useState<number>(
+    speedOptions.indexOf(defaultSpeed * 2)
+  );
 
   const handlePlay = useCallback(() => {
     controller.play();

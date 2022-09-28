@@ -5,7 +5,7 @@ import Container from '@mui/material/Container';
 
 const Feedback = () => (
   <HomepageLayout>
-    <Box paddingTop="100px" textAlign="center" height="100%">
+    <Box paddingTop={5} textAlign="center" height="100%">
       <Container maxWidth="md">
         <Typography color="textPrimary" variant="h3">
           Feedback for Structs.sh

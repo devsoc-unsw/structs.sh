@@ -5,6 +5,6 @@ import React from 'react';
 
 interface Props {}
 
-const HorizontalRule: React.FC<Props> = () => <Divider sx={{ mt: 2, mb: 2 }} />;
+const HorizontalRule: React.FC<Props> = () => <Divider light sx={{ mt: 2, mb: 2 }} />;
 
 export default HorizontalRule;

@@ -1,12 +1,19 @@
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Button, FormControl, ListItemIcon, TextField, useTheme } from '@mui/material';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import ListItemText from '@mui/material/ListItemText';
+import {
+  AppBar,
+  Box,
+  Grid,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Typography,
+  ListItemText,
+  Button,
+  FormControl,
+  ListItemIcon,
+  TextField,
+  useTheme,
+} from '@mui/material';
 import Check from '@mui/icons-material/Check';
 import logo from 'assets/img/logo.png';
 import React, { useContext, useEffect, useState } from 'react';
@@ -72,6 +79,7 @@ const TopNavbar = () => {
   return (
     <Box>
       <AppBar
+        position="static"
         sx={{
           transition: '0.5s all ease-in-out',
           backgroundColor: theme.palette.background.default,
