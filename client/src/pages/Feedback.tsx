@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { HomepageLayout } from 'layout';
+import { HomepageLayout } from 'components/HomepageLayout';
 import React from 'react';
 import Container from '@mui/material/Container';
 
