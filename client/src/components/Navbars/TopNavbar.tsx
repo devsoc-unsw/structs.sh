@@ -46,7 +46,7 @@ const TopNavbar = () => {
   // const learnMenuId = 'topnav-menu-learn';
   // const renderLearnMenu = (
   //   <Menu
-  //     anchorEl={learnAnchorEl}
+  //     menuAnchorEl={learnAnchorEl}
   //     id={learnMenuId}
   //     open={isLearnMenuOpen}
   //     onClose={handleLearnMenuClose}
@@ -76,13 +76,13 @@ const TopNavbar = () => {
   //   </Menu>
   // );
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(menuAnchorEl);
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setMenuAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleCloseMenu = () => {
+    setMenuAnchorEl(null);
   };
 
   return (
@@ -97,20 +97,20 @@ const TopNavbar = () => {
         <Toolbar>
           <Grid container alignItems="center">
             <Grid item xs={4} display="flex">
-              <Button color="info" onClick={handleClick} endIcon={<KeyboardArrowDownIcon />}>
+              <Button color="info" onClick={handleOpenMenu} endIcon={<KeyboardArrowDownIcon />}>
                 <Typography>
                   <strong>{currTopic ? 'Topic: ' : 'Topics'}</strong> {currTopic}
                 </Typography>
               </Button>
-              <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+              <Menu anchorEl={menuAnchorEl} open={open} onClose={handleCloseMenu}>
                 {getTopics() &&
                   getTopics().map((topic, idx) => (
                     <MenuItem
                       key={idx}
-                      className={styles.item}
+                      // className={styles.item}
                       component={Link}
                       to={`/visualiser/${titleToUrl(topic)}`}
-                      onClick={handleClose}
+                      onClick={handleCloseMenu}
                     >
                       {topic.toLowerCase() === currTopic.toLowerCase() ? (
                         <>
