@@ -4,6 +4,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import EducationIcon from '@mui/icons-material/LocalLibrary';
 import GradCapIcon from '@mui/icons-material/School';
 import { Box, Grid, Link, List, ListItem, ListItemIcon, Typography } from '@mui/material';
+import { styled } from '@mui/system';
 import cmsScreen from 'assets/demos/cms.png';
 import visualiserDashboardCodeScreen from 'assets/demos/visualiser-dashboard-code.png';
 import visualiserDashboardLessonScreen from 'assets/demos/visualiser-dashboard-lesson.png';
@@ -22,6 +23,10 @@ const variants = {
   visible: { opacity: 1, transition: { duration: 3 } },
   hidden: { opacity: 0, transition: { duration: 0.2 } },
 };
+
+const StyledBulletIcon = styled(BulletIcon)(({ theme }) => ({
+  fill: theme.palette.text.secondary,
+}));
 
 const Features: React.FC<Props> = () => {
   const { ref, inView } = useInView({
@@ -67,7 +72,7 @@ const Features: React.FC<Props> = () => {
             <List>
               <ListItem>
                 <ListItemIcon>
-                  <BulletIcon />
+                  <StyledBulletIcon />
                 </ListItemIcon>
                 <Typography color="textSecondary">
                   Visualise algorithms for fundamental operations on classic data structures such as
@@ -76,7 +81,7 @@ const Features: React.FC<Props> = () => {
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <BulletIcon />
+                  <StyledBulletIcon />
                 </ListItemIcon>
                 <Typography color="textSecondary">
                   Granular animation control with play/pause, stepping, slider and speed control
@@ -84,7 +89,7 @@ const Features: React.FC<Props> = () => {
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <BulletIcon />
+                  <StyledBulletIcon />
                 </ListItemIcon>
                 <Typography color="textSecondary">
                   Control the visualiser through an integrated terminal or through a simple menu
@@ -107,7 +112,7 @@ const Features: React.FC<Props> = () => {
         <List>
           <ListItem>
             <ListItemIcon>
-              <BulletIcon />
+              <StyledBulletIcon />
             </ListItemIcon>
             <Typography color="textSecondary">
               <Link
@@ -121,7 +126,7 @@ const Features: React.FC<Props> = () => {
           </ListItem>
           <ListItem>
             <ListItemIcon>
-              <BulletIcon />
+              <StyledBulletIcon />
             </ListItemIcon>
             <Typography color="textSecondary">
               The Structs.sh <RouterLink to="/about">team</RouterLink>
