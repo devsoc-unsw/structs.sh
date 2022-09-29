@@ -25,56 +25,65 @@ import styles from './TopNavbar.module.scss';
 const TopNavbar = () => {
   const theme = useTheme();
 
-  const [learnAnchorEl, setLearnAnchorEl] = React.useState<null | HTMLElement>(null);
-
-  const isLearnMenuOpen = Boolean(learnAnchorEl);
-
+  // const [learnAnchorEl, setLearnAnchorEl] = React.useState<null | HTMLElement>(null);
+  //
+  // const isLearnMenuOpen = Boolean(learnAnchorEl);
+  //
   const currTopic = toTitleCase(urlToTitle(useParams().topic || ''));
+  //
+  // /* --------------------------- Dropdown Callbacks --------------------------- */
+  //
+  // const handleLearnMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+  //   setLearnAnchorEl(event.currentTarget);
+  // };
+  //
+  // const handleLearnMenuClose = () => {
+  //   setLearnAnchorEl(null);
+  // };
+  //
+  // /* ------------------------ Dropdown Menu Components ------------------------ */
+  //
+  // const learnMenuId = 'topnav-menu-learn';
+  // const renderLearnMenu = (
+  //   <Menu
+  //     anchorEl={learnAnchorEl}
+  //     id={learnMenuId}
+  //     open={isLearnMenuOpen}
+  //     onClose={handleLearnMenuClose}
+  //     disableScrollLock
+  //   >
+  //     {getTopics() &&
+  //       getTopics().map((topic, idx) => (
+  //         <MenuItem
+  //           key={idx}
+  //           className={styles.item}
+  //           component={Link}
+  //           to={`/visualiser/${titleToUrl(topic)}`}
+  //           onClick={handleLearnMenuClose}
+  //         >
+  //           {topic.toLowerCase() === currTopic.toLowerCase() ? (
+  //             <>
+  //               <ListItemIcon>
+  //                 <Check sx={{ fill: 'white' }} />
+  //               </ListItemIcon>
+  //               <ListItemText>{topic}</ListItemText>
+  //             </>
+  //           ) : (
+  //             <ListItemText inset>{topic}</ListItemText>
+  //           )}
+  //         </MenuItem>
+  //       ))}
+  //   </Menu>
+  // );
 
-  /* --------------------------- Dropdown Callbacks --------------------------- */
-
-  const handleLearnMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setLearnAnchorEl(event.currentTarget);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
   };
-
-  const handleLearnMenuClose = () => {
-    setLearnAnchorEl(null);
+  const handleClose = () => {
+    setAnchorEl(null);
   };
-
-  /* ------------------------ Dropdown Menu Components ------------------------ */
-
-  const learnMenuId = 'topnav-menu-learn';
-  const renderLearnMenu = (
-    <Menu
-      anchorEl={learnAnchorEl}
-      id={learnMenuId}
-      open={isLearnMenuOpen}
-      onClose={handleLearnMenuClose}
-      disableScrollLock
-    >
-      {getTopics() &&
-        getTopics().map((topic, idx) => (
-          <MenuItem
-            key={idx}
-            className={styles.item}
-            component={Link}
-            to={`/visualiser/${titleToUrl(topic)}`}
-            onClick={handleLearnMenuClose}
-          >
-            {topic.toLowerCase() === currTopic.toLowerCase() ? (
-              <>
-                <ListItemIcon>
-                  <Check sx={{ fill: 'white' }} />
-                </ListItemIcon>
-                <ListItemText>{topic}</ListItemText>
-              </>
-            ) : (
-              <ListItemText inset>{topic}</ListItemText>
-            )}
-          </MenuItem>
-        ))}
-    </Menu>
-  );
 
   return (
     <Box>
@@ -86,32 +95,82 @@ const TopNavbar = () => {
         }}
       >
         <Toolbar>
-          <Box display="flex" alignItems="center">
-            <Button color="info" onClick={handleLearnMenuOpen} endIcon={<KeyboardArrowDownIcon />}>
-              <Typography>
-                <strong>{currTopic ? 'Topic: ' : 'Topics'}</strong>
-                {currTopic}
-              </Typography>
-            </Button>
-            <Box className={styles.centralBox}>
+          <Grid container alignItems="center">
+            <Grid item xs={4} display="flex">
+              <Button color="info" onClick={handleClick} endIcon={<KeyboardArrowDownIcon />}>
+                <Typography>
+                  <strong>{currTopic ? 'Topic: ' : 'Topics'}</strong> {currTopic}
+                </Typography>
+              </Button>
+              <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                {getTopics() &&
+                  getTopics().map((topic, idx) => (
+                    <MenuItem
+                      key={idx}
+                      className={styles.item}
+                      component={Link}
+                      to={`/visualiser/${titleToUrl(topic)}`}
+                      onClick={handleClose}
+                    >
+                      {topic.toLowerCase() === currTopic.toLowerCase() ? (
+                        <>
+                          <ListItemIcon>
+                            <Check sx={{ fill: 'white' }} />
+                          </ListItemIcon>
+                          <ListItemText>{topic}</ListItemText>
+                        </>
+                      ) : (
+                        <ListItemText inset>{topic}</ListItemText>
+                      )}
+                    </MenuItem>
+                  ))}
+              </Menu>
+            </Grid>
+
+            <Grid item xs={4} display="flex" justifyContent="center">
               <Button color="inherit" component={Link} to="/">
-                <img src={logo} draggable={false} alt="logo" />
+                <img src={logo} alt="logo" style={{ maxHeight: '48px' }} />
                 <Typography
                   variant="h4"
-                  noWrap
-                  sx={{
-                    fontFamily: 'CodeText',
-                    textTransform: 'none',
-                  }}
+                  fontFamily="CodeText"
+                  sx={{ textTransform: 'none', margin: '0 1' }}
                 >
                   Structs.sh
                 </Typography>
               </Button>
-            </Box>
-          </Box>
+            </Grid>
+            {/* <Grid item xs={4} display="flex" justifyContent="end"> */}
+            {/*   <Button> */}
+            {/*     <Typography>About</Typography> */}
+            {/*   </Button> */}
+            {/* </Grid> */}
+          </Grid>
+          {/* <Box display="flex" alignItems="center"> */}
+          {/*   <Button color="info" onClick={handleLearnMenuOpen} endIcon={<KeyboardArrowDownIcon />}> */}
+          {/*     <Typography> */}
+          {/*       <strong>{currTopic ? 'Topic: ' : 'Topics'}</strong> */}
+          {/*       {currTopic} */}
+          {/*     </Typography> */}
+          {/*   </Button> */}
+          {/*   <Box className={styles.centralBox}> */}
+          {/*     <Button color="inherit" component={Link} to="/"> */}
+          {/*       <img src={logo} draggable={false} alt="logo" /> */}
+          {/*       <Typography */}
+          {/*         variant="h4" */}
+          {/*         noWrap */}
+          {/*         sx={{ */}
+          {/*           fontFamily: 'CodeText', */}
+          {/*           textTransform: 'none', */}
+          {/*         }} */}
+          {/*       > */}
+          {/*         Structs.sh */}
+          {/*       </Typography> */}
+          {/*     </Button> */}
+          {/*   </Box> */}
+          {/* </Box> */}
         </Toolbar>
       </AppBar>
-      {renderLearnMenu}
+      {/* {renderLearnMenu} */}
     </Box>
   );
 };

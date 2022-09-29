@@ -7,7 +7,7 @@ import { structsTheme } from 'structsThemes';
 import Feedback from 'pages/Feedback';
 import HomePage from 'pages/HomePage';
 import Page404 from 'pages/Page404';
-import VisualiserDashboard from 'pages/VisualiserDashboard';
+import VisualiserPage from 'pages/VisualiserPage';
 import './App.scss';
 
 const App = () => (
@@ -18,7 +18,7 @@ const App = () => (
           {/* Homepage */}
           <Route path="/" element={<HomePage />} />
           {/* Visualiser routes */}
-          <Route path="/visualiser/:topic" element={<VisualiserDashboard />} />
+          <Route path="/visualiser/:topic" element={<VisualiserPage />} />
 
           {/* Feedback and feature request page */}
           <Route path="/feedback" element={<Feedback />} />

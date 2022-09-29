@@ -13,8 +13,6 @@ import { useTheme } from '@mui/styles';
 import { Theme } from '@mui/material';
 import Box from '@mui/material/Box';
 
-import styles from './VisualiserDashboard.module.scss';
-
 const containerVariants = {
   hidden: {
     opacity: 0,
@@ -33,7 +31,7 @@ const containerVariants = {
  * Defines the layout and contents of the visualiser pages.
  * Notably, we're using a split-pane layout here.
  */
-const VisualiserDashboard = () => {
+const VisualiserPage = () => {
   const topic = toTitleCase(urlToTitle(useParams().topic));
 
   return topic ? (
@@ -52,4 +50,4 @@ const VisualiserDashboard = () => {
   );
 };
 
-export default VisualiserDashboard;
+export default VisualiserPage;

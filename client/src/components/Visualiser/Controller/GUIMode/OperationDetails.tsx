@@ -2,7 +2,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Box, Collapse, List, ListItem, ListItemIcon, Theme, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { makeStyles, useTheme } from '@mui/styles';
+import { makeStyles, styled, useTheme } from '@mui/styles';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import VisualiserContext from 'components/Visualiser/VisualiserContext';
@@ -11,6 +11,12 @@ import React, { FC, useContext, useState } from 'react';
 interface OperationDetailsProps {
   command: string;
 }
+
+const OperationButton = styled(Button)({
+  textTransform: 'none',
+  display: 'flex',
+  justifyContent: 'space-between',
+});
 
 const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
   const {
