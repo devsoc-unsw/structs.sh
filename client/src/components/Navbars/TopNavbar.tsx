@@ -20,7 +20,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { titleToUrl, toTitleCase, urlToTitle } from 'utils/url';
 import { getTopics } from '../../visualiser-src/common/helpers';
-import styles from './TopNavbar.module.scss';
 
 const TopNavbar = () => {
   const theme = useTheme();
