@@ -18,35 +18,28 @@ export default class SortsInsertionAnimationProducer extends SortsAnimationProdu
             colour = '#FFBC53';
         }
         array.forEach((x) => {
-            this.addSequenceAnimation(x.boxTarget.animate(400).attr({ stroke: colour }));
-            this.addSequenceAnimation(x.boxTarget.animate(400).attr({ fill: colour }));
-            this.addSequenceAnimation(x.numberTarget.animate(400).attr({ fill: colour }));
+            this.addSequenceAnimation(x.boxTarget.animate(1).attr({ stroke: colour }));
+            this.addSequenceAnimation(x.boxTarget.animate(1).attr({ fill: colour }));
+            this.addSequenceAnimation(x.numberTarget.animate(1).attr({ fill: colour }));
         })
+        if (array.length > 0) {
+            this.addSequenceAnimation(array[0].boxTarget.animate(400).attr({ opacity: 1 }));
+        }
         this.finishSequence();
     }
 
     public swapi(
         from: GraphicalSortsElement,
         fromIndex: number,
-        to: GraphicalSortsElement
+        to: GraphicalSortsElement,
+        toIndex: number,
+        last: boolean
     ) {
-        const xFrom = getX(fromIndex);
-        const cxFrom = getCx(fromIndex);
-        const xTo = getX(fromIndex + 1);
-        const cxTo = getCx(fromIndex + 1);
+        this.swapping(from, fromIndex, to, toIndex);
 
-        this.addSequenceAnimation(to.boxTarget.animate(10).attr({ stroke: '#39AF8E' }));
-        this.addSequenceAnimation(to.boxTarget.animate(10).attr({ fill: '#39AF8E' }));
-        this.addSequenceAnimation(to.numberTarget.animate(10).attr({ fill: '#39AF8E' }));
-        this.finishSequence();
+        this.addSequenceAnimation(from.boxTarget.animate(1).attr({ stroke: '#39AF8E', fill: '#39AF8E' }));
+        this.addSequenceAnimation(from.numberTarget.animate(1).attr({ fill: '#39AF8E' }));
 
-        this.addSequenceAnimation(from.boxTarget.animate().x(xTo));
-        this.addSequenceAnimation(from.numberTarget.animate().cx(cxTo));
-        this.addSequenceAnimation(to.boxTarget.animate().x(xFrom));
-        this.addSequenceAnimation(to.numberTarget.animate().cx(cxFrom));
-
-        this.addSequenceAnimation(from.boxTarget.animate(1).attr({ stroke: '#000000', fill: '#000000' }));
-        this.addSequenceAnimation(from.numberTarget.animate(1).attr({ fill: '#000000' }));
         this.finishSequence();
     }
 }

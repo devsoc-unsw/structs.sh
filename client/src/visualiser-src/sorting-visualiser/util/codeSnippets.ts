@@ -25,3 +25,27 @@ export const insertionCodeSnippet = `void insertionSort(int a[], int arr_size)
     }
 }
 `
+
+export const quickCodeSnippet = `void quicksort(Item a[], int lo, int hi)
+{
+   int i; // index of pivot
+   if (hi <= lo) return;
+   i = partition(a, lo, hi);
+   quicksort(a, lo, i-1);
+   quicksort(a, i+1, hi);
+}
+int partition(Item a[], int lo, int hi)
+{
+   Item v = a[lo];  // pivot
+   int  i = lo+1, j = hi;
+   for (;;) {
+      while (less(a[i],v) && i < j) i++;
+      while (less(v,a[j]) && j > i) j--;
+      if (i == j) break;
+      swap(a,i,j);
+   }
+   j = less(a[i],v) ? i : i-1;
+   swap(a,lo,j);
+   return j;
+}
+`
