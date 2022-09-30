@@ -174,6 +174,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         );
         [this.elementList[j], this.elementList[j - 1]] = [this.elementList[j - 1], this.elementList[j]];
       }
+      // Unhighlight current
       producer.doAnimationAndHighlightTimestamp(
         3,
         false,
