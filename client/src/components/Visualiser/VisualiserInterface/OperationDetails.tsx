@@ -58,7 +58,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
     setErrorMessage(err);
     if (err !== '') {
       setTimeout(() => setErrorMessage(''), 2000);
-    } else {
+    } else if (!documentation[command]?.noTimeline) {
       handleSetCodeSnippetExpansion(true);
       handleUpdateIsPlaying(true);
     }
