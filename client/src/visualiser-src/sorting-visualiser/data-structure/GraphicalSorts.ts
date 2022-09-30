@@ -1,4 +1,4 @@
-import { SVG, Element } from '@svgdotjs/svg.js';
+import { SVG } from '@svgdotjs/svg.js';
 import AnimationProducer from 'visualiser-src/common/AnimationProducer';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
@@ -8,7 +8,6 @@ import { generateNumbers } from 'visualiser-src/common/RandomNumGenerator';
 import GraphicalSortsElement from './GraphicalSortsElement';
 import SortsBubbleAnimationProducer from '../animation-producer/SortsBubbleAnimationProducer';
 import SortsInsertionAnimationProducer from '../animation-producer/SortsInsertionAnimationProducer';
-import SortsQuickAnimationProducer from '../animation-producer/SortsQuickAnimationProducer';
 import SortsCreateAnimationProducer from '../animation-producer/SortsCreateAnimationProducer';
 
 export default class GraphicalSortList extends GraphicalDataStructure {
@@ -30,10 +29,6 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     insertion: {
       args: [],
       description: 'Insertion Sort'
-    },
-    quick: {
-      args: [],
-      description: 'Quick Sort'
     },
   });
 
@@ -185,67 +180,6 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     producer.highlightCode(11);
     producer.finishSequence();
     return producer;
-  }
-
-  public quick() {
-    const ipointer = GraphicalSortsElement.pointer(0, "#E22B4F");
-    const jpointer = GraphicalSortsElement.pointer(0, "#39AF8E");
-
-    const producer = new SortsQuickAnimationProducer();
-    producer.renderQuickCode();
-
-    const len = this.elementList.length;
-
-    this.quicksort(0, len - 1, producer, ipointer, jpointer);
-    console.log("after");
-
-    return producer;
-  }
-
-  public quicksort(lo, hi, producer, ipointer, jpointer) {
-    // index of pivot
-    if (hi <= lo) return;
-    const i = this.partition(lo, hi, producer, ipointer, jpointer);
-    this.quicksort(lo, i - 1, producer, ipointer, jpointer);
-    this.quicksort(i + 1, hi, producer, ipointer, jpointer);
-  }
-
-  public partition(lo, hi, producer, ipointer, jpointer) {
-    const v = this.elementList[lo].data.value;  // pivot
-    producer.highlightBoxes([this.elementList[lo]], [3]);
-    let i = lo + 1
-
-    producer.initialisePointer(ipointer, lo + 1);
-    let j = hi;
-    producer.initialisePointer(jpointer, hi);
-    for (; ;) {
-      producer.highlightBoxes([this.elementList[i]], [1]);
-      while (this.elementList[i].data.value < v && i < j) {
-        i += 1;
-        producer.movePointer(ipointer, i);
-        producer.highlightBoxes([this.elementList[i - 1], this.elementList[i]], [0, 1]);
-      }
-      producer.highlightBoxes([this.elementList[j]], [2]);
-      while (v < this.elementList[j].data.value && j > i) {
-        j -= 1;
-        producer.movePointer(jpointer, j);
-        producer.highlightBoxes([this.elementList[j + 1], this.elementList[j]], [0, 2]);
-      }
-
-      if (i === j) {
-        producer.sameSpot(jpointer);
-        break;
-      }
-      producer.swapq(this.elementList[i], i, this.elementList[j], j);
-      [this.elementList[i], this.elementList[j]] = [this.elementList[j], this.elementList[i]];
-    }
-    // Unhighlight j and i
-    producer.highlightBoxes([this.elementList[j], this.elementList[i]], [0, 0]);
-
-    j = this.elementList[i].data.value < v ? i : i - 1;
-    producer.swapq(this.elementList[lo], lo, this.elementList[j], j);
-    [this.elementList[lo], this.elementList[j]] = [this.elementList[j], this.elementList[lo]];
-    return j;
   }
 
   public get documentation(): Documentation {
