@@ -9,6 +9,7 @@ import GraphicalSortsElement from './GraphicalSortsElement';
 import SortsBubbleAnimationProducer from '../animation-producer/SortsBubbleAnimationProducer';
 import SortsInsertionAnimationProducer from '../animation-producer/SortsInsertionAnimationProducer';
 import SortsCreateAnimationProducer from '../animation-producer/SortsCreateAnimationProducer';
+import { sortedColour, checkingColour } from '../util/constants';
 
 export default class GraphicalSortList extends GraphicalDataStructure {
   public elementList: GraphicalSortsElement[] = [];
@@ -115,7 +116,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       false,
       producer.highlightBoxes,
       [this.elementList[0]],
-      2
+      sortedColour
     );
 
     for (let i = 1; i < len; i += 1) {
@@ -126,7 +127,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         false,
         producer.highlightBoxes,
         [this.elementList[i]],
-        3
+        checkingColour
       );
 
       for (j = i; j > 0; j -= 1) {
@@ -136,15 +137,15 @@ export default class GraphicalSortList extends GraphicalDataStructure {
           false,
           producer.highlightBoxes,
           [this.elementList[j - 1]],
-          3
+          checkingColour
         );
-        // DO COMparison
+        // Do Comparison
         producer.doAnimationAndHighlightTimestamp(
           6,
           false,
           producer.highlightBoxes,
-          [],
-          3
+          [this.elementList[j - 1]],
+          checkingColour
         );
         if (val.data.value >= this.elementList[j - 1].data.value) {
           // No swapping needed so turn j green
@@ -153,7 +154,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
             false,
             producer.highlightBoxes,
             [this.elementList[j - 1]],
-            2
+            sortedColour
           );
           break;
         }
@@ -174,7 +175,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         false,
         producer.highlightBoxes,
         [this.elementList[j]],
-        2
+        sortedColour
       );
     }
     producer.highlightCode(11);
