@@ -8,7 +8,7 @@ import styles from './Control.module.scss';
 const MenuButton = styled(Button)({
   backgroundColor: '#46B693',
   '&:hover': {
-    backgroundColor: '#4f8f7b',
+    backgroundColor: '#2b6e5a',
   },
 });
 
