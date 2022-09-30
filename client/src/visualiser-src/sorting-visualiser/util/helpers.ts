@@ -1,11 +1,11 @@
-import { boxWidth, whitespace, textCy } from './constants';
+import { boxWidth, whitespace, textCy, leftOffset } from './constants';
 
 export function getX(index): number {
-    return index * (boxWidth + whitespace) + whitespace;
+    return leftOffset + index * (boxWidth + whitespace);
 }
 
 export function getCx(index): number {
-    return index * (boxWidth + whitespace) + (boxWidth / 2 + whitespace);
+    return leftOffset + index * (boxWidth + whitespace) + (boxWidth / 2);
 }
 
 export function getY(value): number {

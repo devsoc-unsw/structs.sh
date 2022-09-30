@@ -1,9 +1,10 @@
 import { strokeWidth } from '../../common/constants';
 
-export const whitespace = 20;
+export const whitespace = 10;
 export const topOffset = 60;
 export const boxWidth = 50;
 export const textCy = 360;
+export const leftOffset = 20;
 
 export const CANVAS = '#canvas';
 

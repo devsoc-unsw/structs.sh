@@ -152,12 +152,12 @@ export default class GraphicalSortList extends GraphicalDataStructure {
           3
         );
         if (val.data.value >= this.elementList[j - 1].data.value) {
-          // No swapping needed so turn back green
+          // No swapping needed so turn j green
           producer.doAnimationAndHighlightTimestamp(
             7,
             false,
             producer.highlightBoxes,
-            [this.elementList[j - 1], this.elementList[j]],
+            [this.elementList[j - 1]],
             2
           );
           break;
