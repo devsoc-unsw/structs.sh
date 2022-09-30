@@ -24,7 +24,10 @@ interface Props {
   children: React.ReactNode;
 }
 
-const Layout: FC<Props> = ({ children }) => {
+/**
+ * The layout for general pages
+ */
+const PageLayout: FC<Props> = ({ children }) => {
   const theme: Theme = useTheme();
 
   useEffect(() => {
@@ -47,4 +50,4 @@ const Layout: FC<Props> = ({ children }) => {
   );
 };
 
-export default Layout;
+export default PageLayout;

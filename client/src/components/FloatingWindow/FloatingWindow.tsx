@@ -12,6 +12,11 @@ interface Props {
   handleToggleExpansion: () => void;
 }
 
+/**
+ * A collapsible floating window component
+ *
+ * Used for the GUI for performing operations and the code snippets
+ */
 const FloatingWindow: FC<Props> = ({
   children,
   minHeight = undefined,

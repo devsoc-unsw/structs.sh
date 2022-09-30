@@ -13,8 +13,7 @@ const MenuButton = styled(Button)({
 });
 
 /**
- * Contains all the visualiser controller UI, ie. the play/pause buttons, the
- * sliders, etc.
+ * Contains the ability to reset and create new data structures
  *
  * It receives a bunch of callbacks and connects it to each of the corresponding
  * UI components.

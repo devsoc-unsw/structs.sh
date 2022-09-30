@@ -1,10 +1,10 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import HomepageLayout from 'components/HomepageLayout';
+import PageLayout from 'components/PageLayout';
 import Container from '@mui/material/Container';
 
 const Feedback = () => (
-  <HomepageLayout>
+  <PageLayout>
     <Box paddingTop={5} textAlign="center" height="100%">
       <Container maxWidth="md">
         <Typography color="textPrimary" variant="h3">
@@ -35,7 +35,7 @@ const Feedback = () => (
         Loading…
       </iframe>
     </Box>
-  </HomepageLayout>
+  </PageLayout>
 );
 
 export default Feedback;

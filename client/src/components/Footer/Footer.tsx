@@ -11,6 +11,9 @@ import styles from './Footer.module.scss';
 
 interface Props {}
 
+/**
+ * The footer of the page
+ */
 const Footer: React.FC<Props> = () => {
   const theme: Theme = useTheme();
 

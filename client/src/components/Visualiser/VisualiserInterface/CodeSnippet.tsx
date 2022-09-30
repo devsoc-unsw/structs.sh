@@ -5,6 +5,9 @@ import VisualiserContext from './VisualiserContext';
 
 interface Props {}
 
+/**
+ * The floating window where all animation related code snippets are displayed
+ */
 const CodeSnippet: FC<Props> = () => {
   const {
     codeSnippet: { isCodeSnippetExpanded, handleSetCodeSnippetExpansion },

@@ -18,6 +18,9 @@ const OperationButton = styled(Button)({
   justifyContent: 'space-between',
 });
 
+/**
+ * Contains the input for an operation, the button to execute them and error messages
+ */
 const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
   const {
     documentation,

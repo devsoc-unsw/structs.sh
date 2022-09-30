@@ -6,6 +6,9 @@ import TopicCard from './TopicCard';
 
 interface Props {}
 
+/**
+ * A box containing cards for each topic
+ */
 const Topics: React.FC<Props> = () => {
   const topics = getTopics();
   return topics && topics.length > 0 ? (

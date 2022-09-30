@@ -3,7 +3,7 @@ import { useTheme } from '@mui/styles';
 import { styled } from '@mui/system';
 import Topics from 'components/Topics';
 import Features from 'components/Features';
-import HomepageLayout from 'components/HomepageLayout';
+import PageLayout from 'components/PageLayout';
 import Helmet from 'react-helmet';
 import React from 'react';
 import styles from './HomePage.module.scss';
@@ -22,7 +22,7 @@ const HomePage = () => {
   const theme: Theme = useTheme();
 
   return (
-    <HomepageLayout>
+    <PageLayout>
       <Helmet>
         <title>Structs.sh</title>
       </Helmet>
@@ -40,7 +40,7 @@ const HomePage = () => {
           <Features />
         </Container>
       </Box>
-    </HomepageLayout>
+    </PageLayout>
   );
 };
 
