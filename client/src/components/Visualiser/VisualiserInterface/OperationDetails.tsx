@@ -1,3 +1,4 @@
+import React, { FC, useContext, useState } from 'react';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Box, Collapse, List, ListItem, ListItemIcon, Theme, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -5,8 +6,7 @@ import TextField from '@mui/material/TextField';
 import { makeStyles, styled, useTheme } from '@mui/styles';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
-import VisualiserContext from 'components/Visualiser/VisualiserContext';
-import React, { FC, useContext, useState } from 'react';
+import VisualiserContext from './VisualiserContext';
 
 interface OperationDetailsProps {
   command: string;

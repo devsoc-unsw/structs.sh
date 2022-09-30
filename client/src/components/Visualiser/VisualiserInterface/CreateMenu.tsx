@@ -1,7 +1,7 @@
 import { Box, Typography, useTheme, Button } from '@mui/material';
 import { styled } from '@mui/system';
 import React, { useCallback, useContext } from 'react';
-import VisualiserContext from '../VisualiserContext';
+import VisualiserContext from './VisualiserContext';
 
 import styles from './Control.module.scss';
 
@@ -22,7 +22,7 @@ const MenuButton = styled(Button)({
  * Eg. it receives a `handlePlay` callback and attaches it to the Play button's
  *     `onClick` handler.
  */
-const VisualiserCreateNewReset = () => {
+const CreateMenu = () => {
   const { controller } = useContext(VisualiserContext);
   const theme = useTheme();
 
@@ -44,16 +44,12 @@ const VisualiserCreateNewReset = () => {
       right="10px"
       gap="10px"
     >
-      <MenuButton
-        onClick={handleGenerate}
-      >
+      <MenuButton onClick={handleGenerate}>
         <Typography color="textPrimary" whiteSpace="nowrap">
           Create New
         </Typography>
       </MenuButton>
-      <MenuButton
-        onClick={handleReset}
-      >
+      <MenuButton onClick={handleReset}>
         <Typography color="textPrimary" whiteSpace="nowrap">
           Reset All
         </Typography>
@@ -62,4 +58,4 @@ const VisualiserCreateNewReset = () => {
   );
 };
 
-export default VisualiserCreateNewReset;
+export default CreateMenu;

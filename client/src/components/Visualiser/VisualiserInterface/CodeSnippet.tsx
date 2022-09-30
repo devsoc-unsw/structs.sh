@@ -1,7 +1,7 @@
 import React, { FC, useState, useContext } from 'react';
 import { Box, Collapse, useTheme } from '@mui/material';
 import FloatingWindow from 'components/FloatingWindow/FloatingWindow';
-import VisualiserContext from 'components/Visualiser/VisualiserContext';
+import VisualiserContext from './VisualiserContext';
 
 interface Props {}
 

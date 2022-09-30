@@ -1,13 +1,12 @@
 import { Box } from '@mui/material';
 import React, { useCallback, useMemo, useEffect, useRef, useState } from 'react';
-import CodeSnippet from 'components/CodeSnippet/CodeSnippet';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import VisualiserController from 'visualiser-src/controller/VisualiserController';
-import { VisualiserControls } from './Controller';
-import GUIMode from './Controller/GUIMode/GUIMode';
-import styles from './VisualiserDashboard.module.scss';
 import VisualiserContext from './VisualiserContext';
-import VisualiserCreateNewReset from './Controller/VisualiserCreateNewReset';
+import Controls from './Controls';
+import Operations from './Operations';
+import CodeSnippet from './CodeSnippet';
+import CreateMenu from './CreateMenu';
 
 interface VisualiserInterfaceProps {
   topicTitle: string;
@@ -77,10 +76,10 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
 
   return (
     <VisualiserContext.Provider value={contextValues}>
-      <VisualiserCreateNewReset />
-      <GUIMode />
+      <CreateMenu />
+      <Operations />
       <CodeSnippet />
-      <VisualiserControls />
+      <Controls />
     </VisualiserContext.Provider>
   );
 };

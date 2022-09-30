@@ -1,5 +1,5 @@
 import { LineLoader } from 'components/Loader';
-import { VisualiserCanvas, VisualiserInterface } from 'components/Visualiser';
+import Visualiser from 'components/Visualiser';
 import React, { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getTopic, Topic } from 'utils/apiRequests';
@@ -41,8 +41,7 @@ const VisualiserPage = () => {
         <Helmet>
           <title>{topic !== undefined ? topic : 'Structs.sh'}</title>
         </Helmet>
-        <VisualiserCanvas />
-        <VisualiserInterface topicTitle={topic} />
+        <Visualiser topicTitle={topic} />
       </motion.div>
     </>
   ) : (
