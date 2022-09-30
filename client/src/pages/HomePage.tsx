@@ -1,10 +1,9 @@
 import { Container, Theme, Typography, Box } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import { styled } from '@mui/system';
-import { Topics } from 'components/Topics';
-import { Footer } from 'components/Footer';
-import { Features } from 'components/Features';
-import { HomepageLayout } from 'components/HomepageLayout';
+import Topics from 'components/Topics';
+import Features from 'components/Features';
+import HomepageLayout from 'components/HomepageLayout';
 import Helmet from 'react-helmet';
 import React from 'react';
 import styles from './HomePage.module.scss';
@@ -41,7 +40,6 @@ const HomePage = () => {
           <Features />
         </Container>
       </Box>
-      <Footer />
     </HomepageLayout>
   );
 };

@@ -1,1 +1,3 @@
-export { default as HomepageLayout } from './HomepageLayout';
+import HomepageLayout from './HomepageLayout';
+
+export default HomepageLayout;

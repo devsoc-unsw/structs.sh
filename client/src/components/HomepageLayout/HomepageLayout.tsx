@@ -1,8 +1,9 @@
+import React, { FC, useEffect } from 'react';
 import { Box, Theme } from '@mui/material';
 import { useTheme } from '@mui/styles';
-import TopNavbar from 'components/Navbars/TopNavbar';
 import { motion } from 'framer-motion';
-import React, { FC, useEffect } from 'react';
+import { TopNavbar } from 'components/Navbars';
+import Footer from 'components/Footer';
 
 const containerVariants = {
   hidden: {
@@ -41,6 +42,7 @@ const Layout: FC<Props> = ({ children }) => {
       <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="exit">
         <Box bgcolor={theme.palette.primary.main}>{children}</Box>
       </motion.div>
+      <Footer />
     </>
   );
 };

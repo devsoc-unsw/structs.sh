@@ -10,7 +10,7 @@ import visualiserDashboardCodeScreen from 'assets/demos/visualiser-dashboard-cod
 import visualiserDashboardLessonScreen from 'assets/demos/visualiser-dashboard-lesson.png';
 import structsLogo from 'assets/img/structs.png';
 import { LaptopFrame } from 'components/Frame';
-import { HorizontalRule } from 'components/HorizontalRule';
+import HorizontalRule from 'components/HorizontalRule';
 import { motion, useAnimation } from 'framer-motion';
 import React, { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';

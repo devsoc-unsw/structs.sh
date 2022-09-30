@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Alert, Box, List, Typography, useTheme, Collapse } from '@mui/material';
-import FloatingWindow from 'components/FloatingWindow/FloatingWindow';
+import FloatingWindow from 'components/FloatingWindow';
 import VisualiserContext from './VisualiserContext';
 import OperationDetails from './OperationDetails';
 

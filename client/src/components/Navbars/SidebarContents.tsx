@@ -21,7 +21,7 @@ import {
 import Collapse from '@mui/material/Collapse';
 import { useTheme } from '@mui/styles';
 import structsLogo from 'assets/img/logo.png';
-import { HorizontalRule } from 'components/HorizontalRule';
+import HorizontalRule from 'components/HorizontalRule';
 import { LineLoader } from 'components/Loader';
 import { TagList } from 'components/Tags/TagList';
 import PropTypes from 'prop-types';

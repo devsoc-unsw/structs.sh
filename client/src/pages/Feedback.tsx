@@ -1,6 +1,6 @@
-import { Box, Typography } from '@mui/material';
-import { HomepageLayout } from 'components/HomepageLayout';
 import React from 'react';
+import { Box, Typography } from '@mui/material';
+import HomepageLayout from 'components/HomepageLayout';
 import Container from '@mui/material/Container';
 
 const Feedback = () => (
