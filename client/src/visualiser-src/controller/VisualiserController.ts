@@ -110,7 +110,6 @@ class VisualiserController {
   }
 
   public stepBackwards(): void {
-    this.pause();
     this.currentTimeline.time(this.computePrevTimestamp());
   }
 
@@ -205,12 +204,14 @@ class VisualiserController {
   }
 
   private computePrevTimestamp(): number {
+    const sortedTimestamps = [...this.timestamps].sort((x, y) => y - x);
     let prevTimestamp = 0;
-    this.timestamps.forEach((timestamp) => {
-      if (timestamp + 25 < this.currentTime) {
-        prevTimestamp = timestamp;
+    for (let i = 0; i < this.timestamps.length; i += 1) {
+      if (sortedTimestamps[i] + 25 < this.currentTime) {
+        prevTimestamp = sortedTimestamps[i];
+        break;
       }
-    });
+    }
     return prevTimestamp;
   }
 
