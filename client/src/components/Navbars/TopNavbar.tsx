@@ -1,3 +1,4 @@
+import React, { FC, useContext, useEffect, useState } from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import {
   AppBar,
@@ -16,12 +17,15 @@ import {
 } from '@mui/material';
 import Check from '@mui/icons-material/Check';
 import logo from 'assets/img/logo.png';
-import React, { useContext, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { titleToUrl, toTitleCase, urlToTitle } from 'utils/url';
 import { getTopics } from '../../visualiser-src/common/helpers';
 
-const TopNavbar = () => {
+interface Props {
+  position?: 'fixed' | 'static';
+}
+
+const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
   const theme = useTheme();
 
   // Get current topic by the url parameter
@@ -39,7 +43,7 @@ const TopNavbar = () => {
   return (
     <Box>
       <AppBar
-        position="static"
+        position={position}
         sx={{
           transition: '0.5s all ease-in-out',
           backgroundColor: theme.palette.background.default,
@@ -78,7 +82,7 @@ const TopNavbar = () => {
             </Grid>
             <Grid item xs={4} display="flex" justifyContent="center">
               <Button color="inherit" component={Link} to="/">
-                <img src={logo} alt="logo" style={{ maxHeight: '48px' }} />
+                <img src={logo} alt="logo" height={50} />
                 <Typography
                   variant="h4"
                   fontFamily="CodeText"

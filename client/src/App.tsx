@@ -1,13 +1,12 @@
-import { Theme, ThemeProvider, Box } from '@mui/material';
-import TopNavbar from 'components/Navbars/TopNavbar';
-import { AnimatePresence } from 'framer-motion';
 import React, { useState } from 'react';
+import { Theme, ThemeProvider, Box } from '@mui/material';
+import { AnimatePresence } from 'framer-motion';
 import { Route, Routes } from 'react-router-dom';
-import { structsTheme } from 'structsThemes';
 import Feedback from 'pages/Feedback';
 import HomePage from 'pages/HomePage';
 import Page404 from 'pages/Page404';
 import VisualiserPage from 'pages/VisualiserPage';
+import { structsTheme } from 'structsThemes';
 import './App.scss';
 
 const App = () => (

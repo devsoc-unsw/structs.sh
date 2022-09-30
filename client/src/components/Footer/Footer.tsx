@@ -1,13 +1,16 @@
-import { Theme } from '@mui/material';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/styles';
-import structsLogo from 'assets/img/structs.png';
 import React from 'react';
-import { Link } from 'react-router-dom';
-import styles from './Footer.module.scss';
+import { Theme, Box, Container, Grid, Typography, Link } from '@mui/material';
+import { useTheme } from '@mui/styles';
+import { styled } from '@mui/system';
+import { Link as RouterLink } from 'react-router-dom';
+import structsLogo from 'assets/img/structs.png';
+
+const StyledFooter = styled('footer')(({ theme }) => ({
+  backgroundColor: theme.palette.background.default,
+  position: 'relative',
+  paddingTop: 10,
+  paddingBottom: 10,
+}));
 
 interface Props {}
 
@@ -18,84 +21,70 @@ const Footer: React.FC<Props> = () => {
   const theme: Theme = useTheme();
 
   return (
-    <footer
-      className={styles.footer}
-      style={{
-        background: theme.palette.background.default,
-      }}
-    >
+    <StyledFooter>
       <Container maxWidth="lg">
-        <Box className={styles.brand}>
-          <img className={styles.logo} src={structsLogo} alt="Structs.sh logo" />
-          <Box
-            className={styles.brandTextContainer}
-            sx={{
-              display: 'inline-block',
-              textAlign: 'left',
-            }}
-          >
+        <Box display="flex" justifyContent="center" paddingBottom={3}>
+          <img height={35} src={structsLogo} alt="Structs.sh logo" />
+          <Box display="inline-block" textAlign="left">
             <Typography display="inline" variant="h6" color="textPrimary">
               › Structs.sh
             </Typography>
           </Box>
         </Box>
         <Grid container spacing={5}>
-          <Grid item xs={12} sm={4} className={styles.columnContainer}>
+          <Grid item xs={12} sm={4} textAlign="center">
             <Typography color="textPrimary" variant="h5">
               Information
             </Typography>
             <Typography color="textSecondary">
-              <a className={styles.link} href="https://github.com/csesoc/Structs.sh">
+              <Link href="https://github.com/csesoc/Structs.sh" color="inherit">
                 GitHub Repository
-              </a>
+              </Link>
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={4} className={styles.columnContainer}>
+          <Grid item xs={12} sm={4} textAlign="center">
             <Typography color="textPrimary" variant="h5">
               Get Connected
             </Typography>
             <Typography color="textSecondary">
-              <Link to="/feedback" className={styles.link}>
+              <Link component={RouterLink} to="/feedback" color="inherit">
                 Provide Feedback
               </Link>
             </Typography>
             <Typography color="textSecondary">
               <address>
-                <a href="mailto:projects@csesoc.org.au" className={styles.link}>
+                <Link href="mailto:projects@csesoc.org.au" color="inherit">
                   Email Us
-                </a>{' '}
+                </Link>{' '}
               </address>
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={4} className={styles.columnContainer}>
+          <Grid item xs={12} sm={4} textAlign="center">
             <Typography color="textPrimary" variant="h5">
               Social
             </Typography>
             <Typography color="textSecondary">
-              <a className={styles.link} href="https://csesoc.unsw.edu.au/">
+              <Link href="https://csesoc.unsw.edu.au/" color="inherit">
                 CSESoc Website
-              </a>
+              </Link>
             </Typography>
             <Typography color="textSecondary">
-              <a className={styles.link} href="https://www.facebook.com/csesoc/">
+              <Link href="https://www.facebook.com/csesoc/" color="inherit">
                 Facebook
-              </a>
+              </Link>
             </Typography>
             <Typography color="textSecondary">
-              <a
-                className={styles.link}
-                href="https://www.youtube.com/channel/UC1JHpRrf9j5IKluzXhprUJg"
-              >
+              <Link href="https://www.youtube.com/channel/UC1JHpRrf9j5IKluzXhprUJg" color="inherit">
                 YouTube
-              </a>
+              </Link>
             </Typography>
           </Grid>
         </Grid>
       </Container>
-      <Box className={styles.bottomSection}>
+      <Box textAlign="center" paddingTop={5}>
         <Typography color="textSecondary">© {new Date().getFullYear()} — CSESoc UNSW</Typography>
       </Box>
-    </footer>
+    </StyledFooter>
   );
 };
 

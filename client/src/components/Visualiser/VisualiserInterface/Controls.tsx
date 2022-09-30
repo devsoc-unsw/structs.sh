@@ -1,14 +1,4 @@
-import TimeIcon from '@mui/icons-material/AccessTime';
-import PauseIcon from '@mui/icons-material/PauseCircleOutline';
-import PlayIcon from '@mui/icons-material/PlayCircleOutline';
-import ReplayIcon from '@mui/icons-material/Replay';
-import SkipNextIcon from '@mui/icons-material/SkipNext';
-import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
-import FastForwardIcon from '@mui/icons-material/FastForward';
-import FastRewindIcon from '@mui/icons-material/FastRewind';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import SpeedIcon from '@mui/icons-material/Speed';
-import CheckIcon from '@mui/icons-material/Check';
+import React, { EventHandler, FC, useCallback, useContext, useEffect, useState } from 'react';
 import {
   Box,
   IconButton,
@@ -21,10 +11,19 @@ import {
   ListItemText,
 } from '@mui/material';
 import { styled } from '@mui/system';
-import React, { EventHandler, FC, useCallback, useContext, useEffect, useState } from 'react';
+import TimeIcon from '@mui/icons-material/AccessTime';
+import PauseIcon from '@mui/icons-material/PauseCircleOutline';
+import PlayIcon from '@mui/icons-material/PlayCircleOutline';
+import ReplayIcon from '@mui/icons-material/Replay';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
+import FastForwardIcon from '@mui/icons-material/FastForward';
+import FastRewindIcon from '@mui/icons-material/FastRewind';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import SpeedIcon from '@mui/icons-material/Speed';
+import CheckIcon from '@mui/icons-material/Check';
 import { defaultSpeed } from 'visualiser-src/common/constants';
 import VisualiserContext from './VisualiserContext';
-import styles from './Control.module.scss';
 
 const TimelineSlider = styled('input')({
   appearance: 'none',

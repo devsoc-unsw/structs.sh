@@ -1,21 +1,26 @@
 import React, { FC, useContext, useState } from 'react';
-import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Box, Collapse, List, ListItem, ListItemIcon, Theme, Typography } from '@mui/material';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { makeStyles, styled, useTheme } from '@mui/styles';
-import ChevronRight from '@mui/icons-material/ChevronRight';
-import ChevronLeft from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import VisualiserContext from './VisualiserContext';
 
 interface OperationDetailsProps {
   command: string;
 }
 
-const OperationButton = styled(Button)({
+const OperationExpandButton = styled(Button)({
   textTransform: 'none',
   display: 'flex',
   justifyContent: 'space-between',
+});
+
+const StyledListItem = styled(ListItem)({
+  height: 50,
+  padding: 0,
 });
 
 /**
@@ -69,21 +74,16 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
   };
 
   return (
-    <ListItem sx={{ height: 50, padding: 0 }}>
+    <StyledListItem>
       <Box width="180px">
-        <Button
-          sx={{
-            textTransform: 'none',
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}
+        <OperationExpandButton
           onClick={handleToggleDisplay}
           color="inherit"
-          endIcon={shouldDisplay ? <ChevronRight /> : <ChevronLeft />}
+          endIcon={shouldDisplay ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           fullWidth
         >
           <Typography>{command}</Typography>
-        </Button>
+        </OperationExpandButton>
       </Box>
       <Collapse in={shouldDisplay} timeout="auto" orientation="horizontal">
         <Box display="flex" alignItems="center">
@@ -124,7 +124,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
           </Box>
         </Box>
       </Collapse>
-    </ListItem>
+    </StyledListItem>
   );
 };
 

@@ -12,7 +12,7 @@ const HeroBox = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: 10,
-  paddingTop: 50,
+  paddingTop: 120,
   minHeight: '100vh',
   textAlign: 'center',
   backgroundImage: `linear-gradient(to bottom, #18154f, ${theme.palette.primary.main})`,

@@ -1,5 +1,5 @@
-import { Box } from '@mui/material';
 import React, { useCallback, useMemo, useEffect, useRef, useState } from 'react';
+import { Box } from '@mui/material';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import VisualiserController from 'visualiser-src/controller/VisualiserController';
 import VisualiserContext from './VisualiserContext';

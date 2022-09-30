@@ -1,23 +1,20 @@
+import React, { useEffect } from 'react';
+import { motion, useAnimation } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import { Box, Grid, Link, List, ListItem, ListItemIcon, Typography } from '@mui/material';
+import { styled } from '@mui/system';
 import BulletIcon from '@mui/icons-material/ArrowForwardIos';
 import VisualiserIcon from '@mui/icons-material/AutoFixHigh';
 import EditIcon from '@mui/icons-material/Edit';
 import EducationIcon from '@mui/icons-material/LocalLibrary';
 import GradCapIcon from '@mui/icons-material/School';
-import { Box, Grid, Link, List, ListItem, ListItemIcon, Typography } from '@mui/material';
-import { styled } from '@mui/system';
 import cmsScreen from 'assets/demos/cms.png';
 import visualiserDashboardCodeScreen from 'assets/demos/visualiser-dashboard-code.png';
 import visualiserDashboardLessonScreen from 'assets/demos/visualiser-dashboard-lesson.png';
 import structsLogo from 'assets/img/structs.png';
 import { LaptopFrame } from 'components/Frame';
 import HorizontalRule from 'components/HorizontalRule';
-import { motion, useAnimation } from 'framer-motion';
-import React, { useEffect } from 'react';
-import { useInView } from 'react-intersection-observer';
-import { Link as RouterLink } from 'react-router-dom';
 import FeatureItem from './FeatureItem';
-
-interface Props {}
 
 const variants = {
   visible: { opacity: 1, transition: { duration: 3 } },
@@ -28,6 +25,11 @@ const StyledBulletIcon = styled(BulletIcon)(({ theme }) => ({
   fill: theme.palette.text.secondary,
 }));
 
+interface Props {}
+
+/**
+ * A list of features to display on the homepage
+ */
 const Features: React.FC<Props> = () => {
   const { ref, inView } = useInView({
     threshold: 0,
@@ -122,14 +124,6 @@ const Features: React.FC<Props> = () => {
               >
                 GitHub
               </Link>
-            </Typography>
-          </ListItem>
-          <ListItem>
-            <ListItemIcon>
-              <StyledBulletIcon />
-            </ListItemIcon>
-            <Typography color="textSecondary">
-              The Structs.sh <RouterLink to="/about">team</RouterLink>
             </Typography>
           </ListItem>
         </List>
