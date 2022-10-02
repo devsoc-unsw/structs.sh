@@ -134,7 +134,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     
     // compare the value on the pointerLeft and value on the pointerRight
     // move down the column with smaller value
-    // and change the index to the next
+    // and increment the index we are checking by 1
     // do not change the index of column with larger value
     // if either left or right is finished, then move all the other parts down
     // finally move all the columns up
@@ -146,10 +146,11 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       if (producer.compareLowerandEqual(this.elementList[pointerLeft], this.elementList[pointerRight])) {
         // move down pointerLeft
         producer.doAnimationAndHighlightTimestamp(
-          6,
+          21,
           false,
           producer.moveDown,
-          this.elementList[pointerLeft]
+          this.elementList[pointerLeft],
+          p,
         );
         tmpList[p] = this.elementList[pointerLeft];
         p += 1;
@@ -157,10 +158,11 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       } else {
         // move down pointerRight
         producer.doAnimationAndHighlightTimestamp(
-          6,
+          24,
           false,
           producer.moveDown,
-          this.elementList[pointerRight]
+          this.elementList[pointerRight],
+          p,
         );
         tmpList[p] = this.elementList[pointerRight];
         p += 1;
@@ -172,10 +174,11 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       while (pointerRight <= high) {
         // move down this.elementList[pointerRight]
         producer.doAnimationAndHighlightTimestamp(
-          6,
+          15,
           false,
           producer.moveDown,
-          this.elementList[pointerRight]
+          this.elementList[pointerRight],
+          p,
         );
         tmpList[p] = this.elementList[pointerRight];
         p += 1;
@@ -185,10 +188,11 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       while (pointerLeft <= mid) {
         // move down this.elementList[pointerLeft]
         producer.doAnimationAndHighlightTimestamp(
-          6,
+          18,
           false,
           producer.moveDown,
-          this.elementList[pointerLeft]
+          this.elementList[pointerLeft],
+          p,
         );
         tmpList[p] = this.elementList[pointerLeft];
         p += 1;
@@ -203,7 +207,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     for (let i = low; i <= high; i += 1) {
       // move up this.elementsList[i]
       producer.doAnimationAndHighlightTimestamp(
-        6,
+        29,
         false,
         producer.moveUp,
         this.elementList[i],

@@ -17,7 +17,6 @@ export const mergeCodeSnippet = `void merge_sort(int arr[], int low, int high, i
         return;
     }
     int mid = (low + high) / 2;
-    int size = 9;
     
     merge_sort(arr, low, mid, tmp);
     merge_sort(arr, mid + 1, high, tmp);

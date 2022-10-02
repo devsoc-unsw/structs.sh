@@ -2,6 +2,7 @@ import { mergeCodeSnippet } from "../util/codeSnippets";
 import { getX, getCx, getY } from '../util/helpers';
 import GraphicalSortsElement from "../data-structure/GraphicalSortsElement";
 import SortsAnimationProducer from "./SortsAnimationProducer";
+import { textCy } from "../util/constants";
 
 export default class SortsMergeAnimationProducer extends SortsAnimationProducer {
     public renderMergeCode() {
@@ -30,17 +31,23 @@ export default class SortsMergeAnimationProducer extends SortsAnimationProducer 
         // get the target position
         const xTo = getX(index);
         const cxTo = getCx(index);
-        const yTo = getY(0);
+        const yTo = getY(element.data.value) + 120;
+        const cyTo = 350;
 
         // move down the box
-        this.addSequenceAnimation(element.boxTarget.animate().move(xTo, yTo));
-        this.addSequenceAnimation(element.numberTarget.animate().move(cxTo, yTo));
+        this.addSequenceAnimation(element.boxTarget.animate().x(xTo).y(yTo));
+        this.addSequenceAnimation(element.numberTarget.animate().cx(cxTo).cy(cyTo));
+
+        this.addSequenceAnimation(element.boxTarget.animate(1).attr({ stroke: '#39AF8E' }));
+        this.addSequenceAnimation(element.boxTarget.animate(1).attr({ fill: '#39AF8E' }));
+        this.addSequenceAnimation(element.numberTarget.animate(1).attr({ fill: '#39AF8E' }));
     }
 
     public moveUp(element: GraphicalSortsElement, index: number) {
         // get the target position
         const xTo = getX(index);
         const cxTo = getCx(index);
+        const yTo = getY(element.data.value);
 
         // change the color back to balck
         this.addSequenceAnimation(element.boxTarget.animate(1).attr({ stroke: '#000000' }));
@@ -48,8 +55,8 @@ export default class SortsMergeAnimationProducer extends SortsAnimationProducer 
         this.addSequenceAnimation(element.numberTarget.animate(1).attr({ fill: '#000000' }));
 
         // move up the box
-        this.addSequenceAnimation(element.boxTarget.animate().x(xTo));
-        this.addSequenceAnimation(element.numberTarget.animate().cx(cxTo));
+        this.addSequenceAnimation(element.boxTarget.animate().x(xTo).y(yTo));
+        this.addSequenceAnimation(element.numberTarget.animate().cx(cxTo).cy(textCy));
     }
 
 }
