@@ -16,6 +16,10 @@ class GraphicalAVL extends GraphicalDataStructure {
       description:
         'Executes standard AVL insertion to add a new node with the given value into the tree.',
     },
+    delete: {
+      args: ['value'],
+      description: '',
+    },
     inorderTraversal: {
       args: [],
       description: 'Executes an inorder traversal on the tree.',
