@@ -1,3 +1,4 @@
+import { Line, Marker } from '@svgdotjs/svg.js';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import { injectIds } from 'visualiser-src/common/helpers';
@@ -19,8 +20,7 @@ class GraphicalBST extends GraphicalDataStructure {
     },
     delete: {
       args: ['value'],
-      description:
-        'Executes a deletion on the node with the given value'
+      description: 'Executes a deletion on the node with the given value',
     },
     rotateLeft: {
       args: ['value'],
@@ -64,34 +64,144 @@ class GraphicalBST extends GraphicalDataStructure {
   public delete(input: number): BSTDeleteAnimationProducer {
     const animationProducer: BSTDeleteAnimationProducer = new BSTDeleteAnimationProducer();
     animationProducer.renderDeleteCode();
-    GraphicalBST.deleteRecursive(this.root, input, animationProducer);
+    const nodeExists = GraphicalBST.exists(this.root, input);
+    this.root = this.deleteRecursive(this.root, null, input, animationProducer);
+    updateNodePositions(this.root);
+    if (nodeExists) {
+      animationProducer.doAnimationAndHighlightTimestamp(
+        22,
+        false,
+        animationProducer.updateBST,
+        this.root
+      );
+      animationProducer.doAnimation(animationProducer.unhighlightBST, this.root);
+    }
     return animationProducer;
   }
 
-  private static deleteRecursive(root: GraphicalBSTNode, input: number, animationProducer: BSTDeleteAnimationProducer): GraphicalBSTNode {
+  private deleteRecursive(
+    root: GraphicalBSTNode,
+    parent: GraphicalBSTNode,
+    input: number,
+    animationProducer: BSTDeleteAnimationProducer
+  ): GraphicalBSTNode {
     if (root == null) {
-      animationProducer.highlightCode(3);
+      animationProducer.doAnimationAndHighlight(3, animationProducer.unhighlightBST, this.root);
       return null;
     }
-
     let newRoot: GraphicalBSTNode = root;
-
     if (input < root.value) {
-      root.left = GraphicalBST.deleteRecursive(root.left, input, animationProducer);
+      animationProducer.doAnimationAndHighlight(6, animationProducer.halfHighlightNode, root);
+      if (root.left !== null) {
+        animationProducer.doAnimationAndHighlight(
+          7,
+          animationProducer.highlightLine,
+          root.leftLineTarget,
+          root.leftArrowTarget,
+          true
+        );
+      }
+      root.left = this.deleteRecursive(root.left, root, input, animationProducer);
     } else if (input > root.value) {
-      root.right = GraphicalBST.deleteRecursive(root.right, input, animationProducer);
+      animationProducer.doAnimationAndHighlight(8, animationProducer.halfHighlightNode, root);
+      if (root.right !== null) {
+        animationProducer.doAnimationAndHighlight(
+          9,
+          animationProducer.highlightLine,
+          root.rightLineTarget,
+          root.rightArrowTarget,
+          true
+        );
+      }
+      root.right = this.deleteRecursive(root.right, root, input, animationProducer);
     } else {
-      console.log("hi")
+      animationProducer.doAnimationAndHighlight(10, animationProducer.highlightNode, root);
       if (root.left == null && root.right == null) {
         newRoot = null;
-      } else if (root.left == null) {
-        newRoot = newRoot.right
-      } else if (root.right == null) {
-        newRoot = newRoot.left
-      } 
-      animationProducer.doAnimationAndHighlight(20, animationProducer.freeNode, root);
+        animationProducer.doAnimationAndHighlight(
+          20,
+          animationProducer.freeNode,
+          root,
+          parent,
+          true
+        );
+      } else {
+        if (root.left == null) {
+          newRoot = root.right;
+        } else if (root.right == null) {
+          newRoot = root.left;
+        } else {
+          newRoot = this.join(root.left, root.right, animationProducer);
+        }
+        animationProducer.doAnimationAndHighlight(
+          20,
+          animationProducer.freeNode,
+          root,
+          parent,
+          false
+        );
+      }
     }
     return newRoot;
+  }
+
+  private join(
+    root1: GraphicalBSTNode,
+    root2: GraphicalBSTNode,
+    animationProducer: BSTDeleteAnimationProducer
+  ): GraphicalBSTNode {
+    let curr = root2;
+    let parent = null;
+    while (curr.left !== null) {
+      parent = curr;
+      curr = curr.left;
+    }
+    if (parent !== null) {
+      parent.left = curr.right;
+      if (parent.left === null) {
+        animationProducer.doAnimationAndHighlightTimestamp(
+          18,
+          false,
+          animationProducer.hideLine,
+          parent.leftLineTarget
+        );
+      } else {
+        animationProducer.doAnimationAndHighlightTimestamp(
+          18,
+          false,
+          animationProducer.moveLeftPointerToOldRoot,
+          curr.right,
+          parent
+        );
+      }
+      if (curr.right === null) {
+        animationProducer.doAnimationAndHighlightTimestamp(
+          18,
+          false,
+          animationProducer.assignNewRootRightPointerToOldRoot,
+          root2,
+          curr
+        );
+      } else {
+        animationProducer.doAnimationAndHighlightTimestamp(
+          18,
+          false,
+          animationProducer.moveRightPointerToOldRoot,
+          root2,
+          curr
+        );
+      }
+      curr.right = root2;
+    }
+    curr.left = root1;
+    animationProducer.doAnimationAndHighlight(
+      18,
+      animationProducer.assignNewRootLeftPointerToOldRoot,
+      root1,
+      curr
+    );
+
+    return curr;
   }
 
   public generate(): void {
@@ -355,8 +465,19 @@ class GraphicalBST extends GraphicalDataStructure {
       animationProducer.doAnimationAndHighlight(9, animationProducer.unhighlightBST, this.root);
     }
   }
-  
 
+  private static exists(root: GraphicalBSTNode, value: number): boolean {
+    if (root == null) {
+      return false;
+    }
+    if (root.value < value) {
+      return this.exists(root.right, value);
+    }
+    if (root.value > value) {
+      return this.exists(root.left, value);
+    }
+    return true;
+  }
 }
 
 export default GraphicalBST;
