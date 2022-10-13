@@ -9,7 +9,8 @@ import GraphicalSortsElement from './GraphicalSortsElement';
 import SortsBubbleAnimationProducer from '../animation-producer/SortsBubbleAnimationProducer';
 import SortsInsertionAnimationProducer from '../animation-producer/SortsInsertionAnimationProducer';
 import SortsCreateAnimationProducer from '../animation-producer/SortsCreateAnimationProducer';
-import { sortedColour, checkingColour } from '../util/constants';
+import { sortedColour, checkingColour, redColour, defaultColour } from '../util/constants';
+import SortsQuickAnimationProducer from '../animation-producer/SortsQuickAnimationProducer';
 
 export default class GraphicalSortList extends GraphicalDataStructure {
   public elementList: GraphicalSortsElement[] = [];
@@ -31,6 +32,10 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       args: [],
       description: 'Insertion Sort'
     },
+    quick: {
+      args: [],
+      description: 'Quick Sort'
+    }
   });
 
   public append(values: number[]): AnimationProducer {
@@ -182,6 +187,86 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     producer.highlightCode(11);
     producer.finishSequence();
     return producer;
+  }
+
+  public quick() {
+    const ipointer = GraphicalSortsElement.pointer(0, sortedColour);
+    const jpointer = GraphicalSortsElement.pointer(0, redColour);
+
+    const producer = new SortsQuickAnimationProducer();
+    producer.renderQuickCode();
+
+    const len = this.elementList.length;
+
+    this.quicksort(0, len - 1, producer, ipointer, jpointer);
+
+    return producer;
+  }
+
+  public quicksort(lo, hi, producer, ipointer, jpointer) {
+    // index of pivot
+    if (hi <= lo) return;
+    const i = this.partition(lo, hi, producer, ipointer, jpointer);
+    this.quicksort(lo, i - 1, producer, ipointer, jpointer);
+    producer.highlightBoxes(this.elementList.slice(0, i + 1), sortedColour);
+    this.quicksort(i + 1, hi, producer, ipointer, jpointer);
+  }
+
+  public partition(lo, hi, producer, ipointer, jpointer) {
+    const v = this.elementList[lo].data.value;  // pivot
+    producer.highlightBoxes([this.elementList[lo]], checkingColour);
+
+    let i = lo + 1
+    producer.initialisePointer(ipointer, i);
+
+    let j = hi;
+    producer.initialisePointer(jpointer, j);
+
+    for (; ;) {
+      while (this.elementList[i].data.value < v && i < j) {
+        i += 1;
+        producer.doAnimationAndHighlightTimestamp(
+          13,
+          false,
+          producer.movePointer,
+          ipointer,
+          i
+        );
+      }
+      while (v < this.elementList[j].data.value && j > i) {
+        j -= 1;
+        producer.doAnimationAndHighlightTimestamp(
+          14,
+          false,
+          producer.movePointer,
+          jpointer,
+          j
+        );
+      }
+
+      if (i === j) {
+        producer.hidePointer(ipointer);
+        producer.highlightPointer(jpointer, checkingColour);
+        break;
+      }
+      producer.swapq(this.elementList[i], i, this.elementList[j], j);
+      [this.elementList[i], this.elementList[j]] = [this.elementList[j], this.elementList[i]];
+    }
+
+
+    // if 
+    j = this.elementList[i].data.value < v ? i : i - 1;
+    producer.movePointer(jpointer, j);
+
+    // producer.highlightBoxes([this.elementList[lo]], defaultColour);
+    producer.swapq(this.elementList[lo], lo, this.elementList[j], j);
+    [this.elementList[lo], this.elementList[j]] = [this.elementList[j], this.elementList[lo]];
+
+    // Unhighlight j and i
+    producer.hidePointer(ipointer);
+    producer.hidePointer(jpointer);
+    producer.highlightPointer(jpointer, redColour);
+    return j;
   }
 
   public get documentation(): Documentation {

@@ -1,6 +1,7 @@
 import { SVG, Text, Rect, Svg } from '@svgdotjs/svg.js';
 import { VISUALISER_CANVAS } from 'visualiser-src/common/constants';
 import { shapeAttributes, textAttributes, boxWidth } from '../util/constants';
+import { getX, getY } from '../util/helpers';
 
 interface SVGData {
   boxTarget: Rect;
@@ -17,6 +18,16 @@ export default class GraphicalSortsElement {
 
   private constructor(data: GraphicalSortsElementData) {
     this.data = data;
+  }
+
+  public static pointer(index: number, colour: string) {
+    const pointer = SVG()
+      .polygon('15, 15, 10, 30, 5, 15').fill({ color: colour })
+      .addTo(VISUALISER_CANVAS);
+
+    pointer.x(getX(index) + boxWidth / 2 - 5).y(getY(index) - Math.sqrt(200 * 90));
+    pointer.opacity(0);
+    return pointer;
   }
 
   public static from(input: number) {
