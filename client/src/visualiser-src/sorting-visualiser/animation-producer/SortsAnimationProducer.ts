@@ -5,17 +5,19 @@ import { getCx, getX } from '../util/helpers';
 export default class SortsAnimationProducer extends AnimationProducer {
     public highlightingBoxes(array: GraphicalSortsElement[], colour: string) {
         array.forEach((x) => {
-            this.addSequenceAnimation(x.boxTarget.animate(400).attr({ stroke: colour }));
-            this.addSequenceAnimation(x.boxTarget.animate(400).attr({ fill: colour }));
-            this.addSequenceAnimation(x.numberTarget.animate(400).attr({ fill: colour }));
+            this.addSequenceAnimation(x.boxTarget.animate(1).attr({ stroke: colour }));
+            this.addSequenceAnimation(x.boxTarget.animate(1).attr({ fill: colour }));
+            this.addSequenceAnimation(x.numberTarget.animate(1).attr({ fill: colour }));
         })
+        if (array.length > 0) {
+            this.addSequenceAnimation(array[0].boxTarget.animate(400).attr({ opacity: 1 }));
+        }
     }
 
-    public highlightedBoxes(array: GraphicalSortsElement[], colour: string) {
+    public highlightBoxes(array: GraphicalSortsElement[], colour: string) {
         this.highlightingBoxes(array, colour);
         this.finishSequence();
     }
-
 
     public swapping(
         from: GraphicalSortsElement,

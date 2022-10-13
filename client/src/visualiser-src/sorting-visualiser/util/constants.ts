@@ -6,6 +6,10 @@ export const boxWidth = 50;
 export const textCy = 360;
 export const leftOffset = 20;
 
+export const defaultColour = '#000000';
+export const sortedColour = '#39AF8E';
+export const checkingColour = '#FFBC53';
+
 export const CANVAS = '#canvas';
 
 export const shapeAttributes = {
