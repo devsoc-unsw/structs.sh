@@ -10,7 +10,13 @@ import SortsBubbleAnimationProducer from '../animation-producer/SortsBubbleAnima
 import SortsInsertionAnimationProducer from '../animation-producer/SortsInsertionAnimationProducer';
 import SortsCreateAnimationProducer from '../animation-producer/SortsCreateAnimationProducer';
 import SortsSelectionAnimationProducer from '../animation-producer/SortsSelectionAnimationProducer';
-import { sortedColour, checkingColour, defaultColour, comparingColor } from '../util/constants';
+import {
+  sortedColour,
+  checkingColour,
+  defaultColour,
+  comparingColor,
+  selectedColor,
+} from '../util/constants';
 
 export default class GraphicalSortList extends GraphicalDataStructure {
   public elementList: GraphicalSortsElement[] = [];
@@ -207,7 +213,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         3,
         producer.highlightItem,
         this.elementList[i],
-        sortedColour
+        selectedColor
       );
       let minIndex = i;
 
@@ -227,6 +233,17 @@ export default class GraphicalSortList extends GraphicalDataStructure {
             this.elementList[minIndex]
           );
           minIndex = j;
+        } else {
+          // Buffer the unhighlighting of jth item for the next animation sequence
+          producer.addSequenceAnimation(
+            this.elementList[j].boxTarget.animate(100).attr({ stroke: defaultColour })
+          );
+          producer.addSequenceAnimation(
+            this.elementList[j].boxTarget.animate(100).attr({ fill: defaultColour })
+          );
+          producer.addSequenceAnimation(
+            this.elementList[j].numberTarget.animate(100).attr({ fill: defaultColour })
+          );
         }
       }
 
@@ -243,10 +260,17 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         this.elementList[minIndex],
         this.elementList[i],
       ];
+      producer.doAnimationAndHighlight(
+        2,
+        producer.finishSelectionRound,
+        this.elementList[i],
+        this.elementList[minIndex],
+        i !== minIndex
+      );
     }
 
-    producer.doAnimation(producer.highlightBoxes, this.elementList, sortedColour);
-    producer.doAnimation(producer.highlightBoxes, this.elementList, defaultColour);
+    producer.doAnimationAndHighlight(10, producer.highlightAll, this.elementList, sortedColour);
+    producer.doAnimation(producer.highlightAll, this.elementList, defaultColour);
 
     return producer;
   }
