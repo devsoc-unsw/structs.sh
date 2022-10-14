@@ -9,7 +9,8 @@ import GraphicalSortsElement from './GraphicalSortsElement';
 import SortsBubbleAnimationProducer from '../animation-producer/SortsBubbleAnimationProducer';
 import SortsInsertionAnimationProducer from '../animation-producer/SortsInsertionAnimationProducer';
 import SortsCreateAnimationProducer from '../animation-producer/SortsCreateAnimationProducer';
-import { sortedColour, checkingColour, defaultColour } from '../util/constants';
+import SortsSelectionAnimationProducer from '../animation-producer/SortsSelectionAnimationProducer';
+import { sortedColour, checkingColour, defaultColour, comparingColor } from '../util/constants';
 
 export default class GraphicalSortList extends GraphicalDataStructure {
   public elementList: GraphicalSortsElement[] = [];
@@ -31,7 +32,11 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     },
     insertion: {
       args: [],
-      description: 'Insertion Sort'
+      description: 'Insertion Sort',
+    },
+    selection: {
+      args: [],
+      description: 'Selection sort',
     },
   });
 
@@ -166,11 +171,15 @@ export default class GraphicalSortList extends GraphicalDataStructure {
           false,
           producer.swapi,
           this.elementList[j - 1],
-          j - 1, this.elementList[j],
+          j - 1,
+          this.elementList[j],
           j,
           !(j > 1)
         );
-        [this.elementList[j], this.elementList[j - 1]] = [this.elementList[j - 1], this.elementList[j]];
+        [this.elementList[j], this.elementList[j - 1]] = [
+          this.elementList[j - 1],
+          this.elementList[j],
+        ];
       }
       producer.doAnimationAndHighlightTimestamp(
         3,
@@ -183,6 +192,62 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     producer.highlightCode(11);
     producer.highlightingBoxes(this.elementList, defaultColour);
     producer.finishSequence();
+    return producer;
+  }
+
+  public selection(): AnimationProducer {
+    const producer = new SortsSelectionAnimationProducer();
+
+    producer.renderSelectionCode();
+
+    // Slowly move boundary between sorted and unsorted partitions of the array
+    for (let i = 0; i < this.elementList.length - 1; i += 1) {
+      // Select the minimum element in the unsorted partition of the array
+      producer.doAnimationAndHighlight(
+        3,
+        producer.highlightItem,
+        this.elementList[i],
+        comparingColour
+      );
+      let minIndex = i;
+
+      for (let j = i + 1; j < this.elementList.length; j += 1) {
+        producer.doAnimationAndHighlight(
+          5,
+          producer.highlightItem,
+          this.elementList[j],
+          comparingColor
+        );
+
+        if (this.elementList[j].data.value < this.elementList[minIndex].data.value) {
+          producer.doAnimationAndHighlight(
+            6,
+            producer.highlightItem,
+            this.elementList[j],
+            sortedColour
+          );
+          producer.doAnimation(producer.highlight, this.elementList[minIndex], defaultColour);
+          minIndex = j;
+        } else {
+          producer.doAnimation(producer.highlight, this.elementList[j], defaultColour);
+        }
+      }
+
+      // Swap the selected minimum element to place it in sorted position
+      producer.doAnimationAndHighlight(
+        8,
+        producer.swapped,
+        this.elementList[i],
+        i,
+        this.elementList[minIndex],
+        minIndex
+      );
+      [this.elementList[i], this.elementList[minIndex]] = [
+        this.elementList[minIndex],
+        this.elementList[i],
+      ];
+    }
+
     return producer;
   }
 
