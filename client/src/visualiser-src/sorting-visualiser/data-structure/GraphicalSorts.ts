@@ -18,10 +18,12 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     append: {
       args: ['values'],
       description: 'Add element to list of elements to sort',
+      noTimeline: true,
     },
     delete: {
       args: ['values'],
       description: 'Delete elements from list of elements to sort',
+      noTimeline: true,
     },
     bubble: {
       args: [],

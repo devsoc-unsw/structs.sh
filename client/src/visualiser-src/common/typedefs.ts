@@ -9,6 +9,7 @@ export interface OperationUsage {
   args: string[];
   description: string;
   id?: number;
+  noTimeline?: boolean;
 }
 
 export enum DataStructure {

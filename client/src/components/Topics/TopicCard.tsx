@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, Box } from '@mui/material';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { titleToUrl } from 'utils/url';
@@ -14,13 +14,13 @@ interface Props {
 }
 
 const images = [linked, binary, binary, sort];
-const colours = [
+const colors = [
   'rgba(248, 79, 121, 1)',
   'rgba(20, 201, 150, 1)',
   'rgba(120, 110, 243, 1)',
   'rgba(76, 201, 240, 1)',
 ];
-const coloursFaded = [
+const colorsFaded = [
   'rgba(248, 79, 121, 0.8)',
   'rgba(20, 201, 150, 0.8)',
   'rgba(120, 110, 243, 0.8)',
@@ -35,10 +35,11 @@ const TopicCard: React.FC<Props> = ({ topic, index }) => {
   };
 
   return (
-    <div
+    <Box
       className={`${styles.card}`}
+      bgcolor={`linear-gradient(to bottom right, ${colors[index]}, ${colorsFaded[index]})`}
       style={{
-        background: `linear-gradient(to bottom right, ${colours[index]}, ${coloursFaded[index]})`,
+        background: `linear-gradient(to bottom right, ${colors[index]}, ${colorsFaded[index]})`,
       }}
       role="button"
       tabIndex={index}
@@ -53,7 +54,7 @@ const TopicCard: React.FC<Props> = ({ topic, index }) => {
       <Button className={`${styles.button}`} id={styles[`button${index}`]} variant="contained">
         {topic}
       </Button>
-    </div>
+    </Box>
   );
 };
 
