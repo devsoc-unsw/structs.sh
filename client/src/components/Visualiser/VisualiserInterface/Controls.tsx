@@ -50,6 +50,11 @@ const StyledCheckIcon = styled(CheckIcon)(({ theme }) => ({
   fill: theme.palette.text.primary,
 }));
 
+const SpeedMenuButton = styled(Button)(({ theme }) => ({
+  width: 50,
+  marginRight: 10,
+}));
+
 /**
  * Contains all the visualiser controller UI, ie. the play/pause buttons, the
  * sliders, etc.
@@ -143,6 +148,7 @@ const VisualiserControls = () => {
     <Box
       display="flex"
       justifyContent="center"
+      alignItems="center"
       position="fixed"
       bottom="0"
       width="100vw"
@@ -173,7 +179,7 @@ const VisualiserControls = () => {
       <IconButton onClick={handleFastForward} color="inherit">
         <FastForwardIcon fontSize="large" />
       </IconButton>
-      <Box width="100%" display="flex" justifyContent="center" alignItems="center">
+      <Box width="100%" paddingRight={2} display="flex" justifyContent="center" alignItems="center">
         <TimeIcon fontSize="small" />
         <TimelineSlider
           type="range"
@@ -201,10 +207,14 @@ const VisualiserControls = () => {
           }}
         />
       </Box>
-      <Button onClick={handleClickSpeedMenu} color="inherit">
-        <SpeedIcon fontSize="large" />
+      <SpeedIcon fontSize="large" />
+      <SpeedMenuButton
+        onClick={handleClickSpeedMenu}
+        color="inherit"
+        endIcon={<KeyboardArrowUpIcon />}
+      >
         <Typography>{speedOptions[selectedIndex]}</Typography>
-      </Button>
+      </SpeedMenuButton>
       <Menu
         open={speedMenuOpen}
         anchorEl={speedMenuAnchorEl}
