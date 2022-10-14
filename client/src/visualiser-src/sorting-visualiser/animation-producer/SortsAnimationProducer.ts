@@ -24,7 +24,6 @@ export default class SortsAnimationProducer extends AnimationProducer {
     this.addSequenceAnimation(item.boxTarget.animate(100).attr({ fill: color }));
     this.addSequenceAnimation(item.numberTarget.animate(100).attr({ fill: color }));
     this.addSequenceAnimation(item.boxTarget.animate());
-    this.finishSequence();
   }
 
   public swapping(

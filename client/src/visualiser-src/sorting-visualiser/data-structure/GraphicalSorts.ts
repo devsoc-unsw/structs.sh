@@ -207,36 +207,33 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         3,
         producer.highlightItem,
         this.elementList[i],
-        comparingColour
+        sortedColour
       );
       let minIndex = i;
 
       for (let j = i + 1; j < this.elementList.length; j += 1) {
         producer.doAnimationAndHighlight(
           5,
-          producer.highlightItem,
-          this.elementList[j],
-          comparingColor
+          producer.compare,
+          this.elementList[minIndex],
+          this.elementList[j]
         );
 
         if (this.elementList[j].data.value < this.elementList[minIndex].data.value) {
           producer.doAnimationAndHighlight(
             6,
-            producer.highlightItem,
+            producer.select,
             this.elementList[j],
-            sortedColour
+            this.elementList[minIndex]
           );
-          producer.doAnimation(producer.highlight, this.elementList[minIndex], defaultColour);
           minIndex = j;
-        } else {
-          producer.doAnimation(producer.highlight, this.elementList[j], defaultColour);
         }
       }
 
       // Swap the selected minimum element to place it in sorted position
       producer.doAnimationAndHighlight(
         8,
-        producer.swapped,
+        producer.swap,
         this.elementList[i],
         i,
         this.elementList[minIndex],
@@ -247,6 +244,9 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         this.elementList[i],
       ];
     }
+
+    producer.doAnimation(producer.highlightBoxes, this.elementList, sortedColour);
+    producer.doAnimation(producer.highlightBoxes, this.elementList, defaultColour);
 
     return producer;
   }
