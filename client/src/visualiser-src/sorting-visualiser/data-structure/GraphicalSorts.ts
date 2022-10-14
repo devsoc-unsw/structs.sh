@@ -165,7 +165,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         }
         // swap boxes
         producer.doAnimationAndHighlightTimestamp(
-          9,
+          8,
           false,
           producer.swapi,
           this.elementList[j - 1],
@@ -175,7 +175,6 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         );
         [this.elementList[j], this.elementList[j - 1]] = [this.elementList[j - 1], this.elementList[j]];
       }
-      // Unhighlight current
       producer.doAnimationAndHighlightTimestamp(
         3,
         false,
@@ -185,6 +184,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       );
     }
     producer.highlightCode(11);
+    producer.highlightingBoxes(this.elementList, defaultColour);
     producer.finishSequence();
     return producer;
   }
@@ -205,6 +205,12 @@ export default class GraphicalSortList extends GraphicalDataStructure {
 
   public quicksort(lo, hi, producer, ipointer, jpointer) {
     // index of pivot
+    producer.doAnimationAndHighlightTimestamp(
+      5,
+      false,
+      producer.blink,
+      [ipointer, jpointer]
+    )
     if (hi <= lo) return;
     // producer.doAnimationAndHighlightTimestamp(
     //   5,
@@ -222,9 +228,25 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     //   defaultColour
     // )
 
-    this.quicksort(lo, i - 1, producer, ipointer, jpointer);
     producer.doAnimationAndHighlightTimestamp(
       6,
+      false,
+      producer.movePointer,
+      ipointer,
+      lo
+    )
+
+    producer.doAnimationAndHighlightTimestamp(
+      6,
+      false,
+      producer.movePointer,
+      jpointer,
+      i - 1
+    )
+
+    this.quicksort(lo, i - 1, producer, ipointer, jpointer);
+    producer.doAnimationAndHighlightTimestamp(
+      7,
       false,
       producer.highlightBoxes,
       this.elementList.slice(0, i + 1),
@@ -284,7 +306,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       }
 
       if (i === j) {
-        producer.hidePointer(ipointer);
+        // producer.hidePointer(ipointer);
         producer.doAnimationAndHighlightTimestamp(
           16,
           false,

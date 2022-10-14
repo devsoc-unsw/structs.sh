@@ -36,6 +36,14 @@ export default class SortsQuickAnimationProducer extends SortsAnimationProducer 
         this.finishSequence();
     }
 
+    public blink(pointers: Svg[]) {
+        pointers.forEach((pointer) => {
+            this.addSequenceAnimation(pointer.animate(100).attr({ opacity: 0 }));
+            this.addSequenceAnimation(pointer.animate(100).attr({ opacity: 1 }));
+        })
+        this.finishSequence();
+    }
+
     public swapq(
         from: GraphicalSortsElement,
         fromIndex: number,

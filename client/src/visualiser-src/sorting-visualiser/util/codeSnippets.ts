@@ -17,9 +17,8 @@ export const insertionCodeSnippet = `void insertionSort(int a[], int arr_size)
     for (int i = 1; i < arr_size; i++) {
         int val = a[i];
         for (int j = i; j > 0; j--) {
-            if (val >= a[j-1])) {
-            break;
-            }
+            if (val >= a[j-1]))
+                break;
             swap(a[j], a[j-1]);
         }
     }
