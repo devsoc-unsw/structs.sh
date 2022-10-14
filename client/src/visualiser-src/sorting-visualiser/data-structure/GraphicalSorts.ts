@@ -9,7 +9,7 @@ import GraphicalSortsElement from './GraphicalSortsElement';
 import SortsBubbleAnimationProducer from '../animation-producer/SortsBubbleAnimationProducer';
 import SortsInsertionAnimationProducer from '../animation-producer/SortsInsertionAnimationProducer';
 import SortsCreateAnimationProducer from '../animation-producer/SortsCreateAnimationProducer';
-import { sortedColour, checkingColour } from '../util/constants';
+import { sortedColour, checkingColour, defaultColour } from '../util/constants';
 
 export default class GraphicalSortList extends GraphicalDataStructure {
   public elementList: GraphicalSortsElement[] = [];
@@ -160,7 +160,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         }
         // swap boxes
         producer.doAnimationAndHighlightTimestamp(
-          9,
+          8,
           false,
           producer.swapi,
           this.elementList[j - 1],
@@ -179,6 +179,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       );
     }
     producer.highlightCode(11);
+    producer.highlightingBoxes(this.elementList, defaultColour);
     producer.finishSequence();
     return producer;
   }
