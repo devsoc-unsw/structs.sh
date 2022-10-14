@@ -1,5 +1,5 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { styled } from '@mui/system';
 import {
   AppBar,
   Box,
@@ -15,11 +15,20 @@ import {
   TextField,
   useTheme,
 } from '@mui/material';
-import Check from '@mui/icons-material/Check';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import CheckIcon from '@mui/icons-material/Check';
 import logo from 'assets/img/logo.png';
 import { Link, useParams } from 'react-router-dom';
 import { titleToUrl, toTitleCase, urlToTitle } from 'utils/url';
 import { getTopics } from '../../visualiser-src/common/helpers';
+
+const LogoText = styled(Typography)({
+  textTransform: 'none',
+});
+
+const StyledCheckIcon = styled(CheckIcon)(({ theme }) => ({
+  fill: theme.palette.text.primary,
+}));
 
 interface Props {
   position?: 'fixed' | 'static';
@@ -69,7 +78,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
                       {topic.toLowerCase() === currTopic.toLowerCase() ? (
                         <>
                           <ListItemIcon>
-                            <Check sx={{ fill: 'white' }} />
+                            <StyledCheckIcon />
                           </ListItemIcon>
                           <ListItemText>{topic}</ListItemText>
                         </>
@@ -83,13 +92,9 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
             <Grid item xs={4} display="flex" justifyContent="center">
               <Button color="inherit" component={Link} to="/">
                 <img src={logo} alt="logo" height={50} />
-                <Typography
-                  variant="h4"
-                  fontFamily="CodeText"
-                  sx={{ textTransform: 'none', margin: '0 1' }}
-                >
+                <LogoText variant="h4" fontFamily="CodeText">
                   Structs.sh
-                </Typography>
+                </LogoText>
               </Button>
             </Grid>
           </Grid>

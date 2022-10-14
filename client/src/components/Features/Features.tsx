@@ -25,12 +25,10 @@ const StyledBulletIcon = styled(BulletIcon)(({ theme }) => ({
   fill: theme.palette.text.secondary,
 }));
 
-interface Props {}
-
 /**
  * A list of features to display on the homepage
  */
-const Features: React.FC<Props> = () => {
+const Features = () => {
   const { ref, inView } = useInView({
     threshold: 0,
   });
@@ -94,7 +92,7 @@ const Features: React.FC<Props> = () => {
                   <StyledBulletIcon />
                 </ListItemIcon>
                 <Typography color="textSecondary">
-                  Control the visualiser through an integrated terminal or through a simple menu
+                  Control the visualiser through a simple menu
                 </Typography>
               </ListItem>
             </List>

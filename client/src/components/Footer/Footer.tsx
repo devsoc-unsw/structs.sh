@@ -12,12 +12,10 @@ const StyledFooter = styled('footer')(({ theme }) => ({
   paddingBottom: 10,
 }));
 
-interface Props {}
-
 /**
  * The footer of the page
  */
-const Footer: React.FC<Props> = () => {
+const Footer = () => {
   const theme: Theme = useTheme();
 
   return (

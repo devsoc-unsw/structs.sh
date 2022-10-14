@@ -12,8 +12,9 @@ const HeroBox = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: 10,
-  paddingTop: 120,
   minHeight: '100vh',
+  boxSizing: 'border-box',
+  paddingTop: 120,
   textAlign: 'center',
   backgroundImage: `linear-gradient(to bottom, #18154f, ${theme.palette.primary.main})`,
 }));
@@ -35,7 +36,7 @@ const HomePage = () => {
         </Typography>
         <Topics />
       </HeroBox>
-      <Box bgcolor={theme.palette.primary.main}>
+      <Box paddingTop={5} bgcolor={theme.palette.primary.main}>
         <Container maxWidth="md">
           <Features />
         </Container>

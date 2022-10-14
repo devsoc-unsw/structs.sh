@@ -46,6 +46,10 @@ const TimelineSlider = styled('input')({
   },
 });
 
+const StyledCheckIcon = styled(CheckIcon)(({ theme }) => ({
+  fill: theme.palette.text.primary,
+}));
+
 /**
  * Contains all the visualiser controller UI, ie. the play/pause buttons, the
  * sliders, etc.
@@ -65,7 +69,7 @@ const VisualiserControls = () => {
 
   const [userIsDraggingTimeline, setUserIsDraggingTimeline] = useState<boolean>(false);
 
-  const [speedMenuAnchorEl, setSpeedMenuAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [speedMenuAnchorEl, setSpeedMenuAnchorEl] = useState<null | HTMLElement>(null);
   const speedMenuOpen = Boolean(speedMenuAnchorEl);
   const speedOptions: number[] = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2];
   const [selectedIndex, setSelectedIndex] = useState<number>(
@@ -218,8 +222,8 @@ const VisualiserControls = () => {
           <MenuItem onClick={(event) => handleSelectSpeed(event, index)} key={index}>
             {index === selectedIndex ? (
               <>
-                <ListItemIcon sx={{ color: 'inherit' }}>
-                  <CheckIcon />
+                <ListItemIcon>
+                  <StyledCheckIcon />
                 </ListItemIcon>
                 {speedOption}
               </>
