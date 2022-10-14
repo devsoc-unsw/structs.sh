@@ -1,31 +1,36 @@
 import React, { FC, useState } from 'react';
 import { Box, Collapse, useTheme } from '@mui/material';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ChevronLeft from '@mui/icons-material/ChevronLeft';
+import ChevronRight from '@mui/icons-material/ChevronRight';
 
 interface Props {
   children: React.ReactNode;
   minHeight?: string;
   maxHeight?: string;
   flexDirection?: 'row' | 'row-reverse';
+  isExpanded: boolean;
+  handleToggleExpansion: () => void;
 }
 
+/**
+ * A collapsible floating window component
+ *
+ * Used for the GUI for performing operations and the code snippets
+ */
 const FloatingWindow: FC<Props> = ({
   children,
   minHeight = undefined,
   maxHeight = '80vh',
   flexDirection = 'row',
+  isExpanded,
+  handleToggleExpansion,
 }) => {
-  const [shouldDisplay, setShouldDisplay] = useState<boolean>(true);
   const theme = useTheme();
-
-  const handleToggleDisplay = () => {
-    setShouldDisplay(!shouldDisplay);
-  };
 
   return (
     <Box
       bgcolor={theme.palette.background.default}
+      color={theme.palette.text.primary}
       position="absolute"
       bottom="54px"
       minHeight={minHeight}
@@ -36,16 +41,24 @@ const FloatingWindow: FC<Props> = ({
       right={flexDirection === 'row-reverse' && '0'}
     >
       <Box
-        onClick={handleToggleDisplay}
-        sx={{ background: theme.palette.background.paper, display: 'flex', alignItems: 'center' }}
+        onClick={handleToggleExpansion}
+        display="flex"
+        alignItems="center"
+        bgcolor={theme.palette.primary.main}
       >
-        {shouldDisplay ? (
-          <ChevronLeftIcon sx={{ fill: theme.palette.text.primary }} />
+        {isExpanded ? (
+          flexDirection === 'row' ? (
+            <ChevronRight />
+          ) : (
+            <ChevronLeft />
+          )
+        ) : flexDirection === 'row' ? (
+          <ChevronLeft />
         ) : (
-          <ChevronRightIcon sx={{ fill: theme.palette.text.primary }} />
+          <ChevronRight />
         )}
       </Box>
-      <Collapse in={shouldDisplay} orientation="horizontal">
+      <Collapse in={isExpanded} orientation="horizontal">
         <Box
           boxSizing="border-box"
           paddingLeft="10px"

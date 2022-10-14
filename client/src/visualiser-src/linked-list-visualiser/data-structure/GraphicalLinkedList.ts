@@ -20,14 +20,15 @@ import LinkedListAnimationProducer from '../animation-producer/LinkedListAnimati
 // Every operation producers a LinkedListAnimationProducer, which an VisualiserController
 // can then use to place SVG.Runners on a timeline to animate the operation.
 export default class GraphicalLinkedList extends GraphicalDataStructure {
+  // this is the documentation shows up in the input section
   private static documentation: Documentation = injectIds({
+    prepend: {
+      args: ['value'],
+      description: 'Prepend a node containing the value.',
+    },
     append: {
       args: ['value'],
       description: 'Append a node containing the value.',
-    },
-    delete: {
-      args: ['index'],
-      description: 'Delete a node by the index given.',
     },
     insert: {
       args: ['value', 'index'],
@@ -37,9 +38,9 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
       args: ['value'],
       description: 'Search for a value in the linked list.',
     },
-    prepend: {
-      args: ['value'],
-      description: 'Prepend a node containing the value.',
+    delete: {
+      args: ['index'],
+      description: 'Delete a node by the index given.',
     },
   });
 
@@ -59,6 +60,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
   }
 
   append(input: number): AnimationProducer {
+    // now increment the length of list by 1
     this.length += 1;
     const producer = new LinkedListAppendAnimationProducer();
     producer.renderAppendCode();
@@ -71,7 +73,8 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     if (this.head === null) {
       this.head = newNode;
       producer.doAnimationAndHighlight(4, producer.initialiseHead, this.headPointer);
-      producer.doAnimationAndHighlight(5, producer.resetPointers);
+      producer.doAnimationAndHighlight(5, producer.resetPointersAndColor, this.head);
+      
 
       return producer;
     }
@@ -90,7 +93,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     curr.next = newNode;
     producer.doAnimationAndHighlight(13, producer.linkLastToNew, curr);
 
-    producer.doAnimation(producer.resetPointers);
+    producer.doAnimation(producer.resetPointersAndColor, curr.next);
     return producer;
   }
 
@@ -99,7 +102,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     const producer = new LinkedListPrependAnimationProducer();
     producer.renderPrependCode();
     const newHead: GraphicalLinkedListNode = GraphicalLinkedListNode.from(input);
-    producer.doAnimationAndHighlight(2, producer.createNodeAt, 0, newHead, this.length);
+    producer.doAnimationAndHighlight(2, producer.addNodeFront, newHead, this.length);
     if (this.head === null) {
       this.head = newHead;
       producer.doAnimationAndHighlight(4, producer.initialiseHead, this.headPointer);
@@ -132,12 +135,16 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     for (let i = 0; i < index; i += 1) {
       prev = curr;
       if (prev === this.head) {
-        producer.doAnimationAndHighlight(6, producer.initialisePointer, PREV);
+        producer.doAnimationAndHighlight(6, producer.initialisePointerAndHighlight, PREV, prev);
       } else {
-        producer.doAnimationAndHighlight(6, producer.movePointerToNext, PREV);
+        producer.doAnimationAndHighlight(6, producer.movePointerToNextAndHighlight, PREV, prev);
       }
       curr = curr.next;
-      producer.doAnimationAndHighlight(7, producer.movePointerToNext, CURRENT);
+      if (i === (index-1)) {
+        producer.doAnimationAndHighlight(7, producer.movePointerToNextAndHighlightRight, CURRENT, curr);
+      } else {
+        producer.doAnimationAndHighlight(7, producer.movePointerToNext, CURRENT);
+      }
     }
 
     if (prev === null) {
@@ -156,7 +163,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
       }
     }
     producer.doAnimationAndHighlight(16, producer.deleteNode, curr);
-    producer.doAnimation(producer.resetList, this.headPointer, this.head);
+    producer.doAnimation(producer.resetListAndColor, this.headPointer, this.head);
     return producer;
   }
 
@@ -178,7 +185,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     if (curr !== null) {
       producer.doAnimationAndHighlight(3, producer.indicateFound, curr);
     }
-    producer.doAnimationAndHighlight(6, producer.resetColor, this.head);
+    producer.doAnimationAndHighlight(6, producer.resetPointersAndColor, this.head);
     return producer;
   }
 
@@ -188,7 +195,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     producer.renderInsertCode();
 
     const newNode: GraphicalLinkedListNode = GraphicalLinkedListNode.from(value);
-    producer.doAnimationAndHighlight(2, producer.createNodeAt, index, newNode, this.length);
+    producer.doAnimationAndHighlight(2, producer.addNodeAt, index, newNode, this.length);
     if (index === 0 && this.head !== null) {
       newNode.next = this.head;
       this.head = newNode;
@@ -220,10 +227,10 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     if (index < this.length - 1) {
       producer.doAnimationAndHighlight(19, producer.insertedNodePointToNext, newNode);
       producer.doAnimationAndHighlight(20, producer.pointToInsertedNode, curr);
-      producer.doAnimation(producer.resetList, this.headPointer, this.head);
+      producer.doAnimation(producer.resetListAndColor, this.headPointer, this.head, newNode);
     } else {
       producer.doAnimationAndHighlight(20, producer.linkLastToNew, curr);
-      producer.doAnimation(producer.resetPointers);
+      producer.doAnimation(producer.resetPointersAndColor, newNode);
     }
     return producer;
   }

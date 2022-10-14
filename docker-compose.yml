@@ -10,11 +10,3 @@ services:
             - FAST_REFRESH=false # Source: https://stackoverflow.com/questions/43274925/development-server-of-create-react-app-does-not-auto-refresh
         volumes:
             - ./client/src:/app/src
-    api:
-        build:
-            context: server
-            dockerfile: Dockerfile.dev
-        ports:
-            - '8080:8080'
-        volumes:
-            - ./server/src:/app/src

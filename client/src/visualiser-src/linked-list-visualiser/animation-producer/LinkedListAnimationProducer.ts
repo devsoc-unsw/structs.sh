@@ -23,6 +23,21 @@ export default class LinkedListAnimationProducer extends AnimationProducer {
     this.addSequenceAnimation(newNode.numberTarget.animate().attr({ opacity: 1 }));
   }
 
+  public highlightRightNode(node: GraphicalLinkedListNode) {
+    this.addSequenceAnimation(node.boxTarget.animate().attr({ stroke: '#46B493' }));
+    this.addSequenceAnimation(node.numberTarget.animate().attr({ fill: '#46B493' }));
+  }
+
+  public highlightNotRightNode(node: GraphicalLinkedListNode) {
+    this.addSequenceAnimation(node.boxTarget.animate().attr({ stroke: '#FF0000' }));
+    this.addSequenceAnimation(node.numberTarget.animate().attr({ fill: '#FF0000' }));
+  }
+
+  public removeHighlightNode(node: GraphicalLinkedListNode) {
+    this.addSequenceAnimation(node.boxTarget.animate().attr({ stroke: '#000000' }));
+    this.addSequenceAnimation(node.numberTarget.animate().attr({ fill: '#000000' }));
+  }
+
   public initialisePointer(pointerId: string) {
     const pointerSvg: Element = SVG(pointerId);
     pointerSvg.move(nodePathWidth + strokeWidth / 2, topOffset + actualNodeDiameter / 2);
@@ -37,6 +52,11 @@ export default class LinkedListAnimationProducer extends AnimationProducer {
   public resetPointers() {
     this.addSequenceAnimation(SVG(CURRENT).animate().attr({ opacity: 0 }));
     this.addSequenceAnimation(SVG(PREV).animate().attr({ opacity: 0 }));
+  }
+
+  public resetColorNode(head: GraphicalLinkedListNode) {
+    this.addSequenceAnimation(head.boxTarget.animate().attr({ stroke: '#000000' }));
+    this.addSequenceAnimation(head.numberTarget.animate().attr({ fill: '#000000' }));
   }
 
   public resetPositioning(headPointer: Path, head: GraphicalLinkedListNode) {
@@ -66,11 +86,22 @@ export default class LinkedListAnimationProducer extends AnimationProducer {
       index += 1;
       curr = curr.next;
     }
+    this.resetColorNode(head);
   }
 
   public resetList(headPointer: Path, head: GraphicalLinkedListNode) {
     this.resetPointers();
     this.resetPositioning(headPointer, head);
+  }
+
+  public resetPointersAndColor(node: GraphicalLinkedListNode) {
+    this.resetPointers();
+    this.resetColorNode(node);
+  }
+
+  public resetListAndColor(headPointer: Path, head: GraphicalLinkedListNode, node: GraphicalLinkedListNode) {
+    this.resetList(headPointer, head);
+    this.resetColorNode(node);
   }
 
   public newHeadPointToOldHead(newHead: GraphicalLinkedListNode) {

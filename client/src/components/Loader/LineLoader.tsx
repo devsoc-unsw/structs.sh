@@ -8,11 +8,9 @@ interface Props {
 
 const LineLoader: React.FC<Props> = ({ fullViewport = false }) => (
   <Box
-    sx={{
-      position: 'relative',
-      height: fullViewport ? '100vh' : '100%',
-      width: fullViewport ? '100vw' : '100%',
-    }}
+    position="relative"
+    height={fullViewport ? '100vh' : '100%'}
+    width={fullViewport ? '100vw' : '100%'}
   >
     <LinearProgress
       sx={{

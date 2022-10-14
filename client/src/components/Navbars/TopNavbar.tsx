@@ -1,162 +1,105 @@
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import SunIcon from '@mui/icons-material/Brightness7';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import GoogleIcon from '@mui/icons-material/Google';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import MoreIcon from '@mui/icons-material/MoreVert';
-import MoonIcon from '@mui/icons-material/NightsStay';
-import { Button, FormControl, TextField, useTheme } from '@mui/material';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import { SxProps } from '@mui/system';
-// import { ThemeMutationContext } from 'App';
-import logo from 'assets/img/logo.png';
 import React, { FC, useContext, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import Notification from 'utils/Notification';
-import { titleToUrl } from 'utils/url';
+import { styled } from '@mui/system';
+import {
+  AppBar,
+  Box,
+  Grid,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Typography,
+  ListItemText,
+  Button,
+  FormControl,
+  ListItemIcon,
+  TextField,
+  useTheme,
+} from '@mui/material';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import CheckIcon from '@mui/icons-material/Check';
+import logo from 'assets/img/logo.png';
+import { Link, useParams } from 'react-router-dom';
+import { titleToUrl, toTitleCase, urlToTitle } from 'utils/url';
 import { getTopics } from '../../visualiser-src/common/helpers';
-import Drawer from './Drawer';
-// import SidebarContents from './SidebarContents';
-import styles from './TopNavbar.module.scss';
+
+const LogoText = styled(Typography)({
+  textTransform: 'none',
+});
+
+const StyledCheckIcon = styled(CheckIcon)(({ theme }) => ({
+  fill: theme.palette.text.primary,
+}));
 
 interface Props {
-  position?: 'fixed' | 'static' | 'relative' | 'absolute';
-  enableOnScrollEffect?: boolean;
+  position?: 'fixed' | 'static';
 }
 
-const TopNavbar: FC<Props> = ({ position = 'fixed', enableOnScrollEffect = true }) => {
+const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
   const theme = useTheme();
 
-  const [hasScrolledDown, setHasScrolledDown] = useState<boolean>(false);
+  // Get current topic by the url parameter
+  const currTopic = toTitleCase(urlToTitle(useParams().topic || ''));
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [learnAnchorEl, setLearnAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
-
-  const isMenuOpen = Boolean(anchorEl);
-  const isLearnMenuOpen = Boolean(learnAnchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-  /* -------------------------- Page Scroll Callbacks ------------------------- */
-
-  const detectUserHasScrolledDown = () => {
-    const yOffsetPx: number = Number(window.pageYOffset);
-    setHasScrolledDown(!(yOffsetPx <= 0));
+  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
+  const menuOpen = Boolean(menuAnchorEl);
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setMenuAnchorEl(event.currentTarget);
   };
-
-  useEffect(() => {
-    window.addEventListener('scroll', detectUserHasScrolledDown);
-    return () => {
-      window.removeEventListener('scroll', detectUserHasScrolledDown);
-    };
-  }, [setHasScrolledDown]);
-
-  /* ------------------------------ Data Fetching ----------------------------- */
-
-  // useEffect(() => {
-  //   getTopics()
-  //     .then((newTopics) => setTopics(newTopics))
-  //     .catch(() => console.log('TopNav: failed to get topics'));
-  // }, []);
-
-  /* --------------------------- Dropdown Callbacks --------------------------- */
-
-  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+  const handleCloseMenu = () => {
+    setMenuAnchorEl(null);
   };
-
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
-  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
-
-  const handleLearnMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setLearnAnchorEl(event.currentTarget);
-  };
-
-  const handleLearnMenuClose = () => {
-    setLearnAnchorEl(null);
-  };
-
-  /* ------------------------ Dropdown Menu Components ------------------------ */
-
-  const learnMenuId = 'topnav-menu-learn';
-  const renderLearnMenu = (
-    <Menu
-      anchorEl={learnAnchorEl}
-      id={learnMenuId}
-      open={isLearnMenuOpen}
-      onClose={handleLearnMenuClose}
-      className={styles.visualiserMenu}
-    >
-      {getTopics() &&
-        getTopics().map((topic, idx) => (
-          <MenuItem
-            key={idx}
-            className={styles.item}
-            component={Link}
-            to={`/visualiser/${titleToUrl(topic)}`}
-            onClick={handleLearnMenuClose}
-          >
-            {topic}
-          </MenuItem>
-        ))}
-    </Menu>
-  );
 
   return (
     <Box>
       <AppBar
         position={position}
-        elevation={0}
         sx={{
           transition: '0.5s all ease-in-out',
           backgroundColor: theme.palette.background.default,
         }}
       >
         <Toolbar>
-          <Box display="flex" alignItems="center" width="100%">
-            <Button color="info" onClick={handleLearnMenuOpen} endIcon={<KeyboardArrowDownIcon />}>
-              <Typography>
-                <strong>Topics</strong>
-              </Typography>
-            </Button>
-            <Box className={styles.centralBox}>
-              <Button component={Link} to="/">
-                <img src={logo} draggable={false} alt="logo" />
-                <Typography
-                  variant="h4"
-                  noWrap
-                  component="div"
-                  sx={{
-                    fontFamily: 'CodeText',
-                    textTransform: 'none',
-                  }}
-                  color="white"
-                >
-                  Structs.sh
+          <Grid container alignItems="center">
+            <Grid item xs={4} display="flex">
+              <Button color="info" onClick={handleOpenMenu} endIcon={<KeyboardArrowDownIcon />}>
+                <Typography>
+                  <strong>{currTopic ? 'Topic: ' : 'Topics'}</strong> {currTopic}
                 </Typography>
               </Button>
-            </Box>
-            <Box />
-          </Box>
+              <Menu anchorEl={menuAnchorEl} open={menuOpen} onClose={handleCloseMenu}>
+                {getTopics() &&
+                  getTopics().map((topic, idx) => (
+                    <MenuItem
+                      key={idx}
+                      component={Link}
+                      to={`/visualiser/${titleToUrl(topic)}`}
+                      onClick={handleCloseMenu}
+                    >
+                      {topic.toLowerCase() === currTopic.toLowerCase() ? (
+                        <>
+                          <ListItemIcon>
+                            <StyledCheckIcon />
+                          </ListItemIcon>
+                          <ListItemText>{topic}</ListItemText>
+                        </>
+                      ) : (
+                        <ListItemText inset>{topic}</ListItemText>
+                      )}
+                    </MenuItem>
+                  ))}
+              </Menu>
+            </Grid>
+            <Grid item xs={4} display="flex" justifyContent="center">
+              <Button color="inherit" component={Link} to="/">
+                <img src={logo} alt="logo" height={50} />
+                <LogoText variant="h4" fontFamily="CodeText">
+                  Structs.sh
+                </LogoText>
+              </Button>
+            </Grid>
+          </Grid>
         </Toolbar>
       </AppBar>
-      {renderLearnMenu}
     </Box>
   );
 };

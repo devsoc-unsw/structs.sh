@@ -1,70 +1,33 @@
-import { Theme, ThemeProvider } from '@mui/material';
-import { LIGHT_MODE_ON } from 'constants/cookies';
+import React, { useState } from 'react';
+import { Theme, ThemeProvider, Box } from '@mui/material';
 import { AnimatePresence } from 'framer-motion';
-import React, { createContext, useCallback, useState, useMemo } from 'react';
-import { useCookies } from 'react-cookie';
 import { Route, Routes } from 'react-router-dom';
-import { darkTheme, lightTheme } from 'structsThemes';
-import AboutUs from 'views/AboutUs';
-// import ContentManagementDashboard from 'views/ContentManagementDashboard';
-import Feedback from 'views/Feedback';
-import HomePage from 'views/HomePage';
-import Page404 from 'views/Page404';
-import VisualiserDashboard from 'views/VisualiserDashboard';
+import Feedback from 'pages/Feedback';
+import HomePage from 'pages/HomePage';
+import Page404 from 'pages/Page404';
+import VisualiserPage from 'pages/VisualiserPage';
+import { structsTheme } from 'structsThemes';
 import './App.scss';
 
-// export const ThemeMutationContext = createContext({
-//   toggleDarkMode: () => {},
-//   isDarkMode: false,
-// });
-
-const App = () => {
-  // removed light/dark mode hooks for now
-  const [currTheme, setCurrTheme] = useState<Theme>(darkTheme);
-
-  // const toggleDarkMode = useCallback(() => {
-  //   if (currTheme === lightTheme) {
-  //     setCurrTheme(darkTheme);
-  //     setCookie(LIGHT_MODE_ON, 'false');
-  //   } else {
-  //     setCurrTheme(lightTheme);
-  //     setCookie(LIGHT_MODE_ON, 'true');
-  //   }
-  // }, [currTheme, setCookie]);
-
-  // const themeMutationContextProviderValue = useMemo(
-  //   () => ({
-  //     toggleDarkMode,
-  //     isDarkMode: cookies[LIGHT_MODE_ON] !== 'true',
-  //   }),
-  //   []
-  // );
-
-  return (
+const App = () => (
+  <Box color={structsTheme.palette.text.primary}>
     <AnimatePresence>
-      <ThemeProvider theme={currTheme}>
-        {/* <ThemeMutationContext.Provider value={themeMutationContextProviderValue}> */}
+      <ThemeProvider theme={structsTheme}>
         <Routes>
           {/* Homepage */}
           <Route path="/" element={<HomePage />} />
           {/* Visualiser routes */}
-          <Route path="/visualiser/:topic" element={<VisualiserDashboard />} />
-
-          {/* About us page */}
-          <Route path="/about" element={<AboutUs />} />
+          <Route path="/visualiser/:topic" element={<VisualiserPage />} />
 
           {/* Feedback and feature request page */}
           <Route path="/feedback" element={<Feedback />} />
 
-          {/* Content management dashboard */}
-          {/* <Route path="/content" element={<ContentManagementDashboard />} /> */}
           {/* 404 page */}
           <Route path="*" element={<Page404 />} />
         </Routes>
-        {/* </ThemeMutationContext.Provider> */}
       </ThemeProvider>
     </AnimatePresence>
-  );
-};
+  </Box>
+);
 
 export default App;

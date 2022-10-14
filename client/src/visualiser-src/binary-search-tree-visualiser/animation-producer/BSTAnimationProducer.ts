@@ -1,10 +1,25 @@
 import { Line, Marker } from '@svgdotjs/svg.js';
-import { lineDiffY, canvasPadding } from '../util/settings';
+import { lineDiffY, canvasPadding } from '../../common/settings';
 import { getPointerStartEndCoordinates } from '../../common/helpers';
 import AnimationProducer from '../../common/AnimationProducer';
 import GraphicalBSTNode from '../data-structure/GraphicalBSTNode';
 
 export default class BSTAnimationProducer extends AnimationProducer {
+  public highlightNode(node: GraphicalBSTNode): void {
+    this.addSequenceAnimation(
+      node.nodeTarget.animate(500).attr({
+        fill: '#39AF8E',
+        stroke: '#39AF8E',
+      })
+    );
+
+    this.addSequenceAnimation(
+      node.textTarget.animate(500).attr({
+        fill: '#ffffff',
+      })
+    );
+  }
+
   public halfHighlightNode(node: GraphicalBSTNode): void {
     this.addSequenceAnimation(
       node.nodeTarget.animate(500).attr({
@@ -19,19 +34,51 @@ export default class BSTAnimationProducer extends AnimationProducer {
     );
   }
 
-  public highlightLine(lineTarget: Line, arrowTarget: Marker): void {
-    if (lineTarget != null) {
-      this.addSequenceAnimation(
-        lineTarget.animate(500).attr({
-          stroke: '#39AF8E',
-        })
-      );
+  public halfHighlightNodeRed(node: GraphicalBSTNode): void {
+    this.addSequenceAnimation(
+      node.nodeTarget.animate(500).attr({
+        stroke: '#AF3939',
+      })
+    );
 
-      this.addSequenceAnimation(
-        arrowTarget.animate(500).attr({
-          fill: '#39AF8E',
-        })
-      );
+    this.addSequenceAnimation(
+      node.textTarget.animate(500).attr({
+        fill: '#AF3939',
+      })
+    );
+  }
+
+  public highlightLine(lineTarget: Line, arrowTarget: Marker, create: boolean = false): void {
+    if (lineTarget != null) {
+      if (create) {
+        // If line should be created and highlighted
+        this.addSequenceAnimation(
+          lineTarget.animate(500).attr({
+            stroke: '#39AF8E',
+            opacity: 1,
+          })
+        );
+
+        this.addSequenceAnimation(
+          arrowTarget.animate(500).attr({
+            fill: '#39AF8E',
+            opacity: 1,
+          })
+        );
+      } else {
+        // Line will not be highlighted if it doesn't already exist
+        this.addSequenceAnimation(
+          lineTarget.animate(500).attr({
+            stroke: '#39AF8E',
+          })
+        );
+
+        this.addSequenceAnimation(
+          arrowTarget.animate(500).attr({
+            fill: '#39AF8E',
+          })
+        );
+      }
     }
   }
 

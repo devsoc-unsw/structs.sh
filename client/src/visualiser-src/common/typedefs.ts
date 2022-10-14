@@ -9,13 +9,14 @@ export interface OperationUsage {
   args: string[];
   description: string;
   id?: number;
+  noTimeline?: boolean;
 }
 
 export enum DataStructure {
   LINKED_LISTS = 'Linked Lists',
   BINARY_SEARCH_TREE = 'Binary Search Trees',
-  SORTING = 'Sorting Algorithms',
   AVL_TREE = 'AVL Trees',
+  SORTING = 'Sorting Algorithms',
 }
 
 export interface Documentation {

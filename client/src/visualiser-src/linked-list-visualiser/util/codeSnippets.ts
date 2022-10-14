@@ -1,5 +1,5 @@
-export const insertCodeSnippet = `void insert(int data, int index, struct list *list) {
-    struct node *new_node = create_new_node(data);
+export const insertCodeSnippet = `void insert(int value, int index, struct list *list) {
+    struct node *new_node = create_new_node(value);
     if (index == 0) {
         new_node->next = list->head;
     }
@@ -20,8 +20,8 @@ export const insertCodeSnippet = `void insert(int data, int index, struct list *
     curr->next = new_node;
 }`;
 
-export const appendCodeSnippet = `void append(int data, struct list *list) {
-    struct node *new_tail = create_new_node(data);
+export const appendCodeSnippet = `void append(int value, struct list *list) {
+    struct node *new_tail = create_new_node(value);
     if (list->head == NULL) {
         list->head = new_tail;
         return;
@@ -53,15 +53,15 @@ export const deleteCodeSnippet = `void delete(int index, struct list *list) {
     free(curr);
 }`;
 
-export const prependCodeSnippet = `void prepend(int data, struct list *list)
-    struct node *new_head = create_new_node(input);
+export const prependCodeSnippet = `void prepend(int value, struct list *list) {
+    struct node *new_head = create_new_node(value);
     new_head->next = list->head;
     list->head = new_head;
 }`;
 
-export const searchCodeSnippet = `int search(int data, struct list *list) {
+export const searchCodeSnippet = `int search(int value, struct list *list) {
     struct node *curr = list->head;
-    while (curr != NULL && curr->data != data) {
+    while (curr != NULL && curr->value != value) {
         curr = curr->next;
     }
     return curr != NULL;
