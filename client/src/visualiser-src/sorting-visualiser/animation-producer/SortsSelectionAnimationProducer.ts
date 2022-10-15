@@ -52,12 +52,12 @@ export default class SortsSelectionAnimationProducer extends SortsAnimationProdu
     minIndex: number
   ) {
     if (iIndex !== minIndex) {
-      this.addSequenceAnimation(iItem.boxTarget.animate(100).attr({ stroke: checkingColour }));
-      this.addSequenceAnimation(iItem.boxTarget.animate(100).attr({ fill: checkingColour }));
-      this.addSequenceAnimation(iItem.numberTarget.animate(100).attr({ fill: checkingColour }));
+      this.addSequenceAnimation(iItem.boxTarget.animate(100).attr({ stroke: selectedColor }));
+      this.addSequenceAnimation(iItem.boxTarget.animate(100).attr({ fill: selectedColor }));
+      this.addSequenceAnimation(iItem.numberTarget.animate(100).attr({ fill: selectedColor }));
       // Empty animation so that there's a pause
       this.addSequenceAnimation(iItem.numberTarget.animate());
-      this.finishSequence();
+      // this.finishSequence();
     }
     this.swapped(iItem, iIndex, minItem, minIndex);
     // this.addSequenceAnimation(minItem.boxTarget.animate(100).attr({ stroke: sortedColour }));
