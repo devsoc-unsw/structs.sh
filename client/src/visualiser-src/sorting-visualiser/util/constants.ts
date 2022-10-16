@@ -1,9 +1,14 @@
 import { strokeWidth } from '../../common/constants';
 
-export const whitespace = 5;
+export const whitespace = 10;
 export const topOffset = 60;
 export const boxWidth = 50;
 export const textCy = 230;
+export const leftOffset = 20;
+
+export const defaultColour = '#000000';
+export const sortedColour = '#39AF8E';
+export const checkingColour = '#FFBC53';
 
 export const CANVAS = '#canvas';
 

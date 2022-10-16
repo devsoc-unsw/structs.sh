@@ -1,17 +1,31 @@
-import ExpandMore from '@mui/icons-material/ExpandMore';
+import React, { FC, useContext, useState } from 'react';
 import { Box, Collapse, List, ListItem, ListItemIcon, Theme, Typography } from '@mui/material';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { makeStyles, useTheme } from '@mui/styles';
-import ChevronRight from '@mui/icons-material/ChevronRight';
-import ChevronLeft from '@mui/icons-material/ChevronLeft';
-import VisualiserContext from 'components/Visualiser/VisualiserContext';
-import React, { FC, useContext, useState } from 'react';
+import { makeStyles, styled, useTheme } from '@mui/styles';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import VisualiserContext from './VisualiserContext';
 
 interface OperationDetailsProps {
   command: string;
 }
 
+const OperationExpandButton = styled(Button)({
+  textTransform: 'none',
+  display: 'flex',
+  justifyContent: 'space-between',
+});
+
+const StyledListItem = styled(ListItem)({
+  height: 50,
+  padding: 0,
+});
+
+/**
+ * Contains the input for an operation, the button to execute them and error messages
+ */
 const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
   const {
     documentation,
@@ -19,13 +33,13 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
     timeline: { handleTimelineUpdate, handleUpdateIsPlaying },
     codeSnippet: { handleSetCodeSnippetExpansion },
   } = useContext(VisualiserContext);
-  // const classes = useStyles();
+  const theme: Theme = useTheme();
+
   const [shouldDisplay, setShouldDisplay] = useState<boolean>(false);
   const [currentInputs, setCurrentInputs] = useState<string[]>(
     Array(documentation[command]?.args?.length || 0).fill('')
   );
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const theme: Theme = useTheme();
   const textPrimaryColour = theme.palette.text.primary;
 
   const handleToggleDisplay = () => {
@@ -52,7 +66,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
     setErrorMessage(err);
     if (err !== '') {
       setTimeout(() => setErrorMessage(''), 2000);
-    } else {
+    } else if (!documentation[command]?.noTimeline) {
       handleSetCodeSnippetExpansion(true);
       handleUpdateIsPlaying(true);
     }
@@ -60,26 +74,16 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
   };
 
   return (
-    <ListItem sx={{ height: 50, padding: 0 }}>
+    <StyledListItem>
       <Box width="180px">
-        <Button
-          sx={{
-            textTransform: 'none',
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}
+        <OperationExpandButton
           onClick={handleToggleDisplay}
-          endIcon={
-            shouldDisplay ? (
-              <ChevronRight sx={{ fill: textPrimaryColour }} />
-            ) : (
-              <ChevronLeft sx={{ fill: textPrimaryColour }} />
-            )
-          }
+          color="inherit"
+          endIcon={shouldDisplay ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           fullWidth
         >
-          <Typography color="textPrimary">{command}</Typography>
-        </Button>
+          <Typography>{command}</Typography>
+        </OperationExpandButton>
       </Box>
       <Collapse in={shouldDisplay} timeout="auto" orientation="horizontal">
         <Box display="flex" alignItems="center">
@@ -88,7 +92,6 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
               <TextField
                 size="small"
                 value={currentInputs[idx]}
-                variant="outlined"
                 onKeyPress={(e) => {
                   if (e.key === 'Enter') {
                     executeCommand(currentInputs);
@@ -96,7 +99,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
                 }}
                 onChange={(e) => handleSetArguments(e, idx)}
                 placeholder={eachArg}
-                sx={{ backgroundColor: theme.palette.background.paper }}
+                sx={{ backgroundColor: theme.palette.primary.main }}
               />
             </Box>
           ))}
@@ -109,7 +112,6 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
           >
             <Button
               variant="contained"
-              // color="primary"
               onClick={() => {
                 executeCommand(currentInputs);
               }}
@@ -122,7 +124,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
           </Box>
         </Box>
       </Collapse>
-    </ListItem>
+    </StyledListItem>
   );
 };
 

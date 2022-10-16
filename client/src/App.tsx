@@ -1,40 +1,33 @@
-import { Theme, ThemeProvider } from '@mui/material';
-import { AnimatePresence } from 'framer-motion';
 import React, { useState } from 'react';
+import { Theme, ThemeProvider, Box } from '@mui/material';
+import { AnimatePresence } from 'framer-motion';
 import { Route, Routes } from 'react-router-dom';
-import { darkTheme } from 'structsThemes';
-// import ContentManagementDashboard from 'views/ContentManagementDashboard';
-import Feedback from 'views/Feedback';
-import HomePage from 'views/HomePage';
-import Page404 from 'views/Page404';
-import VisualiserDashboard from 'views/VisualiserDashboard';
+import Feedback from 'pages/Feedback';
+import HomePage from 'pages/HomePage';
+import Page404 from 'pages/Page404';
+import VisualiserPage from 'pages/VisualiserPage';
+import { structsTheme } from 'structsThemes';
 import './App.scss';
 
-const App = () => {
-  // removed light/dark mode hooks for now
-  const [currTheme, setCurrTheme] = useState<Theme>(darkTheme);
-  return (
+const App = () => (
+  <Box color={structsTheme.palette.text.primary}>
     <AnimatePresence>
-      <ThemeProvider theme={currTheme}>
-        {/* <ThemeMutationContext.Provider value={themeMutationContextProviderValue}> */}
+      <ThemeProvider theme={structsTheme}>
         <Routes>
           {/* Homepage */}
           <Route path="/" element={<HomePage />} />
           {/* Visualiser routes */}
-          <Route path="/visualiser/:topic" element={<VisualiserDashboard />} />
+          <Route path="/visualiser/:topic" element={<VisualiserPage />} />
 
           {/* Feedback and feature request page */}
           <Route path="/feedback" element={<Feedback />} />
 
-          {/* Content management dashboard */}
-          {/* <Route path="/content" element={<ContentManagementDashboard />} /> */}
           {/* 404 page */}
           <Route path="*" element={<Page404 />} />
         </Routes>
-        {/* </ThemeMutationContext.Provider> */}
       </ThemeProvider>
     </AnimatePresence>
-  );
-};
+  </Box>
+);
 
 export default App;
