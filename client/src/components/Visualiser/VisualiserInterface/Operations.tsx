@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Alert, Box, List, Typography, useTheme, Collapse } from '@mui/material';
-import VisualiserContext from 'components/Visualiser/VisualiserContext';
-import FloatingWindow from 'components/FloatingWindow/FloatingWindow';
+import FloatingWindow from 'components/FloatingWindow';
+import VisualiserContext from './VisualiserContext';
 import OperationDetails from './OperationDetails';
 
 /**
@@ -14,7 +14,7 @@ import OperationDetails from './OperationDetails';
  * All the commands that the form supports are listed separately in the
  * `commandsInputRules.ts` file, where the terminal commands also reside.
  */
-const GUIMode = () => {
+const Operations = () => {
   const { documentation, topicTitle } = useContext(VisualiserContext);
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const handleToggleExpansion = () => {
@@ -42,4 +42,4 @@ const GUIMode = () => {
   );
 };
 
-export default GUIMode;
+export default Operations;

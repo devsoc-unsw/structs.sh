@@ -1,1 +1,3 @@
-export { default as Visualiser } from './Visualiser';
+import Visualiser from './Visualiser';
+
+export default Visualiser;

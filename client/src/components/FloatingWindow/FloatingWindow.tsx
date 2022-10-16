@@ -12,6 +12,11 @@ interface Props {
   handleToggleExpansion: () => void;
 }
 
+/**
+ * A collapsible floating window component
+ *
+ * Used for the GUI for performing operations and the code snippets
+ */
 const FloatingWindow: FC<Props> = ({
   children,
   minHeight = undefined,
@@ -25,6 +30,7 @@ const FloatingWindow: FC<Props> = ({
   return (
     <Box
       bgcolor={theme.palette.background.default}
+      color={theme.palette.text.primary}
       position="absolute"
       bottom="54px"
       minHeight={minHeight}
@@ -36,18 +42,20 @@ const FloatingWindow: FC<Props> = ({
     >
       <Box
         onClick={handleToggleExpansion}
-        sx={{ background: theme.palette.background.paper, display: 'flex', alignItems: 'center' }}
+        display="flex"
+        alignItems="center"
+        bgcolor={theme.palette.primary.main}
       >
         {isExpanded ? (
           flexDirection === 'row' ? (
-            <ChevronRight sx={{ fill: theme.palette.text.primary }} />
+            <ChevronRight />
           ) : (
-            <ChevronLeft sx={{ fill: theme.palette.text.primary }} />
+            <ChevronLeft />
           )
         ) : flexDirection === 'row' ? (
-          <ChevronLeft sx={{ fill: theme.palette.text.primary }} />
+          <ChevronLeft />
         ) : (
-          <ChevronRight sx={{ fill: theme.palette.text.primary }} />
+          <ChevronRight />
         )}
       </Box>
       <Collapse in={isExpanded} orientation="horizontal">
