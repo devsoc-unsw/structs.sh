@@ -34,7 +34,7 @@ const Page404 = () => {
   return (
     <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="exit">
       <Box sx={{ overflow: 'hidden', height: '100vh', background: '#261C2C' }}>
-        <TopNavbar position="fixed" enableOnScrollEffect />
+        <TopNavbar />
         <Box
           sx={{
             width: '100vw',
@@ -84,9 +84,7 @@ const Page404 = () => {
               <Typography variant="h2">404</Typography>
               <br />
               <Typography variant="body1">
-                Couldn&apos;t find a page for:
-                {' '}
-                <pre>{path}</pre>
+                Couldn&apos;t find a page for: <pre>{path}</pre>
               </Typography>
             </Container>
           </Box>

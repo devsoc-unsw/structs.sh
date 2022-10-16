@@ -1,11 +1,11 @@
-import { Box, Typography } from '@mui/material';
-import { HomepageLayout } from 'layout';
 import React from 'react';
+import { Box, Typography } from '@mui/material';
+import PageLayout from 'components/PageLayout';
 import Container from '@mui/material/Container';
 
 const Feedback = () => (
-  <HomepageLayout topNavPosition="fixed">
-    <Box paddingTop="100px" textAlign="center" height="100%">
+  <PageLayout>
+    <Box paddingTop={10} textAlign="center" height="100%">
       <Container maxWidth="md">
         <Typography color="textPrimary" variant="h3">
           Feedback for Structs.sh
@@ -30,13 +30,12 @@ const Feedback = () => (
         style={{
           width: '100%',
           height: '100vh',
-          // height: '100%',
         }}
       >
         Loading…
       </iframe>
     </Box>
-  </HomepageLayout>
+  </PageLayout>
 );
 
 export default Feedback;

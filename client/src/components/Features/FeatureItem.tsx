@@ -1,7 +1,6 @@
 import { motion, useAnimation } from 'framer-motion';
 import React, { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
-import styles from './Features.module.scss';
 
 interface Props {
   children: React.ReactNode;
@@ -16,7 +15,10 @@ const FeatureItem: React.FC<Props> = ({ children, fromDirection = 'left' }) => {
 
   const variants = {
     visible: {
-      opacity: 1, x: 0, y: 0, transition: { duration: 0.6 },
+      opacity: 1,
+      x: 0,
+      y: 0,
+      transition: { duration: 0.6 },
     },
     hidden: {
       opacity: 0,
@@ -35,13 +37,7 @@ const FeatureItem: React.FC<Props> = ({ children, fromDirection = 'left' }) => {
   }, [controls, inView]);
 
   return (
-    <motion.div
-      className={styles.featureItem}
-      variants={variants}
-      initial="hidden"
-      animate={controls}
-      ref={ref}
-    >
+    <motion.div variants={variants} initial="hidden" animate={controls} ref={ref}>
       {children}
     </motion.div>
   );

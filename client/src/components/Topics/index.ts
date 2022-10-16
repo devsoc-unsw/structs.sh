@@ -1,1 +1,3 @@
-export { default as Topics } from './Topics';
+import Topics from './Topics';
+
+export default Topics;
