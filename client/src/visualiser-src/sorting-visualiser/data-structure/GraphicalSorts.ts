@@ -1,4 +1,4 @@
-import { SVG } from '@svgdotjs/svg.js';
+import { Svg, SVG } from '@svgdotjs/svg.js';
 import AnimationProducer from 'visualiser-src/common/AnimationProducer';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
@@ -200,56 +200,73 @@ export default class GraphicalSortList extends GraphicalDataStructure {
 
     this.quicksort(0, len - 1, producer, ipointer, jpointer);
 
+    producer.hidePointers(<Svg><unknown>ipointer, <Svg><unknown>jpointer);
+    producer.highlightBoxes(this.elementList, sortedColour);
+    producer.highlightBoxes(this.elementList, defaultColour);
+
     return producer;
   }
 
   public quicksort(lo, hi, producer, ipointer, jpointer) {
-    // index of pivot
+    if (hi <= lo) {
+      producer.doAnimationAndHighlightTimestamp(
+        4,
+        false,
+        producer.highlightPointers,
+        ipointer,
+        checkingColour,
+        jpointer,
+        checkingColour
+      )
+      return;
+    }
+
+    // change to move pointers
     producer.doAnimationAndHighlightTimestamp(
       5,
       false,
-      producer.blink,
-      [ipointer, jpointer]
-    )
-    if (hi <= lo) return;
-    // producer.doAnimationAndHighlightTimestamp(
-    //   5,
-    //   false,
-    //   producer.highlightBoxes,
-    //   this.elementList.slice(lo, hi + 1),
-    //   redColour
-    // )
-    const i = this.partition(lo, hi, producer, ipointer, jpointer);
-    // producer.doAnimationAndHighlightTimestamp(
-    //   6,
-    //   false,
-    //   producer.highlightBoxes,
-    //   this.elementList.slice(lo, hi + 1),
-    //   defaultColour
-    // )
-
-    producer.doAnimationAndHighlightTimestamp(
-      6,
-      false,
-      producer.movePointer,
+      producer.initialisePointers,
       ipointer,
-      lo
+      lo,
+      sortedColour,
+      jpointer,
+      hi,
+      redColour
     )
+
+    const i = this.partition(lo, hi, producer, ipointer, jpointer);
 
     producer.doAnimationAndHighlightTimestamp(
       6,
       false,
-      producer.movePointer,
+      producer.initialisePointers,
+      ipointer,
+      lo,
+      sortedColour,
       jpointer,
-      i - 1
+      i - 1,
+      redColour
     )
 
     this.quicksort(lo, i - 1, producer, ipointer, jpointer);
+    // todo Combine animations
+    producer.doAnimationAndHighlightTimestamp(
+      7,
+      false,
+      producer.initialisePointers,
+      ipointer,
+      i + 1,
+      sortedColour,
+      jpointer,
+      hi,
+      redColour
+    )
+
     producer.doAnimationAndHighlightTimestamp(
       7,
       false,
       producer.highlightBoxes,
-      this.elementList.slice(0, i + 1),
+      this.elementList.slice(0, lo + 1),
       sortedColour
     )
     this.quicksort(i + 1, hi, producer, ipointer, jpointer);
@@ -266,12 +283,14 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     )
 
     let i = lo + 1
+    // change to move
     producer.doAnimationAndHighlightTimestamp(
       12,
       false,
       producer.initialisePointer,
       ipointer,
-      i
+      i,
+      sortedColour
     )
 
     let j = hi;
@@ -280,7 +299,8 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       false,
       producer.initialisePointer,
       jpointer,
-      j
+      j,
+      redColour
     )
 
     for (; ;) {
@@ -316,7 +336,15 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         )
         break;
       }
-      producer.swapq(this.elementList[i], i, this.elementList[j], j);
+      producer.doAnimationAndHighlightTimestamp(
+        17,
+        false,
+        producer.swapq,
+        this.elementList[i],
+        i,
+        this.elementList[j],
+        j
+      );
       [this.elementList[i], this.elementList[j]] = [this.elementList[j], this.elementList[i]];
     }
 
@@ -346,7 +374,13 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     // Unhighlight j and i
     // producer.hidePointer(ipointer);
     // producer.hidePointer(jpointer);
-    producer.highlightPointer(jpointer, redColour);
+    producer.doAnimationAndHighlightTimestamp(
+      21,
+      false,
+      producer.highlightPointer,
+      jpointer,
+      redColour
+    );
     return j;
   }
 
