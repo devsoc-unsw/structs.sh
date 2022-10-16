@@ -140,6 +140,15 @@ export default class GraphicalSortList extends GraphicalDataStructure {
 
     let pointerLeft = low;
     let pointerRight = mid + 1;
+
+    producer.doAnimationAndHighlightTimestamp(
+      21,
+      false,
+      producer.highlightSorting,
+      low,
+      high,
+      this.elementList
+    );
     
     // compare the value on the pointerLeft and value on the pointerRight
     // move down the column with smaller value
