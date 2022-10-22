@@ -66,8 +66,8 @@ class GraphicalBST extends GraphicalDataStructure {
     animationProducer.renderDeleteCode();
     const nodeExists = GraphicalBST.exists(this.root, input);
     this.root = this.deleteRecursive(this.root, null, input, animationProducer);
-    updateNodePositions(this.root);
     if (nodeExists) {
+      updateNodePositions(this.root);
       animationProducer.doAnimationAndHighlightTimestamp(
         22,
         false,
