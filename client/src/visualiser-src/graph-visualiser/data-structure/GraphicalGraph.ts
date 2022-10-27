@@ -50,15 +50,15 @@ export default class GraphicalGraph extends GraphicalDataStructure {
   ];
 
   private edges: Edge[] = [
-    { source: 0, target: 1, weight: 5, isBidirectional: true },
-    { source: 0, target: 2, weight: 3, isBidirectional: false },
-    { source: 2, target: 5, weight: 5, isBidirectional: false },
-    { source: 3, target: 5, weight: 3, isBidirectional: false },
-    { source: 3, target: 2, weight: 2, isBidirectional: false },
-    { source: 1, target: 4, weight: 1, isBidirectional: true },
-    { source: 3, target: 4, weight: 8, isBidirectional: false },
-    { source: 5, target: 6, weight: 2, isBidirectional: false },
-    { source: 7, target: 2, weight: 4, isBidirectional: true },
+    { source: '0', target: '1', weight: 5, isBidirectional: true },
+    { source: '0', target: '2', weight: 3, isBidirectional: false },
+    { source: '2', target: '5', weight: 5, isBidirectional: false },
+    { source: '3', target: '5', weight: 3, isBidirectional: false },
+    { source: '3', target: '2', weight: 2, isBidirectional: false },
+    { source: '1', target: '4', weight: 1, isBidirectional: true },
+    { source: '3', target: '4', weight: 8, isBidirectional: false },
+    { source: '5', target: '6', weight: 2, isBidirectional: false },
+    { source: '7', target: '2', weight: 4, isBidirectional: true },
   ];
 
   constructor() {
@@ -106,7 +106,10 @@ export default class GraphicalGraph extends GraphicalDataStructure {
    * @returns
    */
   addEdge(from: number, to: number): AnimationProducer {
-    this.edges = [...this.edges, { source: from, target: to, weight: 5, isBidirectional: false }];
+    this.edges = [
+      ...this.edges,
+      { source: String(from), target: String(to), weight: 5, isBidirectional: false },
+    ];
 
     // Reload the graph to sync the change in `this.edges` with what's shown
     // in the visualiser canvas.
@@ -173,8 +176,8 @@ export default class GraphicalGraph extends GraphicalDataStructure {
   private isAdjacent(v: number, w: number): boolean {
     return this.edges.some(
       (edge) =>
-        (edge.source === v && edge.target === w) ||
-        (edge.source === w && edge.target === v && edge.isBidirectional)
+        (edge.source === String(v) && edge.target === String(w)) ||
+        (edge.source === String(w) && edge.target === String(v) && edge.isBidirectional)
     );
   }
 

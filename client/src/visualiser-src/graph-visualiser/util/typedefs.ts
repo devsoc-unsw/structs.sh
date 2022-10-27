@@ -3,8 +3,8 @@ export interface Vertex {
 }
 
 export interface Edge {
-  source: number;
-  target: number;
+  source: string;
+  target: string;
   weight: number;
   isBidirectional?: boolean;
 }
