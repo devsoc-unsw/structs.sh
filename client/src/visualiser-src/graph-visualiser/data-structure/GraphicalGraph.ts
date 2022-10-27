@@ -3,11 +3,11 @@ import AnimationProducer from 'visualiser-src/common/AnimationProducer';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { injectIds } from 'visualiser-src/common/helpers';
 import { Documentation } from 'visualiser-src/common/typedefs';
-import GraphAddVertexAnimationProducer from '../animation-producer/GraphAddVertexAnimationProducer';
 import GraphDfsAnimationProducer from '../animation-producer/GraphDfsAnimationProducer';
 import { renderForceGraph } from '../util/util';
 import { Vertex } from './Vertex';
 import { Edge } from './Edge';
+import GraphAnimationProducer from '../animation-producer/GraphAnimationProducer';
 
 /**
  * Exposes animation-producing graph algorithms that are stateful, meaning that
@@ -95,7 +95,7 @@ export default class GraphicalGraph extends GraphicalDataStructure {
     // Reload the graph to sync the change in `this.edges` with what's shown
     // in the visualiser canvas.
     this.loadGraph();
-    return new GraphAddVertexAnimationProducer();
+    return new GraphAnimationProducer();
   }
 
   /**
@@ -115,7 +115,7 @@ export default class GraphicalGraph extends GraphicalDataStructure {
     // Reload the graph to sync the change in `this.edges` with what's shown
     // in the visualiser canvas.
     this.loadGraph();
-    return new GraphAddVertexAnimationProducer();
+    return new GraphAnimationProducer();
   }
 
   /**
