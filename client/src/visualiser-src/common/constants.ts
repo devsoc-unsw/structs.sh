@@ -18,6 +18,9 @@ export const CODE_CONTAINER = 'code-container';
 /* -------------------------------------------------------------------------- */
 /*                           Graph Drawing Constants                          */
 /* -------------------------------------------------------------------------- */
+export const CONTAINER_DEFAULT_WIDTH = 400;
+export const CONTAINER_DEFAULT_HEIGHT = 400;
+
 // Force parameters.
 export const INTER_VERTEX_FORCE = -2000;
 export const EDGE_ATTRACTIVE_FORCE_MULTIPLIER = 0.2;

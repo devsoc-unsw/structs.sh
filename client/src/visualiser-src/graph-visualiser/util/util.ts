@@ -2,7 +2,13 @@
 // TODO: remove the eslint disable
 
 import * as d3 from 'd3';
-import { NODE_DIAMETER, STROKE_WIDTH, VISUALISER_CANVAS } from 'visualiser-src/common/constants';
+import {
+  CONTAINER_DEFAULT_HEIGHT,
+  CONTAINER_DEFAULT_WIDTH,
+  NODE_DIAMETER,
+  STROKE_WIDTH,
+  VISUALISER_CANVAS,
+} from 'visualiser-src/common/constants';
 import {
   ARROWHEAD_SIZE_FACTOR,
   EDGE_ATTRACTIVE_FORCE_MULTIPLIER,
@@ -106,21 +112,27 @@ export function renderForceGraph(
     edges, // an iterable of link objects (typically [{source, target}, …])
   },
   {
+    // TODO: simplify options passing.
     nodeId = (d) => d.id, // given d in nodes, returns a unique identifier (string)
     nodeStroke = '#fff',
     nodeStrokeWidth = STROKE_WIDTH,
     nodeStrokeOpacity = 1,
-    nodeRadius = NODE_DIAMETER / 2,
     getEdgeSource = ({ source }) => source, // given d in links, returns a node identifier string
     getEdgeDest = ({ target }) => target, // given d in links, returns a node identifier string
     linkStroke = '#999999',
-    linkStrokeOpacity = 0.4,
     linkStrokeWidth = (d) => d.weight,
     linkStrokeLinecap = 'round',
-    width = 400, // Container width.
-    height = 400, // Container height.
   } = {}
 ) {
+  // Determining container dimensions.
+  // TODO: on page dimensions change (from zooming in or out, for example), refresh the width and height so that the graph is positioned correctly.
+  const containerWidth =
+    Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) ||
+    CONTAINER_DEFAULT_WIDTH;
+  const containerHeight =
+    Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0) - 600 ||
+    CONTAINER_DEFAULT_HEIGHT;
+
   // Generating the node & links dataset that D3 uses for simulating the graph.
   const verticesMap = d3.map(vertices, nodeId).map(getPrimitiveVal);
   const edgesSourceMap = d3.map(edges, getEdgeSource).map(getPrimitiveVal);
@@ -147,8 +159,16 @@ export function renderForceGraph(
   d3.select(VISUALISER_CANVAS).selectAll('g').remove();
 
   function ticked(edgeGroup: any, vertexGroup: any, weightLabelGroup: any, vertexTextGroup: any) {
-    const clampX = (x) => Math.max(-width / 2 + nodeRadius, Math.min(width / 2 - nodeRadius, x));
-    const clampY = (y) => Math.max(-height / 2 + nodeRadius, Math.min(height / 2 - nodeRadius, y));
+    const clampX = (x) =>
+      Math.max(
+        -containerWidth / 2 + NODE_DIAMETER / 2,
+        Math.min(containerWidth / 2 - NODE_DIAMETER / 2, x)
+      );
+    const clampY = (y) =>
+      Math.max(
+        -containerHeight / 2 + NODE_DIAMETER / 2,
+        Math.min(containerHeight / 2 - NODE_DIAMETER / 2, y)
+      );
 
     // On each tick of the simulation, update the coordinates of everything.
     edgeGroup
@@ -167,11 +187,11 @@ export function renderForceGraph(
   // Expects the visualiser canvas to be mounted on the DOM already.
   const graph = d3
     .select(VISUALISER_CANVAS)
-    .attr('width', width)
-    .attr('height', height)
-    .attr('width', width)
-    .attr('height', height)
-    .attr('viewBox', [-width / 2, -height / 2, width, height]); // Setting the origin to be at the center of the SVG container.
+    .attr('width', containerWidth)
+    .attr('height', containerHeight)
+    .attr('width', containerWidth)
+    .attr('height', containerHeight)
+    .attr('viewBox', [-containerWidth / 2, -containerHeight / 2, containerWidth, containerHeight]); // Setting the origin to be at the center of the SVG container.
   defineArrowheads();
 
   // Drag callback.
@@ -270,7 +290,7 @@ export function renderForceGraph(
     .selectAll('circle')
     .data(simVertices)
     .join('circle')
-    .attr('r', nodeRadius)
+    .attr('r', NODE_DIAMETER / 2)
     .attr('id', (node) => `vertex-${node.id}`)
     .attr('stroke', '#000000')
     .call(handleDrag(simulation));

@@ -78,9 +78,6 @@ export default class GraphicalGraph extends GraphicalDataStructure {
       {
         nodeId: (d) => d.id,
         linkStrokeWidth: (l) => Math.sqrt(l.value),
-        // TODO: on page dimensions change (from zooming in or out, for example), refresh the width and height so that the graph is positioned correctly.
-        width: Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0),
-        height: Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0) - 600,
       }
     );
   }
