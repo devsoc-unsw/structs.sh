@@ -1,9 +1,9 @@
-import { strokeWidth } from '../../common/constants';
+import { STROKE_WIDTH } from '../../common/constants';
 
 export const nodeStyle = {
   fill: '#EBE8F4',
   stroke: '#000',
-  'stroke-width': strokeWidth,
+  'stroke-width': STROKE_WIDTH,
   opacity: 0,
 };
 

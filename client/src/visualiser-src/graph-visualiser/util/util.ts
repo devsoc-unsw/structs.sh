@@ -2,16 +2,15 @@
 // TODO: remove the eslint disable
 
 import * as d3 from 'd3';
-import { VISUALISER_CANVAS } from 'visualiser-src/common/constants';
+import { NODE_DIAMETER, STROKE_WIDTH, VISUALISER_CANVAS } from 'visualiser-src/common/constants';
 import {
   ARROWHEAD_SIZE_FACTOR,
   EDGE_ATTRACTIVE_FORCE_MULTIPLIER,
   EDGE_WIDTH,
   INTER_VERTEX_FORCE,
-  NODE_RADIUS,
-  VERTEX_NUMBER_SIZE,
+  VERTEX_FONT_SIZE,
   WEIGHT_LABEL_SIZE,
-} from './constants';
+} from 'visualiser-src/common/constants';
 
 function getPrimitiveVal(value) {
   return value !== null && typeof value === 'object' ? value.valueOf() : value;
@@ -28,7 +27,7 @@ function defineArrowheads() {
     .append('marker')
     .attr('id', 'end-arrowhead')
     .attr('viewBox', '-0 -10 20 20')
-    .attr('refX', NODE_RADIUS - parseInt(EDGE_WIDTH) * 0.5) // The offset of the arrowhead.
+    .attr('refX', NODE_DIAMETER / 2 - parseInt(EDGE_WIDTH) * 0.5) // The offset of the arrowhead.
     .attr('refY', 0)
     .attr('orient', 'auto')
     .attr('markerWidth', (ARROWHEAD_SIZE_FACTOR * 1.6) / (parseInt(EDGE_WIDTH) / 5))
@@ -46,7 +45,7 @@ function defineArrowheads() {
     .append('marker')
     .attr('id', 'start-arrowhead')
     .attr('viewBox', '-0 -10 20 20')
-    .attr('refX', NODE_RADIUS - parseInt(EDGE_WIDTH) * 0.5) // The offset of the arrowhead.
+    .attr('refX', NODE_DIAMETER / 2 - parseInt(EDGE_WIDTH) * 0.5) // The offset of the arrowhead.
     .attr('refY', 0)
     .attr('orient', 'auto-start-reverse') // Reverses the direction of 'end-arrowhead'. See: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/orient.
     .attr('markerWidth', (ARROWHEAD_SIZE_FACTOR * 1.6) / (parseInt(EDGE_WIDTH) / 5))
@@ -67,7 +66,7 @@ function defineArrowheads() {
     .append('marker')
     .attr('id', 'highlighted-start-arrowhead')
     .attr('viewBox', '-0 -10 20 20')
-    .attr('refX', NODE_RADIUS - parseInt(EDGE_WIDTH) * 0.5) // The offset of the arrowhead.
+    .attr('refX', NODE_DIAMETER / 2 - parseInt(EDGE_WIDTH) * 0.5) // The offset of the arrowhead.
     .attr('refY', 0)
     .attr('orient', 'auto-start-reverse')
     .attr('markerWidth', (ARROWHEAD_SIZE_FACTOR * 1.6) / (parseInt(EDGE_WIDTH) / 5))
@@ -86,7 +85,7 @@ function defineArrowheads() {
     .append('marker')
     .attr('id', 'highlighted-end-arrowhead')
     .attr('viewBox', '-0 -10 20 20')
-    .attr('refX', NODE_RADIUS - parseInt(EDGE_WIDTH) * 0.5) // The offset of the arrowhead.
+    .attr('refX', NODE_DIAMETER / 2 - parseInt(EDGE_WIDTH) * 0.5) // The offset of the arrowhead.
     .attr('refY', 0)
     .attr('orient', 'auto')
     .attr('markerWidth', (ARROWHEAD_SIZE_FACTOR * 1.6) / (parseInt(EDGE_WIDTH) / 5))
@@ -108,18 +107,18 @@ export function renderForceGraph(
   },
   {
     nodeId = (d) => d.id, // given d in nodes, returns a unique identifier (string)
-    nodeStroke = '#fff', // node stroke color
-    nodeStrokeWidth = 1.5, // node stroke width, in pixels
-    nodeStrokeOpacity = 1, // node stroke opacity
-    nodeRadius = NODE_RADIUS, // node radius, in pixels
+    nodeStroke = '#fff',
+    nodeStrokeWidth = STROKE_WIDTH,
+    nodeStrokeOpacity = 1,
+    nodeRadius = NODE_DIAMETER / 2,
     getEdgeSource = ({ source }) => source, // given d in links, returns a node identifier string
     getEdgeDest = ({ target }) => target, // given d in links, returns a node identifier string
-    linkStroke = '#999999', // link stroke color
-    linkStrokeOpacity = 0.4, // link stroke opacity
-    linkStrokeWidth = (d) => d.weight, // given d in links, returns a stroke width in pixels
-    linkStrokeLinecap = 'round', // link stroke linecap
-    width = 400, // outer width, in pixels
-    height = 400, // outer height, in pixels
+    linkStroke = '#999999',
+    linkStrokeOpacity = 0.4,
+    linkStrokeWidth = (d) => d.weight,
+    linkStrokeLinecap = 'round',
+    width = 400, // Container width.
+    height = 400, // Container height.
   } = {}
 ) {
   // Generating the node & links dataset that D3 uses for simulating the graph.
@@ -287,7 +286,7 @@ export function renderForceGraph(
     .join('text')
     .style('pointer-events', 'none')
     .attr('id', (node) => `text-${node.id}`)
-    .attr('font-size', VERTEX_NUMBER_SIZE)
+    .attr('font-size', VERTEX_FONT_SIZE)
     .attr('alignment-baseline', 'middle') // Centering text inside a circle: https://stackoverflow.com/questions/28128491/svg-center-text-in-circle.
     .attr('text-anchor', 'middle')
     .text((_, i) => i);

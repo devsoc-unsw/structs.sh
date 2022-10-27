@@ -1,6 +1,6 @@
 import { SVG, Runner } from '@svgdotjs/svg.js';
 import { CodeLine } from './typedefs';
-import { showLineNumbers, CODE_CANVAS, CODE_CONTAINER } from './constants';
+import { SHOW_LINE_NUMBERS, CODE_CANVAS, CODE_CONTAINER } from './constants';
 
 interface RunnerInfo {
   runners: Runner[];
@@ -60,7 +60,7 @@ export default abstract class AnimationProducer {
           .fill('#14113C')
           .addTo(CODE_CANVAS),
         textTarget: SVG()
-          .text(showLineNumbers ? String(i + 1).padEnd(4, ' ') + line : line.trim())
+          .text(SHOW_LINE_NUMBERS ? String(i + 1).padEnd(4, ' ') + line : line.trim())
           .font({ family: 'CodeText', size: 10 })
           .fill('#FFFFFF')
           .attr('style', 'white-space: pre-wrap')

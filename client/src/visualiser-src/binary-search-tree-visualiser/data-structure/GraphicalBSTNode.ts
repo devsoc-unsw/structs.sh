@@ -1,8 +1,8 @@
 import { SVG, Svg, Circle, Line, Marker, Text } from '@svgdotjs/svg.js';
 import {
-  markerLength,
-  nodeDiameter,
-  pathD,
+  MARKER_LENGTH,
+  NODE_DIAMETER,
+  PATH_D,
   VISUALISER_CANVAS,
 } from 'visualiser-src/common/constants';
 import { lineStyle, nodeStyle, textStyle } from '../util/settings';
@@ -103,20 +103,20 @@ export default class GraphicalBSTNode {
   protected static createData(input: number) {
     const canvas = SVG(VISUALISER_CANVAS) as Svg;
     const leftArrowTarget = canvas
-      .marker(markerLength, markerLength, (add: Marker) => {
-        add.path(pathD);
+      .marker(MARKER_LENGTH, MARKER_LENGTH, (add: Marker) => {
+        add.path(PATH_D);
       })
       .attr('markerUnits', 'userSpaceOnUse');
     const rightArrowTarget = canvas
-      .marker(markerLength, markerLength, (add: Marker) => {
-        add.path(pathD);
+      .marker(MARKER_LENGTH, MARKER_LENGTH, (add: Marker) => {
+        add.path(PATH_D);
       })
       .attr('markerUnits', 'userSpaceOnUse');
     const leftLineTarget = canvas.line().attr(lineStyle);
     leftLineTarget.marker('end', leftArrowTarget);
     const rightLineTarget = canvas.line().attr(lineStyle);
     rightLineTarget.marker('end', rightArrowTarget);
-    const nodeTarget = canvas.circle(nodeDiameter).attr(nodeStyle);
+    const nodeTarget = canvas.circle(NODE_DIAMETER).attr(nodeStyle);
     const textTarget = canvas.text(String(input)).attr(textStyle);
     return {
       svgData: {

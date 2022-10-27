@@ -1,4 +1,4 @@
-import { strokeWidth } from '../../common/constants';
+import { STROKE_WIDTH } from '../../common/constants';
 
 export const whitespace = 5;
 export const topOffset = 60;
@@ -8,7 +8,7 @@ export const textCy = 360;
 export const CANVAS = '#canvas';
 
 export const shapeAttributes = {
-  'stroke-width': strokeWidth,
+  'stroke-width': STROKE_WIDTH,
   stroke: 'black',
   fill: 'black',
   opacity: 0,

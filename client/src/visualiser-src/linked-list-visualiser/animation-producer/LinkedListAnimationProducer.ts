@@ -1,6 +1,6 @@
 import { SVG, Path, Element } from '@svgdotjs/svg.js';
 import { topOffset, nodePathWidth, insertedNodeTopOffset, CURRENT, PREV } from '../util/constants';
-import { actualNodeDiameter, strokeWidth, nodeDiameter } from '../../common/constants';
+import { ACTUAL_NODE_DIAMETER, STROKE_WIDTH, NODE_DIAMETER } from '../../common/constants';
 import AnimationProducer from '../../common/AnimationProducer';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
 import { getPointerPath } from '../util/util';
@@ -11,10 +11,10 @@ export default class LinkedListAnimationProducer extends AnimationProducer {
     let cx;
     let cy;
     if (index < length - 1) {
-      cx = index * nodePathWidth + (3 * actualNodeDiameter) / 2;
+      cx = index * nodePathWidth + (3 * ACTUAL_NODE_DIAMETER) / 2;
       cy = insertedNodeTopOffset;
     } else {
-      cx = length * nodePathWidth + actualNodeDiameter / 2;
+      cx = length * nodePathWidth + ACTUAL_NODE_DIAMETER / 2;
       cy = topOffset;
     }
     newNode.boxTarget.cx(cx).cy(cy);
@@ -40,7 +40,7 @@ export default class LinkedListAnimationProducer extends AnimationProducer {
 
   public initialisePointer(pointerId: string) {
     const pointerSvg: Element = SVG(pointerId);
-    pointerSvg.move(nodePathWidth + strokeWidth / 2, topOffset + actualNodeDiameter / 2);
+    pointerSvg.move(nodePathWidth + STROKE_WIDTH / 2, topOffset + ACTUAL_NODE_DIAMETER / 2);
     this.addSequenceAnimation(pointerSvg.animate().attr({ opacity: 1 }));
   }
 
@@ -67,15 +67,15 @@ export default class LinkedListAnimationProducer extends AnimationProducer {
         .animate()
         .plot(
           getPointerPath(
-            actualNodeDiameter / 2,
+            ACTUAL_NODE_DIAMETER / 2,
             topOffset,
-            nodePathWidth + actualNodeDiameter / 2,
+            nodePathWidth + ACTUAL_NODE_DIAMETER / 2,
             topOffset
           ) as any
         )
     );
     while (curr !== null) {
-      const cx = (index + 1) * nodePathWidth + actualNodeDiameter / 2;
+      const cx = (index + 1) * nodePathWidth + ACTUAL_NODE_DIAMETER / 2;
       this.addSequenceAnimation(curr.boxTarget.animate().cx(cx).cy(topOffset));
       this.addSequenceAnimation(curr.numberTarget.animate().cx(cx).cy(topOffset));
       this.addSequenceAnimation(
@@ -99,7 +99,11 @@ export default class LinkedListAnimationProducer extends AnimationProducer {
     this.resetColorNode(node);
   }
 
-  public resetListAndColor(headPointer: Path, head: GraphicalLinkedListNode, node: GraphicalLinkedListNode) {
+  public resetListAndColor(
+    headPointer: Path,
+    head: GraphicalLinkedListNode,
+    node: GraphicalLinkedListNode
+  ) {
     this.resetList(headPointer, head);
     this.resetColorNode(node);
   }
@@ -113,7 +117,7 @@ export default class LinkedListAnimationProducer extends AnimationProducer {
 
   public pointHeadToPrependedNode(head: Path, newHead: GraphicalLinkedListNode) {
     this.addSequenceAnimation(
-      head.animate().plot(getPointerPath(nodeDiameter / 2, topOffset, newHead.x, newHead.y) as any)
+      head.animate().plot(getPointerPath(NODE_DIAMETER / 2, topOffset, newHead.x, newHead.y) as any)
     );
   }
 

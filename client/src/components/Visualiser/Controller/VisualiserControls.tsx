@@ -20,7 +20,7 @@ import {
   ListItemText,
 } from '@mui/material';
 import React, { EventHandler, FC, useCallback, useContext, useEffect, useState } from 'react';
-import { defaultSpeed } from 'visualiser-src/common/constants';
+import { DEFAULT_SPEED } from 'visualiser-src/common/constants';
 import VisualiserContext from '../VisualiserContext';
 import styles from './Control.module.scss';
 

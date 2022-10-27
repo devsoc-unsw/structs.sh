@@ -7,10 +7,15 @@ import {
   nodePathWidth,
 } from '../util/constants';
 import { getPointerPath } from '../util/util';
-import { actualNodeDiameter, markerLength, pathD, VISUALISER_CANVAS } from '../../common/constants';
+import {
+  ACTUAL_NODE_DIAMETER,
+  MARKER_LENGTH,
+  PATH_D,
+  VISUALISER_CANVAS,
+} from '../../common/constants';
 
 function addMarker(add: Marker) {
-  add.path(pathD);
+  add.path(PATH_D);
   this.attr('markerUnits', 'userSpaceOnUse');
 }
 interface SVGData {
@@ -46,15 +51,15 @@ export default class GraphicalLinkedListNode {
       .opacity(0)
       .plot(
         getPointerPath(
-          actualNodeDiameter / 2,
+          ACTUAL_NODE_DIAMETER / 2,
           topOffset,
-          actualNodeDiameter / 2 + nodePathWidth,
+          ACTUAL_NODE_DIAMETER / 2 + nodePathWidth,
           topOffset
         )
       )
       .addTo(VISUALISER_CANVAS);
 
-    headPointer.marker('end', markerLength, markerLength, addMarker);
+    headPointer.marker('end', MARKER_LENGTH, MARKER_LENGTH, addMarker);
     return headPointer;
   }
 
@@ -63,7 +68,7 @@ export default class GraphicalLinkedListNode {
     const newPointer = canvas.path().attr(pathAttributes);
     const nodeShape = canvas.circle().attr(shapeAttributes);
     const nodeValue = canvas.text(String(input)).attr(textAttributes);
-    newPointer.marker('end', markerLength, markerLength, addMarker);
+    newPointer.marker('end', MARKER_LENGTH, MARKER_LENGTH, addMarker);
     return new GraphicalLinkedListNode({
       value: input,
       svgData: {

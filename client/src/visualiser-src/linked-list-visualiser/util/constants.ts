@@ -1,11 +1,11 @@
 // SVG Attributes
-import { nodeDiameter, strokeWidth, actualNodeDiameter } from '../../common/constants';
+import { NODE_DIAMETER, STROKE_WIDTH, ACTUAL_NODE_DIAMETER } from '../../common/constants';
 
 export const pathLength = 50;
-export const nodePathWidth = actualNodeDiameter + pathLength;
+export const nodePathWidth = ACTUAL_NODE_DIAMETER + pathLength;
 export const topOffset = 150;
 export const insertedNodeTopOffset =
-  topOffset + (actualNodeDiameter + pathLength) * Math.sin(Math.PI / 3);
+  topOffset + (ACTUAL_NODE_DIAMETER + pathLength) * Math.sin(Math.PI / 3);
 export const CURRENT = '#current';
 export const PREV = '#prev';
 export const CANVAS = '#visualiser-canvas';
@@ -16,15 +16,15 @@ export const nodeAttributes = {
 };
 
 export const shapeAttributes = {
-  r: nodeDiameter / 2,
-  'stroke-width': strokeWidth,
+  r: NODE_DIAMETER / 2,
+  'stroke-width': STROKE_WIDTH,
   stroke: 'black',
   fill: '#EBE8F4',
   opacity: 0,
 };
 
 export const textAttributes = {
-  x: actualNodeDiameter / 2,
+  x: ACTUAL_NODE_DIAMETER / 2,
   y: topOffset,
   'dominant-baseline': 'middle',
   'text-anchor': 'middle',
@@ -35,7 +35,7 @@ export const textAttributes = {
 };
 
 export const pathAttributes = {
-  'stroke-width': strokeWidth,
+  'stroke-width': STROKE_WIDTH,
   stroke: 'black',
   'stroke-linecap': 'round',
   'stroke-linejoin': 'round',

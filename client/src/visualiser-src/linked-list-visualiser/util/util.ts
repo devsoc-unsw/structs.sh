@@ -1,4 +1,4 @@
-import { actualNodeDiameter, markerLength } from '../../common/constants';
+import { ACTUAL_NODE_DIAMETER, MARKER_LENGTH } from '../../common/constants';
 import { getPointerStartEndCoordinates } from '../../common/helpers';
 
 export enum Style {
@@ -20,12 +20,14 @@ export const getPointerPath = (
     endCentreY
   );
   return style === Style.CURVED
-    ? `M ${startX - actualNodeDiameter / 2 + (actualNodeDiameter / 2) * Math.cos(Math.PI / 4)},${
-        startY - (actualNodeDiameter / 2) * Math.sin(Math.PI / 4)
-      } Q ${(startX + endX) / 2 + markerLength / 4},-30 ${
+    ? `M ${
+        startX - ACTUAL_NODE_DIAMETER / 2 + (ACTUAL_NODE_DIAMETER / 2) * Math.cos(Math.PI / 4)
+      },${startY - (ACTUAL_NODE_DIAMETER / 2) * Math.sin(Math.PI / 4)} Q ${
+        (startX + endX) / 2 + MARKER_LENGTH / 4
+      },-30 ${
         endX +
-        (actualNodeDiameter + markerLength) / 2 +
-        -((actualNodeDiameter + markerLength) / 2) * Math.cos(Math.PI / 4)
-      },${endY - ((actualNodeDiameter + markerLength) / 2) * Math.sin(Math.PI / 4)}`
+        (ACTUAL_NODE_DIAMETER + MARKER_LENGTH) / 2 +
+        -((ACTUAL_NODE_DIAMETER + MARKER_LENGTH) / 2) * Math.cos(Math.PI / 4)
+      },${endY - ((ACTUAL_NODE_DIAMETER + MARKER_LENGTH) / 2) * Math.sin(Math.PI / 4)}`
     : `M ${startX},${startY} Q ${(startX + endX) / 2},${(startY + endY) / 2} ${endX},${endY}`;
 };
