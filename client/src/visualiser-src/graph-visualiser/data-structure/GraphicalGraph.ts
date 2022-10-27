@@ -5,8 +5,9 @@ import { injectIds } from 'visualiser-src/common/helpers';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import GraphAddVertexAnimationProducer from '../animation-producer/GraphAddVertexAnimationProducer';
 import GraphDfsAnimationProducer from '../animation-producer/GraphDfsAnimationProducer';
-import { Edge, Vertex } from '../util/typedefs';
 import { renderForceGraph } from '../util/util';
+import { Vertex } from './Vertex';
+import { Edge } from './Edge';
 
 /**
  * Exposes animation-producing graph algorithms that are stateful, meaning that
@@ -39,26 +40,26 @@ export default class GraphicalGraph extends GraphicalDataStructure {
   });
 
   private vertices: Vertex[] = [
-    { id: '0' },
-    { id: '1' },
-    { id: '2' },
-    { id: '3' },
-    { id: '4' },
-    { id: '5' },
-    { id: '6' },
-    { id: '7' },
+    Vertex.from(0),
+    Vertex.from(1),
+    Vertex.from(2),
+    Vertex.from(3),
+    Vertex.from(4),
+    Vertex.from(5),
+    Vertex.from(6),
+    Vertex.from(7),
   ];
 
   private edges: Edge[] = [
-    { source: '0', target: '1', weight: 5, isBidirectional: true },
-    { source: '0', target: '2', weight: 3, isBidirectional: false },
-    { source: '2', target: '5', weight: 5, isBidirectional: false },
-    { source: '3', target: '5', weight: 3, isBidirectional: false },
-    { source: '3', target: '2', weight: 2, isBidirectional: false },
-    { source: '1', target: '4', weight: 1, isBidirectional: true },
-    { source: '3', target: '4', weight: 8, isBidirectional: false },
-    { source: '5', target: '6', weight: 2, isBidirectional: false },
-    { source: '7', target: '2', weight: 4, isBidirectional: true },
+    Edge.from('0', '1', 5, true),
+    Edge.from('0', '2', 3, false),
+    Edge.from('2', '5', 5, false),
+    Edge.from('3', '5', 3, false),
+    Edge.from('3', '2', 2, false),
+    Edge.from('1', '4', 1, true),
+    Edge.from('3', '4', 8, false),
+    Edge.from('5', '6', 2, false),
+    Edge.from('7', '2', 4, true),
   ];
 
   constructor() {
@@ -89,7 +90,7 @@ export default class GraphicalGraph extends GraphicalDataStructure {
    * TODO: currently unanimated. Does this need an animation?
    */
   addVertex(): AnimationProducer {
-    this.vertices = [...this.vertices, { id: `${this.vertices.length}` }];
+    this.vertices = [...this.vertices, Vertex.from(this.vertices.length)];
 
     // Reload the graph to sync the change in `this.edges` with what's shown
     // in the visualiser canvas.
