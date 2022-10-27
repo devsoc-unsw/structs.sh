@@ -51,15 +51,15 @@ export default class GraphicalGraph extends GraphicalDataStructure {
   ];
 
   private edges: Edge[] = [
-    Edge.from('0', '1', 5, true),
-    Edge.from('0', '2', 3, false),
-    Edge.from('2', '5', 5, false),
-    Edge.from('3', '5', 3, false),
-    Edge.from('3', '2', 2, false),
-    Edge.from('1', '4', 1, true),
-    Edge.from('3', '4', 8, false),
-    Edge.from('5', '6', 2, false),
-    Edge.from('7', '2', 4, true),
+    Edge.from(0, 1, 5, true),
+    Edge.from(0, 2, 3, false),
+    Edge.from(2, 5, 5, false),
+    Edge.from(3, 5, 3, false),
+    Edge.from(3, 2, 2, false),
+    Edge.from(1, 4, 1, true),
+    Edge.from(3, 4, 8, false),
+    Edge.from(5, 6, 2, false),
+    Edge.from(7, 2, 4, true),
   ];
 
   constructor() {
@@ -151,7 +151,7 @@ export default class GraphicalGraph extends GraphicalDataStructure {
   ): void {
     // Mark the current vertex as visited.
     visited.add(src);
-    const vertexElem = this.getDomVertex(src);
+    const vertexElem = Vertex.getDomReference(src);
     animationProducer.doAnimationAndHighlight(2, animationProducer.highlightVertex, vertexElem);
 
     // For each unvisited neighbour, highlight the edge to that neighbour and
@@ -161,7 +161,7 @@ export default class GraphicalGraph extends GraphicalDataStructure {
         animationProducer.doAnimationAndHighlight(
           4,
           animationProducer.highlightEdge,
-          this.getDomEdge(src, neighbour)
+          Edge.getDomReference(src, neighbour)
         );
         this.dfsRecurse(animationProducer, neighbour, visited);
       }
@@ -195,13 +195,5 @@ export default class GraphicalGraph extends GraphicalDataStructure {
 
   public get documentation() {
     return GraphicalGraph.documentation;
-  }
-
-  private getDomVertex(vertex: number): Circle {
-    return SVG(`#vertex-${vertex}`) as Circle;
-  }
-
-  private getDomEdge(from: number, to: number): Path {
-    return SVG(`.edge-${from}-${to}`) as Path;
   }
 }

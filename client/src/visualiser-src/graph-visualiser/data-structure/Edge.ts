@@ -1,3 +1,5 @@
+import { Path, SVG } from '@svgdotjs/svg.js';
+
 export class Edge {
   public source: string;
 
@@ -14,7 +16,11 @@ export class Edge {
     this.isBidirectional = isBidirectional;
   }
 
-  public static from(source: string, target: string, weight: number, isBidirectional: boolean) {
-    return new Edge(source, target, weight, isBidirectional);
+  public static from(source: number, target: number, weight: number, isBidirectional: boolean) {
+    return new Edge(String(source), String(target), weight, isBidirectional);
+  }
+
+  public static getDomReference(source: number, target: number): Path {
+    return SVG(`.edge-${source}-${target}`) as Path;
   }
 }
