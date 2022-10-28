@@ -10,7 +10,7 @@ export default class SortsAnimationProducer extends AnimationProducer {
             this.addSequenceAnimation(x.numberTarget.animate(300).attr({ fill: colour }));
         })
         if (array.length > 0) {
-            // this.addSequenceAnimation(array[0].boxTarget.animate(400).attr({ rotate: 0 }));
+            this.addSequenceAnimation(array[0].boxTarget.animate(400));
         }
     }
 

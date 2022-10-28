@@ -22,10 +22,12 @@ export default class GraphicalSortsElement {
 
   public static pointer(index: number, colour: string) {
     const pointer = SVG()
-      .polygon('15, 15, 10, 30, 5, 15').fill({ color: colour })
-      .addTo(VISUALISER_CANVAS);
+      .polygon('5, 15, 15, 15, 10, 0').fill({ color: colour })
+      .addTo(VISUALISER_CANVAS)
 
-    pointer.x(getX(index) + boxWidth / 2 - 5).y(getY(index) - Math.sqrt(200 * 90));
+    // pointer.x(getX(index) + boxWidth / 2 - 5).y(getY(index) - Math.sqrt(200 * 90));
+    pointer.x(getX(index) + boxWidth / 2 - 5).y(getY(index) + 30);
+
     pointer.opacity(0);
     return pointer;
   }

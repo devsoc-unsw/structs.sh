@@ -3,7 +3,7 @@ import { quickCodeSnippet } from '../util/codeSnippets';
 import { getX, getCx } from '../util/helpers';
 import GraphicalSortsElement from '../data-structure/GraphicalSortsElement';
 import SortsAnimationProducer from './SortsAnimationProducer';
-import { boxWidth, checkingColour, defaultColour, redColour, sortedColour } from '../util/constants';
+import { boxWidth, oragneColour, defaultColour, redColour, greenColour } from '../util/constants';
 
 export default class SortsQuickAnimationProducer extends SortsAnimationProducer {
     public renderQuickCode() {
@@ -18,17 +18,15 @@ export default class SortsQuickAnimationProducer extends SortsAnimationProducer 
     public highlightPointers(pointer: Svg, colour: string, pointer2: Svg, colour2: string) {
         this.addSequenceAnimation(pointer.animate(300).attr({ fill: colour }));
         this.addSequenceAnimation(pointer2.animate(300).attr({ fill: colour2 }));
-        this.finishSequence();
     }
 
     public initialisePointer(pointer: Svg, index: number, colour: string) {
         this.addSequenceAnimation(pointer.animate(300).x(getX(index) + + boxWidth / 2 - 5));
         this.addSequenceAnimation(pointer.animate(300).attr({ fill: colour }));
         this.addSequenceAnimation(pointer.animate(300).attr({ opacity: 1 }));
-        this.finishSequence();
     }
 
-    public initialisePointers(pointer: Svg, index: number, colour: string, pointer2: Svg, index2: number, colour2: string, finish: boolean) {
+    public initialisePointers(pointer: Svg, index: number, colour: string, pointer2: Svg, index2: number, colour2: string) {
         this.addSequenceAnimation(pointer.animate(300).x(getX(index) + + boxWidth / 2 - 5));
         this.addSequenceAnimation(pointer.animate(300).attr({ fill: colour }));
 
@@ -40,9 +38,6 @@ export default class SortsQuickAnimationProducer extends SortsAnimationProducer 
         this.addSequenceAnimation(pointer2.animate(300).attr({ fill: colour2 }));
         if (pointer2.opacity() === 0) {
             this.addSequenceAnimation(pointer2.animate(300).attr({ opacity: 1 }));
-        }
-        if (finish) {
-            this.finishSequence();
         }
     }
 
@@ -59,9 +54,11 @@ export default class SortsQuickAnimationProducer extends SortsAnimationProducer 
     public greyOut(array: GraphicalSortsElement[], lo: number, hi: number) {
         array.forEach((x, i) => {
             if (i < lo || i > hi) {
-                this.addSequenceAnimation(x.boxTarget.animate(300).attr({ opacity: 0.5 }));
+                this.addSequenceAnimation(x.boxTarget.animate(300).attr({ opacity: 0.3 }));
+                this.addSequenceAnimation(x.numberTarget.animate(300).attr({ opacity: 0.3 }));
             } else {
                 this.addSequenceAnimation(x.boxTarget.animate(300).attr({ opacity: 1 }));
+                this.addSequenceAnimation(x.numberTarget.animate(300).attr({ opacity: 1 }));
             }
         })
     }
@@ -75,19 +72,13 @@ export default class SortsQuickAnimationProducer extends SortsAnimationProducer 
     public movePointer(pointer: Svg, index: number) {
         this.addSequenceAnimation(pointer.animate(300).x(getX(index) + + boxWidth / 2 - 5));
         this.addSequenceAnimation(pointer.animate(300).attr({ opacity: 1 }));
-        this.finishSequence();
-    }
-
-    public movePointers(pointer: Svg, index: number, pointer2: Svg, index2: number) {
-        this.addSequenceAnimation(pointer.animate(300).x(getX(index) + + boxWidth / 2 - 5));
-        this.addSequenceAnimation(pointer2.animate(300).x(getX(index2) + + boxWidth / 2 - 5));
-        this.finishSequence();
     }
 
     public makeSolved(array: GraphicalSortsElement[]) {
-        this.highlightBoxes(array, sortedColour);
+        this.highlightingBoxes(array, greenColour);
         array.forEach((x) => {
             this.addSequenceAnimation(x.boxTarget.animate(300).attr({ opacity: 1 }));
+            this.addSequenceAnimation(x.numberTarget.animate(300).attr({ opacity: 1 }));
         })
         this.finishSequence();
 
@@ -103,7 +94,6 @@ export default class SortsQuickAnimationProducer extends SortsAnimationProducer 
         const x = "#36CBCC";
         // this.highlightBoxes([from, to], x);
         this.swapping(from, fromIndex, to, toIndex);
-        this.finishSequence();
         // this.highlightBoxes([from, to], defaultColour);
     }
 }
