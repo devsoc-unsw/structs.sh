@@ -21,12 +21,6 @@ export default class SortsSelectionAnimationProducer extends SortsAnimationProdu
     this.addSequenceAnimation(currItem.numberTarget.animate(100).attr({ fill: comparingColor }));
     this.addSequenceAnimation(currItem.numberTarget.animate());
     this.finishSequence();
-    // Unhighlight item if it is not a new minimum
-    // if (currMinItem.data.value <= currItem.data.value) {
-    //   this.addSequenceAnimation(currItem.boxTarget.animate(100).attr({ stroke: defaultColour }));
-    //   this.addSequenceAnimation(currItem.boxTarget.animate(100).attr({ fill: defaultColour }));
-    //   this.addSequenceAnimation(currItem.numberTarget.animate(100).attr({ fill: defaultColour }));
-    // }
   }
 
   public select(newMinItem: GraphicalSortsElement, previousMinItem: GraphicalSortsElement) {
@@ -88,6 +82,12 @@ export default class SortsSelectionAnimationProducer extends SortsAnimationProdu
         prevIthItem.numberTarget.animate(100).attr({ fill: defaultColour })
       );
     }
+  }
+
+  public bufferUnhighlight(prevMin: GraphicalSortsElement) {
+    this.addSequenceAnimation(prevMin.boxTarget.animate(100).attr({ stroke: defaultColour }));
+    this.addSequenceAnimation(prevMin.boxTarget.animate(100).attr({ fill: defaultColour }));
+    this.addSequenceAnimation(prevMin.numberTarget.animate(100).attr({ fill: defaultColour }));
   }
 
   public highlightAll(array: GraphicalSortsElement[], color: string) {

@@ -234,16 +234,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
           );
           minIndex = j;
         } else {
-          // Buffer the unhighlighting of jth item for the next animation sequence
-          producer.addSequenceAnimation(
-            this.elementList[j].boxTarget.animate(100).attr({ stroke: defaultColour })
-          );
-          producer.addSequenceAnimation(
-            this.elementList[j].boxTarget.animate(100).attr({ fill: defaultColour })
-          );
-          producer.addSequenceAnimation(
-            this.elementList[j].numberTarget.animate(100).attr({ fill: defaultColour })
-          );
+          producer.bufferUnhighlight(this.elementList[j]);
         }
       }
 
