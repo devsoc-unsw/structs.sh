@@ -199,12 +199,10 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     producer.renderQuickCode();
 
     const len = this.elementList.length;
-
     this.quicksort(0, len - 1, producer, ipointer, jpointer);
 
     producer.hidePointers(<Svg><unknown>ipointer, <Svg><unknown>jpointer);
-    producer.highlightBoxes(this.elementList, sortedColour);
-    producer.highlightBoxes(this.elementList, defaultColour);
+    producer.makeSolved(this.elementList);
 
     return producer;
   }
@@ -233,11 +231,14 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       sortedColour,
       jpointer,
       hi,
-      redColour
+      redColour,
+      true
     )
 
     const i = this.partition(lo, hi, producer, ipointer, jpointer);
+    producer.greyOut(this.elementList, 0, -1);
 
+    producer.greyOut(this.elementList, lo, i - 1);
     producer.doAnimationAndHighlightTimestamp(
       6,
       false,
@@ -247,11 +248,13 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       sortedColour,
       jpointer,
       i - 1,
-      redColour
+      redColour,
+      true
     )
 
     this.quicksort(lo, i - 1, producer, ipointer, jpointer);
-    // todo Combine animations
+    // todo Combine all animations
+    producer.greyOut(this.elementList, i + 1, hi);
     producer.doAnimationAndHighlightTimestamp(
       7,
       false,
@@ -261,14 +264,15 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       sortedColour,
       jpointer,
       hi,
-      redColour
+      redColour,
+      false
     )
 
     producer.doAnimationAndHighlightTimestamp(
       7,
       false,
       producer.highlightBoxes,
-      this.elementList.slice(0, lo + 1),
+      this.elementList.slice(0, i + 1),
       sortedColour
     )
     this.quicksort(i + 1, hi, producer, ipointer, jpointer);
@@ -328,7 +332,15 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       }
 
       if (i === j) {
-        // producer.hidePointer(ipointer);
+        let end = j;
+        if (this.elementList[j].data.value > v) {
+          end = j;
+        } else {
+          end = j + 1;
+        }
+        producer.highlightingBoxes(this.elementList.slice(lo + 1, end), sortedColour);
+        producer.highlightingBoxes(this.elementList.slice(end, hi + 1), redColour);
+
         producer.doAnimationAndHighlightTimestamp(
           16,
           false,
@@ -373,9 +385,8 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     );
     [this.elementList[lo], this.elementList[j]] = [this.elementList[j], this.elementList[lo]];
 
+    producer.highlightingBoxes(this.elementList.slice(lo, hi + 1), defaultColour);
     // Unhighlight j and i
-    // producer.hidePointer(ipointer);
-    // producer.hidePointer(jpointer);
     producer.doAnimationAndHighlightTimestamp(
       21,
       false,

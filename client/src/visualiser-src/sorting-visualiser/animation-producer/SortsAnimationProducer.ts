@@ -5,12 +5,12 @@ import { getCx, getX } from '../util/helpers';
 export default class SortsAnimationProducer extends AnimationProducer {
     public highlightingBoxes(array: GraphicalSortsElement[], colour: string) {
         array.forEach((x) => {
-            this.addSequenceAnimation(x.boxTarget.animate(1).attr({ stroke: colour }));
-            this.addSequenceAnimation(x.boxTarget.animate(1).attr({ fill: colour }));
-            this.addSequenceAnimation(x.numberTarget.animate(1).attr({ fill: colour }));
+            this.addSequenceAnimation(x.boxTarget.animate(300).attr({ stroke: colour }));
+            this.addSequenceAnimation(x.boxTarget.animate(300).attr({ fill: colour }));
+            this.addSequenceAnimation(x.numberTarget.animate(300).attr({ fill: colour }));
         })
         if (array.length > 0) {
-            this.addSequenceAnimation(array[0].boxTarget.animate(400).attr({ opacity: 1 }));
+            // this.addSequenceAnimation(array[0].boxTarget.animate(400).attr({ rotate: 0 }));
         }
     }
 
@@ -30,10 +30,10 @@ export default class SortsAnimationProducer extends AnimationProducer {
         const xTo = getX(toIndex);
         const cxTo = getCx(toIndex);
 
-        this.addSequenceAnimation(from.boxTarget.animate().x(xTo));
-        this.addSequenceAnimation(from.numberTarget.animate().cx(cxTo));
-        this.addSequenceAnimation(to.boxTarget.animate().x(xFrom));
-        this.addSequenceAnimation(to.numberTarget.animate().cx(cxFrom));
+        this.addSequenceAnimation(from.boxTarget.animate(300).x(xTo));
+        this.addSequenceAnimation(from.numberTarget.animate(300).cx(cxTo));
+        this.addSequenceAnimation(to.boxTarget.animate(300).x(xFrom));
+        this.addSequenceAnimation(to.numberTarget.animate(300).cx(cxFrom));
     }
 
     public swapped(
