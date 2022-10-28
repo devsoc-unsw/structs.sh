@@ -20,9 +20,9 @@ export default class SortsAnimationProducer extends AnimationProducer {
   }
 
   public highlightItem(item: GraphicalSortsElement, color: string) {
-    this.addSequenceAnimation(item.boxTarget.animate(100).attr({ stroke: color }));
-    this.addSequenceAnimation(item.boxTarget.animate(100).attr({ fill: color }));
-    this.addSequenceAnimation(item.numberTarget.animate(100).attr({ fill: color }));
+    this.addSequenceAnimation(item.boxTarget.animate(1).attr({ stroke: color }));
+    this.addSequenceAnimation(item.boxTarget.animate(1).attr({ fill: color }));
+    this.addSequenceAnimation(item.numberTarget.animate(1).attr({ fill: color }));
     this.addSequenceAnimation(item.boxTarget.animate());
   }
 
