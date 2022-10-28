@@ -15,7 +15,7 @@ export default class SortsSelectionAnimationProducer extends SortsAnimationProdu
     this.renderCode(selectionCodeSnippet);
   }
 
-  public compare(currMinItem: GraphicalSortsElement, currItem: GraphicalSortsElement) {
+  public check(currItem: GraphicalSortsElement) {
     this.addSequenceAnimation(currItem.boxTarget.animate(100).attr({ stroke: comparingColor }));
     this.addSequenceAnimation(currItem.boxTarget.animate(100).attr({ fill: comparingColor }));
     this.addSequenceAnimation(currItem.numberTarget.animate(100).attr({ fill: comparingColor }));
@@ -39,7 +39,7 @@ export default class SortsSelectionAnimationProducer extends SortsAnimationProdu
     this.finishSequence();
   }
 
-  public swap(
+  public selectionSwap(
     iItem: GraphicalSortsElement,
     iIndex: number,
     minItem: GraphicalSortsElement,
@@ -53,17 +53,7 @@ export default class SortsSelectionAnimationProducer extends SortsAnimationProdu
       this.addSequenceAnimation(iItem.numberTarget.animate());
       // this.finishSequence();
     }
-    this.swapped(iItem, iIndex, minItem, minIndex);
-    // this.addSequenceAnimation(minItem.boxTarget.animate(100).attr({ stroke: sortedColour }));
-    // this.addSequenceAnimation(minItem.boxTarget.animate(100).attr({ fill: sortedColour }));
-    // this.addSequenceAnimation(minItem.numberTarget.animate(100).attr({ fill: sortedColour }));
-    // Empty animation
-    // this.addSequenceAnimation(minItem.numberTarget.animate());
-    // if (iIndex !== minIndex) {
-    //   this.addSequenceAnimation(iItem.boxTarget.animate(100).attr({ stroke: defaultColour }));
-    //   this.addSequenceAnimation(iItem.boxTarget.animate(100).attr({ fill: defaultColour }));
-    //   this.addSequenceAnimation(iItem.numberTarget.animate(100).attr({ fill: defaultColour }));
-    // }
+    this.swap(iItem, iIndex, minItem, minIndex);
   }
 
   public finishSelectionRound(

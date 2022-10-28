@@ -3,7 +3,7 @@ import GraphicalSortsElement from '../data-structure/GraphicalSortsElement';
 import { getCx, getX } from '../util/helpers';
 
 export default class SortsAnimationProducer extends AnimationProducer {
-  public highlightingBoxes(array: GraphicalSortsElement[], colour: string) {
+  public doHighlightBoxes(array: GraphicalSortsElement[], colour: string) {
     array.forEach((x) => {
       this.addSequenceAnimation(x.boxTarget.animate(1).attr({ stroke: colour }));
       this.addSequenceAnimation(x.boxTarget.animate(1).attr({ fill: colour }));
@@ -15,7 +15,7 @@ export default class SortsAnimationProducer extends AnimationProducer {
   }
 
   public highlightBoxes(array: GraphicalSortsElement[], colour: string) {
-    this.highlightingBoxes(array, colour);
+    this.doHighlightBoxes(array, colour);
     this.finishSequence();
   }
 
@@ -26,7 +26,7 @@ export default class SortsAnimationProducer extends AnimationProducer {
     this.addSequenceAnimation(item.boxTarget.animate());
   }
 
-  public swapping(
+  public doSwap(
     from: GraphicalSortsElement,
     fromIndex: number,
     to: GraphicalSortsElement,
@@ -43,13 +43,13 @@ export default class SortsAnimationProducer extends AnimationProducer {
     this.addSequenceAnimation(to.numberTarget.animate().cx(cxFrom));
   }
 
-  public swapped(
+  public swap(
     from: GraphicalSortsElement,
     fromIndex: number,
     to: GraphicalSortsElement,
     toIndex: number
   ) {
-    this.swapping(from, fromIndex, to, toIndex);
+    this.doSwap(from, fromIndex, to, toIndex);
     this.finishSequence();
   }
 }
