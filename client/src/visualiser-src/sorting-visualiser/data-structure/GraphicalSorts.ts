@@ -7,7 +7,9 @@ import { CANVAS } from 'visualiser-src/linked-list-visualiser/util/constants';
 import { generateNumbers } from 'visualiser-src/common/RandomNumGenerator';
 import GraphicalSortsElement from './GraphicalSortsElement';
 import SortsBubbleAnimationProducer from '../animation-producer/SortsBubbleAnimationProducer';
+import SortsInsertionAnimationProducer from '../animation-producer/SortsInsertionAnimationProducer';
 import SortsCreateAnimationProducer from '../animation-producer/SortsCreateAnimationProducer';
+import { sortedColour, checkingColour, defaultColour } from '../util/constants';
 
 export default class GraphicalSortList extends GraphicalDataStructure {
   public elementList: GraphicalSortsElement[] = [];
@@ -16,14 +18,20 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     append: {
       args: ['values'],
       description: 'Add element to list of elements to sort',
+      noTimeline: true,
     },
     delete: {
       args: ['values'],
       description: 'Delete elements from list of elements to sort',
+      noTimeline: true,
     },
     bubble: {
       args: [],
       description: 'Bubble sort',
+    },
+    insertion: {
+      args: [],
+      description: 'Insertion Sort'
     },
   });
 
@@ -76,7 +84,8 @@ export default class GraphicalSortList extends GraphicalDataStructure {
             this.elementList[j - 1],
             j - 1,
             this.elementList[j],
-            j === len - i - 1
+            j === len - i - 1,
+            j
           );
           [this.elementList[j], this.elementList[j - 1]] = [
             this.elementList[j - 1],
@@ -92,6 +101,88 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       numSwaps = 0;
     }
 
+    return producer;
+  }
+
+  insertion(): AnimationProducer {
+    const producer = new SortsInsertionAnimationProducer();
+
+    producer.renderInsertionCode();
+
+    const len = this.elementList.length;
+
+    let j = 0;
+    // Make first node Sorted
+    producer.doAnimationAndHighlightTimestamp(
+      3,
+      false,
+      producer.highlightBoxes,
+      [this.elementList[0]],
+      sortedColour
+    );
+
+    for (let i = 1; i < len; i += 1) {
+      const val = this.elementList[i];
+      // Select current
+      producer.doAnimationAndHighlightTimestamp(
+        4,
+        false,
+        producer.highlightBoxes,
+        [this.elementList[i]],
+        checkingColour
+      );
+
+      for (j = i; j > 0; j -= 1) {
+        // Select comparison
+        producer.doAnimationAndHighlightTimestamp(
+          5,
+          false,
+          producer.highlightBoxes,
+          [this.elementList[j - 1]],
+          checkingColour
+        );
+        // Do Comparison
+        producer.doAnimationAndHighlightTimestamp(
+          6,
+          false,
+          producer.highlightBoxes,
+          [this.elementList[j - 1]],
+          checkingColour
+        );
+        if (val.data.value >= this.elementList[j - 1].data.value) {
+          // No swapping needed so turn j green
+          producer.doAnimationAndHighlightTimestamp(
+            7,
+            false,
+            producer.highlightBoxes,
+            [this.elementList[j - 1]],
+            sortedColour
+          );
+          break;
+        }
+        // swap boxes
+        producer.doAnimationAndHighlightTimestamp(
+          8,
+          false,
+          producer.swapi,
+          this.elementList[j - 1],
+          j - 1, this.elementList[j],
+          j,
+          !(j > 1)
+        );
+        [this.elementList[j], this.elementList[j - 1]] = [this.elementList[j - 1], this.elementList[j]];
+      }
+      producer.doAnimationAndHighlightTimestamp(
+        3,
+        false,
+        producer.highlightBoxes,
+        [this.elementList[j]],
+        sortedColour
+      );
+    }
+    producer.highlightCode(11);
+    producer.highlightingBoxes(this.elementList, defaultColour);
+    producer.finishSequence();
     return producer;
   }
 

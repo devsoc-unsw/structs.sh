@@ -1,1 +1,3 @@
-export { default as HorizontalRule } from './HorizontalRule';
+import HorizontalRule from './HorizontalRule';
+
+export default HorizontalRule;
