@@ -4,7 +4,6 @@ import {
   preorderTraversalCodeSnippet,
   postorderTraversalCodeSnippet,
 } from '../util/codeSnippets';
-import GraphicalBSTNode from '../data-structure/GraphicalBSTNode';
 
 export default class BSTTraverseAnimationProducer extends BSTAnimationProducer {
   public renderInorderTraversalCode(): void {

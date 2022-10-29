@@ -9,6 +9,8 @@ export const leftOffset = 20;
 export const defaultColour = '#000000';
 export const sortedColour = '#39AF8E';
 export const checkingColour = '#FFBC53';
+export const comparingColor = '#FFBC53';
+export const selectedColor = '#33cccc';
 
 export const CANVAS = '#canvas';
 

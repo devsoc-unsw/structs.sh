@@ -102,7 +102,7 @@ const Features = () => {
           </Grid>
         </Grid>
       </FeatureItem>
-      <FeatureItem fromDirection="right">
+      <FeatureItem>
         <Typography color="textPrimary" variant="h6">
           <GradCapIcon /> Open source
         </Typography>
