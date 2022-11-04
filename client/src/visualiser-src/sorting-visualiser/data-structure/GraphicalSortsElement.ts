@@ -25,7 +25,6 @@ export default class GraphicalSortsElement {
       .polygon('5, 15, 15, 15, 10, 0').fill({ color: colour })
       .addTo(VISUALISER_CANVAS)
 
-    // pointer.x(getX(index) + boxWidth / 2 - 5).y(getY(index) - Math.sqrt(200 * 90));
     pointer.x(getX(index) + boxWidth / 2 - 5).y(getY(index) + 25);
 
     pointer.opacity(0);
