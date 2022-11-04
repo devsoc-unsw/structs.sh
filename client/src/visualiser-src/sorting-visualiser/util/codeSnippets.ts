@@ -54,9 +54,20 @@ export const insertionCodeSnippet = `void insertionSort(int a[], int arr_size)
         }
     }
 }
-`
+`;
 
-export const quickCodeSnippet = `void quicksort(Item a[], int lo, int hi)
+export const selectionCodeSnippet = `void selection_sort(int arr[], int arr_size) {
+    for (int i = 0; i < arr_size - 1; i++) {
+        int min_index = i;
+        for (int j = i + 1; j < arr_size; j++) {
+            if (arr[j] < arr[min_index])
+                min_index = j;
+        }
+        swap(&arr[min_index], &arr[i]);
+    }
+}`;
+
+export const quickCodeSnippet = `void quicksort(int a[], int lo, int hi)
 {
    int i; // index of pivot
    if (hi <= lo) return;
@@ -64,18 +75,17 @@ export const quickCodeSnippet = `void quicksort(Item a[], int lo, int hi)
    quicksort(a, lo, i-1);
    quicksort(a, i+1, hi);
 }
-int partition(Item a[], int lo, int hi)
+int partition(int a[], int lo, int hi)
 {
-   Item v = a[lo];  // pivot
+   int v = a[lo];  // pivot
    int  i = lo+1, j = hi;
    for (;;) {
-      while (less(a[i],v) && i < j) i++;
-      while (less(v,a[j]) && j > i) j--;
+      while (a[i] <= v && i < j) i++;
+      while (v < a[j] && j > i) j--;
       if (i == j) break;
       swap(a,i,j);
    }
-   j = less(a[i],v) ? i : i-1;
+   j = a[i] < v ? i : i-1;
    swap(a,lo,j);
    return j;
-}
-`
+}`;

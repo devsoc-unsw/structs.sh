@@ -9,7 +9,7 @@ export default class SortsBubbleAnimationProducer extends SortsAnimationProducer
     this.renderCode(bubbleCodeSnippet);
   }
 
-  public swap(
+  public bubbleSwap(
     from: GraphicalSortsElement,
     fromIndex: number,
     to: GraphicalSortsElement,
