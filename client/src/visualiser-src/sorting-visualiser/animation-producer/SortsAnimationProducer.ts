@@ -14,9 +14,6 @@ export default class SortsAnimationProducer extends AnimationProducer {
         array.forEach((x) => {
             this.highlightItem(x, colour);
         });
-        // if (array.length > 0) {
-        //     this.addSequenceAnimation(array[0].boxTarget.animate(400));
-        // }
     }
 
     public swap(

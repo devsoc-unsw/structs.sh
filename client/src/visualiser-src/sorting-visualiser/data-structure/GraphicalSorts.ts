@@ -396,14 +396,21 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     [this.elementList[lo], this.elementList[j]] = [this.elementList[j], this.elementList[lo]];
 
     // Unhighlight partition
-    producer.highlightBoxes(this.elementList.slice(lo, hi + 1), defaultColour);
+    // producer.highlightBoxes(this.elementList.slice(lo, hi + 1), defaultColour);
     producer.doAnimationAndHighlightTimestamp(
       21,
       true,
-      producer.highlightPointer,
-      jpointer,
-      redColour
+      producer.highlightBoxes,
+      this.elementList.slice(lo, hi + 1),
+      defaultColour
     );
+    // producer.doAnimationAndHighlightTimestamp(
+    //   21,
+    //   true,
+    //   producer.highlightPointer,
+    //   jpointer,
+    //   redColour
+    // );
     return j;
   }
 
