@@ -1,4 +1,4 @@
-import { Svg } from '@svgdotjs/svg.js';
+import { Polygon, Svg } from '@svgdotjs/svg.js';
 import { quickCodeSnippet } from '../util/codeSnippets';
 import { getX, getCx } from '../util/helpers';
 import GraphicalSortsElement from '../data-structure/GraphicalSortsElement';
@@ -53,7 +53,7 @@ export default class SortsQuickAnimationProducer extends SortsAnimationProducer 
         })
     }
 
-    public hidePointers(pointer: Svg, pointer2: Svg) {
+    public hidePointers(pointer: Polygon, pointer2: Polygon) {
         this.addSequenceAnimation(pointer.animate(300).attr({ opacity: 0 }));
         this.addSequenceAnimation(pointer2.animate(300).attr({ opacity: 0 }));
         this.finishSequence(false);

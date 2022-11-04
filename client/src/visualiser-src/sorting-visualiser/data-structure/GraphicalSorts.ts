@@ -221,7 +221,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     this.quicksort(0, len - 1, producer, ipointer, jpointer);
 
     // End quicksort
-    producer.hidePointers(<Svg><unknown>ipointer, <Svg><unknown>jpointer);
+    producer.hidePointers(ipointer, jpointer);
     producer.doAnimationAndHighlight(
       4,
       producer.makeSolved,

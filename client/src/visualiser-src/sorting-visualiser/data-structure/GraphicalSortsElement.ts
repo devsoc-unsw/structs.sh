@@ -1,4 +1,4 @@
-import { SVG, Text, Rect, Svg } from '@svgdotjs/svg.js';
+import { SVG, Text, Rect, Svg, Polygon } from '@svgdotjs/svg.js';
 import { VISUALISER_CANVAS } from 'visualiser-src/common/constants';
 import { shapeAttributes, textAttributes, boxWidth } from '../util/constants';
 import { getX, getY } from '../util/helpers';
@@ -20,7 +20,7 @@ export default class GraphicalSortsElement {
     this.data = data;
   }
 
-  public static pointer(index: number, colour: string) {
+  public static pointer(index: number, colour: string): Polygon {
     const pointer = SVG()
       .polygon('5, 15, 15, 15, 10, 0').fill({ color: colour })
       .addTo(VISUALISER_CANVAS)
