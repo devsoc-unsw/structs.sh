@@ -28,12 +28,13 @@ export default class SortsQuickAnimationProducer extends SortsAnimationProducer 
 
     public initialisePointers(pointer: Svg, index: number, colour: string, pointer2: Svg, index2: number, colour2: string) {
         if (pointer.opacity() === 0) {
-            this.addSequenceAnimation(pointer.animate(1).attr({ opacity: 1 }));
+            this.addSequenceAnimation(pointer.animate(300).attr({ opacity: 1 }));
         }
         this.addSequenceAnimation(pointer.animate(300).x(getX(index) + + boxWidth / 2 - 5));
         this.addSequenceAnimation(pointer.animate(300).attr({ fill: colour }));
+
         if (pointer2.opacity() === 0) {
-            this.addSequenceAnimation(pointer2.animate(1).attr({ opacity: 1 }));
+            this.addSequenceAnimation(pointer2.animate(300).attr({ opacity: 1 }));
         }
         this.addSequenceAnimation(pointer2.animate(300).x(getX(index2) + + boxWidth / 2 - 5));
         this.addSequenceAnimation(pointer2.animate(300).attr({ fill: colour2 }));
