@@ -159,7 +159,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     let pointerRight = mid + 1;
 
     producer.doAnimationAndHighlightTimestamp(
-      21,
+      13,
       false,
       producer.highlightSorting,
       low,
@@ -179,6 +179,13 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       // move down the column with smaller value
 
       if (producer.compareLowerandEqual(this.elementList[pointerLeft], this.elementList[pointerRight])) {
+        producer.doAnimationAndHighlightTimestamp(
+          20,
+          false,
+          producer.highlightTwoBoxes,
+          this.elementList[pointerLeft],
+          this.elementList[pointerRight],
+        );
         // move down pointerLeft
         producer.doAnimationAndHighlightTimestamp(
           21,
@@ -191,6 +198,13 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         p += 1;
         pointerLeft += 1;
       } else {
+        producer.doAnimationAndHighlightTimestamp(
+          23,
+          false,
+          producer.highlightTwoBoxes,
+          this.elementList[pointerLeft],
+          this.elementList[pointerRight],
+        );
         // move down pointerRight
         producer.doAnimationAndHighlightTimestamp(
           24,

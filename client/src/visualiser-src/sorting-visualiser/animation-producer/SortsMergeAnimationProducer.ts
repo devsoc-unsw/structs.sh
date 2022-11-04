@@ -19,16 +19,18 @@ export default class SortsMergeAnimationProducer extends SortsAnimationProducer 
     }
 
     public compareLowerandEqual(first: GraphicalSortsElement, second: GraphicalSortsElement): boolean {
-        // highlight color to green
-        this.addSequenceAnimation(first.boxTarget.animate(300).attr({ opacity: 0.6 }))
-        this.addSequenceAnimation(second.boxTarget.animate(300).attr({ opacity: 0.6 }))
-        this.finishSequence();
-
         // compare the two values and return the boolean value
         if (first.data.value <= second.data.value) {
             return true;
         } 
         return false;
+    }
+
+    public highlightTwoBoxes(first: GraphicalSortsElement, second: GraphicalSortsElement) {
+        // highlight color to green
+        this.addSequenceAnimation(first.boxTarget.animate(300).attr({ opacity: 0.6 }))
+        this.addSequenceAnimation(second.boxTarget.animate(300).attr({ opacity: 0.6 }))
+        this.finishSequence();
     }
 
     public moveDown(element: GraphicalSortsElement, index: number) {
