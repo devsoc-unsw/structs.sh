@@ -132,7 +132,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     // Make first node Sorted
     producer.doAnimationAndHighlightTimestamp(
       3,
-      false,
+      true,
       producer.highlightBoxes,
       [this.elementList[0]],
       sortedColour
@@ -143,7 +143,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       // Select current
       producer.doAnimationAndHighlightTimestamp(
         4,
-        false,
+        true,
         producer.highlightBoxes,
         [this.elementList[i]],
         comparingColor
@@ -153,7 +153,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         // Select comparison
         producer.doAnimationAndHighlightTimestamp(
           5,
-          false,
+          true,
           producer.highlightBoxes,
           [this.elementList[j - 1]],
           comparingColor
@@ -161,7 +161,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         // Do Comparison
         producer.doAnimationAndHighlightTimestamp(
           6,
-          false,
+          true,
           producer.highlightBoxes,
           [this.elementList[j - 1]],
           comparingColor
@@ -170,7 +170,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
           // No swapping needed so turn j green
           producer.doAnimationAndHighlightTimestamp(
             7,
-            false,
+            true,
             producer.highlightBoxes,
             [this.elementList[j - 1]],
             sortedColour
@@ -180,7 +180,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         // swap boxes
         producer.doAnimationAndHighlightTimestamp(
           8,
-          false,
+          true,
           producer.insertionSwap,
           this.elementList[j - 1],
           j - 1,
@@ -193,9 +193,10 @@ export default class GraphicalSortList extends GraphicalDataStructure {
           this.elementList[j],
         ];
       }
+
       producer.doAnimationAndHighlightTimestamp(
         3,
-        false,
+        true,
         producer.highlightBoxes,
         [this.elementList[j]],
         sortedColour

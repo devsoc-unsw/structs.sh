@@ -26,7 +26,7 @@ export default class GraphicalSortsElement {
       .addTo(VISUALISER_CANVAS)
 
     // pointer.x(getX(index) + boxWidth / 2 - 5).y(getY(index) - Math.sqrt(200 * 90));
-    pointer.x(getX(index) + boxWidth / 2 - 5).y(getY(index) + 30);
+    pointer.x(getX(index) + boxWidth / 2 - 5).y(getY(index) + 25);
 
     pointer.opacity(0);
     return pointer;

@@ -21,6 +21,6 @@ export default class SortsInsertionAnimationProducer extends SortsAnimationProdu
     );
     this.addSequenceAnimation(from.numberTarget.animate(1).attr({ fill: '#39AF8E' }));
 
-    this.finishSequence();
+    // this.finishSequence();
   }
 }
