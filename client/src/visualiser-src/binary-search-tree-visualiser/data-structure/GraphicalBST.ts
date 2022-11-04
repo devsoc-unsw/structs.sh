@@ -466,16 +466,6 @@ class GraphicalBST extends GraphicalDataStructure {
     }
   }
 
-<<<<<<< HEAD
-  // private doInsertWhenNull(
-  // input: number,
-  //   animationProducer: BSTInsertAnimationProducer
-  // ) {
-  //   this.root = GraphicalBSTNode.from(input);
-  //   updateNodePositions(this.root);
-  //   animationProducer.createNode(this.root);
-  // }
-=======
   private static exists(root: GraphicalBSTNode, value: number): boolean {
     if (root == null) {
       return false;
@@ -488,7 +478,6 @@ class GraphicalBST extends GraphicalDataStructure {
     }
     return true;
   }
->>>>>>> a3862d9f319642feef7f2e29d5c86ef3ba6cc891
 }
 
 export default GraphicalBST;
