@@ -1,6 +1,6 @@
 import { SVG, Text, Rect, Svg, Polygon } from '@svgdotjs/svg.js';
 import { VISUALISER_CANVAS } from 'visualiser-src/common/constants';
-import { shapeAttributes, textAttributes, boxWidth } from '../util/constants';
+import { shapeAttributes, textAttributes, boxWidth, textCy } from '../util/constants';
 import { getX, getY } from '../util/helpers';
 
 interface SVGData {
@@ -25,7 +25,7 @@ export default class GraphicalSortsElement {
       .polygon('5, 15, 15, 15, 10, 0').fill({ color: colour })
       .addTo(VISUALISER_CANVAS)
 
-    pointer.x(getX(index) + boxWidth / 2 - 5).y(getY(index) + 25);
+    pointer.x(getX(index) + boxWidth / 2 - 5).y(textCy + 15);
 
     pointer.opacity(0);
     return pointer;

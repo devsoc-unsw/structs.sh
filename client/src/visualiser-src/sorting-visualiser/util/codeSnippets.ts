@@ -46,7 +46,7 @@ export const quickCodeSnippet = `void quicksort(int a[], int lo, int hi)
 }
 int partition(int a[], int lo, int hi)
 {
-   Item v = a[lo];  // pivot
+   int v = a[lo];  // pivot
    int  i = lo+1, j = hi;
    for (;;) {
       while (a[i] <= v && i < j) i++;
