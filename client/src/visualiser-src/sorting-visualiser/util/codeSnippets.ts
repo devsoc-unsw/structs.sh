@@ -20,28 +20,22 @@ export const mergeCodeSnippet = `void merge_sort(int arr[], int low, int high, i
     
     merge_sort(arr, low, mid, tmp);
     merge_sort(arr, mid + 1, high, tmp);
-    int pointer_left = low;
-    int pointer_right = mid + 1;
-    int k;
-    
-    for (k = low; k <= high; k++) {
-        if (pointer_left == mid + 1) {
-            tmp[k] = arr[pointer_right];
-            pointer_right++;
-        } else if (pointer_right == high + 1) {
-            tmp[k] = arr[pointer_left];
-            pointer_left++;
-        } else if (arr[pointer_left] < arr[pointer_right]) {
-            tmp[k] = arr[pointer_left];
-            pointer_left++;
-        } else {
-            tmp[k] = arr[pointer_right];
-            pointer_right++;
-        }
+
+    left = low; right = mid+1; k = 0;
+    // scan both segments, copying to tmp
+    while (left <= mid && right <= high) {
+        if (arr[left] < arr[right])
+            tmp[k++] = arr[left++];
+        else
+            tmp[k++] = arr[right++];
     }
-    for (k = low; k <= high; k++) {
-        arr[k] = tmp[k];
-    }
+    // copy items from unfinished segment
+    while (left <= mid) tmp[k++] = a[left++];
+    while (right <= high) tmp[k++] = a[right++];
+
+    //copy tmp back to main array
+    for (left = low, k = 0; left <= high; left++, k++)
+        a[left] = tmp[k];
 }`;
 export const insertionCodeSnippet = `void insertionSort(int a[], int arr_size)
 {
