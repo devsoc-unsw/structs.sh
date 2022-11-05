@@ -37,7 +37,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     },
     bubble: {
       args: [],
-      description: 'Bubble ort',
+      description: 'Bubble Sort',
     },
     merge: {
       args: [],
