@@ -158,29 +158,26 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     let pointerLeft = low;
     let pointerRight = mid + 1;
 
-    producer.doAnimationAndHighlightTimestamp(
-      13,
-      false,
+    producer.doAnimationAndHighlight(
+      1,
       producer.highlightSorting,
       low,
       high,
       this.elementList
     );
-
+    
     while (pointerLeft <= mid && pointerRight <= high) {
-      
-      if (producer.compareLowerandEqual(this.elementList[pointerLeft], this.elementList[pointerRight])) {
-        producer.doAnimationAndHighlightTimestamp(
-          20,
-          false,
+
+      if (this.elementList[pointerLeft].data.value <= this.elementList[pointerRight].data.value) {
+        producer.doAnimationAndHighlight(
+          13,
           producer.highlightTwoBoxes,
           this.elementList[pointerLeft],
           this.elementList[pointerRight],
         );
-        // move down pointerLeft
-        producer.doAnimationAndHighlightTimestamp(
-          21,
-          false,
+
+        producer.doAnimationAndHighlight(
+          14,
           producer.moveDown,
           this.elementList[pointerLeft],
           p,
@@ -189,17 +186,15 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         p += 1;
         pointerLeft += 1;
       } else {
-        producer.doAnimationAndHighlightTimestamp(
-          23,
-          false,
+        producer.doAnimationAndHighlight(
+          15,
           producer.highlightTwoBoxes,
           this.elementList[pointerLeft],
           this.elementList[pointerRight],
         );
-        // move down pointerRight
-        producer.doAnimationAndHighlightTimestamp(
-          24,
-          false,
+
+        producer.doAnimationAndHighlight(
+          16,
           producer.moveDown,
           this.elementList[pointerRight],
           p,
@@ -212,10 +207,8 @@ export default class GraphicalSortList extends GraphicalDataStructure {
 
     if (pointerLeft === mid + 1) {
       while (pointerRight <= high) {
-        // move down this.elementList[pointerRight]
-        producer.doAnimationAndHighlightTimestamp(
-          15,
-          false,
+        producer.doAnimationAndHighlight(
+          20,
           producer.moveDown,
           this.elementList[pointerRight],
           p,
@@ -226,10 +219,8 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       }
     } else {
       while (pointerLeft <= mid) {
-        // move down this.elementList[pointerLeft]
-        producer.doAnimationAndHighlightTimestamp(
-          18,
-          false,
+        producer.doAnimationAndHighlight(
+          19,
           producer.moveDown,
           this.elementList[pointerLeft],
           p,
@@ -245,9 +236,8 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     }
 
     for (let i = low; i <= high; i += 1) {
-      // move up this.elementsList[i]
       producer.doAnimationAndHighlightTimestamp(
-        29,
+        24,
         false,
         producer.moveUp,
         this.elementList[i],
