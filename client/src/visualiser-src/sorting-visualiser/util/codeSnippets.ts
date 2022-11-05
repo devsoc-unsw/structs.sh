@@ -21,7 +21,7 @@ export const mergeCodeSnippet = `void merge_sort(int arr[], int low, int high, i
     merge_sort(arr, low, mid, tmp);
     merge_sort(arr, mid + 1, high, tmp);
 
-    int left = low; right = mid+1; k = 0;
+    int left = low, right = mid+1, k = 0;
     // scan both segments, copying to tmp
     while (left <= mid && right <= high) {
         if (arr[left] < arr[right])
@@ -30,8 +30,8 @@ export const mergeCodeSnippet = `void merge_sort(int arr[], int low, int high, i
             tmp[k++] = arr[right++];
     }
     // copy items from unfinished segment
-    while (left <= mid) tmp[k++] = a[left++];
-    while (right <= high) tmp[k++] = a[right++];
+    while (left <= mid) tmp[k++] = arr[left++];
+    while (right <= high) tmp[k++] = arr[right++];
 
     //copy tmp back to main array
     for (left = low, k = 0; left <= high; left++, k++)
