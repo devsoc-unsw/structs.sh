@@ -9,12 +9,12 @@ export default class SortsMergeAnimationProducer extends SortsAnimationProducer 
         this.renderCode(mergeCodeSnippet);
     }
 
-    public highlightSorting(low: number, high: number, elemensList: GraphicalSortsElement[]) {
+    public highlightSorting(low: number, high: number, elementList: GraphicalSortsElement[]) {
         for (let i = low; i <= high; i += 1) {
-            this.addSequenceAnimation(elemensList[i].boxTarget.animate().attr({ fill: checkingColour }));
-            this.addSequenceAnimation(elemensList[i].numberTarget.animate().attr({ fill: checkingColour }));
-            this.addSequenceAnimation(elemensList[i].boxTarget.animate().attr({ stroke: checkingColour }));
-            this.addSequenceAnimation(elemensList[i].numberTarget.animate().attr({ stroke: checkingColour }));
+            this.addSequenceAnimation(elementList[i].boxTarget.animate().attr({ fill: checkingColour }));
+            this.addSequenceAnimation(elementList[i].numberTarget.animate().attr({ fill: checkingColour }));
+            this.addSequenceAnimation(elementList[i].boxTarget.animate().attr({ stroke: checkingColour }));
+            this.addSequenceAnimation(elementList[i].numberTarget.animate().attr({ stroke: checkingColour }));
         }
     }
 
