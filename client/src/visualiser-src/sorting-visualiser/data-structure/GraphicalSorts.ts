@@ -7,6 +7,7 @@ import { CANVAS } from 'visualiser-src/linked-list-visualiser/util/constants';
 import { generateNumbers } from 'visualiser-src/common/RandomNumGenerator';
 import GraphicalSortsElement from './GraphicalSortsElement';
 import SortsBubbleAnimationProducer from '../animation-producer/SortsBubbleAnimationProducer';
+import SortsMergeAnimationProducer from '../animation-producer/SortsMergeAnimationProducer';
 import SortsInsertionAnimationProducer from '../animation-producer/SortsInsertionAnimationProducer';
 import SortsCreateAnimationProducer from '../animation-producer/SortsCreateAnimationProducer';
 import SortsQuickAnimationProducer from '../animation-producer/SortsQuickAnimationProducer';
@@ -36,7 +37,11 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     },
     bubble: {
       args: [],
-      description: 'Bubble sort',
+      description: 'Bubble Sort',
+    },
+    merge: {
+      args: [],
+      description: 'Merge Sort',
     },
     insertion: {
       args: [],
@@ -121,7 +126,122 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     return producer;
   }
 
-  insertion(): AnimationProducer {
+  public merge(): AnimationProducer {
+    const producer = new SortsMergeAnimationProducer();
+
+    producer.renderMergeCode();
+
+    const tmpList = [...this.elementList];
+
+    this.mergeSort(producer, 0, this.elementList.length - 1, tmpList);
+
+    return producer;
+  }
+
+  public mergeSort(producer: SortsMergeAnimationProducer, low: number, high: number, tmpList: GraphicalSortsElement[]) {
+    if (high <= low) {
+      return;
+    }
+
+    const mid = Math.floor((low + high) / 2);
+
+    let p = low;
+
+    this.mergeSort(producer, low, mid, tmpList);
+    this.mergeSort(producer, mid+1, high, tmpList);
+
+    let pointerLeft = low;
+    let pointerRight = mid + 1;
+
+    producer.doAnimationAndHighlight(
+      1,
+      producer.highlightSorting,
+      low,
+      high,
+      this.elementList
+    );
+    
+    while (pointerLeft <= mid && pointerRight <= high) {
+
+      if (this.elementList[pointerLeft].data.value <= this.elementList[pointerRight].data.value) {
+        producer.doAnimationAndHighlight(
+          13,
+          producer.compareElements,
+          this.elementList[pointerLeft],
+          this.elementList[pointerRight],
+        );
+
+        producer.doAnimationAndHighlight(
+          14,
+          producer.moveDown,
+          this.elementList[pointerLeft],
+          p,
+        );
+        tmpList[p] = this.elementList[pointerLeft];
+        p += 1;
+        pointerLeft += 1;
+      } else {
+        producer.doAnimationAndHighlight(
+          15,
+          producer.compareElements,
+          this.elementList[pointerLeft],
+          this.elementList[pointerRight],
+        );
+
+        producer.doAnimationAndHighlight(
+          16,
+          producer.moveDown,
+          this.elementList[pointerRight],
+          p,
+        );
+        tmpList[p] = this.elementList[pointerRight];
+        p += 1;
+        pointerRight += 1;
+      }
+    }
+
+    if (pointerLeft === mid + 1) {
+      while (pointerRight <= high) {
+        producer.doAnimationAndHighlight(
+          20,
+          producer.moveDown,
+          this.elementList[pointerRight],
+          p,
+        );
+        tmpList[p] = this.elementList[pointerRight];
+        p += 1;
+        pointerRight += 1;
+      }
+    } else {
+      while (pointerLeft <= mid) {
+        producer.doAnimationAndHighlight(
+          19,
+          producer.moveDown,
+          this.elementList[pointerLeft],
+          p,
+        );
+        tmpList[p] = this.elementList[pointerLeft];
+        p += 1;
+        pointerLeft += 1;
+      }
+    }
+
+    for (let i = low; i <= high; i += 1) {
+      this.elementList[i] = tmpList[i];
+    }
+
+    for (let i = low; i <= high; i += 1) {
+      producer.doAnimationAndHighlightTimestamp(
+        24,
+        false,
+        producer.moveUp,
+        this.elementList[i],
+        i
+      );
+    }
+  }
+
+  public insertion(): AnimationProducer {
     const producer = new SortsInsertionAnimationProducer();
 
     producer.renderInsertionCode();

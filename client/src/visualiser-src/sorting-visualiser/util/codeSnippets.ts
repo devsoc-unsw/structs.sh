@@ -12,6 +12,31 @@ export const bubbleCodeSnippet = `void bubble_sort(int arr[], int arr_size) {
     }
 }`;
 
+export const mergeCodeSnippet = `void merge_sort(int arr[], int low, int high, int tmp[]) {
+    if (high <= low) {
+        return;
+    }
+    int mid = (low + high) / 2;
+    
+    merge_sort(arr, low, mid, tmp);
+    merge_sort(arr, mid + 1, high, tmp);
+
+    int left = low, right = mid+1, k = 0;
+    // scan both segments, copying to tmp
+    while (left <= mid && right <= high) {
+        if (arr[left] < arr[right])
+            tmp[k++] = arr[left++];
+        else
+            tmp[k++] = arr[right++];
+    }
+    // copy items from unfinished segment
+    while (left <= mid) tmp[k++] = arr[left++];
+    while (right <= high) tmp[k++] = arr[right++];
+
+    //copy tmp back to main array
+    for (left = low, k = 0; left <= high; left++, k++)
+        arr[left] = tmp[k];
+}`;
 export const insertionCodeSnippet = `void insertionSort(int a[], int arr_size)
 {
     for (int i = 1; i < arr_size; i++) {
@@ -57,5 +82,4 @@ int partition(int a[], int lo, int hi)
    j = a[i] < v ? i : i-1;
    swap(a,lo,j);
    return j;
-}
-`;
+}`;
