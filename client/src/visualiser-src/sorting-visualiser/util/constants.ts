@@ -4,7 +4,7 @@ export const whitespace = 10;
 export const topOffset = 60;
 export const boxWidth = 50;
 export const textCy = 230;
-export const leftOffset = 20;
+export const leftOffset = 70;
 
 export const defaultColour = '#000000';
 export const sortedColour = '#39AF8E';
