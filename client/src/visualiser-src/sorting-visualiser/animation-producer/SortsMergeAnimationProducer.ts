@@ -9,17 +9,16 @@ export default class SortsMergeAnimationProducer extends SortsAnimationProducer 
         this.renderCode(mergeCodeSnippet);
     }
 
-    public highlightSorting(low: number, high: number, elemensList: GraphicalSortsElement[]) {
+    public highlightSorting(low: number, high: number, elementList: GraphicalSortsElement[]) {
         for (let i = low; i <= high; i += 1) {
-            this.addSequenceAnimation(elemensList[i].boxTarget.animate().attr({ fill: checkingColour }));
-            this.addSequenceAnimation(elemensList[i].numberTarget.animate().attr({ fill: checkingColour }));
-            this.addSequenceAnimation(elemensList[i].boxTarget.animate().attr({ stroke: checkingColour }));
-            this.addSequenceAnimation(elemensList[i].numberTarget.animate().attr({ stroke: checkingColour }));
+            this.addSequenceAnimation(elementList[i].boxTarget.animate().attr({ fill: checkingColour }));
+            this.addSequenceAnimation(elementList[i].numberTarget.animate().attr({ fill: checkingColour }));
+            this.addSequenceAnimation(elementList[i].boxTarget.animate().attr({ stroke: checkingColour }));
+            this.addSequenceAnimation(elementList[i].numberTarget.animate().attr({ stroke: checkingColour }));
         }
     }
 
     public compareLowerandEqual(first: GraphicalSortsElement, second: GraphicalSortsElement): boolean {
-        // compare the two values and return the boolean value
         if (first.data.value <= second.data.value) {
             return true;
         } 
@@ -27,20 +26,17 @@ export default class SortsMergeAnimationProducer extends SortsAnimationProducer 
     }
 
     public highlightTwoBoxes(first: GraphicalSortsElement, second: GraphicalSortsElement) {
-        // highlight color to green
         this.addSequenceAnimation(first.boxTarget.animate(300).attr({ opacity: 0.6 }))
         this.addSequenceAnimation(second.boxTarget.animate(300).attr({ opacity: 0.6 }))
         this.finishSequence();
     }
 
     public moveDown(element: GraphicalSortsElement, index: number) {
-        // get the target position
         const xTo = getX(index);
         const cxTo = getCx(index);
         const yTo = getY(element.data.value) + 120;
         const cyTo = 350;
 
-        // move down the box
         this.addSequenceAnimation(element.boxTarget.animate().x(xTo).y(yTo));
         this.addSequenceAnimation(element.numberTarget.animate().cx(cxTo).cy(cyTo));
         this.addSequenceAnimation(element.boxTarget.animate().attr({ opacity: 1 }))
@@ -51,17 +47,14 @@ export default class SortsMergeAnimationProducer extends SortsAnimationProducer 
     }
 
     public moveUp(element: GraphicalSortsElement, index: number) {
-        // get the target position
         const xTo = getX(index);
         const cxTo = getCx(index);
         const yTo = getY(element.data.value);
 
-        // change the color back to balck
         this.addSequenceAnimation(element.boxTarget.animate(1).attr({ stroke: defaultColour }));
         this.addSequenceAnimation(element.boxTarget.animate(1).attr({ fill: defaultColour }));
         this.addSequenceAnimation(element.numberTarget.animate(1).attr({ fill: defaultColour }));
 
-        // move up the box
         this.addSequenceAnimation(element.boxTarget.animate().x(xTo).y(yTo));
         this.addSequenceAnimation(element.numberTarget.animate().cx(cxTo).cy(textCy));
     }

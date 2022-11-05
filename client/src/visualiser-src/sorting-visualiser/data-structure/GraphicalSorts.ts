@@ -166,18 +166,9 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       high,
       this.elementList
     );
-    
-    // compare the value on the pointerLeft and value on the pointerRight
-    // move down the column with smaller value
-    // and increment the index we are checking by 1
-    // do not change the index of column with larger value
-    // if either left or right is finished, then move all the other parts down
-    // finally move all the columns up
 
     while (pointerLeft <= mid && pointerRight <= high) {
-      // compare this.elemensList[pointerLeft] and this.elementList[pointerRight]
-      // move down the column with smaller value
-
+      
       if (producer.compareLowerandEqual(this.elementList[pointerLeft], this.elementList[pointerRight])) {
         producer.doAnimationAndHighlightTimestamp(
           20,
