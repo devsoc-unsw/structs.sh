@@ -21,7 +21,7 @@ export const mergeCodeSnippet = `void merge_sort(int arr[], int low, int high, i
     merge_sort(arr, low, mid, tmp);
     merge_sort(arr, mid + 1, high, tmp);
 
-    left = low; right = mid+1; k = 0;
+    int left = low; right = mid+1; k = 0;
     // scan both segments, copying to tmp
     while (left <= mid && right <= high) {
         if (arr[left] < arr[right])
@@ -35,7 +35,7 @@ export const mergeCodeSnippet = `void merge_sort(int arr[], int low, int high, i
 
     //copy tmp back to main array
     for (left = low, k = 0; left <= high; left++, k++)
-        a[left] = tmp[k];
+        arr[left] = tmp[k];
 }`;
 export const insertionCodeSnippet = `void insertionSort(int a[], int arr_size)
 {
