@@ -10,22 +10,12 @@ export default class SortsMergeAnimationProducer extends SortsAnimationProducer 
     }
 
     public highlightSorting(low: number, high: number, elementList: GraphicalSortsElement[]) {
-        for (let i = low; i <= high; i += 1) {
-            this.addSequenceAnimation(elementList[i].boxTarget.animate().attr({ fill: checkingColour }));
-            this.addSequenceAnimation(elementList[i].numberTarget.animate().attr({ fill: checkingColour }));
-            this.addSequenceAnimation(elementList[i].boxTarget.animate().attr({ stroke: checkingColour }));
-            this.addSequenceAnimation(elementList[i].numberTarget.animate().attr({ stroke: checkingColour }));
-        }
+        this.highlightBoxes(elementList.slice(low, high+1), checkingColour);
     }
 
-    public highlightTwoBoxes(first: GraphicalSortsElement, second: GraphicalSortsElement) {
-        this.addSequenceAnimation(first.boxTarget.animate().attr({ fill: selectedColor }));
-        this.addSequenceAnimation(first.boxTarget.animate().attr({ stroke: selectedColor }));
-        this.addSequenceAnimation(first.numberTarget.animate().attr({ fill: selectedColor }));
-        this.addSequenceAnimation(second.boxTarget.animate().attr({ fill: selectedColor }));
-        this.addSequenceAnimation(second.boxTarget.animate().attr({ stroke: selectedColor }));
-        this.addSequenceAnimation(second.numberTarget.animate().attr({ fill: selectedColor }));
-        this.finishSequence();
+    public compareElements(first: GraphicalSortsElement, second: GraphicalSortsElement) {
+        this.highlightItem(first, selectedColor);
+        this.highlightItem(second, selectedColor);
     }
 
     public moveDown(element: GraphicalSortsElement, index: number) {

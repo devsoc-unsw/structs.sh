@@ -131,29 +131,24 @@ export default class GraphicalSortList extends GraphicalDataStructure {
 
     producer.renderMergeCode();
 
-    const low = 0;
-    const high = this.elementList.length - 1;
-
-    const p = 0;
-
     const tmpList = [...this.elementList];
 
-    this.mergeSort(producer, low, high, low, tmpList);
+    this.mergeSort(producer, 0, this.elementList.length - 1, tmpList);
 
     return producer;
   }
 
-  public mergeSort(producer: SortsMergeAnimationProducer, low: number, high: number, position: number, tmpList: GraphicalSortsElement[]) {
+  public mergeSort(producer: SortsMergeAnimationProducer, low: number, high: number, tmpList: GraphicalSortsElement[]) {
     if (high <= low) {
       return;
     }
 
     const mid = Math.floor((low + high) / 2);
 
-    let p = position;
+    let p = low;
 
-    this.mergeSort(producer, low, mid, low, tmpList);
-    this.mergeSort(producer, mid+1, high, mid+1, tmpList);
+    this.mergeSort(producer, low, mid, tmpList);
+    this.mergeSort(producer, mid+1, high, tmpList);
 
     let pointerLeft = low;
     let pointerRight = mid + 1;
@@ -171,7 +166,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       if (this.elementList[pointerLeft].data.value <= this.elementList[pointerRight].data.value) {
         producer.doAnimationAndHighlight(
           13,
-          producer.highlightTwoBoxes,
+          producer.compareElements,
           this.elementList[pointerLeft],
           this.elementList[pointerRight],
         );
@@ -188,7 +183,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       } else {
         producer.doAnimationAndHighlight(
           15,
-          producer.highlightTwoBoxes,
+          producer.compareElements,
           this.elementList[pointerLeft],
           this.elementList[pointerRight],
         );
