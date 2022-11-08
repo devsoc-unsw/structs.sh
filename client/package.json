@@ -69,7 +69,7 @@
     "@babel/core": "^7.19.1",
     "@babel/preset-typescript": "7.16.0",
     "@cypress/react": "5.10.3",
-    "@cypress/webpack-dev-server": "1.8.4",
+    "@cypress/webpack-dev-server": "3.0.0",
     "@testing-library/dom": "8.11.1",
     "@testing-library/jest-dom": "5.15.1",
     "@testing-library/react": "12.1.5",
