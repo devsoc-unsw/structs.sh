@@ -138,9 +138,9 @@ class VisualiserController {
       !args.every((value, idx) =>
         expectedArgs[idx].endsWith('s')
           ? value
-              .split(/,| /g)
-              .filter((str) => str !== '')
-              .every((el) => /^\d+$/.test(el))
+            .split(/,| /g)
+            .filter((str) => str !== '')
+            .every((el) => /^\d+$/.test(el))
           : /^\d+$/.test(value)
       )
     ) {
@@ -153,9 +153,9 @@ class VisualiserController {
       !args[valueIndex]
         .split(/,|\s+/g)
         .filter((str) => str !== '')
-        .every((arg) => Number(arg) >= 0 && Number(arg) <= 999)
+        .every((arg) => Number(arg) >= 0 && Number(arg) <= 99)
     ) {
-      return 'Values must be between 0 and 999';
+      return 'Values must be between 0 and 99';
     }
     return '';
   }
