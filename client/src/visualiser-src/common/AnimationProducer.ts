@@ -1,4 +1,4 @@
-import { SVG, Runner } from '@svgdotjs/svg.js';
+import { SVG, Runner, Svg, Shape } from '@svgdotjs/svg.js';
 import { CodeLine } from './typedefs';
 import { showLineNumbers, CODE_CANVAS, CODE_CONTAINER } from './constants';
 
@@ -82,7 +82,7 @@ export default abstract class AnimationProducer {
     this.unhighlightCodeMultiple();
 
     this.addSequenceAnimation(
-      this.codeTargets[line - 1].rectTarget.animate(1).attr({
+      this.animate(this.codeTargets[line - 1].rectTarget, 1).attr({
         fill: '#39AF8E',
         rx: '10',
         ry: '10',
@@ -128,7 +128,7 @@ export default abstract class AnimationProducer {
   public unhighlightCodeMultiple(): void {
     this.highlightedLines.forEach((line) => {
       this.addSequenceAnimation(
-        this.codeTargets[line - 1].rectTarget.animate(1).attr({
+        this.animate(this.codeTargets[line - 1].rectTarget, 1).attr({
           fill: '#14113C',
         })
       );
@@ -149,6 +149,10 @@ export default abstract class AnimationProducer {
     }
 
     this._currentSequence = [];
+  }
+
+  protected animate(svg: Svg | Shape, duration: number = 350) {
+    return svg.animate(duration).ease('<>');
   }
 
   // Modifies the height of the code snippet container to be

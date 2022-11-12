@@ -20,8 +20,8 @@ export default class LinkedListSearchAnimationProducer extends LinkedListAnimati
     this.resetPointers();
     let curr = head;
     while (curr != null) {
-      this.addSequenceAnimation(curr.boxTarget.animate().attr({ stroke: '#000000' }));
-      this.addSequenceAnimation(curr.numberTarget.animate().attr({ fill: '#000000' }));
+      this.addSequenceAnimation(this.animate(curr.boxTarget).attr({ stroke: '#000000' }));
+      this.addSequenceAnimation(this.animate(curr.numberTarget).attr({ fill: '#000000' }));
       curr = curr.next;
     }
   }

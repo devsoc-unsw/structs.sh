@@ -15,16 +15,16 @@ export default class BSTDeleteAnimationProducer extends BSTAnimationProducer {
   ) {
     if (parent !== null && shouldHideParentPointer) {
       if (node === parent.left) {
-        this.addSequenceAnimation(parent.leftLineTarget.animate().attr({ opacity: 0 }));
+        this.addSequenceAnimation(this.animate(parent.leftLineTarget).attr({ opacity: 0 }));
       } else {
-        this.addSequenceAnimation(parent.rightLineTarget.animate().attr({ opacity: 0 }));
+        this.addSequenceAnimation(this.animate(parent.rightLineTarget).attr({ opacity: 0 }));
       }
     }
-    this.addSequenceAnimation(node.nodeTarget.animate().attr({ opacity: 0 }));
-    this.addSequenceAnimation(node.textTarget.animate().attr({ opacity: 0 }));
-    this.addSequenceAnimation(node.leftLineTarget.animate().attr({ opacity: 0 }));
-    this.addSequenceAnimation(node.leftArrowTarget.animate().attr({ opacity: 0 }));
-    this.addSequenceAnimation(node.rightLineTarget.animate().attr({ opacity: 0 }));
-    this.addSequenceAnimation(node.rightArrowTarget.animate().attr({ opacity: 0 }));
+    this.addSequenceAnimation(this.animate(node.nodeTarget).attr({ opacity: 0 }));
+    this.addSequenceAnimation(this.animate(node.textTarget).attr({ opacity: 0 }));
+    this.addSequenceAnimation(this.animate(node.leftLineTarget).attr({ opacity: 0 }));
+    this.addSequenceAnimation(this.animate(node.leftArrowTarget).attr({ opacity: 0 }));
+    this.addSequenceAnimation(this.animate(node.rightLineTarget).attr({ opacity: 0 }));
+    this.addSequenceAnimation(this.animate(node.rightArrowTarget).attr({ opacity: 0 }));
   }
 }

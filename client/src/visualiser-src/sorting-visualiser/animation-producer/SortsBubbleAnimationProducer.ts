@@ -20,40 +20,42 @@ export default class SortsBubbleAnimationProducer extends SortsAnimationProducer
     const xTo = getX(fromIndex + 1);
     const cxTo = getCx(fromIndex + 1);
 
-    this.addSequenceAnimation(from.boxTarget.animate().x(xTo));
-    this.addSequenceAnimation(from.numberTarget.animate().cx(cxTo));
-    this.addSequenceAnimation(to.boxTarget.animate().x(xFrom));
-    this.addSequenceAnimation(to.numberTarget.animate().cx(cxFrom));
+    this.addSequenceAnimation(this.animate(from.boxTarget).x(xTo));
+    this.addSequenceAnimation(this.animate(from.numberTarget).cx(cxTo));
+    this.addSequenceAnimation(this.animate(to.boxTarget).x(xFrom));
+    this.addSequenceAnimation(this.animate(to.numberTarget).cx(cxFrom));
     this.finishSequence();
-    this.addSequenceAnimation(to.boxTarget.animate(1).attr({ stroke: defaultColour, fill: defaultColour }));
-    this.addSequenceAnimation(to.numberTarget.animate(1).attr({ fill: defaultColour }));
+    this.addSequenceAnimation(
+      this.animate(to.boxTarget, 1).attr({ stroke: defaultColour, fill: defaultColour })
+    );
+    this.addSequenceAnimation(this.animate(to.numberTarget, 1).attr({ fill: defaultColour }));
     if (isLast) {
       this.addSequenceAnimation(
-        from.boxTarget.animate(1).attr({ stroke: defaultColour, fill: defaultColour })
+        this.animate(from.boxTarget, 1).attr({ stroke: defaultColour, fill: defaultColour })
       );
-      this.addSequenceAnimation(from.boxTarget.animate(1).attr({ fill: defaultColour }));
-      this.addSequenceAnimation(from.numberTarget.animate(1).attr({ fill: defaultColour }));
+      this.addSequenceAnimation(this.animate(from.boxTarget, 1).attr({ fill: defaultColour }));
+      this.addSequenceAnimation(this.animate(from.numberTarget, 1).attr({ fill: defaultColour }));
     }
   }
 
   public compare(item1: GraphicalSortsElement, item2: GraphicalSortsElement, isLast: boolean) {
-    this.addSequenceAnimation(item1.boxTarget.animate(10).attr({ stroke: sortedColour }));
-    this.addSequenceAnimation(item2.boxTarget.animate(10).attr({ stroke: sortedColour }));
-    this.addSequenceAnimation(item1.boxTarget.animate(10).attr({ fill: sortedColour }));
-    this.addSequenceAnimation(item2.boxTarget.animate(10).attr({ fill: sortedColour }));
-    this.addSequenceAnimation(item1.numberTarget.animate(10).attr({ fill: sortedColour }));
-    this.addSequenceAnimation(item2.numberTarget.animate(10).attr({ fill: sortedColour }));
-    this.addSequenceAnimation(item1.numberTarget.animate().attr({ opacity: 1 }));
+    this.addSequenceAnimation(this.animate(item1.boxTarget, 10).attr({ stroke: sortedColour }));
+    this.addSequenceAnimation(this.animate(item2.boxTarget, 10).attr({ stroke: sortedColour }));
+    this.addSequenceAnimation(this.animate(item1.boxTarget, 10).attr({ fill: sortedColour }));
+    this.addSequenceAnimation(this.animate(item2.boxTarget, 10).attr({ fill: sortedColour }));
+    this.addSequenceAnimation(this.animate(item1.numberTarget, 10).attr({ fill: sortedColour }));
+    this.addSequenceAnimation(this.animate(item2.numberTarget, 10).attr({ fill: sortedColour }));
+    this.addSequenceAnimation(this.animate(item1.numberTarget).attr({ opacity: 1 }));
     this.finishSequence();
     if (item1.data.value <= item2.data.value) {
-      this.addSequenceAnimation(item1.boxTarget.animate(1).attr({ stroke: defaultColour }));
-      this.addSequenceAnimation(item1.boxTarget.animate(1).attr({ fill: defaultColour }));
-      this.addSequenceAnimation(item1.numberTarget.animate(1).attr({ fill: defaultColour }));
+      this.addSequenceAnimation(this.animate(item1.boxTarget, 1).attr({ stroke: defaultColour }));
+      this.addSequenceAnimation(this.animate(item1.boxTarget, 1).attr({ fill: defaultColour }));
+      this.addSequenceAnimation(this.animate(item1.numberTarget, 1).attr({ fill: defaultColour }));
     }
     if (isLast) {
-      this.addSequenceAnimation(item2.boxTarget.animate(1).attr({ stroke: defaultColour }));
-      this.addSequenceAnimation(item2.boxTarget.animate(1).attr({ fill: defaultColour }));
-      this.addSequenceAnimation(item2.numberTarget.animate(1).attr({ fill: defaultColour }));
+      this.addSequenceAnimation(this.animate(item2.boxTarget, 1).attr({ stroke: defaultColour }));
+      this.addSequenceAnimation(this.animate(item2.boxTarget, 1).attr({ fill: defaultColour }));
+      this.addSequenceAnimation(this.animate(item2.numberTarget, 1).attr({ fill: defaultColour }));
     }
   }
 }

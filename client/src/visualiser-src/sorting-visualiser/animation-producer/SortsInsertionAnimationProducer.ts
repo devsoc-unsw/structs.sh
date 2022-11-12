@@ -17,8 +17,8 @@ export default class SortsInsertionAnimationProducer extends SortsAnimationProdu
     this.swap(from, fromIndex, to, toIndex);
 
     this.addSequenceAnimation(
-      from.boxTarget.animate(1).attr({ stroke: '#39AF8E', fill: '#39AF8E' })
+      this.animate(from.boxTarget, 1).attr({ stroke: '#39AF8E', fill: '#39AF8E' })
     );
-    this.addSequenceAnimation(from.numberTarget.animate(1).attr({ fill: '#39AF8E' }));
+    this.addSequenceAnimation(this.animate(from.numberTarget, 1).attr({ fill: '#39AF8E' }));
   }
 }

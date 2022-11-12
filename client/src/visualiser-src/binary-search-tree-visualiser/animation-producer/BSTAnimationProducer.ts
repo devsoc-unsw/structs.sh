@@ -7,14 +7,14 @@ import GraphicalBSTNode from '../data-structure/GraphicalBSTNode';
 export default class BSTAnimationProducer extends AnimationProducer {
   public highlightNode(node: GraphicalBSTNode): void {
     this.addSequenceAnimation(
-      node.nodeTarget.animate(500).attr({
+      this.animate(node.nodeTarget, 500).attr({
         fill: '#39AF8E',
         stroke: '#39AF8E',
       })
     );
 
     this.addSequenceAnimation(
-      node.textTarget.animate(500).attr({
+      this.animate(node.textTarget, 500).attr({
         fill: '#ffffff',
       })
     );
@@ -22,13 +22,13 @@ export default class BSTAnimationProducer extends AnimationProducer {
 
   public halfHighlightNode(node: GraphicalBSTNode): void {
     this.addSequenceAnimation(
-      node.nodeTarget.animate(500).attr({
+      this.animate(node.nodeTarget, 500).attr({
         stroke: '#39AF8E',
       })
     );
 
     this.addSequenceAnimation(
-      node.textTarget.animate(500).attr({
+      this.animate(node.textTarget, 500).attr({
         fill: '#39AF8E',
       })
     );
@@ -36,13 +36,13 @@ export default class BSTAnimationProducer extends AnimationProducer {
 
   public halfHighlightNodeRed(node: GraphicalBSTNode): void {
     this.addSequenceAnimation(
-      node.nodeTarget.animate(500).attr({
+      this.animate(node.nodeTarget, 500).attr({
         stroke: '#AF3939',
       })
     );
 
     this.addSequenceAnimation(
-      node.textTarget.animate(500).attr({
+      this.animate(node.textTarget, 500).attr({
         fill: '#AF3939',
       })
     );
@@ -53,14 +53,14 @@ export default class BSTAnimationProducer extends AnimationProducer {
       if (create) {
         // If line should be created and highlighted
         this.addSequenceAnimation(
-          lineTarget.animate(500).attr({
+          this.animate(lineTarget, 500).attr({
             stroke: '#39AF8E',
             opacity: 1,
           })
         );
 
         this.addSequenceAnimation(
-          arrowTarget.animate(500).attr({
+          this.animate(arrowTarget, 500).attr({
             fill: '#39AF8E',
             opacity: 1,
           })
@@ -68,13 +68,13 @@ export default class BSTAnimationProducer extends AnimationProducer {
       } else {
         // Line will not be highlighted if it doesn't already exist
         this.addSequenceAnimation(
-          lineTarget.animate(500).attr({
+          this.animate(lineTarget, 500).attr({
             stroke: '#39AF8E',
           })
         );
 
         this.addSequenceAnimation(
-          arrowTarget.animate(500).attr({
+          this.animate(arrowTarget, 500).attr({
             fill: '#39AF8E',
           })
         );
@@ -98,9 +98,9 @@ export default class BSTAnimationProducer extends AnimationProducer {
   }
 
   public updateNode(node: GraphicalBSTNode, newX: number, newY: number): void {
-    this.addSequenceAnimation(node.nodeTarget.animate(400).cx(newX).cy(newY));
+    this.addSequenceAnimation(this.animate(node.nodeTarget, 400).cx(newX).cy(newY));
 
-    this.addSequenceAnimation(node.textTarget.animate(400).cx(newX).cy(newY));
+    this.addSequenceAnimation(this.animate(node.textTarget, 400).cx(newX).cy(newY));
   }
 
   public updateLinesRecursive(node: GraphicalBSTNode): void {
@@ -117,15 +117,15 @@ export default class BSTAnimationProducer extends AnimationProducer {
     const lineDiffX = BSTAnimationProducer.getLineDiffX(node);
 
     this.addSequenceAnimation(
-      node.leftLineTarget
-        .animate(400)
-        .plot(getPointerStartEndCoordinates(node.x, node.y, node.x - lineDiffX, node.y + lineDiffY))
+      this.animate(node.leftLineTarget, 400).plot(
+        getPointerStartEndCoordinates(node.x, node.y, node.x - lineDiffX, node.y + lineDiffY)
+      )
     );
 
     this.addSequenceAnimation(
-      node.rightLineTarget
-        .animate(400)
-        .plot(getPointerStartEndCoordinates(node.x, node.y, node.x + lineDiffX, node.y + lineDiffY))
+      this.animate(node.rightLineTarget, 400).plot(
+        getPointerStartEndCoordinates(node.x, node.y, node.x + lineDiffX, node.y + lineDiffY)
+      )
     );
   }
 
@@ -158,13 +158,13 @@ export default class BSTAnimationProducer extends AnimationProducer {
   public unhighlightLine(lineTarget: Line, arrowTarget: Marker): void {
     if (lineTarget != null) {
       this.addSequenceAnimation(
-        lineTarget.animate(500).attr({
+        this.animate(lineTarget, 500).attr({
           stroke: '#000000',
         })
       );
 
       this.addSequenceAnimation(
-        arrowTarget.animate(500).attr({
+        this.animate(arrowTarget, 500).attr({
           fill: '#000000',
         })
       );
@@ -190,14 +190,14 @@ export default class BSTAnimationProducer extends AnimationProducer {
 
   public unhighlightNode(node: GraphicalBSTNode): void {
     this.addSequenceAnimation(
-      node.nodeTarget.animate(500).attr({
+      this.animate(node.nodeTarget, 500).attr({
         fill: '#EBE8F4',
         stroke: '#000000',
       })
     );
 
     this.addSequenceAnimation(
-      node.textTarget.animate(500).attr({
+      this.animate(node.textTarget, 500).attr({
         fill: '#000000',
       })
     );
@@ -208,39 +208,39 @@ export default class BSTAnimationProducer extends AnimationProducer {
     newRoot: GraphicalBSTNode
   ): void {
     this.addSequenceAnimation(
-      oldRoot.leftLineTarget
-        .animate(400)
-        .plot(getPointerStartEndCoordinates(oldRoot.x, oldRoot.y, newRoot.right.x, newRoot.right.y))
+      this.animate(oldRoot.leftLineTarget, 400).plot(
+        getPointerStartEndCoordinates(oldRoot.x, oldRoot.y, newRoot.right.x, newRoot.right.y)
+      )
     );
   }
 
   public movePointerToNewRootLeftChild(oldRoot: GraphicalBSTNode, newRoot: GraphicalBSTNode): void {
     this.addSequenceAnimation(
-      oldRoot.rightLineTarget
-        .animate(400)
-        .plot(getPointerStartEndCoordinates(oldRoot.x, oldRoot.y, newRoot.left.x, newRoot.left.y))
+      this.animate(oldRoot.rightLineTarget, 400).plot(
+        getPointerStartEndCoordinates(oldRoot.x, oldRoot.y, newRoot.left.x, newRoot.left.y)
+      )
     );
   }
 
   public moveRightPointerToOldRoot(oldRoot: GraphicalBSTNode, newRoot: GraphicalBSTNode): void {
     this.addSequenceAnimation(
-      newRoot.rightLineTarget
-        .animate(400)
-        .plot(getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y))
+      this.animate(newRoot.rightLineTarget, 400).plot(
+        getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y)
+      )
     );
   }
 
   public moveLeftPointerToOldRoot(oldRoot: GraphicalBSTNode, newRoot: GraphicalBSTNode): void {
     this.addSequenceAnimation(
-      newRoot.leftLineTarget
-        .animate(400)
-        .plot(getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y))
+      this.animate(newRoot.leftLineTarget, 400).plot(
+        getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y)
+      )
     );
   }
 
   public hideLine(line: Line): void {
     this.addSequenceAnimation(
-      line.animate(400).attr({
+      this.animate(line, 400).attr({
         opacity: 0,
       })
     );
@@ -248,7 +248,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
 
   public showLine(line: Line): void {
     this.addSequenceAnimation(
-      line.animate(400).attr({
+      this.animate(line, 400).attr({
         opacity: 1,
       })
     );
@@ -259,9 +259,9 @@ export default class BSTAnimationProducer extends AnimationProducer {
     newRoot: GraphicalBSTNode
   ): void {
     this.addSequenceAnimation(
-      newRoot.rightLineTarget
-        .animate(1)
-        .plot(getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y))
+      this.animate(newRoot.rightLineTarget, 1).plot(
+        getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y)
+      )
     );
     this.finishSequence(false);
     this.showLine(newRoot.rightLineTarget);
@@ -272,9 +272,9 @@ export default class BSTAnimationProducer extends AnimationProducer {
     newRoot: GraphicalBSTNode
   ): void {
     this.addSequenceAnimation(
-      newRoot.leftLineTarget
-        .animate(1)
-        .plot(getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y))
+      this.animate(newRoot.leftLineTarget, 1).plot(
+        getPointerStartEndCoordinates(newRoot.x, newRoot.y, oldRoot.x, oldRoot.y)
+      )
     );
     this.finishSequence(false);
     this.showLine(newRoot.leftLineTarget);

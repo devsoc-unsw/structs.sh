@@ -1,4 +1,4 @@
-import { Timeline, Runner } from '@svgdotjs/svg.js';
+import { Timeline, Runner, SVG, Ease } from '@svgdotjs/svg.js';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import GraphicalDataStructureFactory from 'visualiser-src/common/GraphicalDataStructureFactory';
 import { Documentation } from 'visualiser-src/common/typedefs';
@@ -138,9 +138,9 @@ class VisualiserController {
       !args.every((value, idx) =>
         expectedArgs[idx].endsWith('s')
           ? value
-            .split(/,| /g)
-            .filter((str) => str !== '')
-            .every((el) => /^\d+$/.test(el))
+              .split(/,| /g)
+              .filter((str) => str !== '')
+              .every((el) => /^\d+$/.test(el))
           : /^\d+$/.test(value)
       )
     ) {

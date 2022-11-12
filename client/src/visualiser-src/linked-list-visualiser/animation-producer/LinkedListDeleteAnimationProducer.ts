@@ -12,42 +12,47 @@ export default class LinkedListDeleteAnimationProducer extends LinkedListAnimati
   }
 
   public setNextToNull(node: GraphicalLinkedListNode) {
-    this.addSequenceAnimation(node.pointerTarget.animate().attr({ opacity: 0 }));
+    this.addSequenceAnimation(this.animate(node.pointerTarget).attr({ opacity: 0 }));
   }
 
   public setHeadToNull(headPointer: Path) {
-    this.addSequenceAnimation(headPointer.animate().attr({ opacity: 0 }));
+    this.addSequenceAnimation(this.animate(headPointer).attr({ opacity: 0 }));
   }
 
   public morphNextPointerToArc(node: GraphicalLinkedListNode) {
     this.addSequenceAnimation(
-      node.pointerTarget
-        .animate()
-        .plot(getPointerPath(node.x, node.y, node.next.x, node.next.y, Style.CURVED) as any)
+      this.animate(node.pointerTarget).plot(
+        getPointerPath(node.x, node.y, node.next.x, node.next.y, Style.CURVED) as any
+      )
     );
   }
 
   public deleteNode(node: GraphicalLinkedListNode) {
-    this.addSequenceAnimation(node.pointerTarget.animate().attr({ opacity: 0 }));
-    this.addSequenceAnimation(node.numberTarget.animate().attr({ opacity: 0 }));
-    this.addSequenceAnimation(node.boxTarget.animate().attr({ opacity: 0 }));
+    this.addSequenceAnimation(this.animate(node.pointerTarget).attr({ opacity: 0 }));
+    this.addSequenceAnimation(this.animate(node.numberTarget).attr({ opacity: 0 }));
+    this.addSequenceAnimation(this.animate(node.boxTarget).attr({ opacity: 0 }));
   }
 
   public pointHeadToNext(headPointer: Path, next: GraphicalLinkedListNode) {
     this.addSequenceAnimation(
-      headPointer.animate().plot(getPointerPath(0, topOffset, next.x, next.y, Style.CURVED) as any)
+      this.animate(headPointer).plot(
+        getPointerPath(0, topOffset, next.x, next.y, Style.CURVED) as any
+      )
     );
   }
 
   public movePointerToNextAndHighlight(pointerId: string, node: GraphicalLinkedListNode): void {
-      this.movePointerToNext(pointerId);
-      this.highlightNotRightNode(node);
+    this.movePointerToNext(pointerId);
+    this.highlightNotRightNode(node);
   }
 
-  public movePointerToNextAndHighlightRight(pointerId: string, node: GraphicalLinkedListNode): void {
+  public movePointerToNextAndHighlightRight(
+    pointerId: string,
+    node: GraphicalLinkedListNode
+  ): void {
     this.highlightRightNode(node);
     this.movePointerToNext(pointerId);
-}
+  }
 
   public initialisePointerAndHighlight(pointerId: string, node: GraphicalLinkedListNode) {
     this.initialisePointer(pointerId);
@@ -58,8 +63,8 @@ export default class LinkedListDeleteAnimationProducer extends LinkedListAnimati
     this.resetList(headPointer, head);
     let curr = head;
     while (curr != null) {
-      this.addSequenceAnimation(curr.boxTarget.animate().attr({ stroke: '#000000' }));
-      this.addSequenceAnimation(curr.numberTarget.animate().attr({ fill: '#000000' }));
+      this.addSequenceAnimation(this.animate(curr.boxTarget).attr({ stroke: '#000000' }));
+      this.addSequenceAnimation(this.animate(curr.numberTarget).attr({ fill: '#000000' }));
       curr = curr.next;
     }
   }

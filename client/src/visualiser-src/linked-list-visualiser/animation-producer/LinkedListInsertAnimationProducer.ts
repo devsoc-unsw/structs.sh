@@ -22,15 +22,15 @@ export default class LinkedListInsertAnimationProducer extends LinkedListAnimati
       newNode.pointerTarget.plot(
         getPointerPath(newNode.x, newNode.y, newNode.next.x, newNode.next.y) as any
       );
-      this.addSequenceAnimation(newNode.pointerTarget.animate().attr({ opacity: 1 }));
+      this.addSequenceAnimation(this.animate(newNode.pointerTarget).attr({ opacity: 1 }));
     }
   }
 
   public pointToInsertedNode(node: GraphicalLinkedListNode) {
     this.addSequenceAnimation(
-      node.pointerTarget
-        .animate()
-        .plot(getPointerPath(node.x, node.y, node.next.x, node.next.y) as any)
+      this.animate(node.pointerTarget).plot(
+        getPointerPath(node.x, node.y, node.next.x, node.next.y) as any
+      )
     );
   }
 }

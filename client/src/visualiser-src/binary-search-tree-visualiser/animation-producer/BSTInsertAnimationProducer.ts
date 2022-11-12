@@ -13,7 +13,7 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
     this.createNode(node);
 
     this.addSequenceAnimation(
-      parent.leftLineTarget.animate(400).attr({
+      this.animate(parent.leftLineTarget, 400).attr({
         opacity: 1,
       })
     );
@@ -23,7 +23,7 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
     this.createNode(node);
 
     this.addSequenceAnimation(
-      parent.rightLineTarget.animate(400).attr({
+      this.animate(parent.rightLineTarget, 400).attr({
         opacity: 1,
       })
     );
@@ -64,7 +64,7 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
     if (highlight) {
       // If node should be highligted during creation
       this.addSequenceAnimation(
-        node.nodeTarget.animate(400).attr({
+        this.animate(node.nodeTarget, 400).attr({
           opacity: 1,
           fill: '#39AF8E',
           stroke: '#39AF8E',
@@ -72,20 +72,20 @@ export default class BSTInsertAnimationProducer extends BSTAnimationProducer {
       );
 
       this.addSequenceAnimation(
-        node.textTarget.animate(400).attr({
+        this.animate(node.textTarget, 400).attr({
           opacity: 1,
           fill: '#ffffff',
         })
       );
     } else {
       this.addSequenceAnimation(
-        node.nodeTarget.animate(400).attr({
+        this.animate(node.nodeTarget, 400).attr({
           opacity: 1,
         })
       );
 
       this.addSequenceAnimation(
-        node.textTarget.animate(400).attr({
+        this.animate(node.textTarget, 400).attr({
           opacity: 1,
         })
       );
