@@ -1,8 +1,9 @@
 import React, { useContext, useState } from 'react';
-import { Alert, Box, List, Typography, useTheme, Collapse } from '@mui/material';
+import { Alert, List } from '@mui/material';
 import FloatingWindow from 'components/FloatingWindow';
-import VisualiserContext from './VisualiserContext';
+import VisualiserContext from '../VisualiserContext';
 import OperationDetails from './OperationDetails';
+import OperationMenu from './OperationMenu';
 
 /**
  * The GUI form that lets users input arguments to a menu of commands and then

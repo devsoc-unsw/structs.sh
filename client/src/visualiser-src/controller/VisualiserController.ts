@@ -131,16 +131,16 @@ class VisualiserController {
     if (args.length !== expectedArgs.length) {
       return `Invalid arguments. Please provide ${args.join(', ')}`;
     }
-    if (args.includes('') || (expectedArgs.length > 0 && args.some((arg) => !arg.match(/\d/)))) {
+    if (args.includes('')) {
       return 'Argument(s) missing';
     }
     if (
       !args.every((value, idx) =>
         expectedArgs[idx].endsWith('s')
           ? value
-            .split(/,| /g)
-            .filter((str) => str !== '')
-            .every((el) => /^\d+$/.test(el))
+              .split(/,| /g)
+              .filter((str) => str !== '')
+              .every((el) => /^\d+$/.test(el))
           : /^\d+$/.test(value)
       )
     ) {

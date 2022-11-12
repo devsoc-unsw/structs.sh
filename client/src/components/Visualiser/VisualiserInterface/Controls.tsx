@@ -6,9 +6,11 @@ import {
   useTheme,
   Button,
   Menu,
+  Select,
   MenuItem,
   ListItemIcon,
   ListItemText,
+  SelectChangeEvent,
 } from '@mui/material';
 import { styled } from '@mui/system';
 import TimeIcon from '@mui/icons-material/AccessTime';
@@ -74,12 +76,13 @@ const VisualiserControls = () => {
 
   const [userIsDraggingTimeline, setUserIsDraggingTimeline] = useState<boolean>(false);
 
-  const [speedMenuAnchorEl, setSpeedMenuAnchorEl] = useState<null | HTMLElement>(null);
-  const speedMenuOpen = Boolean(speedMenuAnchorEl);
+  // const [speedMenuAnchorEl, setSpeedMenuAnchorEl] = useState<null | HTMLElement>(null);
+  // const speedMenuOpen = Boolean(speedMenuAnchorEl);
   const speedOptions: number[] = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2];
-  const [selectedIndex, setSelectedIndex] = useState<number>(
-    speedOptions.indexOf(defaultSpeed * 2)
-  );
+  // const [selectedIndex, setSelectedIndex] = useState<number>(
+  //   speedOptions.indexOf(defaultSpeed * 2)
+  // );
+  const [speed, setSpeed] = useState<number>(defaultSpeed * 2);
 
   const handlePlay = useCallback(() => {
     controller.play();
@@ -130,18 +133,21 @@ const VisualiserControls = () => {
     [controller]
   );
 
-  const handleClickSpeedMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setSpeedMenuAnchorEl(event.currentTarget);
-  };
-
-  const handleCloseSpeedMenu = () => {
-    setSpeedMenuAnchorEl(null);
-  };
-
-  const handleSelectSpeed = (event: React.MouseEvent<HTMLElement>, index: number) => {
-    setSelectedIndex(index);
-    handleSetSpeed(speedOptions[index] / 2);
-    setSpeedMenuAnchorEl(null);
+  // const handleClickSpeedMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+  //   setSpeedMenuAnchorEl(event.currentTarget);
+  // };
+  //
+  // const handleCloseSpeedMenu = () => {
+  //   setSpeedMenuAnchorEl(null);
+  // };
+  //
+  // const handleSelectSpeed = (event: React.MouseEvent<HTMLElement>, index: number) => {
+  //   setSelectedIndex(index);
+  //   handleSetSpeed(speedOptions[index] / 2);
+  //   setSpeedMenuAnchorEl(null);
+  // };
+  const handleSpeedChange = (event: SelectChangeEvent<number>) => {
+    setSpeed(event.target.value as number);
   };
 
   return (
@@ -208,41 +214,39 @@ const VisualiserControls = () => {
         />
       </Box>
       <SpeedIcon fontSize="large" />
-      <SpeedMenuButton
-        onClick={handleClickSpeedMenu}
-        color="inherit"
-        endIcon={<KeyboardArrowUpIcon />}
-      >
-        <Typography>{speedOptions[selectedIndex]}</Typography>
-      </SpeedMenuButton>
-      <Menu
-        open={speedMenuOpen}
-        anchorEl={speedMenuAnchorEl}
-        onClose={handleCloseSpeedMenu}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
+      {/* <SpeedMenuButton */}
+      {/*   onClick={handleClickSpeedMenu} */}
+      {/*   color="inherit" */}
+      {/*   endIcon={<KeyboardArrowUpIcon />} */}
+      {/* > */}
+      {/*   <Typography>{speedOptions[selectedIndex]}</Typography> */}
+      {/* </SpeedMenuButton> */}
+      <Select
+        // open={speedMenuOpen}
+        // anchorEl={speedMenuAnchorEl}
+        // onClose={handleCloseSpeedMenu}
+        value={speed}
+        MenuProps={{
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: 'center',
+          },
+          transformOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center',
+          },
         }}
-        transformOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
+        onChange={handleSpeedChange}
       >
-        {speedOptions.map((speedOption, index) => (
-          <MenuItem onClick={(event) => handleSelectSpeed(event, index)} key={index}>
-            {index === selectedIndex ? (
-              <>
-                <ListItemIcon>
-                  <StyledCheckIcon />
-                </ListItemIcon>
-                {speedOption}
-              </>
-            ) : (
-              <ListItemText inset>{speedOption}</ListItemText>
-            )}
-          </MenuItem>
-        ))}
-      </Menu>
+        <MenuItem value={0.25}>0.25</MenuItem>
+        <MenuItem value={0.5}>0.5</MenuItem>
+        <MenuItem value={0.75}>0.75</MenuItem>
+        <MenuItem value={1}>1</MenuItem>
+        <MenuItem value={1.25}>1.25</MenuItem>
+        <MenuItem value={1.5}>1.5</MenuItem>
+        <MenuItem value={1.75}>1.75</MenuItem>
+        <MenuItem value={2}>2</MenuItem>
+      </Select>
     </Box>
   );
 };

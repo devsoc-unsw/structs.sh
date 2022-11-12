@@ -16,18 +16,23 @@ class GraphicalAVL extends GraphicalDataStructure {
       description:
         'Executes standard AVL insertion to add a new node with the given value into the tree.',
     },
-    inorderTraversal: {
-      args: [],
-      description: 'Executes an inorder traversal on the tree.',
+    traversal: {
+      args: ['type'],
+      options: ['Inorder', 'Preorder', 'Postorder'],
+      description: 'Executes a travesal on the tree',
     },
-    preorderTraversal: {
-      args: [],
-      description: 'Executes a preorder traversal on the tree.',
-    },
-    postorderTraversal: {
-      args: [],
-      description: 'Executes a postorder traversal on the tree.',
-    },
+    // inorderTraversal: {
+    //   args: [],
+    //   description: 'Executes an inorder traversal on the tree.',
+    // },
+    // preorderTraversal: {
+    //   args: [],
+    //   description: 'Executes a preorder traversal on the tree.',
+    // },
+    // postorderTraversal: {
+    //   args: [],
+    //   description: 'Executes a postorder traversal on the tree.',
+    // },
   });
 
   public root: GraphicalAVLNode = null;
@@ -46,6 +51,19 @@ class GraphicalAVL extends GraphicalDataStructure {
       this.doInsert(null, this.root, false, input, animationProducer);
     }
     return animationProducer;
+  }
+
+  public traversal(input: string): BSTTraverseAnimationProducer {
+    switch (input) {
+      case 'Inorder':
+        return GraphicalTreeTraversal.inorderTraversal(this.root);
+      case 'Preorder':
+        return GraphicalTreeTraversal.preorderTraversal(this.root);
+      case 'Postorder':
+        return GraphicalTreeTraversal.postorderTraversal(this.root);
+      default:
+        return new BSTTraverseAnimationProducer();
+    }
   }
 
   public inorderTraversal(): BSTTraverseAnimationProducer {

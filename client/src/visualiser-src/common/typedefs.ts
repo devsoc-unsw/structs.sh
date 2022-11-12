@@ -6,10 +6,11 @@ export interface CodeLine {
 }
 
 export interface OperationUsage {
-  args: string[];
+  args?: string[];
   description: string;
   id?: number;
   noTimeline?: boolean;
+  options?: string[];
 }
 
 export enum DataStructure {

@@ -1,12 +1,22 @@
 import React, { FC, useContext, useState } from 'react';
-import { Box, Collapse, List, ListItem, ListItemIcon, Theme, Typography } from '@mui/material';
+import {
+  Box,
+  Collapse,
+  List,
+  ListItem,
+  ListItemIcon,
+  Theme,
+  Typography,
+  Stack,
+} from '@mui/material';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { makeStyles, styled, useTheme } from '@mui/styles';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import VisualiserContext from './VisualiserContext';
+import VisualiserContext from '../VisualiserContext';
+import OperationMenu from './OperationMenu';
 
 interface OperationDetailsProps {
   command: string;
@@ -37,8 +47,11 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
 
   const [shouldDisplay, setShouldDisplay] = useState<boolean>(false);
   const [currentInputs, setCurrentInputs] = useState<string[]>(
-    Array(documentation[command]?.args?.length || 0).fill('')
+    documentation[command]?.options
+      ? [documentation[command]?.options[0]]
+      : Array(documentation[command]?.args?.length || 0).fill('')
   );
+  console.log(currentInputs);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const textPrimaryColour = theme.palette.text.primary;
 
@@ -53,6 +66,10 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
     const newArgs = [...currentInputs];
     newArgs[index] = String(e.target.value);
     setCurrentInputs(newArgs);
+  };
+
+  const selectArgument = (arg: string) => {
+    setCurrentInputs([arg]);
   };
 
   const clearArguments = () => {
@@ -75,7 +92,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
 
   return (
     <StyledListItem>
-      <Box width="180px">
+      <Box width={180}>
         <OperationExpandButton
           onClick={handleToggleDisplay}
           color="inherit"
@@ -87,29 +104,30 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
       </Box>
       <Collapse in={shouldDisplay} timeout="auto" orientation="horizontal">
         <Box display="flex" alignItems="center">
-          {documentation[command].args.map((eachArg, idx) => (
-            <Box key={idx} boxSizing="border-box" padding="5px" width="110px">
-              <TextField
-                size="small"
-                value={currentInputs[idx]}
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    executeCommand(currentInputs);
-                  }
-                }}
-                onChange={(e) => handleSetArguments(e, idx)}
-                placeholder={eachArg}
-                sx={{ backgroundColor: theme.palette.primary.main }}
-              />
-            </Box>
-          ))}
-          <Box
-            boxSizing="border-box"
-            display="flex"
-            alignItems="center"
-            paddingRight="10px"
-            paddingLeft="5px"
-          >
+          {documentation[command].options ? (
+            <OperationMenu
+              options={documentation[command].options}
+              selectArgument={selectArgument}
+            />
+          ) : (
+            documentation[command].args.map((eachArg, idx) => (
+              <Box key={idx} boxSizing="border-box" padding={1} width={120}>
+                <TextField
+                  size="small"
+                  value={currentInputs[idx]}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      executeCommand(currentInputs);
+                    }
+                  }}
+                  onChange={(e) => handleSetArguments(e, idx)}
+                  placeholder={eachArg}
+                  sx={{ backgroundColor: theme.palette.primary.main }}
+                />
+              </Box>
+            ))
+          )}
+          <Box boxSizing="border-box" display="flex" alignItems="center" padding={1}>
             <Button
               variant="contained"
               onClick={() => {
@@ -118,7 +136,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
             >
               Run
             </Button>
-            <Typography color="red" marginLeft="10px">
+            <Typography color="red" padding={1}>
               {errorMessage}
             </Typography>
           </Box>
