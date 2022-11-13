@@ -1,13 +1,11 @@
-import { Box } from '@mui/material';
-import React, { useCallback, useMemo, useEffect, useRef, useState } from 'react';
 import CodeSnippet from 'components/CodeSnippet/CodeSnippet';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import VisualiserController from 'visualiser-src/controller/VisualiserController';
 import { VisualiserControls } from './Controller';
 import GUIMode from './Controller/GUIMode/GUIMode';
-import styles from './VisualiserDashboard.module.scss';
-import VisualiserContext from './VisualiserContext';
 import VisualiserCreateNewReset from './Controller/VisualiserCreateNewReset';
+import VisualiserContext from './VisualiserContext';
 
 interface VisualiserInterfaceProps {
   topicTitle: string;

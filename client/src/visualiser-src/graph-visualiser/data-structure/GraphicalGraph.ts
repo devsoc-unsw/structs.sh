@@ -5,8 +5,8 @@ import { injectIds } from 'visualiser-src/common/helpers';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import GraphDfsAnimationProducer from '../animation-producer/GraphDfsAnimationProducer';
 import { renderForceGraph } from '../util/util';
-import { Vertex } from './Vertex';
-import { Edge } from './Edge';
+import { GraphicalVertex } from './GraphicalVertex';
+import { GraphicalEdge } from './GraphicalEdge';
 import GraphAnimationProducer from '../animation-producer/GraphAnimationProducer';
 
 /**
@@ -39,30 +39,30 @@ export default class GraphicalGraph extends GraphicalDataStructure {
     },
   });
 
-  private vertices: Vertex[] = [
-    Vertex.from(0),
-    Vertex.from(1),
-    Vertex.from(2),
-    Vertex.from(3),
-    Vertex.from(4),
-    Vertex.from(5),
-    Vertex.from(6),
-    Vertex.from(7),
+  private vertices: GraphicalVertex[] = [
+    GraphicalVertex.from(0),
+    GraphicalVertex.from(1),
+    GraphicalVertex.from(2),
+    GraphicalVertex.from(3),
+    GraphicalVertex.from(4),
+    GraphicalVertex.from(5),
+    GraphicalVertex.from(6),
+    GraphicalVertex.from(7),
   ];
 
-  private edges: Edge[] = [
-    Edge.from(0, 1, 5, true),
-    Edge.from(0, 2, 3, false),
-    Edge.from(2, 5, 5, false),
-    Edge.from(3, 5, 3, false),
-    Edge.from(3, 2, 2, false),
-    Edge.from(1, 4, 1, true),
-    Edge.from(3, 4, 8, false),
-    Edge.from(5, 6, 2, false),
-    Edge.from(7, 2, 4, true),
+  private edges: GraphicalEdge[] = [
+    GraphicalEdge.from(this.vertices[0], this.vertices[1], 5, true),
+    GraphicalEdge.from(this.vertices[0], this.vertices[2], 3, false),
+    GraphicalEdge.from(this.vertices[2], this.vertices[5], 5, false),
+    GraphicalEdge.from(this.vertices[3], this.vertices[5], 3, false),
+    GraphicalEdge.from(this.vertices[3], this.vertices[2], 2, false),
+    GraphicalEdge.from(this.vertices[1], this.vertices[4], 1, true),
+    GraphicalEdge.from(this.vertices[3], this.vertices[4], 8, false),
+    GraphicalEdge.from(this.vertices[5], this.vertices[6], 2, false),
+    GraphicalEdge.from(this.vertices[7], this.vertices[2], 4, true),
   ];
 
-  constructor() {
+  private constructor() {
     super();
     this.loadGraph();
 
@@ -87,7 +87,7 @@ export default class GraphicalGraph extends GraphicalDataStructure {
    * TODO: currently unanimated. Does this need an animation?
    */
   addVertex(): AnimationProducer {
-    this.vertices = [...this.vertices, Vertex.from(this.vertices.length)];
+    this.vertices = [...this.vertices, GraphicalVertex.from(this.vertices.length)];
 
     // Reload the graph to sync the change in `this.edges` with what's shown
     // in the visualiser canvas.
@@ -106,7 +106,7 @@ export default class GraphicalGraph extends GraphicalDataStructure {
   addEdge(from: number, to: number): AnimationProducer {
     this.edges = [
       ...this.edges,
-      { source: String(from), target: String(to), weight: 5, isBidirectional: false },
+      GraphicalEdge.from(this.vertices[from], this.vertices[to], 5, false),
     ];
 
     // Reload the graph to sync the change in `this.edges` with what's shown
@@ -148,17 +148,30 @@ export default class GraphicalGraph extends GraphicalDataStructure {
   ): void {
     // Mark the current vertex as visited.
     visited.add(src);
-    const vertexElem = Vertex.getDomReference(src);
+    const vertexElem = this.vertices[src].getReference();
     animationProducer.doAnimationAndHighlight(2, animationProducer.highlightVertex, vertexElem);
 
     // For each unvisited neighbour, highlight the edge to that neighbour and
     // launch DFS on them.
     for (let neighbour = 0; neighbour < this.vertices.length; neighbour += 1) {
       if (this.isAdjacent(src, neighbour) && !visited.has(neighbour)) {
+        // TODO: this is disgusting. Clean up.
+        const targetEdge = this.edges.find(
+          (edge) =>
+            (parseInt(edge.source.id, 10) === src && parseInt(edge.target.id, 10) === neighbour) ||
+            (parseInt(edge.source.id, 10) === neighbour &&
+              parseInt(edge.target.id, 10) === src &&
+              edge.isBidirectional)
+        );
+        if (!targetEdge) {
+          throw new Error(
+            `Expected an edge to exist between vertices '${src}' and '${neighbour}'.`
+          );
+        }
         animationProducer.doAnimationAndHighlight(
           4,
           animationProducer.highlightEdge,
-          Edge.getDomReference(src, neighbour)
+          targetEdge.getReference()
         );
         this.dfsRecurse(animationProducer, neighbour, visited);
       }
@@ -174,8 +187,8 @@ export default class GraphicalGraph extends GraphicalDataStructure {
   private isAdjacent(v: number, w: number): boolean {
     return this.edges.some(
       (edge) =>
-        (edge.source === String(v) && edge.target === String(w)) ||
-        (edge.source === String(w) && edge.target === String(v) && edge.isBidirectional)
+        (edge.source.id === String(v) && edge.target.id === String(w)) ||
+        (edge.source.id === String(w) && edge.target.id === String(v) && edge.isBidirectional)
     );
   }
 

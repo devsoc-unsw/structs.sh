@@ -1,6 +1,6 @@
 import { Circle, Path, SVG } from '@svgdotjs/svg.js';
 
-export class Vertex {
+export class GraphicalVertex {
   // Note: d3 expects this to be named exactly `id`.
   public id: string;
 
@@ -9,10 +9,10 @@ export class Vertex {
   }
 
   public static from(id: number) {
-    return new Vertex(String(id));
+    return new GraphicalVertex(String(id));
   }
 
-  public static getDomReference(source: number): Circle {
-    return SVG(`#vertex-${source}`) as Circle;
+  public getReference(): Circle {
+    return SVG(`#vertex-${this.id}`) as Circle;
   }
 }

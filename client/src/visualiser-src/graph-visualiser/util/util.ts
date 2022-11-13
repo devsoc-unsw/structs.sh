@@ -117,8 +117,8 @@ export function renderForceGraph(
     nodeStroke = '#fff',
     nodeStrokeWidth = STROKE_WIDTH,
     nodeStrokeOpacity = 1,
-    getEdgeSource = ({ source }) => source, // given d in links, returns a node identifier string
-    getEdgeDest = ({ target }) => target, // given d in links, returns a node identifier string
+    getEdgeSource = ({ source }) => source.id, // given d in links, returns a node identifier string
+    getEdgeDest = ({ target }) => target.id, // given d in links, returns a node identifier string
     linkStroke = '#999999',
     linkStrokeWidth = (d) => d.weight,
     linkStrokeLinecap = 'round',
