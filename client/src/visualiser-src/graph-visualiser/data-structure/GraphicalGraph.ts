@@ -125,11 +125,11 @@ export default class GraphicalGraph extends GraphicalDataStructure {
         linkStrokeWidth: (l) => Math.sqrt(l.value),
       }
     );
+    console.log(this._edges);
   }
 
   /**
    * Increases the number of vertices in the graph by 1.
-   * TODO: currently unanimated. Does this need an animation?
    */
   addVertex(): AnimationProducer {
     this._vertices = [...this._vertices, GraphicalVertex.from(this._vertices.length)];
@@ -143,7 +143,6 @@ export default class GraphicalGraph extends GraphicalDataStructure {
   /**
    * Inserts the edge from `from` to `to`.
    * Assumes that `from` and `to` are valid vertex numbers.
-   * TODO: currently unanimated. Does this need an animation?
    * @param from
    * @param to
    * @returns
@@ -209,7 +208,9 @@ export default class GraphicalGraph extends GraphicalDataStructure {
         animationProducer.doAnimationAndHighlight(
           4,
           animationProducer.highlightEdge,
-          targetEdge.getReference()
+          targetEdge.getReference(),
+          targetEdge.getStartArrowheadReference(),
+          targetEdge.getEndArrowheadReference()
         );
         this.dfsRecurse(animationProducer, neighbour, visited);
       }

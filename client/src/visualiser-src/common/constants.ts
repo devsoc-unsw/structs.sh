@@ -36,8 +36,11 @@ export const EDGE_ATTRACTIVE_FORCE_MULTIPLIER = 0.1;
 
 // Size parameters.
 export const EDGE_WIDTH = '6px';
+export const ARROWHEAD_FATNESS = '36px';
+export const ARROWHEAD_POSITION_OFFSET = '5px';
 export const WEIGHT_LABEL_SIZE = '22px';
 export const VERTEX_FONT_SIZE = '28px';
 export const NODE_RADIUS = 24;
-
-export const ARROWHEAD_SIZE_FACTOR = 4.5;
+export const EDGE_PATH_D = 'M 0,-4.5 L 9,0 L 0,4.5';
+export const EDGE_FILL = '#00000066';
+export const ARROWHEAD_FILL = '#444444';

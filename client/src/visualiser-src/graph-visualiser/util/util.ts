@@ -2,20 +2,18 @@
 // TODO: remove the eslint disable
 
 import * as d3 from 'd3';
-import { number } from 'prop-types';
 import {
+  ARROWHEAD_FATNESS,
+  ARROWHEAD_FILL,
   CONTAINER_DEFAULT_HEIGHT,
   CONTAINER_DEFAULT_WIDTH,
+  EDGE_FILL,
+  EDGE_PATH_D,
+  EDGE_WIDTH,
   NODE_DIAMETER,
   STROKE_WIDTH,
-  VISUALISER_CANVAS,
-} from 'visualiser-src/common/constants';
-import {
-  ARROWHEAD_SIZE_FACTOR,
-  EDGE_ATTRACTIVE_FORCE_MULTIPLIER,
-  EDGE_WIDTH,
-  INTER_VERTEX_FORCE,
   VERTEX_FONT_SIZE,
+  VISUALISER_CANVAS,
   WEIGHT_LABEL_SIZE,
 } from 'visualiser-src/common/constants';
 
@@ -23,89 +21,19 @@ function getPrimitiveVal(value) {
   return value !== null && typeof value === 'object' ? value.valueOf() : value;
 }
 
+// TODO: move or delete
+const lineStyle = {
+  'stroke-width': 3,
+  'stroke-linecap': 'round',
+  opacity: 0,
+  stroke: '#000',
+};
+
 // Defining the arrowhead for directed edges.
 // Sourced the attributes from here: http://bl.ocks.org/fancellu/2c782394602a93921faff74e594d1bb1.
 // TODO: these could be defined declaratively elsewhere
-function defineArrowheads() {
-  const graph = d3.select(VISUALISER_CANVAS);
-
-  graph
-    .append('defs')
-    .append('marker')
-    .attr('id', 'end-arrowhead')
-    .attr('viewBox', '-0 -10 20 20')
-    .attr('refX', NODE_DIAMETER / 2 - parseInt(EDGE_WIDTH) * 0.5) // The offset of the arrowhead.
-    .attr('refY', 0)
-    .attr('orient', 'auto')
-    .attr('markerWidth', (ARROWHEAD_SIZE_FACTOR * 1.6) / (parseInt(EDGE_WIDTH) / 5))
-    .attr('markerHeight', (ARROWHEAD_SIZE_FACTOR * 1.6) / (parseInt(EDGE_WIDTH) / 5))
-    .attr('xoverflow', 'visible')
-    .append('svg:path')
-    .attr(
-      'd',
-      `M 0,-${ARROWHEAD_SIZE_FACTOR} L ${ARROWHEAD_SIZE_FACTOR * 2} ,0 L 0,${ARROWHEAD_SIZE_FACTOR}`
-    )
-    .style('fill', '#999999');
-
-  graph
-    .select('defs')
-    .append('marker')
-    .attr('id', 'start-arrowhead')
-    .attr('viewBox', '-0 -10 20 20')
-    .attr('refX', NODE_DIAMETER / 2 - parseInt(EDGE_WIDTH) * 0.5) // The offset of the arrowhead.
-    .attr('refY', 0)
-    .attr('orient', 'auto-start-reverse') // Reverses the direction of 'end-arrowhead'. See: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/orient.
-    .attr('markerWidth', (ARROWHEAD_SIZE_FACTOR * 1.6) / (parseInt(EDGE_WIDTH) / 5))
-    .attr('markerHeight', (ARROWHEAD_SIZE_FACTOR * 1.6) / (parseInt(EDGE_WIDTH) / 5))
-    .attr('xoverflow', 'visible')
-    .append('svg:path')
-    .attr(
-      'd',
-      `M 0,-${ARROWHEAD_SIZE_FACTOR} L ${ARROWHEAD_SIZE_FACTOR * 2} ,0 L 0,${ARROWHEAD_SIZE_FACTOR}`
-    )
-    .style('fill', '#999999');
-
-  // Unfortunately, there is no way for the <marker> element to inherit the
-  // styling of the parent <line>. The workaround is to define these highlighted
-  // variants of the arrowhead which get applied on highlighted edges.
-  graph
-    .select('defs')
-    .append('marker')
-    .attr('id', 'highlighted-start-arrowhead')
-    .attr('viewBox', '-0 -10 20 20')
-    .attr('refX', NODE_DIAMETER / 2 - parseInt(EDGE_WIDTH) * 0.5) // The offset of the arrowhead.
-    .attr('refY', 0)
-    .attr('orient', 'auto-start-reverse')
-    .attr('markerWidth', (ARROWHEAD_SIZE_FACTOR * 1.6) / (parseInt(EDGE_WIDTH) / 5))
-    .attr('markerHeight', (ARROWHEAD_SIZE_FACTOR * 1.6) / (parseInt(EDGE_WIDTH) / 5))
-    .attr('xoverflow', 'visible')
-    .append('svg:path')
-    .attr(
-      'd',
-      `M 0,-${ARROWHEAD_SIZE_FACTOR} L ${ARROWHEAD_SIZE_FACTOR * 2} ,0 L 0,${ARROWHEAD_SIZE_FACTOR}`
-    )
-    .attr('fill', 'blue')
-    .style('stroke', 'none');
-
-  graph
-    .select('defs')
-    .append('marker')
-    .attr('id', 'highlighted-end-arrowhead')
-    .attr('viewBox', '-0 -10 20 20')
-    .attr('refX', NODE_DIAMETER / 2 - parseInt(EDGE_WIDTH) * 0.5) // The offset of the arrowhead.
-    .attr('refY', 0)
-    .attr('orient', 'auto')
-    .attr('markerWidth', (ARROWHEAD_SIZE_FACTOR * 1.6) / (parseInt(EDGE_WIDTH) / 5))
-    .attr('markerHeight', (ARROWHEAD_SIZE_FACTOR * 1.6) / (parseInt(EDGE_WIDTH) / 5))
-    .attr('xoverflow', 'visible')
-    .append('svg:path')
-    .attr(
-      'd',
-      `M 0,-${ARROWHEAD_SIZE_FACTOR} L ${ARROWHEAD_SIZE_FACTOR * 2} ,0 L 0,${ARROWHEAD_SIZE_FACTOR}`
-    )
-    .attr('fill', 'blue')
-    .style('stroke', 'none');
-}
+// TODO: remove.
+function defineArrowheads() {}
 
 export function renderForceGraph(
   {
@@ -120,7 +48,7 @@ export function renderForceGraph(
     nodeStrokeOpacity = 1,
     getEdgeSource = ({ source }) => source.id, // given d in links, returns a node identifier string
     getEdgeDest = ({ target }) => target.id, // given d in links, returns a node identifier string
-    linkStroke = '#999999',
+    linkStroke = EDGE_FILL,
     linkStrokeWidth = (d) => d.weight,
     linkStrokeLinecap = 'round',
   } = {}
@@ -217,7 +145,6 @@ export function renderForceGraph(
   const edgeGroup = graph
     .append('g')
     .attr('stroke', typeof linkStroke !== 'function' ? linkStroke : null)
-    // .attr('stroke-opacity', linkStrokeOpacity)
     .attr('stroke-width', EDGE_WIDTH)
     .attr('stroke-linecap', linkStrokeLinecap)
     .attr('id', 'edges')
@@ -228,8 +155,74 @@ export function renderForceGraph(
       'class',
       (link) => `edge-${link.source.id}-${link.target.id} edge-${link.target.id}-${link.source.id}`
     )
-    .attr('marker-end', 'url(#end-arrowhead)') // Attach the arrowhead defined in <defs> earlier.
-    .attr('marker-start', (link) => (link.isBidirectional ? 'url(#start-arrowhead)' : '')); // Add the start arrow IFF the link is bidirectional.
+    .attr('marker-end', (edge) => {
+      // TODO: these 4 lines are duplicated a few times in this file.
+      const src = getEdgeSource(edge);
+      const dest = getEdgeDest(edge);
+      const startVertex = src < dest ? src : dest;
+      const endVertex = src < dest ? dest : src;
+      return `url(#arrowhead-end-${startVertex}-${endVertex})`;
+    })
+    .attr('marker-start', (edge) => {
+      if (edge.isBidirectional) {
+        const src = getEdgeSource(edge);
+        const dest = getEdgeDest(edge);
+        const startVertex = src < dest ? src : dest;
+        const endVertex = src < dest ? dest : src;
+        return `url(#arrowhead-start-${startVertex}-${endVertex})`;
+      }
+    });
+
+  // TODO: rename
+  const markerGroup = graph
+    .append('g')
+    .attr('id', 'end-arrowheads')
+    .selectAll('marker')
+    .data(simEdges)
+    .join('marker')
+    .attr('id', (edge) => {
+      const src = getEdgeSource(edge);
+      const dest = getEdgeDest(edge);
+      const startVertex = src < dest ? src : dest;
+      const endVertex = src < dest ? dest : src;
+      return `arrowhead-end-${startVertex}-${endVertex}`;
+    })
+    .attr('viewBox', '-0 -10 20 20')
+    .attr('refX', NODE_DIAMETER / 2 - 5) // The offset of the arrowhead.
+    .attr('refY', 0)
+    .attr('orient', 'auto')
+    .attr('markerWidth', ARROWHEAD_FATNESS)
+    .attr('markerHeight', ARROWHEAD_FATNESS)
+    .attr('markerUnits', 'userSpaceOnUse')
+    .attr('xoverflow', 'visible')
+    .append('svg:path')
+    .attr('d', EDGE_PATH_D)
+    .attr('fill', ARROWHEAD_FILL);
+
+  const markerGroup2 = graph
+    .append('g')
+    .attr('id', 'start-arrowheads')
+    .selectAll('marker')
+    .data(simEdges)
+    .join('marker')
+    .attr('id', (edge) => {
+      const src = getEdgeSource(edge);
+      const dest = getEdgeDest(edge);
+      const startVertex = src < dest ? src : dest;
+      const endVertex = src < dest ? dest : src;
+      return `arrowhead-start-${startVertex}-${endVertex}`;
+    })
+    .attr('viewBox', '-0 -10 20 20')
+    .attr('refX', NODE_DIAMETER / 2 - 5) // The offset of the arrowhead.
+    .attr('refY', 0)
+    .attr('orient', 'auto-start-reverse') // Reverses the direction of 'end-arrowhead'. See: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/orient.
+    .attr('markerWidth', ARROWHEAD_FATNESS)
+    .attr('markerHeight', ARROWHEAD_FATNESS)
+    .attr('markerUnits', 'userSpaceOnUse')
+    .attr('xoverflow', 'visible')
+    .append('svg:path')
+    .attr('d', EDGE_PATH_D)
+    .attr('fill', ARROWHEAD_FILL);
 
   // Add the weight labels to the graph and set their properties.
   const weightLabelGroup = graph
