@@ -16,8 +16,17 @@ export const CODE_CANVAS = '#code-canvas';
 export const CODE_CONTAINER = 'code-container';
 
 /* -------------------------------------------------------------------------- */
-/*                           Graph Drawing Constants                          */
+/*                               Graph Constants                              */
 /* -------------------------------------------------------------------------- */
+/* ----------------------- Randomised Graph Generation ---------------------- */
+export const MAX_RANDOM_VERTICES = 10;
+export const MIN_RANDOM_VERTICES = 5;
+
+// A multiplier on the number of vertices.
+// E.g. A factor of 1.2 results in 1.2*num_vertices edges being generated.
+export const MAX_EDGES_FACTOR = 1.5;
+
+/* ------------------------- Graph Drawing Constants ------------------------ */
 export const CONTAINER_DEFAULT_WIDTH = 400;
 export const CONTAINER_DEFAULT_HEIGHT = 400;
 

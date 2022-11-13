@@ -1,13 +1,22 @@
-import { Circle, Path, SVG } from '@svgdotjs/svg.js';
 import AnimationProducer from 'visualiser-src/common/AnimationProducer';
+import {
+  MAX_EDGES_FACTOR,
+  MAX_RANDOM_VERTICES,
+  MIN_EDGES_FACTOR,
+  MIN_RANDOM_VERTICES,
+} from 'visualiser-src/common/constants';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { injectIds } from 'visualiser-src/common/helpers';
+import {
+  getRandomElemInArray,
+  getRandomIntInRange,
+} from 'visualiser-src/common/RandomNumGenerator';
 import { Documentation } from 'visualiser-src/common/typedefs';
+import GraphAnimationProducer from '../animation-producer/GraphAnimationProducer';
 import GraphDfsAnimationProducer from '../animation-producer/GraphDfsAnimationProducer';
 import { renderForceGraph } from '../util/util';
-import { GraphicalVertex } from './GraphicalVertex';
 import { GraphicalEdge } from './GraphicalEdge';
-import GraphAnimationProducer from '../animation-producer/GraphAnimationProducer';
+import { GraphicalVertex } from './GraphicalVertex';
 
 /**
  * Exposes animation-producing graph algorithms that are stateful, meaning that
@@ -39,40 +48,99 @@ export default class GraphicalGraph extends GraphicalDataStructure {
     },
   });
 
-  private vertices: GraphicalVertex[] = [
-    GraphicalVertex.from(0),
-    GraphicalVertex.from(1),
-    GraphicalVertex.from(2),
-    GraphicalVertex.from(3),
-    GraphicalVertex.from(4),
-    GraphicalVertex.from(5),
-    GraphicalVertex.from(6),
-    GraphicalVertex.from(7),
-  ];
+  private vertices: GraphicalVertex[];
+  // 	= [
+  //   GraphicalVertex.from(0),
+  //   GraphicalVertex.from(1),
+  //   GraphicalVertex.from(2),
+  //   GraphicalVertex.from(3),
+  //   GraphicalVertex.from(4),
+  //   GraphicalVertex.from(5),
+  //   GraphicalVertex.from(6),
+  //   GraphicalVertex.from(7),
+  // ];
 
-  private edges: GraphicalEdge[] = [
-    GraphicalEdge.from(this.vertices[0], this.vertices[1], 5, true),
-    GraphicalEdge.from(this.vertices[0], this.vertices[2], 3, false),
-    GraphicalEdge.from(this.vertices[2], this.vertices[5], 5, false),
-    GraphicalEdge.from(this.vertices[3], this.vertices[5], 3, false),
-    GraphicalEdge.from(this.vertices[3], this.vertices[2], 2, false),
-    GraphicalEdge.from(this.vertices[1], this.vertices[4], 1, true),
-    GraphicalEdge.from(this.vertices[3], this.vertices[4], 8, false),
-    GraphicalEdge.from(this.vertices[5], this.vertices[6], 2, false),
-    GraphicalEdge.from(this.vertices[7], this.vertices[2], 4, true),
-  ];
+  private edges: GraphicalEdge[];
+  // 	= [
+  //   GraphicalEdge.from(this.vertices[0], this.vertices[1], 5, true),
+  //   GraphicalEdge.from(this.vertices[0], this.vertices[2], 3, false),
+  //   GraphicalEdge.from(this.vertices[2], this.vertices[5], 5, false),
+  //   GraphicalEdge.from(this.vertices[3], this.vertices[5], 3, false),
+  //   GraphicalEdge.from(this.vertices[3], this.vertices[2], 2, false),
+  //   GraphicalEdge.from(this.vertices[1], this.vertices[4], 1, true),
+  //   GraphicalEdge.from(this.vertices[3], this.vertices[4], 8, false),
+  //   GraphicalEdge.from(this.vertices[5], this.vertices[6], 2, false),
+  //   GraphicalEdge.from(this.vertices[7], this.vertices[2], 4, true),
+  // ];
 
-  private constructor() {
+  public constructor() {
     super();
-    this.loadGraph();
 
-    // TODO: initialise the graph with randomly generated vertices and edges, sparsely.
+    // Randomly set the number of vertices and the connections between those
+    // vertices prior to first render.
+    this.randomlyAssignVertices();
+    this.randomlyAssignEdges();
+    // this.edges = [GraphicalEdge.from(this.vertices[0], this.vertices[1], 5, false)];
+
+    this.loadGraph();
+  }
+
+  /**
+   * Randomly generates the number of vertices in this graph.
+   */
+  private randomlyAssignVertices() {
+    const numVertices = getRandomIntInRange(MIN_RANDOM_VERTICES, MAX_RANDOM_VERTICES);
+    const vertexIds = [...Array(numVertices)].map((_, i) => i);
+    this.vertices = vertexIds.map((id) => GraphicalVertex.from(id));
+  }
+
+  /**
+   * Randomly generates between N to 1.5 * N edges to be added to this graph.
+   * Note that we want to avoid generating extremely dense graphs as this would
+   * likely cause intersection of edges, which is ugly.
+   *
+   * Must be called after the vertices have been generated, else this would have
+   * no effect.
+   *
+   * There are many ways to generate 'random graphs'. The approach used here is
+   * a simple random walk on the set of vertices until a desired number of edges
+   * has been reached.
+   */
+  private randomlyAssignEdges() {
+    if (!this.vertices) throw new Error('Expected vertices to be defined for this graph.');
+    const numVertices = this.vertices.length;
+
+    this.edges = [];
+    const encountered: { [id: string]: number } = {};
+    const maxEdges = MAX_EDGES_FACTOR * numVertices;
+    let currVertex = this.vertices[0];
+    let edgeCount = 0;
+
+    encountered[currVertex.id] = 0;
+    while (Object.keys(encountered).length < numVertices && edgeCount < maxEdges) {
+      const nextVertex = getRandomElemInArray(
+        this.vertices.filter((v) => !(v.id in encountered) || encountered[v.id] <= 3)
+      );
+      if (nextVertex !== currVertex) {
+        if (encountered[nextVertex.id]) {
+          encountered[nextVertex.id] += 1;
+        } else {
+          encountered[nextVertex.id] = 1;
+        }
+
+        this.edges.push(GraphicalEdge.from(currVertex, nextVertex, 5, Math.random() > 0.5));
+        encountered[currVertex.id] += 1;
+        currVertex = nextVertex;
+        edgeCount += 1;
+      }
+    }
   }
 
   /**
    * Renders or re-renders the graph SVG elements into the visualiser canvas.
+   * Must be called after the vertices and edges have been populated.
    */
-  loadGraph() {
+  private loadGraph() {
     renderForceGraph(
       { vertices: this.vertices, edges: this.edges },
       {
@@ -155,14 +223,7 @@ export default class GraphicalGraph extends GraphicalDataStructure {
     // launch DFS on them.
     for (let neighbour = 0; neighbour < this.vertices.length; neighbour += 1) {
       if (this.isAdjacent(src, neighbour) && !visited.has(neighbour)) {
-        // TODO: this is disgusting. Clean up.
-        const targetEdge = this.edges.find(
-          (edge) =>
-            (parseInt(edge.source.id, 10) === src && parseInt(edge.target.id, 10) === neighbour) ||
-            (parseInt(edge.source.id, 10) === neighbour &&
-              parseInt(edge.target.id, 10) === src &&
-              edge.isBidirectional)
-        );
+        const targetEdge = this.getEdge(src, neighbour);
         if (!targetEdge) {
           throw new Error(
             `Expected an edge to exist between vertices '${src}' and '${neighbour}'.`
@@ -205,5 +266,17 @@ export default class GraphicalGraph extends GraphicalDataStructure {
 
   public get documentation() {
     return GraphicalGraph.documentation;
+  }
+
+  private getEdge(src: number, dest: number) {
+    console.log(this.edges);
+    const targetEdge = this.edges.find(
+      (edge) =>
+        (parseInt(edge.source.id, 10) === src && parseInt(edge.target.id, 10) === dest) ||
+        (parseInt(edge.source.id, 10) === dest &&
+          parseInt(edge.target.id, 10) === src &&
+          edge.isBidirectional)
+    );
+    return targetEdge;
   }
 }

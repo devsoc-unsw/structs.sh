@@ -2,6 +2,7 @@
 // TODO: remove the eslint disable
 
 import * as d3 from 'd3';
+import { number } from 'prop-types';
 import {
   CONTAINER_DEFAULT_HEIGHT,
   CONTAINER_DEFAULT_WIDTH,
