@@ -195,36 +195,15 @@ export function renderForceGraph(
     .attr('viewBox', [-containerWidth / 2, -containerHeight / 2, containerWidth, containerHeight]); // Setting the origin to be at the center of the SVG container.
   defineArrowheads();
 
-  // Drag callback.
-  function handleDrag(simulation) {
-    function dragstarted(event) {
-      if (!event.active) simulation.alphaTarget(0.3).restart();
-      event.subject.fx = event.subject.x;
-      event.subject.fy = event.subject.y;
-    }
-
-    function dragged(event) {
-      event.subject.fx = event.x;
-      event.subject.fy = event.y;
-    }
-
-    function dragended(event) {
-      if (!event.active) simulation.alphaTarget(0);
-      event.subject.fx = null;
-      event.subject.fy = null;
-    }
-
-    return d3.drag().on('start', dragstarted).on('drag', dragged).on('end', dragended);
-  }
-
   // Construct the forces. Nodes must strongly repel each other and links must
   // attract them together.
-  const forceNode = d3.forceManyBody().strength(INTER_VERTEX_FORCE).distanceMax(400);
+  const forceNode = d3.forceManyBody().strength(-2000).distanceMax(300);
   const forceLink = d3
     .forceLink(simEdges)
     .id(({ index: i }) => verticesMap[i])
-    .strength(EDGE_ATTRACTIVE_FORCE_MULTIPLIER);
-  const centralForce = d3.forceCenter().strength(1);
+    .strength(0.08);
+  // .strength(EDGE_ATTRACTIVE_FORCE_MULTIPLIER);
+  const centralForce = d3.forceCenter();
 
   // Set the force directed layout simulation parameters.
   const simulation = d3
@@ -232,13 +211,7 @@ export function renderForceGraph(
     .force('link', forceLink)
     .force('charge', forceNode)
     .force('center', centralForce)
-    .force(
-      'manyBody',
-      d3
-        .forceManyBody()
-        .strength(1000) // A really negative force tends to space out nodes better.
-        .distanceMax(200)
-    ); // This prevents forces from pushing out isolated subgraphs/vertices to the far edge.
+    .stop();
 
   // Add the edges to the graph and set their properties.
   const edgeGroup = graph
@@ -293,8 +266,7 @@ export function renderForceGraph(
     .join('circle')
     .attr('r', NODE_DIAMETER / 2)
     .attr('id', (node) => `vertex-${node.id}`)
-    .attr('stroke', '#000000')
-    .call(handleDrag(simulation));
+    .attr('stroke', '#000000');
 
   // Add the vertex text labels to the graph and set their properties.
   const vertexTextGroup = graph
@@ -311,6 +283,31 @@ export function renderForceGraph(
     .attr('alignment-baseline', 'middle') // Centering text inside a circle: https://stackoverflow.com/questions/28128491/svg-center-text-in-circle.
     .attr('text-anchor', 'middle')
     .text((_, i) => i);
+
+  simulation.tick(300);
+
+  const clampX = (x) =>
+    Math.max(
+      -containerWidth / 2 + NODE_DIAMETER / 2,
+      Math.min(containerWidth / 2 - NODE_DIAMETER / 2, x)
+    );
+  const clampY = (y) =>
+    Math.max(
+      -containerHeight / 2 + NODE_DIAMETER / 2,
+      Math.min(containerHeight / 2 - NODE_DIAMETER / 2, y)
+    );
+
+  // On each tick of the simulation, update the coordinates of everything.
+  edgeGroup
+    .attr('x1', (d) => clampX(d.source.x))
+    .attr('y1', (d) => clampY(d.source.y))
+    .attr('x2', (d) => clampX(d.target.x))
+    .attr('y2', (d) => clampY(d.target.y));
+  vertexGroup.attr('cx', (d) => clampX(d.x)).attr('cy', (d) => clampY(d.y));
+  weightLabelGroup
+    .attr('x', (d) => (clampX(d.source.x) + clampX(d.target.x)) / 2)
+    .attr('y', (d) => (clampY(d.source.y) + clampY(d.target.y)) / 2);
+  vertexTextGroup.attr('x', (d) => clampX(d.x)).attr('y', (d) => clampY(d.y));
 
   // Applying styling maps to the edges.
   if (edgeWidths) edgeGroup.attr('stroke-width', ({ index: i }) => edgeWidths[i]);

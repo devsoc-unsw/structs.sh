@@ -19,8 +19,8 @@ export const CODE_CONTAINER = 'code-container';
 /*                               Graph Constants                              */
 /* -------------------------------------------------------------------------- */
 /* ----------------------- Randomised Graph Generation ---------------------- */
-export const MAX_RANDOM_VERTICES = 10;
-export const MIN_RANDOM_VERTICES = 5;
+export const MAX_RANDOM_VERTICES = 7;
+export const MIN_RANDOM_VERTICES = 4;
 
 // A multiplier on the number of vertices.
 // E.g. A factor of 1.2 results in 1.2*num_vertices edges being generated.
@@ -32,7 +32,7 @@ export const CONTAINER_DEFAULT_HEIGHT = 400;
 
 // Force parameters.
 export const INTER_VERTEX_FORCE = -2000;
-export const EDGE_ATTRACTIVE_FORCE_MULTIPLIER = 0.2;
+export const EDGE_ATTRACTIVE_FORCE_MULTIPLIER = 0.1;
 
 // Size parameters.
 export const EDGE_WIDTH = '6px';

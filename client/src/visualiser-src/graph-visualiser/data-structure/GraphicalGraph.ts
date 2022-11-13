@@ -2,7 +2,6 @@ import AnimationProducer from 'visualiser-src/common/AnimationProducer';
 import {
   MAX_EDGES_FACTOR,
   MAX_RANDOM_VERTICES,
-  MIN_EDGES_FACTOR,
   MIN_RANDOM_VERTICES,
 } from 'visualiser-src/common/constants';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
@@ -48,30 +47,9 @@ export default class GraphicalGraph extends GraphicalDataStructure {
     },
   });
 
-  private vertices: GraphicalVertex[];
-  // 	= [
-  //   GraphicalVertex.from(0),
-  //   GraphicalVertex.from(1),
-  //   GraphicalVertex.from(2),
-  //   GraphicalVertex.from(3),
-  //   GraphicalVertex.from(4),
-  //   GraphicalVertex.from(5),
-  //   GraphicalVertex.from(6),
-  //   GraphicalVertex.from(7),
-  // ];
+  private _vertices: GraphicalVertex[];
 
-  private edges: GraphicalEdge[];
-  // 	= [
-  //   GraphicalEdge.from(this.vertices[0], this.vertices[1], 5, true),
-  //   GraphicalEdge.from(this.vertices[0], this.vertices[2], 3, false),
-  //   GraphicalEdge.from(this.vertices[2], this.vertices[5], 5, false),
-  //   GraphicalEdge.from(this.vertices[3], this.vertices[5], 3, false),
-  //   GraphicalEdge.from(this.vertices[3], this.vertices[2], 2, false),
-  //   GraphicalEdge.from(this.vertices[1], this.vertices[4], 1, true),
-  //   GraphicalEdge.from(this.vertices[3], this.vertices[4], 8, false),
-  //   GraphicalEdge.from(this.vertices[5], this.vertices[6], 2, false),
-  //   GraphicalEdge.from(this.vertices[7], this.vertices[2], 4, true),
-  // ];
+  private _edges: GraphicalEdge[];
 
   public constructor() {
     super();
@@ -80,7 +58,6 @@ export default class GraphicalGraph extends GraphicalDataStructure {
     // vertices prior to first render.
     this.randomlyAssignVertices();
     this.randomlyAssignEdges();
-    // this.edges = [GraphicalEdge.from(this.vertices[0], this.vertices[1], 5, false)];
 
     this.loadGraph();
   }
@@ -91,7 +68,7 @@ export default class GraphicalGraph extends GraphicalDataStructure {
   private randomlyAssignVertices() {
     const numVertices = getRandomIntInRange(MIN_RANDOM_VERTICES, MAX_RANDOM_VERTICES);
     const vertexIds = [...Array(numVertices)].map((_, i) => i);
-    this.vertices = vertexIds.map((id) => GraphicalVertex.from(id));
+    this._vertices = vertexIds.map((id) => GraphicalVertex.from(id));
   }
 
   /**
@@ -107,28 +84,28 @@ export default class GraphicalGraph extends GraphicalDataStructure {
    * has been reached.
    */
   private randomlyAssignEdges() {
-    if (!this.vertices) throw new Error('Expected vertices to be defined for this graph.');
-    const numVertices = this.vertices.length;
+    if (!this._vertices) throw new Error('Expected vertices to be defined for this graph.');
+    const numVertices = this._vertices.length;
 
-    this.edges = [];
+    this._edges = [];
     const encountered: { [id: string]: number } = {};
     const maxEdges = MAX_EDGES_FACTOR * numVertices;
-    let currVertex = this.vertices[0];
+    let currVertex = this._vertices[0];
     let edgeCount = 0;
 
     encountered[currVertex.id] = 0;
     while (Object.keys(encountered).length < numVertices && edgeCount < maxEdges) {
       const nextVertex = getRandomElemInArray(
-        this.vertices.filter((v) => !(v.id in encountered) || encountered[v.id] <= 3)
+        this._vertices.filter((v) => !(v.id in encountered) || encountered[v.id] <= 3)
       );
-      if (nextVertex !== currVertex) {
+      if (nextVertex !== currVertex && !this.getEdge(currVertex.id, nextVertex.id, true)) {
         if (encountered[nextVertex.id]) {
           encountered[nextVertex.id] += 1;
         } else {
           encountered[nextVertex.id] = 1;
         }
 
-        this.edges.push(GraphicalEdge.from(currVertex, nextVertex, 5, Math.random() > 0.5));
+        this._edges.push(GraphicalEdge.from(currVertex, nextVertex, 5, Math.random() > 0.5));
         encountered[currVertex.id] += 1;
         currVertex = nextVertex;
         edgeCount += 1;
@@ -142,7 +119,7 @@ export default class GraphicalGraph extends GraphicalDataStructure {
    */
   private loadGraph() {
     renderForceGraph(
-      { vertices: this.vertices, edges: this.edges },
+      { vertices: this._vertices, edges: this._edges },
       {
         nodeId: (d) => d.id,
         linkStrokeWidth: (l) => Math.sqrt(l.value),
@@ -155,7 +132,7 @@ export default class GraphicalGraph extends GraphicalDataStructure {
    * TODO: currently unanimated. Does this need an animation?
    */
   addVertex(): AnimationProducer {
-    this.vertices = [...this.vertices, GraphicalVertex.from(this.vertices.length)];
+    this._vertices = [...this._vertices, GraphicalVertex.from(this._vertices.length)];
 
     // Reload the graph to sync the change in `this.edges` with what's shown
     // in the visualiser canvas.
@@ -172,9 +149,9 @@ export default class GraphicalGraph extends GraphicalDataStructure {
    * @returns
    */
   addEdge(from: number, to: number): AnimationProducer {
-    this.edges = [
-      ...this.edges,
-      GraphicalEdge.from(this.vertices[from], this.vertices[to], 5, false),
+    this._edges = [
+      ...this._edges,
+      GraphicalEdge.from(this._vertices[from], this._vertices[to], 5, false),
     ];
 
     // Reload the graph to sync the change in `this.edges` with what's shown
@@ -216,12 +193,12 @@ export default class GraphicalGraph extends GraphicalDataStructure {
   ): void {
     // Mark the current vertex as visited.
     visited.add(src);
-    const vertexElem = this.vertices[src].getReference();
+    const vertexElem = this._vertices[src].getReference();
     animationProducer.doAnimationAndHighlight(2, animationProducer.highlightVertex, vertexElem);
 
     // For each unvisited neighbour, highlight the edge to that neighbour and
     // launch DFS on them.
-    for (let neighbour = 0; neighbour < this.vertices.length; neighbour += 1) {
+    for (let neighbour = 0; neighbour < this._vertices.length; neighbour += 1) {
       if (this.isAdjacent(src, neighbour) && !visited.has(neighbour)) {
         const targetEdge = this.getEdge(src, neighbour);
         if (!targetEdge) {
@@ -246,7 +223,7 @@ export default class GraphicalGraph extends GraphicalDataStructure {
    * @returns existence of edge v-w.
    */
   private isAdjacent(v: number, w: number): boolean {
-    return this.edges.some(
+    return this._edges.some(
       (edge) =>
         (edge.source.id === String(v) && edge.target.id === String(w)) ||
         (edge.source.id === String(w) && edge.target.id === String(v) && edge.isBidirectional)
@@ -268,15 +245,21 @@ export default class GraphicalGraph extends GraphicalDataStructure {
     return GraphicalGraph.documentation;
   }
 
-  private getEdge(src: number, dest: number) {
-    console.log(this.edges);
-    const targetEdge = this.edges.find(
-      (edge) =>
-        (parseInt(edge.source.id, 10) === src && parseInt(edge.target.id, 10) === dest) ||
-        (parseInt(edge.source.id, 10) === dest &&
-          parseInt(edge.target.id, 10) === src &&
-          edge.isBidirectional)
-    );
+  private getEdge(src: number | string, dest: number | string, ignoreDirection: boolean = false) {
+    const matchSrc = typeof src === 'string' ? parseInt(src, 10) : src;
+    const matchDest = typeof dest === 'string' ? parseInt(dest, 10) : dest;
+
+    const targetEdge = this._edges.find((edge) => {
+      const edgeSrc = parseInt(edge.source.id, 10);
+      const edgeDest = parseInt(edge.target.id, 10);
+      return (
+        (edgeSrc === matchSrc && edgeDest === matchDest) ||
+        (edgeSrc === matchDest &&
+          edgeDest === matchSrc &&
+          (edge.isBidirectional || ignoreDirection))
+      );
+    });
+
     return targetEdge;
   }
 }
