@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@types/d3": "^7.4.0",
+    "@types/d3-force": "^3.0.3"
+  }
+}

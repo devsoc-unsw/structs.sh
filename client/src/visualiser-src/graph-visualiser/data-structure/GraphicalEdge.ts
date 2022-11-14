@@ -1,4 +1,5 @@
-import { Marker, Path, SVG } from '@svgdotjs/svg.js';
+import { Path, SVG } from '@svgdotjs/svg.js';
+import { getEdgeIdFragment } from '../util/id';
 import { GraphicalVertex } from './GraphicalVertex';
 
 export class GraphicalEdge {
@@ -32,21 +33,33 @@ export class GraphicalEdge {
   }
 
   public getReference(): Path {
-    return SVG(`.edge-${this.source.id}-${this.target.id}`) as Path;
+    return SVG(
+      `#edge-${getEdgeIdFragment({ source: this.source.id, target: this.target.id })}`
+    ) as Path;
   }
 
   public getEndArrowheadReference(): Path {
     // TODO: see util.ts. These lines are duplicated.
     const startVertex = this.source.id < this.target.id ? this.source.id : this.target.id;
     const endVertex = this.source.id < this.target.id ? this.target.id : this.source.id;
-    return SVG(`#arrowhead-end-${startVertex}-${endVertex} > path`) as Path;
+    return SVG(
+      `#arrowhead-end-${getEdgeIdFragment({
+        source: this.source.id,
+        target: this.target.id,
+      })} > path`
+    ) as Path;
   }
 
   public getStartArrowheadReference(): Path {
     // TODO: see util.ts. These lines are duplicated.
     const startVertex = this.source.id < this.target.id ? this.source.id : this.target.id;
     const endVertex = this.source.id < this.target.id ? this.target.id : this.source.id;
-    return SVG(`#arrowhead-start-${startVertex}-${endVertex} > path`) as Path;
+    return SVG(
+      `#arrowhead-start-${getEdgeIdFragment({
+        source: this.source.id,
+        target: this.target.id,
+      })} > path`
+    ) as Path;
   }
 
   public get source() {

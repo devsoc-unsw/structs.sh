@@ -13,7 +13,7 @@ import {
 import { Documentation } from 'visualiser-src/common/typedefs';
 import GraphAnimationProducer from '../animation-producer/GraphAnimationProducer';
 import GraphDfsAnimationProducer from '../animation-producer/GraphDfsAnimationProducer';
-import { renderForceGraph } from '../util/util';
+import { renderForceGraph } from '../util/render';
 import { GraphicalEdge } from './GraphicalEdge';
 import { GraphicalVertex } from './GraphicalVertex';
 
@@ -118,14 +118,7 @@ export default class GraphicalGraph extends GraphicalDataStructure {
    * Must be called after the vertices and edges have been populated.
    */
   private loadGraph() {
-    renderForceGraph(
-      { vertices: this._vertices, edges: this._edges },
-      {
-        nodeId: (d) => d.id,
-        linkStrokeWidth: (l) => Math.sqrt(l.value),
-      }
-    );
-    console.log(this._edges);
+    renderForceGraph(this._vertices, this._edges);
   }
 
   /**
