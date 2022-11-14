@@ -44,6 +44,8 @@ type VertexTextGroup = d3.Selection<
   unknown
 >;
 
+type ClamperFunc = (value: number) => number;
+
 /**
  * Extracts the primitive value from the given value.
  * See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/valueOf.
@@ -79,6 +81,33 @@ const getClamper = (minPosition: number, maxPosition: number) => (position: numb
   Math.max(minPosition, Math.min(maxPosition, position));
 
 /**
+ * Calculates the rotation to apply on the weight label, depending on the angle
+ * of the edge. This makes the weight label more readable since we can associate
+ * it more easily with the edge it's labeling.
+ * @param edge
+ * @returns
+ */
+const rotateWeightLabel = (
+  edge: SimulationLinkDatum<SimulationNodeDatum>,
+  clampX: ClamperFunc,
+  clampY: ClamperFunc
+) => {
+  const src = edge.source as SimulationNodeDatum;
+  const dest = edge.target as SimulationNodeDatum;
+
+  const [x1, y1, x2, y2] = [clampX(src.x), clampY(src.y), clampX(dest.x), clampY(dest.y)];
+  const gradient = (y2 - y1) / (x2 - x1);
+  const angleBetweenEdgeAndXAxis = Math.atan(Math.abs(gradient)) * (180 / Math.PI);
+
+  // Quadrants 1 and 3.
+  if (gradient >= 0) {
+    return angleBetweenEdgeAndXAxis;
+  }
+  // Quandrants 2 and 4.
+  return -angleBetweenEdgeAndXAxis;
+};
+
+/**
  * Callback that gets run on each 'tick' of the force simulation. Think of this
  * as a function called for each frame in a video game.
  *
@@ -100,21 +129,9 @@ const handleTick = (
   vertexGroup: VertexGroup,
   weightLabelGroup: WeightLabelGroup,
   vertexTextGroup: VertexTextGroup,
-  containerWidth: number,
-  containerHeight: number
+  clampX: ClamperFunc,
+  clampY: ClamperFunc
 ) => {
-  // Determine the x and y boundaries that a vertex can be positioned at.
-  // Clamping is necessary to prevent the vertex from flying out of the
-  // container's dimensions.
-  const clampX = getClamper(
-    -containerWidth / 2 + NODE_DIAMETER / 2,
-    containerWidth / 2 - NODE_DIAMETER / 2
-  );
-  const clampY = getClamper(
-    -containerHeight / 2 + NODE_DIAMETER / 2,
-    containerHeight / 2 - NODE_DIAMETER / 2
-  );
-
   // On each tick of the simulation, update the coordinates of everything.
   edgeGroup
     .attr('x1', (d: SimulationLinkDatum<SimulationNodeDatum>) =>
@@ -144,7 +161,8 @@ const handleTick = (
         (clampY((d.source as SimulationNodeDatum).y) +
           clampY((d.target as SimulationNodeDatum).y)) /
         2
-    );
+    )
+    .attr('rotate', (edge) => rotateWeightLabel(edge, clampX, clampY));
   vertexTextGroup.attr('x', (d) => clampX(d.x)).attr('y', (d) => clampY(d.y));
 };
 
@@ -263,7 +281,9 @@ const instantiateVertexLabels = (
 
 const instantiateWeightLabels = (
   graph: GraphContainer,
-  simulationEdges: SimulationLinkDatum<SimulationNodeDatum>[]
+  simulationEdges: SimulationLinkDatum<SimulationNodeDatum>[],
+  clampX: ClamperFunc,
+  clampY: ClamperFunc
 ) =>
   graph
     .append('g')
@@ -278,9 +298,14 @@ const instantiateWeightLabels = (
     )
     .text((edge) => `${(edge as GraphicalEdge).weight}`)
     .style('font-size', WEIGHT_LABEL_SIZE)
+    .style('font-weight', 'bold')
+    .style('stroke', 'lightgrey')
     .attr('fill', 'black')
     .attr('text-anchor', 'middle')
-    .attr('alignment-baseline', 'middle');
+    .attr('alignment-baseline', 'middle')
+    .attr('transform-origin', 'center center')
+    .attr('transform-box', 'fill-box')
+    .attr('rotate', (edge) => rotateWeightLabel(edge, clampX, clampY));
 
 /**
  * Settle every single thing in the graph into the right position. All vertices,
@@ -299,20 +324,9 @@ const reachEquilibriumPosition = (
   vertexGroup: VertexGroup,
   weightLabelGroup: WeightLabelGroup,
   vertexTextGroup: VertexTextGroup,
-  containerWidth: number,
-  containerHeight: number
+  clampX: ClamperFunc,
+  clampY: ClamperFunc
 ) => {
-  const clampX = (x) =>
-    Math.max(
-      -containerWidth / 2 + NODE_DIAMETER / 2,
-      Math.min(containerWidth / 2 - NODE_DIAMETER / 2, x)
-    );
-  const clampY = (y) =>
-    Math.max(
-      -containerHeight / 2 + NODE_DIAMETER / 2,
-      Math.min(containerHeight / 2 - NODE_DIAMETER / 2, y)
-    );
-
   edgeGroup
     .attr('x1', (d: SimulationLinkDatum<SimulationNodeDatum>) =>
       clampX((d.source as SimulationNodeDatum).x)
@@ -343,7 +357,8 @@ const reachEquilibriumPosition = (
         (clampY((d.source as SimulationNodeDatum).y) +
           clampY((d.target as SimulationNodeDatum).y)) /
         2
-    );
+    )
+    .attr('rotate', (edge) => rotateWeightLabel(edge, clampX, clampY));
 
   vertexTextGroup.attr('x', (d: any) => clampX(d.x)).attr('y', (d: any) => clampY(d.y));
 };
@@ -390,7 +405,7 @@ export function renderForceGraph(vertices: GraphicalVertex[], edges: GraphicalEd
 
   // Construct the forces. Nodes must strongly repel each other and links must
   // attract them together.
-  const forceNode = d3.forceManyBody().strength(-2800).distanceMax(500);
+  const forceNode = d3.forceManyBody().strength(-2800).distanceMax(700);
   const forceLink = d3
     .forceLink(simEdges)
     .id(({ index: i }) => verticesMap[i])
@@ -411,12 +426,24 @@ export function renderForceGraph(vertices: GraphicalVertex[], edges: GraphicalEd
   simulation.stop();
   simulation.tick(300);
 
+  // Determine the x and y boundaries that a vertex can be positioned at.
+  // Clamping is necessary to prevent the vertex from flying out of the
+  // container's dimensions.
+  const clampX = getClamper(
+    -containerWidth / 2 + NODE_DIAMETER / 2,
+    containerWidth / 2 - NODE_DIAMETER / 2
+  );
+  const clampY = getClamper(
+    -containerHeight / 2 + NODE_DIAMETER / 2,
+    containerHeight / 2 - NODE_DIAMETER / 2
+  );
+
   // Add the edges to the graph and set their properties.
   const edgeGroup = instantiateEdges(graph, simEdges);
   instantiateEdgeArrowheads(graph, simEdges);
 
   // Add the weight labels to the graph and set their properties.
-  const weightLabelGroup = instantiateWeightLabels(graph, simEdges);
+  const weightLabelGroup = instantiateWeightLabels(graph, simEdges, clampX, clampY);
 
   // Add the vertices to the graph and set their properties.
   const vertexGroup = instantiateVertices(graph, simVertices);
@@ -430,22 +457,15 @@ export function renderForceGraph(vertices: GraphicalVertex[], edges: GraphicalEd
     vertexGroup,
     weightLabelGroup,
     vertexTextGroup,
-    containerWidth,
-    containerHeight
+    clampX,
+    clampY
   );
 
   // Registering a tick event handler so that whenever a node's position
   // updates (due to user drag, for example), the rest of the nodes re-update
   // their position.
   simulation.on('tick', () =>
-    handleTick(
-      edgeGroup,
-      vertexGroup,
-      weightLabelGroup,
-      vertexTextGroup,
-      containerWidth,
-      containerHeight
-    )
+    handleTick(edgeGroup, vertexGroup, weightLabelGroup, vertexTextGroup, clampX, clampY)
   );
 
   return Object.assign(graph.node());
