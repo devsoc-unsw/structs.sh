@@ -1,36 +1,55 @@
-import { Circle, Marker, Path } from '@svgdotjs/svg.js';
-import { EDGE_FILL, EDGE_WIDTH, STROKE_WIDTH } from 'visualiser-src/common/constants';
+import { Circle, CircleMethods, Marker, Path, Text } from '@svgdotjs/svg.js';
+import {
+  EDGE_FILL,
+  EDGE_WIDTH,
+  STROKE_WIDTH,
+  VERTEX_FILL,
+  VERTEX_STROKE,
+} from 'visualiser-src/common/constants';
 import AnimationProducer from '../../common/AnimationProducer';
 
 export default class GraphAnimationProducer extends AnimationProducer {
-  public highlightVertex(vertex: Circle): void {
+  public highlightVertex(vertex: Circle, vertexText: Text): void {
     // TODO: move hex codes in this file to a constants file.
-    this.addSequenceAnimation(vertex.animate().attr({ fill: '#dbff27' }));
+    this.addSequenceAnimation(
+      vertex.animate().attr({ stroke: '#39AF8E', 'stroke-width': '6px', fill: '#48dbb2' })
+    );
+    this.addSequenceAnimation(vertexText.animate().attr({ fill: '#FFFFFF' }));
   }
 
   public highlightEdge(edge: Path, startArrowhead: Path, endArrowhead: Path): void {
     this.addSequenceAnimation(
       edge.animate().attr({
-        stroke: '#00008B',
-        'stroke-width': '10px',
+        'stroke-width': '6px',
+        stroke: '#39AF8E',
       })
     );
     this.addSequenceAnimation(
       endArrowhead.animate().attr({
-        fill: '#00008B',
+        stroke: '#39AF8E',
+        fill: '#39AF8E',
       })
     );
     this.addSequenceAnimation(
       startArrowhead.animate().attr({
-        fill: '#00008B',
+        stroke: '#39AF8E',
+        fill: '#39AF8E',
       })
     );
   }
 
-  public unhighlightVertex(vertex: Circle): void {
+  public unhighlightVertex(vertex: CircleMethods, vertexText: Text): void {
     this.addSequenceAnimation(
       vertex.animate().attr({
-        fill: '#FFFFFF',
+        stroke: VERTEX_STROKE,
+        'stroke-width': STROKE_WIDTH,
+        fill: VERTEX_FILL,
+      })
+    );
+
+    this.addSequenceAnimation(
+      vertexText.animate().attr({
+        fill: '#000000',
       })
     );
   }
@@ -45,18 +64,21 @@ export default class GraphAnimationProducer extends AnimationProducer {
     this.addSequenceAnimation(
       endArrowhead.animate().attr({
         fill: EDGE_FILL,
+        stroke: EDGE_FILL,
       })
     );
     this.addSequenceAnimation(
       startArrowhead.animate().attr({
         fill: EDGE_FILL,
+        stroke: EDGE_FILL,
       })
     );
   }
 
-  public unhighlightAllVerticesAndEdges(edges: [Path, Path, Path][], vertices: Circle[]) {
+  public unhighlightAllVerticesAndEdges(edges: [Path, Path, Path][], vertices: [Circle, Text][]) {
     vertices.forEach((vertex) => {
-      this.unhighlightVertex(vertex);
+      const [circle, text] = vertex;
+      this.unhighlightVertex(circle, text);
     });
     edges.forEach((edge) => {
       const [line, startArrowhead, endArrowhead] = edge;

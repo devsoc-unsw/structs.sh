@@ -12,7 +12,9 @@ import {
   EDGE_WIDTH,
   NODE_DIAMETER,
   STROKE_WIDTH,
+  VERTEX_FILL,
   VERTEX_FONT_SIZE,
+  VERTEX_STROKE,
   VISUALISER_CANVAS,
   WEIGHT_LABEL_SIZE,
 } from 'visualiser-src/common/constants';
@@ -208,8 +210,8 @@ const instantiateVertices = (graph: GraphContainer, simulationVertices: Simulati
     .join('circle')
     .attr('r', NODE_DIAMETER / 2)
     .attr('id', (node) => `vertex-${(node as GraphicalVertex).id}`)
-    .attr('fill', '#FFFFFF')
-    .attr('stroke', '#000000')
+    .attr('fill', VERTEX_FILL)
+    .attr('stroke', VERTEX_STROKE)
     .attr('stroke-opacity', 1)
     .attr('stroke-width', STROKE_WIDTH);
 

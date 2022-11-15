@@ -1,4 +1,4 @@
-import { Circle, Path, SVG } from '@svgdotjs/svg.js';
+import { Circle, Path, SVG, Text } from '@svgdotjs/svg.js';
 
 export class GraphicalVertex {
   // Note: d3 expects this to be named exactly `id`.
@@ -14,5 +14,9 @@ export class GraphicalVertex {
 
   public getReference(): Circle {
     return SVG(`#vertex-${this.id}`) as Circle;
+  }
+
+  public getTextReference(): Text {
+    return SVG(`#text-${this.id}`) as Text;
   }
 }

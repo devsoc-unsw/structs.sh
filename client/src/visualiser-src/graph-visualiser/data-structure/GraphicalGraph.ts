@@ -175,7 +175,10 @@ export default class GraphicalGraph extends GraphicalDataStructure {
           graphicalEdge.getStartArrowheadReference(),
           graphicalEdge.getEndArrowheadReference(),
         ]),
-        this._vertices.map((graphicalVertex) => graphicalVertex.getReference())
+        this._vertices.map((graphicalVertex) => [
+          graphicalVertex.getReference(),
+          graphicalVertex.getTextReference(),
+        ])
       );
     }
 
@@ -199,7 +202,13 @@ export default class GraphicalGraph extends GraphicalDataStructure {
     // Mark the current vertex as visited.
     visited.add(src);
     const vertexElem = this._vertices[src].getReference();
-    animationProducer.doAnimationAndHighlight(2, animationProducer.highlightVertex, vertexElem);
+    const vertexLabelElem = this._vertices[src].getTextReference();
+    animationProducer.doAnimationAndHighlight(
+      2,
+      animationProducer.highlightVertex,
+      vertexElem,
+      vertexLabelElem
+    );
 
     // For each unvisited neighbour, highlight the edge to that neighbour and
     // launch DFS on them.
