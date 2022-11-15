@@ -3,9 +3,11 @@ import { SimulationLinkDatum, SimulationNodeDatum } from 'd3';
 import {
   ARROWHEAD_FATNESS,
   ARROWHEAD_FILL,
+  ARROWHEAD_POSITION_OFFSET,
   CONTAINER_DEFAULT_HEIGHT,
   CONTAINER_DEFAULT_WIDTH,
   EDGE_FILL,
+  EDGE_OPACITY,
   EDGE_PATH_D,
   EDGE_WIDTH,
   NODE_DIAMETER,
@@ -64,7 +66,7 @@ const getGraphContainerDimensions = (): [number, number] => {
     Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) ||
     CONTAINER_DEFAULT_WIDTH;
   const containerHeight =
-    Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0) - 600 ||
+    Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0) - 400 ||
     CONTAINER_DEFAULT_HEIGHT;
   return [containerWidth, containerHeight];
 };
@@ -172,13 +174,14 @@ const instantiateEdges = (
 ) =>
   graph
     .append('g')
-    .attr('stroke', EDGE_FILL)
-    .attr('stroke-width', EDGE_WIDTH)
-    .attr('stroke-linecap', 'round')
     .attr('id', 'edges')
     .selectAll('line')
     .data(simulationEdges)
     .join('line')
+    .attr('stroke', EDGE_FILL)
+    .attr('stroke-opacity', EDGE_OPACITY)
+    .attr('stroke-width', EDGE_WIDTH)
+    .attr('stroke-linecap', 'round')
     .attr(
       'id',
       (edge: SimulationLinkDatum<SimulationNodeDatum>) => `edge-${getEdgeIdFragment(edge)}`
@@ -199,17 +202,16 @@ const instantiateEdges = (
 const instantiateVertices = (graph: GraphContainer, simulationVertices: SimulationNodeDatum[]) =>
   graph
     .append('g')
-    .attr('fill', '#FFFFFF')
-    .attr('stroke', '#0000FF')
-    .attr('stroke-opacity', 1)
-    .attr('stroke-width', STROKE_WIDTH)
     .attr('id', 'vertices')
     .selectAll('circle')
     .data(simulationVertices)
     .join('circle')
     .attr('r', NODE_DIAMETER / 2)
     .attr('id', (node) => `vertex-${(node as GraphicalVertex).id}`)
-    .attr('stroke', '#000000');
+    .attr('fill', '#FFFFFF')
+    .attr('stroke', '#000000')
+    .attr('stroke-opacity', 1)
+    .attr('stroke-width', STROKE_WIDTH);
 
 const instantiateEdgeArrowheads = (
   graph: GraphContainer,
@@ -227,7 +229,7 @@ const instantiateEdgeArrowheads = (
     )
     .attr('viewBox', '-0 -10 20 20')
     // The offset of the arrowhead.
-    .attr('refX', NODE_DIAMETER / 2 - 5)
+    .attr('refX', NODE_DIAMETER / 2 - ARROWHEAD_POSITION_OFFSET)
     .attr('refY', 0)
     .attr('orient', 'auto')
     .attr('markerWidth', ARROWHEAD_FATNESS)
@@ -246,7 +248,7 @@ const instantiateEdgeArrowheads = (
     .attr('id', (edge) => `arrowhead-start-${getEdgeIdFragment(edge)}`)
     .attr('viewBox', '-0 -10 20 20')
     // The offset of the arrowhead.
-    .attr('refX', NODE_DIAMETER / 2 - 5)
+    .attr('refX', NODE_DIAMETER / 2 - ARROWHEAD_POSITION_OFFSET)
     .attr('refY', 0)
     // Reverses the direction of 'end-arrowhead'. See: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/orient.
     .attr('orient', 'auto-start-reverse')
@@ -405,12 +407,12 @@ export function renderForceGraph(vertices: GraphicalVertex[], edges: GraphicalEd
 
   // Construct the forces. Nodes must strongly repel each other and links must
   // attract them together.
-  const forceNode = d3.forceManyBody().strength(-2800).distanceMax(700);
+  const forceNode = d3.forceManyBody().strength(-2000).distanceMax(750);
   const forceLink = d3
     .forceLink(simEdges)
     .id(({ index: i }) => verticesMap[i])
     .strength(0.08);
-  const centralForce = d3.forceCenter();
+  const centralForce = d3.forceCenter().strength(0.5);
 
   // Set the force directed layout simulation parameters.
   const simulation = d3

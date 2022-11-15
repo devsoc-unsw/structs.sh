@@ -166,6 +166,19 @@ export default class GraphicalGraph extends GraphicalDataStructure {
     const visited = new Set<number>();
     this.dfsRecurse(producer, src, visited);
 
+    // Unhighlight all vertices and edges.
+    if (this._edges && this._vertices) {
+      producer.doAnimation(
+        producer.unhighlightAllVerticesAndEdges,
+        this._edges.map((graphicalEdge) => [
+          graphicalEdge.getReference(),
+          graphicalEdge.getStartArrowheadReference(),
+          graphicalEdge.getEndArrowheadReference(),
+        ]),
+        this._vertices.map((graphicalVertex) => graphicalVertex.getReference())
+      );
+    }
+
     return producer;
   }
 
@@ -225,14 +238,9 @@ export default class GraphicalGraph extends GraphicalDataStructure {
   }
 
   public generate(): void {
-    // TODO: IMPLEMENT ME
-    alert('NOT IMPLEMENTED');
-  }
-
-  public reset(): void {
-    // Reset state.
-    // TODO: IMPLEMENT ME
-    alert('NOT IMPLEMENTED');
+    this.randomlyAssignVertices();
+    this.randomlyAssignEdges();
+    this.loadGraph();
   }
 
   public get documentation() {
