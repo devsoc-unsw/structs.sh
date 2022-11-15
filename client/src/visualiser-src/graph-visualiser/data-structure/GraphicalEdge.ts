@@ -38,24 +38,10 @@ export class GraphicalEdge {
     ) as Path;
   }
 
-  public getEndArrowheadReference(): Path {
-    // TODO: see util.ts. These lines are duplicated.
-    const startVertex = this.source.id < this.target.id ? this.source.id : this.target.id;
-    const endVertex = this.source.id < this.target.id ? this.target.id : this.source.id;
+  public getArrowheadReference(side: 'start' | 'end'): Path {
+    // Query for the <marker> element's path child.
     return SVG(
-      `#arrowhead-end-${getEdgeIdFragment({
-        source: this.source.id,
-        target: this.target.id,
-      })} > path`
-    ) as Path;
-  }
-
-  public getStartArrowheadReference(): Path {
-    // TODO: see util.ts. These lines are duplicated.
-    const startVertex = this.source.id < this.target.id ? this.source.id : this.target.id;
-    const endVertex = this.source.id < this.target.id ? this.target.id : this.source.id;
-    return SVG(
-      `#arrowhead-start-${getEdgeIdFragment({
+      `#arrowhead-${side}-${getEdgeIdFragment({
         source: this.source.id,
         target: this.target.id,
       })} > path`

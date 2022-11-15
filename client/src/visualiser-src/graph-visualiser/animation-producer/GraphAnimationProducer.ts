@@ -10,9 +10,8 @@ import AnimationProducer from '../../common/AnimationProducer';
 
 export default class GraphAnimationProducer extends AnimationProducer {
   public highlightVertex(vertex: Circle, vertexText: Text): void {
-    // TODO: move hex codes in this file to a constants file.
     this.addSequenceAnimation(
-      vertex.animate().attr({ stroke: '#39AF8E', 'stroke-width': '6px', fill: '#48dbb2' })
+      vertex.animate().attr({ stroke: '#39AF8E', 'stroke-width': '4px', fill: '#48dbb2' })
     );
     this.addSequenceAnimation(vertexText.animate().attr({ fill: '#FFFFFF' }));
   }

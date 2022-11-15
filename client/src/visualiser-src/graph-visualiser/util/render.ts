@@ -182,7 +182,7 @@ const instantiateEdges = (
     .join('line')
     .attr('stroke', EDGE_FILL)
     .attr('stroke-opacity', EDGE_OPACITY)
-    .attr('stroke-width', EDGE_WIDTH)
+    .attr('stroke-width', STROKE_WIDTH)
     .attr('stroke-linecap', 'round')
     .attr(
       'id',

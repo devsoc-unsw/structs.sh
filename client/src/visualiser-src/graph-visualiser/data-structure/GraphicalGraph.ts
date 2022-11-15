@@ -172,8 +172,8 @@ export default class GraphicalGraph extends GraphicalDataStructure {
         producer.unhighlightAllVerticesAndEdges,
         this._edges.map((graphicalEdge) => [
           graphicalEdge.getReference(),
-          graphicalEdge.getStartArrowheadReference(),
-          graphicalEdge.getEndArrowheadReference(),
+          graphicalEdge.getArrowheadReference('start'),
+          graphicalEdge.getArrowheadReference('end'),
         ]),
         this._vertices.map((graphicalVertex) => [
           graphicalVertex.getReference(),
@@ -224,8 +224,8 @@ export default class GraphicalGraph extends GraphicalDataStructure {
           4,
           animationProducer.highlightEdge,
           targetEdge.getReference(),
-          targetEdge.getStartArrowheadReference(),
-          targetEdge.getEndArrowheadReference()
+          targetEdge.getArrowheadReference('start'),
+          targetEdge.getArrowheadReference('end')
         );
         this.dfsRecurse(animationProducer, neighbour, visited);
       }
