@@ -1,5 +1,5 @@
 export const insertCodeSnippet = `struct node *insert(struct node *node, int value) {
-    if (node == null)
+    if (node == NULL)
         return create_new_node(value);
 
     if (value < node->value)
@@ -7,9 +7,33 @@ export const insertCodeSnippet = `struct node *insert(struct node *node, int val
     else if (value > node->value)
         node->right = insert(node->right, value);
     return node;
-  }`;
+}`;
 
-export const rotateLeftCodeSnippet = `struct node *rotate_left(struct node *node, value) {
+export const deleteCodeSnippet = `struct node *delete(struct node *node, int value) {
+    if (node == NULL)
+        return node;
+
+    struct node *new_root = node;
+    if (value < node->value) {
+        node->left = delete(node->left, value);
+    } else if (value > node->value) {
+        node->right = delete(node->right, value);
+    } else {
+        if (node->left == NULL && node->right == NULL) {
+            new_root = NULL;
+        } else if (node->left == NULL) {
+            new_root = node->right;
+        } else if (node->right == NULL) {
+            new_root = node->left;
+        } else {
+            new_root = tree_join(node->left, node->right);
+        }
+        free(node);
+    }
+    return new_root;
+}`;
+
+export const rotateLeftCodeSnippet = `struct node *rotate_left(struct node *node, int value) {
     if (value == node->value) {
         struct node *new_root = node->right;
         node->right = new_root->left;
@@ -17,13 +41,13 @@ export const rotateLeftCodeSnippet = `struct node *rotate_left(struct node *node
         return new_root;
     } else if (value < node->value) {
         node->left = rotate_left(node->left, value);
-    } else {
+    } else if (value > node->value) {
         node->right = rotate_left(node->right, value);
     }
     return node;
 }`;
 
-export const rotateRightCodeSnippet = `struct node *rotate_right(struce node *node, value) {
+export const rotateRightCodeSnippet = `struct node *rotate_right(struce node *node, int value) {
     if (value == node->value) {
         struct node *new_root = node->left;
         node->left = new_root->right;
@@ -31,7 +55,7 @@ export const rotateRightCodeSnippet = `struct node *rotate_right(struce node *no
         return new_root;
     } else if (value < node->value) {
         node->left = rotate_right(node->left, value);
-    } else {
+    } else if (value > node->value) {
         node->right = rotate_right(node->right, value);
     }
     return node;

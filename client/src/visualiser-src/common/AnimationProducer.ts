@@ -55,7 +55,7 @@ export default abstract class AnimationProducer {
     lines.forEach((line, i) => {
       const codeLine: CodeLine = {
         rectTarget: SVG()
-          .rect(2000, 18)
+          .rect(450, 18)
           .move(-5, 18 * i)
           .fill('#14113C')
           .addTo(CODE_CANVAS),
@@ -65,7 +65,7 @@ export default abstract class AnimationProducer {
           .fill('#FFFFFF')
           .attr('style', 'white-space: pre-wrap')
           .move(0, 18 * i + 2)
-          .x(line.search(/\S/) > 0 ? line.search(/\S/) * 5 : 0)
+          .x(SHOW_LINE_NUMBERS ? 0 : line.search(/\S/) * 5)
           .addTo(CODE_CANVAS),
       };
 
