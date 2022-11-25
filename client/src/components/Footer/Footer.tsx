@@ -1,6 +1,6 @@
 import React from 'react';
 import { Theme, Box, Container, Grid, Typography, Link } from '@mui/material';
-import { useTheme } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import { styled } from '@mui/system';
 import { Link as RouterLink } from 'react-router-dom';
 import structsLogo from 'assets/img/structs.png';

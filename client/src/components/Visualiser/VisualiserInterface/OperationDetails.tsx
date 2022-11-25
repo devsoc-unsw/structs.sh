@@ -3,7 +3,7 @@ import { Box, Collapse, List, ListItem, ListItemIcon, Theme, Typography } from '
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { makeStyles, styled, useTheme } from '@mui/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import VisualiserContext from './VisualiserContext';

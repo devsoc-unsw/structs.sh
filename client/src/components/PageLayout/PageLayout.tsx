@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from 'react';
 import { Box, Theme } from '@mui/material';
-import { useTheme } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import { motion } from 'framer-motion';
 import { TopNavbar } from 'components/Navbars';
 import Footer from 'components/Footer';
