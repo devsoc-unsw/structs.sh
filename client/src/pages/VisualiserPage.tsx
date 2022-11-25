@@ -2,8 +2,6 @@ import { LineLoader } from 'components/Loader';
 import Visualiser from 'components/Visualiser';
 import React, { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getTopic, Topic } from 'utils/apiRequests';
-import Notification from 'utils/Notification';
 import { toTitleCase, urlToTitle } from 'utils/url';
 import 'visualiser-src/linked-list-visualiser/styles/visualiser.css';
 import { motion } from 'framer-motion';
