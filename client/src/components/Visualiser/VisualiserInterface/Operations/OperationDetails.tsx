@@ -79,6 +79,8 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
   };
 
   const executeCommand = (args: string[]) => {
+    console.log(args);
+    console.log(command);
     const err = controller.doOperation(command, handleTimelineUpdate, ...args);
     setErrorMessage(err);
     if (err !== '') {
@@ -113,6 +115,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
             documentation[command].args.map((eachArg, idx) => (
               <Box key={idx} boxSizing="border-box" padding={1} width={120}>
                 <TextField
+                  type="number"
                   size="small"
                   value={currentInputs[idx]}
                   onKeyPress={(e) => {

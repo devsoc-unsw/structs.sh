@@ -209,6 +209,7 @@ class GraphicalBST extends GraphicalDataStructure {
   }
 
   public inorderTraversal() {
+    console.log('Hi');
     return GraphicalTreeTraversal.inorderTraversal(this.root);
   }
 

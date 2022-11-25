@@ -134,29 +134,29 @@ class VisualiserController {
     if (args.includes('')) {
       return 'Argument(s) missing';
     }
-    if (
-      !args.every((value, idx) =>
-        expectedArgs[idx].endsWith('s')
-          ? value
-              .split(/,| /g)
-              .filter((str) => str !== '')
-              .every((el) => /^\d+$/.test(el))
-          : /^\d+$/.test(value)
-      )
-    ) {
-      return 'Argument(s) must be a positive integer';
-    }
-    let valueIndex = expectedArgs.indexOf('value');
-    valueIndex = valueIndex === -1 ? expectedArgs.indexOf('values') : valueIndex;
-    if (
-      valueIndex !== -1 &&
-      !args[valueIndex]
-        .split(/,|\s+/g)
-        .filter((str) => str !== '')
-        .every((arg) => Number(arg) >= 0 && Number(arg) <= 99)
-    ) {
-      return 'Values must be between 0 and 99';
-    }
+    // if (
+    //   !args.every((value, idx) =>
+    //     expectedArgs[idx].endsWith('s')
+    //       ? value
+    //           .split(/,| /g)
+    //           .filter((str) => str !== '')
+    //           .every((el) => /^\d+$/.test(el))
+    //       : /^\d+$/.test(value)
+    //   )
+    // ) {
+    //   return 'Argument(s) must be a positive integer';
+    // }
+    // let valueIndex = expectedArgs.indexOf('value');
+    // valueIndex = valueIndex === -1 ? expectedArgs.indexOf('values') : valueIndex;
+    // if (
+    //   valueIndex !== -1 &&
+    //   !args[valueIndex]
+    //     .split(/,|\s+/g)
+    //     .filter((str) => str !== '')
+    //     .every((arg) => Number(arg) >= 0 && Number(arg) <= 99)
+    // ) {
+    //   return 'Values must be between 0 and 99';
+    // }
     return '';
   }
 

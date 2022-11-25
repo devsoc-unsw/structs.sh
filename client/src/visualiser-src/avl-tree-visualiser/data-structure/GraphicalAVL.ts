@@ -54,6 +54,7 @@ class GraphicalAVL extends GraphicalDataStructure {
   }
 
   public traversal(input: string): BSTTraverseAnimationProducer {
+    console.log(`The input is ${input}`);
     switch (input) {
       case 'Inorder':
         return GraphicalTreeTraversal.inorderTraversal(this.root);
