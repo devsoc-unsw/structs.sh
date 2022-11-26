@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Box, Grid, Link, List, ListItem, ListItemIcon, Typography } from '@mui/material';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import BulletIcon from '@mui/icons-material/ArrowForwardIos';
 import VisualiserIcon from '@mui/icons-material/AutoFixHigh';
 import EditIcon from '@mui/icons-material/Edit';

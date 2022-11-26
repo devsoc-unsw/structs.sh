@@ -1,5 +1,5 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import {
   AppBar,
   Box,

@@ -1,6 +1,6 @@
 import { Theme } from '@mui/material';
 import Divider from '@mui/material/Divider';
-import { useTheme } from '@mui/system';
+import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
 const HorizontalRule = () => {
