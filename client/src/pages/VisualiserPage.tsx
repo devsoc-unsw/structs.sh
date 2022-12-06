@@ -35,7 +35,7 @@ const VisualiserPage = () => {
   const topic = toTitleCase(urlToTitle(useParams().topic));
 
   return topic ? (
-    <>
+    <Box height="100vh" overflow="hidden">
       <TopNavbar position="static" />
       <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="exit">
         <Helmet>
@@ -43,7 +43,7 @@ const VisualiserPage = () => {
         </Helmet>
         <Visualiser topicTitle={topic} />
       </motion.div>
-    </>
+    </Box>
   ) : (
     <LineLoader fullViewport />
   );
