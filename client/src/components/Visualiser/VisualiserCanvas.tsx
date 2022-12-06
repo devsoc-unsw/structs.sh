@@ -10,7 +10,7 @@ import { Box } from '@mui/material';
  * attaches itself to.
  */
 const VisualiserCanvas: React.FC = () => (
-  <Box id="visualiser-container">
+  <Box id="visualiser-container" width={window.screen.width}>
     <svg id="visualiser-canvas" />
   </Box>
 );
