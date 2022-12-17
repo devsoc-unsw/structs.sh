@@ -1,14 +1,12 @@
-import { LineLoader } from 'components/Loader';
-import Visualiser from 'components/Visualiser';
 import React, { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { toTitleCase, urlToTitle } from 'utils/url';
-import 'visualiser-src/linked-list-visualiser/styles/visualiser.css';
 import { motion } from 'framer-motion';
 import Helmet from 'react-helmet';
+import { toTitleCase, urlToTitle } from 'utils/url';
+import 'visualiser-src/linked-list-visualiser/styles/visualiser.css';
 import { TopNavbar } from 'components/Navbars';
-import { Theme } from '@mui/material';
-import Box from '@mui/material/Box';
+import { LineLoader } from 'components/Loader';
+import Visualiser from 'components/Visualiser';
 
 const containerVariants = {
   hidden: {
