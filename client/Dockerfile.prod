@@ -18,7 +18,7 @@ FROM nginx:1.23.1-alpine
 
 # From stage 1, copy the build files into the default directory that NGINX serves files from.
 # The project will serve requests inbound at port 80 in the container
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/nginx/html
 
 EXPOSE 80
 
