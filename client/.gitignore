@@ -1,6 +1,5 @@
 node_modules
 build-storybook
 storybook-static
-dist
 build
 .jest-test-results.json
