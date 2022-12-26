@@ -8,7 +8,7 @@
     "@mui/icons-material": "5.1.1",
     "@mui/material": "5.1.1",
     "@mui/styles": "5.1.1",
-    "@mui/system": "5.4.0",
+    "@mui/system": "5.11.2",
     "@svgdotjs/svg.js": "^3.1.2",
     "axios": "0.27.2",
     "cogo-toast": "4.2.3",
