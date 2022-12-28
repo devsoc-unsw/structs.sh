@@ -62,6 +62,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
   };
 
   const executeCommand = (args: string[]) => {
+    console.log(controller);
     const err = controller.doOperation(command, handleTimelineUpdate, ...args);
     setErrorMessage(err);
     if (err !== '') {

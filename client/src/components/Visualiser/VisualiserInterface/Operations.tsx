@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Alert, Box, List, Typography, useTheme, Collapse } from '@mui/material';
 import FloatingWindow from 'components/FloatingWindow';
 import VisualiserContext from './VisualiserContext';
@@ -15,31 +15,55 @@ import OperationDetails from './OperationDetails';
  * `commandsInputRules.ts` file, where the terminal commands also reside.
  */
 const Operations = () => {
-  const { documentation, topicTitle } = useContext(VisualiserContext);
+  const {
+    controller,
+    documentation,
+    topicTitle,
+    timeline: { handleTimelineUpdate },
+  } = useContext(VisualiserContext);
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const handleToggleExpansion = () => {
     setIsExpanded(!isExpanded);
   };
 
-  return !documentation ? (
-    <Alert severity="error">
-      No operations are defined for the topicTitle &apos;
-      {topicTitle}
-      &apos;
-    </Alert>
-  ) : (
-    <FloatingWindow
-      flexDirection="row"
-      isExpanded={isExpanded}
-      handleToggleExpansion={handleToggleExpansion}
-    >
-      <List>
-        {Object.keys(documentation).map((command) => (
-          <OperationDetails command={command} key={documentation[command].id} />
-        ))}
-      </List>
-    </FloatingWindow>
-  );
+  useEffect(() => {
+    // const executeCommand = () => {
+    //   const command = 'append';
+    //   const args = ['5'];
+    //   controller.doOperation(command, handleTimelineUpdate, ...args);
+    // };
+    if (!controller) return;
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        // e.preventDefault();
+        const command = 'append';
+        const args = ['5'];
+        controller.doOperation(command, handleTimelineUpdate, ...args);
+        // executeCommand();
+      }
+    });
+  }, [controller]);
+
+  // return !documentation ? (
+  //   <Alert severity="error">
+  //     No operations are defined for the topicTitle &apos;
+  //     {topicTitle}
+  //     &apos;
+  //   </Alert>
+  // ) : (
+  //   <FloatingWindow
+  //     flexDirection="row"
+  //     isExpanded={isExpanded}
+  //     handleToggleExpansion={handleToggleExpansion}
+  //   >
+  //     <List>
+  //       {Object.keys(documentation).map((command) => (
+  //         <OperationDetails command={command} key={documentation[command].id} />
+  //       ))}
+  //     </List>
+  //   </FloatingWindow>
+  // );
+  return <></>;
 };
 
 export default Operations;

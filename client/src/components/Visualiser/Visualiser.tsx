@@ -2,6 +2,8 @@ import React from 'react';
 import { CircularLoader } from 'components/Loader';
 import VisualiserCanvas from './VisualiserCanvas';
 import VisualiserInterface from './VisualiserInterface/VisualiserInterface';
+import Debugger from './VisualiserInterface/Debugger';
+import { Box } from '@mui/system';
 
 interface VisualiserProps {
   topicTitle: string;
@@ -19,7 +21,10 @@ interface VisualiserProps {
 const Visualiser: React.FC<VisualiserProps> = ({ topicTitle }) =>
   topicTitle ? (
     <>
-      <VisualiserCanvas />
+      <Box width="100vw" display="flex">
+        <VisualiserCanvas />
+        <Debugger />
+      </Box>
       <VisualiserInterface topicTitle={topicTitle} />
     </>
   ) : (

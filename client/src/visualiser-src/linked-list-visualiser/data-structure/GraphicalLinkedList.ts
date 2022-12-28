@@ -22,26 +22,26 @@ import LinkedListAnimationProducer from '../animation-producer/LinkedListAnimati
 export default class GraphicalLinkedList extends GraphicalDataStructure {
   // this is the documentation shows up in the input section
   private static documentation: Documentation = injectIds({
-    prepend: {
-      args: ['value'],
-      description: 'Prepend a node containing the value.',
-    },
+    // prepend: {
+    //   args: ['value'],
+    //   description: 'Prepend a node containing the value.',
+    // },
     append: {
       args: ['value'],
       description: 'Append a node containing the value.',
     },
-    insert: {
-      args: ['value', 'index'],
-      description: 'Insert a value at the given index.',
-    },
-    search: {
-      args: ['value'],
-      description: 'Search for a value in the linked list.',
-    },
-    delete: {
-      args: ['index'],
-      description: 'Delete a node by the index given.',
-    },
+    // insert: {
+    //   args: ['value', 'index'],
+    //   description: 'Insert a value at the given index.',
+    // },
+    // search: {
+    //   args: ['value'],
+    //   description: 'Search for a value in the linked list.',
+    // },
+    // delete: {
+    //   args: ['index'],
+    //   description: 'Delete a node by the index given.',
+    // },
   });
 
   public headPointer: Path;
@@ -74,7 +74,6 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
       this.head = newNode;
       producer.doAnimationAndHighlight(4, producer.initialiseHead, this.headPointer);
       producer.doAnimationAndHighlight(5, producer.resetPointersAndColor, this.head);
-      
 
       return producer;
     }
@@ -140,8 +139,13 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
         producer.doAnimationAndHighlight(6, producer.movePointerToNextAndHighlight, PREV, prev);
       }
       curr = curr.next;
-      if (i === (index-1)) {
-        producer.doAnimationAndHighlight(7, producer.movePointerToNextAndHighlightRight, CURRENT, curr);
+      if (i === index - 1) {
+        producer.doAnimationAndHighlight(
+          7,
+          producer.movePointerToNextAndHighlightRight,
+          CURRENT,
+          curr
+        );
       } else {
         producer.doAnimationAndHighlight(7, producer.movePointerToNext, CURRENT);
       }

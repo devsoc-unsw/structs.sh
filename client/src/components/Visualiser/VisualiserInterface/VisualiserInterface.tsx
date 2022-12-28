@@ -7,6 +7,7 @@ import Controls from './Controls';
 import Operations from './Operations';
 import CodeSnippet from './CodeSnippet';
 import CreateMenu from './CreateMenu';
+import Debugger from './Debugger';
 
 interface VisualiserInterfaceProps {
   topicTitle: string;
@@ -76,10 +77,11 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
 
   return (
     <VisualiserContext.Provider value={contextValues}>
-      <CreateMenu />
+      <Controls />
+      {/* <CreateMenu /> */}
       <Operations />
       <CodeSnippet />
-      <Controls />
+      {/* <Debugger /> */}
     </VisualiserContext.Provider>
   );
 };
