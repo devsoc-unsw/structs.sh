@@ -19,12 +19,19 @@ void append(int value, struct list *list) {
     while (curr->next != NULL) {
         curr = curr->next;
     }
-    curr->next = new_tail
-};
+    curr->next = new_tail;
+}
 `;
 
 const CodeEditor = () => {
   const [code, setCode] = useState(program);
+  let markers = [];
+  // markers.push({
+  //   startRow: 6,
+  //   endRow: 7,
+  //   className: 'replacement_marker',
+  //   type: 'text',
+  // });
   return (
     <AceEditor
       mode="c_cpp"
@@ -34,6 +41,7 @@ const CodeEditor = () => {
       showPrintMargin={false}
       fontSize="16px"
       onChange={(value) => setCode(value)}
+      markers={markers}
       value={code}
     />
   );

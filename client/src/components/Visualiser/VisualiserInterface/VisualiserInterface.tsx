@@ -42,6 +42,18 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
     topicTitleRef.current = topicTitle;
     setDocumentation(controllerRef.current.documentation);
     setIsCodeSnippetExpanded(false);
+
+    controllerRef.current.generateDataStructure();
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'z') {
+        // e.preventDefault();
+        const command = 'append';
+        const args = ['5'];
+        controllerRef.current.doOperation(command, handleTimelineUpdate, ...args);
+        handleUpdateIsPlaying(true);
+        // executeCommand();
+      }
+    });
   }, [topicTitle]);
 
   const handleTimelineUpdate = useCallback((val) => {
@@ -99,7 +111,7 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
       </Box>
       {/* <CreateMenu /> */}
       {/* <Operations /> */}
-      {/* <CodeSnippet /> */}
+      <CodeSnippet />
       {/* <Controls /> */}
     </VisualiserContext.Provider>
   );

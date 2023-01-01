@@ -16,16 +16,9 @@ const CodeSnippet: FC<Props> = () => {
     handleSetCodeSnippetExpansion(!isCodeSnippetExpanded);
   };
   return (
-    <FloatingWindow
-      flexDirection="row-reverse"
-      minHeight="30vh"
-      isExpanded={isCodeSnippetExpanded}
-      handleToggleExpansion={handleToggleExpansion}
-    >
-      <Box id="code-container">
-        <svg id="code-canvas" />
-      </Box>
-    </FloatingWindow>
+    <Box id="code-container">
+      <svg id="code-canvas" />
+    </Box>
   );
 };
 
