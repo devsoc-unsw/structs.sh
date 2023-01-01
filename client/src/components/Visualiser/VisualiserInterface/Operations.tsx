@@ -19,7 +19,7 @@ const Operations = () => {
     controller,
     documentation,
     topicTitle,
-    timeline: { handleTimelineUpdate },
+    timeline: { handleTimelineUpdate, handleUpdateIsPlaying },
   } = useContext(VisualiserContext);
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const handleToggleExpansion = () => {
@@ -34,11 +34,12 @@ const Operations = () => {
     // };
     if (!controller) return;
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
+      if (e.key === 'z') {
         // e.preventDefault();
         const command = 'append';
         const args = ['5'];
         controller.doOperation(command, handleTimelineUpdate, ...args);
+        handleUpdateIsPlaying(true);
         // executeCommand();
       }
     });

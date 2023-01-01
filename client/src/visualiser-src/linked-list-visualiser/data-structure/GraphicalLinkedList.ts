@@ -66,7 +66,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     producer.renderAppendCode();
 
     // Create new node
-    const newNode = GraphicalLinkedListNode.from(input);
+    let newNode = GraphicalLinkedListNode.from(input);
     producer.doAnimationAndHighlight(2, producer.addNodeAtEnd, newNode, this.length);
 
     // Account for case when list is empty
@@ -74,6 +74,29 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
       this.head = newNode;
       producer.doAnimationAndHighlight(4, producer.initialiseHead, this.headPointer);
       producer.doAnimationAndHighlight(5, producer.resetPointersAndColor, this.head);
+
+      //BRUHHHH
+
+      this.length += 1;
+      newNode = GraphicalLinkedListNode.from(10);
+      producer.doAnimationAndHighlight(2, producer.addNodeAtEnd, newNode, this.length);
+
+      let curr = this.head;
+      producer.doAnimationAndHighlight(8, producer.initialisePointer, CURRENT);
+
+      // Traverse to last node
+      while (curr.next !== null) {
+        curr = curr.next;
+        producer.doAnimationAndHighlight(10, producer.movePointerToNext, CURRENT);
+      }
+
+      // Link last node to new node
+      curr.next = newNode;
+      producer.doAnimationAndHighlight(13, producer.linkLastToNew, curr);
+
+      producer.doAnimation(producer.resetPointersAndColor, curr.next);
+
+      //BRUHHH
 
       return producer;
     }
@@ -93,6 +116,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     producer.doAnimationAndHighlight(13, producer.linkLastToNew, curr);
 
     producer.doAnimation(producer.resetPointersAndColor, curr.next);
+
     return producer;
   }
 

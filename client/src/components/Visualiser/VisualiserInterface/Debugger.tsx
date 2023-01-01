@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button, useTheme } from '@mui/material';
-import Editor, { loader } from '@monaco-editor/react';
+import Editor, { useMonaco } from '@monaco-editor/react';
 import monokai from 'monaco-themes/themes/Monokai.json';
 import githubDark from 'monaco-themes/themes/GitHub Dark.json';
 import { Box } from '@mui/system';
@@ -44,41 +44,40 @@ void append(int value, struct list *list) {
 
 
 int main(int argc, char *argv[]) {
-    // Declare pointer to the head of the linked list, which is empty
     struct list *list = malloc(sizeof(struct list));
     list->head = NULL;
     append(5, list);
-    append(10, list);
 }
 `;
 
 const Debugger = () => {
   const [code, setCode] = useState(program);
   const theme = useTheme();
+  const monaco = useMonaco();
   const handleEditorChange = (value: string) => {
-    // setValue(value);
     setCode(value);
-    console.log(value);
-    console.log(code);
   };
   useEffect(() => {
-    loader.init().then((monaco) => {
-      // monaco.editor.defineTheme('monokai', monokai);
+    if (monaco) {
+      monaco.editor.defineTheme('monokai', monokai);
       monaco.editor.defineTheme('githubDark', githubDark);
-    });
-  }, []);
+      monaco.editor.setTheme('githubDark');
+      // monaco.editor.deltaDecorations(
+      //   [],
+      //   [
+      //     {
+      //       range: new monaco.Range(20, 1, 20),
+      //       options: { inlineClassName: 'myLineDecoration', isWholeLine: true },
+      //     },
+      //   ]
+      // );
+
+      // monaco.editor.deltaDecorations(
+      // );
+    }
+  }, [monaco]);
   return (
-    <Box
-      // position="absolute"
-      // width="40vw"
-      // height="100vh"
-      // right={0}
-      // top={0}
-      width="40vw"
-      height="100vh"
-      bgcolor={theme.palette.background.default}
-      zIndex="1000"
-    >
+    <Box width="40vw" height="100vh" bgcolor={theme.palette.background.default} zIndex="1000">
       <Box display="flex" gap={2} paddingLeft={2} paddingBottom={1} paddingTop={1}>
         <Button variant="contained">
           <BuildIcon />
@@ -92,17 +91,17 @@ const Debugger = () => {
       <Box display="flex" flexDirection="column">
         <Editor
           language="c"
-          theme="githubDark"
-          height="60vh"
+          height="100vh"
           options={{
             minimap: {
               enabled: false,
             },
+            fontSize: '17px',
           }}
           value={code}
           onChange={handleEditorChange}
         />
-        <Console />
+        {/* <Console /> */}
       </Box>
     </Box>
   );

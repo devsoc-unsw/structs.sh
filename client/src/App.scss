@@ -94,3 +94,14 @@ body {
   margin: 0;
   background-color: #ebe8f4;
 }
+
+.myLineDecoration {
+  background: lightblue;
+  width: 5px !important;
+  margin-left: 3px;
+}
+
+#visualiser-canvas {
+  transform: scale(200%);
+  padding-left: 100px;
+}
