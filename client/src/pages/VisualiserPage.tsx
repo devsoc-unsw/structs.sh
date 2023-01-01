@@ -7,7 +7,7 @@ import 'visualiser-src/linked-list-visualiser/styles/visualiser.css';
 import { TopNavbar } from 'components/Navbars';
 import { LineLoader } from 'components/Loader';
 import Visualiser from 'components/Visualiser';
-import { Box } from '@mui/material';
+import { Box, Divider } from '@mui/material';
 
 const containerVariants = {
   hidden: {
@@ -31,7 +31,7 @@ const VisualiserPage = () => {
   const topic = toTitleCase(urlToTitle(useParams().topic));
 
   return topic ? (
-    <Box height="100vh" overflow="hidden">
+    <Box height="100vh" overflow="hidden" display="flex" flexDirection="column">
       <TopNavbar position="static" />
       <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="exit">
         <Helmet>

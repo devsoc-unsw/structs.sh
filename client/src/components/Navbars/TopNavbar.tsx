@@ -61,33 +61,33 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
         <Toolbar>
           <Grid container alignItems="center">
             <Grid item xs={4} display="flex">
-              <Button color="info" onClick={handleOpenMenu} endIcon={<KeyboardArrowDownIcon />}>
-                <Typography>
-                  <strong>{currTopic ? 'Topic: ' : 'Topics'}</strong> {currTopic}
-                </Typography>
-              </Button>
-              <Menu anchorEl={menuAnchorEl} open={menuOpen} onClose={handleCloseMenu}>
-                {getTopics() &&
-                  getTopics().map((topic, idx) => (
-                    <MenuItem
-                      key={idx}
-                      component={Link}
-                      to={`/visualiser/${titleToUrl(topic)}`}
-                      onClick={handleCloseMenu}
-                    >
-                      {topic.toLowerCase() === currTopic.toLowerCase() ? (
-                        <>
-                          <ListItemIcon>
-                            <StyledCheckIcon />
-                          </ListItemIcon>
-                          <ListItemText>{topic}</ListItemText>
-                        </>
-                      ) : (
-                        <ListItemText inset>{topic}</ListItemText>
-                      )}
-                    </MenuItem>
-                  ))}
-              </Menu>
+              {/* <Button color="info" onClick={handleOpenMenu} endIcon={<KeyboardArrowDownIcon />}> */}
+              {/*   <Typography> */}
+              {/*     <strong>{currTopic ? 'Topic: ' : 'Topics'}</strong> {currTopic} */}
+              {/*   </Typography> */}
+              {/* </Button> */}
+              {/* <Menu anchorEl={menuAnchorEl} open={menuOpen} onClose={handleCloseMenu}> */}
+              {/*   {getTopics() && */}
+              {/*     getTopics().map((topic, idx) => ( */}
+              {/*       <MenuItem */}
+              {/*         key={idx} */}
+              {/*         component={Link} */}
+              {/*         to={`/visualiser/${titleToUrl(topic)}`} */}
+              {/*         onClick={handleCloseMenu} */}
+              {/*       > */}
+              {/*         {topic.toLowerCase() === currTopic.toLowerCase() ? ( */}
+              {/*           <> */}
+              {/*             <ListItemIcon> */}
+              {/*               <StyledCheckIcon /> */}
+              {/*             </ListItemIcon> */}
+              {/*             <ListItemText>{topic}</ListItemText> */}
+              {/*           </> */}
+              {/*         ) : ( */}
+              {/*           <ListItemText inset>{topic}</ListItemText> */}
+              {/*         )} */}
+              {/*       </MenuItem> */}
+              {/*     ))} */}
+              {/* </Menu> */}
             </Grid>
             <Grid item xs={4} display="flex" justifyContent="center">
               <Button color="inherit" component={Link} to="/">

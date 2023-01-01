@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useEffect, useRef, useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, Divider } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import VisualiserController from 'visualiser-src/controller/VisualiserController';
 import VisualiserContext from './VisualiserContext';
@@ -7,6 +8,10 @@ import Controls from './Controls';
 import Operations from './Operations';
 import CodeSnippet from './CodeSnippet';
 import CreateMenu from './CreateMenu';
+import TopicTree from './TopicTree';
+import VisualiserCanvas from '../VisualiserCanvas';
+import CodeEditor from './CodeEditor';
+import Debugger from './Debugger';
 
 interface VisualiserInterfaceProps {
   topicTitle: string;
@@ -29,6 +34,7 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
   const [documentation, setDocumentation] = useState<Documentation>({});
   const [isCodeSnippetExpanded, setIsCodeSnippetExpanded] = useState<boolean>(false);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const theme = useTheme();
 
   useEffect(() => {
     controllerRef.current = controllerRef.current || new VisualiserController();
@@ -76,10 +82,25 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
 
   return (
     <VisualiserContext.Provider value={contextValues}>
-      <CreateMenu />
-      <Operations />
-      <CodeSnippet />
-      <Controls />
+      <Box display="flex" height="100vh">
+        <Box width="15vw">
+          <TopicTree />
+        </Box>
+        {/* <Divider orientation="vertical" flexItem /> */}
+        <Box width="85vw">
+          <Box display="flex" height="45vh" bgcolor={theme.palette.background.default} width="100%">
+            <CodeEditor />
+            <Divider orientation="vertical" flexItem light />
+            <Debugger />
+          </Box>
+          <VisualiserCanvas />
+          <Controls />
+        </Box>
+      </Box>
+      {/* <CreateMenu /> */}
+      {/* <Operations /> */}
+      {/* <CodeSnippet /> */}
+      {/* <Controls /> */}
     </VisualiserContext.Provider>
   );
 };

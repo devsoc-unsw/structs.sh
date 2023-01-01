@@ -19,7 +19,7 @@ interface VisualiserProps {
 const Visualiser: React.FC<VisualiserProps> = ({ topicTitle }) =>
   topicTitle ? (
     <>
-      <VisualiserCanvas />
+      {/* <VisualiserCanvas /> */}
       <VisualiserInterface topicTitle={topicTitle} />
     </>
   ) : (

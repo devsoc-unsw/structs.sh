@@ -7,7 +7,7 @@ const baseOptions: ThemeOptions = {
   },
   palette: {
     primary: {
-      main: '#2E2054',
+      main: '#614d96',
     },
     secondary: {
       main: '#916BBF',

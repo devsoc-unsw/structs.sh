@@ -151,7 +151,7 @@ const VisualiserControls = () => {
       alignItems="center"
       position="fixed"
       bottom="0"
-      width="100vw"
+      width="85vw"
       bgcolor={theme.palette.background.default}
     >
       <IconButton onClick={handleFastRewind} color="inherit">
