@@ -1,5 +1,4 @@
-import { ThemeOptions } from '@mui/material';
-import { createTheme } from '@mui/material/styles';
+import { createTheme, ThemeOptions } from '@mui/material';
 
 const baseOptions: ThemeOptions = {
   typography: {

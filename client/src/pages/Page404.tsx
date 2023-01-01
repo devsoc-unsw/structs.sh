@@ -1,5 +1,5 @@
 import { Container, Typography } from '@mui/material';
-import Box from '@mui/material/Box';
+import { Box } from '@mui/material';
 import TopNavbar from 'components/Navbars/TopNavbar';
 import { motion } from 'framer-motion';
 import React, { useEffect } from 'react';
