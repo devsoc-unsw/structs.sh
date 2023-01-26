@@ -10,7 +10,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import TimeIcon from '@mui/icons-material/AccessTime';
 import PauseIcon from '@mui/icons-material/PauseCircleOutline';
 import PlayIcon from '@mui/icons-material/PlayCircleOutline';

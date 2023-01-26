@@ -22,13 +22,11 @@
 
 > See the [Structs.sh Confluence workspace](https://compclub.atlassian.net/wiki/spaces/S/overview?homepageId=2142995642) for documentation, **setup instructions**, deployment instructions, milestones and project management!
 
-
-
-### About Structs.sh
+## About Structs.sh
 
 Structs.sh is an interactive data structure and algorithm visualiser and educational platform for computer science students.
 
-### Features:
+## Features:
 
 -   Algorithm visualisation
     -   Interactive animation player for visualising fundamental operations on classic data structures such as linked lists, binary search trees, graphs, etc.
@@ -38,13 +36,6 @@ Structs.sh is an interactive data structure and algorithm visualiser and educati
 -   Content management system
     -   Create new topics, source code snippets, lessons and quizzes
 
-### Structs.sh Team
-
-Structs.sh is a project developed by passionate computer science students at the University of New South Wales!
-
-- [Your name], [hyperlinked GitHub username]
-- Tim Zhang, [@Tymotex](https://github.com/Tymotex/)
-
 ---
 
 ## Why Structs.sh Exists
@@ -53,8 +44,34 @@ Structs.sh is a project that aims to be a comprehensive educational resource for
 
 Structs.sh exists to help bridge the gap between a student's high-level understanding of computer science concepts and how real code would accomplish a certain task. The project was started by students who felt there was a lack in tools/resources that focus on helping people develop a proper visual intuition for algorithmic thinking.
 
+## Running Structs.sh
 
-# Documentation
+### Prerequisites
+
+Ensure you have the following software:
+
+-   git
+-   Node.js (v18 or later)
+    -   [nvm](https://github.com/nvm-sh/nvm) is recommended to easily manage and install versions of node
+-   yarn, an alternative package manager to npm (Can be installed with `npm install --global yarn`)
+-   (_Optional_) Docker and Docker-compose
+
+### Setup
+
+Clone the repository using the commmand: `git clone git@github.com:csesoc/structs.sh.git`
+
+### Running the frontend without Docker
+
+1. `cd` into the `client` directory
+2. Run `yarn install` to install node modules
+3. Run `yarn dev` to start the server. The frontend should be accessible at `localhost:3000`
+
+### Running the app with Docker
+
+1. `cd` into the project root directory
+2. Run `docker-compose up --build`. The frontend should be accesible at `localhost:3000`
+
+## Documentation
 
 For everything architecture, endpoints documentation, style guide, etc. see
 our <a href="https://compclub.atlassian.net/wiki/spaces/S/overview?homepageId=2142995642">Confluence workspace</a>!
