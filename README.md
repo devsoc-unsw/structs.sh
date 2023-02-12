@@ -53,7 +53,7 @@ Ensure you have the following software:
 -   git
 -   Node.js (v18 or later)
     -   [nvm](https://github.com/nvm-sh/nvm) is recommended to easily manage and install versions of node
--   yarn, an alternative package manager to npm (Can be installed with `npm install --global yarn`)
+-   yarn, an alternative package manager to npm (Can be installed with `sudo npm install --global yarn`)
 -   (_Optional_) Docker and Docker-compose
 
 ### Setup
@@ -64,7 +64,7 @@ Clone the repository using the commmand: `git clone git@github.com:csesoc/struct
 
 1. `cd` into the `client` directory
 2. Run `yarn install` to install node modules
-3. Run `yarn dev` to start the server. The frontend should be accessible at `localhost:3000`
+3. Run `yarn start` to start the server. The frontend should be accessible at `localhost:3000`
 
 ### Running the app with Docker
 
