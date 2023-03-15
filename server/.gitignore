@@ -1,0 +1,5 @@
+node_modules
+build-storybook
+storybook-static
+build
+.jest-test-results.json
