@@ -11,12 +11,16 @@
     "lint-fix": "eslint './src/**/*.{tsx,ts,jsx,js}' --fix"
   },
   "dependencies": {
+    "@codemirror/lang-cpp": "^6.0.2",
+    "@codemirror/lang-javascript": "^6.1.8",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@mui/icons-material": "^5.10.15",
     "@mui/material": "^5.10.15",
     "@svgdotjs/svg.js": "^3.1.2",
+    "@types/react-codemirror": "^1.0.8",
     "@types/react-helmet": "^6.1.5",
+    "@uiw/react-codemirror": "^4.19.16",
     "framer-motion": "^7.6.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
