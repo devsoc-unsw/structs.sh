@@ -1,20 +1,21 @@
 import express, { Request, Response } from 'express'
 import { Todo } from '../models/todo'
+import { dataStructure } from '../models/dataStructure'
 
 const router = express.Router()
 
 router.get('/api/todo', [], async (req: Request, res: Response) => {
-    const todo = await Todo.find({})
+    const todo = await dataStructure.find({})
     return res.status(200).send(todo)
 })
 
 router.post('/api/todo', async (req: Request, res: Response) => {
     console.log(req.body);
-    const { title, description } = req.body;
+    const { owner, type, data } = req.body;
 
-    const todo = Todo.build({ title, description });
-    await todo.save()
-    return res.status(201).send(todo);
+    const ds = dataStructure.build({ owner, type, data });
+    await ds.save()
+    return res.status(201).send(ds);
 })
 
 router.delete('/api/delete', async (req: Request, res: Response) => {

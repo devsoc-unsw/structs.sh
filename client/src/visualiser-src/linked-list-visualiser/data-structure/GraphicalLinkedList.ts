@@ -44,6 +44,16 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     },
   });
 
+  public get data(): number[] {
+    var data: number[] = [];
+    var curr: GraphicalLinkedListNode = this.head;
+    while (curr != null) {
+      data.push(curr.data.value);
+      curr = curr.next;
+    }
+    return data;
+  }
+
   public headPointer: Path;
 
   public head: GraphicalLinkedListNode = null;
@@ -74,7 +84,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
       this.head = newNode;
       producer.doAnimationAndHighlight(4, producer.initialiseHead, this.headPointer);
       producer.doAnimationAndHighlight(5, producer.resetPointersAndColor, this.head);
-      
+
 
       return producer;
     }
@@ -140,7 +150,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
         producer.doAnimationAndHighlight(6, producer.movePointerToNextAndHighlight, PREV, prev);
       }
       curr = curr.next;
-      if (i === (index-1)) {
+      if (i === (index - 1)) {
         producer.doAnimationAndHighlight(7, producer.movePointerToNextAndHighlightRight, CURRENT, curr);
       } else {
         producer.doAnimationAndHighlight(7, producer.movePointerToNext, CURRENT);

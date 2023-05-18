@@ -203,6 +203,11 @@ class VisualiserController {
     this.dataStructure.generate();
   }
 
+  // Return data in form of integer array
+  public getData(): number[] {
+    return this.dataStructure.data;
+  }
+
   private computePrevTimestamp(): number {
     const sortedTimestamps = [...this.timestamps].sort((x, y) => y - x);
     let prevTimestamp = 0;

@@ -2,6 +2,7 @@ import { Box, Typography, useTheme, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React, { useCallback, useContext } from 'react';
 import VisualiserContext from './VisualiserContext';
+import axios from 'axios';
 
 import styles from './Control.module.scss';
 
@@ -33,6 +34,25 @@ const CreateMenu = () => {
     controller.generateDataStructure();
   }, [controller]);
 
+  const handleSave = () => {
+    const data = {
+      owner: "Your Title",
+      type: "Your Description",
+      data: controller.getData()
+    };
+    console.log(controller.getData());
+    axios
+      .post("http://localhost:3000/api/todo", data)
+      .then((response) => {
+        // Handle the response data
+        console.log("Linked List saved:", response.data);
+      })
+      .catch((error) => {
+        // Handle the error
+        console.error("Error saving data structure:", error);
+      });
+  };
+
   return (
     <Box
       display="flex"
@@ -51,6 +71,11 @@ const CreateMenu = () => {
       <MenuButton onClick={handleReset}>
         <Typography color="textPrimary" whiteSpace="nowrap">
           Reset All
+        </Typography>
+      </MenuButton>
+      <MenuButton onClick={handleSave}>
+        <Typography color="textPrimary" whiteSpace="nowrap">
+          Save
         </Typography>
       </MenuButton>
     </Box>
