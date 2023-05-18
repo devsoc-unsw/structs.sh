@@ -1,5 +1,5 @@
 import express from 'express'
-import mongoose, { ConnectOptions } from 'mongoose'
+import mongoose from 'mongoose'
 import { json } from 'body-parser'
 import { todoRouter } from './routes/todo'
 
