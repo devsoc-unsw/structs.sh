@@ -1,15 +1,14 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import { json } from 'body-parser'
-import { todoRouter } from './routes/todo'
+import { router } from './routes/dataStructureRouter'
+import cors from 'cors'
 
-
-const cors = require('cors');
 const app = express()
 
 app.use(cors())
 app.use(json())
-app.use(todoRouter)
+app.use(router)
 
 
 const connectionString = 'mongodb+srv://jinsunwoo:b6M4MmX5x6gt3y7l@structsdb.1rge7z4.mongodb.net/?retryWrites=true&w=majority'

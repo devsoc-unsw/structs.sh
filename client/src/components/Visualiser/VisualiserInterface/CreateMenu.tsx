@@ -36,13 +36,13 @@ const CreateMenu = () => {
 
   const handleSave = () => {
     const data = {
-      owner: "Your Title",
-      type: "Your Description",
+      owner: "Hanyuan Li",
+      type: "Linked List",
       data: controller.getData()
     };
     console.log(controller.getData());
     axios
-      .post("http://localhost:3000/api/todo", data)
+      .post("http://localhost:3000/api/save", data)
       .then((response) => {
         // Handle the response data
         console.log("Linked List saved:", response.data);
