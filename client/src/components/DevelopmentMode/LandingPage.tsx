@@ -1,9 +1,7 @@
 import React, { FC } from 'react';
 
-const LandingPage: FC = () => {
-	return (
+const LandingPage: FC = () => (
 		<div>Landing page!</div>
 	);
-};
 
 export default LandingPage;
