@@ -13,7 +13,8 @@ const CodeEditor: FC = () => {
   const [code, setCode] = React.useState(placeholder);
   const [stdout, setStdout] = React.useState('');
   const [input, setInput] = React.useState('');
-  // const [history, setHistory] = React.useState('');
+  const [history, setHistory] = React.useState('');
+  const [count, setCount] = React.useState(0);
 
   const onEditorChange = React.useCallback((value: React.SetStateAction<string>) => {
     console.log('value:', value);
@@ -38,7 +39,9 @@ const CodeEditor: FC = () => {
         .then(response => response.json())
         .then(data => {
           setStdout(data.stdout)
-          // setHistory(history + '\n' +  data.stdout)
+          // setHistory(history + '\n' + '$ ' + data.stdout)
+          setCount(count + 1)
+          setHistory(`[${count}] ` + '$ \t' + data.stdout + '\n' + history)
         });
     
     console.log(stdout);
@@ -58,26 +61,6 @@ const CodeEditor: FC = () => {
           Run Code
         </Button>
 
-        {/* <TextField
-          disabled
-          fullWidth
-          multiline
-          rows={6}
-          style={{display: 'block', marginTop: '3rem'}}
-          onChange={onInputChange}
-          value={history}
-          onKeyPress={event => {
-            if (event.key === 'Enter') {
-              runCode();
-            }
-          }}
-          sx={{
-              "& .MuiInputBase-input.Mui-disabled": {
-                WebkitTextFillColor: "#000000",
-            },
-          }}
-        /> */}
-
         <TextField
           fullWidth
           label='Input'
@@ -96,8 +79,9 @@ const CodeEditor: FC = () => {
         <Box
           component="div"
           sx={{
-            whiteSpace: 'nowrap',
+            whiteSpace: 'pre-wrap',
             overflowX: 'auto',
+            height: '10rem',
             my: 2,
             p: 1,
             bgcolor: (theme) =>
@@ -113,7 +97,8 @@ const CodeEditor: FC = () => {
             fontWeight: '700',
           }}
         >
-          {/* Output: {history} */}
+          Output: {'\n'}
+          {history}
         </Box>
       </div>
 		</>
