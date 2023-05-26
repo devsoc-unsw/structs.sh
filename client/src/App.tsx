@@ -17,6 +17,7 @@ const App = () => (
         <Routes>
           {/* Homepage */}
           <Route path="/" element={<HomePage />} />
+
           {/* Visualiser routes */}
           <Route path="/visualiser/:topic" element={<VisualiserPage />} />
 
