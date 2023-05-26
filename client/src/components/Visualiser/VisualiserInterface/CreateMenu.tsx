@@ -1,9 +1,9 @@
 import { Box, Typography, useTheme, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import VisualiserContext from './VisualiserContext';
 import axios from 'axios';
-
+import LoadOptions from './LoadOptions';
 import styles from './Control.module.scss';
 
 const MenuButton = styled(Button)({
@@ -26,6 +26,13 @@ const CreateMenu = () => {
   const { controller } = useContext(VisualiserContext);
   const theme = useTheme();
 
+  const [loadOptions, setLoadOptions] = useState([]);
+
+  // just using this to handle load options
+  const {
+    codeSnippet: { isCodeSnippetExpanded, handleSetCodeSnippetExpansion },
+  } = useContext(VisualiserContext);
+
   const handleReset = useCallback(() => {
     controller.resetDataStructure();
   }, [controller]);
@@ -44,14 +51,49 @@ const CreateMenu = () => {
     axios
       .post("http://localhost:3000/api/save", data)
       .then((response) => {
-        // Handle the response data
         console.log("Linked List saved:", response.data);
+        alert("Saved");
+      })
+      .catch((error) => {
+        console.error("Error saving data structure:", error);
+      });
+  };
+
+  const handleLoad = () => {
+    axios
+      .get("http://localhost:3000/api/getAll")
+      .then((response) => {
+        // Handle the response data
+        let newOptions: any[] = [];
+
+        console.log("Linked List loaded:", response.data);
+
+        response.data.forEach((item, index) => {
+          newOptions.push(
+            {
+              key: index,
+              name: item['owner'],
+              type: item['type'],
+              data: item['data']
+            }
+          )
+        })
+        setLoadOptions(newOptions);
+
+        console.log("0: ", newOptions[0]['data']);
+
+        handleSetCodeSnippetExpansion(true);
       })
       .catch((error) => {
         // Handle the error
         console.error("Error saving data structure:", error);
       });
-  };
+  }
+
+  const load = (data: number[]) => {
+    controller.loadData(data);
+    handleSetCodeSnippetExpansion(false);
+  }
 
   return (
     <Box
@@ -78,6 +120,14 @@ const CreateMenu = () => {
           Save
         </Typography>
       </MenuButton>
+      <MenuButton onClick={handleLoad}>
+        <Typography color="textPrimary" whiteSpace="nowrap">
+          Load
+        </Typography>
+      </MenuButton>
+      {isCodeSnippetExpanded ? <LoadOptions options={loadOptions} handleLoad={load} handleToggleExpansion={() => {
+        handleSetCodeSnippetExpansion(false);
+      }} /> : null}
     </Box>
   );
 };

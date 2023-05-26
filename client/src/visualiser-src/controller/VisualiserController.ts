@@ -27,6 +27,16 @@ class VisualiserController {
     }
   }
 
+  // Return data in form of integer array
+  public getData(): number[] {
+    return this.dataStructure.data;
+  }
+
+  // Set data sctructure to loaded data
+  public loadData(data: number[]): void {
+    this.dataStructure.load(data);
+  }
+
   public getCurrentTimeline(): Timeline {
     return this.currentTimeline;
   }
@@ -203,10 +213,6 @@ class VisualiserController {
     this.dataStructure.generate();
   }
 
-  // Return data in form of integer array
-  public getData(): number[] {
-    return this.dataStructure.data;
-  }
 
   private computePrevTimestamp(): number {
     const sortedTimestamps = [...this.timestamps].sort((x, y) => y - x);

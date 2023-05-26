@@ -18,6 +18,11 @@ abstract class GraphicalDataStructure {
   public get data(): number[] {
     return [1, 2, 3];
   }
+
+  // Loads data structure from given data
+  public load(data: number[]): void {
+
+  };
 }
 
 export default GraphicalDataStructure;
