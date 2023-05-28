@@ -39,7 +39,6 @@ const CodeEditor: FC = () => {
         .then(response => response.json())
         .then(data => {
           setStdout(data.stdout)
-          // setHistory(history + '\n' + '$ ' + data.stdout)
           setCount(count + 1)
           setHistory(`[${count}] ` + '$ \t' + data.stdout + '\n' + history)
         });
