@@ -1,0 +1,37 @@
+{
+  "extends": ["config:base"],
+  "lockFileMaintenance": { "enabled": true, "automerge": true },
+  "prHourlyLimit": 5,
+  "labels": ["dependencies"],
+  "reviewersFromCodeOwners": true,
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true,
+      "automergeType": "branch"
+    },
+    {
+      "groupName": "ci-actions",
+      "managers": ["github-actions", "dockerfile"],
+      "automerge": true,
+      "automergeType": "branch",
+      "addLabels": ["deps: ci-actions"]
+    },
+    {
+      "matchUpdateTypes": ["patch"],
+      "groupName": "weekly patch updates",
+      "schedule": ["before 5am every monday"],
+      "addLabels": ["deps: patches"]
+    },
+    {
+      "matchUpdateTypes": ["minor"],
+      "groupName": "weekly minor updates",
+      "schedule": ["before 5am every monday"],
+      "addLabels": ["deps: minor"]
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "addLabels": ["deps: major"]
+    }
+  ]
+}
