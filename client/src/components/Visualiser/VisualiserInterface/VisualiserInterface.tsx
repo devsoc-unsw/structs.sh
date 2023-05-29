@@ -7,10 +7,13 @@ import Controls from './Controls';
 import Operations from './Operations';
 import CodeSnippet from './CodeSnippet';
 import CreateMenu from './CreateMenu';
+import { drawOnCanvas } from './../VisualiserCanvas';
 
 interface VisualiserInterfaceProps {
   topicTitle: string;
 }
+
+let drawingInterval = null;
 
 /**
  * The component responsible for connecting the visualiser source code with the
@@ -73,7 +76,28 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
       handleSetCodeSnippetExpansion,
     ]
   );
-
+  
+  /* Handles the upload of the SVG to a canvas
+  which will be captured using CCapture library
+  */
+  let lockChanges = false;
+  const uploadRate = 1/10; 
+  if (isPlaying && !isTimelineComplete) {
+    if (!lockChanges && drawingInterval === null) {
+      console.log("STARTING ANIMATION");
+      drawingInterval = setInterval(drawOnCanvas, uploadRate);
+      // start CCapture here
+    }
+    
+    lockChanges = true;
+  } else if (isTimelineComplete) {
+    // end CCapture here and save
+    console.log("STOPPING ANIMATION");
+    lockChanges = false;
+    clearInterval(drawingInterval);
+    drawingInterval = null;
+  } 
+  
   return (
     <VisualiserContext.Provider value={contextValues}>
       <CreateMenu />
