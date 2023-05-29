@@ -7,13 +7,13 @@
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true,
+      "automerge": false,
       "automergeType": "branch"
     },
     {
       "groupName": "ci-actions",
       "managers": ["github-actions", "dockerfile"],
-      "automerge": true,
+      "automerge": false,
       "automergeType": "branch",
       "addLabels": ["deps: ci-actions"]
     },
