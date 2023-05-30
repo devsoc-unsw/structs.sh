@@ -18,6 +18,10 @@
       "addLabels": ["deps: ci-actions"]
     },
     {
+      "matchPackageNames": ["node"],
+      "allowedVersions": "<19.0.0"
+    },
+    {
       "matchUpdateTypes": ["major"],
       "automerge": false,
       "matchPackageNames": ["vite", "@vitejs/plugin-react"],
