@@ -18,6 +18,13 @@
       "addLabels": ["deps: ci-actions"]
     },
     {
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "matchPackageNames": ["vite", "@vitejs/plugin-react"],
+      "groupName": "vite & plugins",
+      "addLabels": ["deps: vite"]
+    },
+    {
       "matchUpdateTypes": ["patch"],
       "groupName": "weekly patch updates",
       "schedule": ["before 5am every monday"],
