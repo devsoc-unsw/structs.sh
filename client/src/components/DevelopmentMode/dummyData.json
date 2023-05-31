@@ -1,0 +1,72 @@
+[
+  {
+    "name": "a",
+    "type": "int",
+    "value": "3"
+  },
+  {
+    "name": "c",
+    "type": "int",
+    "value": "104"
+  },
+  {
+    "name": "b",
+    "type": "int [4]",
+    "value": "{9, 6, 3, 2}"
+  },
+  {
+    "name": "foo",
+    "type": "int *",
+    "value": "0x5555555592a0"
+  },
+  {
+    "name": "z",
+    "type": "int",
+    "value": "0"
+  },
+  {
+    "name": "foo",
+    "type": "int *",
+    "value": "0x5555555592a0"
+  },
+  {
+    "name": "z",
+    "type": "int",
+    "value": "0"
+  },
+  {
+    "name": "foo",
+    "type": "int *",
+    "value": "0x5555555592a0"
+  },
+  {
+    "name": "z",
+    "type": "int",
+    "value": "0"
+  },
+  {
+    "name": "foo",
+    "type": "int *",
+    "value": "0x5555555592a0"
+  },
+  {
+    "name": "z",
+    "type": "int",
+    "value": "0"
+  },
+  {
+    "name": "foo",
+    "type": "int *",
+    "value": "0x5555555592a0"
+  },
+  {
+    "name": "z",
+    "type": "int",
+    "value": "0"
+  },
+  {
+    "name": "foo",
+    "type": "int *",
+    "value": "0x5555555592a0"
+  }
+]
