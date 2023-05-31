@@ -1,0 +1,30 @@
+table {
+    border-collapse: collapse;
+}
+
+thead {
+    position: -webkit-sticky; // these don't work
+    position: sticky;
+}
+
+th {
+    padding: 5px 15px;
+    background-color: white;
+    border: 1px grey;
+    border-style: none solid; // why doesn't this work when it works for td?
+}
+
+td {
+    font-family: monospace;
+    padding: 5px;
+    border: 1px grey;
+    border-style: none solid;
+}
+
+tr:nth-child(2n+1) {
+    background-color: lightgrey;
+}
+
+tr:nth-child(2n) {
+    background-color: white;
+}
