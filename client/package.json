@@ -17,6 +17,7 @@
     "@mui/material": "^5.10.15",
     "@svgdotjs/svg.js": "^3.1.2",
     "@types/react-helmet": "^6.1.5",
+    "canvas-record": "^4.2.0",
     "framer-motion": "^7.6.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

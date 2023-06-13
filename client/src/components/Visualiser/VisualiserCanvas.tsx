@@ -1,18 +1,29 @@
 import { useEffect, useRef, useState } from 'react';
 import React from 'react';
 import { Box } from '@mui/material';
+import { setCanvas } from './canvasRecordIndex';
 
 /* -------------------------------------------------------------------------- */
 /*                        Visualiser-Specific Canvases                        */
 /* -------------------------------------------------------------------------- */
-let canvasElement = null;
+export let canvasElement = null;
 let svgElement = null;
+let toggleGIF = false;
 
+export const toggleCapture = (captureOn) => {
+  toggleGIF = captureOn;
+}
+
+export const getCanvas = () => {
+  return canvasElement.current;
+}
 // Draws the current state of the SVG to a canvas
 export const drawOnCanvas = () => {
   let canvas = canvasElement.current;
+  setCanvas(canvas);
   let svg = svgElement.current;
 
+  if (!toggleGIF) return;
   if (svg !== null) {
     let canvasContext = canvas.getContext('2d');
     let img = new Image();

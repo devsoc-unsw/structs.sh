@@ -7,7 +7,8 @@ import Controls from './Controls';
 import Operations from './Operations';
 import CodeSnippet from './CodeSnippet';
 import CreateMenu from './CreateMenu';
-import { drawOnCanvas } from './../VisualiserCanvas';
+import { drawOnCanvas, toggleCapture } from './../VisualiserCanvas';
+import { startRec, stopRec } from '../canvasRecordIndex';
 
 interface VisualiserInterfaceProps {
   topicTitle: string;
@@ -86,16 +87,19 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
     if (!lockChanges && drawingInterval === null) {
       console.log("STARTING ANIMATION");
       drawingInterval = setInterval(drawOnCanvas, uploadRate);
-      // start CCapture here
+      startRec();
     }
     
     lockChanges = true;
   } else if (isTimelineComplete) {
     // end CCapture here and save
     console.log("STOPPING ANIMATION");
+
     lockChanges = false;
     clearInterval(drawingInterval);
     drawingInterval = null;
+    toggleCapture(0);
+    stopRec();
   } 
   
   return (

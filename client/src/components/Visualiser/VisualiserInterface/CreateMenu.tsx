@@ -1,9 +1,10 @@
 import { Box, Typography, useTheme, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import React, { useCallback, useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import VisualiserContext from './VisualiserContext';
+import { toggleCapture } from '../VisualiserCanvas';
 
-import styles from './Control.module.scss';
+
 
 const MenuButton = styled(Button)({
   backgroundColor: '#46B693',
@@ -33,6 +34,10 @@ const CreateMenu = () => {
     controller.generateDataStructure();
   }, [controller]);
 
+  const handleGIFCapture = () => {
+    toggleCapture(1);
+  }
+
   return (
     <Box
       display="flex"
@@ -51,6 +56,11 @@ const CreateMenu = () => {
       <MenuButton onClick={handleReset}>
         <Typography color="textPrimary" whiteSpace="nowrap">
           Reset All
+        </Typography>
+      </MenuButton>
+      <MenuButton onClick={handleGIFCapture}>
+        <Typography color="textPrimary" whiteSpace="nowrap">
+          Capture GIF
         </Typography>
       </MenuButton>
     </Box>
