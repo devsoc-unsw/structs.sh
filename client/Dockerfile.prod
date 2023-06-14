@@ -3,14 +3,14 @@ FROM node:20-alpine AS build
 
 WORKDIR /app
 
-COPY package.json yarn.lock ./
+COPY package.json package-lock.json ./
 
-RUN yarn install
+RUN npm install
 
 COPY . .
 
 # This outputs production-ready files to `build` in the current directory on the host
-RUN yarn build
+RUN npm run build
 
 # ===== Stage 2: Setting up NGINX =====
 
