@@ -19,4 +19,16 @@ def echo(socket_id: str, data: Any) -> None:
     print("Echoing message back to client...")
     io.emit("echo", data, room=socket_id)
 
-eventlet.wsgi.server(eventlet.listen(("", 5000)), app)
+@io.event
+def compileCode(socket_id: str, data: Any) -> None:
+    print("Received code from", socket_id, ":", data)
+    print("Echoing code back to client...")
+    io.emit("compileCode", data, room=socket_id)
+
+@io.event
+def stdInput(socket_id: str, data: Any) -> None:
+    print("Received standard input from", socket_id, ":", data)
+    print("Echoing standard input back to client...")
+    io.emit("stdInput", data, room=socket_id)
+
+eventlet.wsgi.server(eventlet.listen(("", 5001)), app)
