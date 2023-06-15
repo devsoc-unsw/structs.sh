@@ -19,14 +19,26 @@ const DevelopmentMode = () => {
       console.log(`Received message: ${data}`);
     }
 
+    const onCompileCode = (data: any) => {
+      console.log(`Sent code through websocket: ${data}`);
+    }
+
+    const onStdInput = (data: any) => {
+      console.log(`Sent standard input through websocket: ${data}`);
+    }
+
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
     socket.on("echo", onEcho);
+    socket.on("compileCode", onCompileCode);
+    socket.on("stdInput", onStdInput);
 
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
       socket.off("echo", onEcho);
+      socket.off("compileCode", onCompileCode);
+      socket.off("stdInput", onStdInput);
     };
   }, []);
 

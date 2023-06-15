@@ -7,10 +7,12 @@ import SendIcon from '@mui/icons-material/Send';
 import { TopNavbar } from 'components/Navbars';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
+import { socket } from '../../utils/socket';
 
 const CodeEditor: FC = () => {
   const placeholder = '// Code your stuff below!';
   const [code, setCode] = React.useState(placeholder);
+  // state for when debugger team sends std output
   const [stdout, setStdout] = React.useState('');
   const [input, setInput] = React.useState('');
   const [history, setHistory] = React.useState('');
@@ -31,23 +33,16 @@ const CodeEditor: FC = () => {
 
   const runCode = () => {
     console.log('codeSent:', code);
-
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ language: 'C', code: code }),
-    };
-
-    fetch('https://online-debugger-api.onrender.com/compile', requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
-        setStdout(data.stdout);
-        setCount(count + 1);
-        setHistory(`[${count}] ` + '$ \t' + data.stdout + '\n' + history);
-      });
-
-    console.log(stdout);
+    socket.emit("compileCode", code);
   };
+
+  const sendStdInput = () => {
+    console.log('stdIn sent:', input);
+    socket.emit("stdInput", input);
+    setInput('');
+    setCount(count + 1);
+    setHistory(`[${count}] ` + '$ \t' + input + '\n' + history);
+  }
 
   return (
     <>
@@ -79,7 +74,8 @@ const CodeEditor: FC = () => {
           value={input}
           onKeyPress={(event) => {
             if (event.key === 'Enter') {
-              runCode();
+              event.preventDefault();
+              sendStdInput();
             }
           }}
         />
