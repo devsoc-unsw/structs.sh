@@ -3,7 +3,7 @@ name: Continuous Integration
 on:
   pull_request:
     branches:
-      - master 
+      - master
       - production
 
 jobs:
@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install dependencies
         working-directory: ./client
-        run: yarn
+        run: npm install
       - name: Lint
         working-directory: ./client
-        run: yarn lint
+        run: npm run lint
