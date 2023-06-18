@@ -13,8 +13,9 @@ const VisualiserCanvas: React.FC = () => {
   const [scale, setScale] = useState(1);
   const ZOOM_SPEED = 0.05;
   const onScroll = (e: React.WheelEvent) => {
-    console.log(`scale: ${scale}`);
-    e.deltaY > 0 ? setScale(scale + ZOOM_SPEED) : setScale(scale - ZOOM_SPEED);
+    e.deltaY < 0
+      ? setScale(Math.min(scale + ZOOM_SPEED, 2))
+      : setScale(Math.max(scale - ZOOM_SPEED, 0.5));
   };
 
   return (
@@ -26,6 +27,7 @@ const VisualiserCanvas: React.FC = () => {
       width={window.screen.width}
     >
       <svg
+        style={{ transition: 'transform 0.2s linear' }}
         transform={`scale(${scale})`}
         transform-origin="center"
         onWheel={onScroll}
