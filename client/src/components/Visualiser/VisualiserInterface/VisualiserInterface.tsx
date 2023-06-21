@@ -97,7 +97,6 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
     lockChanges = false;
     clearInterval(drawingInterval);
     drawingInterval = null;
-    toggleCapture(0);
     stopRecording();
   } 
   

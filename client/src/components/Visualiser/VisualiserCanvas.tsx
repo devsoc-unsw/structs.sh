@@ -10,13 +10,9 @@ export let canvasElement = null;
 let svgElement = null;
 let toggleGIF = false;
 
-export const toggleCapture = (captureOn) => {
-  if (captureOn) {
-    toggleGIF = captureOn;
-  } else {
-    stopRecording();
-  }
-  
+export const toggleCapture = () => {
+  toggleGIF = !toggleGIF;
+  if (!toggleGIF) stopRecording();
 }
 
 export const getCanvas = () => {
@@ -27,7 +23,6 @@ export const drawOnCanvas = () => {
   let canvas = canvasElement.current;
   let svg = svgElement.current;
 
-  if (!toggleGIF) return;
   if (svg !== null) {
     let canvasContext = canvas.getContext('2d');
     let img = new Image();
@@ -56,7 +51,7 @@ const VisualiserCanvas: React.FC = () => {
   return (
   <Box id="visualiser-container" margin="auto" width={window.screen.width}>
     <svg ref={svgElement} id="visualiser-canvas" />
-    <canvas ref={canvasElement} id="gifCanvas" width={window.screen.width} height={window.screen.height} style={{'display': 'none'}}></canvas>
+    <canvas ref={canvasElement} id="gifCanvas" width={window.screen.width} height={window.screen.height} style={{'display': 'none', 'zIndex': -1}}></canvas>
   </Box>);
 };
 

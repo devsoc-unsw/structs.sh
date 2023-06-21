@@ -3,7 +3,8 @@ import { styled } from '@mui/material/styles';
 import { useCallback, useContext } from 'react';
 import VisualiserContext from './VisualiserContext';
 import { toggleCapture } from '../VisualiserCanvas';
-import { stopCapture } from './../canvasRecordIndex';
+import { stopRecording } from '../canvasRecordIndex';
+
 
 
 
@@ -35,18 +36,15 @@ const CreateMenu = () => {
     controller.generateDataStructure();
   }, [controller]);
 
-  let toggleGIF : Boolean = false;
+  let stopGIF : Boolean = true;
   const handleGIFCapture = () => {
-    if (toggleGIF) 
-      toggleCapture(1);
-    else 
-      toggleCapture(0);
-  }
+    if (stopGIF) {
+      stopRecording();
+    } 
 
-  const stopGIFCapture = () => {
-    stopCapture();
+    stopGIF = !stopGIF;
   }
-  
+    
   return (
     <Box
       display="flex"
