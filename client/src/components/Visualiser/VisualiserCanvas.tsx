@@ -12,11 +12,13 @@ import { Box } from '@mui/material';
 const VisualiserCanvas: React.FC = () => {
   const [scale, setScale] = useState(1);
   const ZOOM_SPEED = 0.05;
+  const MAX_SCALE = 2;
+  const MIN_SCALE = 0.5;
   const onScroll = (e: React.WheelEvent) => {
     if (e.deltaY < 0) {
-      setScale(Math.min(scale + ZOOM_SPEED, 2));
+      setScale(Math.min(scale + ZOOM_SPEED, MAX_SCALE));
     } else {
-      setScale(Math.max(scale - ZOOM_SPEED, 0.5));
+      setScale(Math.max(scale - ZOOM_SPEED, MIN_SCALE));
     }
   };
 
