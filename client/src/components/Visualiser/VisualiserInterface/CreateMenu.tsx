@@ -35,8 +35,12 @@ const CreateMenu = () => {
     controller.generateDataStructure();
   }, [controller]);
 
+  let toggleGIF : Boolean = false;
   const handleGIFCapture = () => {
-    toggleCapture(1);
+    if (toggleGIF) 
+      toggleCapture(1);
+    else 
+      toggleCapture(0);
   }
 
   const stopGIFCapture = () => {
@@ -65,12 +69,7 @@ const CreateMenu = () => {
       </MenuButton>
       <MenuButton onClick={handleGIFCapture}>
         <Typography color="textPrimary" whiteSpace="nowrap">
-         Start Capture GIF
-        </Typography>
-      </MenuButton>
-      <MenuButton onClick={stopGIFCapture}>
-        <Typography color="textPrimary" whiteSpace="nowrap">
-          Stop Capture GIF
+         Toggle Capture GIF
         </Typography>
       </MenuButton>
     </Box>

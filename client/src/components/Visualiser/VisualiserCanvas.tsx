@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import React from 'react';
 import { Box } from '@mui/material';
+import { stopRecording } from './canvasRecordIndex';
 
 /* -------------------------------------------------------------------------- */
 /*                        Visualiser-Specific Canvases                        */
@@ -10,10 +11,11 @@ let svgElement = null;
 let toggleGIF = false;
 
 export const toggleCapture = (captureOn) => {
-  toggleGIF = captureOn;
-}
-
-export const stopCapture = () => { 
+  if (captureOn) {
+    toggleGIF = captureOn;
+  } else {
+    stopRecording();
+  }
   
 }
 
@@ -54,7 +56,7 @@ const VisualiserCanvas: React.FC = () => {
   return (
   <Box id="visualiser-container" margin="auto" width={window.screen.width}>
     <svg ref={svgElement} id="visualiser-canvas" />
-    <canvas ref={canvasElement} id="gifCanvas" width={window.screen.width} height={window.screen.height} style={{'opacity': 1, 'display': 'none', 'zIndex': -1, 'left': window.screen.width * 2}}></canvas>
+    <canvas ref={canvasElement} id="gifCanvas" width={window.screen.width} height={window.screen.height} style={{'display': 'none'}}></canvas>
   </Box>);
 };
 

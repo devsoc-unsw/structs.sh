@@ -1,7 +1,6 @@
 import { Recorder, RecorderStatus, Encoders } from "canvas-record";
-import createCanvasContext from "canvas-context";
 import { AVC } from "media-codecs";
-import { canvasElement, drawOnCanvas, getCanvas } from "./VisualiserCanvas";
+import { drawOnCanvas, getCanvas } from "./VisualiserCanvas";
 
 // Animation
 let rAFId;
