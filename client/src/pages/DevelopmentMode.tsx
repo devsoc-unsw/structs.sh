@@ -9,6 +9,7 @@ const DevelopmentMode = () => {
       console.log("Connected!");
       console.log("Emitting message to server...");
       socket.emit("echo", "example");
+      socket.emit("get_breakpoints", {breakpoints:["1","5","function1","main"]});
     }
 
     const onDisconnect = () => {
@@ -19,9 +20,14 @@ const DevelopmentMode = () => {
       console.log(`Received message: ${data}`);
     }
 
+    const onBreakpoints = (data: any) => {
+      console.log(`Received: ${data}`);
+    }
+
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
     socket.on("echo", onEcho);
+    socket.on("breakpoints", onBreakpoints);
 
     return () => {
       socket.off("connect", onConnect);
