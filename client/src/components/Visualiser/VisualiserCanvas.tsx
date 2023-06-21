@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import React from 'react';
 import { Box } from '@mui/material';
-import { setCanvas } from './canvasRecordIndex';
 
 /* -------------------------------------------------------------------------- */
 /*                        Visualiser-Specific Canvases                        */
@@ -14,13 +13,16 @@ export const toggleCapture = (captureOn) => {
   toggleGIF = captureOn;
 }
 
+export const stopCapture = () => { 
+  
+}
+
 export const getCanvas = () => {
-  return canvasElement.current;
+  return canvasElement.current.getContext('2d');
 }
 // Draws the current state of the SVG to a canvas
 export const drawOnCanvas = () => {
   let canvas = canvasElement.current;
-  setCanvas(canvas);
   let svg = svgElement.current;
 
   if (!toggleGIF) return;
@@ -31,6 +33,8 @@ export const drawOnCanvas = () => {
     img.onload = function() {
       console.log("drawing image onto canvas...");
       canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+      canvasContext.fillStyle = "#eae8f5";
+      canvasContext.fillRect(0, 0, canvas.width, canvas.height);
       canvasContext.drawImage(img, 0, 0);
     }
 
@@ -50,8 +54,7 @@ const VisualiserCanvas: React.FC = () => {
   return (
   <Box id="visualiser-container" margin="auto" width={window.screen.width}>
     <svg ref={svgElement} id="visualiser-canvas" />
-    <canvas ref={canvasElement} id="canvas1" style={{'opacity': 1, 'position': 'absolute', 'zIndex': -1}} width={window.screen.width} height={window.screen.height}></canvas>
-    <button style={{'position': 'relative', 'top': window.screen.height / 10, 'right': window.screen.height / 4}}>hello</button>
+    <canvas ref={canvasElement} id="gifCanvas" width={window.screen.width} height={window.screen.height} style={{'opacity': 1, 'display': 'none', 'zIndex': -1, 'left': window.screen.width * 2}}></canvas>
   </Box>);
 };
 

@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import { useCallback, useContext } from 'react';
 import VisualiserContext from './VisualiserContext';
 import { toggleCapture } from '../VisualiserCanvas';
+import { stopCapture } from './../canvasRecordIndex';
 
 
 
@@ -38,6 +39,10 @@ const CreateMenu = () => {
     toggleCapture(1);
   }
 
+  const stopGIFCapture = () => {
+    stopCapture();
+  }
+  
   return (
     <Box
       display="flex"
@@ -60,7 +65,12 @@ const CreateMenu = () => {
       </MenuButton>
       <MenuButton onClick={handleGIFCapture}>
         <Typography color="textPrimary" whiteSpace="nowrap">
-          Capture GIF
+         Start Capture GIF
+        </Typography>
+      </MenuButton>
+      <MenuButton onClick={stopGIFCapture}>
+        <Typography color="textPrimary" whiteSpace="nowrap">
+          Stop Capture GIF
         </Typography>
       </MenuButton>
     </Box>

@@ -1,32 +1,18 @@
 import { Recorder, RecorderStatus, Encoders } from "canvas-record";
 import createCanvasContext from "canvas-context";
 import { AVC } from "media-codecs";
-import { canvasElement, drawOnCanvas } from "./VisualiserCanvas";
-
-// Setup
-const pixelRatio = devicePixelRatio;
-const width = 512;
-const height = 512;
-const { context, canvas } = createCanvasContext("2d", {
-  width: width * pixelRatio,
-  height: height * pixelRatio,
-  contextAttributes: { willReadFrequently: true },
-});
-Object.assign(canvas.style, { width: `${width}px`, height: `${height}px` });
-
-let mainElement = null; 
-export function setCanvas(c) {
-  mainElement = c;
-  mainElement.appendChild(canvas);
-}
+import { canvasElement, drawOnCanvas, getCanvas } from "./VisualiserCanvas";
 
 // Animation
 let rAFId;
-console.log("hi")
 let canvasRecorder;
 
 function render() {
   drawOnCanvas();
+}
+
+export const stopCapture = () => {
+  if (canvasRecorder.status !== RecorderStatus.Stopped) stopRecording();
 }
 
 const tick = async () => {
@@ -34,7 +20,6 @@ const tick = async () => {
 
   if (canvasRecorder.status !== RecorderStatus.Recording) return;
   await canvasRecorder.step();
-  updateStatus();
 
   if (canvasRecorder.status !== RecorderStatus.Stopped) {
     rAFId = requestAnimationFrame(() => tick());
@@ -48,20 +33,21 @@ const reset = async () => {
   }
   if (canvasRecorder) {
     await canvasRecorder.stop();
-    console.log("stopping recording.....");
     canvasRecorder = null;
   }
 
   render();
 };
 
-
-export const startRec = async () => {
+export const startRecording = async () => {
   await reset();
 
-  canvasRecorder = new Recorder(context, {
-    name: "Canvas GIF Recorder",
-    encoder: "GIFEncoder",
+  canvasRecorder = new Recorder(getCanvas(), {
+    name: "StructsVisualisation",
+    duration: 1000,
+    frameRate: 30,
+    encoder: new Encoders['GIFEncoder'],
+    download: true,
     encoderOptions: {
       codec: AVC.getCodec({ profile: "Main", level: "5.2" }),
     },
@@ -77,6 +63,6 @@ export const startRec = async () => {
 
 }
 
-export const stopRec = async () => {
+export const stopRecording = async () => {
   reset();
 }
