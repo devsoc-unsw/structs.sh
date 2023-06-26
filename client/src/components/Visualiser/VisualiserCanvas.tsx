@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
 import { Box } from '@mui/material';
+import { styled } from '@mui/system';
+
+const ZoomableSvg = styled('svg')(({ scale }) => ({
+  transition: 'transform 0.2s linear',
+  transformOrigin: 'center',
+  transform: `scale(${scale})`,
+  width: '100%',
+}));
 
 /* -------------------------------------------------------------------------- */
 /*                        Visualiser-Specific Canvases                        */
@@ -30,13 +38,7 @@ const VisualiserCanvas: React.FC = () => {
       height="100vh"
       width={window.screen.width}
     >
-      <svg
-        style={{ transition: 'transform 0.2s linear', transformOrigin: 'center' }}
-        transform={`scale(${scale})`}
-        onWheel={onScroll}
-        id="visualiser-canvas"
-        width="100%"
-      />
+      <ZoomableSvg onWheel={onScroll} id="visualiser-canvas" scale={scale} />
     </Box>
   );
 };
