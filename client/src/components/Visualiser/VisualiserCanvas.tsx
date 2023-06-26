@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box } from '@mui/material';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 
 const ZoomableSvg = styled('svg')(({ scale }) => ({
   transition: 'transform 0.2s linear',
