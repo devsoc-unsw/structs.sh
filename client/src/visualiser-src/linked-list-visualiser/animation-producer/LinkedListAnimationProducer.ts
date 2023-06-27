@@ -99,7 +99,11 @@ export default class LinkedListAnimationProducer extends AnimationProducer {
     this.resetColorNode(node);
   }
 
-  public resetListAndColor(headPointer: Path, head: GraphicalLinkedListNode, node: GraphicalLinkedListNode) {
+  public resetListAndColor(
+    headPointer: Path,
+    head: GraphicalLinkedListNode,
+    node: GraphicalLinkedListNode
+  ) {
     this.resetList(headPointer, head);
     this.resetColorNode(node);
   }
