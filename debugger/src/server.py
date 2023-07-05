@@ -89,12 +89,11 @@ def getBreakpoints(socket_id: str, data: Any) -> None:
     io.emit("getBreakpoints", nodes2 + '\n\n' + data, room=socket_id)
 
 
-
 @io.event
 def echo(socket_id: str, data: Any) -> None:
-    
-    io.emit("echo", nodes2, room=socket_id)
-
+    print("Received message from", socket_id, ":", data)
+    print("Echoing message back to client...")
+    io.emit("echo", data, room=socket_id)
 
 
 eventlet.wsgi.server(eventlet.listen(("", 5000)), app)
