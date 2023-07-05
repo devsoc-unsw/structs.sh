@@ -53,12 +53,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
   public length: number = 0;
 
   initCurrPrev() {
-    const currGroup = (SVG(VISUALISER_CANVAS) as Svg)
-      .group()
-      // .height(50)
-      // .width(50)
-      .opacity(0)
-      .id('current');
+    const currGroup = (SVG(VISUALISER_CANVAS) as Svg).group().opacity(0).id('current');
     currGroup
       .path('M18 27L25 1L32 27L25 23L18 27Z')
       .fill('#5EEEC3')
@@ -77,9 +72,6 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     this.headPointer = GraphicalLinkedListNode.newHeadPointer();
 
     this.initCurrPrev();
-    // add prev and curr pointers to visualiser canvas
-    // (SVG(VISUALISER_CANVAS) as Svg).image(currSvg).opacity(0).id('current');
-    // (SVG(VISUALISER_CANVAS) as Svg).image(prevSvg).opacity(0).id('prev');
   }
 
   append(input: number): AnimationProducer {
@@ -290,9 +282,6 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     this.headPointer = GraphicalLinkedListNode.newHeadPointer();
 
     this.initCurrPrev();
-    // add prev and curr pointers to visualiser canvas
-    // (SVG(VISUALISER_CANVAS) as Svg).image(currSvg).opacity(0).id('current');
-    // (SVG(VISUALISER_CANVAS) as Svg).image(prevSvg).opacity(0).id('prev');
   }
 
   public get documentation() {
