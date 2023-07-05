@@ -64,10 +64,10 @@ def connect(socket_id: str, *_) -> None:
 @io.event
 def disconnect(socket_id: str) -> None:
     print("Client disconnected: ", socket_id)
-
+    
 
 @io.event
-def echo(socket_id: str, data: Any) -> None:
+def getBreakpoints(socket_id: str, data: Any) -> None:
     print("Received message from", socket_id, ":", data)
     print("Echoing message back to client...")
 
@@ -85,7 +85,16 @@ def echo(socket_id: str, data: Any) -> None:
     nodes = nodes_dict["Nodes"]
     nodes2 = f"{nodes}"
     
+    #io.emit("getBreakpoints", data, room=socket_id)
+    io.emit("getBreakpoints", nodes2 + '\n\n' + data, room=socket_id)
+
+
+
+@io.event
+def echo(socket_id: str, data: Any) -> None:
+    
     io.emit("echo", nodes2, room=socket_id)
+
 
 
 eventlet.wsgi.server(eventlet.listen(("", 5000)), app)
