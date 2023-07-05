@@ -7,7 +7,7 @@ import Controls from './Controls';
 import Operations from './Operations';
 import CodeSnippet from './CodeSnippet';
 import CreateMenu from './CreateMenu';
-import { drawOnCanvas, toggleCapture } from './../VisualiserCanvas';
+import { drawOnCanvas } from './../VisualiserCanvas';
 import { startRecording, stopRecording } from '../canvasRecordIndex';
 
 interface VisualiserInterfaceProps {
@@ -15,6 +15,15 @@ interface VisualiserInterfaceProps {
 }
 
 let drawingInterval = null;
+let recordingOn : Boolean = false;
+
+export const toggleRecording = (setting) => {
+  recordingOn = setting;
+}
+
+export const changeRecordingStatus = () => {
+  recordingOn = !recordingOn;
+}
 
 /**
  * The component responsible for connecting the visualiser source code with the
@@ -82,8 +91,8 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
   which will be captured using CCapture library
   */
   let lockChanges = false;
-  const uploadRate = 1/10; 
-  if (isPlaying && !isTimelineComplete) {
+  const uploadRate = 1/100; 
+  if (isPlaying && !isTimelineComplete && recordingOn) {
     if (!lockChanges && drawingInterval === null) {
       console.log("STARTING ANIMATION");
       drawingInterval = setInterval(drawOnCanvas, uploadRate);
@@ -91,12 +100,13 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
     }
     
     lockChanges = true;
-  } else if (isTimelineComplete) {
-    console.log("STOPPING ANIMATION");
-
+  } else if (isTimelineComplete && recordingOn) {
     lockChanges = false;
     clearInterval(drawingInterval);
     drawingInterval = null;
+
+    recordingOn = !recordingOn;
+    console.log("STOPPING ANIMATION");
     stopRecording();
   } 
   

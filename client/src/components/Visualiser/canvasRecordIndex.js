@@ -35,17 +35,18 @@ const reset = async () => {
     canvasRecorder = null;
   }
 
-  render();
+ // render();
 };
 
 export const startRecording = async () => {
   await reset();
+  const MAX_DURATION = 1000;
 
   canvasRecorder = new Recorder(getCanvas(), {
     name: "StructsVisualisation",
-    duration: 1000,
+    duration: MAX_DURATION,
     frameRate: 30,
-    encoder: new Encoders['GIFEncoder'],
+    encoder: new Encoders['MP4WasmEncoder'],
     download: true,
     encoderOptions: {
       codec: AVC.getCodec({ profile: "Main", level: "5.2" }),
@@ -63,5 +64,5 @@ export const startRecording = async () => {
 }
 
 export const stopRecording = async () => {
-  reset();
+  if (canvasRecorder) reset();
 }

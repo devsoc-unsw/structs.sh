@@ -4,6 +4,7 @@ import { useCallback, useContext } from 'react';
 import VisualiserContext from './VisualiserContext';
 import { toggleCapture } from '../VisualiserCanvas';
 import { stopRecording } from '../canvasRecordIndex';
+import { changeRecordingStatus, toggleRecording } from './VisualiserInterface';
 
 
 
@@ -26,7 +27,6 @@ const MenuButton = styled(Button)({
  */
 const CreateMenu = () => {
   const { controller } = useContext(VisualiserContext);
-  const theme = useTheme();
 
   const handleReset = useCallback(() => {
     controller.resetDataStructure();
@@ -38,11 +38,7 @@ const CreateMenu = () => {
 
   let stopGIF : Boolean = true;
   const handleGIFCapture = () => {
-    if (stopGIF) {
-      stopRecording();
-    } 
-
-    stopGIF = !stopGIF;
+    changeRecordingStatus();
   }
     
   return (

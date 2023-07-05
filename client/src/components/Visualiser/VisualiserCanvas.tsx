@@ -26,17 +26,17 @@ export const drawOnCanvas = () => {
   if (svg !== null) {
     let canvasContext = canvas.getContext('2d');
     let img = new Image();
+    let svgXML = (new XMLSerializer).serializeToString(svg);
+    img.src = 'data:image/svg+xml; charset=utf8, ' + encodeURIComponent(svgXML);
 
     img.onload = function() {
-      console.log("drawing image onto canvas...");
       canvasContext.clearRect(0, 0, canvas.width, canvas.height);
       canvasContext.fillStyle = "#eae8f5";
       canvasContext.fillRect(0, 0, canvas.width, canvas.height);
       canvasContext.drawImage(img, 0, 0);
     }
 
-    let svgXML = (new XMLSerializer).serializeToString(svg);
-    img.src = "data:image/svg+xml;base64," + btoa(svgXML);
+
   }
 }
 
