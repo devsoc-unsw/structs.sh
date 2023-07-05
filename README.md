@@ -68,7 +68,7 @@ Clone the repository using the commmand: `git clone git@github.com:csesoc/struct
 ### Running the app with Docker
 
 1. `cd` into the project root directory
-2. Run `docker-compose up --build`. The frontend should be accesible at `localhost:3000`
+2. Run `docker-compose up --build` The frontend should be accesible at `localhost:3000`. The debugger server should be accessible at `localhost:5000`.
 
 ## Documentation
 
