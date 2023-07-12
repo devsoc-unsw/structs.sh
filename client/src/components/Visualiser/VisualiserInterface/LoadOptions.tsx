@@ -28,6 +28,7 @@ const LoadOptions: FC<Props> = (
                     handleLoad(options[index]['data']);
                 }}>
                     <Typography color="textPrimary" whiteSpace="nowrap">
+                        {options[index]['type']}:
                         {index}
                     </Typography>
                 </MenuButton>

@@ -38,4 +38,14 @@ router.delete('/api/delete', async (req: Request, res: Response) => {
     return res.status(201).send();
 })
 
+router.delete('/api/deleteAll', async (req: Request, res: Response) => {
+    const { owner, type } = req.body;
+    console.log("deleting everything");
+    console.log(req.body);
+    const result = await dataStructure.deleteMany({ owner: owner })
+
+    console.log("Deleted " + result.deletedCount + " documents");
+    return res.status(201).send();
+})
+
 export { router }

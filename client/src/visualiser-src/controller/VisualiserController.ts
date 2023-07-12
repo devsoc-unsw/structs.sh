@@ -32,8 +32,9 @@ class VisualiserController {
     return this.dataStructure.data;
   }
 
-  // Set data sctructure to loaded data
+  // Set data structure to loaded data
   public loadData(data: number[]): void {
+    this.resetDataStructure();
     this.dataStructure.load(data);
   }
 

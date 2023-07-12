@@ -478,6 +478,31 @@ class GraphicalBST extends GraphicalDataStructure {
     }
     return true;
   }
+
+  public get data(): number[] {
+    let data: number[] = [];
+
+    this.saveInPreOrder(this.root, data);
+
+    console.log(data);
+
+    return data;
+  }
+
+  private saveInPreOrder(node: GraphicalBSTNode, data: number[]) {
+    if (node == null)
+      return;
+
+    data.push(node.value);
+
+    this.saveInPreOrder(node.left, data);
+
+    this.saveInPreOrder(node.right, data);
+  }
+
+  public load(data: number[]): void {
+    this.root = GraphicalTreeGenerate.testgenerate<GraphicalBSTNode>(GraphicalBSTNode.from, data);
+  };
 }
 
 export default GraphicalBST;

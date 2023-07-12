@@ -23,7 +23,7 @@ const MenuButton = styled(Button)({
  *     `onClick` handler.
  */
 const CreateMenu = () => {
-  const { controller } = useContext(VisualiserContext);
+  const { controller, topicTitle } = useContext(VisualiserContext);
   const theme = useTheme();
 
   const [loadOptions, setLoadOptions] = useState([]);
@@ -44,7 +44,7 @@ const CreateMenu = () => {
   const handleSave = () => {
     const data = {
       owner: "Hanyuan Li",
-      type: "Linked List",
+      type: topicTitle,
       data: controller.getData()
     };
     console.log(controller.getData());
@@ -64,23 +64,22 @@ const CreateMenu = () => {
       .get("http://localhost:3000/api/getAll")
       .then((response) => {
         // Handle the response data
+        console.log(response.data);
         let newOptions: any[] = [];
 
-        console.log("Linked List loaded:", response.data);
-
         response.data.forEach((item, index) => {
-          newOptions.push(
-            {
-              key: index,
-              name: item['owner'],
-              type: item['type'],
-              data: item['data']
-            }
-          )
+          if (item['type'] == topicTitle) {
+            newOptions.push(
+              {
+                key: index,
+                name: item['owner'],
+                type: item['type'],
+                data: item['data']
+              }
+            )
+          }
         })
         setLoadOptions(newOptions);
-
-        console.log("0: ", newOptions[0]['data']);
 
         handleSetCodeSnippetExpansion(true);
       })
@@ -93,6 +92,22 @@ const CreateMenu = () => {
   const load = (data: number[]) => {
     controller.loadData(data);
     handleSetCodeSnippetExpansion(false);
+  }
+
+  const clearDb = () => {
+    axios
+      .delete("http://localhost:3000/api/deleteAll", {
+        data: {
+          owner: "Hanyuan Li"
+        }
+      })
+      .then((response) => {
+        alert("cleared db")
+      })
+      .catch((error) => {
+        // Handle the error
+        console.error("Error deleting everything:", error);
+      });
   }
 
   return (
@@ -113,6 +128,11 @@ const CreateMenu = () => {
       <MenuButton onClick={handleReset}>
         <Typography color="textPrimary" whiteSpace="nowrap">
           Reset All
+        </Typography>
+      </MenuButton>
+      <MenuButton onClick={clearDb}>
+        <Typography color="textPrimary" whiteSpace="nowrap">
+          Clear DB
         </Typography>
       </MenuButton>
       <MenuButton onClick={handleSave}>
