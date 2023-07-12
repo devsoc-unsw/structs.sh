@@ -8,6 +8,12 @@ const DevelopmentMode = () => {
       console.log('Connected!');
       console.log('Emitting message to server...');
       socket.emit('echo', 'example');
+      socket.emit('getBreakpoints', '121', 'list2');
+      socket.emit('getBreakpoints', '122', 'list2');
+      socket.emit('getBreakpoints', '123', 'list2');
+      socket.emit('getBreakpoints', '124', 'list2');
+      socket.emit('getBreakpoints', '125', 'list2');
+      socket.emit('getBreakpoints', '126', 'list2');
     };
 
     const onDisconnect = () => {

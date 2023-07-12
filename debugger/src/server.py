@@ -4,13 +4,14 @@ from typing import Any
 import subprocess
 import json
 
-# Later we want to receive the variable name, line number and file_name from the client
-variable_name = "list2"
-line_number = "126"
-file_name = "program"
-    
-# Construct the GDB script
-gdb_script = f"""
+
+def compile_program(file_name):
+    subprocess.run(["gcc", "-ggdb", file_name, "-o", "program"])    
+
+
+
+def create_ll_script(line_number, variable_name, file_name):
+    gdb_script = f"""
 python
 import gdb
 import json
@@ -50,6 +51,7 @@ nodelist
 continue
 quit
 """
+    return gdb_script
 
 
 io = socketio.Server(cors_allowed_origins='*')
@@ -67,13 +69,20 @@ def disconnect(socket_id: str) -> None:
     
 
 @io.event
-def getBreakpoints(socket_id: str, data: Any) -> None:
-    print("Received message from", socket_id, ":", data)
+def getBreakpoints(socket_id: str, line: Any, listName: Any) -> None:
+    print("Received message from", socket_id)
     print("Echoing message back to client...")
 
+    
+    # Compile C program
+    compile_program('program.c')
+
     # Run GDB with the script
-    command = f"echo '{gdb_script}' | gdb -q"
+    script = create_ll_script(line, listName, "program")
+
+    command = f"echo '{script}' | gdb -q"
     output = subprocess.check_output(command, shell=True).decode("utf-8")
+
 
     # Find the JSON data in the GDB output
     json_start = output.find("{")
@@ -85,8 +94,8 @@ def getBreakpoints(socket_id: str, data: Any) -> None:
     nodes = nodes_dict["Nodes"]
     nodes2 = f"{nodes}"
     
-    #io.emit("getBreakpoints", data, room=socket_id)
-    io.emit("getBreakpoints", nodes2 + '\n\n' + data, room=socket_id)
+    # Send linked list nodes back to the client
+    io.emit("getBreakpoints", nodes2 + '\n\n' + line, room=socket_id)
 
 
 @io.event
