@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { socket } from 'utils/socket';
-import CodeEditor from 'components/DevelopmentMode/CodeEditor';
+import EntryPoint from './src/EnteryPoint';
 
 const DevelopmentMode = () => {
   useEffect(() => {
@@ -36,7 +36,7 @@ const DevelopmentMode = () => {
     };
   }, []);
 
-  return <CodeEditor />;
+  return <EntryPoint />;
 };
 
 export default DevelopmentMode;
