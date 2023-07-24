@@ -1,0 +1,51 @@
+
+.icon-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 24px;
+  cursor: pointer;
+}
+
+.icon-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 0;
+  width: 100%;
+}
+
+.icon-row:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+  z-index: 1001;
+}
+
+.tooltip {
+  visibility: hidden;
+  background-color: orange;  /* Changed from #555 to orange */
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  transform: translateX(70px);
+  transition: opacity 0.3s;
+  z-index: 1;
+  font-size: 10px;
+  min-width: 90px;
+  max-width: 90px;
+}
+
+.tooltip::after {
+  content: "";
+  position: absolute;
+  top: 50%;  /* Adjust so that the arrow points from the middle of tooltip */
+  left: 0;  /* Arrow starting point from left */
+  margin-top: -5px;  /* Center the arrow vertically */
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent orange;  /* Changed last color from #555 to orange to match tooltip */
+}
