@@ -96,4 +96,4 @@ def echo(socket_id: str, data: Any) -> None:
     io.emit("echo", data, room=socket_id)
 
 
-eventlet.wsgi.server(eventlet.listen(("", 5000)), app)
+eventlet.wsgi.server(eventlet.listen(("", 5001)), app)
