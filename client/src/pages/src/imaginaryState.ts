@@ -1,105 +1,37 @@
-import { BackendLinkedList } from "./framer-component/types/graphState";
+import { BackendLinkedList, BackendLinkedListUpdate } from './framer-component/types/graphState';
 
-export const IMAGINARY_STATE_1: BackendLinkedList[] = [
+export const IMAGINARY_STATE_1: BackendLinkedList = {
+  nodes: [
+    {
+      nodeId: '0x000001',
+      value: '32',
+      next: '0x000002',
+      isPointer: true,
+    },
+    {
+      nodeId: '0x000002',
+      value: '15',
+      next: '0x000003',
+      isPointer: false,
+    },
+    {
+      nodeId: '0x000003',
+      value: '32',
+      next: '0x000004',
+      isPointer: false,
+    },
+    {
+      nodeId: '0x000004',
+      value: '44',
+      next: null,
+      isPointer: false,
+    },
+  ],
+};
+
+export const IMAGINARY_UPDATE: BackendLinkedListUpdate[] = [
   {
-    nodes: [
-      {
-        nodeId: "0x000001",
-        value: "Node 1",
-        next: "0x000002",
-      },
-      {
-        nodeId: "0x000002",
-        value: "Node 2",
-        next: "0x000003",
-      },
-      {
-        nodeId: "0x000003",
-        value: "Node 3",
-        next: "0x000004",
-      },
-      {
-        nodeId: "0x000004",
-        value: "Node 4",
-        next: null,
-      },
-    ],
+    modified: [],
+    deleted: [],
   },
-  {
-    nodes: [
-      {
-        nodeId: "0x000001",
-        value: "Node 1",
-        next: "0x000002",
-      },
-      {
-        nodeId: "0x000002",
-        value: "Node 2",
-        next: "0x000003",
-      },
-      {
-        nodeId: "0x000003",
-        value: "Node 3",
-        next: "0x000004",
-      },
-      {
-        nodeId: "0x000004",
-        value: "Node 4",
-        next: "0x000005",
-      },
-      {
-        nodeId: "0x000005",
-        value: "Node 5",
-        next: null,
-      },
-    ],
-  },
-  {
-    nodes: [
-      {
-        nodeId: "0x000001",
-        value: "Node 1",
-        next: "0x000002",
-      },
-      {
-        nodeId: "0x000002",
-        value: "Node 2",
-        next: null,
-      },
-      {
-        nodeId: "0x000004",
-        value: "Node 4",
-        next: "0x000005",
-      },
-      {
-        nodeId: "0x000005",
-        value: "Node 5",
-        next: null,
-      },
-    ],
-  },
-  {
-    nodes: [
-      {
-        nodeId: "0x000001",
-        value: "Node 1",
-        next: "0x000002",
-      },
-      {
-        nodeId: "0x000002",
-        value: "Node 2",
-        next: "0x000004",
-      },
-      {
-        nodeId: "0x000004",
-        value: "Node 4",
-        next: "0x000005",
-      },
-      {
-        nodeId: "0x000005",
-        value: "Node 5",
-        next: null,
-      },
-    ],
-  },
-]
+];
