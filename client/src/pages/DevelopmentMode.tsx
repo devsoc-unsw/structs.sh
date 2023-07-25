@@ -21,7 +21,7 @@ const DevelopmentMode = () => {
     }
 
     const onGetBreakpoints = (data: any) => {
-      console.log(`Received message: ${data}`);
+      console.log(`Received message!!: ${data}`);
     }
 
     socket.on("connect", onConnect);
