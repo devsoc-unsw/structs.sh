@@ -92,9 +92,15 @@ export type Addr = `0x${string}`;
 export interface BackendLinkedListNode {
   nodeId: Addr;
   value: string | number | null;
+  isPointer: boolean;
   next: Addr | null;
 }
 
 export interface BackendLinkedList {
   nodes: BackendLinkedListNode[];
+}
+
+export interface BackendLinkedListUpdate {
+  modified: BackendLinkedListNode[];
+  deleted: string[];
 }

@@ -1,5 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
+import ReactJson from "react-json-view";
+import { motion } from "framer-motion";
 import LinkedList from "./linkedList";
 import { DEFAULT_UISTATE, UiState } from "./types/uiState";
 import { ControlPanel } from "./controlPanel";
@@ -13,8 +14,7 @@ import {
   FrontendLinkedListGraph,
   NodeEntity,
 } from "./types/graphState";
-import ReactJson from "react-json-view";
-import { motion } from "framer-motion";
+
 
 export interface BackendState {
   state: BackendLinkedList;
@@ -30,7 +30,7 @@ export const DrawingMotions: React.FC<BackendState> = ({
   /**
    * Parse the background graph state into frontend ones
    */
-  const parseState = (state: BackendLinkedList): FrontendLinkedListGraph => {
+  const parseState = (backendState: BackendLinkedList): FrontendLinkedListGraph => {
     const nodeEntities: NodeEntity[] = [];
     const edgeEntities: EdgeEntity[] = [];
     const cacheEntity: {
@@ -39,12 +39,12 @@ export const DrawingMotions: React.FC<BackendState> = ({
 
     // Create a mapping for the backend nodes
     const nodeMapping: { [key: string]: BackendLinkedListNode } = {};
-    state.nodes.forEach((node) => {
+    backendState.nodes.forEach((node) => {
       nodeMapping[node.nodeId] = node;
     });
 
     // Now we build the NodeEntities and EdgeEntities
-    state.nodes.forEach((node, index) => {
+    backendState.nodes.forEach((node, index) => {
       // Convert backend node to frontend node
       const nodeEntity: NodeEntity = {
         uid: node.nodeId,
@@ -59,7 +59,7 @@ export const DrawingMotions: React.FC<BackendState> = ({
       nodeEntities.push(nodeEntity);
     });
 
-    state.nodes.forEach((node) => {
+    backendState.nodes.forEach((node) => {
       const nodeEntity: NodeEntity | undefined = nodeEntities.find(
         (n) => n.uid === node.nodeId
       );
@@ -150,7 +150,7 @@ export const DrawingMotions: React.FC<BackendState> = ({
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={() => {
-                return;
+                
               }}
             >
               Backward
@@ -160,7 +160,7 @@ export const DrawingMotions: React.FC<BackendState> = ({
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={() => {
-                return;
+                
               }}
             >
               Forward

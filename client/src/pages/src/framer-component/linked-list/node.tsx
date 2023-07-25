@@ -123,6 +123,7 @@ const LinkedNode = forwardRef<SVGSVGElement, NodePros>(
             initial="hidden"
             animate="visible"
             variants={draw}
+            style={{ userSelect: "none" }}
           >
             {title}
           </motion.text>
@@ -131,8 +132,8 @@ const LinkedNode = forwardRef<SVGSVGElement, NodePros>(
             <motion.foreignObject
               width={250}
               height={350}
-              x={size + 10}
-              y={-50}
+              x={size - 50}
+              y={80}
               style={{ zIndex: 1000 }}
             >
               <div
