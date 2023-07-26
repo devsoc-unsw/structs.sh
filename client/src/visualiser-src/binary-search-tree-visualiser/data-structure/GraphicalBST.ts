@@ -484,8 +484,6 @@ class GraphicalBST extends GraphicalDataStructure {
 
     this.saveInPreOrder(this.root, data);
 
-    console.log(data);
-
     return data;
   }
 
@@ -501,7 +499,7 @@ class GraphicalBST extends GraphicalDataStructure {
   }
 
   public load(data: number[]): void {
-    this.root = GraphicalTreeGenerate.testgenerate<GraphicalBSTNode>(GraphicalBSTNode.from, data);
+    this.root = GraphicalTreeGenerate.loadTree<GraphicalBSTNode>(GraphicalBSTNode.from, data);
   };
 }
 

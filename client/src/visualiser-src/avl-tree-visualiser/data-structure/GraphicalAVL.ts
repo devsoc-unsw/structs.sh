@@ -267,6 +267,29 @@ class GraphicalAVL extends GraphicalDataStructure {
     GraphicalAVL.updateHeight(root.right);
     root.updateHeight();
   }
+
+  public get data(): number[] {
+    let data: number[] = [];
+
+    this.saveInPreOrder(this.root, data);
+
+    return data;
+  }
+
+  private saveInPreOrder(node: GraphicalAVLNode, data: number[]) {
+    if (node == null)
+      return;
+
+    data.push(node.value);
+
+    this.saveInPreOrder(node.left, data);
+
+    this.saveInPreOrder(node.right, data);
+  }
+
+  public load(data: number[]): void {
+    this.root = GraphicalTreeGenerate.loadTree<GraphicalAVLNode>(GraphicalAVLNode.from, data);
+  };
 }
 
 export default GraphicalAVL;
