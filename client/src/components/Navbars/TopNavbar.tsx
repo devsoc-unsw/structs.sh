@@ -97,6 +97,9 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
                 </LogoText>
               </Button>
             </Grid>
+            <Grid item xs={4} display="flex" justifyContent="end">
+              <Button color="inherit">Login</Button>
+            </Grid>
           </Grid>
         </Toolbar>
       </AppBar>

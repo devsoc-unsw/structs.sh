@@ -9,9 +9,9 @@ interface Props {
 }
 
 const MenuButton = styled(Button)({
-    backgroundColor: '#46B693',
+    backgroundColor: '#C81437',
     '&:hover': {
-        backgroundColor: '#2b6e5a',
+        backgroundColor: '#F05C79',
     },
 });
 

@@ -13,6 +13,14 @@ const MenuButton = styled(Button)({
   },
 });
 
+const LoadingButton = styled(Button)({
+
+  backgroundColor: '#C81437',
+  '&:hover': {
+    backgroundColor: '#F05C79',
+  },
+})
+
 /**
  * Contains the ability to reset and create new data structures
  *
@@ -131,21 +139,21 @@ const CreateMenu = () => {
           Reset All
         </Typography>
       </MenuButton>
-      <MenuButton onClick={clearDb}>
+      <LoadingButton onClick={clearDb}>
         <Typography color="textPrimary" whiteSpace="nowrap">
           Clear DB
         </Typography>
-      </MenuButton>
-      <MenuButton onClick={handleSave}>
+      </LoadingButton>
+      <LoadingButton onClick={handleSave}>
         <Typography color="textPrimary" whiteSpace="nowrap">
           Save
         </Typography>
-      </MenuButton>
-      <MenuButton onClick={handleLoad}>
+      </LoadingButton>
+      <LoadingButton onClick={handleLoad}>
         <Typography color="textPrimary" whiteSpace="nowrap">
           Load
         </Typography>
-      </MenuButton>
+      </LoadingButton>
       {isLoadOptionsExpanded ? <LoadOptions options={loadOptions} handleLoad={load} handleToggleExpansion={() => {
         handleSetLoadOptionsExpansion(false);
       }} /> : null}
