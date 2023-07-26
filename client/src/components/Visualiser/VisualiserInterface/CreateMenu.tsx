@@ -30,7 +30,7 @@ const CreateMenu = () => {
 
   // just using this to handle load options
   const {
-    codeSnippet: { isCodeSnippetExpanded, handleSetCodeSnippetExpansion },
+    loadOptionsContext: { isLoadOptionsExpanded, handleSetLoadOptionsExpansion }
   } = useContext(VisualiserContext);
 
   const handleReset = useCallback(() => {
@@ -80,8 +80,9 @@ const CreateMenu = () => {
           }
         })
         setLoadOptions(newOptions);
-
-        handleSetCodeSnippetExpansion(true);
+        console.log(isLoadOptionsExpanded);
+        handleSetLoadOptionsExpansion(true);
+        console.log(isLoadOptionsExpanded);
       })
       .catch((error) => {
         // Handle the error
@@ -91,7 +92,7 @@ const CreateMenu = () => {
 
   const load = (data: number[]) => {
     controller.loadData(data);
-    handleSetCodeSnippetExpansion(false);
+    handleSetLoadOptionsExpansion(false);
   }
 
   const clearDb = () => {
@@ -145,8 +146,8 @@ const CreateMenu = () => {
           Load
         </Typography>
       </MenuButton>
-      {isCodeSnippetExpanded ? <LoadOptions options={loadOptions} handleLoad={load} handleToggleExpansion={() => {
-        handleSetCodeSnippetExpansion(false);
+      {isLoadOptionsExpanded ? <LoadOptions options={loadOptions} handleLoad={load} handleToggleExpansion={() => {
+        handleSetLoadOptionsExpansion(false);
       }} /> : null}
     </Box>
   );
