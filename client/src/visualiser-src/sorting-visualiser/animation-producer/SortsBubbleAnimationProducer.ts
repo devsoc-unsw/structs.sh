@@ -25,7 +25,9 @@ export default class SortsBubbleAnimationProducer extends SortsAnimationProducer
     this.addSequenceAnimation(to.boxTarget.animate().x(xFrom));
     this.addSequenceAnimation(to.numberTarget.animate().cx(cxFrom));
     this.finishSequence();
-    this.addSequenceAnimation(to.boxTarget.animate(1).attr({ stroke: defaultColour, fill: defaultColour }));
+    this.addSequenceAnimation(
+      to.boxTarget.animate(1).attr({ stroke: defaultColour, fill: defaultColour })
+    );
     this.addSequenceAnimation(to.numberTarget.animate(1).attr({ fill: defaultColour }));
     if (isLast) {
       this.addSequenceAnimation(

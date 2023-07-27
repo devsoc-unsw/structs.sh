@@ -22,8 +22,9 @@ export default class GraphicalSortsElement {
 
   public static pointer(index: number, colour: string): Polygon {
     const pointer = SVG()
-      .polygon('5, 15, 15, 15, 10, 0').fill({ color: colour })
-      .addTo(VISUALISER_CANVAS)
+      .polygon('5, 15, 15, 15, 10, 0')
+      .fill({ color: colour })
+      .addTo(VISUALISER_CANVAS);
 
     pointer.x(getX(index) + boxWidth / 2 - 5).y(textCy + 15);
 
