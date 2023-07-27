@@ -118,7 +118,6 @@ export const DrawingMotions: React.FC<BackendState> = ({
   useEffect(() => {
     const newFrontendState = parseState(state);
 
-    console.log("This should load WHEN BACKEND CHANGE", newFrontendState);
     setCurrGraphState(newFrontendState);
     setHistoryGraphState([...historyGraphState, newFrontendState]);
   }, [state]);
