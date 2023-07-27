@@ -104,3 +104,42 @@ export interface BackendLinkedListUpdate {
   modified: BackendLinkedListNode[];
   deleted: string[];
 }
+
+export enum CType {
+  DOUBLE_LINED_LIST_NODE = 'struct doubly_list_node',
+  INT = 'int',
+  DOUBLE = 'double',
+  CHAR = 'char',
+}
+
+export type DoublePointerVariable = {
+  data: string,
+  prev: Addr,
+  next: Addr,
+}
+export type IntVariable = number;
+export type DoubleVariable = number;
+export type CharVariable = string;
+
+export type BackendVariable = 
+  { type: CType.DOUBLE_LINED_LIST_NODE, data: DoublePointerVariable } |
+  { type: CType.INT, data: IntVariable } |
+  { type: CType.DOUBLE, data: DoubleVariable } |
+  { type: CType.CHAR, data: CharVariable };
+
+export interface BackendVariableBasePointer {
+  data: Addr;
+  type: CType;
+  is_pointer: true;
+}
+
+export interface BackendVariableBaseNonPointer {
+  data: BackendVariable;
+  type: CType;
+  is_pointer: false;
+}
+export type BackendVariableBase = BackendVariableBasePointer | BackendVariableBaseNonPointer;
+
+export interface BackendStructure {
+  [address: Addr]: BackendVariableBase;
+}

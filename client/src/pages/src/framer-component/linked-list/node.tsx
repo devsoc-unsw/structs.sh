@@ -38,10 +38,12 @@ const draw = {
 const LinkedNode = forwardRef<SVGSVGElement, NodePros>(
   ({ nodeUid, graph, onAddNode, config, onReload, setConfig }, ref) => {
     const [, setIsHovered] = useState(false);
+    
+    const nodeEntityRef = graph.cacheEntity[nodeUid];
 
-    const nodeEntity = graph.cacheEntity[nodeUid];
-    if (nodeEntity.type !== "node") return;
-    const { x, y, colorHex, title, size } = nodeEntity;
+    if (nodeEntityRef.type !== "node") return;
+    const [entity, setEntity] = useState(nodeEntityRef);
+    const { colorHex, title, size } = nodeEntityRef;
 
     const showClick = () => config.showClick && config.clickedEntity === nodeUid;
 
@@ -71,8 +73,8 @@ const LinkedNode = forwardRef<SVGSVGElement, NodePros>(
     return (      
         <motion.g
           ref={ref}
-          initial={{ x, y }}
-          animate={{ x, y, transition: {duration: 1} }}
+          initial={{ x: entity.x, y: entity.y }}
+          animate={{ x: entity.x, y: entity.y, transition: {duration: 1} }}
           exit= {{
             opacity: 0,
             scale: 0.7,
@@ -95,8 +97,8 @@ const LinkedNode = forwardRef<SVGSVGElement, NodePros>(
             }
           }}
           onDragEnd={(_event, info) => {
-            nodeEntity.x += info.offset.x;
-            nodeEntity.y += info.offset.y;
+            nodeEntityRef.x += info.offset.x;
+            nodeEntityRef.y += info.offset.y;
 
             if (onReload) {
               onReload();
@@ -151,7 +153,7 @@ const LinkedNode = forwardRef<SVGSVGElement, NodePros>(
                 }}
               >
                 <pre style={{ margin: 0 }}>
-                  {JSON.stringify(nodeEntity, null, 2)}
+                  {JSON.stringify(nodeEntityRef, null, 2)}
                 </pre>
               </div>
             </motion.foreignObject>
