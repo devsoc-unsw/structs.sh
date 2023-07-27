@@ -1,4 +1,4 @@
-import { Svg, SVG } from '@svgdotjs/svg.js';
+import { SVG } from '@svgdotjs/svg.js';
 import AnimationProducer from 'visualiser-src/common/AnimationProducer';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
@@ -14,7 +14,6 @@ import SortsQuickAnimationProducer from '../animation-producer/SortsQuickAnimati
 import SortsSelectionAnimationProducer from '../animation-producer/SortsSelectionAnimationProducer';
 import {
   sortedColour,
-  checkingColour,
   defaultColour,
   comparingColor,
   selectedColor,
@@ -277,8 +276,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
           this.elementList[j - 1],
           j - 1,
           this.elementList[j],
-          j,
-          !(j > 1)
+          j
         );
         [this.elementList[j], this.elementList[j - 1]] = [
           this.elementList[j - 1],

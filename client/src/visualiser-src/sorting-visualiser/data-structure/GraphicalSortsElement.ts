@@ -1,7 +1,7 @@
 import { SVG, Text, Rect, Svg, Polygon } from '@svgdotjs/svg.js';
 import { VISUALISER_CANVAS } from 'visualiser-src/common/constants';
 import { shapeAttributes, textAttributes, boxWidth, textCy } from '../util/constants';
-import { getX, getY } from '../util/helpers';
+import { getX } from '../util/helpers';
 
 interface SVGData {
   boxTarget: Rect;

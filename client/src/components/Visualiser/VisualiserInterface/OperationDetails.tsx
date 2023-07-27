@@ -1,6 +1,5 @@
-import React, { FC, useContext, useState } from 'react';
-import { Box, Collapse, List, ListItem, ListItemIcon, Theme, Typography } from '@mui/material';
-import ExpandMore from '@mui/icons-material/ExpandMore';
+import { ChangeEvent, FC, useContext, useState } from 'react';
+import { Box, Collapse, ListItem, Theme, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { styled, useTheme } from '@mui/material/styles';
@@ -40,14 +39,13 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
     Array(documentation[command]?.args?.length || 0).fill('')
   );
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const textPrimaryColour = theme.palette.text.primary;
 
   const handleToggleDisplay = () => {
     setShouldDisplay(!shouldDisplay);
   };
 
   const handleSetArguments = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     index: number
   ) => {
     const newArgs = [...currentInputs];

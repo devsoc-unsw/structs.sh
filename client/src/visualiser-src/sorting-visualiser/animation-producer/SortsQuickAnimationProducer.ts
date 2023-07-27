@@ -1,15 +1,9 @@
 import { Polygon, Svg } from '@svgdotjs/svg.js';
 import { quickCodeSnippet } from '../util/codeSnippets';
-import { getX, getCx } from '../util/helpers';
+import { getX } from '../util/helpers';
 import GraphicalSortsElement from '../data-structure/GraphicalSortsElement';
 import SortsAnimationProducer from './SortsAnimationProducer';
-import {
-  boxWidth,
-  comparingColor,
-  defaultColour,
-  redColour,
-  sortedColour,
-} from '../util/constants';
+import { boxWidth, defaultColour, sortedColour } from '../util/constants';
 
 export default class SortsQuickAnimationProducer extends SortsAnimationProducer {
   public renderQuickCode() {

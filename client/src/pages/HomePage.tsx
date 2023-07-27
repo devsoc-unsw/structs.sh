@@ -4,7 +4,6 @@ import Topics from 'components/Topics';
 import Features from 'components/Features';
 import PageLayout from 'components/PageLayout';
 import Helmet from 'react-helmet';
-import React from 'react';
 
 const HeroBox = styled(Box)(({ theme }) => ({
   display: 'flex',

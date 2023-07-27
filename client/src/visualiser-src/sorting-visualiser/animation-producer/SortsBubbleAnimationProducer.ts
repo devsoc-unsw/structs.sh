@@ -2,7 +2,7 @@ import { bubbleCodeSnippet } from '../util/codeSnippets';
 import { getX, getCx } from '../util/helpers';
 import GraphicalSortsElement from '../data-structure/GraphicalSortsElement';
 import SortsAnimationProducer from './SortsAnimationProducer';
-import { defaultColour, sortedColour, checkingColour } from '../util/constants';
+import { defaultColour, sortedColour } from '../util/constants';
 
 export default class SortsBubbleAnimationProducer extends SortsAnimationProducer {
   public renderBubbleCode() {
