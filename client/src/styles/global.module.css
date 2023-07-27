@@ -1,0 +1,7 @@
+@import '@radix-ui/colors/slate.css';
+@import '@radix-ui/colors/slate-dark.css';
+
+.root {
+	--border: 1.5px solid var(--slate-7);
+	--rounding: 8px;
+}

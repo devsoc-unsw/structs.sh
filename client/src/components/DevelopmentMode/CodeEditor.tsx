@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
 const CodeEditor: FC = () => (
-		<div>Hello, world!</div>
-	);
+  <div>Code editor</div>
+);
 
 export default CodeEditor;
