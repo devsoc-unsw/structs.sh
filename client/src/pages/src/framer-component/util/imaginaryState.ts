@@ -1,4 +1,4 @@
-import { BackendLinkedList, BackendLinkedListUpdate } from './framer-component/types/graphState';
+import { BackendLinkedList, ParsedBackendLinkedListUpdate } from '../types/graphState';
 
 export const IMAGINARY_STATE_1: BackendLinkedList = {
   nodes: [
@@ -29,7 +29,7 @@ export const IMAGINARY_STATE_1: BackendLinkedList = {
   ],
 };
 
-export const IMAGINARY_UPDATE: BackendLinkedListUpdate[] = [
+export const IMAGINARY_UPDATE: ParsedBackendLinkedListUpdate[] = [
   {
     modified: [],
     deleted: [],

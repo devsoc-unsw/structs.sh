@@ -1,11 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { forwardRef } from "react";
+import React, { forwardRef } from "react";
 import { FrontendLinkedListGraph, NodeEntity } from "../types/graphState";
 
 interface EdgeProps {
   edgeUid: string;
   graph: FrontendLinkedListGraph;
-  color: string;
 }
 
 const draw = {
@@ -38,7 +37,7 @@ const createArrowMarker = (id: string, color: string) => (
     orient="auto"
     markerUnits="strokeWidth"
   >
-    <path d="M0,0 L0,2 L3,1 z" fill={color} /> // coordinates are divided by 3
+    <path d="M0,0 L0,2 L3,1 z" fill={color} />
   </marker>
 );
 
@@ -68,30 +67,31 @@ function calculateCoordinates(
 
 const Edge = forwardRef<SVGSVGElement, EdgeProps>(({ edgeUid, graph }, ref) => {
   const edge = graph.cacheEntity[edgeUid];
-  if (edge.type !== "edge") return;
+  if (edge.type !== "edge") return null;
   const markerId = `arrow-${edgeUid}`;
 
   return (
-      <motion.g
-        ref={ref}
+    <motion.g
+      ref={ref}
+      variants={draw}
+      transition={{ ease: "easeOut", duration: 2 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1, transition: { duration: 1 },}}
+    >
+      <defs>{createArrowMarker(markerId, "#DE3163")}</defs>
+      <motion.line
+        initial={calculateCoordinates(edge.from, edge.to, graph)}
+        animate={calculateCoordinates(edge.from, edge.to, graph)}
+        transition={{ type: "spring", bounce: 0.025 }}
+        stroke="#DE3163"
+        strokeWidth={6}
+        custom={2}
         variants={draw}
-        transition={{ ease: "easeOut", duration: 2 }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1, transition: { duration: 1 },}}
-      >
-        <defs>{createArrowMarker(markerId, "#DE3163")}</defs>
-        <motion.line
-          initial={calculateCoordinates(edge.from, edge.to, graph)}
-          animate={calculateCoordinates(edge.from, edge.to, graph)}
-          transition={{ type: "spring", bounce: 0.025 }}
-          stroke={"#DE3163"}
-          strokeWidth={6}
-          custom={2}
-          variants={draw}
-          markerEnd={`url(#${markerId})`}
-        />
-      </motion.g>
+        markerEnd={`url(#${markerId})`}
+      />
+    </motion.g>
   );
 });
 
+Edge.displayName = 'Edge';
 export default Edge;
