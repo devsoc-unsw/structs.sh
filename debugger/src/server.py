@@ -105,4 +105,136 @@ def echo(socket_id: str, data: Any) -> None:
     io.emit("echo", data, room=socket_id)
 
 
+@io.event
+def sendDummyData(socket_id: str, line_number: Any) -> None:
+    print("Received message from", socket_id, ":", line_number)
+    heap_dict = {}
+    # Our initial linked list node has been alloced with data value 27
+    if line_number == "100":
+        heap_dict = {
+            '0x1': {
+                'data': '27',
+                'type': 'struct node',
+                'next': '0x2',
+                'is_pointer': 'false'
+            }
+        }
+
+    # Append the value 34 to the end of the list
+    elif line_number == "101":
+        heap_dict = {
+            '0x1': {
+                'data': '27',
+                'type': 'struct node',
+                'next': '0x2',
+                'is_pointer': 'false'
+            },
+            '0x2': {
+                'data': '34',
+                'type': 'struct node',
+                'next': '0x0',
+                'is_pointer': 'false'
+            }
+        }
+
+    # Append the value 56 to the end of the list
+    elif line_number == "102":
+        heap_dict = {
+            '0x1': {
+                'data': '27',
+                'type': 'struct node',
+                'next': '0x2',
+                'is_pointer': 'false'
+            },
+            '0x2': {
+                'data': '34',
+                'type': 'struct node',
+                'next': '0x3',
+                'is_pointer': 'false'
+            },
+            '0x3': {
+                'data': '56',
+                'type': 'struct node',
+                'next': '0x0',
+                'is_pointer': 'false'
+            }
+        }
+
+    # Remove the second element from the linked list (i.e. remove 34)
+    elif line_number == "103":
+        heap_dict = {
+            '0x1': {
+                'data': '27',
+                'type': 'struct node',
+                'next': '0x3',
+                'is_pointer': 'false'
+            },
+            '0x3': {
+                'data': '56',
+                'type': 'struct node',
+                'next': '0x0',
+                'is_pointer': 'false'
+            }
+        }
+    
+    # Append the value 72 to the start of the list (order of list nodes in heap_dict shouldn't 
+    # matter as long as the next pointers are in the correct order)
+    elif line_number == "104":
+        heap_dict = {
+            '0x1': {
+                'data': '27',
+                'type': 'struct node',
+                'next': '0x3',
+                'is_pointer': 'false'
+            },
+            '0x3': {
+                'data': '56',
+                'type': 'struct node',
+                'next': '0x0',
+                'is_pointer': 'false'
+            },
+            '0x4': {
+                'data': '72',
+                'type': 'struct node',
+                'next': '0x1',
+                'is_pointer': 'false'
+            }
+        }
+
+    # Append the value 21 to the second element of the linked list 
+    # (will be placed AFTER the second element i.e. the third element)
+    elif line_number == "105":
+        heap_dict = {
+            '0x1': {
+                'data': '27',
+                'type': 'struct node',
+                'next': '0x5',
+                'is_pointer': 'false'
+            },
+            '0x3': {
+                'data': '56',
+                'type': 'struct node',
+                'next': '0x0',
+                'is_pointer': 'false'
+            },
+            '0x4': {
+                'data': '72',
+                'type': 'struct node',
+                'next': '0x1',
+                'is_pointer': 'false'
+            },
+            '0x5': {
+                'data': '21',
+                'type': 'struct node',
+                'next': '0x3',
+                'is_pointer': 'false'
+            },
+        }
+    else:
+        heap_dict = 'LINE NOT FOUND'
+
+    retVal = f"{heap_dict}"
+    io.emit("sendDummyData", retVal, room=socket_id)
+
+
 eventlet.wsgi.server(eventlet.listen(("", 8000)), app)
