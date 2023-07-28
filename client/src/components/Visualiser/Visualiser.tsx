@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import { CircularLoader } from 'components/Loader';
 import VisualiserCanvas from './VisualiserCanvas';
 import VisualiserInterface from './VisualiserInterface/VisualiserInterface';
@@ -16,7 +16,7 @@ interface VisualiserProps {
  * Given the `topicTitle`, this component will render the corresponding
  * visualiser and load up the commands for that visualiser.
  */
-const Visualiser: React.FC<VisualiserProps> = ({ topicTitle }) =>
+const Visualiser: FC<VisualiserProps> = ({ topicTitle }) =>
   topicTitle ? (
     <>
       <VisualiserCanvas />

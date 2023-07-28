@@ -2,7 +2,7 @@ import { bubbleCodeSnippet } from '../util/codeSnippets';
 import { getX, getCx } from '../util/helpers';
 import GraphicalSortsElement from '../data-structure/GraphicalSortsElement';
 import SortsAnimationProducer from './SortsAnimationProducer';
-import { defaultColour, sortedColour, checkingColour } from '../util/constants';
+import { defaultColour, sortedColour } from '../util/constants';
 
 export default class SortsBubbleAnimationProducer extends SortsAnimationProducer {
   public renderBubbleCode() {
@@ -25,7 +25,9 @@ export default class SortsBubbleAnimationProducer extends SortsAnimationProducer
     this.addSequenceAnimation(to.boxTarget.animate().x(xFrom));
     this.addSequenceAnimation(to.numberTarget.animate().cx(cxFrom));
     this.finishSequence();
-    this.addSequenceAnimation(to.boxTarget.animate(1).attr({ stroke: defaultColour, fill: defaultColour }));
+    this.addSequenceAnimation(
+      to.boxTarget.animate(1).attr({ stroke: defaultColour, fill: defaultColour })
+    );
     this.addSequenceAnimation(to.numberTarget.animate(1).attr({ fill: defaultColour }));
     if (isLast) {
       this.addSequenceAnimation(
