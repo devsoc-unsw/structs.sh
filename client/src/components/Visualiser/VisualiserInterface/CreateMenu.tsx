@@ -103,6 +103,7 @@ const CreateMenu = () => {
     handleSetLoadOptionsExpansion(false);
   }
 
+  // for developing purpoeses only to clear datastructures
   const clearDb = () => {
     axios
       .delete("http://localhost:3000/api/deleteAll", {
