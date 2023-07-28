@@ -113,10 +113,12 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
     if line_number == "100":
         heap_dict = {
             '0x1': {
-                'data': '27',
                 'type': 'struct node',
-                'next': '0x2',
-                'is_pointer': 'false'
+                'is_pointer': 'false',
+                'data': {
+                    'value': '27',
+                    'next': '0x0'
+                }
             }
         }
 
@@ -124,16 +126,20 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
     elif line_number == "101":
         heap_dict = {
             '0x1': {
-                'data': '27',
                 'type': 'struct node',
-                'next': '0x2',
-                'is_pointer': 'false'
+                'is_pointer': 'false',
+                'data': {
+                    'value': '27',
+                    'next': '0x2'
+                }
             },
             '0x2': {
-                'data': '34',
                 'type': 'struct node',
-                'next': '0x0',
-                'is_pointer': 'false'
+                'is_pointer': 'false',
+                'data': {
+                    'value': '34',
+                    'next': '0x0'
+                }
             }
         }
 
@@ -141,22 +147,28 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
     elif line_number == "102":
         heap_dict = {
             '0x1': {
-                'data': '27',
                 'type': 'struct node',
-                'next': '0x2',
-                'is_pointer': 'false'
+                'is_pointer': 'false',
+                'data': {
+                    'value': '27',
+                    'next': '0x2'
+                }
             },
             '0x2': {
-                'data': '34',
                 'type': 'struct node',
-                'next': '0x3',
-                'is_pointer': 'false'
+                'is_pointer': 'false',
+                'data': {
+                    'value': '34',
+                    'next': '0x3'
+                }
             },
             '0x3': {
-                'data': '56',
                 'type': 'struct node',
-                'next': '0x0',
-                'is_pointer': 'false'
+                'is_pointer': 'false',
+                'data': {
+                    'value': '56',
+                    'next': '0x0'
+                }
             }
         }
 
@@ -164,16 +176,20 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
     elif line_number == "103":
         heap_dict = {
             '0x1': {
-                'data': '27',
                 'type': 'struct node',
-                'next': '0x3',
-                'is_pointer': 'false'
+                'is_pointer': 'false',
+                'data': {
+                    'value': '27',
+                    'next': '0x3'
+                }
             },
             '0x3': {
-                'data': '56',
                 'type': 'struct node',
-                'next': '0x0',
-                'is_pointer': 'false'
+                'is_pointer': 'false',
+                'data': {
+                    'value': '56',
+                    'next': '0x0'
+                }
             }
         }
     
@@ -182,22 +198,28 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
     elif line_number == "104":
         heap_dict = {
             '0x1': {
-                'data': '27',
                 'type': 'struct node',
-                'next': '0x3',
-                'is_pointer': 'false'
+                'is_pointer': 'false',
+                'data': {
+                    'value': '27',
+                    'next': '0x3'
+                }
             },
             '0x3': {
-                'data': '56',
                 'type': 'struct node',
-                'next': '0x0',
-                'is_pointer': 'false'
+                'is_pointer': 'false',
+                'data': {
+                    'value': '56',
+                    'next': '0x0'
+                }
             },
             '0x4': {
-                'data': '72',
                 'type': 'struct node',
-                'next': '0x1',
-                'is_pointer': 'false'
+                'is_pointer': 'false',
+                'data': {
+                    'value': '72',
+                    'next': '0x1'
+                }
             }
         }
 
@@ -206,29 +228,37 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
     elif line_number == "105":
         heap_dict = {
             '0x1': {
-                'data': '27',
                 'type': 'struct node',
-                'next': '0x5',
-                'is_pointer': 'false'
+                'is_pointer': 'false',
+                'data': {
+                    'value': '27',
+                    'next': '0x5'
+                }
             },
             '0x3': {
-                'data': '56',
                 'type': 'struct node',
-                'next': '0x0',
-                'is_pointer': 'false'
+                'is_pointer': 'false',
+                'data': {
+                    'value': '56',
+                    'next': '0x0'
+                }
             },
             '0x4': {
-                'data': '72',
                 'type': 'struct node',
-                'next': '0x1',
-                'is_pointer': 'false'
+                'is_pointer': 'false',
+                'data': {
+                    'value': '72',
+                    'next': '0x1'
+                }
             },
             '0x5': {
-                'data': '21',
                 'type': 'struct node',
-                'next': '0x3',
-                'is_pointer': 'false'
-            },
+                'is_pointer': 'false',
+                'data': {
+                    'value': '21',
+                    'next': '0x3'
+                }
+            }
         }
     else:
         heap_dict = 'LINE NOT FOUND'
