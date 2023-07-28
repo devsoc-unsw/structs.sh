@@ -89,22 +89,6 @@ export interface FrontendLinkedListGraph extends GenericGraph {
  * Backend data structure definition
  */
 export type Addr = `0x${string}`;
-export interface BackendLinkedListNode {
-  nodeId: Addr;
-  value: string | number | null;
-  isPointer: boolean;
-  next: Addr | null;
-}
-
-export interface BackendLinkedList {
-  nodes: BackendLinkedListNode[];
-}
-
-export interface BackendLinkedListUpdate {
-  modified: BackendLinkedListNode[];
-  deleted: string[];
-}
-
 export enum CType {
   DOUBLE_LINED_LIST_NODE = 'struct doubly_list_node',
   INT = 'int',
@@ -142,4 +126,27 @@ export type BackendVariableBase = BackendVariableBasePointer | BackendVariableBa
 
 export interface BackendStructure {
   [address: Addr]: BackendVariableBase;
+}
+
+export interface BackendUpdate {
+  modified: {
+    [address: Addr]: BackendVariableBase;
+  },
+  removed: Addr[];
+}
+
+export interface BackendLinkedListNode {
+  nodeId: Addr;
+  value: string | number | null;
+  isPointer: boolean;
+  next: Addr | null;
+}
+
+export interface BackendLinkedList {
+  nodes: BackendLinkedListNode[];
+}
+
+export interface ParsedBackendLinkedListUpdate {
+  modified: BackendLinkedListNode[];
+  deleted: string[];
 }

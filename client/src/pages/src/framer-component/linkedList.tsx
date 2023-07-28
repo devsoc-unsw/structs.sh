@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useState, useEffect, useRef } from "react";
-import LinkedNode from "./linked-list/node";
+import React, { useState, useEffect, useRef } from "react";
+import { v4 } from "uuid";
+import LinkedNode from "./objects/node";
 import { UiState } from "./types/uiState";
 import {
   EdgeEntity,
@@ -8,8 +9,8 @@ import {
   FrontendLinkedListGraph,
   NodeEntity,
 } from "./types/graphState";
-import Edge from "./linked-list/edge";
-import { v4 } from "uuid";
+import Edge from "./objects/edge";
+
 
 export interface LinkedListState {
   linkedListState: FrontendLinkedListGraph;
@@ -38,13 +39,43 @@ const LinkedList: React.FC<LinkedListState> = ({
   const localGlobalSetting = settings;
   const width = window.innerWidth;
   const height = window.innerHeight;
+  const renderNodes = (onReload: () => void, onAddNode: () => void) => Object.values(state.cacheEntity).map((entity, index) => {
+      switch (entity.type) {
+        case EntityType.NODE:
+          return (
+            <LinkedNode
+              ref={(ref) => (nodeRefs.current[index] = ref)}
+              key={entity.uid}
+              nodeUid={entity.uid}
+              graph={state}
+              config={settings}
+              onReload={onReload}
+              onAddNode={onAddNode}
+              setConfig={setSettings}
+            />
+          );
+        case EntityType.EDGE:
+          return (
+            <Edge
+              ref={(ref) => (nodeRefs.current[index] = ref)}
+              key={entity.uid}
+              color="#h122f6"
+              graph={state}
+              edgeUid={entity.uid}
+            />
+          );
+        default:
+          return null;
+      }
+    }); 
+  const [drawables, setDrawables] = useState<JSX.Element[]>(renderNodes());
 
   useEffect(() => {
     console.log("GraphState changes!!!", linkedListState);
     setNodes(linkedListState);
 
     state = linkedListState;
-    setDrawables(renderNodes());
+    setDrawables(renderNodes(onReload, onAddNode));
     setUpdated(true);
   }, [linkedListState]);
 
@@ -53,18 +84,18 @@ const LinkedList: React.FC<LinkedListState> = ({
       // Initialize it
     } else {
       // First remove the edge, node being removed from graph
-      for (const key of Object.keys(nodeRefs.current)) {
+      Object.keys(nodeRefs.current).forEach(key => {
         if (state.cacheEntity[key] === undefined) {
           delete nodeRefs.current[key];
         }
-      }
+      });
 
       // Then add the node, edge to it
-      for (const key of Object.keys(state.cacheEntity)) {
+      Object.keys(state.cacheEntity).forEach(key => {
         if (nodeRefs.current[key] === undefined) {
           nodeRefs.current[key] = null;
         }
-      }
+      });
     }
   }, [state]);
 
@@ -84,7 +115,6 @@ const LinkedList: React.FC<LinkedListState> = ({
   }, [settings]);
 
   const onReload = () => {
-    console.log("Reload called? Node should updated?");
     setDrawables(renderNodes());
   };
 
@@ -122,38 +152,6 @@ const LinkedList: React.FC<LinkedListState> = ({
     setNodes({ ...state });
     onReload();
   };
-
-  const renderNodes = () => {
-    return Object.values(state.cacheEntity).map((entity, index) => {
-      switch (entity.type) {
-        case EntityType.NODE:
-          return (
-            <LinkedNode
-              ref={(ref) => (nodeRefs.current[index] = ref)}
-              key={entity.uid}
-              nodeUid={entity.uid}
-              graph={state}
-              config={settings}
-              onReload={onReload}
-              onAddNode={onAddNode}
-              setConfig={setSettings}
-            />
-          );
-        case EntityType.EDGE:
-          return (
-            <Edge
-              ref={(ref) => (nodeRefs.current[index] = ref)}
-              key={entity.uid}
-              color="#h122f6"
-              graph={state}
-              edgeUid={entity.uid}
-            />
-          );
-      }
-    });
-  };
-
-  const [drawables, setDrawables] = useState<JSX.Element[]>(renderNodes());
 
   return (
     <AnimatePresence>

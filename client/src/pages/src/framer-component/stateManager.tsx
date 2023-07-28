@@ -3,7 +3,7 @@ import ReactJson from "react-json-view";
 import { motion } from "framer-motion";
 import LinkedList from "./linkedList";
 import { DEFAULT_UISTATE, UiState } from "./types/uiState";
-import { ControlPanel } from "./controlPanel";
+import { ControlPanel } from "./util/controlPanel";
 import "./css/drawingMotion.css";
 import {
   BackendLinkedList,
