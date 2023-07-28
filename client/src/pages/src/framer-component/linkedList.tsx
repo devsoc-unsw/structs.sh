@@ -67,7 +67,7 @@ const LinkedList: React.FC<LinkedListState> = ({
         default:
           return null;
       }
-    }); 
+    });
   const [drawables, setDrawables] = useState<JSX.Element[]>(renderNodes());
 
   useEffect(() => {

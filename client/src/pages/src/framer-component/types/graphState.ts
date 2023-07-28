@@ -16,30 +16,15 @@ export interface BaseEntity {
 }
 
 export interface NodeEntity extends BaseEntity {
-  /**
-   * I think in our system, will have two layer
-   * 1. Background layer, where node represent like this
-   * 2. Drawable Layer, where the node contains it's own drawing functionality, and also the background node
-   */
   uid: string;  
   type: EntityType.NODE;
-  
-  /**
-   * It's own property
-   */
+
   title: string;
   colorHex: string;
   size: number;
 
-  /**
-   * As the node in graph
-   */
   edges: string[];
 
-  /**
-   * As well as position, generate frontend graph require some smart algo
-   * but can be served without a brain
-   */
   x: number;
   y: number;
 }
@@ -149,4 +134,25 @@ export interface BackendLinkedList {
 export interface ParsedBackendLinkedListUpdate {
   modified: BackendLinkedListNode[];
   deleted: string[];
+}
+
+/**
+ * Code editor definition for user's own defined struct
+ */
+export type LinkedListType = {
+  linkedListStruct: string;
+  value: {
+    type: 'int',
+    name: 'cockatoo',
+    isPointer: false,
+  },
+  next: {
+    type: 'struct pigeon',
+    name: 'magpie',
+    isPointer: true,
+  },
+}
+
+export interface EditorAnnotation {
+  [name: string]: LinkedListType;
 }
