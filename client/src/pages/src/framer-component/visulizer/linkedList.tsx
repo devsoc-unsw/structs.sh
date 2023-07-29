@@ -2,15 +2,15 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState, useEffect, useRef } from "react";
 import { v4 } from "uuid";
-import LinkedNode from "./objects/node";
-import { UiState } from "./types/uiState";
+import LinkedNode from "../objects/node";
+import { UiState } from "../types/uiState";
 import {
   EdgeEntity,
   EntityType,
   FrontendLinkedListGraph,
   NodeEntity,
-} from "./types/graphState";
-import Edge from "./objects/edge";
+} from "../types/graphState";
+import Edge from "../objects/edge";
 
 
 export interface LinkedListState {
@@ -155,18 +155,20 @@ const LinkedList: React.FC<LinkedListState> = ({
   };
 
   return (
-    <AnimatePresence>
-      <motion.svg
-        key={updated ? "updated" : "not-updated"}
-        width={width}
-        height={height}
-        viewBox={`0 0 ${width} ${height}`}
-        initial="hidden"
-        animate="visible"
-      >
-        {drawables}
-      </motion.svg>
-    </AnimatePresence>
+    <div className="LinkedList">
+      <AnimatePresence>
+        <motion.svg
+          key={updated ? "updated" : "not-updated"}
+          width={width}
+          height={height}
+          viewBox={`0 0 ${width} ${height}`}
+          initial="hidden"
+          animate="visible"
+        >
+          {drawables}
+        </motion.svg>
+      </AnimatePresence>
+    </div>
   );
 };
 

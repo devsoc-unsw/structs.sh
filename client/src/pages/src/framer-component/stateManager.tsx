@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
-import ReactJson from "react-json-view";
-import { motion } from "framer-motion";
-import LinkedList from "./linkedList";
-import { DEFAULT_UISTATE, UiState } from "./types/uiState";
-import { ControlPanel } from "./util/controlPanel";
-import "./css/drawingMotion.css";
+import React, { useEffect, useState } from 'react';
+import LinkedList from './visulizer/linkedList';
+import { DEFAULT_UISTATE, UiState } from './types/uiState';
+import { ControlPanel } from './util/controlPanel';
+import './css/drawingMotion.css';
 import {
   BackendLinkedList,
   BackendLinkedListNode,
@@ -13,18 +11,16 @@ import {
   EntityType,
   FrontendLinkedListGraph,
   NodeEntity,
-} from "./types/graphState";
-
+} from './types/graphState';
+import { Debugger } from './util/debugger';
+import { Timeline } from './util/timeline';
 
 export interface BackendState {
   state: BackendLinkedList;
   nextState: () => void;
 }
 
-export const DrawingMotions: React.FC<BackendState> = ({
-  state,
-  nextState,
-}) => {
+export const DrawingMotions: React.FC<BackendState> = ({ state, nextState }) => {
   const [settings, setSettings] = useState<UiState>(DEFAULT_UISTATE);
 
   /**
@@ -49,8 +45,8 @@ export const DrawingMotions: React.FC<BackendState> = ({
       const nodeEntity: NodeEntity = {
         uid: node.nodeId,
         type: EntityType.NODE,
-        title: node.value ? node.value.toString() : "",
-        colorHex: "#FFFFFF",
+        title: node.value ? node.value.toString() : '',
+        colorHex: '#FFFFFF',
         size: 50,
         edges: [],
         x: 200 + index * 200,
@@ -60,9 +56,7 @@ export const DrawingMotions: React.FC<BackendState> = ({
     });
 
     backendState.nodes.forEach((node) => {
-      const nodeEntity: NodeEntity | undefined = nodeEntities.find(
-        (n) => n.uid === node.nodeId
-      );
+      const nodeEntity: NodeEntity | undefined = nodeEntities.find((n) => n.uid === node.nodeId);
       if (!nodeEntity) return;
 
       // If there's a next node, create an edge between the current node and the next node
@@ -76,8 +70,8 @@ export const DrawingMotions: React.FC<BackendState> = ({
             type: EntityType.EDGE,
             from: nodeEntity.uid,
             to: toNode.uid, // It's sure to find because we've already created all the nodes
-            label: "", // you might need a better way to label the edge
-            colorHex: "#FFFFFF", // default color
+            label: '', // you might need a better way to label the edge
+            colorHex: '#FFFFFF', // default color
           };
           edgeEntities.push(edgeEntity);
 
@@ -104,9 +98,9 @@ export const DrawingMotions: React.FC<BackendState> = ({
   const initialFrontendState = parseState(state);
   const [currGraphState, setCurrGraphState] =
     useState<FrontendLinkedListGraph>(initialFrontendState);
-  const [historyGraphState, setHistoryGraphState] = useState<
-    FrontendLinkedListGraph[]
-  >([initialFrontendState]);
+  const [historyGraphState, setHistoryGraphState] = useState<FrontendLinkedListGraph[]>([
+    initialFrontendState,
+  ]);
 
   const onJsonChange = (edit: any) => {
     const newFrontendState = parseState(edit.updated_src);
@@ -130,64 +124,19 @@ export const DrawingMotions: React.FC<BackendState> = ({
    * Hard code for now yea yea
    */
   return (
-    <div>
-      <div className="container">
-        <div className="control-panel">
-          <ControlPanel settings={settings} setSettings={setSettings} />
-        </div>
-        <div className="linked-list">
-          <div className="LinkedList">
-            <LinkedList
-              settings={settings}
-              linkedListState={currGraphState}
-              setSettings={setSettings}
-            />
-          </div>
-          <div className="timeline">
-            <motion.button
-              className="state-button"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => {
-                
-              }}
-            >
-              Backward
-            </motion.button>
-            <motion.button
-              className="state-button"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => {
-                
-              }}
-            >
-              Forward
-            </motion.button>
-            <motion.button
-              className="state-button"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={nextState} // On button click, handleButtonClick function will be called
-            >
-              Update FramerNodes
-            </motion.button>
-          </div>
-        </div>
-        {settings.debug && (
-          <div className="DEBUG">
-            <pre>
-              <ReactJson
-                src={currGraphState}
-                onEdit={onJsonChange}
-                onDelete={onJsonChange}
-                onAdd={onJsonChange}
-                name={null} // Removes the root node
-              />
-            </pre>
-          </div>
-        )}
+    <div className="container">
+      <div className="control-panel">
+        <ControlPanel settings={settings} setSettings={setSettings} />
       </div>
+      <div className="linked-list">
+        <LinkedList
+          settings={settings}
+          linkedListState={currGraphState}
+          setSettings={setSettings}
+        />
+        <Timeline nextState={nextState} forwardState={() => {}} backwardState={() => {}} />
+      </div>
+      {settings.debug && <Debugger src={currGraphState} />}
     </div>
   );
 };
