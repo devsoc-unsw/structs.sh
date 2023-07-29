@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { StateManager } from './framer-component/stateManager';
-import { BackendLinkedList } from './framer-component/types/graphState';
-import { IMAGINARY_STATE_1 } from './framer-component/util/imaginaryState';
-import { DEFAULT_UISTATE, UiState } from './framer-component/types/uiState';
+import { StateManager } from './visualizer-component/stateManager';
+import { BackendLinkedList } from './visualizer-component/types/graphState';
+import { IMAGINARY_STATE_1 } from './visualizer-component/util/imaginaryState';
+import { DEFAULT_UISTATE, UiState } from './visualizer-component/types/uiState';
 
 export interface RoutesProps {
   onGetBreakPoint: (breakPoint: number) => void;

@@ -1,5 +1,5 @@
-import { AnimatePresence, motion } from "framer-motion";
 import React, { useState, useEffect, useRef } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { v4 } from "uuid";
 import LinkedNode from "../objects/node";
 import { UiState } from "../types/uiState";
