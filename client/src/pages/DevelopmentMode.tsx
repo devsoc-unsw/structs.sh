@@ -1,15 +1,10 @@
-<<<<<<< HEAD
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { socket } from 'utils/socket';
 import styles from 'styles/DevelopmentMode.module.css';
 import globalStyles from 'styles/global.module.css';
 import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
-=======
-import React, { useCallback, useEffect } from 'react';
-import { socket } from 'utils/socket';
 import VisualizerMain from './src/VisualizerMain';
->>>>>>> dev
 
 const DevelopmentMode = () => {
   const onGetBreakpoints = useCallback((data: any) => {
@@ -21,8 +16,6 @@ const DevelopmentMode = () => {
       console.log('Connected!');
       console.log('Emitting message to server...');
       socket.emit('echo', 'example');
-<<<<<<< HEAD
-=======
       //      socket.emit("getBreakpoints", "121", "list2")
       //      socket.emit("getBreakpoints", "122", "list2")
       //      socket.emit("getBreakpoints", "123", "list2")
@@ -36,7 +29,6 @@ const DevelopmentMode = () => {
       socket.emit('sendDummyData', '103');
       socket.emit('sendDummyData', '104');
       socket.emit('sendDummyData', '105');
->>>>>>> dev
     };
 
     const onDisconnect = () => {
@@ -46,12 +38,6 @@ const DevelopmentMode = () => {
     const onEcho = (data: any) => {
       console.log(`Received message: ${data}`);
     };
-<<<<<<< HEAD
-
-    socket.on('connect', onConnect);
-    socket.on('disconnect', onDisconnect);
-    socket.on('echo', onEcho);
-=======
 
     const onGetBreakpoints = (data: any) => {
       console.log(`Received message: ${data}`);
@@ -66,22 +52,17 @@ const DevelopmentMode = () => {
     socket.on('echo', onEcho);
     socket.on('getBreakpoints', onGetBreakpoints);
     socket.on('sendDummyData', onSendDummyData);
->>>>>>> dev
 
     return () => {
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
       socket.off('echo', onEcho);
-<<<<<<< HEAD
-=======
       socket.off('getBreakpoints', onGetBreakpoints);
       socket.off('sendDummyData', onSendDummyData);
->>>>>>> dev
     };
   }, [onGetBreakpoints]);
 
   return (
-<<<<<<< HEAD
     <div className={classNames(globalStyles.root, styles.dark)}>
       <div className={styles.layout}>
         <div className={classNames(styles.pane, styles.nav)}>
@@ -107,16 +88,13 @@ const DevelopmentMode = () => {
           </Tabs>
         </div>
         <div className={classNames(styles.pane, styles.visualiser)}>
-          Visualiser
+          <VisualizerMain onGetBreakPoint={onGetBreakpoints}/>
         </div>
         <div className={classNames(styles.pane, styles.timeline)}>
           Timeline
         </div>
       </div>
     </div>
-=======
-    <VisualizerMain onGetBreakPoint={onGetBreakpoints}/>
->>>>>>> dev
   );
 };
 
