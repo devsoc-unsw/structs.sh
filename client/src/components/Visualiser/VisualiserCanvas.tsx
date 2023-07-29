@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import { Box } from '@mui/material';
 
 /* -------------------------------------------------------------------------- */
@@ -9,7 +9,7 @@ import { Box } from '@mui/material';
  * The React component that renders the DOM elements that the visualiser
  * attaches itself to.
  */
-const VisualiserCanvas: React.FC = () => (
+const VisualiserCanvas: FC = () => (
   <Box id="visualiser-container" margin="auto" width={window.screen.width}>
     <svg id="visualiser-canvas" />
   </Box>

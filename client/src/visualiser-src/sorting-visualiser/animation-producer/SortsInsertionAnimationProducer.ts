@@ -11,8 +11,7 @@ export default class SortsInsertionAnimationProducer extends SortsAnimationProdu
     from: GraphicalSortsElement,
     fromIndex: number,
     to: GraphicalSortsElement,
-    toIndex: number,
-    last: boolean
+    toIndex: number
   ) {
     this.swap(from, fromIndex, to, toIndex);
 

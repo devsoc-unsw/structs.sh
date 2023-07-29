@@ -1,5 +1,6 @@
 // Strips the frontmatter from the given markdown string
-export const bypassFrontmatter = (markdownBody: string): string => (markdownBody ? markdownBody.replace(/^---$.*^---$/ms, '') : '');
+export const bypassFrontmatter = (markdownBody: string): string =>
+  markdownBody ? markdownBody.replace(/^---$.*^---$/ms, '') : '';
 
 /**
  * Determines an estimate for the number of minutes it'd take to read through a markdown document

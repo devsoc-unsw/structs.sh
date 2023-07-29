@@ -1,9 +1,7 @@
-import { Box, Typography, useTheme, Button } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import React, { useCallback, useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import VisualiserContext from './VisualiserContext';
-
-import styles from './Control.module.scss';
 
 const MenuButton = styled(Button)({
   backgroundColor: '#46B693',
@@ -23,7 +21,6 @@ const MenuButton = styled(Button)({
  */
 const CreateMenu = () => {
   const { controller } = useContext(VisualiserContext);
-  const theme = useTheme();
 
   const handleReset = useCallback(() => {
     controller.resetDataStructure();
