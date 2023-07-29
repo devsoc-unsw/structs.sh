@@ -96,7 +96,7 @@ export const StateManager: React.FC<StateManagerProp> = ({ state, nextState, set
     return frontendState;
   };
   const parser = parserFactory(settings);
-  const [Visualizer, setVisualizer] = useState(() => visualizerFactory(settings));
+  const Visualizer = visualizerFactory(settings);
 
   const initialFrontendState = parseState(state);
   const [currGraphState, setCurrGraphState] =
