@@ -2,11 +2,7 @@ import React, { ReactNode } from 'react';
 import * as Internal from '@radix-ui/react-tabs';
 import styles from 'styles/Tabs.module.css';
 
-export const Tabs = ({
-  children,
-}: {
-  children: ReactNode,
-}) => (
+export const Tabs = ({ children }: { children: ReactNode }) => (
   <Internal.Root className={styles.TabsRoot} defaultValue="0">
     <Internal.List className={styles.TabsList} aria-label="Tabs">
       {React.Children.map(children, (child, index) => (
@@ -23,13 +19,6 @@ export const Tabs = ({
   </Internal.Root>
 );
 
-export const Tab = ({
-  children
-}: {
-  label: string,
-  children: ReactNode
-}) => (
-  <div className={styles.TabsContent}>
-    {children}
-  </div>
+export const Tab = ({ children }: { label: string; children: ReactNode }) => (
+  <div className={styles.TabsContent}>{children}</div>
 );

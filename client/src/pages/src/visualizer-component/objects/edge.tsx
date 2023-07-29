@@ -1,6 +1,6 @@
-import { AnimatePresence, motion } from "framer-motion";
-import React, { forwardRef } from "react";
-import { FrontendLinkedListGraph, NodeEntity } from "../types/graphState";
+import { motion } from 'framer-motion';
+import { forwardRef } from 'react';
+import { FrontendLinkedListGraph, NodeEntity } from '../types/graphState';
 
 interface EdgeProps {
   edgeUid: string;
@@ -12,7 +12,7 @@ const draw = {
     pathLength: 1,
     opacity: 1,
     transition: {
-      type: "spring",
+      type: 'spring',
       pathLength: {
         delay: i * 0.2,
         duration: 1,
@@ -62,27 +62,27 @@ function calculateCoordinates(
   const x2 = to.x - Math.cos(angle) * offsetDistance;
   const y2 = to.y - Math.sin(angle) * offsetDistance;
 
-  return { x1, y1, x2, y2, opacity: 1, transition: { duration: 1 }, };
+  return { x1, y1, x2, y2, opacity: 1, transition: { duration: 1 } };
 }
 
 const Edge = forwardRef<SVGSVGElement, EdgeProps>(({ edgeUid, graph }, ref) => {
   const edge = graph.cacheEntity[edgeUid];
-  if (edge.type !== "edge") return null;
+  if (edge.type !== 'edge') return null;
   const markerId = `arrow-${edgeUid}`;
 
   return (
     <motion.g
       ref={ref}
       variants={draw}
-      transition={{ ease: "easeOut", duration: 2 }}
+      transition={{ ease: 'easeOut', duration: 2 }}
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1, transition: { duration: 1 },}}
+      animate={{ opacity: 1, transition: { duration: 1 } }}
     >
-      <defs>{createArrowMarker(markerId, "#DE3163")}</defs>
+      <defs>{createArrowMarker(markerId, '#DE3163')}</defs>
       <motion.line
         initial={calculateCoordinates(edge.from, edge.to, graph)}
         animate={calculateCoordinates(edge.from, edge.to, graph)}
-        transition={{ type: "spring", bounce: 0.025 }}
+        transition={{ type: 'spring', bounce: 0.025 }}
         stroke="#DE3163"
         strokeWidth={6}
         custom={2}

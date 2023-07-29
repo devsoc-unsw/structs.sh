@@ -8,13 +8,13 @@ import {
 export interface Parser {
   parseInitialState: (
     backendStructure: BackendStructure,
-    editorAnnotation: EditorAnnotation | undefined 
+    editorAnnotation: EditorAnnotation | undefined
   ) => GenericGraph;
   updateState: (
     frontendStructure: GenericGraph,
     backendStructure: BackendStructure,
     backendUpdate: BackendUpdate,
-    editorAnnotation: EditorAnnotation | undefined 
+    editorAnnotation: EditorAnnotation | undefined
   ) => GenericGraph;
 }
 

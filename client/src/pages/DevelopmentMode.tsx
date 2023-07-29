@@ -39,9 +39,9 @@ const DevelopmentMode = () => {
       console.log(`Received message: ${data}`);
     };
 
-    const onGetBreakpoints = (data: any) => {
-      console.log(`Received message: ${data}`);
-    };
+    // const onGetBreakpoints = (data: any) => {
+    //   console.log(`Received message: ${data}`);
+    // };
 
     const onSendDummyData = (data: any) => {
       console.log(`Received message: ${data}`);
@@ -65,15 +65,9 @@ const DevelopmentMode = () => {
   return (
     <div className={classNames(globalStyles.root, styles.dark)}>
       <div className={styles.layout}>
-        <div className={classNames(styles.pane, styles.nav)}>
-          Nav bar
-        </div>
-        <div className={classNames(styles.pane, styles.files)}>
-          File tree
-        </div>
-        <div className={classNames(styles.pane, styles.editor)}>
-          Code editor
-        </div>
+        <div className={classNames(styles.pane, styles.nav)}>Nav bar</div>
+        <div className={classNames(styles.pane, styles.files)}>File tree</div>
+        <div className={classNames(styles.pane, styles.editor)}>Code editor</div>
         <div className={classNames(styles.pane, styles.inspector)}>
           <Tabs>
             <Tab label="Console">
@@ -88,11 +82,9 @@ const DevelopmentMode = () => {
           </Tabs>
         </div>
         <div className={classNames(styles.pane, styles.visualiser)}>
-          <VisualizerMain onGetBreakPoint={onGetBreakpoints}/>
+          <VisualizerMain onGetBreakPoint={onGetBreakpoints} />
         </div>
-        <div className={classNames(styles.pane, styles.timeline)}>
-          Timeline
-        </div>
+        <div className={classNames(styles.pane, styles.timeline)}>Timeline</div>
       </div>
     </div>
   );
