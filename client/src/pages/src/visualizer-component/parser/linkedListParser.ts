@@ -156,18 +156,6 @@ export class LinkedListParser implements Parser {
     });
 
     try {
-      const rootedTree: LinkedListNode | null = null;
-      const prevNodeMap: Map<Addr, LinkedListNode[]> = new Map();
-      linkedList.forEach((node) => {
-        if (node.next !== '0x0') {
-          if (!prevNodeMap.has(node.next)) {
-            prevNodeMap.set(node.next, []);
-          }
-          prevNodeMap.get(node.next)!.push(node);
-        } else {
-          root = node; // The root node will be the one that has no next node
-        }
-      });
       const rootedTree = this.convertToRootedTree(linkedList, cacheLinkedListNode);
       const positions = this.assignPositions(rootedTree, cacheLinkedListNode);
       debugger;
