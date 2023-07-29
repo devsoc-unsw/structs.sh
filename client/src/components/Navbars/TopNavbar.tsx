@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
+import { FC, MouseEvent, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import {
   AppBar,
@@ -10,9 +10,7 @@ import {
   Typography,
   ListItemText,
   Button,
-  FormControl,
   ListItemIcon,
-  TextField,
   useTheme,
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -42,7 +40,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
 
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
   const menuOpen = Boolean(menuAnchorEl);
-  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleOpenMenu = (event: MouseEvent<HTMLElement>) => {
     setMenuAnchorEl(event.currentTarget);
   };
   const handleCloseMenu = () => {

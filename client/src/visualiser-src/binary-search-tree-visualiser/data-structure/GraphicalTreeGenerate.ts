@@ -33,7 +33,7 @@ export default class GraphicalTreeGenerate {
   }
 
   public static generate<T extends GraphicalBSTNode>(createNode: (number) => T): T {
-    const num = generateNumbers().sort((a,b) => a - b);
+    const num = generateNumbers().sort((a, b) => a - b);
     const root = GraphicalTreeGenerate.recurseArrInsert(num, 0, num.length, createNode);
     updateNodePositions(root);
     GraphicalTreeGenerate.create(root);

@@ -9,7 +9,7 @@
     "airbnb",
     "airbnb-typescript",
     "plugin:react/recommended",
-    "prettier"
+    "plugin:prettier/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -42,9 +42,11 @@
         "unnamedComponents": "arrow-function"
       }
     ],
+    "rules": {
+      "react/prop-types": "off"
+    },
     "no-console": "off",
     "no-alert": "off",
-    "@typescript-eslint/no-unused-vars": "off",
     "no-nested-ternary": "off",
     "import/prefer-default-export": "off",
     "react/require-default-props": "off",
@@ -56,7 +58,16 @@
         "allowAsProps": true
       }
     ],
+    "react/react-in-jsx-scope": "off",
     "jsx-a11y/anchor-is-valid": "off",
     "class-methods-use-this": "off"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["**/*.ts", "**/*.tsx"],
+      "rules": {
+        "react/prop-types": "off"
+      }
+    }
+  ]
 }

@@ -1,4 +1,3 @@
-import { Line, Marker } from '@svgdotjs/svg.js';
 import BSTAnimationProducer from './BSTAnimationProducer';
 import { deleteCodeSnippet } from '../util/codeSnippets';
 import GraphicalBSTNode from '../data-structure/GraphicalBSTNode';

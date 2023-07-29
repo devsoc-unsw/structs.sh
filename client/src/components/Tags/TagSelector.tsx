@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React from 'react';
+import { FC } from 'react';
 import { TagList } from './TagList';
 
 interface TagSelectorProps {
@@ -7,7 +7,7 @@ interface TagSelectorProps {
   setSelectedTags: (tags: string[]) => void;
 }
 
-const TagSelector: React.FC<TagSelectorProps> = ({ selectedTags, setSelectedTags }) => (
+const TagSelector: FC<TagSelectorProps> = ({ selectedTags, setSelectedTags }) => (
   <TagList
     tags={selectedTags}
     handleDelete={(tag: string) => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import { Box } from '@mui/material';
 import { LineLoader } from 'components/Loader';
 import { getTopics } from '../../visualiser-src/common/helpers';
@@ -9,7 +9,7 @@ interface Props {}
 /**
  * A box containing cards for each topic
  */
-const Topics: React.FC<Props> = () => {
+const Topics: FC<Props> = () => {
   const topics = getTopics();
   return topics && topics.length > 0 ? (
     <Box
