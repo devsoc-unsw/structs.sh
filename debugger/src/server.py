@@ -4,6 +4,13 @@ from typing import Any
 import subprocess
 import json
 
+# Later we want to receive the variable name, line number and file_name from the client
+variable_name = "list2"
+line_number = "126"
+file_name = "program"
+    
+# Construct the GDB script
+gdb_script = f"""
 
 def compile_program(file_name):
     subprocess.run(["gcc", "-ggdb", file_name, "-o", "program"])    
@@ -11,7 +18,7 @@ def compile_program(file_name):
 
 
 def create_ll_script(line_number, variable_name, file_name):
-    gdb_script = f"""
+    gdb_script = f
 python
 import gdb
 import json
@@ -51,7 +58,6 @@ nodelist
 continue
 quit
 """
-    return gdb_script
 
 
 io = socketio.Server(cors_allowed_origins='*')

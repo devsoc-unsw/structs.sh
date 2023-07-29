@@ -1,8 +1,12 @@
-import { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { socket } from 'utils/socket';
-import CodeEditor from 'components/DevelopmentMode/CodeEditor';
+import VisualizerMain from './src/VisualizerMain';
 
 const DevelopmentMode = () => {
+  const onGetBreakpoints = useCallback((data: any) => {
+    console.log(`Received message!!: ${data}`);
+  }, []);
+
   useEffect(() => {
     const onConnect = () => {
       console.log('Connected!');
@@ -52,9 +56,11 @@ const DevelopmentMode = () => {
       socket.off('getBreakpoints', onGetBreakpoints);
       socket.off('sendDummyData', onSendDummyData);
     };
-  }, []);
+  }, [onGetBreakpoints]);
 
-  return <CodeEditor />;
+  return (
+    <VisualizerMain onGetBreakPoint={onGetBreakpoints}/>
+  );
 };
 
 export default DevelopmentMode;
