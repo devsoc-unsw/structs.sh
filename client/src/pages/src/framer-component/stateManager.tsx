@@ -15,14 +15,14 @@ import {
 import { Debugger } from './util/debugger';
 import { Timeline } from './util/timeline';
 
-export interface BackendState {
+export interface StateManagerProp {
   state: BackendLinkedList;
+  settings: UiState;
+  setSettings: React.Dispatch<React.SetStateAction<UiState>>;
   nextState: () => void;
 }
 
-export const DrawingMotions: React.FC<BackendState> = ({ state, nextState }) => {
-  const [settings, setSettings] = useState<UiState>(DEFAULT_UISTATE);
-
+export const StateManager: React.FC<StateManagerProp> = ({ state, nextState, settings, setSettings }) => {
   /**
    * Parse the background graph state into frontend ones
    */
@@ -101,13 +101,6 @@ export const DrawingMotions: React.FC<BackendState> = ({ state, nextState }) => 
   const [historyGraphState, setHistoryGraphState] = useState<FrontendLinkedListGraph[]>([
     initialFrontendState,
   ]);
-
-  const onJsonChange = (edit: any) => {
-    const newFrontendState = parseState(edit.updated_src);
-
-    setCurrGraphState(newFrontendState);
-    setHistoryGraphState([...historyGraphState, newFrontendState]);
-  };
 
   useEffect(() => {
     const newFrontendState = parseState(state);
