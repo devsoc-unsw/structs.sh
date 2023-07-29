@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState, useEffect, useRef } from "react";
 import { v4 } from "uuid";
@@ -11,21 +10,15 @@ import {
   NodeEntity,
 } from "../types/graphState";
 import Edge from "../objects/edge";
+import { VisualizerComponent } from "./visualizer";
 
-
-export interface LinkedListState {
-  linkedListState: FrontendLinkedListGraph;
-  settings: UiState;
-  setSettings: React.Dispatch<React.SetStateAction<UiState>>;
-}
-
-const LinkedList: React.FC<LinkedListState> = ({
-  linkedListState,
+const LinkedList: VisualizerComponent = ({
+  graphState,
   settings,
   setSettings,
 }) => {
   // eslint-disable-next-line prefer-const
-  let [state, setNodes] = useState(linkedListState);
+  let [state, setNodes] = useState(graphState);
   const nodeRefs = useRef<{
     [uid: string]: SVGSVGElement | null;
   }>({});
@@ -72,13 +65,13 @@ const LinkedList: React.FC<LinkedListState> = ({
   const [drawables, setDrawables] = useState<JSX.Element[]>(renderNodes());
 
   useEffect(() => {
-    console.log("GraphState changes!!!", linkedListState);
-    setNodes(linkedListState);
+    console.log("GraphState changes!!!", graphState);
+    setNodes(graphState);
 
-    state = linkedListState;
+    state = graphState;
     setDrawables(renderNodes(onReload, onAddNode));
     setUpdated(true);
-  }, [linkedListState]);
+  }, [graphState]);
 
   useEffect(() => {
     if (Object.keys(nodeRefs.current).length === 0) {

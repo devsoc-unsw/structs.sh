@@ -1,8 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { socket } from 'utils/socket';
 import EntryPoint from './src/EnteryPoint';
 
 const DevelopmentMode = () => {
+  const onGetBreakpoints = useCallback((data: any) => {
+    console.log(`Received message!!: ${data}`);
+  }, []);
+
   useEffect(() => {
     const onConnect = () => {
       console.log('Connected!');
@@ -19,14 +23,10 @@ const DevelopmentMode = () => {
       console.log(`Received message: ${data}`);
     };
 
-    const onGetBreakpoints = (data: any) => {
-      console.log(`Received message: ${data}`);
-    };
-
-    socket.on('connect', onConnect);
-    socket.on('disconnect', onDisconnect);
-    socket.on('echo', onEcho);
-    socket.on('getBreakpoints', onGetBreakpoints);
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+    socket.on("echo", onEcho);
+    socket.on("getBreakpoints", onGetBreakpoints)
 
     return () => {
       socket.off('connect', onConnect);
@@ -34,9 +34,11 @@ const DevelopmentMode = () => {
       socket.off('echo', onEcho);
       socket.off('getBreakpoints', onGetBreakpoints);
     };
-  }, []);
+  }, [onGetBreakpoints]);
 
-  return <EntryPoint />;
+  return (
+    <EntryPoint onGetBreakPoint={onGetBreakpoints}/>
+  );
 };
 
 export default DevelopmentMode;

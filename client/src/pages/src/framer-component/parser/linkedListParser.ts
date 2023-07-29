@@ -9,7 +9,7 @@ type LinkedListNode = {
   next: Addr;
 }
 
-class LinkedListParser implements Parser {
+export class LinkedListParser implements Parser {
   convertToRootedTree(linkedList: LinkedListNode[], cacheLinkedListNode: Map<Addr, LinkedListNode>): LinkedListNode {
     let root: LinkedListNode | null = null;
     const prevNodeMap: Map<Addr, LinkedListNode[]> = new Map();

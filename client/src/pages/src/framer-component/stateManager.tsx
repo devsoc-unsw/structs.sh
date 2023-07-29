@@ -14,6 +14,8 @@ import {
 } from './types/graphState';
 import { Debugger } from './util/debugger';
 import { Timeline } from './util/timeline';
+import { parserFactory } from './parser/parserFactory';
+import { visualizerFactory } from './visulizer/visualizerFactory';
 
 export interface StateManagerProp {
   state: BackendLinkedList;
@@ -89,11 +91,12 @@ export const StateManager: React.FC<StateManagerProp> = ({ state, nextState, set
       nodes: nodeEntities,
       edges: edgeEntities,
       cacheEntity,
-      head: nodeEntities[0],
     };
 
     return frontendState;
   };
+  const parser = parserFactory(settings);
+  const [Visualizer, setVisualizer] = useState(() => visualizerFactory(settings));
 
   const initialFrontendState = parseState(state);
   const [currGraphState, setCurrGraphState] =
@@ -122,9 +125,9 @@ export const StateManager: React.FC<StateManagerProp> = ({ state, nextState, set
         <ControlPanel settings={settings} setSettings={setSettings} />
       </div>
       <div className="linked-list">
-        <LinkedList
+        <Visualizer
           settings={settings}
-          linkedListState={currGraphState}
+          graphState={currGraphState}
           setSettings={setSettings}
         />
         <Timeline nextState={nextState} forwardState={() => {}} backwardState={() => {}} />

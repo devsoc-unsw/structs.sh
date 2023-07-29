@@ -1,3 +1,5 @@
+import { type } from "os";
+
 /**
  *  Frontend data structure definition
  */
@@ -61,10 +63,7 @@ export interface GenericGraph {
  * Doubtful about assumption, linked list won't be linked list at sometime, 
  * so how about we use a generic graph!!
  */
-export interface FrontendLinkedListGraph extends GenericGraph {
-  head: NodeEntity;
-}
-
+export type FrontendLinkedListGraph = GenericGraph;
 
 /**
  * Backend data structure definition
