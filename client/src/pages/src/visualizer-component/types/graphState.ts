@@ -163,22 +163,6 @@ export interface BackendUpdate {
   removed: Addr[];
 }
 
-export interface BackendLinkedListNode {
-  nodeId: Addr;
-  value: string | number | null;
-  isPointer: boolean;
-  next: Addr | null;
-}
-
-export interface BackendLinkedList {
-  nodes: BackendLinkedListNode[];
-}
-
-export interface ParsedBackendLinkedListUpdate {
-  modified: BackendLinkedListNode[];
-  deleted: string[];
-}
-
 /**
  * Code editor definition for user's own defined struct
  */

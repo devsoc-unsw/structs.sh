@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import { socket } from 'utils/socket';
-import EntryPoint from './src/EnteryPoint';
+import VisualizerMain from './src/VisualizerMain';
 
 const DevelopmentMode = () => {
   const onGetBreakpoints = useCallback((data: any) => {
@@ -37,7 +37,7 @@ const DevelopmentMode = () => {
   }, [onGetBreakpoints]);
 
   return (
-    <EntryPoint onGetBreakPoint={onGetBreakpoints}/>
+    <VisualizerMain onGetBreakPoint={onGetBreakpoints}/>
   );
 };
 
