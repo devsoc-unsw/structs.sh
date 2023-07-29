@@ -15,6 +15,6 @@ services:
       context: debugger
       dockerfile: Dockerfile.dev
     ports:
-      - '5001:5001'
+      - '8000:8000'
     volumes:
       - ./debugger/src:/app/src
