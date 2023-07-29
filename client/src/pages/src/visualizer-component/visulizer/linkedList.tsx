@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { v4 } from "uuid";
 import LinkedNode from "../objects/node";
-import { UiState } from "../types/uiState";
 import {
   EdgeEntity,
   EntityType,
-  FrontendLinkedListGraph,
   NodeEntity,
 } from "../types/graphState";
 import Edge from "../objects/edge";
@@ -17,11 +15,8 @@ const LinkedList: VisualizerComponent = ({
   settings,
   setSettings,
 }) => {
-  // eslint-disable-next-line prefer-const
-  let [state, setNodes] = useState(graphState);
-  const nodeRefs = useRef<{
-    [uid: string]: SVGSVGElement | null;
-  }>({});
+  const [state, setNodes] = useState(graphState);
+  const nodeRefs = useRef<{[uid: string]: SVGSVGElement | null;}>({});
   const [updated, setUpdated] = useState(false);
 
   useEffect(() => {
@@ -33,91 +28,14 @@ const LinkedList: VisualizerComponent = ({
   const localGlobalSetting = settings;
   const width = window.innerWidth;
   const height = window.innerHeight;
-  const renderNodes = (onReload: () => void, onAddNode: () => void) => Object.values(state.cacheEntity).map((entity, index) => {
-      switch (entity.type) {
-        case EntityType.NODE:
-          return (
-            <LinkedNode
-              ref={(ref) => (nodeRefs.current[index] = ref)}
-              key={entity.uid}
-              nodeUid={entity.uid}
-              graph={state}
-              config={settings}
-              onReload={onReload}
-              onAddNode={onAddNode}
-              setConfig={setSettings}
-            />
-          );
-        case EntityType.EDGE:
-          return (
-            <Edge
-              ref={(ref) => (nodeRefs.current[index] = ref)}
-              key={entity.uid}
-              color="#h122f6"
-              graph={state}
-              edgeUid={entity.uid}
-            />
-          );
-        default:
-          return null;
-      }
-    }); 
-  const [drawables, setDrawables] = useState<JSX.Element[]>(renderNodes());
+  const [drawables, setDrawables] = useState<JSX.Element[]>([]);
 
-  useEffect(() => {
-    console.log("GraphState changes!!!", graphState);
-    setNodes(graphState);
-
-    state = graphState;
-    setDrawables(renderNodes(onReload, onAddNode));
-    setUpdated(true);
-  }, [graphState]);
-
-  useEffect(() => {
-    if (Object.keys(nodeRefs.current).length === 0) {
-      // Initialize it
-    } else {
-      // First remove the edge, node being removed from graph
-      Object.keys(nodeRefs.current).forEach(key => {
-        if (state.cacheEntity[key] === undefined) {
-          delete nodeRefs.current[key];
-        }
-      });
-
-      // Then add the node, edge to it
-      Object.keys(state.cacheEntity).forEach(key => {
-        if (nodeRefs.current[key] === undefined) {
-          nodeRefs.current[key] = null;
-        }
-      });
-    }
-  }, [state]);
-
-  useEffect(() => {
-    console.log("settings changes!!!", settings);
-
-    ["showHover", "showClick", "canDrag", "debug"].forEach((key) => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      if (settings[key] !== localGlobalSetting[key]) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        localGlobalSetting[key] = settings[key];
-      }
-    });
+  const onReload = useCallback(() => {
     setDrawables(renderNodes());
-  }, [settings]);
+  }, [state, settings]);
 
-  const onReload = () => {
-    setDrawables(renderNodes());
-  };
-
-  const onAddNode = (uid: string) => {
+  const onAddNode = useCallback((uid: string) => {
     const node = state.cacheEntity[uid] as NodeEntity;
-
-    /**
-     * Add a new node to the graph
-     */
     const newNode: NodeEntity = {
       uid: v4(),
       type: EntityType.NODE,
@@ -130,9 +48,6 @@ const LinkedList: VisualizerComponent = ({
     };
     state.cacheEntity[newNode.uid] = newNode;
 
-    /**
-     * Add a new edge
-     */
     const newEdge: EdgeEntity = {
       uid: `${node.uid}-${newNode.uid}`,
       type: EntityType.EDGE,
@@ -145,7 +60,66 @@ const LinkedList: VisualizerComponent = ({
 
     setNodes({ ...state });
     onReload();
-  };
+  }, [state]);
+
+  const renderNodes = useCallback(() => Object.values(state.cacheEntity).map((entity, index) => {
+    switch (entity.type) {
+      case EntityType.NODE:
+        return (
+          <LinkedNode
+            ref={(ref) => (nodeRefs.current[index] = ref)}
+            key={entity.uid}
+            nodeUid={entity.uid}
+            graph={state}
+            config={settings}
+            onReload={onReload}
+            onAddNode={onAddNode}
+            setConfig={setSettings}
+          />
+        );
+      case EntityType.EDGE:
+        return (
+          <Edge
+            ref={(ref) => (nodeRefs.current[index] = ref)}
+            key={entity.uid}
+            graph={state}
+            edgeUid={entity.uid}
+          />
+        );
+      default:
+        return null;
+    }
+  }), [state, settings, onReload, onAddNode]);
+
+  useEffect(() => {
+    setNodes(graphState);
+    setDrawables(renderNodes());
+    setUpdated(true);
+  }, [graphState]);
+
+  useEffect(() => {
+    if (Object.keys(nodeRefs.current).length !== 0) {
+      Object.keys(nodeRefs.current).forEach(key => {
+        if (state.cacheEntity[key] === undefined) {
+          delete nodeRefs.current[key];
+        }
+      });
+      Object.keys(state.cacheEntity).forEach(key => {
+        if (nodeRefs.current[key] === undefined) {
+          nodeRefs.current[key] = null;
+        }
+      });
+    }
+  }, [state]);
+
+  useEffect(() => {
+    ["showHover", "showClick", "canDrag", "debug"].forEach((key) => {
+      if (settings[key] !== localGlobalSetting[key]) {
+        localGlobalSetting[key] = settings[key];
+      }
+    });
+    setDrawables(renderNodes());
+  }, [settings]);
 
   return (
     <div className="LinkedList">
