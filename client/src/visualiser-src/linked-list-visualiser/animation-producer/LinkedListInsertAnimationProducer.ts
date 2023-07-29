@@ -1,4 +1,3 @@
-import { Path } from '@svgdotjs/svg.js';
 import LinkedListAnimationProducer from './LinkedListAnimationProducer';
 import GraphicalLinkedListNode from '../data-structure/GraphicalLinkedListNode';
 import { getPointerPath } from '../util/util';
