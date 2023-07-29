@@ -1,9 +1,5 @@
 /**
  *  Frontend data structure definition
- */  
-
-/**
- * Definition of Graph State My man
  */
 export enum EntityType {
   NODE = 'node',
@@ -76,8 +72,10 @@ export interface FrontendLinkedListGraph extends GenericGraph {
 export type Addr = `0x${string}`;
 export enum CType {
   DOUBLE_LINED_LIST_NODE = 'struct doubly_list_node',
+  SINGLE_LINED_LIST_NODE = 'struct single_list_node',
   INT = 'int',
   DOUBLE = 'double',
+
   CHAR = 'char',
 }
 
@@ -86,36 +84,82 @@ export type DoublePointerVariable = {
   prev: Addr,
   next: Addr,
 }
+
+export type SinglePointerVariable = {
+  data: string,
+  next: Addr,
+}
 export type IntVariable = number;
 export type DoubleVariable = number;
 export type CharVariable = string;
 
-export type BackendVariable = 
-  { type: CType.DOUBLE_LINED_LIST_NODE, data: DoublePointerVariable } |
-  { type: CType.INT, data: IntVariable } |
-  { type: CType.DOUBLE, data: DoubleVariable } |
-  { type: CType.CHAR, data: CharVariable };
+export type BackendVariable = DoublePointerVariable | SinglePointerVariable | IntVariable | DoubleVariable | CharVariable;
 
-export interface BackendVariableBasePointer {
+export type IsPointerType = true | false;
+export interface BackendVariableBase {
+  data: Addr | BackendVariable;
+  type: CType;
+  is_pointer: IsPointerType;
+}
+
+export interface BackendVariablePointer extends BackendVariableBase {
   data: Addr;
   type: CType;
   is_pointer: true;
 }
 
-export interface BackendVariableBaseNonPointer {
-  data: BackendVariable;
-  type: CType;
+export interface BackendVariableBaseInt extends BackendVariableBase {
+  data: IntVariable;
+  type: CType.INT;
   is_pointer: false;
 }
-export type BackendVariableBase = BackendVariableBasePointer | BackendVariableBaseNonPointer;
+
+export interface BackendVariableBaseDouble extends BackendVariableBase {
+  data: DoubleVariable;
+  type: CType.DOUBLE;
+  is_pointer: false;
+}
+
+export interface BackendVariableBaseChar extends BackendVariableBase {
+  data: CharVariable;
+  type: CType.CHAR;
+  is_pointer: false;
+}
+
+export interface BackendVariableBaseDoubleLinkedList extends BackendVariableBase {
+  data: DoublePointerVariable;
+  type: CType.DOUBLE_LINED_LIST_NODE;
+  is_pointer: false;
+}
+
+export interface BackendVariableBaseSingleLinkedList extends BackendVariableBase {
+  data: SinglePointerVariable;
+  type: CType.SINGLE_LINED_LIST_NODE;
+  is_pointer: false;
+}
+
+export type BackendVariableNonPointerConcrete =
+  | BackendVariableBaseInt
+  | BackendVariableBaseDouble
+  | BackendVariableBaseChar
+  | BackendVariableBaseDoubleLinkedList
+  | BackendVariableBaseSingleLinkedList;
+
+export interface BackendVariableBasePointer extends BackendVariableBase {
+  data: Addr;
+  type: CType;
+  is_pointer: true;
+}
+
+export type BackendVariableConcrete = BackendVariablePointer | BackendVariableNonPointerConcrete;
 
 export interface BackendStructure {
-  [address: Addr]: BackendVariableBase;
+  [address: Addr]: BackendVariableConcrete;
 }
 
 export interface BackendUpdate {
   modified: {
-    [address: Addr]: BackendVariableBase;
+    [address: Addr]: BackendVariableConcrete;
   },
   removed: Addr[];
 }

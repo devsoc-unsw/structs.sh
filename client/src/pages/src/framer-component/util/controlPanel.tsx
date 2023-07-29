@@ -8,7 +8,7 @@ import {
   faUnlock,
 } from "@fortawesome/free-solid-svg-icons"; // Add faLock and faUnlock
 import { UiState } from "../types/uiState";
-import "./css/controlPanel.css";
+import "../css/controlPanel.css";
 
 interface ControlPanelProps {
   settings: UiState;

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState, useEffect, useRef } from "react";
 import { v4 } from "uuid";
@@ -67,7 +68,7 @@ const LinkedList: React.FC<LinkedListState> = ({
         default:
           return null;
       }
-    });
+    }); 
   const [drawables, setDrawables] = useState<JSX.Element[]>(renderNodes());
 
   useEffect(() => {
