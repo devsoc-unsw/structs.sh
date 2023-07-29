@@ -42,7 +42,6 @@ const LinkedNode = forwardRef<SVGSVGElement, NodePros>(
     const nodeEntityRef = graph.cacheEntity[nodeUid];
 
     if (nodeEntityRef.type !== "node") return;
-    const [entity, setEntity] = useState(nodeEntityRef);
     const { colorHex, title, size } = nodeEntityRef;
 
     const showClick = () => config.showClick && config.clickedEntity === nodeUid;
@@ -73,8 +72,8 @@ const LinkedNode = forwardRef<SVGSVGElement, NodePros>(
     return (      
         <motion.g
           ref={ref}
-          initial={{ x: entity.x, y: entity.y }}
-          animate={{ x: entity.x, y: entity.y, transition: {duration: 1} }}
+          initial={{ x: nodeEntityRef.x, y: nodeEntityRef.y }}
+          animate={{ x: nodeEntityRef.x, y: nodeEntityRef.y, transition: {duration: 1} }}
           exit= {{
             opacity: 0,
             scale: 0.7,
