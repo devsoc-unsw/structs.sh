@@ -1,19 +1,32 @@
 import { Box, Typography, useTheme, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { keyframes } from '@mui/system';
 import { useCallback, useContext } from 'react';
 import VisualiserContext from './VisualiserContext';
-import { toggleCapture } from '../VisualiserCanvas';
-import { stopRecording } from '../canvasRecordIndex';
-import { changeRecordingStatus, toggleRecording } from './VisualiserInterface';
-
-
-
+import { recorder } from './VisualiserInterface';
 
 const MenuButton = styled(Button)({
   backgroundColor: '#46B693',
   '&:hover': {
     backgroundColor: '#2b6e5a',
   },
+});
+
+const blink = keyframes`
+  0% { opacity: 0.1; }
+  50% { opacity: 1; }
+  100% { opacity: 0.1; }
+`;
+
+const BlinkingCircle = styled('div')({
+  backgroundColor: 'red',
+  borderRadius: 10,
+  width: 8,
+  height: 8,
+  animation: `${blink} 1.5s linear infinite`,
+  position: 'absolute',
+  bottom: 12,
+  right: 183
 });
 
 /**
@@ -36,11 +49,10 @@ const CreateMenu = () => {
     controller.generateDataStructure();
   }, [controller]);
 
-  let stopGIF : Boolean = true;
-  const handleGIFCapture = () => {
-    changeRecordingStatus();
+  const handleRecord = () => {
+    recorder.toggleRecord();
   }
-    
+
   return (
     <Box
       display="flex"
@@ -61,10 +73,11 @@ const CreateMenu = () => {
           Reset All
         </Typography>
       </MenuButton>
-      <MenuButton onClick={handleGIFCapture}>
+      <MenuButton onClick={handleRecord}>
         <Typography color="textPrimary" whiteSpace="nowrap">
-         Toggle Capture GIF
+         Toggle Recording
         </Typography>
+        <Box>{(recorder.isRecording() ? <BlinkingCircle/> : null)}</Box>
       </MenuButton>
     </Box>
   );

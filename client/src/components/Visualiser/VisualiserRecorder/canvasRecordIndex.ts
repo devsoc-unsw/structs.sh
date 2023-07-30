@@ -1,6 +1,6 @@
 import { Recorder, RecorderStatus, Encoders } from "canvas-record";
 import { AVC } from "media-codecs";
-import { drawOnCanvas, getCanvas } from "./VisualiserCanvas";
+import { drawOnCanvas, getCanvas } from "../VisualiserCanvas";
 
 // Animation
 let rAFId;
@@ -34,8 +34,6 @@ const reset = async () => {
     await canvasRecorder.stop();
     canvasRecorder = null;
   }
-
- // render();
 };
 
 export const startRecording = async () => {
@@ -44,23 +42,19 @@ export const startRecording = async () => {
 
   canvasRecorder = new Recorder(getCanvas(), {
     name: "StructsVisualisation",
-    duration: MAX_DURATION,
-    frameRate: 30,
-    encoder: new Encoders['MP4WasmEncoder'],
+    duration: Infinity,
+    frameRate: 55,
     download: true,
     encoderOptions: {
       codec: AVC.getCodec({ profile: "Main", level: "5.2" }),
     },
   });
 
-  console.log(canvasRecorder);
-
   // Start and encode frame 0
   await canvasRecorder.start();
 
   // Animate to encode the rest
-  tick(canvasRecorder);
-
+  tick();
 }
 
 export const stopRecording = async () => {

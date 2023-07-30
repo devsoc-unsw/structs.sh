@@ -7,22 +7,14 @@ import Controls from './Controls';
 import Operations from './Operations';
 import CodeSnippet from './CodeSnippet';
 import CreateMenu from './CreateMenu';
-import { drawOnCanvas } from './../VisualiserCanvas';
-import { startRecording, stopRecording } from '../canvasRecordIndex';
+import { drawOnCanvas, clearCanvas } from './../VisualiserCanvas';
+import { startRecording, stopRecording } from '../VisualiserRecorder/canvasRecordIndex';
+import { RecorderState } from '../VisualiserRecorder/RecorderState';
+
+export const recorder : RecorderState = RecorderState.getInstance();
 
 interface VisualiserInterfaceProps {
   topicTitle: string;
-}
-
-let drawingInterval = null;
-let recordingOn : Boolean = false;
-
-export const toggleRecording = (setting) => {
-  recordingOn = setting;
-}
-
-export const changeRecordingStatus = () => {
-  recordingOn = !recordingOn;
 }
 
 /**
@@ -42,7 +34,7 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
   const [documentation, setDocumentation] = useState<Documentation>({});
   const [isCodeSnippetExpanded, setIsCodeSnippetExpanded] = useState<boolean>(false);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-
+  
   useEffect(() => {
     controllerRef.current = controllerRef.current || new VisualiserController();
     controllerRef.current.applyTopicTitle(topicTitle);
@@ -65,7 +57,7 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
   const handleUpdateIsPlaying = useCallback((val) => {
     setIsPlaying(val);
   }, []);
-
+  
   const contextValues = useMemo(
     () => ({
       controller: controllerRef.current,
@@ -88,27 +80,14 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
   );
   
   /* Handles the upload of the SVG to a canvas
-  which will be captured using CCapture library
+  which will be captured using canvas-record library
   */
-  let lockChanges = false;
-  const uploadRate = 1/100; 
-  if (isPlaying && !isTimelineComplete && recordingOn) {
-    if (!lockChanges && drawingInterval === null) {
-      console.log("STARTING ANIMATION");
-      drawingInterval = setInterval(drawOnCanvas, uploadRate);
-      startRecording();
-    }
-    
-    lockChanges = true;
-  } else if (isTimelineComplete && recordingOn) {
-    lockChanges = false;
-    clearInterval(drawingInterval);
-    drawingInterval = null;
-
-    recordingOn = !recordingOn;
-    console.log("STOPPING ANIMATION");
-    stopRecording();
-  } 
+ console.log(recorder);
+  if (!isTimelineComplete && recorder.isRecording()) {
+    recorder.record();
+  } else if (isTimelineComplete && recorder.isRecording()) {
+    recorder.stop();
+  }
   
   return (
     <VisualiserContext.Provider value={contextValues}>
