@@ -26,6 +26,10 @@ class RecorderState {
     }
 
     public toggleRecord() {
+        if (this.recording) {
+            this.stopMidway();
+        } 
+        
         this.recording = !this.recording;
     }
 
@@ -37,13 +41,18 @@ class RecorderState {
         }
     }
 
+    private stopMidway() {
+        stopRecording();
+        clearInterval(this.canvasInterval);
+        this.canvasInterval = null;
+    }
+
     public stop() {
         stopRecording();
         this.toggleRecord();
         clearInterval(this.canvasInterval);
         this.canvasInterval = null;
     }
-
 }
 
 export { RecorderState };
