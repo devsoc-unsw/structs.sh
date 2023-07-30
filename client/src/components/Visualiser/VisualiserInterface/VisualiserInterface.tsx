@@ -6,7 +6,7 @@ import Controls from './Controls';
 import Operations from './Operations';
 import CodeSnippet from './CodeSnippet';
 import CreateMenu from './CreateMenu';
-import { RecorderState } from '../VisualiserRecorder/RecorderState';
+import RecorderState from '../VisualiserRecorder/RecorderState';
 
 export const recorder : RecorderState = RecorderState.getInstance();
 

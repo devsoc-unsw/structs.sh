@@ -2,11 +2,10 @@ import { Recorder, RecorderStatus, Encoders } from "canvas-record";
 import { AVC } from "media-codecs";
 import { canvasElement, drawer, svgElement } from "../VisualiserCanvas";
 
-// Animation
 let rAFId;
 let canvasRecorder;
 
-function render() {
+const render = () => {
   drawer.drawOnCanvas(canvasElement, svgElement);
 }
 
@@ -38,11 +37,11 @@ const reset = async () => {
 
 export const startRecording = async () => {
   await reset();
-  const MAX_DURATION = 1000;
+  const MAX_DURATION_SECONDS = 60 * 15;
 
   canvasRecorder = new Recorder(drawer.getCanvas(canvasElement), {
     name: "StructsVisualisation",
-    duration: Infinity,
+    duration: MAX_DURATION_SECONDS,
     frameRate: 55,
     download: true,
     encoderOptions: {
@@ -50,10 +49,7 @@ export const startRecording = async () => {
     },
   });
 
-  // Start and encode frame 0
   await canvasRecorder.start();
-
-  // Animate to encode the rest
   tick();
 }
 

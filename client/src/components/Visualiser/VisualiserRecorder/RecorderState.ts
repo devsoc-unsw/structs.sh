@@ -13,7 +13,7 @@ class RecorderState {
         this.canvasInterval = null;
     }
 
-    public static getInstance(): RecorderState {
+    public static getInstance = (): RecorderState => {
         if (!RecorderState.instance) {
             RecorderState.instance = new RecorderState();
         }
@@ -21,11 +21,11 @@ class RecorderState {
         return RecorderState.instance;
     }
 
-    public isRecording(): Boolean {
+    public isRecording = (): Boolean => {
         return this.recording;
     }
 
-    public toggleRecord() {
+    public toggleRecord = () => {
         if (this.recording) {
             this.stopMidway();
         } 
@@ -33,7 +33,7 @@ class RecorderState {
         this.recording = !this.recording;
     }
 
-    public record() {
+    public record = () => {
         if (this.canvasInterval === null) {
             drawer.clearCanvas(canvasElement);
             this.canvasInterval = setInterval(drawer.drawOnCanvas, RecorderState.UPLOAD_RATE);
@@ -41,13 +41,13 @@ class RecorderState {
         }
     }
 
-    private stopMidway() {
+    private stopMidway = () => {
         stopRecording();
         clearInterval(this.canvasInterval);
         this.canvasInterval = null;
     }
 
-    public stop() {
+    public stop = () => {
         stopRecording();
         this.toggleRecord();
         clearInterval(this.canvasInterval);
@@ -55,4 +55,4 @@ class RecorderState {
     }
 }
 
-export { RecorderState };
+export default RecorderState;

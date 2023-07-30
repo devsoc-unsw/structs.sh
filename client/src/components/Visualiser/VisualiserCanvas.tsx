@@ -3,7 +3,7 @@ import { stopRecording } from './VisualiserRecorder/CanvasRecorder';
 import React, { useState } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { CanvasDrawer } from './VisualiserRecorder/CanvasDrawer';
+import CanvasDrawer from './VisualiserRecorder/CanvasDrawer';
 
 const ZoomableSvg = styled('svg')(({ scale }) => ({
   transition: 'transform 0.2s linear',
