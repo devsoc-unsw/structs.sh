@@ -1,5 +1,5 @@
-import { drawOnCanvas, clearCanvas } from './../VisualiserCanvas';
-import { startRecording, stopRecording } from '../VisualiserRecorder/canvasRecordIndex';
+import { canvasElement, drawer } from './../VisualiserCanvas';
+import { startRecording, stopRecording } from './CanvasRecorder';
 
 /* Using Singleton to ensure we always keep the same instance of recorder */
 class RecorderState {
@@ -31,8 +31,8 @@ class RecorderState {
 
     public record() {
         if (this.canvasInterval === null) {
-            clearCanvas();
-            this.canvasInterval = setInterval(drawOnCanvas, RecorderState.UPLOAD_RATE);
+            drawer.clearCanvas(canvasElement);
+            this.canvasInterval = setInterval(drawer.drawOnCanvas, RecorderState.UPLOAD_RATE);
             startRecording();
         }
     }

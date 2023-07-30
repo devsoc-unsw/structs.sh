@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo, useEffect, useRef, useState } from 'react';
-import { Box } from '@mui/material';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import VisualiserController from 'visualiser-src/controller/VisualiserController';
 import VisualiserContext from './VisualiserContext';
@@ -7,8 +6,6 @@ import Controls from './Controls';
 import Operations from './Operations';
 import CodeSnippet from './CodeSnippet';
 import CreateMenu from './CreateMenu';
-import { drawOnCanvas, clearCanvas } from './../VisualiserCanvas';
-import { startRecording, stopRecording } from '../VisualiserRecorder/canvasRecordIndex';
 import { RecorderState } from '../VisualiserRecorder/RecorderState';
 
 export const recorder : RecorderState = RecorderState.getInstance();
@@ -82,7 +79,6 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
   /* Handles the upload of the SVG to a canvas
   which will be captured using canvas-record library
   */
- console.log(recorder);
   if (!isTimelineComplete && recorder.isRecording()) {
     recorder.record();
   } else if (isTimelineComplete && recorder.isRecording()) {

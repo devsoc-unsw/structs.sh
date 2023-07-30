@@ -1,8 +1,9 @@
 import { useRef } from 'react';
-import { stopRecording } from './VisualiserRecorder/canvasRecordIndex';
+import { stopRecording } from './VisualiserRecorder/CanvasRecorder';
 import React, { useState } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { CanvasDrawer } from './VisualiserRecorder/CanvasDrawer';
 
 const ZoomableSvg = styled('svg')(({ scale }) => ({
   transition: 'transform 0.2s linear',
@@ -14,55 +15,17 @@ const ZoomableSvg = styled('svg')(({ scale }) => ({
 /* -------------------------------------------------------------------------- */
 /*                        Visualiser-Specific Canvases                        */
 /* -------------------------------------------------------------------------- */
-export let canvasElement = null;
-let svgElement = null;
-let toggleGIF = false;
+export const drawer : CanvasDrawer = CanvasDrawer.getInstance();
 
-export const toggleCapture = () => {
-  toggleGIF = !toggleGIF;
-  if (!toggleGIF) stopRecording();
-}
-
-export const getCanvas = () => {
-  return canvasElement.current.getContext('2d');
-}
-
-export const clearCanvas = () => {
-  let canvas = canvasElement.current;
-  let canvasContext = canvas.getContext('2d');
-  canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-  canvasContext.fillStyle = "#eae8f5";
-  canvasContext.fillRect(0, 0, canvas.width, canvas.height);
-}
-
-// Draws the current state of the SVG to a canvas
-export const drawOnCanvas = () => {
-  let canvas = canvasElement.current;
-  let svg = svgElement.current;
-
-  if (svg !== null) {
-    let canvasContext = canvas.getContext('2d');
-    let img = new Image();
-    let svgXML = (new XMLSerializer).serializeToString(svg);
-    img.src = 'data:image/svg+xml; charset=utf8, ' + encodeURIComponent(svgXML);
-
-    img.onload = function() {
-      canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-      canvasContext.fillStyle = "#eae8f5";
-      canvasContext.fillRect(0, 0, canvas.width, canvas.height);
-      canvasContext.drawImage(img, 0, 0);
-    }
-  }
-}
+/* Can't put these two in the CanvasDrawer class because that would violate the useRef hook */
+export let canvasElement;
+export let svgElement;
 
 /**
  * The React component that renders the DOM elements that the visualiser
  * attaches itself to.
  */
 const VisualiserCanvas: React.FC = () => {
-  canvasElement = useRef(null);
-  svgElement = useRef(null);
-
   const [scale, setScale] = useState(1);
   const ZOOM_SPEED = 0.05;
   const MAX_SCALE = 2;
@@ -75,6 +38,8 @@ const VisualiserCanvas: React.FC = () => {
     }
   };
 
+  canvasElement = useRef(null);
+  svgElement = useRef(null);
   return (
     <Box
       onWheel={onScroll}
@@ -83,7 +48,7 @@ const VisualiserCanvas: React.FC = () => {
       height="100vh"
       width={window.screen.width}
     >
-      <ZoomableSvg onWheel={onScroll} id="visualiser-canvas" ref={svgElement} scale={scale} />
+      <ZoomableSvg ref={svgElement} onWheel={onScroll} id="visualiser-canvas"  scale={scale} />
       <canvas ref={canvasElement} id="gifCanvas" width={window.screen.width} height={window.screen.height} style={{'display': 'none'}}></canvas>
     </Box>
   );
