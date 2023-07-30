@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { stopRecording } from "./CanvasRecorder";
 
 class CanvasDrawer {
