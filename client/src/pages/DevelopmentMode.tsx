@@ -1,5 +1,9 @@
-import React, { useCallback, useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { socket } from 'utils/socket';
+import styles from 'styles/DevelopmentMode.module.css';
+import globalStyles from 'styles/global.module.css';
+import classNames from 'classnames';
+import { Tabs, Tab } from 'components/Tabs';
 import VisualizerMain from './src/VisualizerMain';
 
 const DevelopmentMode = () => {
@@ -35,9 +39,9 @@ const DevelopmentMode = () => {
       console.log(`Received message: ${data}`);
     };
 
-    const onGetBreakpoints = (data: any) => {
-      console.log(`Received message: ${data}`);
-    };
+    // const onGetBreakpoints = (data: any) => {
+    //   console.log(`Received message: ${data}`);
+    // };
 
     const onSendDummyData = (data: any) => {
       console.log(`Received message: ${data}`);
@@ -59,7 +63,30 @@ const DevelopmentMode = () => {
   }, [onGetBreakpoints]);
 
   return (
-    <VisualizerMain onGetBreakPoint={onGetBreakpoints}/>
+    <div className={classNames(globalStyles.root, styles.dark)}>
+      <div className={styles.layout}>
+        <div className={classNames(styles.pane, styles.nav)}>Nav bar</div>
+        <div className={classNames(styles.pane, styles.files)}>File tree</div>
+        <div className={classNames(styles.pane, styles.editor)}>Code editor</div>
+        <div className={classNames(styles.pane, styles.inspector)}>
+          <Tabs>
+            <Tab label="Console">
+              <div className={styles.pane}>Console</div>
+            </Tab>
+            <Tab label="Inspect">
+              <div className={styles.pane}>Inspect</div>
+            </Tab>
+            <Tab label="Configure">
+              <div className={styles.pane}>Configure</div>
+            </Tab>
+          </Tabs>
+        </div>
+        <div className={classNames(styles.pane, styles.visualiser)}>
+          <VisualizerMain onGetBreakPoint={onGetBreakpoints} />
+        </div>
+        <div className={classNames(styles.pane, styles.timeline)}>Timeline</div>
+      </div>
+    </div>
   );
 };
 

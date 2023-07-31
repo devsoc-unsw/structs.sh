@@ -3,10 +3,7 @@ import LinkedList from './visulizer/linkedList';
 import { DEFAULT_UISTATE, UiState } from './types/uiState';
 import { ControlPanel } from './util/controlPanel';
 import './css/drawingMotion.css';
-import {
-  BackendStructure,
-  FrontendLinkedListGraph,
-} from './types/graphState';
+import { BackendStructure, FrontendLinkedListGraph } from './types/graphState';
 import { Debugger } from './util/debugger';
 import { Timeline } from './util/timeline';
 import { parserFactory } from './parser/parserFactory';
@@ -19,7 +16,12 @@ export interface StateManagerProp {
   nextState: () => void;
 }
 
-export const StateManager: React.FC<StateManagerProp> = ({ state, nextState, settings, setSettings }) => {
+export const StateManager: React.FC<StateManagerProp> = ({
+  state,
+  nextState,
+  settings,
+  setSettings,
+}) => {
   /**
    * Parse the background graph state into frontend ones
    */
@@ -53,11 +55,7 @@ export const StateManager: React.FC<StateManagerProp> = ({ state, nextState, set
         <ControlPanel settings={settings} setSettings={setSettings} />
       </div>
       <div className="linked-list">
-        <Visualizer
-          settings={settings}
-          graphState={currGraphState}
-          setSettings={setSettings}
-        />
+        <Visualizer settings={settings} graphState={currGraphState} setSettings={setSettings} />
         <Timeline nextState={nextState} forwardState={() => {}} backwardState={() => {}} />
       </div>
       {settings.debug && <Debugger src={currGraphState} />}

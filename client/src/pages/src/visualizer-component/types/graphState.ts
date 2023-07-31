@@ -1,5 +1,3 @@
-import { type } from "os";
-
 /**
  *  Frontend data structure definition
  */
@@ -14,7 +12,7 @@ export interface BaseEntity {
 }
 
 export interface NodeEntity extends BaseEntity {
-  uid: string;  
+  uid: string;
   type: EntityType.NODE;
 
   title: string;
@@ -28,7 +26,7 @@ export interface NodeEntity extends BaseEntity {
 }
 
 export interface EdgeEntity extends BaseEntity {
-  uid: string;  
+  uid: string;
   type: EntityType.EDGE;
 
   /**
@@ -46,8 +44,8 @@ export type EntityConcrete = NodeEntity | EdgeEntity;
 export interface MindMapGraph {
   rootNode: NodeEntity;
   cacheEntity: {
-    [uid: string]: EntityConcrete
-  }
+    [uid: string]: EntityConcrete;
+  };
 }
 
 export interface GenericGraph {
@@ -55,12 +53,12 @@ export interface GenericGraph {
   edges: EdgeEntity[];
 
   cacheEntity: {
-    [uid: string]: EntityConcrete
-  }
+    [uid: string]: EntityConcrete;
+  };
 }
 
 /**
- * Doubtful about assumption, linked list won't be linked list at sometime, 
+ * Doubtful about assumption, linked list won't be linked list at sometime,
  * so how about we use a generic graph!!
  */
 export type FrontendLinkedListGraph = GenericGraph;
@@ -79,20 +77,25 @@ export enum CType {
 }
 
 export type DoublePointerVariable = {
-  data: string,
-  prev: Addr,
-  next: Addr,
-}
+  data: string;
+  prev: Addr;
+  next: Addr;
+};
 
 export type SinglePointerVariable = {
-  data: string,
-  next: Addr,
-}
+  data: string;
+  next: Addr;
+};
 export type IntVariable = number;
 export type DoubleVariable = number;
 export type CharVariable = string;
 
-export type BackendVariable = DoublePointerVariable | SinglePointerVariable | IntVariable | DoubleVariable | CharVariable;
+export type BackendVariable =
+  | DoublePointerVariable
+  | SinglePointerVariable
+  | IntVariable
+  | DoubleVariable
+  | CharVariable;
 
 export type IsPointerType = true | false;
 export interface BackendVariableBase {
@@ -159,7 +162,7 @@ export interface BackendStructure {
 export interface BackendUpdate {
   modified: {
     [address: Addr]: BackendVariableConcrete;
-  },
+  };
   removed: Addr[];
 }
 
@@ -169,16 +172,16 @@ export interface BackendUpdate {
 export type LinkedListType = {
   linkedListStruct: string;
   value: {
-    type: 'int',
-    name: 'cockatoo',
-    isPointer: false,
-  },
+    type: 'int';
+    name: 'cockatoo';
+    isPointer: false;
+  };
   next: {
-    type: 'struct pigeon',
-    name: 'magpie',
-    isPointer: true,
-  },
-}
+    type: 'struct pigeon';
+    name: 'magpie';
+    isPointer: true;
+  };
+};
 
 export interface EditorAnnotation {
   [name: string]: LinkedListType;

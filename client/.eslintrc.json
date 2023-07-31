@@ -16,9 +16,7 @@
     "ecmaFeatures": {
       "jsx": true
     },
-    "project": [
-      "tsconfig.json"
-    ],
+    "project": ["tsconfig.json"],
     "ecmaVersion": 12,
     "sourceType": "module"
   },
@@ -42,9 +40,6 @@
         "unnamedComponents": "arrow-function"
       }
     ],
-    "rules": {
-      "react/prop-types": "off"
-    },
     "no-console": "off",
     "no-alert": "off",
     "no-nested-ternary": "off",
@@ -61,13 +56,5 @@
     "react/react-in-jsx-scope": "off",
     "jsx-a11y/anchor-is-valid": "off",
     "class-methods-use-this": "off"
-  },
-  "overrides": [
-    {
-      "files": ["**/*.ts", "**/*.tsx"],
-      "rules": {
-        "react/prop-types": "off"
-      }
-    }
-  ]
+  }
 }

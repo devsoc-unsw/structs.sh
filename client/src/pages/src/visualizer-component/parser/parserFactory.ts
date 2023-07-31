@@ -1,7 +1,7 @@
-import { UiState, VisualizerType } from "../types/uiState";
-import { assertUnreachable } from "../util/util";
-import { LinkedListParser } from "./linkedListParser";
-import { Parser } from "./parser";
+import { UiState, VisualizerType } from '../types/uiState';
+import { assertUnreachable } from '../util/util';
+import { LinkedListParser } from './linkedListParser';
+import { Parser } from './parser';
 
 export function parserFactory(uiState: UiState): Parser {
   switch (uiState.visualizerType) {

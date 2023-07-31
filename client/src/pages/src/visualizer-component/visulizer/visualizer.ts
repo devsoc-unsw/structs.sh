@@ -1,10 +1,10 @@
 /**
- * This class manages the conversion from Backend 
+ * This class manages the conversion from Backend
  */
 
-import React from "react";
-import { GenericGraph } from "../types/graphState";
-import { UiState } from "../types/uiState";
+import React from 'react';
+import { GenericGraph } from '../types/graphState';
+import { UiState } from '../types/uiState';
 
 export interface VisualizerState {
   graphState: GenericGraph;

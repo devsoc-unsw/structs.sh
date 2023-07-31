@@ -12,7 +12,7 @@ export type UiState = {
   debug: boolean;
   clickedEntity: string | null;
   visualizerType: VisualizerType;
-}
+};
 
 export const DEFAULT_UISTATE: UiState = {
   showHover: false,
@@ -21,8 +21,7 @@ export const DEFAULT_UISTATE: UiState = {
   debug: true,
   clickedEntity: null,
   visualizerType: VisualizerType.LINKED_LIST,
-}
-
+};
 
 export const NODE_SIZE = 30;
 export const EDGE_WIDTH = 6;

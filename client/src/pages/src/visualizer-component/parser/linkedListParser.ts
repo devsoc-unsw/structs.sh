@@ -93,7 +93,7 @@ export class LinkedListParser implements Parser {
   }
 
   findMaxDepth(cacheLinkedListNode: Map<Addr, LinkedListNode>): number {
-    let values = Object.values(cacheLinkedListNode).map((node) => {
+    const values = Object.values(cacheLinkedListNode).map((node) => {
       let depth = 0;
       let currentNode = node;
       while (currentNode && currentNode.next) {
