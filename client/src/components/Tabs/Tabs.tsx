@@ -2,8 +2,8 @@ import React, { ReactNode } from 'react';
 import * as Internal from '@radix-ui/react-tabs';
 import styles from 'styles/Tabs.module.css';
 
-export const Tabs = ({ children }: { children: ReactNode }) => (
-  <Internal.Root className={styles.TabsRoot} defaultValue="0">
+export const Tabs = React.forwardRef<HTMLDivElement, Internal.TabsProps>(({ children }, ref) => (
+  <Internal.Root className={styles.TabsRoot} defaultValue="0" ref={ref}>
     <Internal.List className={styles.TabsList} aria-label="Tabs">
       {React.Children.map(children, (child, index) => (
         <Internal.Trigger className={styles.TabsTrigger} value={String(index)} key={index}>
@@ -17,8 +17,10 @@ export const Tabs = ({ children }: { children: ReactNode }) => (
       </Internal.Content>
     ))}
   </Internal.Root>
-);
+));
 
-export const Tab = ({ children }: { label: string; children: ReactNode }) => (
+Tabs.displayName = 'Tabs' as string;
+
+export const Tab = ({ children, label }: { label: string; children: ReactNode }) => (
   <div className={styles.TabsContent}>{children}</div>
 );
