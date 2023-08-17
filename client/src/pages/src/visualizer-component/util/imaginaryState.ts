@@ -6,7 +6,7 @@ export const IMAGINARY_STATES: BackendState[] = [
       type: CType.SINGLE_LINED_LIST_NODE,
       is_pointer: false,
       data: {
-        data: '27',
+        value: '27',
         next: '0x0',
       },
     },
@@ -16,7 +16,7 @@ export const IMAGINARY_STATES: BackendState[] = [
       type: CType.SINGLE_LINED_LIST_NODE,
       is_pointer: false,
       data: {
-        data: '27',
+        value: '27',
         next: '0x2',
       },
     },
@@ -24,7 +24,7 @@ export const IMAGINARY_STATES: BackendState[] = [
       type: CType.SINGLE_LINED_LIST_NODE,
       is_pointer: false,
       data: {
-        data: '34',
+        value: '34',
         next: '0x0',
       },
     },
@@ -34,7 +34,7 @@ export const IMAGINARY_STATES: BackendState[] = [
       type: CType.SINGLE_LINED_LIST_NODE,
       is_pointer: false,
       data: {
-        data: '27',
+        value: '27',
         next: '0x2',
       },
     },
@@ -42,7 +42,7 @@ export const IMAGINARY_STATES: BackendState[] = [
       type: CType.SINGLE_LINED_LIST_NODE,
       is_pointer: false,
       data: {
-        data: '34',
+        value: '34',
         next: '0x3',
       },
     },
@@ -50,7 +50,7 @@ export const IMAGINARY_STATES: BackendState[] = [
       type: CType.SINGLE_LINED_LIST_NODE,
       is_pointer: false,
       data: {
-        data: '56',
+        value: '56',
         next: '0x0',
       },
     },
@@ -60,7 +60,7 @@ export const IMAGINARY_STATES: BackendState[] = [
       type: CType.SINGLE_LINED_LIST_NODE,
       is_pointer: false,
       data: {
-        data: '27',
+        value: '27',
         next: '0x3',
       },
     },
@@ -68,7 +68,7 @@ export const IMAGINARY_STATES: BackendState[] = [
       type: CType.SINGLE_LINED_LIST_NODE,
       is_pointer: false,
       data: {
-        data: '56',
+        value: '56',
         next: '0x0',
       },
     },
@@ -76,7 +76,7 @@ export const IMAGINARY_STATES: BackendState[] = [
       type: CType.SINGLE_LINED_LIST_NODE,
       is_pointer: false,
       data: {
-        data: '72',
+        value: '72',
         next: '0x1',
       },
     },
@@ -86,7 +86,7 @@ export const IMAGINARY_STATES: BackendState[] = [
       type: CType.SINGLE_LINED_LIST_NODE,
       is_pointer: false,
       data: {
-        data: '27',
+        value: '27',
         next: '0x3',
       },
     },
@@ -94,7 +94,7 @@ export const IMAGINARY_STATES: BackendState[] = [
       type: CType.SINGLE_LINED_LIST_NODE,
       is_pointer: false,
       data: {
-        data: '56',
+        value: '56',
         next: '0x0',
       },
     },
@@ -102,7 +102,7 @@ export const IMAGINARY_STATES: BackendState[] = [
       type: CType.SINGLE_LINED_LIST_NODE,
       is_pointer: false,
       data: {
-        data: '72',
+        value: '72',
         next: '0x1',
       },
     },
@@ -110,7 +110,7 @@ export const IMAGINARY_STATES: BackendState[] = [
       type: CType.SINGLE_LINED_LIST_NODE,
       is_pointer: false,
       data: {
-        data: '21',
+        value: '21',
         next: '0x3',
       },
     },

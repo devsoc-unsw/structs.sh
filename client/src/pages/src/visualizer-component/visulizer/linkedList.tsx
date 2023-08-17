@@ -19,12 +19,14 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings }) 
   }, [updated]);
 
   const localGlobalSetting = settings;
-  const width = 500;
-  const height = 300;
-  const [drawables, setDrawables] = useState<JSX.Element[]>([]);
+  const width = window.innerWidth / 2.5;
+  const height = window.innerHeight / 2.5;
+  const [drawable, setDrawables] = useState<{
+    [key: string]: JSX.Element;
+  }>({});
 
   const onReload = useCallback(() => {
-    setDrawables(renderNodes());
+    renderNodes();
   }, [state, settings]);
 
   const onAddNode = useCallback(
@@ -58,14 +60,15 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings }) 
     [state]
   );
 
-  const renderNodes = useCallback(
-    () =>
-      Object.values(state.cacheEntity).map((entity, index) => {
+  const renderNodes = useCallback(() => {
+    Object.values(state.cacheEntity).map((entity) => {
+      if (drawable[entity.uid] === undefined) {
+        // Add it
         switch (entity.type) {
           case EntityType.NODE:
-            return (
+            drawable[entity.uid] = (
               <LinkedNode
-                ref={(ref) => (nodeRefs.current[index] = ref)}
+                ref={(ref) => (nodeRefs.current[entity.uid] = ref)}
                 key={entity.uid}
                 nodeUid={entity.uid}
                 graph={state}
@@ -75,25 +78,28 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings }) 
                 setConfig={setSettings}
               />
             );
+            break;
           case EntityType.EDGE:
-            return (
+            drawable[entity.uid] = (
               <Edge
-                ref={(ref) => (nodeRefs.current[index] = ref)}
+                ref={(ref) => (nodeRefs.current[entity.uid] = ref)}
                 key={entity.uid}
                 graph={state}
                 edgeUid={entity.uid}
               />
             );
+            break;
           default:
             return null;
         }
-      }),
-    [state, settings, onReload, onAddNode]
-  );
+      }
+    });
+    setDrawables(drawable);
+  }, [state, settings, onReload, onAddNode]);
 
   useEffect(() => {
     setNodes(graphState);
-    setDrawables(renderNodes());
+    renderNodes();
     setUpdated(true);
   }, [graphState]);
 
@@ -118,7 +124,7 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings }) 
         localGlobalSetting[key] = settings[key];
       }
     });
-    setDrawables(renderNodes());
+    renderNodes();
   }, [settings]);
 
   return (
@@ -132,7 +138,7 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings }) 
           initial="hidden"
           animate="visible"
         >
-          {drawables}
+          {Object.values(drawable)}
         </motion.svg>
       </AnimatePresence>
     </div>

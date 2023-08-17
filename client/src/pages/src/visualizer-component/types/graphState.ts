@@ -48,6 +48,11 @@ export interface MindMapGraph {
   };
 }
 
+export const INITIAL_GRAPH = {
+  nodes: [],
+  edges: [],
+  cacheEntity: {},
+};
 export interface GenericGraph {
   nodes: NodeEntity[];
   edges: EdgeEntity[];
@@ -77,13 +82,13 @@ export enum CType {
 }
 
 export type DoublePointerVariable = {
-  data: string;
+  value: string;
   prev: Addr;
   next: Addr;
 };
 
 export type SinglePointerVariable = {
-  data: string;
+  value: string;
   next: Addr;
 };
 export type IntVariable = number;

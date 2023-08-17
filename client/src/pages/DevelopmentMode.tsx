@@ -5,19 +5,23 @@ import globalStyles from 'styles/global.module.css';
 import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
 import VisualizerMain from './src/VisualizerMain';
-import { BackendState, BackendUpdate } from './src/visualizer-component/types/graphState';
+import { BackendState, CType } from './src/visualizer-component/types/graphState';
 
 const DevelopmentMode = () => {
-  const [backendState, setBackendState] = useState<BackendState>({});
-  const [backendUpate, setBackendUpdate] = useState<BackendUpdate>({
-    modified: {},
-    removed: [],
+  const [backendState, setBackendState] = useState<BackendState>({
+    '0x1': {
+      type: CType.SINGLE_LINED_LIST_NODE,
+      is_pointer: false,
+      data: {
+        value: '27',
+        next: '0x0',
+      },
+    },
   });
 
   const [count, setCountState] = useState(100);
   const onSendDummyData = useCallback((data: any) => {
     const correctedJsonString = data.replace(/'/g, '"');
-    console.log(correctedJsonString);
 
     const backendStateJson = JSON.parse(correctedJsonString as string);
 
@@ -40,8 +44,10 @@ const DevelopmentMode = () => {
     };
   }, [onSendDummyData]);
 
-  return (
+  const DEBUG_MODE = true;
+  return !DEBUG_MODE ? (
     <div className={classNames(globalStyles.root, styles.dark)}>
+      Parser
       <div className={styles.layout}>
         <div className={classNames(styles.pane, styles.nav)}>Nav bar</div>
         <div className={classNames(styles.pane, styles.files)}>File tree</div>
@@ -71,6 +77,14 @@ const DevelopmentMode = () => {
         <div className={classNames(styles.pane, styles.timeline)}>Timeline</div>
       </div>
     </div>
+  ) : (
+    <VisualizerMain
+      backendState={backendState}
+      getNextState={() => {
+        socket.emit('sendDummyData', count.toString());
+        setCountState(count + 1);
+      }}
+    />
   );
 };
 
