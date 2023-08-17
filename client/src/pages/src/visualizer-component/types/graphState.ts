@@ -69,7 +69,7 @@ export type FrontendLinkedListGraph = GenericGraph;
 export type Addr = `0x${string}`;
 export enum CType {
   DOUBLE_LINED_LIST_NODE = 'struct doubly_list_node',
-  SINGLE_LINED_LIST_NODE = 'struct single_list_node',
+  SINGLE_LINED_LIST_NODE = 'struct node',
   INT = 'int',
   DOUBLE = 'double',
 
@@ -155,7 +155,7 @@ export interface BackendVariableBasePointer extends BackendVariableBase {
 
 export type BackendVariableConcrete = BackendVariablePointer | BackendVariableNonPointerConcrete;
 
-export interface BackendStructure {
+export interface BackendState {
   [address: Addr]: BackendVariableConcrete;
 }
 

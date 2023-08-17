@@ -1,5 +1,5 @@
 import {
-  BackendStructure,
+  BackendState,
   BackendUpdate,
   EditorAnnotation,
   GenericGraph,
@@ -7,12 +7,12 @@ import {
 
 export interface Parser {
   parseInitialState: (
-    backendStructure: BackendStructure,
+    backendStructure: BackendState,
     editorAnnotation: EditorAnnotation | undefined
   ) => GenericGraph;
   updateState: (
     frontendStructure: GenericGraph,
-    backendStructure: BackendStructure,
+    backendStructure: BackendState,
     backendUpdate: BackendUpdate,
     editorAnnotation: EditorAnnotation | undefined
   ) => GenericGraph;

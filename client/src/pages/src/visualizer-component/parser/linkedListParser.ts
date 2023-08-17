@@ -1,5 +1,5 @@
 import {
-  BackendStructure,
+  BackendState,
   EditorAnnotation,
   GenericGraph,
   BackendUpdate,
@@ -109,7 +109,7 @@ export class LinkedListParser implements Parser {
   /**
    * Parser functionality
    */
-  parseInitialState(backendStructure: BackendStructure, editorAnnotation: EditorAnnotation) {
+  parseInitialState(backendStructure: BackendState, editorAnnotation: EditorAnnotation) {
     const nodes: NodeEntity[] = [];
     const edges: EdgeEntity[] = [];
     const cacheEntity: { [uid: string]: EntityConcrete } = {};
@@ -158,7 +158,6 @@ export class LinkedListParser implements Parser {
     try {
       const rootedTree = this.convertToRootedTree(linkedList, cacheLinkedListNode);
       const positions = this.assignPositions(rootedTree, cacheLinkedListNode);
-      debugger;
 
       cacheLinkedListNode.forEach((node, uid) => {
         if (!positions.has(uid)) {
@@ -213,7 +212,7 @@ export class LinkedListParser implements Parser {
 
   updateState(
     frontendStructure: GenericGraph,
-    backendStructure: BackendStructure,
+    backendStructure: BackendState,
     backendUpdate: BackendUpdate,
     editorAnnotation: EditorAnnotation
   ) {

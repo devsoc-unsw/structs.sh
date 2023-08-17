@@ -1,6 +1,6 @@
-import { BackendStructure, BackendUpdate, CType } from '../types/graphState';
+import { BackendState, BackendUpdate, CType } from '../types/graphState';
 
-export const IMAGINARY_STATES: BackendStructure[] = [
+export const IMAGINARY_STATES: BackendState[] = [
   {
     '0x1': {
       type: CType.SINGLE_LINED_LIST_NODE,

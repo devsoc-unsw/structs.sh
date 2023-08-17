@@ -6,6 +6,7 @@ import { EdgeEntity, EntityType, NodeEntity } from '../types/graphState';
 import Edge from '../objects/edge';
 import { VisualizerComponent } from './visualizer';
 
+// TODO: Expand different component for different data structure, implementing common interface
 const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings }) => {
   const [state, setNodes] = useState(graphState);
   const nodeRefs = useRef<{ [uid: string]: SVGSVGElement | null }>({});
@@ -18,8 +19,8 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings }) 
   }, [updated]);
 
   const localGlobalSetting = settings;
-  const width = window.innerWidth;
-  const height = window.innerHeight;
+  const width = 500;
+  const height = 300;
   const [drawables, setDrawables] = useState<JSX.Element[]>([]);
 
   const onReload = useCallback(() => {
@@ -121,7 +122,7 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings }) 
   }, [settings]);
 
   return (
-    <div className="LinkedList">
+    <div>
       <AnimatePresence>
         <motion.svg
           key={updated ? 'updated' : 'not-updated'}

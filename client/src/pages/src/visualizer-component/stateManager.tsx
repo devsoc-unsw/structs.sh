@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import LinkedList from './visulizer/linkedList';
-import { DEFAULT_UISTATE, UiState } from './types/uiState';
+import { UiState } from './types/uiState';
 import { ControlPanel } from './util/controlPanel';
 import './css/drawingMotion.css';
-import { BackendStructure, FrontendLinkedListGraph } from './types/graphState';
+import { BackendState, FrontendLinkedListGraph } from './types/graphState';
 import { Debugger } from './util/debugger';
 import { Timeline } from './util/timeline';
 import { parserFactory } from './parser/parserFactory';
 import { visualizerFactory } from './visulizer/visualizerFactory';
 
 export interface StateManagerProp {
-  state: BackendStructure;
+  state: BackendState;
   settings: UiState;
   setSettings: React.Dispatch<React.SetStateAction<UiState>>;
   nextState: () => void;
 }
 
+// A generic interface to manages the history of frontend state,
+// navigation between states
 export const StateManager: React.FC<StateManagerProp> = ({
   state,
   nextState,

@@ -1,22 +1,31 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StateManager } from './visualizer-component/stateManager';
 import { IMAGINARY_STATES } from './visualizer-component/util/imaginaryState';
 import { DEFAULT_UISTATE, UiState } from './visualizer-component/types/uiState';
+import { BackendState } from './visualizer-component/types/graphState';
+import { parserFactory } from './visualizer-component/parser/parserFactory';
 
 export interface RoutesProps {
-  onGetBreakPoint: (breakPoint: number) => void;
+  backendState: BackendState;
+  getNextState: () => void;
 }
 
-const VisualizerMain: React.FC<RoutesProps> = ({ onGetBreakPoint }) => {
+// Future support different parser
+const VisualizerMain: React.FC<RoutesProps> = ({ backendState, getNextState }) => {
   const [framerNodes, setFramerNodes] = useState(IMAGINARY_STATES[0]);
   const [settings, setSettings] = useState<UiState>(DEFAULT_UISTATE);
 
-  let idx = 0;
   const handleButtonClick = () => {
-    idx += 1;
-    onGetBreakPoint(idx);
-    setFramerNodes(IMAGINARY_STATES[idx]);
+    getNextState();
   };
+
+  useEffect(() => {
+    console.log('Backend state changes', backendState);
+    const parser = parserFactory(settings);
+
+    const frontendState = parser.parseInitialState(backendState, undefined);
+    console.log('Parser', frontendState);
+  }, [backendState]);
 
   return (
     <StateManager

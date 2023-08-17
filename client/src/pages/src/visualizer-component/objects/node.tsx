@@ -3,6 +3,7 @@ import React, { forwardRef, useState } from 'react';
 import { UiState } from '../types/uiState';
 import { FrontendLinkedListGraph } from '../types/graphState';
 
+// DrawableObject for LL nodes
 interface NodePros {
   nodeUid: string;
   graph: FrontendLinkedListGraph;

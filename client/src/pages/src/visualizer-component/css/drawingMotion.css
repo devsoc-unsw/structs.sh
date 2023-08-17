@@ -1,8 +1,7 @@
 .container {
   display: flex;
-  height: 100vh;
-  max-width: 1200px;
-  min-width: 1200px;
+  height: auto;
+  width: auto;
 }
 
 .control-panel {
@@ -15,7 +14,7 @@
 
 .linked-list {
   flex: 0 0 80%;
-  max-width: 1200px;
+  width: auto;
   background-color: #f0f0f0;
   z-index: 1;
   position: relative; /* set position to relative */
