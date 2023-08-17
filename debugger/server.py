@@ -1,63 +1,40 @@
+'''
+Must run in /debugger directory (because the gdb commands will source a python file by relative path)'''
+
 import socketio
 import eventlet
 from typing import Any
 import subprocess
 import json
 
-# Later we want to receive the variable name, line number and file_name from the client
+# Later we want to receive the variable name, line number and program_name from the client
 variable_name = "list2"
 line_number = "126"
-file_name = "program"
-    
-# Construct the GDB script
-gdb_script = f"""
+file_name = "program.c"
+program_name = "program"
+
+# Store heap memory in this global variable
+heap_dict = {
+}
+
 
 def compile_program(file_name):
-    subprocess.run(["gcc", "-ggdb", file_name, "-o", "program"])    
+    subprocess.run(["gcc", "-ggdb", file_name, "-o", program_name])
 
 
+def create_ll_script(line_number, variable_name, program_name):
+    gdb_script = f"""
+source src/traverse-linked-list.py
+python NodeListCommand("nodelist", "{variable_name}")
 
-def create_ll_script(line_number, variable_name, file_name):
-    gdb_script = f
-python
-import gdb
-import json
-
-# Define a custom command to extract the linked list nodes
-class NodeListCommand(gdb.Command):
-    def __init__(self):
-        super(NodeListCommand, self).__init__("nodelist", gdb.COMMAND_USER)
-
-    def invoke(self, arg, from_tty):
-        linked_list = gdb.parse_and_eval("{variable_name}")
-        nodes = []
-
-        # Traverse the linked list and collect node information
-        n = linked_list["head"]
-        while n:
-            data = int(n["data"])
-            address = str(n)
-            next_address = str(n["next"]) if n["next"] else None
-
-            node = {{"Data": data, "Address": address, "Next": next_address}}
-            nodes.append(node)
-
-            n = n["next"]
-
-        # Store the nodes as an array of dictionaries
-        nodes_dict = {{"Nodes": nodes}}
-        print(json.dumps(nodes_dict))
-
-NodeListCommand()
-end
-
-file {file_name}
+file {program_name}
 break {line_number}
 run
 nodelist
 continue
 quit
 """
+    return gdb_script
 
 
 io = socketio.Server(cors_allowed_origins='*')
@@ -72,16 +49,15 @@ def connect(socket_id: str, *_) -> None:
 @io.event
 def disconnect(socket_id: str) -> None:
     print("Client disconnected: ", socket_id)
-    
+
 
 @io.event
 def getBreakpoints(socket_id: str, line: Any, listName: Any) -> None:
     print("Received message from", socket_id)
     print("Echoing message back to client...")
 
-    
     # Compile C program
-    compile_program('program.c')
+    compile_program(file_name)
 
     # Run GDB with the script
     script = create_ll_script(line, listName, "program")
@@ -89,6 +65,7 @@ def getBreakpoints(socket_id: str, line: Any, listName: Any) -> None:
     command = f"echo '{script}' | gdb -q"
     output = subprocess.check_output(command, shell=True).decode("utf-8")
 
+    print(output)
 
     # Find the JSON data in the GDB output
     json_start = output.find("{")
@@ -99,9 +76,12 @@ def getBreakpoints(socket_id: str, line: Any, listName: Any) -> None:
     nodes_dict = json.loads(json_data)
     nodes = nodes_dict["Nodes"]
     nodes2 = f"{nodes}"
-    
+
     # Send linked list nodes back to the client
     io.emit("getBreakpoints", nodes2 + '\n\n' + line, room=socket_id)
+
+    # Send heap dictionary
+    # io.emit("getBreakpoints", heap_dict, room=socket_id)
 
 
 @io.event
@@ -198,8 +178,8 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
                 }
             }
         }
-    
-    # Append the value 72 to the start of the list (order of list nodes in heap_dict shouldn't 
+
+    # Append the value 72 to the start of the list (order of list nodes in heap_dict shouldn't
     # matter as long as the next pointers are in the correct order)
     elif line_number == "104":
         heap_dict = {
@@ -229,7 +209,7 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
             }
         }
 
-    # Append the value 21 to the second element of the linked list 
+    # Append the value 21 to the second element of the linked list
     # (will be placed AFTER the second element i.e. the third element)
     elif line_number == "105":
         heap_dict = {
