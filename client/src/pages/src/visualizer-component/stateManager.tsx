@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { UiState } from './types/uiState';
-import { ControlPanel } from './util/controlPanel';
-import './css/drawingMotion.css';
+import './css/stateManager.css';
 import { FrontendLinkedListGraph, GenericGraph } from './types/graphState';
 import { Debugger } from './util/debugger';
 import { Timeline } from './util/timeline';
 import { VisualizerComponent } from './visulizer/visualizer';
-import { motion } from 'framer-motion';
 
 export interface StateManagerProp {
   state: GenericGraph;
@@ -41,28 +39,51 @@ export const StateManager: React.FC<StateManagerProp> = ({
     setSettings(settings);
   }, [settings]);
 
-  const movePosTest = () => {
-    currGraphState.nodes.forEach((node) => {
-      node.y += 10;
+  const visualizerRef = useRef(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const observer = new ResizeObserver((entries) => {
+      if (!visualizerRef) return;
+
+      entries.forEach((element) => {
+        if (element.target instanceof HTMLElement && element.target.className === 'visualizer') {
+          const { width, height } = element.contentRect;
+
+          if (dimensions.height === 0) {
+            console.log('Triggered', width, height);
+            setDimensions({ width, height });
+          }
+        }
+      });
     });
-    setCurrGraphState(currGraphState);
-  };
-  /**
-   * Hard code for now yea yea
-   */
+
+    if (visualizerRef.current) {
+      observer.observe(visualizerRef.current);
+    }
+    return () => {
+      if (visualizerRef.current) {
+        observer.unobserve(visualizerRef.current);
+      }
+    };
+  }, [visualizerRef]);
+
   return (
     <div className="container">
-      <div className="control-panel">
-        <ControlPanel settings={settings} setSettings={setSettings} />
-      </div>
       <div className="linked-list">
-        <Visualizer settings={settings} graphState={currGraphState} setSettings={setSettings} />
-        <Timeline nextState={nextState} forwardState={() => {}} backwardState={() => {}} />
-        <motion.button className="state-button" type="button" onClick={movePosTest}>
-          Check Move Ref
-        </motion.button>
+        <div className="visualizer" ref={visualizerRef}>
+          <Visualizer
+            settings={settings}
+            graphState={currGraphState}
+            setSettings={setSettings}
+            dimensions={dimensions}
+          />
+        </div>
+        <div className="timeline">
+          <Timeline nextState={nextState} forwardState={() => {}} backwardState={() => {}} />
+        </div>
       </div>
-      {settings.debug && <Debugger src={currGraphState} />}
+      <div className="debugger">{settings.debug && <Debugger src={currGraphState} />}</div>
     </div>
   );
 };

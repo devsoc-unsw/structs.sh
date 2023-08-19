@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, useAnimation } from 'framer-motion';
 import { v4 } from 'uuid';
 import LinkedNode from '../objects/node';
 import { EdgeEntity, EntityType, NodeEntity } from '../types/graphState';
@@ -7,10 +7,11 @@ import Edge from '../objects/edge';
 import { VisualizerComponent } from './visualizer';
 
 // TODO: Expand different component for different data structure, implementing common interface
-const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings }) => {
+const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, dimensions }) => {
   const [state, setNodes] = useState(graphState);
   const nodeRefs = useRef<{ [uid: string]: SVGSVGElement | null }>({});
   const [updated, setUpdated] = useState(false);
+  const controls = useAnimation();
 
   useEffect(() => {
     if (updated) {
@@ -19,15 +20,9 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings }) 
   }, [updated]);
 
   const localGlobalSetting = settings;
-  const width = window.innerWidth / 2.5;
-  const height = window.innerHeight / 2.5;
   const [drawable, setDrawables] = useState<{
     [key: string]: JSX.Element;
   }>({});
-
-  const onReload = useCallback(() => {
-    renderNodes();
-  }, [state, settings]);
 
   const onAddNode = useCallback(
     (uid: string) => {
@@ -55,7 +50,6 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings }) 
       state.cacheEntity[newEdge.uid] = newEdge;
 
       setNodes({ ...state });
-      onReload();
     },
     [state]
   );
@@ -73,7 +67,6 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings }) 
                 nodeUid={entity.uid}
                 graph={state}
                 config={settings}
-                onReload={onReload}
                 onAddNode={onAddNode}
                 setConfig={setSettings}
               />
@@ -95,12 +88,13 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings }) 
       }
     });
     setDrawables(drawable);
-  }, [state, settings, onReload, onAddNode]);
+  }, [state, settings, onAddNode]);
 
   useEffect(() => {
     setNodes(graphState);
     renderNodes();
     setUpdated(true);
+    controls.start('visible');
   }, [graphState]);
 
   useEffect(() => {
@@ -128,20 +122,17 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings }) 
   }, [settings]);
 
   return (
-    <div>
-      <AnimatePresence>
-        <motion.svg
-          key={updated ? 'updated' : 'not-updated'}
-          width={width}
-          height={height}
-          viewBox={`0 0 ${width} ${height}`}
-          initial="hidden"
-          animate="visible"
-        >
-          {Object.values(drawable)}
-        </motion.svg>
-      </AnimatePresence>
-    </div>
+    <AnimatePresence>
+      <motion.svg
+        width={dimensions.width}
+        height={dimensions.height}
+        viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
+        initial="hidden"
+        animate={controls}
+      >
+        {Object.values(drawable)}
+      </motion.svg>
+    </AnimatePresence>
   );
 };
 

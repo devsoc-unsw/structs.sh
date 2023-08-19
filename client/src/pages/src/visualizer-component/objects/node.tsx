@@ -10,7 +10,7 @@ interface NodePros {
   config: UiState;
   setConfig: React.Dispatch<React.SetStateAction<UiState>>;
   onAddNode?: (uid: string) => void;
-  onReload: () => void;
+  onReload?: () => void;
 }
 
 const draw = {
@@ -37,7 +37,7 @@ const draw = {
 
 // eslint-disable-next-line react/display-name
 const LinkedNode = forwardRef<SVGSVGElement, NodePros>(
-  ({ nodeUid, graph, onAddNode, config, onReload, setConfig }, ref) => {
+  ({ nodeUid, graph, onAddNode, onReload, config, setConfig }, ref) => {
     const [, setIsHovered] = useState(false);
 
     const nodeEntityRef = graph.cacheEntity[nodeUid];

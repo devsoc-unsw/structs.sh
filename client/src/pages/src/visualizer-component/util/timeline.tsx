@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import React from 'react';
+import '../css/timeline.css';
 
 const MotionButton: React.FC<{
   className: string;

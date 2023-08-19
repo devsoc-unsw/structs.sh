@@ -10,6 +10,10 @@ export interface VisualizerState {
   graphState: GenericGraph;
   settings: UiState;
   setSettings: React.Dispatch<React.SetStateAction<UiState>>;
+  dimensions: {
+    width: number;
+    height: number;
+  };
 }
 
 export type VisualizerComponent = React.FC<VisualizerState>;

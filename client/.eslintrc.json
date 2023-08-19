@@ -26,6 +26,7 @@
     }
   },
   "rules": {
+    "react/prop-types": "off",
     "no-underscore-dangle": "off",
     "no-param-reassign": [
       "error",
