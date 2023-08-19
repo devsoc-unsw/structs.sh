@@ -17,16 +17,27 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
       setUpdated(false);
     }
   }, [updated]);
-
-  const localGlobalSetting = settings;
   const [drawable, setDrawables] = useState<{
     [key: string]: JSX.Element;
   }>({});
 
   const renderNodes = useCallback(() => {
+    if (Object.keys(nodeRefs.current).length !== 0) {
+      Object.keys(nodeRefs.current).forEach((key) => {
+        if (state.cacheEntity[key] === undefined) {
+          delete nodeRefs.current[key];
+        }
+      });
+      Object.keys(state.cacheEntity).forEach((key) => {
+        if (nodeRefs.current[key] === undefined) {
+          nodeRefs.current[key] = null;
+        }
+      });
+    }
+
+    // Create new drawable objects
     Object.values(state.cacheEntity).map((entity) => {
       if (drawable[entity.uid] === undefined) {
-        // Add it
         switch (entity.type) {
           case EntityType.NODE:
             drawable[entity.uid] = (
@@ -63,30 +74,6 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
     setUpdated(true);
     controls.start('visible');
   }, [graphState]);
-
-  useEffect(() => {
-    if (Object.keys(nodeRefs.current).length !== 0) {
-      Object.keys(nodeRefs.current).forEach((key) => {
-        if (state.cacheEntity[key] === undefined) {
-          delete nodeRefs.current[key];
-        }
-      });
-      Object.keys(state.cacheEntity).forEach((key) => {
-        if (nodeRefs.current[key] === undefined) {
-          nodeRefs.current[key] = null;
-        }
-      });
-    }
-  }, [state]);
-
-  useEffect(() => {
-    ['showHover', 'showClick', 'canDrag', 'debug'].forEach((key) => {
-      if (settings[key] !== localGlobalSetting[key]) {
-        localGlobalSetting[key] = settings[key];
-      }
-    });
-    renderNodes();
-  }, [settings]);
 
   return (
     <AnimatePresence>

@@ -4,6 +4,7 @@ import { DEFAULT_UISTATE, UiState } from './visualizer-component/types/uiState';
 import { BackendState, GenericGraph, INITIAL_GRAPH } from './visualizer-component/types/graphState';
 import { parserFactory } from './visualizer-component/parser/parserFactory';
 import { visualizerFactory } from './visualizer-component/visulizer/visualizerFactory';
+import { recursiveUpdate } from './visualizer-component/util/util';
 
 export interface RoutesProps {
   backendState: BackendState;
@@ -22,7 +23,9 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState, getNextState }) =
   };
 
   useEffect(() => {
-    setFrontend(parser.parseInitialState(backendState, undefined));
+    const newParsedState = parser.parseInitialState(backendState, undefined);
+    recursiveUpdate(frontend, newParsedState);
+    setFrontend((prev) => ({ ...prev }));
   }, [backendState]);
 
   return (
