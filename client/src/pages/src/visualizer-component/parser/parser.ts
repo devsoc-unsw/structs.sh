@@ -1,4 +1,5 @@
-import { BackendState, BackendUpdate, EditorAnnotation, GenericGraph } from '../types/graphState';
+import { BackendState, BackendUpdate, EditorAnnotation } from '../types/backendType';
+import { GenericGraph } from '../types/frontendType';
 
 export interface Parser {
   parseInitialState: (

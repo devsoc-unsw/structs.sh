@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { GenericGraph } from '../types/graphState';
+import { GenericGraph } from '../types/frontendType';
 import { UiState } from '../types/uiState';
 
 export interface VisualizerState {

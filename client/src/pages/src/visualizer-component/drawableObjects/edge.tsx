@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FrontendLinkedListGraph, NodeEntity } from '../types/graphState';
+import { FrontendLinkedListGraph, NodeEntity } from '../types/frontendType';
 import { DrawableComponentBase, EdgeProp } from './drawable';
 
 const draw = {
@@ -62,10 +62,8 @@ function calculateCoordinates(
 }
 
 type DrawableEdgeComponent = DrawableComponentBase<EdgeProp>;
-const Edge: DrawableEdgeComponent = ({ uid: edgeUid, graph }, ref) => {
-  const edge = graph.cacheEntity[edgeUid];
-  if (edge.type !== 'edge') return null;
-  const markerId = `arrow-${edgeUid}`;
+const Edge: DrawableEdgeComponent = ({ entity: edge, graph }, ref) => {
+  const markerId = `arrow-${edge.uid}`;
 
   return (
     <motion.g

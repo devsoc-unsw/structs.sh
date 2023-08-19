@@ -5,7 +5,7 @@ import globalStyles from 'styles/global.module.css';
 import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
 import VisualizerMain from './src/VisualizerMain';
-import { BackendState, CType } from './src/visualizer-component/types/graphState';
+import { BackendState, CType } from './src/visualizer-component/types/backendType';
 
 const DevelopmentMode = () => {
   const [backendState, setBackendState] = useState<BackendState>({

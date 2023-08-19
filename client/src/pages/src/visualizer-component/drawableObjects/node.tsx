@@ -25,47 +25,26 @@ const draw = {
 };
 
 type DrawableEdgeComponent = DrawableComponentBase<NodeProp>;
-const LinkedNode: DrawableEdgeComponent = ({ uid: nodeUid, graph }, ref) => {
+const LinkedNode: DrawableEdgeComponent = ({ entity: nodeEntity }, ref) => {
   const [isHover, setIsHovered] = useState(false);
 
-  const nodeEntityRef = graph.cacheEntity[nodeUid];
-
-  if (nodeEntityRef.type !== 'node') return;
-  const { colorHex, title, size } = nodeEntityRef;
-
-  const dragProps: Partial<{
-    drag: boolean | 'x' | 'y';
-    dragConstraints: {
-      left: number;
-      right: number;
-      top: number;
-      bottom: number;
-    };
-    dragMomentum: boolean;
-  }> = {
-    drag: true,
-    dragConstraints: {
-      left: 0,
-      top: 0,
-      right: 1000, // change to your desired area width
-      bottom: 1000, // change to your desired area height
-    },
-    dragMomentum: false,
-  };
+  if (nodeEntity.type !== 'node') return;
+  const { colorHex, title, size } = nodeEntity;
 
   // eslint-disable-next-line consistent-return
   return (
     <motion.g
       ref={ref}
-      initial={{ x: nodeEntityRef.x, y: nodeEntityRef.y }}
-      animate={{ x: nodeEntityRef.x, y: nodeEntityRef.y, transition: { duration: 1 } }}
+      initial={{ x: nodeEntity.x, y: nodeEntity.y }}
       exit={{
         opacity: 0,
         scale: 0.7,
         transition: { duration: 0.05, type: 'spring' },
       }}
       transition={{ x: 'x', y: 'y' }}
-      {...dragProps}
+      drag
+      dragConstraints={{ left: 0, top: 0, right: 1000, bottom: 1000 }}
+      dragMomentum={false}
       onHoverStart={() => {
         setIsHovered(true);
       }}
@@ -76,8 +55,8 @@ const LinkedNode: DrawableEdgeComponent = ({ uid: nodeUid, graph }, ref) => {
         setIsHovered(false);
       }}
       onDragEnd={(_event, info) => {
-        nodeEntityRef.x += info.offset.x;
-        nodeEntityRef.y += info.offset.y;
+        nodeEntity.x += info.offset.x;
+        nodeEntity.y += info.offset.y;
       }}
     >
       <motion.circle
@@ -105,7 +84,7 @@ const LinkedNode: DrawableEdgeComponent = ({ uid: nodeUid, graph }, ref) => {
         {title}
       </motion.text>
 
-      {isHover && ( // Refactor to according to uiState, to have different hover, click, etc. effects
+      {isHover && (
         <motion.foreignObject
           width={250}
           height={350}
@@ -127,7 +106,7 @@ const LinkedNode: DrawableEdgeComponent = ({ uid: nodeUid, graph }, ref) => {
               border: '2px solid black',
             }}
           >
-            <pre style={{ margin: 0 }}>{JSON.stringify(nodeEntityRef, null, 2)}</pre>
+            <pre style={{ margin: 0 }}>{JSON.stringify(nodeEntity, null, 2)}</pre>
           </div>
         </motion.foreignObject>
       )}

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { AnimatePresence, motion, useAnimation } from 'framer-motion';
 import LinkedNode from '../drawableObjects/node';
-import { EntityType } from '../types/graphState';
+import { EntityType } from '../types/frontendType';
 import Edge from '../drawableObjects/edge';
 import { VisualizerComponent } from './visualizer';
 
@@ -9,14 +9,7 @@ import { VisualizerComponent } from './visualizer';
 const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, dimensions }) => {
   const [state, setNodes] = useState(graphState);
   const nodeRefs = useRef<{ [uid: string]: SVGSVGElement | null }>({});
-  const [updated, setUpdated] = useState(false);
   const controls = useAnimation();
-
-  useEffect(() => {
-    if (updated) {
-      setUpdated(false);
-    }
-  }, [updated]);
   const [drawable, setDrawables] = useState<{
     [key: string]: JSX.Element;
   }>({});
@@ -44,8 +37,7 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
               <LinkedNode
                 ref={(ref) => (nodeRefs.current[entity.uid] = ref)}
                 key={entity.uid}
-                uid={entity.uid}
-                graph={state}
+                entity={entity}
               />
             );
             break;
@@ -54,8 +46,8 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
               <Edge
                 ref={(ref) => (nodeRefs.current[entity.uid] = ref)}
                 key={entity.uid}
+                entity={entity}
                 graph={state}
-                uid={entity.uid}
               />
             );
             break;
@@ -71,7 +63,6 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
   useEffect(() => {
     setNodes(graphState);
     renderNodes();
-    setUpdated(true);
     controls.start('visible');
   }, [graphState]);
 

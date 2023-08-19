@@ -1,17 +1,18 @@
-import { v4 } from 'uuid';
 import {
+  Addr,
   BackendState,
   EditorAnnotation,
-  GenericGraph,
+  BackendVariableConcrete,
+  CType,
   BackendUpdate,
+} from '../types/backendType';
+import {
+  GenericGraph,
   EdgeEntity,
   EntityConcrete,
   NodeEntity,
-  Addr,
-  CType,
-  BackendVariableConcrete,
   EntityType,
-} from '../types/graphState';
+} from '../types/frontendType';
 import { assertUnreachable, cloneSimple } from '../util/util';
 import { Parser } from './parser';
 

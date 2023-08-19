@@ -1,4 +1,4 @@
-import { FrontendLinkedListGraph, GenericGraph } from '../types/graphState';
+import { EdgeEntity, EntityConcrete, GenericGraph, NodeEntity } from '../types/frontendType';
 
 interface TransitionDetails {
   type?: 'spring' | 'tween';
@@ -7,7 +7,6 @@ interface TransitionDetails {
   ease?: [number, number, number, number] | string;
   bounce?: number;
 }
-
 interface AnimationVariants {
   opacity?: number;
   pathLength?: number;
@@ -21,15 +20,16 @@ export interface DrawAnimation {
 }
 
 export interface DrawablePropBase {
-  graph: GenericGraph;
-  uid: string;
+  entity: EntityConcrete;
 }
 
 export interface NodeProp extends DrawablePropBase {
-  graph: FrontendLinkedListGraph;
-  uid: string;
+  entity: NodeEntity;
 }
-export type EdgeProp = NodeProp;
+export interface EdgeProp extends DrawablePropBase {
+  entity: EdgeEntity;
+  graph: GenericGraph;
+}
 export type DrawablePropConcrete = NodeProp | EdgeProp;
 
 export type DrawableComponentBase<T extends DrawablePropConcrete> = React.ForwardRefRenderFunction<

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { UiState } from './types/uiState';
 import './css/stateManager.css';
-import { FrontendLinkedListGraph, GenericGraph } from './types/graphState';
+import { FrontendLinkedListGraph, GenericGraph } from './types/frontendType';
 import { Debugger } from './util/debugger';
 import { Timeline } from './util/timeline';
 import { VisualizerComponent } from './visulizer/visualizer';
