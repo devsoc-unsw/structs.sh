@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DrawableComponentBase, NodeProp } from './drawable';
 
 const draw = {
@@ -25,23 +25,32 @@ const draw = {
 };
 
 type DrawableEdgeComponent = DrawableComponentBase<NodeProp>;
-const LinkedNode: DrawableEdgeComponent = ({ entity: nodeEntity }, ref) => {
+const LinkedNode: DrawableEdgeComponent = ({ entity: nodeEntity, coord }, ref) => {
   const [isHover, setIsHovered] = useState(false);
 
-  if (nodeEntity.type !== 'node') return;
+  if (nodeEntity.type !== 'node' || !coord) return null;
   const { colorHex, title, size } = nodeEntity;
 
-  // eslint-disable-next-line consistent-return
+  const [x, setX] = useState(0);
+  const [y, setY] = useState(0);
+  useEffect(() => {
+    setX(coord.x.val);
+    setY(coord.y.val);
+    console.log('Triggered set position', nodeEntity.uid, coord.x.val, coord.y.val);
+  }, [coord.y.val, coord.x.val]);
+
   return (
     <motion.g
       ref={ref}
-      initial={{ x: nodeEntity.x, y: nodeEntity.y }}
+      initial={{ x: coord.x.val, y: coord.y.val }}
       exit={{
         opacity: 0,
         scale: 0.7,
         transition: { duration: 0.05, type: 'spring' },
       }}
       transition={{ x: 'x', y: 'y' }}
+      x={x}
+      y={y}
       drag
       dragConstraints={{ left: 0, top: 0, right: 1000, bottom: 1000 }}
       dragMomentum={false}
@@ -54,9 +63,10 @@ const LinkedNode: DrawableEdgeComponent = ({ entity: nodeEntity }, ref) => {
       onClick={() => {
         setIsHovered(false);
       }}
-      onDragEnd={(_event, info) => {
-        nodeEntity.x += info.offset.x;
-        nodeEntity.y += info.offset.y;
+      onDragEnd={(_event, info) => {}}
+      animate={{
+        x: coord.x.val,
+        y: coord.y.val,
       }}
     >
       <motion.circle
@@ -64,9 +74,13 @@ const LinkedNode: DrawableEdgeComponent = ({ entity: nodeEntity }, ref) => {
         cy={0}
         r={size}
         stroke={colorHex}
-        variants={draw}
         initial="hidden"
-        animate="visible"
+        opacity={1}
+        transition={{
+          type: 'spring',
+          bounce: 0,
+          duration: 0.5,
+        }}
       />
 
       <motion.text

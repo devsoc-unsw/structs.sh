@@ -24,7 +24,7 @@ const draw = {
 };
 
 const createArrowMarker = (id: string, color: string) => (
-  <marker
+  <motion.marker
     id={id}
     markerWidth="2.67" // 8 / 3 = 2.67
     markerHeight="2.67" // 8 / 3 = 2.67
@@ -34,7 +34,7 @@ const createArrowMarker = (id: string, color: string) => (
     markerUnits="strokeWidth"
   >
     <path d="M0,0 L0,2 L3,1 z" fill={color} />
-  </marker>
+  </motion.marker>
 );
 
 function calculateCoordinates(
@@ -62,7 +62,7 @@ function calculateCoordinates(
 }
 
 type DrawableEdgeComponent = DrawableComponentBase<EdgeProp>;
-const Edge: DrawableEdgeComponent = ({ entity: edge, graph }, ref) => {
+const Edge: DrawableEdgeComponent = ({ entity: edge, graph, from, to }, ref) => {
   const markerId = `arrow-${edge.uid}`;
 
   return (

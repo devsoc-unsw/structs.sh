@@ -23,12 +23,22 @@ export interface DrawablePropBase {
   entity: EntityConcrete;
 }
 
+export interface NumberHook {
+  val: number;
+}
+export type MotionCoord = {
+  x: NumberHook;
+  y: NumberHook;
+};
 export interface NodeProp extends DrawablePropBase {
   entity: NodeEntity;
+  coord: MotionCoord;
 }
 export interface EdgeProp extends DrawablePropBase {
   entity: EdgeEntity;
   graph: GenericGraph;
+  from: MotionCoord;
+  to: MotionCoord;
 }
 export type DrawablePropConcrete = NodeProp | EdgeProp;
 
