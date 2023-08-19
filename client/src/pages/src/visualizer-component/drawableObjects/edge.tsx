@@ -1,11 +1,7 @@
+import React from 'react';
 import { motion } from 'framer-motion';
-import { forwardRef } from 'react';
 import { FrontendLinkedListGraph, NodeEntity } from '../types/graphState';
-
-interface EdgeProps {
-  edgeUid: string;
-  graph: FrontendLinkedListGraph;
-}
+import { DrawableComponentBase, EdgeProp } from './drawable';
 
 const draw = {
   animate: (i: number) => ({
@@ -65,7 +61,8 @@ function calculateCoordinates(
   return { x1, y1, x2, y2, opacity: 1, transition: { duration: 1 } };
 }
 
-const Edge = forwardRef<SVGSVGElement, EdgeProps>(({ edgeUid, graph }, ref) => {
+type DrawableEdgeComponent = DrawableComponentBase<EdgeProp>;
+const Edge: DrawableEdgeComponent = ({ uid: edgeUid, graph }, ref) => {
   const edge = graph.cacheEntity[edgeUid];
   if (edge.type !== 'edge') return null;
   const markerId = `arrow-${edgeUid}`;
@@ -91,7 +88,7 @@ const Edge = forwardRef<SVGSVGElement, EdgeProps>(({ edgeUid, graph }, ref) => {
       />
     </motion.g>
   );
-});
+};
 
 Edge.displayName = 'Edge';
-export default Edge;
+export default React.forwardRef(Edge);

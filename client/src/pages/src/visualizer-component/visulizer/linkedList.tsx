@@ -1,9 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { AnimatePresence, motion, useAnimation } from 'framer-motion';
-import { v4 } from 'uuid';
-import LinkedNode from '../objects/node';
-import { EdgeEntity, EntityType, NodeEntity } from '../types/graphState';
-import Edge from '../objects/edge';
+import LinkedNode from '../drawableObjects/node';
+import { EntityType } from '../types/graphState';
+import Edge from '../drawableObjects/edge';
 import { VisualizerComponent } from './visualizer';
 
 // TODO: Expand different component for different data structure, implementing common interface
@@ -24,36 +23,6 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
     [key: string]: JSX.Element;
   }>({});
 
-  const onAddNode = useCallback(
-    (uid: string) => {
-      const node = state.cacheEntity[uid] as NodeEntity;
-      const newNode: NodeEntity = {
-        uid: v4(),
-        type: EntityType.NODE,
-        title: 'New Node',
-        colorHex: '#FFFFFF',
-        size: 50,
-        edges: [],
-        x: node.x + 100,
-        y: node.y + 140,
-      };
-      state.cacheEntity[newNode.uid] = newNode;
-
-      const newEdge: EdgeEntity = {
-        uid: `${node.uid}-${newNode.uid}`,
-        type: EntityType.EDGE,
-        from: node.uid,
-        to: newNode.uid,
-        label: '',
-        colorHex: '#FFFFFF',
-      };
-      state.cacheEntity[newEdge.uid] = newEdge;
-
-      setNodes({ ...state });
-    },
-    [state]
-  );
-
   const renderNodes = useCallback(() => {
     Object.values(state.cacheEntity).map((entity) => {
       if (drawable[entity.uid] === undefined) {
@@ -64,11 +33,8 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
               <LinkedNode
                 ref={(ref) => (nodeRefs.current[entity.uid] = ref)}
                 key={entity.uid}
-                nodeUid={entity.uid}
+                uid={entity.uid}
                 graph={state}
-                config={settings}
-                onAddNode={onAddNode}
-                setConfig={setSettings}
               />
             );
             break;
@@ -78,7 +44,7 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
                 ref={(ref) => (nodeRefs.current[entity.uid] = ref)}
                 key={entity.uid}
                 graph={state}
-                edgeUid={entity.uid}
+                uid={entity.uid}
               />
             );
             break;
@@ -86,9 +52,10 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
             return null;
         }
       }
+      return null;
     });
     setDrawables(drawable);
-  }, [state, settings, onAddNode]);
+  }, [state, settings]);
 
   useEffect(() => {
     setNodes(graphState);
