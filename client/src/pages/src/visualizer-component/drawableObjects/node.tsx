@@ -1,14 +1,24 @@
 import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { DrawableComponentBase, NodeProp } from './drawable';
+import HoverContent from '../util/hoverDebugger';
 
 const animations = {
   entry: {
+    initialPosition: (x: number, y: number) => {
+      return {
+        x,
+        y,
+        opacity: 0,
+        scale: 0,
+        duration: 1.5,
+      };
+    },
     hidden: { opacity: 0 },
-    visible: (i: number) => ({
+    visible: () => ({
       opacity: 1,
+      scale: 1,
       transition: {
-        delay: 1 + i * 0.5,
         type: 'spring',
         bounce: 0,
         duration: 0.5,
@@ -20,7 +30,7 @@ const animations = {
       opacity: 0,
       scale: 0.7,
       transition: {
-        duration: 0.05,
+        duration: 0.5,
         type: 'spring',
       },
     },
@@ -30,6 +40,8 @@ const animations = {
       x,
       y,
       transition: { duration: 1.5 },
+      opacity: 1,
+      scale: 1,
     }),
   },
 };
@@ -52,7 +64,7 @@ const LinkedNode: DrawableEdgeComponent = ({ entity: nodeEntity, coord }, ref) =
   return (
     <motion.g
       ref={ref}
-      initial={{ x: coord.x.val, y: coord.y.val }}
+      initial={animations.entry.initialPosition(coord.x.val, coord.y.val)}
       exit={animations.exit.exit}
       animate={animations.animate.positionChange(coord.x.val, coord.y.val)}
       x={x}
@@ -62,8 +74,6 @@ const LinkedNode: DrawableEdgeComponent = ({ entity: nodeEntity, coord }, ref) =
       dragMomentum={false}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      onClick={() => setIsHovered(false)}
-      onDragEnd={(_event, info) => {}}
     >
       <motion.circle cx={0} cy={0} r={size} stroke={colorHex} opacity={1} />
       <motion.text
@@ -77,32 +87,7 @@ const LinkedNode: DrawableEdgeComponent = ({ entity: nodeEntity, coord }, ref) =
       >
         {title}
       </motion.text>
-      {isHover && (
-        <motion.foreignObject
-          width={250}
-          height={350}
-          x={size - 50}
-          y={80}
-          style={{ zIndex: 1000 }}
-        >
-          <div
-            style={{
-              backgroundColor: 'white',
-              color: 'black',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '250px',
-              padding: '10px',
-              overflow: 'auto',
-              boxSizing: 'border-box',
-              border: '2px solid black',
-            }}
-          >
-            <pre style={{ margin: 0 }}>{JSON.stringify(nodeEntity, null, 2)}</pre>
-          </div>
-        </motion.foreignObject>
-      )}
+      <HoverContent isVisible={isHover} obj={nodeEntity} size={size} />
     </motion.g>
   );
 };

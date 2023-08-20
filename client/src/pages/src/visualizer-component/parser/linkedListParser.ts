@@ -130,7 +130,7 @@ export class LinkedListParser implements Parser {
       prevNodeMap,
       cacheLinkedListNode,
       posCache,
-      horizontalDepth * LINKED_LIST_GAP + 100,
+      horizontalDepth * LINKED_LIST_GAP,
       [0, 200]
     );
     return posCache;

@@ -5,6 +5,7 @@ import { EntityType } from '../types/frontendType';
 import Edge from '../drawableObjects/edge';
 import { VisualizerComponent } from './visualizer';
 import { MotionCoord } from '../drawableObjects/drawable';
+import { assertUnreachable } from '../util/util';
 
 // TODO: Expand different component for different data structure, implementing common interface
 const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, dimensions }) => {
@@ -41,16 +42,17 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
         pos[nodeConcrete.uid].y.val = nodeConcrete.y;
       }
     });
+    const renderDrawable = {};
 
     // Create new drawable objects
-    Object.values(graphState.cacheEntity).map((entity) => {
+    Object.values(graphState.cacheEntity).forEach((entity) => {
       switch (entity.type) {
         case EntityType.NODE:
-          drawable[entity.uid] = (
+          renderDrawable[entity.uid] = (
             <LinkedNode
               ref={(ref) => {
-                nodeRefs.current[entity.uid] = ref;
-                return undefined;
+                if (nodeRefs.current[entity.uid] === undefined) nodeRefs.current[entity.uid] = ref;
+                return nodeRefs.current[entity.uid];
               }}
               key={entity.uid}
               entity={entity}
@@ -59,11 +61,11 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
           );
           break;
         case EntityType.EDGE:
-          drawable[entity.uid] = (
+          renderDrawable[entity.uid] = (
             <Edge
               ref={(ref) => {
-                nodeRefs.current[entity.uid] = ref;
-                return undefined;
+                if (nodeRefs.current[entity.uid] === undefined) nodeRefs.current[entity.uid] = ref;
+                return nodeRefs.current[entity.uid];
               }}
               key={entity.uid}
               entity={entity}
@@ -74,19 +76,11 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
           );
           break;
         default:
-          return null;
-      }
-
-      return null;
-    });
-
-    // Remove node no longer in graph
-    Object.keys(drawable).forEach((key) => {
-      if (graphState.cacheEntity[key] === undefined) {
-        delete drawable[key];
+          assertUnreachable(entity);
       }
     });
-    setDrawables({ ...drawable });
+
+    setDrawables({ ...renderDrawable });
   }, [graphState, settings]);
 
   useEffect(() => {

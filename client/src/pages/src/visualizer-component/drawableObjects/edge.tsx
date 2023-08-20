@@ -1,20 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { FrontendLinkedListGraph } from '../types/frontendType';
 import { DrawableComponentBase, EdgeProp, MotionCoord } from './drawable';
+import HoverContent from '../util/hoverDebugger';
+import { cloneSimple } from '../util/util';
 
 const animations = {
-  enter: { opacity: 1, transition: { duration: 1 } },
-  exit: { opacity: 0, transition: { duration: 1 } },
-  path: (i: number) => ({
-    pathLength: 1,
-    opacity: 1,
-    transition: {
-      type: 'spring',
-      pathLength: { delay: i * 0.2, duration: 1, ease: [0.43, 0.13, 0.23, 0.96] },
-      opacity: { delay: i * 0.2, duration: 0.05 },
+  enter: {
+    initialPosition: (x: number, y: number) => {
+      return {
+        x,
+        y,
+        opacity: 1,
+        transition: { duration: 1.5 },
+      };
     },
-  }),
+  },
+  exit: { opacity: 0, transition: { duration: 1.5 } },
+  animate: {
+    positionChange: (x: number, y: number) => ({
+      x,
+      y,
+      transition: { duration: 1.5 },
+    }),
+  },
 };
 
 const ArrowMarker = ({ id, color }: { id: string; color: string }) => (
@@ -48,38 +56,45 @@ function calculateCoordinates(from: MotionCoord, to: MotionCoord, offsetDistance
 }
 
 type DrawableEdgeComponent = DrawableComponentBase<EdgeProp>;
-const Edge: DrawableEdgeComponent = ({ entity: edge, graph, from, to }, ref) => {
+const Edge: DrawableEdgeComponent = ({ entity: edge, from, to }, ref) => {
   const markerId = `arrow-${edge.uid}`;
-  const [coords, setCoords] = useState<
-    | {
-        x1: number;
-        y1: number;
-        x2: number;
-        y2: number;
-      }
-    | {}
-  >({});
+  const [coords, setCoords] = useState(calculateCoordinates(from, to));
+  const [isHover, setIsHovered] = useState(false);
 
   useEffect(() => {
     const res = calculateCoordinates(from, to);
+    console.log('Trigger position changed', edge.uid, cloneSimple(coords), cloneSimple(res));
     setCoords(res);
-  }, [from.x, from.y, to.x, to.y]);
+  }, [from.x.val, from.y.val, to.x.val, to.y.val]);
 
   return (
-    <motion.g ref={ref} variants={animations} initial="exit" animate="enter">
+    <motion.g
+      ref={ref}
+      x={coords.x1}
+      y={coords.y1}
+      initial={animations.enter.initialPosition(coords.x1, coords.y1)}
+      exit={animations.exit}
+      animate={animations.animate.positionChange(coords.x1, coords.y1)}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      drag
+      dragMomentum={false}
+    >
       <defs>
         <ArrowMarker id={markerId} color="#DE3163" />
       </defs>
       <motion.line
-        {...coords}
+        x1={0}
+        y1={0}
+        x2={coords.x2 - coords.x1}
+        y2={coords.y2 - coords.y1}
         opacity={1}
         transition={{ type: 'spring', bounce: 0.025, duration: 1 }}
         stroke="#DE3163"
         strokeWidth={6}
-        variants={animations}
-        custom={2}
         markerEnd={`url(#${markerId})`}
       />
+      <HoverContent isVisible={isHover} obj={{ ...edge, toPos: to, fromPos: from }} size={75} />
     </motion.g>
   );
 };
