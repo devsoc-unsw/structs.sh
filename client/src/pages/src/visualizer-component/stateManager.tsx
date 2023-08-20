@@ -1,10 +1,58 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
+import { StoreApi, UseBoundStore, create } from 'zustand';
 import { UiState } from './types/uiState';
 import './css/stateManager.css';
-import { FrontendLinkedListGraph, GenericGraph } from './types/frontendType';
-import { Debugger } from './util/debugger';
-import { Timeline } from './util/timeline';
+import { GenericGraph, INITIAL_GRAPH } from './types/frontendType';
 import { VisualizerComponent } from './visulizer/visualizer';
+
+type State = {
+  states: GenericGraph[];
+  currStateIdx: number;
+  currState: () => GenericGraph;
+};
+type Action = {
+  updateNextState: (newState: GenericGraph) => void;
+  forwardState: () => void;
+  backwardState: () => void;
+};
+
+export const useFrontendStateStore: UseBoundStore<StoreApi<State & Action>> = create<
+  State & Action
+>((set) => ({
+  states: [],
+  currStateIdx: -1,
+  currState: () => {
+    if (useFrontendStateStore.getState().currStateIdx === -1) {
+      return INITIAL_GRAPH;
+    }
+    return useFrontendStateStore.getState().states[useFrontendStateStore.getState().currStateIdx];
+  },
+  updateNextState: (newState: GenericGraph) => {
+    set((state) => ({
+      states: [...state.states, newState],
+      currStateIdx: state.currStateIdx + 1,
+    }));
+  },
+  forwardState: () => {
+    if (
+      useFrontendStateStore.getState().currStateIdx >=
+      useFrontendStateStore.getState().states.length - 1
+    ) {
+      return;
+    }
+    set((state) => ({
+      currStateIdx: state.currStateIdx + 1,
+    }));
+  },
+  backwardState: () => {
+    if (useFrontendStateStore.getState().currStateIdx <= 0) {
+      return;
+    }
+    set((state) => ({
+      currStateIdx: state.currStateIdx - 1,
+    }));
+  },
+}));
 
 export interface StateManagerProp {
   state: GenericGraph;
@@ -14,76 +62,3 @@ export interface StateManagerProp {
 
   Visualizer: VisualizerComponent;
 }
-
-// A generic interface to manages the history of frontend state,
-// navigation between states
-export const StateManager: React.FC<StateManagerProp> = ({
-  state,
-  nextState,
-  settings,
-  setSettings,
-  Visualizer,
-}) => {
-  /**
-   * Parse the background graph state into frontend ones
-   */
-  const [currGraphState, setCurrGraphState] = useState<FrontendLinkedListGraph>(state);
-  const [historyGraphState, setHistoryGraphState] = useState<FrontendLinkedListGraph[]>([state]);
-
-  useEffect(() => {
-    setCurrGraphState(state);
-    setHistoryGraphState([...historyGraphState, state]);
-  }, [state]);
-
-  useEffect(() => {
-    setSettings(settings);
-  }, [settings]);
-
-  const visualizerRef = useRef(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-
-  useEffect(() => {
-    const observer = new ResizeObserver((entries) => {
-      if (!visualizerRef) return;
-
-      entries.forEach((element) => {
-        if (element.target instanceof HTMLElement && element.target.className === 'visualizer') {
-          const { width, height } = element.contentRect;
-
-          if (dimensions.height === 0) {
-            
-            setDimensions({ width, height });
-          }
-        }
-      });
-    });
-
-    if (visualizerRef.current) {
-      observer.observe(visualizerRef.current);
-    }
-    return () => {
-      if (visualizerRef.current) {
-        observer.unobserve(visualizerRef.current);
-      }
-    };
-  }, [visualizerRef]);
-
-  return (
-    <div className="container">
-      <div className="linked-list">
-        <div className="visualizer" ref={visualizerRef}>
-          <Visualizer
-            settings={settings}
-            graphState={currGraphState}
-            setSettings={setSettings}
-            dimensions={dimensions}
-          />
-        </div>
-        <div className="timeline">
-          <Timeline nextState={nextState} forwardState={() => {}} backwardState={() => {}} />
-        </div>
-      </div>
-      <div className="debugger">{settings.debug && <Debugger src={currGraphState} />}</div>
-    </div>
-  );
-};

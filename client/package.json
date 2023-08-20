@@ -35,7 +35,8 @@
     "resize-observer-polyfill": "^1.5.1",
     "sass": "^1.56.1",
     "socket.io-client": "^4.6.1",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "zustand": "^4.4.1"
   },
   "devDependencies": {
     "@types/d3": "^7.4.0",

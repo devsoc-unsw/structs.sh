@@ -82,7 +82,7 @@ export class LinkedListParser implements Parser {
     if (!prevNodes) {
       posCache.set(currNode.uid, {
         x,
-        y: (yRange[0] + yRange[1]) / 2,
+        y: (yRange[0] + 100) / 2,
       });
       return posCache.get(currNode.uid);
     }
@@ -131,7 +131,7 @@ export class LinkedListParser implements Parser {
       cacheLinkedListNode,
       posCache,
       horizontalDepth * LINKED_LIST_GAP,
-      [0, 200]
+      [0, 600]
     );
     return posCache;
   }
