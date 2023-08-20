@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { DrawableComponentBase, EdgeProp, MotionCoord } from './drawable';
 import HoverContent from '../util/hoverDebugger';
-import { cloneSimple } from '../util/util';
 
 const animations = {
   enter: {
@@ -10,16 +9,17 @@ const animations = {
       return {
         x,
         y,
-        opacity: 1,
+        opacity: 0,
         transition: { duration: 1.5 },
       };
     },
   },
-  exit: { opacity: 0, transition: { duration: 1.5 } },
+  exit: { opacity: 0, transition: { duration: 0.75 } },
   animate: {
     positionChange: (x: number, y: number) => ({
       x,
       y,
+      opacity: 1,
       transition: { duration: 1.5 },
     }),
   },
@@ -63,7 +63,6 @@ const Edge: DrawableEdgeComponent = ({ entity: edge, from, to }, ref) => {
 
   useEffect(() => {
     const res = calculateCoordinates(from, to);
-    console.log('Trigger position changed', edge.uid, cloneSimple(coords), cloneSimple(res));
     setCoords(res);
   }, [from.x.val, from.y.val, to.x.val, to.y.val]);
 
