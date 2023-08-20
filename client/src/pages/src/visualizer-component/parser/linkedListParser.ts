@@ -26,7 +26,7 @@ const LINKED_LIST_GAP = 200;
 export class LinkedListParser implements Parser {
   convertToRootedTree(
     linkedList: LinkedListNode[],
-    cacheLinkedListNode: Map<Addr, LinkedListNode>
+    cacheLinkedListNode?: Map<Addr, LinkedListNode>
   ): [LinkedListNode, Map<Addr, LinkedListNode[]>] {
     let root: LinkedListNode | null = null;
     const prevNodeMap: Map<Addr, LinkedListNode[]> = new Map();
@@ -136,7 +136,21 @@ export class LinkedListParser implements Parser {
     return posCache;
   }
 
-  findMaxDepth(cacheLinkedListNode: Map<Addr, LinkedListNode[]>): number {
+  findMaxDepth(
+    cacheLinkedListNode: Map<Addr, LinkedListNode[]>,
+    linkedList: LinkedListNode[]
+  ): number {
+    // Reverase cache linkedList as we want trakck back
+    const cacheLinkedListNodeReverse: Map<Addr, LinkedListNode[]> = new Map();
+    cacheLinkedListNode.forEach((nodes) => {
+      nodes.forEach((node) => {
+        if (!cacheLinkedListNodeReverse.has(node.uid)) {
+          cacheLinkedListNodeReverse.set(node.uid, []);
+        }
+        cacheLinkedListNodeReverse.get(node.uid)!.push(node);
+      });
+    });
+
     // Utility function for DFS traversal
     function dfs(node: LinkedListNode | null, visited: Set<Addr>): number {
       if (!node) return 0; // base case: end of linked list
@@ -144,22 +158,19 @@ export class LinkedListParser implements Parser {
 
       visited.add(node.uid);
 
-      const nextNodes = cacheLinkedListNode.get(node.next);
+      const nextNodes = cacheLinkedListNodeReverse.get(node.next);
       if (!nextNodes) return 1;
 
       let maxDepth = 0;
       nextNodes.forEach((nextNode: LinkedListNode) => {
         maxDepth = Math.max(maxDepth, dfs(nextNode, new Set(visited)));
       });
-
       return 1 + maxDepth;
     }
 
     let maximumDepth = 0;
-    Array.from(cacheLinkedListNode.values()).forEach((nodes) => {
-      nodes.forEach((node) => {
-        maximumDepth = Math.max(maximumDepth, dfs(node, new Set()));
-      });
+    linkedList.forEach((node) => {
+      maximumDepth = Math.max(maximumDepth, dfs(node, new Set()));
     });
     return maximumDepth + 1;
   }
@@ -216,7 +227,7 @@ export class LinkedListParser implements Parser {
 
     try {
       const [rootedTree, prevNodeMap] = this.convertToRootedTree(linkedList, cacheLinkedListNode);
-      const maxDepth = this.findMaxDepth(prevNodeMap);
+      const maxDepth = this.findMaxDepth(prevNodeMap, linkedList);
       const positions = this.assignPositions(
         rootedTree,
         prevNodeMap,
@@ -276,7 +287,6 @@ export class LinkedListParser implements Parser {
     backendUpdate: BackendUpdate,
     editorAnnotation: EditorAnnotation
   ) {
-    console.log('Update', frontendStructure, backendStructure, backendUpdate, editorAnnotation);
     return undefined;
   }
 }

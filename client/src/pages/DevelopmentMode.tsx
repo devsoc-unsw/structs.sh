@@ -10,6 +10,7 @@ import { BackendState, CType } from './src/visualizer-component/types/backendTyp
 const DevelopmentMode = () => {
   const [backendState, setBackendState] = useState<BackendState>({
     '0x1': {
+      addr: '0x1',
       type: CType.SINGLE_LINED_LIST_NODE,
       is_pointer: false,
       data: {
@@ -30,10 +31,7 @@ const DevelopmentMode = () => {
   }, []);
 
   useEffect(() => {
-    const onConnect = () => {
-      console.log('Connected!');
-      console.log('Emitting message to server...');
-    };
+    const onConnect = () => {};
 
     socket.on('connect', onConnect);
     socket.on('sendDummyData', onSendDummyData);

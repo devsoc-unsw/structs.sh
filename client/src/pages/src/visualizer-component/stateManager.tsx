@@ -51,7 +51,7 @@ export const StateManager: React.FC<StateManagerProp> = ({
           const { width, height } = element.contentRect;
 
           if (dimensions.height === 0) {
-            console.log('Triggered', width, height);
+            
             setDimensions({ width, height });
           }
         }

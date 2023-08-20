@@ -34,6 +34,7 @@ export type BackendVariable =
 
 export type IsPointerType = true | false;
 export interface BackendVariableBase {
+  addr: Addr;
   data: Addr | BackendVariable;
   type: CType;
   is_pointer: IsPointerType;
@@ -82,10 +83,14 @@ export type BackendVariableNonPointerConcrete =
   | BackendVariableBaseDoubleLinkedList
   | BackendVariableBaseSingleLinkedList;
 
+// data: 0X78
+// size: 3
+// 0x78, 0x7C, 0x80, 0x84
 export interface BackendVariableBasePointer extends BackendVariableBase {
   data: Addr;
   type: CType;
   is_pointer: true;
+  size: number;
 }
 
 export type BackendVariableConcrete = BackendVariablePointer | BackendVariableNonPointerConcrete;

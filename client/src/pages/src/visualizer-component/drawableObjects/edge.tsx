@@ -1,35 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { FrontendLinkedListGraph, NodeEntity } from '../types/frontendType';
-import { DrawableComponentBase, EdgeProp } from './drawable';
+import { FrontendLinkedListGraph } from '../types/frontendType';
+import { DrawableComponentBase, EdgeProp, MotionCoord } from './drawable';
 
-const draw = {
-  animate: (i: number) => ({
+const animations = {
+  enter: { opacity: 1, transition: { duration: 1 } },
+  exit: { opacity: 0, transition: { duration: 1 } },
+  path: (i: number) => ({
     pathLength: 1,
     opacity: 1,
     transition: {
       type: 'spring',
-      pathLength: {
-        delay: i * 0.2,
-        duration: 1,
-        ease: [0.43, 0.13, 0.23, 0.96],
-      },
+      pathLength: { delay: i * 0.2, duration: 1, ease: [0.43, 0.13, 0.23, 0.96] },
       opacity: { delay: i * 0.2, duration: 0.05 },
     },
   }),
-  exit: {
-    opacity: 0,
-    transition: { duration: 1 },
-  },
 };
 
-const createArrowMarker = (id: string, color: string) => (
+const ArrowMarker = ({ id, color }: { id: string; color: string }) => (
   <motion.marker
     id={id}
-    markerWidth="2.67" // 8 / 3 = 2.67
-    markerHeight="2.67" // 8 / 3 = 2.67
+    markerWidth="2.67"
+    markerHeight="2.67"
     refX="0"
-    refY="1" // 3 / 3 = 1
+    refY="1"
     orient="auto"
     markerUnits="strokeWidth"
   >
@@ -37,51 +31,53 @@ const createArrowMarker = (id: string, color: string) => (
   </motion.marker>
 );
 
-function calculateCoordinates(
-  fromUid: string,
-  toUid: string,
-  graph: FrontendLinkedListGraph,
-  offsetDistance = 80
-) {
-  const from: NodeEntity = graph.cacheEntity[fromUid] as NodeEntity;
-  const to: NodeEntity = graph.cacheEntity[toUid] as NodeEntity;
-
-  const deltaX = to.x - from.x;
-  const deltaY = to.y - from.y;
+function calculateCoordinates(from: MotionCoord, to: MotionCoord, offsetDistance = 80) {
+  const deltaX = to.x.val - from.x.val;
+  const deltaY = to.y.val - from.y.val;
   const angle = Math.atan2(deltaY, deltaX);
 
   // Coordinates for the starting point
-  const x1 = from.x + Math.cos(angle) * offsetDistance * 0.8;
-  const y1 = from.y + Math.sin(angle) * offsetDistance * 0.8;
+  const x1 = from.x.val + Math.cos(angle) * offsetDistance * 0.8;
+  const y1 = from.y.val + Math.sin(angle) * offsetDistance * 0.8;
 
   // Coordinates for the end point
-  const x2 = to.x - Math.cos(angle) * offsetDistance;
-  const y2 = to.y - Math.sin(angle) * offsetDistance;
+  const x2 = to.x.val - Math.cos(angle) * offsetDistance;
+  const y2 = to.y.val - Math.sin(angle) * offsetDistance;
 
-  return { x1, y1, x2, y2, opacity: 1, transition: { duration: 1 } };
+  return { x1, y1, x2, y2 };
 }
 
 type DrawableEdgeComponent = DrawableComponentBase<EdgeProp>;
 const Edge: DrawableEdgeComponent = ({ entity: edge, graph, from, to }, ref) => {
   const markerId = `arrow-${edge.uid}`;
+  const [coords, setCoords] = useState<
+    | {
+        x1: number;
+        y1: number;
+        x2: number;
+        y2: number;
+      }
+    | {}
+  >({});
+
+  useEffect(() => {
+    const res = calculateCoordinates(from, to);
+    setCoords(res);
+  }, [from.x, from.y, to.x, to.y]);
 
   return (
-    <motion.g
-      ref={ref}
-      variants={draw}
-      transition={{ ease: 'easeOut', duration: 2 }}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1, transition: { duration: 1 } }}
-    >
-      <defs>{createArrowMarker(markerId, '#DE3163')}</defs>
+    <motion.g ref={ref} variants={animations} initial="exit" animate="enter">
+      <defs>
+        <ArrowMarker id={markerId} color="#DE3163" />
+      </defs>
       <motion.line
-        initial={calculateCoordinates(edge.from, edge.to, graph)}
-        animate={calculateCoordinates(edge.from, edge.to, graph)}
-        transition={{ type: 'spring', bounce: 0.025 }}
+        {...coords}
+        opacity={1}
+        transition={{ type: 'spring', bounce: 0.025, duration: 1 }}
         stroke="#DE3163"
         strokeWidth={6}
+        variants={animations}
         custom={2}
-        variants={draw}
         markerEnd={`url(#${markerId})`}
       />
     </motion.g>
