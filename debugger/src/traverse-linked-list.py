@@ -18,7 +18,6 @@ class NodeListCommand(gdb.Command):
         self.variable_name = variable_name
 
     def invoke(self, arg, from_tty):
-        print("nodeeeeee")
         linked_list = gdb.parse_and_eval(self.variable_name)
         nodes = []
 

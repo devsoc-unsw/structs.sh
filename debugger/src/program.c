@@ -11,7 +11,7 @@ struct node {
   struct node *next;
 };
 
-struct list_2 {
+struct list {
   struct node *head;
 };
 
@@ -45,7 +45,7 @@ void remove_backd(listd_t *list);
 void remove_val_d(listd_t *list, double val);
 void remove_headd(listd_t *list);
 
-void appendList(int value, struct list_2 *list) {
+void appendList(int value, struct list *list) {
   struct node *new_tail = new_node(value);
   if (list->head == NULL) {
     list->head = new_tail;
@@ -60,7 +60,7 @@ void appendList(int value, struct list_2 *list) {
   curr->next = new_tail;
 };
 
-void print_list(struct list_2 *list) {
+void print_list(struct list *list) {
   struct node *curr = list->head;
   while (curr != NULL) {
     printf("%d -> ", curr->data);
@@ -111,7 +111,7 @@ int main(int argc, char **argv) {
   remove_val_d(dlist, 12);
   remove_val_d(dlist, 12);
 
-  struct list_2 *list2 = malloc(sizeof(struct list_2));
+  struct list *list2 = malloc(sizeof(struct list));
   list2->head = NULL;
   appendList(5, list2);
   appendList(10, list2);
