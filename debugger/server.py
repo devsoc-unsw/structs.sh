@@ -8,27 +8,29 @@ import subprocess
 import json
 
 # Later we want to receive the variable name, line number and program_name from the client
-variable_name = "list2"
-line_number = "126"
-file_name = "program.c"
-program_name = "program"
+VARIABLE_NAME = "l"
+LINE_NUMBERS = ["28"]
+FILE_NAMES = ["src/linked-list/main1.c", "src/linked-list/linked-list.c"]
+PROGRAM_NAME = "program"
 
 # Store heap memory in this global variable
 heap_dict = {
 }
 
 
-def compile_program(file_name):
-    subprocess.run(["gcc", "-ggdb", file_name, "-o", program_name])
+def compile_program(file_names: list[str]):
+    subprocess.run(["gcc", "-ggdb", *file_names, "-o", PROGRAM_NAME])
 
 
-def create_ll_script(line_number, variable_name, program_name):
+def create_ll_script(line_numbers, variable_name, program_name):
     gdb_script = f"""
 source src/traverse-linked-list.py
 python NodeListCommand("nodelist", "{variable_name}")
 
 file {program_name}
-break {line_number}
+""" \
++ "\n".join([f"break {n}" for n in line_numbers]) \
+        + f"""
 run
 nodelist
 continue
@@ -52,15 +54,15 @@ def disconnect(socket_id: str) -> None:
 
 
 @io.event
-def getBreakpoints(socket_id: str, line: Any, listName: Any) -> None:
+def getBreakpoints(socket_id: str, line_numbers: list[int], listName: list[str]) -> None:
     print("Received message from", socket_id)
     print("Echoing message back to client...")
 
     # Compile C program
-    compile_program(file_name)
+    compile_program(FILE_NAMES)
 
     # Run GDB with the script
-    script = create_ll_script(line, listName, "program")
+    script = create_ll_script(LINE_NUMBERS, VARIABLE_NAME, PROGRAM_NAME)
 
     command = f"echo '{script}' | gdb -q"
     output = subprocess.check_output(command, shell=True).decode("utf-8")
@@ -78,7 +80,7 @@ def getBreakpoints(socket_id: str, line: Any, listName: Any) -> None:
     nodes2 = f"{nodes}"
 
     # Send linked list nodes back to the client
-    io.emit("getBreakpoints", nodes2 + '\n\n' + line, room=socket_id)
+    io.emit("getBreakpoints", nodes2, room=socket_id)
 
     # Send heap dictionary
     # io.emit("getBreakpoints", heap_dict, room=socket_id)
