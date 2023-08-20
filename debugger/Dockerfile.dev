@@ -39,4 +39,4 @@ COPY . .
 
 EXPOSE 8000
 
-CMD [ "nodemon", "--exec", "pyenv", "exec", "python3", "src/server.py"]
+CMD [ "nodemon", "--exec", "pyenv", "exec", "python3", "server.py"]
