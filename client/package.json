@@ -59,6 +59,12 @@
     "vite-plugin-checker": "^0.5.1",
     "vite-tsconfig-paths": "^3.6.0"
   },
+  "overrides": {
+    "react-json-view": {
+      "react": "18.2.0",
+      "react-dom": "18.2.0"
+    }
+  },
   "browserslist": {
     "production": [
       ">0.2%",
