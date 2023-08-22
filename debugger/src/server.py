@@ -8,7 +8,7 @@ import json
 variable_name = "list2"
 line_number = "126"
 file_name = "program"
-    
+
 # Construct the GDB script
 gdb_script = f"""
 
@@ -72,14 +72,13 @@ def connect(socket_id: str, *_) -> None:
 @io.event
 def disconnect(socket_id: str) -> None:
     print("Client disconnected: ", socket_id)
-    
+
 
 @io.event
 def getBreakpoints(socket_id: str, line: Any, listName: Any) -> None:
     print("Received message from", socket_id)
     print("Echoing message back to client...")
 
-    
     # Compile C program
     compile_program("program.c")
 
@@ -88,7 +87,6 @@ def getBreakpoints(socket_id: str, line: Any, listName: Any) -> None:
 
     command = f'echo "{script}" | gdb -q'
     output = subprocess.check_output(command, shell=True).decode("utf-8")
-
 
     # Find the JSON data in the GDB output
     json_start = output.find("{")
@@ -99,7 +97,7 @@ def getBreakpoints(socket_id: str, line: Any, listName: Any) -> None:
     nodes_dict = json.loads(json_data)
     nodes = nodes_dict["Nodes"]
     nodes2 = f"{nodes}"
-    
+
     # Send linked list nodes back to the client
     io.emit("getBreakpoints", nodes2 + "\n\n" + line, room=socket_id)
 
@@ -206,8 +204,8 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
                 }
             }
         }
-    
-    # Append the value 72 to the start of the list (order of list nodes in heap_dict shouldn"t 
+
+    # Append the value 72 to the start of the list (order of list nodes in heap_dict shouldn"t
     # matter as long as the next pointers are in the correct order)
     elif line_number == "104":
         heap_dict = {
@@ -240,7 +238,7 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
             }
         }
 
-    # Append the value 21 to the second element of the linked list 
+    # Append the value 21 to the second element of the linked list
     # (will be placed AFTER the second element i.e. the third element)
     elif line_number == "105":
         heap_dict = {
@@ -388,4 +386,4 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
     io.emit("sendDummyData", retVal, room=socket_id)
 
 
-eventlet.wsgi.server(eventlet.listen(("", 8001)), app)
+eventlet.wsgi.server(eventlet.listen(("", 8000)), app)
