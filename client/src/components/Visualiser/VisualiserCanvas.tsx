@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { PointerEvent, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -19,6 +19,8 @@ const ZoomableSvg = styled('svg')(({ scale }) => ({
  */
 const VisualiserCanvas: React.FC = () => {
   const [scale, setScale] = useState(1);
+  const svgRef = useRef(null);
+
   const ZOOM_SPEED = 0.05;
   const MAX_SCALE = 2;
   const MIN_SCALE = 0.5;
@@ -30,6 +32,53 @@ const VisualiserCanvas: React.FC = () => {
     }
   };
 
+  const [isPointerDown, setIsPointerDown] = useState(false);
+
+  const [pointerOrigin, setPointerOrigin] = useState({
+    x: 0,
+    y: 0,
+  });
+
+  const handlePointerDown = (event: PointerEvent<SVGSVGElement>) => {
+    setIsPointerDown(true);
+
+    setPointerOrigin({
+      x: event.clientX,
+      y: event.clientY,
+    });
+  };
+
+  const [viewBox, setViewBox] = useState({
+    x: 0,
+    y: 0,
+    width: 1000,
+    height: 1000,
+  });
+
+  const [newViewBox, setNewViewBox] = useState({
+    x: 0,
+    y: 0,
+  });
+
+  const handlePointerMove = (event: PointerEvent<SVGSVGElement>) => {
+    if (!isPointerDown) {
+      return;
+    }
+
+    event.preventDefault();
+
+    setNewViewBox({
+      x: viewBox.x - (event.clientX - pointerOrigin.x),
+      y: viewBox.y - (event.clientY - pointerOrigin.y),
+    });
+  };
+
+  const handlePointerUp = () => {
+    setIsPointerDown(false);
+
+    setViewBox((prevViewBox) => ({ ...prevViewBox, x: newViewBox.x, y: newViewBox.y }));
+  };
+
   return (
     <Box
       onWheel={onScroll}
@@ -38,7 +87,16 @@ const VisualiserCanvas: React.FC = () => {
       height="100vh"
       width={window.screen.width}
     >
-      <ZoomableSvg onWheel={onScroll} id="visualiser-canvas" scale={scale} />
+      <ZoomableSvg
+        ref={svgRef}
+        onWheel={onScroll}
+        id="visualiser-canvas"
+        scale={scale}
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
+        onPointerMove={handlePointerMove}
+        viewBox={`${newViewBox.x} ${newViewBox.y} ${viewBox.width} ${viewBox.height}`}
+      />
     </Box>
   );
 };
