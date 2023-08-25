@@ -158,7 +158,6 @@ export class LinkedListParser implements Parser {
     try {
       const rootedTree = this.convertToRootedTree(linkedList, cacheLinkedListNode);
       const positions = this.assignPositions(rootedTree, cacheLinkedListNode);
-      debugger;
 
       cacheLinkedListNode.forEach((node, uid) => {
         if (!positions.has(uid)) {

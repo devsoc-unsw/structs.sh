@@ -4,61 +4,63 @@ import styles from 'styles/DevelopmentMode.module.css';
 import globalStyles from 'styles/global.module.css';
 import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
+import { Socket } from 'socket.io-client';
 import VisualizerMain from './src/VisualizerMain';
 
+type ExtendedWindow = Window &
+  typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
+
 const DevelopmentMode = () => {
-  const onGetBreakpoints = useCallback((data: any) => {
-    console.log(`Received message!!: ${data}`);
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      console.log('Attach socket to window for debugging: ', socket);
+      (window as ExtendedWindow).socket = socket;
+      (window as ExtendedWindow).getBreakpoints = (line: string, listName: string) =>
+        socket.emit('getBreakpoints', line, listName);
+    }
   }, []);
+
+  const onGetBreakpoints = useCallback((data: any) => {
+    console.log(`Received data:\n`, data);
+  }, []);
+
+  const onDisconnect = useCallback(() => {
+    console.log('Disconnected!');
+  }, []);
+
+  // const onSendDummyData = useCallback((data: any) => {
+  //   console.log(`Received message: ${data}`);
+  // }, []);
 
   useEffect(() => {
     const onConnect = () => {
       console.log('Connected!');
       console.log('Emitting message to server...');
-      socket.emit('echo', 'example');
-      //      socket.emit("getBreakpoints", "121", "list2")
-      //      socket.emit("getBreakpoints", "122", "list2")
-      //      socket.emit("getBreakpoints", "123", "list2")
-      //      socket.emit("getBreakpoints", "124", "list2")
-      //      socket.emit("getBreakpoints", "125", "list2")
-      //      socket.emit("getBreakpoints", "126", "list2")
+      socket.emit('getBreakpoints', '121', 'list2');
+      socket.emit('getBreakpoints', '122', 'list2');
+      socket.emit('getBreakpoints', '123', 'list2');
+      socket.emit('getBreakpoints', '124', 'list2');
+      socket.emit('getBreakpoints', '125', 'list2');
+      socket.emit('getBreakpoints', '126', 'list2');
 
-      socket.emit('sendDummyData', '100');
-      socket.emit('sendDummyData', '101');
-      socket.emit('sendDummyData', '102');
-      socket.emit('sendDummyData', '103');
-      socket.emit('sendDummyData', '104');
-      socket.emit('sendDummyData', '105');
-    };
-
-    const onDisconnect = () => {
-      console.log('Disconnected!');
-    };
-
-    const onEcho = (data: any) => {
-      console.log(`Received message: ${data}`);
-    };
-
-    // const onGetBreakpoints = (data: any) => {
-    //   console.log(`Received message: ${data}`);
-    // };
-
-    const onSendDummyData = (data: any) => {
-      console.log(`Received message: ${data}`);
+      // socket.emit('sendDummyData', '100');
+      // socket.emit('sendDummyData', '101');
+      // socket.emit('sendDummyData', '102');
+      // socket.emit('sendDummyData', '103');
+      // socket.emit('sendDummyData', '104');
+      // socket.emit('sendDummyData', '105');
     };
 
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
-    socket.on('echo', onEcho);
     socket.on('getBreakpoints', onGetBreakpoints);
-    socket.on('sendDummyData', onSendDummyData);
+    // socket.on('sendDummyData', onSendDummyData);
 
     return () => {
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
-      socket.off('echo', onEcho);
       socket.off('getBreakpoints', onGetBreakpoints);
-      socket.off('sendDummyData', onSendDummyData);
+      // socket.off('sendDummyData', onSendDummyData);
     };
   }, [onGetBreakpoints]);
 
