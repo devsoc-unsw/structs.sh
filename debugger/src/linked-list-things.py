@@ -44,20 +44,3 @@ class StepCommand(gdb.Command):
 
 # Run in gdb with `python NodeListCommand("nodelist", "list2")`
 # NodeListCommand("nodelist", "list2")
-
-# Useful
-
-# info functions -n
-
-def nextUntilEnd():
-    while any(t.is_running() for t in gdb.selected_inferior().threads()):
-        gdb.execute('next')
-
-        # Add new heap memory to heap_dict
-        # If malloc
-
-        # Update existing tracked heap memory
-        for addr in self.heap_dict.keys():
-            update(heap_dict, addr)
-
-        # Remove freed heap memory from heap_dict
