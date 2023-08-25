@@ -13,9 +13,9 @@ LINE_NUMBERS = ["28"]
 FILE_NAMES = ["src/linked-list/main1.c", "src/linked-list/linked-list.c"]
 PROGRAM_NAME = "program"
 
-# Store heap memory in this global variable
-heap_dict = {
-}
+# Not sure whether this should go in server.py or in the python instance
+# running inside the gdb instance.
+heap_dict = {}
 
 
 def compile_program(file_names: list[str]):
@@ -35,6 +35,24 @@ run
 nodelist
 continue
 quit
+"""
+    return gdb_script
+
+
+def create_ll_script_2(line_numbers, variable_name, program_name):
+    gdb_script = f"""
+source src/linked-list-things.py
+python info_functions_output = gdb.execute('info functions', False, True)
+python my_functions = parseFunctionNames(info_functions_output)
+python breakOnUserFunctions(my_functions)
+
+python StepCommand("my_next", my_functions)
+
+file {program_name}
+start
+python newHeapDict = myNext()
+python print(newHeapDict)
+
 """
     return gdb_script
 
@@ -62,7 +80,7 @@ def getBreakpoints(socket_id: str, line_numbers: list[int], listName: list[str])
     compile_program(FILE_NAMES)
 
     # Run GDB with the script
-    script = create_ll_script(LINE_NUMBERS, VARIABLE_NAME, PROGRAM_NAME)
+    script = create_ll_script_2(LINE_NUMBERS, VARIABLE_NAME, PROGRAM_NAME)
 
     command = f"echo '{script}' | gdb -q"
     output = subprocess.check_output(command, shell=True).decode("utf-8")

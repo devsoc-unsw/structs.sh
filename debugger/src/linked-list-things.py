@@ -19,7 +19,27 @@ class StepCommand(gdb.Command):
         self.heap_dict = {}
 
     def invoke(self, arg, from_tty):
-        gdb.execute('step')
+        if any(t.is_running() for t in gdb.selected_inferior().threads()):
+            gdb.execute('next')
+
+            # === Add new heap memory to heap_dict
+            # Intercept malloc
+            # if line has call to malloc
+            #   # if the type of data malloced is the user's annotate linked list type
+            #   # get the address to the malloc'ed memory
+            #   # store address and memory in heap dictionary
+
+            # === Up date existing tracked heap memory
+            # for addr in self.heap_dict.keys():
+            #  # update(heap_dict, addr)
+
+            # === Remove freed heap memory from heap_dict
+            # Intercept free
+            # if line has call to free
+            #   # what address is being freed
+            #   # look for the address in heap dictionary
+
+            return self.heap_dict
 
 
 # Run in gdb with `python NodeListCommand("nodelist", "list2")`
