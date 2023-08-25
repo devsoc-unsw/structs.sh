@@ -6,7 +6,7 @@
  * Construct basic linked list using functions to append and remove
  */
 int main(int argc, char **argv) {
-  struct list *l = new_list();
+  List *l = new_list();
 
   append(l, 11);
   append(l, 22);

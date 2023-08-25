@@ -11,7 +11,7 @@ struct node {
   struct node *next;
 };
 
-struct list {
+typedef struct list {
   struct node *head;
   int size;
-};
+} List;
