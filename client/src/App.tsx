@@ -9,6 +9,31 @@ import VisualiserPage from 'pages/VisualiserPage';
 import { structsTheme } from 'structsThemes';
 import './App.scss';
 import DevelopmentMode from 'pages/DevelopmentMode';
+import LearningMode from 'pages/LearningMode';
+import { customizedParagraph, customizedListing, customizedCode } from 'utils/customized-mdx';
+
+const eduPages = import.meta.glob('./edu-pages/*.mdx');
+
+const generateRoutes = async (pages: any) => {
+  const routes = [];
+
+  const components = {
+    p: customizedParagraph,
+    li: customizedListing,
+    code: customizedCode,
+  }
+
+  for (const path in pages) {
+    const module = await pages[path]();
+    const PageComponent = module.default;
+    const routePath = '/' + path.slice(12, -4); // remove './edu_pages/' and '.mdx'
+    routes.push(<Route key={routePath} path={routePath} element={<PageComponent components={components}/>} />);
+  }
+
+  return routes;
+}
+
+const eduRoutes = await generateRoutes(eduPages);
 
 const App = () => (
   <Box color={structsTheme.palette.text.primary}>
@@ -26,6 +51,12 @@ const App = () => (
 
           {/* Development mode */}
           <Route path="/dev" element={<DevelopmentMode />} />
+
+          {/* Learning mode */}
+          <Route path="/learning" element={<LearningMode />} />
+
+          {/* Education MDX pages */}
+          {eduRoutes}
 
           {/* 404 page */}
           <Route path="*" element={<Page404 />} />

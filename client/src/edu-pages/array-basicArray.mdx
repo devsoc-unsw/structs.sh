@@ -1,0 +1,43 @@
+import CodeBlock from '../components/CodeBlock';
+
+# Arrays🐶
+
+## What is an Array? 📚
+
+An **array** is a collection of elements of the same data type that are stored in contiguous memory locations. 
+Each element in the array is identified by its index, which is an integer value starting from zero.
+It is one of the most popular and simple data structures and is often used to implement other data strucutres.
+
+## Basic terminologies of array 🔧
+- **Array Index**: the numeric value that represents the position or location of an element within an array.
+- **Array Element**: the individual value or data item stored within an array.
+- **Array Length**: the number of elements contained within an array.
+
+## Types of arrays: 😉
+- **One-dimensional array (1-D array)**: elements in the array are organized in a single row or line.
+- **Two-dimensional array (2-D array)**: 
+- **Multi-dimensional array**:
+
+## Advantages of using arrays 🎉
+- **Organized Data**: Arrays provide a structured way to organize and store multiple values of the same data type.
+- **Random Access**: Arrays enable direct access to individual elements using their indices.
+- **Efficiency**: Arrays provide constant-time access to elements based on their indices.
+- **Iteration**: Arrays can be easily traversed using loops, allowing you to iterate over the elements sequentially. 
+- **Memory Efficiency**: Arrays have a fixed memory footprint, making them memory-efficient.
+- **Simplicity**: Arrays have a straightforward and intuitive syntax, making them easy to understand and implement.
+
+## Implementation of basic array in C ✍️
+
+<CodeBlock>
+  {`#include <stdio.h>
+
+int main() {
+   int arr[5] = {1, 2, 3, 4, 5};
+   printf("%d", arr[2]); // Output: 3
+   return 0;
+}`}
+</CodeBlock>
+
+## Code explaination 😎
+- `int arr[5] = {1, 2, 3, 4, 5};`: This line declares and initializes an integer array named `arr` within a length of 5. It is initialized with the values 1, 2, 3, 4, and 5.
+- `printf("%d", arr[2]);`: This line uses the `printf()` function to print the value at index 2 of the `arr` array. In C, arrays are zero-based, so the index 2 refers to the third element of the array. Therefore, it will print the value 3.
