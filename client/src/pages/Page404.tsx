@@ -2,7 +2,7 @@ import { Container, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import TopNavbar from 'components/Navbars/TopNavbar';
 import { motion } from 'framer-motion';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import './Page404.scss';
 

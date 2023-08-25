@@ -1,5 +1,4 @@
-import React, { useCallback, useMemo, useEffect, useRef, useState } from 'react';
-import { Box } from '@mui/material';
+import { FC, useCallback, useMemo, useEffect, useRef, useState } from 'react';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import VisualiserController from 'visualiser-src/controller/VisualiserController';
 import VisualiserContext from './VisualiserContext';
@@ -22,7 +21,7 @@ interface VisualiserInterfaceProps {
  *     them off to the controller components (basically the play/pause buttons,
  *     sliders, etc.).
  */
-const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle }) => {
+const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle }) => {
   const topicTitleRef = useRef<string>();
   const controllerRef = useRef<VisualiserController>();
   const [isTimelineComplete, setIsTimelineComplete] = useState<boolean>(false);

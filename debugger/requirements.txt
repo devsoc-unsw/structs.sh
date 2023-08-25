@@ -1,8 +1,8 @@
 bidict==0.22.1
-dnspython==2.3.0
+dnspython==2.4.2
 eventlet==0.33.3
 greenlet==2.0.2
-python-engineio==4.4.1
+python-engineio==4.6.0
 python-socketio==5.8.0
 six==1.16.0
 pygdbmi==0.11.0.0
