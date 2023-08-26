@@ -4,6 +4,26 @@
 
 Run `make` or `make all`.
 
+For manual compilation:
+
+```bash
+$ gcc -ggdb program.c -o program
+```
+
+## Debugging
+
+To debug with gdb:
+
+```bash
+$ gdb <program_name> 
+```
+
+For example, if your program binary file is named `program`:
+
+```bash
+$ gdb program
+```
+
 ## Removing binaries and object files
 
 Run `make clean`.
