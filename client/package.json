@@ -22,6 +22,8 @@
     "@radix-ui/react-tabs": "^1.0.4",
     "@svgdotjs/svg.js": "^3.1.2",
     "@types/react-helmet": "^6.1.5",
+    "@uiw/codemirror-theme-basic": "^4.21.11",
+    "@uiw/react-codemirror": "^4.21.11",
     "classnames": "^2.3.2",
     "d3": "^7.8.5",
     "framer-motion": "^10.15.0",
