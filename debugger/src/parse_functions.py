@@ -44,10 +44,17 @@ from pprint import pprint
 import re
 import subprocess
 import sys
+import gdb
 from pycparser import parse_file, c_ast
+import socketio
 
 # Relative path to the test C file with function prototypes
 FN_PROTOTYPES_TEST_FILE = "samples/fn_prototypes.c"
+
+# File to write the user-defined function prototypes extracted from gdb
+USER_FN_PROTOTYPES_FILE_PATH = "user_fn_prototypes.c"
+
+# File to write the preprocessed C code to, before parsing with pycparser
 FN_PROTOTYPES_PREPROCESSED = "fn_prototypes_preprocessed"
 
 """
@@ -73,9 +80,215 @@ functions = {
 }
 """
 
+# sys.path.extend(['.', '..'])
+
+
+"""
+Output of the gdb command `info types` looks something like this:
+
+```
+All defined types:
+
+File /usr/lib/gcc/aarch64-linux-gnu/11/include/stddef.h:
+209:	typedef unsigned long size_t;
+
+File linkedlist/linkedlist.c:
+	char
+	int
+	long
+	long long
+	unsigned long long
+	unsigned long
+	short
+	unsigned short
+	signed char
+	unsigned char
+	unsigned int
+
+File linkedlist/linkedlist.h:
+17:	typedef struct list List;
+14:	struct list;
+9:	struct node;
+
+File linkedlist/main1.c:
+	char
+	int
+	long
+	long long
+	unsigned long long
+	unsigned long
+	short
+	unsigned short
+	signed char
+	unsigned char
+	unsigned int
+```
+
+We need to extract the user-defined types and typedefs as well as other std types and typedefs.
+They serve two purposes:
+1. Allow user to annotate their types on the frontend to inform the visual debugger
+    what types to treat as specific data structures e.g. linked list nodes.
+2. Allow the parser to parse function declarations that use the user-defined types.
+    E.g. `List * insert(List *head, struct node *new_node);`
+
+"""
+
+
+def pycparser_parse_type_decls():
+    '''
+    Using pycparser to parse type declarations by constructing AST.
+    TODO
+    '''
+    types = []
+    return types
+
+
+def pycparser_parse_fn_decls(socket_id: str = None):
+    '''
+    Using pycparser to parse function declarations by constructing AST.
+    TODO: Use visitor pattern to traverse AST and extract function declaration info.
+    '''
+
+    # typedef and struct declarations need to be declared in the files of the
+    # user-defined functions for pycparser to parse them correctly.
+    type_decl_strs = get_type_decl_strs()
+
+    fns_str: str = gdb.execute("info functions -n", False, True)
+
+    # Parse the functions string
+    fns_str_lines = re.split("\n", fns_str.strip())
+    print(fns_str_lines)
+
+    functions: dict[str, list[dict]] = {}
+
+    current_file = None
+    for line in fns_str_lines:
+
+        print(line)
+
+        if m := re.fullmatch(r'^File.*:$', line):
+            print("^^^ Matched file name")
+            # Set new file name and reset text
+            current_file = line.split(" ")[1][:-1]
+        elif m := re.fullmatch(r'^(\d+):\t(.*;)$', line):
+            print("^^^ Matched function declaration")
+            line_num = int(m.group(1))
+            fn_decl_str = m.group(2)
+
+            fn_decl_str = re.sub(r',', r' a,', fn_decl_str)
+            fn_decl_str = re.sub(r'\)', r' a)', fn_decl_str)
+
+            print(f"transformed fn decl: {fn_decl_str}")
+
+            # Write a single user-defined function declaration to the file USER_FN_PROTOTYPES_FILE_PATH
+            # then preprocess the C code to remove comments (redundant)
+            subprocess.run("echo -e " + "\n".join(type_decl_strs) + "\n" + fn_decl_str + "\n" + f"> {USER_FN_PROTOTYPES_FILE_PATH} ; gcc -E {USER_FN_PROTOTYPES_FILE_PATH} > {FN_PROTOTYPES_PREPROCESSED}; cat {FN_PROTOTYPES_PREPROCESSED}",
+                           shell=True)
+
+            """
+            The resulting USER_FN_PROTOTYPES_FILE_PATH file looks something like this:
+            ```
+            typedef struct list List;
+            struct list;
+
+            void append(List * a, int a);
+            ```
+            """
+
+            # Parse the preprocessed C code into an AST
+            # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
+            ast = parse_file(FN_PROTOTYPES_PREPROCESSED, use_cpp=True,
+                             cpp_args=r'-Iutils/fake_libc_include')
+
+            # Traverse each node in top level of AST and extract function declarations
+            for node in ast.ext:
+                if not (isinstance(node, c_ast.Decl) and isinstance(node.type, c_ast.FuncDecl)):
+                    continue
+
+                print(f'\n=== Parsing function declaration {node.name}')
+                function = {}
+                function['file'] = current_file
+                function['line_num'] = line_num
+                func_name = node.name
+                function["name"] = func_name
+                # print(f"Function Name: {func_name}")
+
+                return_type_ast = node.type.type
+                return_type = None
+                if isinstance(return_type_ast, c_ast.PtrDecl):
+                    if isinstance(return_type_ast.type, c_ast.Struct):
+                        return_type = "struct " + \
+                            return_type_ast.type.type.name + " *"
+                    elif isinstance(return_type_ast.type, c_ast.TypeDecl):
+                        if isinstance(return_type_ast.type.type, c_ast.Struct):
+                            return_type = "struct " + \
+                                return_type_ast.type.type.name + " *"
+                        else:
+                            return_type = " ".join(
+                                return_type_ast.type.type.names) + " *"
+                    else:
+                        return_type = " ".join(
+                            return_type_ast.type.type.names) + " *"
+                elif isinstance(return_type_ast, c_ast.TypeDecl):
+                    if isinstance(return_type_ast.type, c_ast.Struct):
+                        return_type = "struct " + \
+                            return_type_ast.type.name
+                    else:
+                        return_type = " ".join(return_type_ast.type.names)
+                else:
+                    raise Exception("Unknown return type")
+                function["return_type"] = return_type
+
+                function['params'] = []
+                for param_ast in node.type.args.params if node.type.args else []:
+                    param_name = param_ast.name
+                    param_type = None
+                    if isinstance(param_ast.type, c_ast.PtrDecl):
+                        if isinstance(param_ast.type.type.type, c_ast.Struct):
+                            param_type = "struct "+param_ast.type.type.type.name + " *"
+                        else:
+                            param_type = " ".join(
+                                param_ast.type.type.type.names) + " *"
+                    elif isinstance(param_ast.type, c_ast.TypeDecl):
+                        if isinstance(param_ast.type.type, c_ast.Struct):
+                            param_type = "struct "+param_ast.type.type.name
+                        else:
+                            param_type = " ".join(param_ast.type.type.names)
+                    elif isinstance(param_ast.type, c_ast.ArrayDecl):
+                        param_type = " ".join(
+                            param_ast.type.type.type.names) + f"[{param_ast.type.dim.value if param_ast.type.dim else ''}]"
+                    else:
+                        raise Exception("Unknown param type")
+                    function['params'].append({
+                        'type': param_type,
+                        'name': param_name
+                    })
+
+                pprint(function)
+                if socket_id is not None:
+                    io = socketio.Server(cors_allowed_origins='*')
+                    io.emit("mainDebug", f"{function}", room=socket_id)
+
+                functions[func_name] = function
+
+    return functions
+
+
+def get_type_decl_strs():
+    types_str = gdb.execute("info types", False, True)
+    types_str_lines = re.split("\n", types_str.strip())
+    types = []
+    for line in types_str_lines:
+        if m := re.fullmatch(r'^(\d+):\t(.*;)$', line):
+            # Valid type
+            types.append(m.group(2))
+
+    return types
+
 
 def manual_regex_parse_fn_decl():
     '''
+    DEPRECATED
     Writing a regex to parser function declarations.
     A bit hopeless. Should use a prewritten parser like pycparser.
     See below function.
@@ -141,91 +354,6 @@ def manual_regex_parse_fn_decl():
     return functions
 
 
-# sys.path.extend(['.', '..'])
-
-def pycparser_parse_fn_decl():
-    '''
-    Using pycparser to parse function declarations by constructing AST.
-    TODO: Use visitor pattern to traverse AST and extract function declaration info.
-    '''
-
-    # Preprocess the C code to remove comments
-    subprocess.run(f"gcc -E {FN_PROTOTYPES_TEST_FILE} > {FN_PROTOTYPES_PREPROCESSED}",
-                   shell=True)
-
-    functions = {}
-
-    # Parse the preprocessed C code into an AST
-    # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
-    ast = parse_file(FN_PROTOTYPES_PREPROCESSED, use_cpp=True,
-                     cpp_args=r'-Iutils/fake_libc_include')
-
-    # Traverse and analyze the AST
-    for node in ast.ext:
-        if isinstance(node, c_ast.Decl) and isinstance(node.type, c_ast.FuncDecl):
-            print(f'\n=== Parsing function declaration {node.name}')
-            function = {}
-            func_name = node.name
-            function["name"] = func_name
-            # print(f"Function Name: {func_name}")
-
-            return_type_ast = node.type.type
-            return_type = None
-            if isinstance(return_type_ast, c_ast.PtrDecl):
-                if isinstance(return_type_ast.type, c_ast.Struct):
-                    return_type = "struct " + \
-                        return_type_ast.type.type.name + " *"
-                elif isinstance(return_type_ast.type, c_ast.TypeDecl):
-                    if isinstance(return_type_ast.type.type, c_ast.Struct):
-                        return_type = "struct " + \
-                            return_type_ast.type.type.name + " *"
-                    else:
-                        return_type = " ".join(
-                            return_type_ast.type.type.names) + " *"
-                else:
-                    return_type = " ".join(
-                        return_type_ast.type.type.names) + " *"
-            elif isinstance(return_type_ast, c_ast.TypeDecl):
-                if isinstance(return_type_ast.type, c_ast.Struct):
-                    return_type = "struct " + \
-                        return_type_ast.type.name
-                else:
-                    return_type = " ".join(return_type_ast.type.names)
-            else:
-                raise Exception("Unknown return type")
-            function["return_type"] = return_type
-
-            function['params'] = []
-            for param_ast in node.type.args.params if node.type.args else []:
-                param_name = param_ast.name
-                param_type = None
-                if isinstance(param_ast.type, c_ast.PtrDecl):
-                    if isinstance(param_ast.type.type.type, c_ast.Struct):
-                        param_type = "struct "+param_ast.type.type.type.name + " *"
-                    else:
-                        param_type = " ".join(
-                            param_ast.type.type.type.names) + " *"
-                elif isinstance(param_ast.type, c_ast.TypeDecl):
-                    if isinstance(param_ast.type.type, c_ast.Struct):
-                        param_type = "struct "+param_ast.type.type.name
-                    else:
-                        param_type = " ".join(param_ast.type.type.names)
-                elif isinstance(param_ast.type, c_ast.ArrayDecl):
-                    param_type = " ".join(
-                        param_ast.type.type.type.names) + f"[{param_ast.type.dim.value if param_ast.type.dim else ''}]"
-                else:
-                    raise Exception("Unknown param type")
-                function['params'].append({
-                    'type': param_type,
-                    'name': param_name
-                })
-
-            pprint(function)
-
-            functions[func_name] = function
-
-    return functions
-
-
 if __name__ == '__main__':
-    pycparser_parse_fn_decl().values()
+    _ = pycparser_parse_fn_decls()
+    _ = pycparser_parse_type_decls()
