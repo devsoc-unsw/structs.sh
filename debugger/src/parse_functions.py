@@ -2,6 +2,15 @@
 Get user-defined functions in the target c files that make up
 the compiled binary being debugged.
 
+Usage:
+
+```bash
+$ cd debugger
+$ python3 src/parse_functions.py
+```
+
+MUST run this script from the debugger directory due to relative paths:
+
 This script needs to be run BEFORE starting the program
 in gdb, otherwise you get strange output from the
 'info functions -n' command.
@@ -33,10 +42,13 @@ remove comments before parsing with pycparser.
 """
 from pprint import pprint
 import re
+import subprocess
 import sys
 from pycparser import parse_file, c_ast
 
-FN_PROTOTYPES_TEST_FILE = "samples/fn_prototypes_nocomment.c"
+# Relative path to the test C file with function prototypes
+FN_PROTOTYPES_TEST_FILE = "samples/fn_prototypes.c"
+FN_PROTOTYPES_PREPROCESSED = "fn_prototypes_preprocessed"
 
 """
 The parsing functions below will return a map of user-defined
@@ -65,14 +77,13 @@ functions = {
 def manual_regex_parse_fn_decl():
     '''
     Writing a regex to parser function declarations.
-    A bit hopeless.
+    A bit hopeless. Should use a prewritten parser like pycparser.
+    See below function.
     '''
     # Regex to match function signature
-    # Example: TODO
     fn_signature_pattern = r'((?:[a-zA-Z_]\w*(?:\s*\*+\s*)*)+)\s+([a-zA-Z_]\w*)\s*\(([^)]*)\)'
 
     # Regex to match function parameters
-    # Example: TODO
     fn_params_pattern = r'((?:[a-zA-Z_]\w*(?:\s*\*+\s*)*)+)\s+([a-zA-Z_]\w*)'
 
     functions: dict[str, list[dict]] = {}
@@ -111,7 +122,7 @@ def manual_regex_parse_fn_decl():
                 print("Function Name:", function_name)
 
                 # Extract and print individual parameters
-                parameters = re.findall(param_pattern, parameters_text)
+                parameters = re.findall(fn_params_pattern, parameters_text)
                 print("Parameters:")
                 for param in parameters:
                     param_type = param[0]
@@ -138,19 +149,19 @@ def pycparser_parse_fn_decl():
     TODO: Use visitor pattern to traverse AST and extract function declaration info.
     '''
 
+    # Preprocess the C code to remove comments
+    subprocess.run(f"gcc -E {FN_PROTOTYPES_TEST_FILE} > {FN_PROTOTYPES_PREPROCESSED}",
+                   shell=True)
+
     functions = {}
 
-    # Parse the C code into an AST
-    ast = parse_file(FN_PROTOTYPES_TEST_FILE, use_cpp=True,
+    # Parse the preprocessed C code into an AST
+    # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
+    ast = parse_file(FN_PROTOTYPES_PREPROCESSED, use_cpp=True,
                      cpp_args=r'-Iutils/fake_libc_include')
 
-    # print(ast.ext)
-    # Now you can traverse and analyze the AST
-    # For example, you can print the function signatures
+    # Traverse and analyze the AST
     for node in ast.ext:
-        # if isinstance(node, c_ast.FuncDecl):
-        # if isinstance(node, Decl):
-        # print(node)
         if isinstance(node, c_ast.Decl) and isinstance(node.type, c_ast.FuncDecl):
             print(f'\n=== Parsing function declaration {node.name}')
             function = {}
