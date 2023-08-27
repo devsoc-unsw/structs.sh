@@ -50,10 +50,6 @@ const DevelopmentMode = () => {
     console.log('Disconnected!');
   }, []);
 
-  // const onSendDummyData = useCallback((data: any) => {
-  //   console.log(`Received message: ${data}`);
-  // }, []);
-
   useEffect(() => {
     const onConnect = () => {
       console.log('Connected!');
@@ -76,13 +72,13 @@ const DevelopmentMode = () => {
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
     socket.on('getBreakpoints', onGetBreakpoints);
-    // socket.on('sendDummyData', onSendDummyData);
+    socket.on('sendDummyData', onSendDummyData);
 
     return () => {
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
       socket.off('getBreakpoints', onGetBreakpoints);
-      // socket.off('sendDummyData', onSendDummyData);
+      socket.off('sendDummyData', onSendDummyData);
     };
   }, [onSendDummyData]);
 
