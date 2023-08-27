@@ -21,14 +21,14 @@ const DevelopmentMode = () => {
   });
 
   const [count, setCountState] = useState(100);
-  const onSendDummyData = useCallback((data: any) => {
+  const onSendDummyData = (data: any) => {
     const correctedJsonString = data.replace(/'/g, '"');
 
     const backendStateJson = JSON.parse(correctedJsonString as string);
 
     // Upddate will handled in this step, rn we use backendState
     setBackendState(backendStateJson);
-  }, []);
+  };
 
   useEffect(() => {
     const onConnect = () => {};
