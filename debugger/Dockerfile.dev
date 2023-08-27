@@ -39,4 +39,9 @@ COPY . .
 
 EXPOSE 8000
 
-CMD [ "nodemon", "--exec", "pyenv", "exec", "python3", "server.py"]
+# nodemon doesnt seem to work with docker image, maybe because 
+# when editing file on host, the file is not changed in the container.
+# CMD [ "nodemon", "--exec", "pyenv", "exec", "python3", "server.py"]
+
+# Please manually restart the container when editing files
+CMD [ "pyenv", "exec", "python3", "server.py"]
