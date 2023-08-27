@@ -1,18 +1,19 @@
 import {
-  BackendStructure,
+  Addr,
+  BackendState,
   EditorAnnotation,
-  GenericGraph,
+  BackendVariableConcrete,
+  CType,
   BackendUpdate,
+} from '../types/backendType';
+import {
+  GenericGraph,
   EdgeEntity,
   EntityConcrete,
   NodeEntity,
-  Addr,
-  CType,
-  BackendVariableConcrete,
   EntityType,
-} from '../types/graphState';
-import { NODE_MIN_DISTANCE } from '../types/uiState';
-import { assertUnreachable } from '../util/util';
+} from '../types/frontendType';
+import { assertUnreachable, cloneSimple } from '../util/util';
 import { Parser } from './parser';
 
 type LinkedListNode = {
@@ -21,11 +22,12 @@ type LinkedListNode = {
   next: Addr;
 };
 
+const LINKED_LIST_GAP = 200;
 export class LinkedListParser implements Parser {
   convertToRootedTree(
     linkedList: LinkedListNode[],
-    cacheLinkedListNode: Map<Addr, LinkedListNode>
-  ): LinkedListNode {
+    cacheLinkedListNode?: Map<Addr, LinkedListNode>
+  ): [LinkedListNode, Map<Addr, LinkedListNode[]>] {
     let root: LinkedListNode | null = null;
     const prevNodeMap: Map<Addr, LinkedListNode[]> = new Map();
     linkedList.forEach((node) => {
@@ -35,7 +37,12 @@ export class LinkedListParser implements Parser {
         }
         prevNodeMap.get(node.next)!.push(node);
       } else {
-        root = node; // The root node will be the one that has no next node
+        root = node;
+      }
+    });
+    linkedList.forEach((node) => {
+      if (node.next === '0x0') {
+        node.next = null;
       }
     });
 
@@ -47,8 +54,6 @@ export class LinkedListParser implements Parser {
     while (stack.length > 0) {
       const node = stack.pop()!;
       if (prevNodeMap.has(node.uid)) {
-        if (node.next === '0x0') node.next = null;
-
         const prevNodes = prevNodeMap.get(node.uid)!;
         prevNodes.forEach((prevNode) => {
           prevNode.next = node.uid; // Point the previous nodes to the current node
@@ -57,59 +62,123 @@ export class LinkedListParser implements Parser {
       }
     }
 
-    return root;
+    return [root, prevNodeMap];
+  }
+
+  // Recursion algorithm
+  assignPositionsRecursion(
+    currNode: LinkedListNode,
+    prevNodeMap: Map<Addr, LinkedListNode[]>,
+    cacheLinkedListNode: Map<Addr, LinkedListNode>,
+    posCache: Map<Addr, { x: number; y: number }>,
+    x: number,
+    yRange: [number, number]
+  ): {
+    x: number;
+    y: number;
+  } {
+    const prevNodes = prevNodeMap.get(currNode.uid);
+    // Base case: The currNode is the last node
+    if (!prevNodes) {
+      posCache.set(currNode.uid, {
+        x,
+        y: (yRange[0] + 100) / 2,
+      });
+      return posCache.get(currNode.uid);
+    }
+
+    // Recursive case
+    const yRangePerNode = (yRange[1] - yRange[0]) / prevNodes.length;
+    let currY = yRange[0];
+    const positions: {
+      x: number;
+      y: number;
+    }[] = [];
+    prevNodes.forEach((prevNode) => {
+      positions.push(
+        this.assignPositionsRecursion(
+          prevNode,
+          prevNodeMap,
+          cacheLinkedListNode,
+          posCache,
+          x - LINKED_LIST_GAP,
+          [currY, currY + yRangePerNode]
+        )
+      );
+      currY += yRangePerNode;
+    });
+
+    // Choose the middle y value
+    const y = positions.reduce((a, b) => a + b.y, 0) / positions.length;
+    posCache.set(currNode.uid, {
+      x,
+      y,
+    });
+    return posCache.get(currNode.uid);
   }
 
   // TODO: Rewrite
   assignPositions(
-    root: LinkedListNode,
-    cacheLinkedListNode: Map<Addr, LinkedListNode>
+    currNode: LinkedListNode,
+    prevNodeMap: Map<Addr, LinkedListNode[]>,
+    cacheLinkedListNode: Map<Addr, LinkedListNode>,
+    horizontalDepth: number
   ): Map<Addr, { x: number; y: number }> {
-    const positions: Map<Addr, { x: number; y: number }> = new Map();
-    const depthCount: Map<number, number> = new Map();
-    const maxDepth = this.findMaxDepth(cacheLinkedListNode);
-
-    const stack: { node: LinkedListNode; depth: number }[] = [{ node: root, depth: 0 }];
-    while (stack.length > 0) {
-      const { node, depth } = stack.pop()!;
-
-      if (!depthCount.has(depth)) {
-        depthCount.set(depth, 1);
-      }
-      const countAtDepth = depthCount.get(depth);
-      positions.set(node.uid, {
-        x: (maxDepth - depth) * NODE_MIN_DISTANCE,
-        y: countAtDepth! * NODE_MIN_DISTANCE,
-      });
-      depthCount.set(depth, countAtDepth! + 1);
-
-      const nextNode = cacheLinkedListNode.get(node.next!);
-      if (nextNode) {
-        stack.push({ node: nextNode, depth: depth + 1 });
-      }
-    }
-
-    return positions;
+    const posCache: Map<Addr, { x: number; y: number }> = new Map();
+    this.assignPositionsRecursion(
+      currNode,
+      prevNodeMap,
+      cacheLinkedListNode,
+      posCache,
+      horizontalDepth * LINKED_LIST_GAP,
+      [0, 600]
+    );
+    return posCache;
   }
 
-  findMaxDepth(cacheLinkedListNode: Map<Addr, LinkedListNode>): number {
-    const values = Object.values(cacheLinkedListNode).map((node) => {
-      let depth = 0;
-      let currentNode = node;
-      while (currentNode && currentNode.next) {
-        depth++;
-        currentNode = cacheLinkedListNode.get(currentNode.next)!;
-      }
-      return depth;
+  findMaxDepth(
+    cacheLinkedListNode: Map<Addr, LinkedListNode[]>,
+    linkedList: LinkedListNode[]
+  ): number {
+    // Reverase cache linkedList as we want trakck back
+    const cacheLinkedListNodeReverse: Map<Addr, LinkedListNode[]> = new Map();
+    cacheLinkedListNode.forEach((nodes) => {
+      nodes.forEach((node) => {
+        if (!cacheLinkedListNodeReverse.has(node.uid)) {
+          cacheLinkedListNodeReverse.set(node.uid, []);
+        }
+        cacheLinkedListNodeReverse.get(node.uid)!.push(node);
+      });
     });
-    if (values.length <= 1) return 1;
-    return values.reduce((a, b) => Math.max(a, b));
+
+    // Utility function for DFS traversal
+    function dfs(node: LinkedListNode | null, visited: Set<Addr>): number {
+      if (!node) return 0; // base case: end of linked list
+      if (visited.has(node.uid)) return 0; // loop detected, end traversal
+
+      visited.add(node.uid);
+
+      const nextNodes = cacheLinkedListNodeReverse.get(node.next);
+      if (!nextNodes) return 1;
+
+      let maxDepth = 0;
+      nextNodes.forEach((nextNode: LinkedListNode) => {
+        maxDepth = Math.max(maxDepth, dfs(nextNode, new Set(visited)));
+      });
+      return 1 + maxDepth;
+    }
+
+    let maximumDepth = 0;
+    linkedList.forEach((node) => {
+      maximumDepth = Math.max(maximumDepth, dfs(node, new Set()));
+    });
+    return maximumDepth + 1;
   }
 
   /**
    * Parser functionality
    */
-  parseInitialState(backendStructure: BackendStructure, editorAnnotation: EditorAnnotation) {
+  parseInitialState(backendStructure: BackendState, editorAnnotation?: EditorAnnotation) {
     const nodes: NodeEntity[] = [];
     const edges: EdgeEntity[] = [];
     const cacheEntity: { [uid: string]: EntityConcrete } = {};
@@ -130,11 +199,13 @@ export class LinkedListParser implements Parser {
             break;
           }
           case CType.SINGLE_LINED_LIST_NODE: {
-            linkedList.push({
-              uid: uid as Addr,
-              data: entity.data.data,
-              next: entity.data.next,
-            });
+            linkedList.push(
+              cloneSimple({
+                uid: uid as Addr,
+                data: entity.data.value,
+                next: entity.data.next,
+              })
+            );
             break;
           }
           case CType.INT:
@@ -149,21 +220,22 @@ export class LinkedListParser implements Parser {
         }
       }
     });
-
     const cacheLinkedListNode: Map<Addr, LinkedListNode> = new Map();
     linkedList.forEach((node) => {
       cacheLinkedListNode.set(node.uid, node);
     });
 
     try {
-      const rootedTree = this.convertToRootedTree(linkedList, cacheLinkedListNode);
-      const positions = this.assignPositions(rootedTree, cacheLinkedListNode);
+      const [rootedTree, prevNodeMap] = this.convertToRootedTree(linkedList, cacheLinkedListNode);
+      const maxDepth = this.findMaxDepth(prevNodeMap, linkedList);
+      const positions = this.assignPositions(
+        rootedTree,
+        prevNodeMap,
+        cacheLinkedListNode,
+        maxDepth
+      );
 
       cacheLinkedListNode.forEach((node, uid) => {
-        if (!positions.has(uid)) {
-          console.log(`Invalid position for node ${uid}`, positions);
-          return;
-        }
         // Create NodeEntity from LinkedListNode
         const nodeEntity: NodeEntity = {
           uid,
@@ -205,14 +277,13 @@ export class LinkedListParser implements Parser {
         cacheEntity,
       };
     } catch (e) {
-      console.error(e);
       return undefined;
     }
   }
 
   updateState(
     frontendStructure: GenericGraph,
-    backendStructure: BackendStructure,
+    backendStructure: BackendState,
     backendUpdate: BackendUpdate,
     editorAnnotation: EditorAnnotation
   ) {

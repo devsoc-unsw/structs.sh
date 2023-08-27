@@ -27,18 +27,22 @@
     "classnames": "^2.3.2",
     "d3": "^7.8.5",
     "framer-motion": "^10.15.0",
+    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
     "react-intersection-observer": "^9.4.1",
     "react-json-view": "^1.21.3",
     "react-router-dom": "^6.14.2",
+    "resize-observer-polyfill": "^1.5.1",
     "sass": "^1.56.1",
     "socket.io-client": "^4.6.1",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "zustand": "^4.4.1"
   },
   "devDependencies": {
     "@types/d3": "^7.4.0",
+    "@types/lodash": "^4.14.197",
     "@types/node": "^18.11.9",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.9",

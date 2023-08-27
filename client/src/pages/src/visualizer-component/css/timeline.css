@@ -1,0 +1,16 @@
+.timeline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.state-button {
+  flex: 1 1 33%;
+  height: 75px; 
+  padding: 10px 40px;
+  margin: 0 15px;
+  box-sizing: border-box;
+  text-align: center;
+
+  background-color: black;
+}

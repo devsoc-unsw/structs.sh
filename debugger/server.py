@@ -7,8 +7,18 @@ from typing import Any
 import subprocess
 import json
 
+<<<<<<< HEAD:debugger/server.py
 # Hard-coded variables for now.
 # Later we want to receive the line numbers and file names from the client
+=======
+# Later we want to receive the variable name, line number and file_name from the client
+variable_name = "list2"
+line_number = "126"
+file_name = "program"
+
+# Construct the GDB script
+gdb_script = f"""
+>>>>>>> dev:debugger/src/server.py
 
 # Line numbers that the user wants to set breakpoints on.
 LINE_NUMBERS = ["28"]
@@ -61,7 +71,7 @@ python print(newHeapDict)
     return gdb_script
 
 
-io = socketio.Server(cors_allowed_origins='*')
+io = socketio.Server(cors_allowed_origins="*")
 app = socketio.WSGIApp(io)
 
 
@@ -81,16 +91,26 @@ def getBreakpoints(socket_id: str, line_numbers: list[int], listName: list[str])
     print("Echoing message back to client...")
 
     # Compile C program
+<<<<<<< HEAD:debugger/server.py
     compile_program(FILE_NAMES)
+=======
+    compile_program("program.c")
+>>>>>>> dev:debugger/src/server.py
 
     # Run GDB with the script
     gdb_script = create_ll_script_2(PROGRAM_NAME)
 
+<<<<<<< HEAD:debugger/server.py
     command = f"echo '{gdb_script}' | gdb -q"
     output = subprocess.check_output(command, shell=True).decode("utf-8")
 
     print(output)
 
+=======
+    command = f'echo "{script}" | gdb -q'
+    output = subprocess.check_output(command, shell=True).decode("utf-8")
+
+>>>>>>> dev:debugger/src/server.py
     # Find the JSON data in the GDB output
     json_start = output.find("{")
     json_end = output.rfind("}") + 1
@@ -102,7 +122,11 @@ def getBreakpoints(socket_id: str, line_numbers: list[int], listName: list[str])
     nodes2 = f"{nodes}"
 
     # Send linked list nodes back to the client
+<<<<<<< HEAD:debugger/server.py
     io.emit("getBreakpoints", nodes2, room=socket_id)
+=======
+    io.emit("getBreakpoints", nodes2 + "\n\n" + line, room=socket_id)
+>>>>>>> dev:debugger/src/server.py
 
 
 @io.event
@@ -119,12 +143,13 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
     # Our initial linked list node has been alloced with data value 27
     if line_number == "100":
         heap_dict = {
-            '0x1': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '27',
-                    'next': '0x0'
+            "0x1": {
+                "addr": "0x1",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "27",
+                    "next": "0x0"
                 }
             }
         }
@@ -132,20 +157,22 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
     # Append the value 34 to the end of the list
     elif line_number == "101":
         heap_dict = {
-            '0x1': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '27',
-                    'next': '0x2'
+            "0x1": {
+                "addr": "0x1",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "27",
+                    "next": "0x2"
                 }
             },
-            '0x2': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '34',
-                    'next': '0x0'
+            "0x2": {
+                "addr": "0x2",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "34",
+                    "next": "0x0"
                 }
             }
         }
@@ -153,28 +180,31 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
     # Append the value 56 to the end of the list
     elif line_number == "102":
         heap_dict = {
-            '0x1': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '27',
-                    'next': '0x2'
+            "0x1": {
+                "addr": "0x1",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "27",
+                    "next": "0x2"
                 }
             },
-            '0x2': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '34',
-                    'next': '0x3'
+            "0x2": {
+                "addr": "0x2",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "34",
+                    "next": "0x3"
                 }
             },
-            '0x3': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '56',
-                    'next': '0x0'
+            "0x3": {
+                "addr": "0x3",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "56",
+                    "next": "0x0"
                 }
             }
         }
@@ -182,14 +212,16 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
     # Remove the second element from the linked list (i.e. remove 34)
     elif line_number == "103":
         heap_dict = {
-            '0x1': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '27',
-                    'next': '0x3'
+            "0x1": {
+                "addr": "0x1",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "27",
+                    "next": "0x3"
                 }
             },
+<<<<<<< HEAD:debugger/server.py
             '0x3': {
                 'type': 'struct node',
                 'is_pointer': 'false',
@@ -226,6 +258,54 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
                 'data': {
                     'value': '72',
                     'next': '0x1'
+=======
+            "0x3": {
+                "addr": "0x3",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "56",
+                    "next": "0x0"
+>>>>>>> dev:debugger/src/server.py
+                }
+            }
+        }
+
+<<<<<<< HEAD:debugger/server.py
+    # Append the value 21 to the second element of the linked list
+    # (will be placed AFTER the second element i.e. the third element)
+    elif line_number == "105":
+=======
+    # Append the value 72 to the start of the list (order of list nodes in heap_dict shouldn"t
+    # matter as long as the next pointers are in the correct order)
+    elif line_number == "104":
+>>>>>>> dev:debugger/src/server.py
+        heap_dict = {
+            "0x1": {
+                "addr": "0x1",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "27",
+                    "next": "0x3"
+                }
+            },
+            "0x3": {
+                "addr": "0x3",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "56",
+                    "next": "0x0"
+                }
+            },
+            "0x4": {
+                "addr": "0x4",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "72",
+                    "next": "0x1"
                 }
             }
         }
@@ -234,41 +314,145 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
     # (will be placed AFTER the second element i.e. the third element)
     elif line_number == "105":
         heap_dict = {
-            '0x1': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '27',
-                    'next': '0x5'
+            "0x1": {
+                "addr": "0x1",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "27",
+                    "next": "0x5"
                 }
             },
-            '0x3': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '56',
-                    'next': '0x0'
+            "0x3": {
+                "addr": "0x3",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "56",
+                    "next": "0x0"
                 }
             },
-            '0x4': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '72',
-                    'next': '0x1'
+            "0x4": {
+                "addr": "0x4",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "72",
+                    "next": "0x1"
                 }
             },
-            '0x5': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '21',
-                    'next': '0x3'
+            "0x5": {
+                "addr": "0x5",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "21",
+                    "next": "0x3"
                 }
             }
         }
+    elif line_number == "106":
+        heap_dict = {
+            "0x1": {
+                "addr": "0x1",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "27",
+                    "next": "0x5"
+                }
+            },
+            "0x4": {
+                "addr": "0x4",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "72",
+                    "next": "0x1"
+                }
+            },
+            "0x5": {
+                "addr": "0x5",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "21",
+                    "next": "0x0"
+                }
+            }
+        }
+    elif line_number == "107":
+        heap_dict = {
+            "0x1": {
+                "addr": "0x1",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "27",
+                    "next": "0x5"
+                }
+            },
+            "0x4": {
+                "addr": "0x4",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "72",
+                    "next": "0x1"
+                }
+            },
+            "0x5": {
+                "addr": "0x5",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "21",
+                    "next": "0x6"
+                }
+            },
+            "0x6": {
+                "addr": "0x6",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "45",
+                    "next": "0x0"
+                }
+            }
+        }
+    elif line_number == "108":
+        heap_dict = {
+            "0x1": {
+                "addr": "0x1",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "27",
+                    "next": "0x5"
+                }
+            },
+            "0x5": {
+                "addr": "0x5",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "21",
+                    "next": "0x6"
+                }
+            },
+            "0x6": {
+                "addr": "0x6",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "45",
+                    "next": "0x0"
+                }
+            }
+        }
+
     else:
-        heap_dict = 'LINE NOT FOUND'
+        heap_dict = "LINE NOT FOUND"
 
     retVal = f"{heap_dict}"
     io.emit("sendDummyData", retVal, room=socket_id)
