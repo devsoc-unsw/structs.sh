@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "lodash": "^4.17.21",
-    "resize-observer-polyfill": "^1.5.1"
-  }
-}
