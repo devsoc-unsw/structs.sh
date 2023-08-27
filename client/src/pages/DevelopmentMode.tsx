@@ -1,69 +1,51 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { socket } from 'utils/socket';
 import styles from 'styles/DevelopmentMode.module.css';
 import globalStyles from 'styles/global.module.css';
 import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
 import VisualizerMain from './src/VisualizerMain';
+import { BackendState, CType } from './src/visualizer-component/types/backendType';
 
 const DevelopmentMode = () => {
-  const onGetBreakpoints = useCallback((data: any) => {
-    console.log(`Received message!!: ${data}`);
-  }, []);
+  const [backendState, setBackendState] = useState<BackendState>({
+    '0x1': {
+      addr: '0x1',
+      type: CType.SINGLE_LINED_LIST_NODE,
+      is_pointer: false,
+      data: {
+        value: '27',
+        next: '0x0',
+      },
+    },
+  });
+
+  const [count, setCountState] = useState(100);
+  const onSendDummyData = (data: any) => {
+    const correctedJsonString = data.replace(/'/g, '"');
+
+    const backendStateJson = JSON.parse(correctedJsonString as string);
+
+    // Upddate will handled in this step, rn we use backendState
+    setBackendState(backendStateJson);
+  };
 
   useEffect(() => {
-    const onConnect = () => {
-      console.log('Connected!');
-      console.log('Emitting message to server...');
-      socket.emit('echo', 'example');
-      //      socket.emit("getBreakpoints", "121", "list2")
-      //      socket.emit("getBreakpoints", "122", "list2")
-      //      socket.emit("getBreakpoints", "123", "list2")
-      //      socket.emit("getBreakpoints", "124", "list2")
-      //      socket.emit("getBreakpoints", "125", "list2")
-      //      socket.emit("getBreakpoints", "126", "list2")
-
-      socket.emit('sendDummyData', '100');
-      socket.emit('sendDummyData', '101');
-      socket.emit('sendDummyData', '102');
-      socket.emit('sendDummyData', '103');
-      socket.emit('sendDummyData', '104');
-      socket.emit('sendDummyData', '105');
-    };
-
-    const onDisconnect = () => {
-      console.log('Disconnected!');
-    };
-
-    const onEcho = (data: any) => {
-      console.log(`Received message: ${data}`);
-    };
-
-    // const onGetBreakpoints = (data: any) => {
-    //   console.log(`Received message: ${data}`);
-    // };
-
-    const onSendDummyData = (data: any) => {
-      console.log(`Received message: ${data}`);
-    };
+    const onConnect = () => {};
 
     socket.on('connect', onConnect);
-    socket.on('disconnect', onDisconnect);
-    socket.on('echo', onEcho);
-    socket.on('getBreakpoints', onGetBreakpoints);
     socket.on('sendDummyData', onSendDummyData);
 
     return () => {
       socket.off('connect', onConnect);
-      socket.off('disconnect', onDisconnect);
-      socket.off('echo', onEcho);
-      socket.off('getBreakpoints', onGetBreakpoints);
       socket.off('sendDummyData', onSendDummyData);
     };
-  }, [onGetBreakpoints]);
+  }, [onSendDummyData]);
 
-  return (
+  const DEBUG_MODE = true;
+  return !DEBUG_MODE ? (
     <div className={classNames(globalStyles.root, styles.dark)}>
+      Parser
       <div className={styles.layout}>
         <div className={classNames(styles.pane, styles.nav)}>Nav bar</div>
         <div className={classNames(styles.pane, styles.files)}>File tree</div>
@@ -82,11 +64,25 @@ const DevelopmentMode = () => {
           </Tabs>
         </div>
         <div className={classNames(styles.pane, styles.visualiser)}>
-          <VisualizerMain onGetBreakPoint={onGetBreakpoints} />
+          <VisualizerMain
+            backendState={backendState}
+            getNextState={() => {
+              socket.emit('sendDummyData', count.toString());
+              setCountState(count + 1);
+            }}
+          />
         </div>
         <div className={classNames(styles.pane, styles.timeline)}>Timeline</div>
       </div>
     </div>
+  ) : (
+    <VisualizerMain
+      backendState={backendState}
+      getNextState={() => {
+        socket.emit('sendDummyData', count.toString());
+        setCountState(count + 1);
+      }}
+    />
   );
 };
 
