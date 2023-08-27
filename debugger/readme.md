@@ -27,6 +27,11 @@ run the following command in your shell after starting the docker image:
 $ docker exec -it structssh-debugger-1 bash
 ```
 
+The `structssh-debugger-1` above refers to the image name, which you can see by running the command:
+
+```bash
+$ docker images
+```
 
 ## Resources
 
