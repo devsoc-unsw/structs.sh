@@ -96,7 +96,12 @@ export interface BackendVariableBasePointer extends BackendVariableBase {
 export type BackendVariableConcrete = BackendVariablePointer | BackendVariableNonPointerConcrete;
 
 export interface BackendState {
-  [address: Addr]: BackendVariableConcrete;
+  data: {
+    [address: Addr]: BackendVariableConcrete;
+  };
+  type: {
+    [name: string]: CStruct;
+  };
 }
 
 export interface BackendUpdate {
@@ -125,4 +130,24 @@ export type LinkedListType = {
 
 export interface EditorAnnotation {
   [name: string]: LinkedListType;
+}
+
+export interface CStruct {
+  name: string;
+  fields : {
+    [propertyName: string]: string;
+  }
+}
+
+
+export interface Annotation {
+  cStructName: string;
+  type: CType | null;
+  mapping: {
+    [propertyName: string]: string;
+  }
+}
+
+export interface Annotations {
+  [name: string]: Annotation;
 }

@@ -6,7 +6,8 @@ import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
 import { Socket } from 'socket.io-client';
 import VisualizerMain from './src/VisualizerMain';
-import { BackendState, CType } from './src/visualizer-component/types/backendType';
+import { Annotation, Annotations, BackendState, CType } from './src/visualizer-component/types/backendType';
+import AnnotatorMain from './src/AnnotatorMain';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -21,14 +22,32 @@ const DevelopmentMode = () => {
     }
   }, []);
   const [backendState, setBackendState] = useState<BackendState>({
-    '0x1': {
-      addr: '0x1',
-      type: CType.SINGLE_LINED_LIST_NODE,
-      is_pointer: false,
-      data: {
-        value: '27',
-        next: '0x0',
+    data: {
+      '0x1': {
+        addr: '0x1',
+        type: CType.SINGLE_LINED_LIST_NODE,
+        is_pointer: false,
+        data: {
+          value: '27',
+          next: '0x0',
+        },
       },
+    },
+    type: {
+      'struct node': {
+        name: 'struct node',
+        fields: {
+          'data': 'int',
+          'next': 'struct node*',
+        }
+      },
+      'struct boo': {
+        name: 'struct boo',
+        fields: {
+          'data': 'int',
+          'next_element': 'struct boo*',
+        }
+      }   
     },
   });
 
@@ -82,6 +101,8 @@ const DevelopmentMode = () => {
     };
   }, [onSendDummyData]);
 
+  let [annotation, setAnnotations] = useState<Annotations>({});
+
   const DEBUG_MODE = true;
   return !DEBUG_MODE ? (
     <div className={classNames(globalStyles.root, styles.dark)}>
@@ -116,11 +137,10 @@ const DevelopmentMode = () => {
       </div>
     </div>
   ) : (
-    <VisualizerMain
+    <AnnotatorMain
       backendState={backendState}
-      getNextState={() => {
-        socket.emit('sendDummyData', count.toString());
-        setCountState(count + 1);
+      setAnnotations={(annotations) => {
+        setAnnotations(annotations);
       }}
     />
   );

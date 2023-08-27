@@ -185,7 +185,7 @@ export class LinkedListParser implements Parser {
 
     // Later need to add an additional step to parse user defined struct into generic struct
     const linkedList: LinkedListNode[] = [];
-    Object.keys(backendStructure).forEach((uid) => {
+    Object.keys(backendStructure.data).forEach((uid) => {
       const entity = backendStructure[uid] as BackendVariableConcrete;
 
       if (entity.is_pointer === true) {
