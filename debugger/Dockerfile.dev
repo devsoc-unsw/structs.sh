@@ -47,4 +47,4 @@ EXPOSE 8000
 # CMD [ "nodemon", "--exec", "pyenv", "exec", "python3", "server.py"]
 
 # Please manually restart the container when editing files
-CMD [ "pyenv", "exec", "python3", "server.py"]
+CMD [ "pyenv", "exec", "python3", "-u", "server.py"]
