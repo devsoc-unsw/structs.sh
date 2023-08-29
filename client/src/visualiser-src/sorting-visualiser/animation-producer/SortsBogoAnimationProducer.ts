@@ -15,6 +15,19 @@ export default class SortsSelectionAnimationProducer extends SortsAnimationProdu
         this.renderCode(bogoCodeSnippet);
     }
 
+    public bogoSwap(
+        from: GraphicalSortsElement,
+        fromIndex: number,
+        to: GraphicalSortsElement,
+        toIndex: number,
+    ) {
+        this.swap(from, fromIndex, to, toIndex);
+
+        this.addSequenceAnimation(
+            from.boxTarget.animate(1).attr({ stroke: '#39AF8E', fill: '#39AF8E' })
+        );
+        this.addSequenceAnimation(from.numberTarget.animate(1).attr({ fill: '#39AF8E' }));
+    }
     // public check(currItem: GraphicalSortsElement) {
     //     this.addSequenceAnimation(currItem.boxTarget.animate(1).attr({ stroke: comparingColor }));
     //     this.addSequenceAnimation(currItem.boxTarget.animate(1).attr({ fill: comparingColor }));
