@@ -40,12 +40,17 @@ Not: pycparser does not support C comments and will fail if there are
 comments in the C code. Pass the C code through a preprocessor to
 remove comments before parsing with pycparser.
 """
+import socket
+import urllib3
+from urllib3.connection import HTTPConnection
 from pprint import pprint
 import re
 import subprocess
 import sys
+import time
 import gdb
 from pycparser import parse_file, c_ast
+import requests
 import socketio
 
 # Relative path to the test C file with function prototypes
@@ -133,8 +138,70 @@ They serve two purposes:
 
 """
 
+# sio = socketio.Client()
+# sio.connect("http://localhost:8000")
 
-def pycparser_parse_type_decls():
+
+def useSocketIOConnection(func):
+    def wrapper(*args, **kwargs):
+        # Increase socket buffer size to reduce chance of connection failure
+        # due to insufficient buffer size.
+        # https://stackoverflow.com/a/67732984/17815949
+        HTTPConnection.default_socket_options = (
+            HTTPConnection.default_socket_options + [
+                (socket.SOL_SOCKET, socket.SO_SNDBUF, 1000000),  # 1MB in byte
+                (socket.SOL_SOCKET, socket.SO_RCVBUF, 1000000)
+            ])
+
+        # Disable verifying server-side SSL certificate
+        http_session = requests.Session()
+        http_session.verify = False
+        sio = socketio.Client(http_session=http_session)
+
+        # Try connect to server loop
+        NUM_RETRIES = 5
+        for i in range(NUM_RETRIES):
+            try:
+                sio.connect('http://localhost:8000', wait_timeout=100)
+                print(
+                    f"Parser client successfully established socket connection to server. Socket ID: {sio.sid}")
+                break
+            except Exception as ex:
+                print(ex)
+                print("Parser client failed to establish socket connection to server:",
+                      type(ex).__name__)
+                if i == NUM_RETRIES - 1:
+                    print("Exiting parser client...")
+                    sys.exit(1)
+                else:
+                    print("Retrying in 2 seconds...")
+                    time.sleep(2)
+
+        result = func(*args, **kwargs, sio=sio)
+
+        sio.disconnect()
+        return result
+
+    return wrapper
+
+
+# @sio.event
+# def connect():
+#     print("Parser socketio client connected")
+
+
+# @sio.event
+# def connect_error(data):
+#     print("Parser socketio client connection failed")
+
+
+# @sio.event
+# def disconnect():
+#     print("Parser socketio client disconnected")
+
+
+@useSocketIOConnection
+def pycparser_parse_type_decls(sio=None):
     '''
     Using pycparser to parse type declarations by constructing AST.
     TODO
@@ -143,7 +210,8 @@ def pycparser_parse_type_decls():
     return types
 
 
-def pycparser_parse_fn_decls(socket_id: str = None):
+@useSocketIOConnection
+def pycparser_parse_fn_decls(user_socket_id: str = None, sio=None):
     '''
     Using pycparser to parse function declarations by constructing AST.
     TODO: Use visitor pattern to traverse AST and extract function declaration info.
@@ -175,15 +243,17 @@ def pycparser_parse_fn_decls(socket_id: str = None):
             line_num = int(m.group(1))
             fn_decl_str = m.group(2)
 
-            fn_decl_str = re.sub(r',', r' a,', fn_decl_str)
-            fn_decl_str = re.sub(r'\)', r' a)', fn_decl_str)
-
-            print(f"transformed fn decl: {fn_decl_str}")
-
             # Write a single user-defined function declaration to the file USER_FN_PROTOTYPES_FILE_PATH
             # then preprocess the C code to remove comments (redundant)
-            subprocess.run("echo -e " + "\n".join(type_decl_strs) + "\n" + fn_decl_str + "\n" + f"> {USER_FN_PROTOTYPES_FILE_PATH} ; gcc -E {USER_FN_PROTOTYPES_FILE_PATH} > {FN_PROTOTYPES_PREPROCESSED}; cat {FN_PROTOTYPES_PREPROCESSED}",
+            with open(USER_FN_PROTOTYPES_FILE_PATH, "w") as f:
+                f.write("\n".join(type_decl_strs))
+                f.write("\n")
+                f.write(fn_decl_str)
+                f.write("\n")
+            subprocess.run(f"gcc -E {USER_FN_PROTOTYPES_FILE_PATH} > {FN_PROTOTYPES_PREPROCESSED}",
                            shell=True)
+            # subprocess.run("echo -e " + "\"" + "\n".join(type_decl_strs) + "\n" + fn_decl_str + "\n" + "\"" + f" > {USER_FN_PROTOTYPES_FILE_PATH} ; gcc -E {USER_FN_PROTOTYPES_FILE_PATH} > {FN_PROTOTYPES_PREPROCESSED}",
+            #                shell=True)
 
             """
             The resulting USER_FN_PROTOTYPES_FILE_PATH file looks something like this:
@@ -246,6 +316,18 @@ def pycparser_parse_fn_decls(socket_id: str = None):
                     if isinstance(param_ast.type, c_ast.PtrDecl):
                         if isinstance(param_ast.type.type.type, c_ast.Struct):
                             param_type = "struct "+param_ast.type.type.type.name + " *"
+                        elif isinstance(param_ast.type.type.type, c_ast.PtrDecl):
+                            if isinstance(param_ast.type.type.type.type, c_ast.Struct):
+                                param_type = "struct "+param_ast.type.type.type.type.name + " *"
+                            else:
+                                param_type = " ".join(
+                                    param_ast.type.type.type.type.names) + " *"
+                        elif isinstance(param_ast.type.type.type, c_ast.TypeDecl):
+                            if isinstance(param_ast.type.type.type.type, c_ast.Struct):
+                                param_type = "struct "+param_ast.type.type.type.type.name + " *"
+                            else:
+                                param_type = " ".join(
+                                    param_ast.type.type.type.type.names) + " *"
                         else:
                             param_type = " ".join(
                                 param_ast.type.type.type.names) + " *"
@@ -265,9 +347,10 @@ def pycparser_parse_fn_decls(socket_id: str = None):
                     })
 
                 pprint(function)
-                if socket_id is not None:
-                    io = socketio.Server(cors_allowed_origins='*')
-                    io.emit("mainDebug", f"{function}", room=socket_id)
+                if user_socket_id is not None:
+                    print("Parser parsed function declaration, sending to server...")
+                    sio.emit("createdFunctionDeclarations",
+                             (user_socket_id, function))
 
                 functions[func_name] = function
 
@@ -355,5 +438,6 @@ def manual_regex_parse_fn_decl():
 
 
 if __name__ == '__main__':
-    _ = pycparser_parse_fn_decls()
-    _ = pycparser_parse_type_decls()
+    # _ = pycparser_parse_fn_decls()
+    # _ = pycparser_parse_type_decls()
+    pass
