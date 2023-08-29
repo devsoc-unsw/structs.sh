@@ -597,68 +597,63 @@ export default class GraphicalSortList extends GraphicalDataStructure {
 
     producer.renderBogoCode();
 
-    while (!this.isSorted(producer)) {
-      this.shuffle(producer);
-    }
+    this.shuffle(producer)
+    console.log('1')
+    this.shuffle(producer)
+    console.log('1')
+    this.shuffle(producer)
+    console.log('1')
+    // producer.highlightCode(
+    //   2,
+    // );
+    // while (!this.isSorted(producer)) {
+    //   // producer.highlightCode(
+    //   //   3,
+    //   // );
+    //   this.shuffle(producer)
+    // }
     return producer;
   }
 
   public isSorted(producer: SortsBogoAnimationProducer) {
-    for (let i = 0; i < this.elementList.length - 1; i += 1) {
-      // NEED TO ADD ANIMATIONS HERE 
-      producer.doAnimationAndHighlight(
-        7,
-        producer.highlightItem,
+    for (let i = 0; i < this.elementList.length - 1; i++) {
+      producer.doAnimationAndHighlightTimestamp(
+        8,
+        false,
+        producer.bogoCompare,
         this.elementList[i],
-        comparingColor
+        this.elementList[i + 1]
       );
 
-      producer.doAnimationAndHighlight(
-        7,
-        producer.highlightItem,
-        this.elementList[i + 1],
-        comparingColor
-      );
-
-      // producer.doAnimationAndHighlightTimestamp(
-      //   5,
-      //   false,
-      //   producer.compare,
-      //   this.elementList[j - 1],
-      //   this.elementList[j],
-      //   j === len - i - 1
-      // );
-      // if (this.elementList[j].data.value < this.elementList[j - 1].data.value) {
-      //   producer.doAnimationAndHighlightTimestamp(
-      //     6,
-      //     false,
-      //     producer.bubbleSwap,
-      //     this.elementList[j - 1],
-      //     j - 1,
-      //     this.elementList[j],
-      //     j === len - i - 1,
-      //     j
-      //   );
-      //   [this.elementList[j], this.elementList[j - 1]] = [
-      //     this.elementList[j - 1],
-      //     this.elementList[j],
-      //   ];
-      //   numSwaps += 1;
-      // }
-
-      if (this.elementList[i] > this.elementList[i + 1]) {
+      if (this.elementList[i].data.value > this.elementList[i + 1].data.value) {
+        producer.doAnimationAndHighlightTimestamp(
+          9,
+          false,
+          producer.UnsortedCompare,
+          this.elementList[i],
+          this.elementList[i + 1],
+          i === this.elementList.length - 1
+        );
+        // console.log(this.elementList.map((element) => element.data.value));
         return false;
       }
     }
+    producer.doAnimationAndHighlight(12, producer.finishSequence, false);
     return true
   }
 
   public shuffle(producer: SortsBogoAnimationProducer) {
-    for (let i = 0; i < this.elementList.length; i += 1) {
+    for (let i = 0; i < this.elementList.length; i++) {
       const j = Math.floor(Math.random() * (this.elementList.length));
-      // NEED TO ADD ANIMATIONS HERE 
-      producer.doAnimationAndHighlight(
-        4,
+      console.log(i, j)
+      console.log(this.elementList.map((element) => element.data.value));
+      // producer.highlightCode(
+      //   15,
+      // );
+
+      producer.doAnimationAndHighlightTimestamp(
+        16,
+        true,
         producer.bogoSwap,
         this.elementList[i],
         i,
@@ -671,6 +666,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       ];
     }
   }
+
   public get documentation(): Documentation {
     return GraphicalSortList.documentation;
   }

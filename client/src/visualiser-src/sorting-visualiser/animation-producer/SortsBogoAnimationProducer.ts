@@ -10,7 +10,7 @@ import {
     selectedColor,
 } from '../util/constants';
 
-export default class SortsSelectionAnimationProducer extends SortsAnimationProducer {
+export default class SortsBogoAnimationProducer extends SortsAnimationProducer {
     public renderBogoCode() {
         this.renderCode(bogoCodeSnippet);
     }
@@ -19,83 +19,42 @@ export default class SortsSelectionAnimationProducer extends SortsAnimationProdu
         from: GraphicalSortsElement,
         fromIndex: number,
         to: GraphicalSortsElement,
-        toIndex: number,
+        toIndex: number
     ) {
+        if (fromIndex !== toIndex) {
+            this.bogoCompare(from, to);
+            this.addSequenceAnimation(from.numberTarget.animate());
+            this.addSequenceAnimation(to.numberTarget.animate());
+        }
         this.swap(from, fromIndex, to, toIndex);
-
-        this.addSequenceAnimation(
-            from.boxTarget.animate(1).attr({ stroke: '#39AF8E', fill: '#39AF8E' })
-        );
-        this.addSequenceAnimation(from.numberTarget.animate(1).attr({ fill: '#39AF8E' }));
+        this.finishSequence();
+        this.addSequenceAnimation(from.boxTarget.animate(10).attr({ stroke: defaultColour }));
+        this.addSequenceAnimation(from.boxTarget.animate(10).attr({ fill: defaultColour }));
+        this.addSequenceAnimation(from.numberTarget.animate(10).attr({ fill: defaultColour }));
+        this.addSequenceAnimation(to.boxTarget.animate(10).attr({ stroke: defaultColour }));
+        this.addSequenceAnimation(to.boxTarget.animate(10).attr({ fill: defaultColour }));
+        this.addSequenceAnimation(to.numberTarget.animate(10).attr({ fill: defaultColour }));
+        this.finishSequence();
     }
-    // public check(currItem: GraphicalSortsElement) {
-    //     this.addSequenceAnimation(currItem.boxTarget.animate(1).attr({ stroke: comparingColor }));
-    //     this.addSequenceAnimation(currItem.boxTarget.animate(1).attr({ fill: comparingColor }));
-    //     this.addSequenceAnimation(currItem.numberTarget.animate(1).attr({ fill: comparingColor }));
-    //     this.addSequenceAnimation(currItem.numberTarget.animate());
-    //     this.finishSequence();
-    // }
 
-    // public select(newMinItem: GraphicalSortsElement, previousMinItem: GraphicalSortsElement) {
-    //     this.addSequenceAnimation(previousMinItem.boxTarget.animate(1).attr({ stroke: defaultColour }));
-    //     this.addSequenceAnimation(previousMinItem.boxTarget.animate(1).attr({ fill: defaultColour }));
-    //     this.addSequenceAnimation(
-    //         previousMinItem.numberTarget.animate(1).attr({ fill: defaultColour })
-    //     );
-    //     this.addSequenceAnimation(newMinItem.boxTarget.animate(1).attr({ stroke: selectedColor }));
-    //     this.addSequenceAnimation(newMinItem.boxTarget.animate(1).attr({ fill: selectedColor }));
-    //     this.addSequenceAnimation(newMinItem.numberTarget.animate(1).attr({ fill: selectedColor }));
-    //     // Empty animation so that there's a pause
-    //     this.addSequenceAnimation(newMinItem.numberTarget.animate());
-    //     this.finishSequence();
-    // }
+    public bogoCompare(item1: GraphicalSortsElement, item2: GraphicalSortsElement) {
+        this.addSequenceAnimation(item1.boxTarget.animate(10).attr({ stroke: comparingColor }));
+        this.addSequenceAnimation(item2.boxTarget.animate(10).attr({ stroke: comparingColor }));
+        this.addSequenceAnimation(item1.boxTarget.animate(10).attr({ fill: comparingColor }));
+        this.addSequenceAnimation(item2.boxTarget.animate(10).attr({ fill: comparingColor }));
+        this.addSequenceAnimation(item1.numberTarget.animate(10).attr({ fill: comparingColor }));
+        this.addSequenceAnimation(item2.numberTarget.animate(10).attr({ fill: comparingColor }));
+        this.addSequenceAnimation(item1.numberTarget.animate().attr({ opacity: 1 }));
+        this.finishSequence();
+    }
 
-    // public selectionSwap(
-    //     iItem: GraphicalSortsElement,
-    //     iIndex: number,
-    //     minItem: GraphicalSortsElement,
-    //     minIndex: number
-    // ) {
-    //     if (iIndex !== minIndex) {
-    //         this.addSequenceAnimation(iItem.boxTarget.animate(1).attr({ stroke: selectedColor }));
-    //         this.addSequenceAnimation(iItem.boxTarget.animate(1).attr({ fill: selectedColor }));
-    //         this.addSequenceAnimation(iItem.numberTarget.animate(1).attr({ fill: selectedColor }));
-    //         // Empty animation so that there's a pause
-    //         this.addSequenceAnimation(iItem.numberTarget.animate());
-    //     }
-    //     this.swap(iItem, iIndex, minItem, minIndex);
-    // }
-
-    // public finishSelectionRound(
-    //     newIthItem: GraphicalSortsElement,
-    //     prevIthItem: GraphicalSortsElement,
-    //     ithItemChanged: boolean
-    // ) {
-    //     this.addSequenceAnimation(newIthItem.boxTarget.animate(1).attr({ stroke: sortedColour }));
-    //     this.addSequenceAnimation(newIthItem.boxTarget.animate(1).attr({ fill: sortedColour }));
-    //     this.addSequenceAnimation(newIthItem.numberTarget.animate(1).attr({ fill: sortedColour }));
-    //     this.addSequenceAnimation(newIthItem.numberTarget.animate());
-    //     if (ithItemChanged) {
-    //         this.addSequenceAnimation(prevIthItem.boxTarget.animate(1).attr({ stroke: defaultColour }));
-    //         this.addSequenceAnimation(prevIthItem.boxTarget.animate(1).attr({ fill: defaultColour }));
-    //         this.addSequenceAnimation(prevIthItem.numberTarget.animate(1).attr({ fill: defaultColour }));
-    //     }
-    // }
-
-    // public bufferUnhighlight(prevMin: GraphicalSortsElement) {
-    //     this.addSequenceAnimation(prevMin.boxTarget.animate(1).attr({ stroke: defaultColour }));
-    //     this.addSequenceAnimation(prevMin.boxTarget.animate(1).attr({ fill: defaultColour }));
-    //     this.addSequenceAnimation(prevMin.numberTarget.animate(1).attr({ fill: defaultColour }));
-    // }
-
-    // public highlightAll(array: GraphicalSortsElement[], color: string) {
-    //     array.forEach((item) => {
-    //         this.addSequenceAnimation(item.boxTarget.animate(1).attr({ stroke: color }));
-    //         this.addSequenceAnimation(item.boxTarget.animate(1).attr({ fill: color }));
-    //         this.addSequenceAnimation(item.numberTarget.animate(1).attr({ fill: color }));
-    //         // Empty animation so that there's a pause
-    //         this.addSequenceAnimation(item.numberTarget.animate());
-    //     });
-    //     this.finishSequence();
-    // }
+    public UnsortedCompare(item1: GraphicalSortsElement, item2: GraphicalSortsElement) {
+        this.addSequenceAnimation(item1.boxTarget.animate(10).attr({ stroke: comparingColor }));
+        this.addSequenceAnimation(item2.boxTarget.animate(10).attr({ stroke: comparingColor }));
+        this.addSequenceAnimation(item1.boxTarget.animate(10).attr({ fill: comparingColor }));
+        this.addSequenceAnimation(item2.boxTarget.animate(10).attr({ fill: comparingColor }));
+        this.addSequenceAnimation(item1.numberTarget.animate(10).attr({ fill: comparingColor }));
+        this.addSequenceAnimation(item2.numberTarget.animate(10).attr({ fill: comparingColor }));
+        this.finishSequence();
+    }
 }
