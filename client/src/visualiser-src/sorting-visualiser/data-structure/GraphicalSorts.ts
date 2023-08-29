@@ -12,6 +12,7 @@ import SortsInsertionAnimationProducer from '../animation-producer/SortsInsertio
 import SortsCreateAnimationProducer from '../animation-producer/SortsCreateAnimationProducer';
 import SortsQuickAnimationProducer from '../animation-producer/SortsQuickAnimationProducer';
 import SortsSelectionAnimationProducer from '../animation-producer/SortsSelectionAnimationProducer';
+import SortsBogoAnimationProducer from '../animation-producer/SortsBogoAnimationProducer';
 import {
   sortedColour,
   checkingColour,
@@ -54,7 +55,11 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     quick: {
       args: [],
       description: 'Quick Sort'
-    }
+    },
+    bogo: {
+      args: [],
+      description: 'Bogo Sort'
+    },
   });
 
   public append(values: number[]): AnimationProducer {
@@ -148,7 +153,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     let p = low;
 
     this.mergeSort(producer, low, mid, tmpList);
-    this.mergeSort(producer, mid+1, high, tmpList);
+    this.mergeSort(producer, mid + 1, high, tmpList);
 
     let pointerLeft = low;
     let pointerRight = mid + 1;
@@ -160,7 +165,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       high,
       this.elementList
     );
-    
+
     while (pointerLeft <= mid && pointerRight <= high) {
 
       if (this.elementList[pointerLeft].data.value <= this.elementList[pointerRight].data.value) {
@@ -587,6 +592,28 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     return producer;
   }
 
+  public bogo(): AnimationProducer {
+    const producer = new SortsBogoAnimationProducer();
+    producer.renderBogoCode();
+
+    // let sorted = false;
+    // while (!sorted) {
+    //   sorted = true;
+    //   for (let i = 0; i < this.elementList.length - 1; i += 1) {
+    //     if (this.elementList[i].data.value > this.elementList[i + 1].data.value) {
+    //       sorted = false;
+    //       break;
+    //     }
+    //   }
+    //   if (!sorted) {
+    //     this.elementList = this.shuffle(this.elementList);
+    //     producer.doAnimationAndHighlight(3, producer.highlightAll, this.elementList, defaultColour);
+    //   }
+    // }
+    // producer.doAnimationAndHighlight(4, producer.highlightAll, this.elementList, sortedColour);
+    return producer;
+  }
+
   public get documentation(): Documentation {
     return GraphicalSortList.documentation;
   }
@@ -596,3 +623,4 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     this.append(numbers);
   }
 }
+

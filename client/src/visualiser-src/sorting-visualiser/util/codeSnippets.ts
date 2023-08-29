@@ -37,6 +37,7 @@ export const mergeCodeSnippet = `void merge_sort(int arr[], int low, int high, i
     for (left = low, k = 0; left <= high; left++, k++)
         arr[left] = tmp[k];
 }`;
+
 export const insertionCodeSnippet = `void insertionSort(int a[], int arr_size)
 {
     for (int i = 1; i < arr_size; i++) {
@@ -58,6 +59,25 @@ export const selectionCodeSnippet = `void selection_sort(int arr[], int arr_size
                 min_index = j;
         }
         swap(&arr[min_index], &arr[i]);
+    }
+}`;
+
+export const bogoCodeSnippet = `void bogo_sort(int arr[], int arr_size) {
+    while (!is_sorted(arr, arr_size)) {
+        shuffle(arr, arr_size);
+    }
+}
+bool is_sorted(int arr[], int arr_size) {
+    for (int i = 0; i < arr_size - 1; i++) {
+        if (arr[i] > arr[i + 1]) {
+            return false;
+        }
+    }
+    return true;
+}
+void shuffle(int arr[], int arr_size) {
+    for (int i = 0; i < arr_size - 1; i++) {
+        swap(&arr[i], &arr[rand() % arr_size]);
     }
 }`;
 
