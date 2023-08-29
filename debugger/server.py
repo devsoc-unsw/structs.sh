@@ -12,7 +12,7 @@ import json
 
 # Line numbers that the user wants to set breakpoints on.
 LINE_NUMBERS = ["28"]
-FILE_NAMES = ["src/linked-list/main1.c", "src/linked-list/linked-list.c"]
+FILE_NAMES = ["samples/linkedlist/main1.c", "samples/linkedlist/linkedlist.c"]
 PROGRAM_NAME = "user_program"
 
 # Should this go in server.py or in python interpretter running inside the
@@ -46,9 +46,9 @@ quit
 def create_ll_script_2(program_name):
     gdb_script = f"""
 source src/linked-list-things.py
-python info_functions_output = gdb.execute('info functions', False, True)
-python my_functions = parseFunctionNames(info_functions_output)
-python breakOnUserFunctions(my_functions)
+# python info_functions_output = gdb.execute("info functions -n", False, True)
+# python my_functions = parseFunctionNames(info_functions_output)
+# python breakOnUserFunctions(my_functions)
 
 python StepCommand("my_next", my_functions)
 
@@ -62,7 +62,6 @@ python print(newHeapDict)
 
 
 io = socketio.Server(cors_allowed_origins='*')
-app = socketio.WSGIApp(io)
 
 
 @io.event
@@ -84,7 +83,7 @@ def getBreakpoints(socket_id: str, line_numbers: list[int], listName: list[str])
     compile_program(FILE_NAMES)
 
     # Run GDB with the script
-    gdb_script = create_ll_script_2(PROGRAM_NAME)
+    gdb_script = create_ll_script(LINE_NUMBERS, PROGRAM_NAME)
 
     command = f"echo '{gdb_script}' | gdb -q"
     output = subprocess.check_output(command, shell=True).decode("utf-8")
@@ -274,4 +273,43 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
     io.emit("sendDummyData", retVal, room=socket_id)
 
 
+@io.event
+def mainDebug(socket_id: str) -> None:
+    print("\n=== Running make to compile sample C programs...")
+    command = "make --directory=samples clean; make --directory=samples all"
+    ret = subprocess.run(command, capture_output=True, shell=True)
+    compilation_out = ret.stdout.decode()
+    print(compilation_out)
+
+    # python print(user_fn_decls)
+    print("\n=== Running gdb script...")
+    gdb_script = f"""
+    file samples/linkedlist/main1
+    set python print-stack full
+    set pagination off
+    source src/parse_functions.py
+    python pycparser_parse_fn_decls("{socket_id}")
+    python print(f"Finished running pyxparser_parse_fn_decls in gdb instance")
+    start
+    """
+    print(f"gdb_script:\n{gdb_script}")
+    command = f"echo '{gdb_script}' | gdb -q"
+    ret = subprocess.run(command, capture_output=True, shell=True, check=True)
+    gdb_out = ret.stdout.decode()
+    print(gdb_out)
+
+    io.emit("mainDebug", f"Finished mainDebug:\n\n{gdb_out}")
+
+
+@io.event
+def createdFunctionDeclarations(socket_id: str, user_socket_id, function) -> None:
+    print(f"Received function declaration from {user_socket_id}:")
+    print(function)
+    print("Sending function  declaration to client...")
+    io.emit("sendFunctionDeclarations", function, room=user_socket_id)
+
+
+print("Starting server...")
+app = socketio.WSGIApp(io)
 eventlet.wsgi.server(eventlet.listen(("", 8000)), app)
+# Server start will stall python script until server terminated
