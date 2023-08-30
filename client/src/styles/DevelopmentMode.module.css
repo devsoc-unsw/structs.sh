@@ -16,6 +16,11 @@ body {
   color: var(--slate-12);
 }
 
+.layout > * {
+  min-width: 0;
+  min-height: 0;
+}
+
 .pane {
   height: 100%;
   display: flex;
@@ -51,6 +56,7 @@ body {
 }
 
 .visualiser {
+  padding: 0;
   grid-column: 3;
   grid-row: 3;
 }

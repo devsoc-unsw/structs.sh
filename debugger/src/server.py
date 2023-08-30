@@ -13,7 +13,7 @@ file_name = "program"
 gdb_script = f"""
 
 def compile_program(file_name):
-    subprocess.run(["gcc", "-ggdb", file_name, "-o", "program"])    
+    subprocess.run(["gcc", "-ggdb", file_name, "-o", "program"])
 
 
 
@@ -382,8 +382,7 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
     else:
         heap_dict = "LINE NOT FOUND"
 
-    retVal = f"{heap_dict}"
-    io.emit("sendDummyData", retVal, room=socket_id)
+    io.emit("sendDummyData", heap_dict, room=socket_id)
 
 
 eventlet.wsgi.server(eventlet.listen(("", 8000)), app)

@@ -23,12 +23,8 @@ const DevelopmentMode = () => {
 
   const [count, setCountState] = useState(100);
   const onSendDummyData = (data: any) => {
-    const correctedJsonString = data.replace(/'/g, '"');
-
-    const backendStateJson = JSON.parse(correctedJsonString as string);
-
     // Upddate will handled in this step, rn we use backendState
-    setBackendState(backendStateJson);
+    setBackendState(data);
   };
 
   useEffect(() => {
@@ -45,7 +41,7 @@ const DevelopmentMode = () => {
 
   const DEBUG_MODE = false;
   return !DEBUG_MODE ? (
-    <div className={classNames(globalStyles.root, styles.light)}>
+    <div className={classNames(globalStyles.root, styles.dark)}>
       <div className={styles.layout}>
         <div className={classNames(styles.pane, styles.nav)}>Nav bar</div>
         <div className={classNames(styles.pane, styles.files)}>File tree</div>
@@ -66,13 +62,13 @@ const DevelopmentMode = () => {
           </Tabs>
         </div>
         <div className={classNames(styles.pane, styles.visualiser)}>
-          {/* <VisualizerMain
+          <VisualizerMain
             backendState={backendState}
             getNextState={() => {
               socket.emit('sendDummyData', count.toString());
               setCountState(count + 1);
             }}
-          /> */}
+          />
         </div>
         <div className={classNames(styles.pane, styles.timeline)}>Timeline</div>
       </div>
