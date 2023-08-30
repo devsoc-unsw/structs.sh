@@ -25,7 +25,7 @@ const CodeEditor: FC = () => {
       height="100%"
       extensions={[cpp()]}
       onChange={onChange}
-      theme="dark"
+      theme="light"
     />
   );
 };

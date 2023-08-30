@@ -41,7 +41,7 @@ const DevelopmentMode = () => {
 
   const DEBUG_MODE = false;
   return !DEBUG_MODE ? (
-    <div className={classNames(globalStyles.root, styles.dark)}>
+    <div className={classNames(globalStyles.root, styles.light)}>
       <div className={styles.layout}>
         <div className={classNames(styles.pane, styles.nav)}>Nav bar</div>
         <div className={classNames(styles.pane, styles.files)}>File tree</div>
