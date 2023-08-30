@@ -593,7 +593,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
 
   public bogo(): AnimationProducer {
     const originalProd = new SortsBogoAnimationProducer();
-    let producer = new SortsBogoAnimationProducer();;
+    let producer = new SortsBogoAnimationProducer();
 
     producer.renderBogoCode();
 
