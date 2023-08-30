@@ -1,4 +1,4 @@
-import { Svg, SVG } from '@svgdotjs/svg.js';
+import { SVG } from '@svgdotjs/svg.js';
 import AnimationProducer from 'visualiser-src/common/AnimationProducer';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
@@ -15,7 +15,6 @@ import SortsSelectionAnimationProducer from '../animation-producer/SortsSelectio
 import SortsBogoAnimationProducer from '../animation-producer/SortsBogoAnimationProducer';
 import {
   sortedColour,
-  checkingColour,
   defaultColour,
   comparingColor,
   selectedColor,
@@ -593,27 +592,25 @@ export default class GraphicalSortList extends GraphicalDataStructure {
   }
 
   public bogo(): AnimationProducer {
-    const producer = new SortsBogoAnimationProducer();
+    const originalProd = new SortsBogoAnimationProducer();
+    let producer = originalProd;
 
     producer.renderBogoCode();
 
-    this.shuffle(producer)
-    console.log('1')
-    this.shuffle(producer)
-    console.log('1')
-    this.shuffle(producer)
-    console.log('1')
-    // producer.highlightCode(
-    //   2,
-    // );
-    // while (!this.isSorted(producer)) {
-    //   // producer.highlightCode(
-    //   //   3,
-    //   // );
-    //   this.shuffle(producer)
-    // }
+    let start = Date.now();
+    console.log(start)
+    while (!this.isSorted(producer)) {
+      if (Date.now() - start < 10000) {
+        this.shuffle(producer);
+      } else {
+        alert('L + Bogo')
+        return originalProd;
+      }
+    }
+
     return producer;
   }
+
 
   public isSorted(producer: SortsBogoAnimationProducer) {
     for (let i = 0; i < this.elementList.length - 1; i++) {
@@ -622,19 +619,19 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         false,
         producer.bogoCompare,
         this.elementList[i],
-        this.elementList[i + 1]
+        this.elementList[i + 1],
+        i === this.elementList.length - 2,
+        false
       );
 
       if (this.elementList[i].data.value > this.elementList[i + 1].data.value) {
         producer.doAnimationAndHighlightTimestamp(
           9,
           false,
-          producer.UnsortedCompare,
+          producer.unsortedCompare,
           this.elementList[i],
           this.elementList[i + 1],
-          i === this.elementList.length - 1
         );
-        // console.log(this.elementList.map((element) => element.data.value));
         return false;
       }
     }
@@ -645,11 +642,6 @@ export default class GraphicalSortList extends GraphicalDataStructure {
   public shuffle(producer: SortsBogoAnimationProducer) {
     for (let i = 0; i < this.elementList.length; i++) {
       const j = Math.floor(Math.random() * (this.elementList.length));
-      console.log(i, j)
-      console.log(this.elementList.map((element) => element.data.value));
-      // producer.highlightCode(
-      //   15,
-      // );
 
       producer.doAnimationAndHighlightTimestamp(
         16,
