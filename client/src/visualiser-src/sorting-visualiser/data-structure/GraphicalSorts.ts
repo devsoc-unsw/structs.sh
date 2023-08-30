@@ -593,17 +593,18 @@ export default class GraphicalSortList extends GraphicalDataStructure {
 
   public bogo(): AnimationProducer {
     const originalProd = new SortsBogoAnimationProducer();
-    let producer = originalProd;
+    let producer = new SortsBogoAnimationProducer();;
 
     producer.renderBogoCode();
 
     let start = Date.now();
     console.log(start)
     while (!this.isSorted(producer)) {
-      if (Date.now() - start < 10000) {
+      if (Date.now() - start < 8500) {
         this.shuffle(producer);
       } else {
         alert('L + Bogo')
+        producer.finishSequence();
         return originalProd;
       }
     }
