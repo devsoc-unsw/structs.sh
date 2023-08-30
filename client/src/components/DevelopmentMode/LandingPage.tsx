@@ -1,9 +1,5 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 
-const LandingPage: FC = () => {
-	return (
-		<div>Landing page!</div>
-	);
-};
+const LandingPage: FC = () => <div>Landing page!</div>;
 
 export default LandingPage;

@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Theme, ThemeProvider, Box } from '@mui/material';
+import { ThemeProvider, Box } from '@mui/material';
 import { AnimatePresence } from 'framer-motion';
 import { Route, Routes } from 'react-router-dom';
 import Feedback from 'pages/Feedback';
@@ -17,6 +16,7 @@ const App = () => (
         <Routes>
           {/* Homepage */}
           <Route path="/" element={<HomePage />} />
+
           {/* Visualiser routes */}
           <Route path="/visualiser/:topic" element={<VisualiserPage />} />
 

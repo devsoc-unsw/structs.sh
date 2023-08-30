@@ -1,0 +1,35 @@
+.container {
+  display: flex;
+  height: auto;
+  width: auto;
+}
+
+.linked-list {
+  flex: 0 0 80%; /* This remains unchanged as it refers to the horizontal space taken by .linked-list */
+  background-color: #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  max-height: 557px;
+}
+
+.linked-list .visualizer {
+  flex: 0 0 70%;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  max-height: 70%;
+}
+
+.linked-list .timeline {
+  flex: 0 0 30%;
+  width: 100%;
+  background-color: #d0d0d0;
+}
+
+.debugger {
+  flex: 0 0 30%;
+  min-width: 500px;
+  background-color: #ccc; 
+  overflow-y: auto;
+}

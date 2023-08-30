@@ -9,16 +9,14 @@
     "airbnb",
     "airbnb-typescript",
     "plugin:react/recommended",
-    "prettier"
+    "plugin:prettier/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
     },
-    "project": [
-      "tsconfig.json"
-    ],
+    "project": ["tsconfig.json"],
     "ecmaVersion": 12,
     "sourceType": "module"
   },
@@ -28,6 +26,7 @@
     }
   },
   "rules": {
+    "react/prop-types": "on",
     "no-underscore-dangle": "off",
     "no-param-reassign": [
       "error",
@@ -44,7 +43,6 @@
     ],
     "no-console": "off",
     "no-alert": "off",
-    "@typescript-eslint/no-unused-vars": "off",
     "no-nested-ternary": "off",
     "import/prefer-default-export": "off",
     "react/require-default-props": "off",
@@ -56,6 +54,7 @@
         "allowAsProps": true
       }
     ],
+    "react/react-in-jsx-scope": "off",
     "jsx-a11y/anchor-is-valid": "off",
     "class-methods-use-this": "off"
   }

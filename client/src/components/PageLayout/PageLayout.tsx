@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import { FC, ReactNode, useEffect } from 'react';
 import { Box, Theme } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { motion } from 'framer-motion';
@@ -19,9 +19,8 @@ const containerVariants = {
   },
 };
 
-// TODO: check if it's fine for children to be required
 interface Props {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 /**
