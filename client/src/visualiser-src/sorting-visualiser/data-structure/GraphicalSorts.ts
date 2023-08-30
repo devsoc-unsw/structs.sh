@@ -600,7 +600,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     let start = Date.now();
     console.log(start)
     while (!this.isSorted(producer)) {
-      if (Date.now() - start < 8500) {
+      if (Date.now() - start < 6000) {
         this.shuffle(producer);
       } else {
         alert('L + Bogo')
