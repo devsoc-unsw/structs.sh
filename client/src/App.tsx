@@ -10,7 +10,9 @@ import { structsTheme } from 'structsThemes';
 import './App.scss';
 import DevelopmentMode from 'pages/DevelopmentMode';
 import LearningMode from 'pages/LearningMode';
-import { customizedParagraph, customizedListing, customizedCode } from 'utils/customized-mdx';
+import { customizedParagraph, customizedListing, customizedCode, customizedH1, customizedH2 } from 'utils/customized-mdx';
+import EduMaterialPage from 'pages/EduMaterialPage';
+import Sidebar from 'components/EduSidebar/Sidebar';
 
 const eduPages = import.meta.glob('./edu-pages/*.mdx');
 
@@ -21,13 +23,26 @@ const generateRoutes = async (pages: any) => {
     p: customizedParagraph,
     li: customizedListing,
     code: customizedCode,
+    h1: customizedH1,
+    h2: customizedH2,
   }
 
   for (const path in pages) {
     const module = await pages[path]();
     const PageComponent = module.default;
     const routePath = '/' + path.slice(12, -4); // remove './edu_pages/' and '.mdx'
-    routes.push(<Route key={routePath} path={routePath} element={<PageComponent components={components}/>} />);
+    routes.push(
+      <Route 
+        key={routePath} 
+        path={routePath} 
+        element={
+          <EduMaterialPage 
+            sidebar={<Sidebar />} 
+            mdxContent={<PageComponent components={components} />} 
+          />
+        }
+      />
+    );
   }
 
   return routes;

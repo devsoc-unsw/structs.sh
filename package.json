@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "react-icons": "^4.10.1",
     "react-syntax-highlighter": "^15.5.0"
   }
 }

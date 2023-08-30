@@ -1,4 +1,14 @@
-import CodeBlock from '../components/CodeBlock';
+import CodeBlock from 'components/CodeBlock/CodeBlock';
+import ProgressBar from "components/ProgressBar/ProgressBar";
+
+<ProgressBar
+  color="#F1959B"
+  height={5}
+  direction="right"
+  position="top"
+  gradient={true}
+  gradientColor="#EA4C46"
+/>
 
 # Arrays🐶
 
@@ -29,7 +39,7 @@ It is one of the most popular and simple data structures and is often used to im
 ## Implementation of basic array in C ✍️
 
 <CodeBlock>
-  {`#include <stdio.h>
+{`#include <stdio.h>
 
 int main() {
    int arr[5] = {1, 2, 3, 4, 5};

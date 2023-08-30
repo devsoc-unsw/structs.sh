@@ -1,23 +1,23 @@
+import { Style } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AiOutlineDown, AiOutlineRight } from 'react-icons/ai';
+import style from './Sidebar.module.scss';
 
 interface SidebarItemProps {
-	item: {
-		name: string;
-		level: number;
-		isOpen: boolean;
-		url: string;
-		children?: SidebarItemProps['item'][];
-	}
+	name: string;
+	url: string;
+	level: number;
+	children: SidebarItemProps[];
 }
 
-const SidebarItem: React.FC<SidebarItemProps> = ({ item }) => {
-	const [open, setOpen] = useState(item.isOpen || false);
-	const [isHighlighted, setIsHighlighted] = useState(false);
-
+const SidebarItem: React.FC<SidebarItemProps> = (item) => {
+	const { name, url, level, children } = item;
+	const currentPath = window.location.pathname;
 	const navigate = useNavigate();
 
-	const currentPath = window.location.pathname;
+	const [open, setOpen] = useState(false);
+	const [isHighlighted, setIsHighlighted] = useState(false);
 
 	useEffect(() => {
 		setIsHighlighted(currentPath.includes(item.url));
@@ -29,20 +29,37 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ item }) => {
 
 	const toggleOpen = () => {
 		setOpen(!open);
-		item.isOpen = !item.isOpen;
 	};
 
 	const handleTopicClick = (url: string) => {
 		navigate(`${url}`);
 	};
 
-	if (item.children) {
+	if (item.children.length !== 0) {
 		return (
-			<div className={isHighlighted ? "sidebar-item highlighted" : "sidebar-item"}>
-				<div className="">
-
+			<div className={isHighlighted ? style.sidebarItemHighlighted : style.sidebarItem}>
+				<div className={style.sidebarTitle} onClick={toggleOpen}>
+					<div className={style.sidebarName}>{name}</div>
+					<div className={style.sidebarArrow}>
+						{open ? <AiOutlineDown /> : <AiOutlineRight />}
+					</div>
 				</div>
+				{open && (
+        <div>
+          {item.children.map((child, index) => (
+            <SidebarItem key={index} name={child.name} url={child.url} level={child.level} children={child.children} />
+          ))}
+        </div>
+      )}
 			</div>
+		)
+	} else {
+		return (
+			<div className={`${currentPath === item.url ? style.SidebarItemFocus : style.sidebarItem}`}>
+        <div className={style.sidebarTitleLeaf} onClick={() => handleTopicClick(item.url)}>{item.name}</div>
+      </div>
 		)
 	}
 }
+
+export default SidebarItem;

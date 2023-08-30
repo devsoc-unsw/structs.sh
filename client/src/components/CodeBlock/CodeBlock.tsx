@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import style from './CodeBlock.module.css';
+import style from './CodeBlock.module.scss';
 
 interface Props {
 	children: string;
@@ -20,7 +20,7 @@ const CodeBlock = ({ children }: Props): JSX.Element => {
 	}
 
 	return (
-		<div >
+		<div className={style.codeBlock}>
 			<button className={style.copy} onClick={copyCode}>
         <span>
           <svg 

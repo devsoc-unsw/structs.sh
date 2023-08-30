@@ -1,0 +1,208 @@
+import CodeBlock from '../components/CodeBlock';
+import ProgressBar from "components/ProgressBar/ProgressBar";
+
+<ProgressBar
+  color="#92DFF3"
+  height={5}
+  direction="right"
+  position="top"
+  gradient={true}
+  gradientColor="#7AD7F0"
+/>
+
+# 2D Array 🥳
+
+Welcome to our guide on 2D Arrays in C!
+
+Here you will learn how to use and understand seamlessly the very scary topic that is 2D arrays!
+
+To break it down nice and easy, we will be covering 6 operations:
+- **Creating** a 2D Array 🔧
+- **Initialising** a 2D Array 📚
+- **Accessing** elements in a 2D Array 🔍
+- **Editing** elements in a 2D Array ✏️
+- **Iterating** through a 2D Array 🔁
+
+# Creating a 2D Array
+
+## Preface 🐶
+
+A 2D array is often referred to as an array of arrays, or a matrix!
+This is because it consist of rows and columns, and thus takes the shape of a matrix!
+
+## Getting Started 🎉
+
+To create a 2D array in C, you will need to declare it using the following syntax:
+
+<CodeBlock>
+  {`<datatype> <arrayname> [row_size][col_size];`}
+</CodeBlock>
+
+Where:
+- `<datatype>` is the datatype of the array (i.e. `int`, `char`, `bool`, etc...)
+- `<arrayname>` is the name of the array (i.e. `my_array`)
+- `row_size` is the number of rows in the array
+- `col_size` is the number of columns in the array
+
+For example, to create a 2D array of integers with 2 rows and 4 columns, you would use the following declaration:
+
+<CodeBlock>
+  {`int my_array[2][4];`}
+</CodeBlock>
+
+# Initailising a 2D Array 📚
+
+## Preface 🐶
+
+Whats the fun in creating a 2D array if we can't store stuff in it? 😛 
+Here we will learn how to create a 2D array with values already present in it. 
+This operation is called **initialisation**.
+
+## Getting Started 🎉
+
+So before we learnt we could create an array with 2 rows and 4 columns by the following:
+
+<CodeBlock>
+  {`int my_array[2][4];`}
+</CodeBlock>
+
+But lets say that we want to initialise some values to it, specifically:
+- The integers `1,2,3,4`, in the first row
+- The integers `5,6,7,8`, in the second row
+
+To do that we would use the following initialisation:
+
+<CodeBlock>
+  {`int my_array[2][4] = {
+  {1, 2, 3, 4}, // First row
+  {5, 6, 7, 8} // Second row
+};`}
+</CodeBlock>
+
+If we were to add another row, it could look something like this!
+
+<CodeBlock>
+  {`int my_array[3][4] = {
+  {1, 2, 3, 4}, // First row
+  {5, 6, 7, 8}, // Second row
+  {9, 10, 11, 12} // Third row
+};`}
+</CodeBlock>
+
+If we were to add another column, it could look something like this!
+
+<CodeBlock>
+  {`int my_array[2][5] = {
+  {1, 2, 3, 4, 5}, // First row
+  {6, 7, 8, 9, 10}, // Second row
+};`}
+</CodeBlock>
+
+# Accessing elements in a 2D Array 📚
+
+## Preface 🐶
+
+Whats the fun in storing elements in a 2D array if we can't access the elements? 😛 
+Here we will learn how to access the elements in a 2D array.
+
+## Getting Started 🎉
+
+To access an element in a 2D array you need two things!
+- The **row** index
+- The **column** index
+
+With those two things we can accesss any element!
+- Remember that indexes start at `0`, so the **first row** and **first columns** will have indexes of `0`.
+
+## Writing the code ✍️
+
+So luckily writing the code to access an element is very similar to our thought process above - we need the row and column indexes of the element we want to access!
+
+For example, if I wanted to access the element in the first row and second column, I would do the following:
+
+<CodeBlock>
+  {`int my_num = my_array[0][1];`}
+</CodeBlock>
+
+This creates an integer variable called `my_num`, and assigns it the value of whatever element is stored at `my_array[0][1]`.
+
+# Editing elements in a 2D Array ✏️
+
+## Preface 🐶
+
+So we've learnt how to access elements in an array, but whats also cool is that we can change those elements too!
+
+## Getting Started 🎉
+
+To edit an element in a 2D array you need **two** things!
+- The **row** index
+- The **column** index
+
+Say we have the following array:
+
+<CodeBlock>
+  {`int my_array[2][4] = {
+  {1, 2, 3, 4}, // First row
+  {5, 6, 7, 8} // Second row
+};`}
+</CodeBlock>
+
+We know that to access element `2`, we can do the following:
+
+<CodeBlock>
+  {`int my_num = my_array[0][1];`}
+</CodeBlock>
+
+Luckily, editing it is very similar!
+
+Let say we want to change the element at `[0][1]` to be 42, we can do the following:
+
+<CodeBlock>
+  {`my_array[0][1] = 42;`}
+</CodeBlock>
+
+# Iterating through a 2D Array 🔁
+
+## Preface 🐶
+
+Whats the point of storing stuff in an array if we can access them all? Here we will learn how to iterate through a 2D array.
+
+## Getting Started 🎉
+
+To iterate through a 2D array you need:
+- A variable representing the **row** index
+- A variable representing the **column** index
+- A **nested for-loop**!
+
+So again, let's say we have the following array,
+
+<CodeBlock>
+  {`int my_array[2][4] = {
+  {1, 2, 3, 4}, // First row
+  {5, 6, 7, 8} // Second row
+};`}
+</CodeBlock>
+
+How would we iterate through the elements and print them out?
+
+Well let's do it!
+
+<CodeBlock>
+  {`int row, col;
+for (row = 0; row < 2; row++) {
+    for (col = 0; col < 4; col++) {
+        printf("%d ", myArray[row][col]);
+    }
+    printf("\\n");
+}`}
+</CodeBlock>
+
+- The first loop runs through each row of the array, starting with row 0
+- Then for that specific row, the second for loop, runs through every column
+- Then for each column, we just print out the element!
+
+The result will be:
+
+<CodeBlock>
+  {`1, 2, 3, 4, 5, 6, 7, 8`}
+</CodeBlock>

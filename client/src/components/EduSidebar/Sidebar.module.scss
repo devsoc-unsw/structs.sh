@@ -1,0 +1,77 @@
+.sidebar {
+  color: #212427;
+  width: 270px;
+  height: 100vh;
+  flex-shrink: 0;
+  font-size: 1.3rem;
+  font-weight: 500;
+  overflow: hidden;
+  background-color: rgba(203, 203, 203, 0.4);
+  position: fixed;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+.sidebarItem {
+	display: block;
+	padding-left: 10px;
+  padding-top: 10px;
+	border-bottom: 1px solid rgba(180, 180, 180, 0.3);
+}
+
+.sidebarItemHighlighted {
+  display: block;
+	padding-left: 10px;
+  padding-top: 10px;
+	border-bottom: 1px solid rgba(180, 180, 180, 0.3);
+	background-color: azure;
+}
+
+.SidebarItemFocus {
+  line-height: 32px;
+  font-size: 25px;
+	padding-left: 1rem;
+  padding-top: 10px;
+  border-left: 2px blue solid;
+  color: blue;
+}
+
+.sidebarTitle {
+	display: flex;
+  justify-content: space-between;
+  line-height: 32px;
+  font-size: 22px;
+  transition: margin-left 0.3s ease;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(180, 180, 180, 0.3);
+}
+
+.sidebarTitleLeaf {
+	display: flex;
+  justify-content: space-between;
+  line-height: 32px;
+  font-size: 20px;
+  transition: margin-left 0.3s ease;
+	cursor: pointer;
+  border-bottom: 1px solid rgba(180, 180, 180, 0.3);
+}
+
+.sidebarTitle.leaf:hover {
+	margin-left: 0.7rem;
+  cursor: pointer;
+}
+
+.sidebarName {
+  font-weight: bold;
+}
+
+.sidebarArrow {
+	padding: 5px 0;
+  padding-right: 10px;
+}
+
+
