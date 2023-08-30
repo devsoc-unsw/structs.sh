@@ -1,1 +1,3 @@
 fn_prototypes_preprocessed
+*.dYSM
+__pycache__
