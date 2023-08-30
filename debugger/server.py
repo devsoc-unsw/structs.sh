@@ -7,6 +7,8 @@ from typing import Any
 import subprocess
 import json
 
+from debugger.src.placeholder_data import PLACEHOLDER_HEAP_DICTS
+
 # Hard-coded variables for now.
 # Later we want to receive the line numbers and file names from the client
 
@@ -113,159 +115,28 @@ def echo(socket_id: str, data: Any) -> None:
 
 @io.event
 def sendDummyData(socket_id: str, line_number: Any) -> None:
+    """
+    Send hard-coded heap dictionaries to the frontend user.
+    Mainly for development purposes.
+    Supposing the GDB debug session is currently at `line_number` in the program.
+    This function will send
+    the heap dictionary at that point during the program's runtime.
+    """
     print("Received message from", socket_id, ":", line_number)
     heap_dict = {}
     # Our initial linked list node has been alloced with data value 27
     if line_number == "100":
-        heap_dict = {
-            '0x1': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '27',
-                    'next': '0x0'
-                }
-            }
-        }
-
-    # Append the value 34 to the end of the list
+        heap_dict = PLACEHOLDER_HEAP_DICTS[0]
     elif line_number == "101":
-        heap_dict = {
-            '0x1': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '27',
-                    'next': '0x2'
-                }
-            },
-            '0x2': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '34',
-                    'next': '0x0'
-                }
-            }
-        }
-
-    # Append the value 56 to the end of the list
+        heap_dict = PLACEHOLDER_HEAP_DICTS[1]
     elif line_number == "102":
-        heap_dict = {
-            '0x1': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '27',
-                    'next': '0x2'
-                }
-            },
-            '0x2': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '34',
-                    'next': '0x3'
-                }
-            },
-            '0x3': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '56',
-                    'next': '0x0'
-                }
-            }
-        }
-
-    # Remove the second element from the linked list (i.e. remove 34)
+        heap_dict = PLACEHOLDER_HEAP_DICTS[2]
     elif line_number == "103":
-        heap_dict = {
-            '0x1': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '27',
-                    'next': '0x3'
-                }
-            },
-            '0x3': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '56',
-                    'next': '0x0'
-                }
-            }
-        }
-
-    # Append the value 72 to the start of the list (order of list nodes in heap_dict shouldn't
-    # matter as long as the next pointers are in the correct order)
+        heap_dict = PLACEHOLDER_HEAP_DICTS[3]
     elif line_number == "104":
-        heap_dict = {
-            '0x1': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '27',
-                    'next': '0x3'
-                }
-            },
-            '0x3': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '56',
-                    'next': '0x0'
-                }
-            },
-            '0x4': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '72',
-                    'next': '0x1'
-                }
-            }
-        }
-
-    # Append the value 21 to the second element of the linked list
-    # (will be placed AFTER the second element i.e. the third element)
+        heap_dict = PLACEHOLDER_HEAP_DICTS[4]
     elif line_number == "105":
-        heap_dict = {
-            '0x1': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '27',
-                    'next': '0x5'
-                }
-            },
-            '0x3': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '56',
-                    'next': '0x0'
-                }
-            },
-            '0x4': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '72',
-                    'next': '0x1'
-                }
-            },
-            '0x5': {
-                'type': 'struct node',
-                'is_pointer': 'false',
-                'data': {
-                    'value': '21',
-                    'next': '0x3'
-                }
-            }
-        }
+        heap_dict = PLACEHOLDER_HEAP_DICTS[5]
     else:
         heap_dict = 'LINE NOT FOUND'
 
@@ -294,11 +165,18 @@ def mainDebug(socket_id: str) -> None:
     """
     print(f"gdb_script:\n{gdb_script}")
     command = f"echo '{gdb_script}' | gdb -q"
-    ret = subprocess.run(command, capture_output=True, shell=True, check=True)
-    gdb_out = ret.stdout.decode()
-    print(gdb_out)
 
-    io.emit("mainDebug", f"Finished mainDebug:\n\n{gdb_out}")
+    # TODO: subprocess.Popen and Popen.communicate
+    # ret = subprocess.run(command, capture_output=True, shell=True, check=True)
+    stuff = []
+    for line in gdb_script.split('\n'):
+        stuff.append("-ex")
+        stuff.append(line)
+    subprocess.run(["gdb", "-batch", *stuff, "./samples/linkedlist/main1"])
+    # gdb_out = ret.stdout.decode()
+    # print(gdb_out)
+
+    # io.emit("mainDebug", f"Finished mainDebug:\n\n{gdb_out}")
 
 
 @io.event
