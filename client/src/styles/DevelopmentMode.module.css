@@ -2,9 +2,9 @@
 @import '@radix-ui/colors/slate-dark.css';
 @import './global.module.css';
 
-/* body {
+.devBody {
   overflow: hidden;
-} */
+}
 
 .layout {
   display: grid;

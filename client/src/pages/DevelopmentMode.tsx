@@ -44,7 +44,7 @@ const DevelopmentMode = () => {
 
   const DEBUG_MODE = true;
   return !DEBUG_MODE ? (
-    <div className={classNames(globalStyles.root, styles.dark)}>
+    <div className={classNames(globalStyles.root, styles.dark, styles.devBody)}>
       Parser
       <div className={styles.layout}>
         <div className={classNames(styles.pane, styles.nav)}>Nav bar</div>
