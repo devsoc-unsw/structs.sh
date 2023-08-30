@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
 import VisualizerMain from './src/VisualizerMain';
 import { BackendState, CType } from './src/visualizer-component/types/backendType';
+import CodeEditor from 'components/DevelopmentMode/CodeEditor';
 
 const DevelopmentMode = () => {
   const [backendState, setBackendState] = useState<BackendState>({
@@ -42,14 +43,15 @@ const DevelopmentMode = () => {
     };
   }, [onSendDummyData]);
 
-  const DEBUG_MODE = true;
+  const DEBUG_MODE = false;
   return !DEBUG_MODE ? (
-    <div className={classNames(globalStyles.root, styles.dark)}>
-      Parser
+    <div className={classNames(globalStyles.root, styles.light)}>
       <div className={styles.layout}>
         <div className={classNames(styles.pane, styles.nav)}>Nav bar</div>
         <div className={classNames(styles.pane, styles.files)}>File tree</div>
-        <div className={classNames(styles.pane, styles.editor)}>Code editor</div>
+        <div className={classNames(styles.pane, styles.editor)}>
+          <CodeEditor />
+        </div>
         <div className={classNames(styles.pane, styles.inspector)}>
           <Tabs>
             <Tab label="Console">
@@ -64,13 +66,13 @@ const DevelopmentMode = () => {
           </Tabs>
         </div>
         <div className={classNames(styles.pane, styles.visualiser)}>
-          <VisualizerMain
+          {/* <VisualizerMain
             backendState={backendState}
             getNextState={() => {
               socket.emit('sendDummyData', count.toString());
               setCountState(count + 1);
             }}
-          />
+          /> */}
         </div>
         <div className={classNames(styles.pane, styles.timeline)}>Timeline</div>
       </div>

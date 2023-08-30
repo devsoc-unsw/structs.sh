@@ -4,6 +4,7 @@ import CodeMirror from '@uiw/react-codemirror';
 import { cpp } from '@codemirror/lang-cpp';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
+import 'styles/CodeEditor.css';
 
 const CodeEditor: FC = () => {
   const placeholder = "// Code your stuff below!";
@@ -18,20 +19,14 @@ const CodeEditor: FC = () => {
     console.log('codeSent:', code);
   }
 
-	return (
-		<>
-			<div>Hello, world!</div>
-			<CodeMirror
-        value={placeholder}
-        height="200px"
-        extensions={[cpp()]}
-        onChange={onChange}
-      />
-      <Button onClick={sendCode} variant="contained" endIcon={<SendIcon />}>
-        Send Code
-      </Button>
-		</>
-	);
+  return (
+    <CodeMirror
+      value={placeholder}
+      height="100%"
+      extensions={[cpp()]}
+      onChange={onChange}
+    />
+  );
 };
 
 export default CodeEditor;
