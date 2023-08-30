@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Theme, ThemeProvider, Box } from '@mui/material';
+import { ThemeProvider, Box } from '@mui/material';
 import { AnimatePresence } from 'framer-motion';
 import { Route, Routes } from 'react-router-dom';
 import Feedback from 'pages/Feedback';

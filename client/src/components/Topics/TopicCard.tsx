@@ -1,11 +1,10 @@
 import { Button, Box } from '@mui/material';
-import React from 'react';
+import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { titleToUrl } from 'utils/url';
 import styles from './TopicCard.module.scss';
 import binary from './topic-images/binary-search-tree-nobg.png';
 import linked from './topic-images/linked-list-nobg.png';
-import graph from './topic-images/graph-nobg.png';
 import sort from './topic-images/sorting-nobg.png';
 
 interface Props {
@@ -27,7 +26,7 @@ const colorsFaded = [
   'rgba(76, 201, 240, 0.8)',
 ];
 
-const TopicCard: React.FC<Props> = ({ topic, index }) => {
+const TopicCard: FC<Props> = ({ topic, index }) => {
   const navigate = useNavigate();
 
   const handleClick = (top: string) => {

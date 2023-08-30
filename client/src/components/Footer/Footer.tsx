@@ -1,6 +1,5 @@
-import React from 'react';
-import { Theme, Box, Container, Grid, Typography, Link } from '@mui/material';
-import { useTheme, styled } from '@mui/material/styles';
+import { Box, Container, Grid, Typography, Link } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { Link as RouterLink } from 'react-router-dom';
 import structsLogo from 'assets/img/structs.png';
 
@@ -15,8 +14,6 @@ const StyledFooter = styled('footer')(({ theme }) => ({
  * The footer of the page
  */
 const Footer = () => {
-  const theme: Theme = useTheme();
-
   return (
     <StyledFooter>
       <Container maxWidth="lg">

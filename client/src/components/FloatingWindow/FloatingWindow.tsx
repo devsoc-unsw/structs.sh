@@ -1,10 +1,10 @@
-import React, { FC, useState } from 'react';
+import { FC, ReactNode } from 'react';
 import { Box, Collapse, useTheme } from '@mui/material';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 
 interface Props {
-  children: React.ReactNode;
+  children: ReactNode;
   minHeight?: string;
   maxHeight?: string;
   flexDirection?: 'row' | 'row-reverse';
