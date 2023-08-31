@@ -44,6 +44,7 @@ export const startRecording = async () => {
     duration: MAX_DURATION_SECONDS,
     frameRate: 55,
     download: true,
+    encoder: new Encoders.MP4WasmEncoder({}),
     encoderOptions: {
       codec: AVC.getCodec({ profile: "Main", level: "5.2" }),
     },
