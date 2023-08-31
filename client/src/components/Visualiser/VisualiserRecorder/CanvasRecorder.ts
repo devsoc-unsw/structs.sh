@@ -1,5 +1,4 @@
 import { Recorder, RecorderStatus, Encoders } from "canvas-record";
-import { AVC } from "media-codecs";
 import { canvasElement, drawer, svgElement } from "../VisualiserCanvas";
 
 let rAFId;
@@ -44,10 +43,7 @@ export const startRecording = async () => {
     duration: MAX_DURATION_SECONDS,
     frameRate: 55,
     download: true,
-    encoder: new Encoders.MP4WasmEncoder({}),
-    encoderOptions: {
-      codec: AVC.getCodec({ profile: "Main", level: "5.2" }),
-    },
+    encoder: new Encoders.H264MP4Encoder({}),
   });
 
   await canvasRecorder.start();
