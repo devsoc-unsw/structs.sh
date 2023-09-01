@@ -225,13 +225,15 @@ def pycparser_parse_fn_decls(user_socket_id: str = None, sio=None):
 
     # Parse the functions string
     fns_str_lines = re.split("\n", fns_str.strip())
-    print(fns_str_lines)
+    print("\n=== Raw lines as strings to potentially parse into function declarations:")
+    pprint(fns_str_lines)
 
     functions: dict[str, list[dict]] = {}
 
     current_file = None
     for line in fns_str_lines:
 
+        print("\n=== Current line:")
         print(line)
 
         if m := re.fullmatch(r'^File.*:$', line):
@@ -275,7 +277,7 @@ def pycparser_parse_fn_decls(user_socket_id: str = None, sio=None):
                 if not (isinstance(node, c_ast.Decl) and isinstance(node.type, c_ast.FuncDecl)):
                     continue
 
-                print(f'\n=== Parsing function declaration {node.name}')
+                print(f'Parsing function declaration {node.name}')
                 function = {}
                 function['file'] = current_file
                 function['line_num'] = line_num
@@ -346,13 +348,15 @@ def pycparser_parse_fn_decls(user_socket_id: str = None, sio=None):
                         'name': param_name
                     })
 
-                pprint(function)
+                # pprint(function)
                 if user_socket_id is not None:
-                    print("Parser parsed function declaration, sending to server...")
+                    print("Sending parsed function declaration to server...")
                     sio.emit("createdFunctionDeclarations",
                              (user_socket_id, function))
 
                 functions[func_name] = function
+
+    print(f"\n=== Finished running pycparser_parse_fn_decls in gdb instance\n\n")
 
     return functions
 

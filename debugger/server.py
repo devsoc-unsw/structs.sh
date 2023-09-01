@@ -7,7 +7,7 @@ from typing import Any
 import subprocess
 import json
 
-from debugger.src.placeholder_data import PLACEHOLDER_HEAP_DICTS
+from src.placeholder_data import PLACEHOLDER_HEAP_DICTS
 
 # Hard-coded variables for now.
 # Later we want to receive the line numbers and file names from the client
@@ -146,7 +146,7 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
 
 @io.event
 def mainDebug(socket_id: str) -> None:
-    print("\n=== Running make to compile sample C programs...")
+    print("\n=== Running make to compile sample C programs....")
     command = "make --directory=samples clean; make --directory=samples all"
     ret = subprocess.run(command, capture_output=True, shell=True)
     compilation_out = ret.stdout.decode()
@@ -160,30 +160,34 @@ def mainDebug(socket_id: str) -> None:
     set pagination off
     source src/parse_functions.py
     python pycparser_parse_fn_decls("{socket_id}")
-    python print(f"Finished running pyxparser_parse_fn_decls in gdb instance")
     start
     """
     print(f"gdb_script:\n{gdb_script}")
-    command = f"echo '{gdb_script}' | gdb -q"
 
-    # TODO: subprocess.Popen and Popen.communicate
-    # ret = subprocess.run(command, capture_output=True, shell=True, check=True)
     stuff = []
     for line in gdb_script.split('\n'):
         stuff.append("-ex")
         stuff.append(line)
-    subprocess.run(["gdb", "-batch", *stuff, "./samples/linkedlist/main1"])
+
+    # === Method 1: echo gdb_script to gdb and run gdb in a subprocess
+    # command = f"echo '{gdb_script}' | gdb -q"
+    # ret = subprocess.run(command, capture_output=True, shell=True, check=True)
     # gdb_out = ret.stdout.decode()
     # print(gdb_out)
 
-    # io.emit("mainDebug", f"Finished mainDebug:\n\n{gdb_out}")
+    # === Method 2: use subprocess.Popen and Popen.communicate
+    # TODO: subprocess.Popen and Popen.communicate
+    subprocess.Popen(["gdb", "-batch", "-ex", *stuff,
+                     "./samples/linkedlist/main1"])
+
+    io.emit("mainDebug", f"Finished mainDebug event on server-side")
 
 
 @io.event
 def createdFunctionDeclarations(socket_id: str, user_socket_id, function) -> None:
     print(f"Received function declaration from {user_socket_id}:")
     print(function)
-    print("Sending function  declaration to client...")
+    print("Sending function declaration to client...")
     io.emit("sendFunctionDeclarations", function, room=user_socket_id)
 
 
