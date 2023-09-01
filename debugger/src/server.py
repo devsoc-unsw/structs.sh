@@ -26,7 +26,7 @@ abs_file_path = os.path.dirname(os.path.abspath(__file__))
 LINE_NUMBERS = ["28"]
 FILE_NAMES = [f"{abs_file_path}/samples/linkedlist/main1.c",
               f"{abs_file_path}/samples/linkedlist/linkedlist.c"]
-PROGRAM_NAME = "{abs_file_path}/user_program"
+PROGRAM_NAME = f"{abs_file_path}/user_program"
 
 # Should this go in server.py or in python interpretter running inside the
 # gdb instance? Probably latter, because the state of

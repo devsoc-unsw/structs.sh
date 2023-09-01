@@ -40,6 +40,7 @@ Not: pycparser does not support C comments and will fail if there are
 comments in the C code. Pass the C code through a preprocessor to
 remove comments before parsing with pycparser.
 """
+import os
 import socket
 import urllib3
 from urllib3.connection import HTTPConnection
@@ -53,14 +54,21 @@ from pycparser import parse_file, c_ast
 import requests
 import socketio
 
+# Parent directory of this python script e.g. "/user/.../debugger/src/gdb_scripts"
+# In the docker container this will be "/app/src/gdb_scripts"
+# You can then use this to reference files relative to this directory.
+abs_file_path = os.path.dirname(os.path.abspath(__file__))
+
 # Relative path to the test C file with function prototypes
-FN_PROTOTYPES_TEST_FILE = "samples/fn_prototypes.c"
+# When running user-submitted C code, use the file path to the user's C file
+# instead.
+FN_PROTOTYPES_TEST_FILE = f"{abs_file_path}/../samples/fn_prototypes.c"
 
 # File to write the user-defined function prototypes extracted from gdb
-USER_FN_PROTOTYPES_FILE_PATH = "user_fn_prototypes.c"
+USER_FN_PROTOTYPES_FILE_PATH = f"{abs_file_path}/user_fn_prototypes.c"
 
 # File to write the preprocessed C code to, before parsing with pycparser
-FN_PROTOTYPES_PREPROCESSED = "fn_prototypes_preprocessed"
+FN_PROTOTYPES_PREPROCESSED = f"{abs_file_path}/user_fn_prototypes_preprocessed"
 
 """
 The parsing functions below will return a map of user-defined
