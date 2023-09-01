@@ -1,21 +1,32 @@
 '''
-Must run in /debugger directory (because the gdb commands will source a python file by relative path)'''
+Main debugger server. Hosts the socketio server and handles events from frontend 
+clients as well as gdb instance clients.
 
+Must run in /debugger/src directory (because the gdb commands will source a python file by relative path e.g. ./gdb_scripts/linked_list_things.py)
+'''
+
+import os
 import socketio
 import eventlet
 from typing import Any
 import subprocess
 import json
 
-from src.placeholder_data import PLACEHOLDER_HEAP_DICTS
+from placeholder_data import PLACEHOLDER_HEAP_DICTS
+
+# Parent directory of this python script e.g. "/user/.../debugger/src"
+# In the docker container this will be "/app/src"
+# You can then use this to reference files relative to this directory.
+abs_file_path = os.path.dirname(os.path.abspath(__file__))
 
 # Hard-coded variables for now.
 # Later we want to receive the line numbers and file names from the client
 
 # Line numbers that the user wants to set breakpoints on.
 LINE_NUMBERS = ["28"]
-FILE_NAMES = ["samples/linkedlist/main1.c", "samples/linkedlist/linkedlist.c"]
-PROGRAM_NAME = "user_program"
+FILE_NAMES = [f"{abs_file_path}/samples/linkedlist/main1.c",
+              f"{abs_file_path}/samples/linkedlist/linkedlist.c"]
+PROGRAM_NAME = "{abs_file_path}/user_program"
 
 # Should this go in server.py or in python interpretter running inside the
 # gdb instance? Probably latter, because the state of
@@ -30,7 +41,7 @@ def compile_program(file_names: list[str]):
 
 def create_ll_script(line_numbers, program_name):
     gdb_script = f"""
-source src/traverse-linked-list.py
+source {abs_file_path}/gdb_scripts/traverse_linked_list.py
 python NodeListCommand("nodelist", "l")
 
 file {program_name}
@@ -47,7 +58,7 @@ quit
 
 def create_ll_script_2(program_name):
     gdb_script = f"""
-source src/linked-list-things.py
+source {abs_file_path}/gdb_scripts/linked_list_things.py
 # python info_functions_output = gdb.execute("info functions -n", False, True)
 # python my_functions = parseFunctionNames(info_functions_output)
 # python breakOnUserFunctions(my_functions)
@@ -147,7 +158,7 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
 @io.event
 def mainDebug(socket_id: str) -> None:
     print("\n=== Running make to compile sample C programs....")
-    command = "make --directory=samples clean; make --directory=samples all"
+    command = "make --directory=src/samples clean; make --directory=src/samples all"
     ret = subprocess.run(command, capture_output=True, shell=True)
     compilation_out = ret.stdout.decode()
     print(compilation_out)
@@ -155,10 +166,10 @@ def mainDebug(socket_id: str) -> None:
     # python print(user_fn_decls)
     print("\n=== Running gdb script...")
     gdb_script = f"""
-    file samples/linkedlist/main1
+    file {abs_file_path}/samples/linkedlist/main1
     set python print-stack full
     set pagination off
-    source src/parse_functions.py
+    source {abs_file_path}/gdb_scripts/parse_functions.py
     python pycparser_parse_fn_decls("{socket_id}")
     start
     """
@@ -177,8 +188,8 @@ def mainDebug(socket_id: str) -> None:
 
     # === Method 2: use subprocess.Popen and Popen.communicate
     # TODO: subprocess.Popen and Popen.communicate
-    subprocess.Popen(["gdb", "-batch", "-ex", *stuff,
-                     "./samples/linkedlist/main1"])
+    subprocess.Popen(["gdb", "-batch", *stuff,
+                     f"{abs_file_path}/samples/linkedlist/main1"])
 
     io.emit("mainDebug", f"Finished mainDebug event on server-side")
 
