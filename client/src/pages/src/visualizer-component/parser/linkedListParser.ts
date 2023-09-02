@@ -6,13 +6,11 @@ import {
   CType,
   BackendUpdate,
 } from '../types/backendType';
-import {
-  GenericGraph,
-  EdgeEntity,
-  EntityConcrete,
-  NodeEntity,
-  EntityType,
-} from '../types/frontendType';
+import { EntityType } from '../types/entity/baseEntity';
+import { EdgeEntity } from '../types/entity/edgeEntity';
+import { DEFAULT_NODE_SIZE, NodeEntity } from '../types/entity/nodeEntity';
+import { PointerEntity } from '../types/entity/pointerEntity';
+import { EntityConcrete, FrontendLinkedListGraph, GenericGraph } from '../types/frontendType';
 import { assertUnreachable, cloneSimple } from '../util/util';
 import { Parser } from './parser';
 
@@ -178,15 +176,15 @@ export class LinkedListParser implements Parser {
   /**
    * Parser functionality
    */
-  parseInitialState(backendStructure: BackendState, editorAnnotation?: EditorAnnotation) {
+  parseInitialState(backendStructure: BackendState, editorAnnotation: EditorAnnotation): FrontendLinkedListGraph {
     const nodes: NodeEntity[] = [];
     const edges: EdgeEntity[] = [];
     const cacheEntity: { [uid: string]: EntityConcrete } = {};
 
     // Later need to add an additional step to parse user defined struct into generic struct
     const linkedList: LinkedListNode[] = [];
-    Object.keys(backendStructure).forEach((uid) => {
-      const entity = backendStructure[uid] as BackendVariableConcrete;
+    Object.keys(backendStructure.heap).forEach((uid) => {
+      const entity = backendStructure.heap[uid] as BackendVariableConcrete;
 
       if (entity.is_pointer === true) {
         // Let it go, I am unsure why we need this
@@ -242,7 +240,7 @@ export class LinkedListParser implements Parser {
           type: EntityType.NODE,
           title: node.data ? node.data.toString() : '',
           colorHex: '#FFFFFF',
-          size: 50,
+          size: DEFAULT_NODE_SIZE,
           edges: [],
           x: positions.get(uid).x,
           y: positions.get(uid).y,
@@ -271,12 +269,34 @@ export class LinkedListParser implements Parser {
         }
       });
 
+      let pointers: PointerEntity[] = [];
+      // Add annotation entity on top
+      Object.values(editorAnnotation).forEach((annotation) => {
+        /**
+         * Find variable from stack
+         */
+        let stackVariable: BackendVariableConcrete | undefined = backendStructure.stack[annotation.varName];
+        if (!stackVariable) return;
+
+        const annotationEntity: PointerEntity = {
+          uid: `${annotation.varName}`,
+          type: EntityType.POINTER,
+          attachedUid: cacheEntity[stackVariable.addr].uid,
+          varName: annotation.varName
+        };
+        pointers.push(annotationEntity);
+        cacheEntity[annotationEntity.uid] = annotationEntity;
+      })
+
       return {
         nodes,
         edges,
         cacheEntity,
+        pointers
       };
     } catch (e) {
+      // Not silent fail
+      console.error(e.message);
       return undefined;
     }
   }

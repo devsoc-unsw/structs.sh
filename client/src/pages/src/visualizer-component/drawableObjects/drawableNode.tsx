@@ -69,8 +69,6 @@ const LinkedNode: DrawableEdgeComponent = ({ entity: nodeEntity, coord }, ref) =
       animate={animations.animate.positionChange(coord.x.val, coord.y.val)}
       x={x}
       y={y}
-      drag
-      dragConstraints={{ left: 0, top: 0, right: 1000, bottom: 1000 }}
       dragMomentum={false}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}

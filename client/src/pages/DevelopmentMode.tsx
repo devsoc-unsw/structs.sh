@@ -9,15 +9,17 @@ import { BackendState, CType } from './src/visualizer-component/types/backendTyp
 
 const DevelopmentMode = () => {
   const [backendState, setBackendState] = useState<BackendState>({
-    '0x1': {
-      addr: '0x1',
-      type: CType.SINGLE_LINED_LIST_NODE,
-      is_pointer: false,
-      data: {
-        value: '27',
-        next: '0x0',
+    heap :{ '0x1': {
+        addr: '0x1',
+        type: CType.SINGLE_LINED_LIST_NODE,
+        is_pointer: false,
+        data: {
+          value: '27',
+          next: '0x0',
+        },
       },
     },
+    stack: {}
   });
 
   const [count, setCountState] = useState(100);
