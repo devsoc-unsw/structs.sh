@@ -146,9 +146,99 @@ They serve two purposes:
 
 """
 
+
+class DeclVisitor(c_ast.NodeVisitor):
+    def visit_Decl(self, node):
+        print(
+            f"hi im visiting a Decl!!!!!!!!!!!!!!!!!!! {type(node).__name__}, {isinstance(node, c_ast.FuncDecl)}")
+        result = {}
+        result['name'] = node.name
+        if isinstance(node.type, c_ast.FuncDecl):
+            print("===================== in decl about to visit funcdecl")
+            result['func_decl'] = FuncDeclVisitor().visit(node.type)
+        elif isinstance(node.type, c_ast.TypeDecl):
+            result['type'] = TypeDeclVisitor().visit(node.type)
+        elif isinstance(node.type, c_ast.PtrDecl):
+            print("===================== in decl about to visit ptrdecl")
+            result['type'] = PtrDeclVisitor().visit(node.type)
+        elif isinstance(node.type, c_ast.ArrayDecl):
+            result['type'] = ArrayVisitor().visit(node.type)
+        else:
+            raise Exception(
+                f"Visiting Decl of unknown type: {type(node).__name__}")
+
+        return result
+
+
+class FuncDeclVisitor(c_ast.NodeVisitor):
+    def visit_FuncDecl(self, node):
+        result = {}
+        result["return_type"] = DeclVisitor().visit(node.type)
+        if node.args is not None:
+            result["params"] = ParamListVisitor().visit(node.args)
+        else:
+            result["params"] = []
+
+        return result
+
+
+class ParamListVisitor(c_ast.NodeVisitor):
+    def visit_ParamList(self, node):
+        result = []
+
+        for param in node.params:
+            result.append(TypenameVisitor().visit(param))
+
+        return result
+
+
+class TypenameVisitor(c_ast.NodeVisitor):
+    def visit_Typename(self, node):
+        print(
+            f"!!!!!!!!!!!!!!!!!! hi im visiting a typename!!! {node.type.__class__.__name__}")
+        result = {}
+        result["name"] = node.name
+        result["type"] = DeclVisitor().visit(node.type)
+        return result
+
+
+class TypeDeclVisitor(c_ast.NodeVisitor):
+
+    def visit_TypeDecl(self, node):
+        if isinstance(node.type, c_ast.Decl):
+            return DeclVisitor().visit(node.type)
+        elif isinstance(node.type, c_ast.Struct):
+            return StructVisitor().visit(node.type)
+        elif isinstance(node.type, c_ast.IdentifierType):
+            print("===================== in typedecl about to visit identifiertype")
+            return IdentifierTypeVisitor().visit(node.type)
+        else:
+            raise Exception(
+                f"Visiting TypeDecl with unknown type: {type(node.type).__name__}")
+
+
+class StructVisitor(c_ast.NodeVisitor):
+    def visit_Struct(self, node):
+        return f"struct {node.name}"
+
+
+class PtrDeclVisitor(c_ast.NodeVisitor):
+    def visit_PtrDecl(self, node):
+        return f"{DeclVisitor().visit(node.type)} *"
+
+
+class ArrayVisitor(c_ast.NodeVisitor):
+    def visit_ArrayDecl(self, node):
+        return f"{DeclVisitor().visit(node.type)}[{node.dim.value if node.dim else ''}]"
+
+
+class IdentifierTypeVisitor(c_ast.NodeVisitor):
+    def visit_IdentifierType(self, node):
+        return " ".join(node.names)
+
+
 # sio = socketio.Client()
 # sio.connect("http://localhost:8000")
-
 
 def useSocketIOConnection(func):
     def wrapper(*args, **kwargs):
@@ -280,6 +370,8 @@ def pycparser_parse_fn_decls(user_socket_id: str = None, sio=None):
             ast = parse_file(FN_PROTOTYPES_PREPROCESSED, use_cpp=True,
                              cpp_args=r'-Iutils/fake_libc_include')
 
+            declVisitor = DeclVisitor()
+
             # Traverse each node in top level of AST and extract function declarations
             for node in ast.ext:
                 if not (isinstance(node, c_ast.Decl) and isinstance(node.type, c_ast.FuncDecl)):
@@ -291,6 +383,11 @@ def pycparser_parse_fn_decls(user_socket_id: str = None, sio=None):
                 function['line_num'] = line_num
                 func_name = node.name
                 function["name"] = func_name
+                # node.show()
+                print(node)
+                # print(node.type)
+                result = declVisitor.visit(node)
+                pprint(result)
                 # print(f"Function Name: {func_name}")
 
                 return_type_ast = node.type.type
@@ -367,6 +464,160 @@ def pycparser_parse_fn_decls(user_socket_id: str = None, sio=None):
     print(f"\n=== Finished running pycparser_parse_fn_decls in gdb instance\n\n")
 
     return functions
+
+# @useSocketIOConnection
+# def pycparser_parse_fn_decls(user_socket_id: str = None, sio=None):
+#     '''
+#     Using pycparser to parse function declarations by constructing AST.
+#     TODO: Use visitor pattern to traverse AST and extract function declaration info.
+#     '''
+
+#     # typedef and struct declarations need to be declared in the files of the
+#     # user-defined functions for pycparser to parse them correctly.
+#     type_decl_strs = get_type_decl_strs()
+
+#     fns_str: str = gdb.execute("info functions -n", False, True)
+
+#     # Parse the functions string
+#     fns_str_lines = re.split("\n", fns_str.strip())
+#     print("\n=== Raw lines as strings to potentially parse into function declarations:")
+#     pprint(fns_str_lines)
+
+#     functions: dict[str, list[dict]] = {}
+
+#     current_file = None
+#     for line in fns_str_lines:
+
+#         print("\n=== Current line:")
+#         print(line)
+
+#         if m := re.fullmatch(r'^File.*:$', line):
+#             print("^^^ Matched file name")
+#             # Set new file name and reset text
+#             current_file = line.split(" ")[1][:-1]
+#         elif m := re.fullmatch(r'^(\d+):\t(.*;)$', line):
+#             print("^^^ Matched function declaration")
+#             line_num = int(m.group(1))
+#             fn_decl_str = m.group(2)
+
+#             # Write a single user-defined function declaration to the file USER_FN_PROTOTYPES_FILE_PATH
+#             # then preprocess the C code to remove comments (redundant)
+#             with open(USER_FN_PROTOTYPES_FILE_PATH, "w") as f:
+#                 f.write("\n".join(type_decl_strs))
+#                 f.write("\n")
+#                 f.write(fn_decl_str)
+#                 f.write("\n")
+#             subprocess.run(f"gcc -E {USER_FN_PROTOTYPES_FILE_PATH} > {FN_PROTOTYPES_PREPROCESSED}",
+#                            shell=True)
+#             # subprocess.run("echo -e " + "\"" + "\n".join(type_decl_strs) + "\n" + fn_decl_str + "\n" + "\"" + f" > {USER_FN_PROTOTYPES_FILE_PATH} ; gcc -E {USER_FN_PROTOTYPES_FILE_PATH} > {FN_PROTOTYPES_PREPROCESSED}",
+#             #                shell=True)
+
+#             """
+#             The resulting USER_FN_PROTOTYPES_FILE_PATH file looks something like this:
+#             ```
+#             typedef struct list List;
+#             struct list;
+
+#             void append(List * a, int a);
+#             ```
+#             """
+
+#             # Parse the preprocessed C code into an AST
+#             # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
+#             ast = parse_file(FN_PROTOTYPES_PREPROCESSED, use_cpp=True,
+#                              cpp_args=r'-Iutils/fake_libc_include')
+
+#             funcDeclVisitor = DeclVisitor()
+
+#             # Traverse each node in top level of AST and extract function declarations
+#             for node in ast.ext:
+#                 if not (isinstance(node, c_ast.Decl) and isinstance(node.type, c_ast.FuncDecl)):
+#                     continue
+
+#                 print(f'Parsing function declaration {node.name}')
+#                 node.show()
+#                 funcDeclVisitor.visit(node)
+#                 function = {}
+#                 function['file'] = current_file
+#                 function['line_num'] = line_num
+#                 func_name = node.name
+#                 function["name"] = func_name
+#                 # print(f"Function Name: {func_name}")
+
+#                 return_type_ast = node.type.type
+#                 return_type = None
+#                 if isinstance(return_type_ast, c_ast.PtrDecl):
+#                     if isinstance(return_type_ast.type, c_ast.Struct):
+#                         return_type = "struct " + \
+#                             return_type_ast.type.type.name + " *"
+#                     elif isinstance(return_type_ast.type, c_ast.TypeDecl):
+#                         if isinstance(return_type_ast.type.type, c_ast.Struct):
+#                             return_type = "struct " + \
+#                                 return_type_ast.type.type.name + " *"
+#                         else:
+#                             return_type = " ".join(
+#                                 return_type_ast.type.type.names) + " *"
+#                     else:
+#                         return_type = " ".join(
+#                             return_type_ast.type.type.names) + " *"
+#                 elif isinstance(return_type_ast, c_ast.TypeDecl):
+#                     if isinstance(return_type_ast.type, c_ast.Struct):
+#                         return_type = "struct " + \
+#                             return_type_ast.type.name
+#                     else:
+#                         return_type = " ".join(return_type_ast.type.names)
+#                 else:
+#                     raise Exception("Unknown return type")
+#                 function["return_type"] = return_type
+
+#                 function['params'] = []
+#                 for param_ast in node.type.args.params if node.type.args else []:
+#                     param_name = param_ast.name
+#                     param_type = None
+#                     if isinstance(param_ast.type, c_ast.PtrDecl):
+#                         if isinstance(param_ast.type.type.type, c_ast.Struct):
+#                             param_type = "struct "+param_ast.type.type.type.name + " *"
+#                         elif isinstance(param_ast.type.type.type, c_ast.PtrDecl):
+#                             if isinstance(param_ast.type.type.type.type, c_ast.Struct):
+#                                 param_type = "struct "+param_ast.type.type.type.type.name + " *"
+#                             else:
+#                                 param_type = " ".join(
+#                                     param_ast.type.type.type.type.names) + " *"
+#                         elif isinstance(param_ast.type.type.type, c_ast.TypeDecl):
+#                             if isinstance(param_ast.type.type.type.type, c_ast.Struct):
+#                                 param_type = "struct "+param_ast.type.type.type.type.name + " *"
+#                             else:
+#                                 param_type = " ".join(
+#                                     param_ast.type.type.type.type.names) + " *"
+#                         else:
+#                             param_type = " ".join(
+#                                 param_ast.type.type.type.names) + " *"
+#                     elif isinstance(param_ast.type, c_ast.TypeDecl):
+#                         if isinstance(param_ast.type.type, c_ast.Struct):
+#                             param_type = "struct "+param_ast.type.type.name
+#                         else:
+#                             param_type = " ".join(param_ast.type.type.names)
+#                     elif isinstance(param_ast.type, c_ast.ArrayDecl):
+#                         param_type = " ".join(
+#                             param_ast.type.type.type.names) + f"[{param_ast.type.dim.value if param_ast.type.dim else ''}]"
+#                     else:
+#                         raise Exception("Unknown param type")
+#                     function['params'].append({
+#                         'type': param_type,
+#                         'name': param_name
+#                     })
+
+#                 # pprint(function)
+#                 if user_socket_id is not None:
+#                     print("Sending parsed function declaration to server...")
+#                     sio.emit("createdFunctionDeclarations",
+#                              (user_socket_id, function))
+
+#                 functions[func_name] = function
+
+#     print(f"\n=== Finished running pycparser_parse_fn_decls in gdb instance\n\n")
+
+#     return functions
 
 
 def get_type_decl_strs():
