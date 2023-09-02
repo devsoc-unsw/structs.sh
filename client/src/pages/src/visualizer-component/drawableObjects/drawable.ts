@@ -1,4 +1,7 @@
-import { EdgeEntity, EntityConcrete, GenericGraph, NodeEntity } from '../types/frontendType';
+import { EdgeEntity } from '../types/entity/edgeEntity';
+import { NodeEntity } from '../types/entity/nodeEntity';
+import { PointerEntity } from '../types/entity/pointerEntity';
+import { EntityConcrete, GenericGraph } from '../types/frontendType';
 
 interface TransitionDetails {
   type?: 'spring' | 'tween';
@@ -40,7 +43,13 @@ export interface EdgeProp extends DrawablePropBase {
   from: MotionCoord;
   to: MotionCoord;
 }
-export type DrawablePropConcrete = NodeProp | EdgeProp;
+export interface PointerProp extends DrawablePropBase {
+  entity: PointerEntity;
+  attachedEntity: NodeEntity;
+  pos: MotionCoord;
+}
+
+export type DrawablePropConcrete = NodeProp | EdgeProp | PointerProp;
 
 export type DrawableComponentBase<T extends DrawablePropConcrete> = React.ForwardRefRenderFunction<
   SVGSVGElement,

@@ -112,95 +112,131 @@ def echo(socket_id: str, data: Any) -> None:
 @io.event
 def sendDummyData(socket_id: str, line_number: Any) -> None:
     print("Received message from", socket_id, ":", line_number)
-    heap_dict = {}
+    backend_dict = {}
     # Our initial linked list node has been alloced with data value 27
     if line_number == "100":
-        heap_dict = {
-            "0x1": {
-                "addr": "0x1",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "27",
-                    "next": "0x0"
+        backend_dict = {
+            'heap': {
+                "0x1": {
+                    "addr": "0x1",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "27",
+                        "next": "0x0"
+                    }
+                }
+            },
+            'stack': {
+                'curr': {
+                    "addr": "0x1",
+                    "type": "struct node",
+                    "is_pointer": "true",
                 }
             }
         }
 
     # Append the value 34 to the end of the list
     elif line_number == "101":
-        heap_dict = {
-            "0x1": {
-                "addr": "0x1",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "27",
-                    "next": "0x2"
+        backend_dict = {
+            'heap': {
+                "0x1": {
+                    "addr": "0x1",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "27",
+                        "next": "0x2"
+                    }
+                },
+                "0x2": {
+                    "addr": "0x2",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "34",
+                        "next": "0x0"
+                    }
                 }
             },
-            "0x2": {
-                "addr": "0x2",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "34",
-                    "next": "0x0"
+            'stack': {
+                'curr': {
+                    "addr": "0x2",
+                    "type": "struct node",
+                    "is_pointer": "true",
                 }
             }
         }
 
     # Append the value 56 to the end of the list
     elif line_number == "102":
-        heap_dict = {
-            "0x1": {
-                "addr": "0x1",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "27",
-                    "next": "0x2"
+        backend_dict = {
+            'heap': {
+                "0x1": {
+                    "addr": "0x1",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "27",
+                        "next": "0x2"
+                    }
+                },
+                "0x2": {
+                    "addr": "0x2",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "34",
+                        "next": "0x3"
+                    }
+                },
+                "0x3": {
+                    "addr": "0x3",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "56",
+                        "next": "0x0"
+                    }
                 }
             },
-            "0x2": {
-                "addr": "0x2",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "34",
-                    "next": "0x3"
-                }
-            },
-            "0x3": {
-                "addr": "0x3",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "56",
-                    "next": "0x0"
+            'stack': {
+                'curr': {
+                    "addr": "0x3",
+                    "type": "struct node",
+                    "is_pointer": "true",
                 }
             }
         }
 
     # Remove the second element from the linked list (i.e. remove 34)
     elif line_number == "103":
-        heap_dict = {
-            "0x1": {
-                "addr": "0x1",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "27",
-                    "next": "0x3"
+        backend_dict = {
+            'heap': {
+                "0x1": {
+                    "addr": "0x1",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "27",
+                        "next": "0x3"
+                    }
+                },
+                "0x3": {
+                    "addr": "0x3",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "56",
+                        "next": "0x0"
+                    }
                 }
             },
-            "0x3": {
-                "addr": "0x3",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "56",
-                    "next": "0x0"
+            'stack': {
+                'curr': {
+                    "addr": "0x3",
+                    "type": "struct node",
+                    "is_pointer": "true",
                 }
             }
         }
@@ -208,32 +244,41 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
     # Append the value 72 to the start of the list (order of list nodes in heap_dict shouldn"t
     # matter as long as the next pointers are in the correct order)
     elif line_number == "104":
-        heap_dict = {
-            "0x1": {
-                "addr": "0x1",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "27",
-                    "next": "0x3"
+        backend_dict = {
+            'heap': {
+                "0x1": {
+                    "addr": "0x1",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "27",
+                        "next": "0x3"
+                    }
+                },
+                "0x3": {
+                    "addr": "0x3",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "56",
+                        "next": "0x0"
+                    }
+                },
+                "0x4": {
+                    "addr": "0x4",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "72",
+                        "next": "0x1"
+                    }
                 }
             },
-            "0x3": {
-                "addr": "0x3",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "56",
-                    "next": "0x0"
-                }
-            },
-            "0x4": {
-                "addr": "0x4",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "72",
-                    "next": "0x1"
+            'stack': {
+                'curr': {
+                    "addr": "0x4",
+                    "type": "struct node",
+                    "is_pointer": "true",
                 }
             }
         }
@@ -241,148 +286,192 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
     # Append the value 21 to the second element of the linked list
     # (will be placed AFTER the second element i.e. the third element)
     elif line_number == "105":
-        heap_dict = {
-            "0x1": {
-                "addr": "0x1",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "27",
-                    "next": "0x5"
+        backend_dict = {
+            'heap': {
+                "0x1": {
+                    "addr": "0x1",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "27",
+                        "next": "0x0"
+                    }
+                },
+                "0x3": {
+                    "addr": "0x3",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "56",
+                        "next": "0x4"
+                    }
+                },
+                "0x4": {
+                    "addr": "0x4",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "72",
+                        "next": "0x1"
+                    }
+                },
+                "0x5": {
+                    "addr": "0x5",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "21",
+                        "next": "0x3"
+                    }
                 }
             },
-            "0x3": {
-                "addr": "0x3",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "56",
-                    "next": "0x0"
-                }
-            },
-            "0x4": {
-                "addr": "0x4",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "72",
-                    "next": "0x1"
-                }
-            },
-            "0x5": {
-                "addr": "0x5",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "21",
-                    "next": "0x3"
+            'stack': {
+                'curr': {
+                    "addr": "0x5",
+                    "type": "struct node",
+                    "is_pointer": "true",
                 }
             }
         }
     elif line_number == "106":
-        heap_dict = {
-            "0x1": {
-                "addr": "0x1",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "27",
-                    "next": "0x5"
+        backend_dict = {
+            'heap': {
+                "0x1": {
+                    "addr": "0x1",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "27",
+                        "next": "0x0"
+                    }
+                },
+                "0x4": {
+                    "addr": "0x4",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "72",
+                        "next": "0x1"
+                    }
+                },
+                "0x5": {
+                    "addr": "0x5",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "21",
+                        "next": "0x4"
+                    }
                 }
             },
-            "0x4": {
-                "addr": "0x4",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "72",
-                    "next": "0x1"
-                }
-            },
-            "0x5": {
-                "addr": "0x5",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "21",
-                    "next": "0x0"
+            'stack': {
+                'curr': {
+                    "addr": "0x5",
+                    "type": "struct node",
+                    "is_pointer": "true",
                 }
             }
         }
     elif line_number == "107":
-        heap_dict = {
-            "0x1": {
-                "addr": "0x1",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "27",
-                    "next": "0x5"
+        backend_dict = {
+            'heap': {
+                "0x1": {
+                    "addr": "0x1",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "27",
+                        "next": "0x0"
+                    }
+                },
+                "0x4": {
+                    "addr": "0x4",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "72",
+                        "next": "0x1"
+                    }
+                },
+                "0x5": {
+                    "addr": "0x5",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "21",
+                        "next": "0x6"
+                    }
+                },
+                "0x6": {
+                    "addr": "0x6",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "45",
+                        "next": "0x4"
+                    }
                 }
             },
-            "0x4": {
-                "addr": "0x4",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "72",
-                    "next": "0x1"
-                }
-            },
-            "0x5": {
-                "addr": "0x5",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "21",
-                    "next": "0x6"
-                }
-            },
-            "0x6": {
-                "addr": "0x6",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "45",
-                    "next": "0x0"
+            'stack': {
+                'curr': {
+                    "addr": "0x6",
+                    "type": "struct node",
+                    "is_pointer": "true",
                 }
             }
         }
     elif line_number == "108":
-        heap_dict = {
-            "0x1": {
-                "addr": "0x1",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "27",
-                    "next": "0x5"
+        backend_dict = {
+            'heap': {
+                "0x1": {
+                    "addr": "0x1",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "27",
+                        "next": "0x0"
+                    }
+                },
+                "0x4": {
+                    "addr": "0x4",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "72",
+                        "next": "0x1"
+                    }
+                },
+                "0x5": {
+                    "addr": "0x5",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "21",
+                        "next": "0x6"
+                    }
+                },
+                "0x6": {
+                    "addr": "0x6",
+                    "type": "struct node",
+                    "is_pointer": "false",
+                    "data": {
+                        "value": "45",
+                        "next": "0x4"
+                    }
                 }
             },
-            "0x5": {
-                "addr": "0x5",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "21",
-                    "next": "0x6"
-                }
-            },
-            "0x6": {
-                "addr": "0x6",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                    "value": "45",
-                    "next": "0x0"
+            'stack': {
+                'curr': {
+                    "addr": "0x6",
+                    "type": "struct node",
+                    "is_pointer": "true",
                 }
             }
         }
-
     else:
-        heap_dict = "LINE NOT FOUND"
+        backend_dict = "LINE NOT FOUND"
 
-    retVal = f"{heap_dict}"
+    retVal = f"{backend_dict}"
     io.emit("sendDummyData", retVal, room=socket_id)
 
 
