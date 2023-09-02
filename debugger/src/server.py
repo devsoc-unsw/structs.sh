@@ -27,7 +27,7 @@ LINE_NUMBERS = ["28"]
 FILE_NAMES = [f"{abs_file_path}/samples/linkedlist/main1.c",
               f"{abs_file_path}/samples/linkedlist/linkedlist.c"]
 USER_PROGRAM_NAME = f"{abs_file_path}/user_program"
-TEST_PROGRAM_NAME = f"{abs_file_path}/samples/fn_declarations"
+TEST_PROGRAM_NAME = f"{abs_file_path}/samples/linkedlist/main1"
 
 # Should this go in server.py or in python interpretter running inside the
 # gdb instance? Probably latter, because the state of
@@ -171,7 +171,10 @@ def mainDebug(socket_id: str) -> None:
     set python print-stack full
     set pagination off
     source {abs_file_path}/gdb_scripts/parse_functions.py
+    python print("fe client socket io")
+    python print("{socket_id}")
     python pycparser_parse_fn_decls("{socket_id}")
+    python pycparser_parse_type_decls("{socket_id}")
     start
     """
     print(f"gdb_script:\n{gdb_script}")
@@ -195,11 +198,19 @@ def mainDebug(socket_id: str) -> None:
 
 
 @io.event
-def createdFunctionDeclarations(socket_id: str, user_socket_id, function) -> None:
+def createdFunctionDeclaration(socket_id: str, user_socket_id, function) -> None:
     print(f"Received function declaration from {user_socket_id}:")
     print(function)
     print("Sending function declaration to client...")
-    io.emit("sendFunctionDeclarations", function, room=user_socket_id)
+    io.emit("sendFunctionDeclaration", function, room=user_socket_id)
+
+
+@io.event
+def createdTypeDeclaration(socket_id: str, user_socket_id, type) -> None:
+    print(f"Received type declaration from {user_socket_id}:")
+    print(type)
+    print("Sending type declaration to client...")
+    io.emit("sendTypeDeclaration", type, room=user_socket_id)
 
 
 print("Starting server...")

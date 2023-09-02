@@ -69,5 +69,5 @@ int main(void) { return 0; }
  * - functions and whitespace
  * - nested pointer types
  * - nested array types
- *
+ * - function pointer types
  */
