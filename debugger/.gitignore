@@ -1,4 +1,7 @@
-user_fn_prototypes_preprocessed
-user_fn_prototypes.c
+user_fn_declarations_preprocessed
+user_fn_declarations.c
+user_fn_declarations.o
+fn_declarations
+fn_declarations.o
 *.dYSM
 __pycache__

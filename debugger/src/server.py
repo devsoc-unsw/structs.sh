@@ -26,7 +26,8 @@ abs_file_path = os.path.dirname(os.path.abspath(__file__))
 LINE_NUMBERS = ["28"]
 FILE_NAMES = [f"{abs_file_path}/samples/linkedlist/main1.c",
               f"{abs_file_path}/samples/linkedlist/linkedlist.c"]
-PROGRAM_NAME = f"{abs_file_path}/user_program"
+USER_PROGRAM_NAME = f"{abs_file_path}/user_program"
+TEST_PROGRAM_NAME = f"{abs_file_path}/samples/fn_declarations"
 
 # Should this go in server.py or in python interpretter running inside the
 # gdb instance? Probably latter, because the state of
@@ -36,7 +37,7 @@ heap_dict = {}
 
 
 def compile_program(file_names: list[str]):
-    subprocess.run(["gcc", "-ggdb", *file_names, "-o", PROGRAM_NAME])
+    subprocess.run(["gcc", "-ggdb", *file_names, "-o", USER_PROGRAM_NAME])
 
 
 def create_ll_script(line_numbers, program_name):
@@ -96,7 +97,7 @@ def getBreakpoints(socket_id: str, line_numbers: list[int], listName: list[str])
     compile_program(FILE_NAMES)
 
     # Run GDB with the script
-    gdb_script = create_ll_script(LINE_NUMBERS, PROGRAM_NAME)
+    gdb_script = create_ll_script(LINE_NUMBERS, USER_PROGRAM_NAME)
 
     command = f"echo '{gdb_script}' | gdb -q"
     output = subprocess.check_output(command, shell=True).decode("utf-8")
@@ -166,7 +167,7 @@ def mainDebug(socket_id: str) -> None:
     # python print(user_fn_decls)
     print("\n=== Running gdb script...")
     gdb_script = f"""
-    file {abs_file_path}/samples/linkedlist/main1
+    file {TEST_PROGRAM_NAME}
     set python print-stack full
     set pagination off
     source {abs_file_path}/gdb_scripts/parse_functions.py
@@ -188,8 +189,7 @@ def mainDebug(socket_id: str) -> None:
 
     # === Method 2: use subprocess.Popen and Popen.communicate
     # TODO: subprocess.Popen and Popen.communicate
-    subprocess.Popen(["gdb", "-batch", *stuff,
-                     f"{abs_file_path}/samples/linkedlist/main1"])
+    subprocess.Popen(["gdb", "-batch", *stuff])
 
     io.emit("mainDebug", f"Finished mainDebug event on server-side")
 
