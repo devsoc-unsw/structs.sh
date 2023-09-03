@@ -61,8 +61,11 @@ const DevelopmentMode = () => {
     socket.on('getBreakpoints', onGetBreakpoints);
     // socket.on('sendDummyData', onSendDummyData);
     socket.on('mainDebug', onMainDebug);
-    socket.on('sendFunctionDeclarations', (data: any) => {
-      console.log(`Received function declarations:\n`, data);
+    socket.on('sendFunctionDeclaration', (data: any) => {
+      console.log(`Received function declaration:\n`, data);
+    });
+    socket.on('sendTypeDeclaration', (data: any) => {
+      console.log(`Received type declaration:\n`, data);
     });
 
     return () => {
