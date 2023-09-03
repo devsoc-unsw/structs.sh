@@ -59,16 +59,10 @@ Ensure you have the following software:
 
 Clone the repository using the commmand: `git clone git@github.com:csesoc/structs.sh.git`
 
-### Running the frontend without Docker
-
-1. `cd` into the `client` directory
-2. Run `npm install` to install node modules
-3. Run `npm start` to start the server. The frontend should be accessible at `localhost:3000`
-
 ### Running the app with Docker
 
 1. `cd` into the project root directory
-2. Run `docker-compose up --build`. The frontend should be accesible at `localhost:3000`. The debugger server should be accessible at `localhost:5000`.
+2. Run `docker-compose up --build`. The frontend should be accesible at `localhost:3000`. The debugger server should be accessible at `localhost:8000`.
 
 ## Documentation
 

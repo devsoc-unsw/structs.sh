@@ -28,6 +28,10 @@ const DevelopmentMode = () => {
     console.log('Disconnected!');
   }, []);
 
+  const onMainDebug = useCallback((data: any) => {
+    console.log(`Received event onMainDebug:\n`, data);
+  }, []);
+
   // const onSendDummyData = useCallback((data: any) => {
   //   console.log(`Received message: ${data}`);
   // }, []);
@@ -36,12 +40,13 @@ const DevelopmentMode = () => {
     const onConnect = () => {
       console.log('Connected!');
       console.log('Emitting message to server...');
-      socket.emit('getBreakpoints', '121', 'list2');
-      socket.emit('getBreakpoints', '122', 'list2');
-      socket.emit('getBreakpoints', '123', 'list2');
-      socket.emit('getBreakpoints', '124', 'list2');
-      socket.emit('getBreakpoints', '125', 'list2');
-      socket.emit('getBreakpoints', '126', 'list2');
+      // socket.emit('getBreakpoints', '121', 'list2');
+      // socket.emit('getBreakpoints', '122', 'list2');
+      // socket.emit('getBreakpoints', '123', 'list2');
+      // socket.emit('getBreakpoints', '124', 'list2');
+      // socket.emit('getBreakpoints', '125', 'list2');
+      // socket.emit('getBreakpoints', '126', 'list2');
+      socket.emit('mainDebug');
 
       // socket.emit('sendDummyData', '100');
       // socket.emit('sendDummyData', '101');
@@ -55,6 +60,10 @@ const DevelopmentMode = () => {
     socket.on('disconnect', onDisconnect);
     socket.on('getBreakpoints', onGetBreakpoints);
     // socket.on('sendDummyData', onSendDummyData);
+    socket.on('mainDebug', onMainDebug);
+    socket.on('sendFunctionDeclarations', (data: any) => {
+      console.log(`Received function declarations:\n`, data);
+    });
 
     return () => {
       socket.off('connect', onConnect);

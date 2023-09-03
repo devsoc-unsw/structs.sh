@@ -2,11 +2,62 @@
 
 A web server for compiling C programs and starting a GDB instance to inspect the state of data structures such as linked lists, arrays, trees and graphs.
 
+## File Structure
+
+```
+.
+├── .dockerignore
+├── .gitignore
+├── Dockerfile.dev
+├── README.md
+├── requirements.txt
+└── src
+    ├── gdb_scripts
+    ├── placeholder_data.py
+    ├── samples
+    │   ├── Makefile
+    │   ├── ...
+    └── server.py
+```
+
+The top level (*/debugger*) mainly contains configurations for the Docker image (*Dockerfile.dev*, *.dockerignore*), git (*.gitignore*), and python dependencies (*requirements.txt*).
+
+The */debugger/src* directory has all the debugger server logic. It is mounted onto the
+Docker container's */app/src* volume which means if you edit files in the
+*/debugger/src* directory, changes will immediately be reflected in the Docker
+container. This setting is in */docker-compose.yml* under Volumes.
+
 ## Dependencies
 
 - GDB and it's builtin python interpretter
 - SocketIO (PyPI python-socketio)
 - See requirements.txt for Python3 dependencies
+
+# Development
+
+1. `cd` into the `debugger` directory
+2. Run `pip3 install -r requirements.txt` to install python dependencies.
+3. `cd` into the `debugger/src` directory
+4. Run `python3 server.py` to start the debugger server. Or `nodemon --exec python3 server.py`
+
+# Running Docker image
+
+To run the app with Docker, (both the client and server simultaneously) see the instructs in the [README.md](/README.md) in the project root directory.
+
+# Running interactive shell in Docker image
+
+To run an interactive bash shell to inspect the Ubuntu docker image for the debugger,
+run the following command in your shell after starting the docker image:
+
+```bash
+$ docker exec -it structssh-debugger-1 bash
+```
+
+The `structssh-debugger-1` above refers to the image name, which you can see by running the command:
+
+```bash
+$ docker images
+```
 
 ## Resources
 
