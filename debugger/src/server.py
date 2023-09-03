@@ -135,24 +135,30 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
     the heap dictionary at that point during the program's runtime.
     """
     print("Received message from", socket_id, ":", line_number)
-    heap_dict = {}
+    backend_dict = {}
     # Our initial linked list node has been alloced with data value 27
     if line_number == "100":
-        heap_dict = PLACEHOLDER_HEAP_DICTS[0]
+        backend_dict = PLACEHOLDER_HEAP_DICTS[0]
     elif line_number == "101":
-        heap_dict = PLACEHOLDER_HEAP_DICTS[1]
+        backend_dict = PLACEHOLDER_HEAP_DICTS[1]
     elif line_number == "102":
-        heap_dict = PLACEHOLDER_HEAP_DICTS[2]
+        backend_dict = PLACEHOLDER_HEAP_DICTS[2]
     elif line_number == "103":
-        heap_dict = PLACEHOLDER_HEAP_DICTS[3]
+        backend_dict = PLACEHOLDER_HEAP_DICTS[3]
     elif line_number == "104":
-        heap_dict = PLACEHOLDER_HEAP_DICTS[4]
+        backend_dict = PLACEHOLDER_HEAP_DICTS[4]
     elif line_number == "105":
-        heap_dict = PLACEHOLDER_HEAP_DICTS[5]
+        backend_dict = PLACEHOLDER_HEAP_DICTS[5]
+    elif line_number == "106":
+        backend_dict = PLACEHOLDER_HEAP_DICTS[6]
+    elif line_number == "107":
+        backend_dict = PLACEHOLDER_HEAP_DICTS[7]
+    elif line_number == "108":
+        backend_dict = PLACEHOLDER_HEAP_DICTS[8]
     else:
-        heap_dict = 'LINE NOT FOUND'
+        backend_dict = "LINE NOT FOUND"
 
-    retVal = f"{heap_dict}"
+    retVal = f"{backend_dict}"
     io.emit("sendDummyData", retVal, room=socket_id)
 
 

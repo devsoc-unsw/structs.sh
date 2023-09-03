@@ -1,75 +1,10 @@
 /**
- *  Frontend data structure definition
- */
-export enum EntityType {
-  NODE = 'node',
-  EDGE = 'edge',
-}
-
-export interface BaseEntity {
-  type: EntityType;
-  uid: string;
-}
-
-export interface NodeEntity extends BaseEntity {
-  uid: string;
-  type: EntityType.NODE;
-
-  title: string;
-  colorHex: string;
-  size: number;
-
-  edges: string[];
-
-  x: number;
-  y: number;
-}
-
-export interface EdgeEntity extends BaseEntity {
-  uid: string;
-  type: EntityType.EDGE;
-
-  /**
-   * Edge entity can figure out it's position from the two node
-   */
-  from: string;
-  to: string;
-
-  label: string;
-  colorHex: string;
-}
-
-export type EntityConcrete = NodeEntity | EdgeEntity;
-
-export interface MindMapGraph {
-  rootNode: NodeEntity;
-  cacheEntity: {
-    [uid: string]: EntityConcrete;
-  };
-}
-
-export interface GenericGraph {
-  nodes: NodeEntity[];
-  edges: EdgeEntity[];
-
-  cacheEntity: {
-    [uid: string]: EntityConcrete;
-  };
-}
-
-/**
- * Doubtful about assumption, linked list won't be linked list at sometime,
- * so how about we use a generic graph!!
- */
-export type FrontendLinkedListGraph = GenericGraph;
-
-/**
  * Backend data structure definition
  */
 export type Addr = `0x${string}`;
 export enum CType {
   DOUBLE_LINED_LIST_NODE = 'struct doubly_list_node',
-  SINGLE_LINED_LIST_NODE = 'struct single_list_node',
+  SINGLE_LINED_LIST_NODE = 'struct node',
   INT = 'int',
   DOUBLE = 'double',
 
@@ -77,13 +12,13 @@ export enum CType {
 }
 
 export type DoublePointerVariable = {
-  data: string;
+  value: string;
   prev: Addr;
   next: Addr;
 };
 
 export type SinglePointerVariable = {
-  data: string;
+  value: string;
   next: Addr;
 };
 export type IntVariable = number;
@@ -99,6 +34,7 @@ export type BackendVariable =
 
 export type IsPointerType = true | false;
 export interface BackendVariableBase {
+  addr: Addr;
   data: Addr | BackendVariable;
   type: CType;
   is_pointer: IsPointerType;
@@ -147,16 +83,21 @@ export type BackendVariableNonPointerConcrete =
   | BackendVariableBaseDoubleLinkedList
   | BackendVariableBaseSingleLinkedList;
 
+// data: 0X78
+// size: 3
+// 0x78, 0x7C, 0x80, 0x84
 export interface BackendVariableBasePointer extends BackendVariableBase {
   data: Addr;
   type: CType;
   is_pointer: true;
+  size: number;
 }
 
 export type BackendVariableConcrete = BackendVariablePointer | BackendVariableNonPointerConcrete;
 
-export interface BackendStructure {
-  [address: Addr]: BackendVariableConcrete;
+export interface BackendState {
+  heap: {[address: Addr]: BackendVariableConcrete;}
+  stack: {[varName: string]: BackendVariableConcrete;}
 }
 
 export interface BackendUpdate {
@@ -169,7 +110,7 @@ export interface BackendUpdate {
 /**
  * Code editor definition for user's own defined struct
  */
-export type LinkedListType = {
+/*export type LinkedListAnnotation = {
   linkedListStruct: string;
   value: {
     type: 'int';
@@ -181,8 +122,14 @@ export type LinkedListType = {
     name: 'magpie';
     isPointer: true;
   };
-};
+}*/
+
+export type PointerAnnotation = {
+  varName: string;
+}
+
+export type AnnotationVariableConcrete = PointerAnnotation;
 
 export interface EditorAnnotation {
-  [name: string]: LinkedListType;
+  [name: string]: AnnotationVariableConcrete;
 }
