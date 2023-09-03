@@ -11,6 +11,7 @@ import { EdgeEntity } from '../types/entity/edgeEntity';
 import { DEFAULT_NODE_SIZE, NodeEntity } from '../types/entity/nodeEntity';
 import { PointerEntity } from '../types/entity/pointerEntity';
 import { EntityConcrete, FrontendLinkedListGraph, GenericGraph } from '../types/frontendType';
+import { UiState } from '../types/uiState';
 import { assertUnreachable, cloneSimple } from '../util/util';
 import { Parser } from './parser';
 
@@ -178,7 +179,8 @@ export class LinkedListParser implements Parser {
    */
   parseInitialState(
     backendStructure: BackendState,
-    editorAnnotation: EditorAnnotation
+    editorAnnotation: EditorAnnotation,
+    uiState: UiState
   ): FrontendLinkedListGraph {
     const nodes: NodeEntity[] = [];
     const edges: EdgeEntity[] = [];
@@ -211,7 +213,8 @@ export class LinkedListParser implements Parser {
           }
           case CType.INT:
           case CType.DOUBLE:
-          case CType.CHAR: {
+          case CType.CHAR:
+          case CType.TREE_NODE: {
             // Here is normal user variable??
             // We will handle this case later
             break;

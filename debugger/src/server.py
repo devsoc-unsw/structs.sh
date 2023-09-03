@@ -11,7 +11,7 @@ import eventlet
 from typing import Any
 import subprocess
 import json
-
+from placeholder_data import TREE_PLACEHOLDER_HEAP_DICTS
 from placeholder_data import PLACEHOLDER_HEAP_DICTS
 
 # Parent directory of this python script e.g. "/user/.../debugger/src"
@@ -138,23 +138,13 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
     backend_dict = {}
     # Our initial linked list node has been alloced with data value 27
     if line_number == "100":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[0]
+        backend_dict = TREE_PLACEHOLDER_HEAP_DICTS[0]
     elif line_number == "101":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[1]
+        backend_dict = TREE_PLACEHOLDER_HEAP_DICTS[1]
     elif line_number == "102":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[2]
+        backend_dict = TREE_PLACEHOLDER_HEAP_DICTS[2]
     elif line_number == "103":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[3]
-    elif line_number == "104":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[4]
-    elif line_number == "105":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[5]
-    elif line_number == "106":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[6]
-    elif line_number == "107":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[7]
-    elif line_number == "108":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[8]
+        backend_dict = TREE_PLACEHOLDER_HEAP_DICTS[3]
     else:
         backend_dict = "LINE NOT FOUND"
 

@@ -109,13 +109,41 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
     controls.start('visible');
   }, [graphState]);
 
+  const svgRef = useRef(null);
+  const handleDrag = (event, info) => {
+    const viewBox = svgRef.current.viewBox.baseVal;
+    viewBox.x -= info.delta.x / 2;
+    viewBox.y -= info.delta.y / 2;
+  };
+
+  const handleWheel = (event) => {
+    event.preventDefault();
+  
+    const viewBox = svgRef.current.viewBox.baseVal;
+    const zoomFactor = 1.045;
+    
+    if (event.deltaY < 0) {
+      viewBox.width /= zoomFactor;
+      viewBox.height /= zoomFactor;
+    } else {
+      viewBox.width *= zoomFactor;
+      viewBox.height *= zoomFactor;
+    }
+  };
+
   return (
     <motion.svg
-      width="100%"
-      height="100%"
-      viewBox={`0 0 100% 100%`}
+      ref={svgRef}
+      width={dimensions.width}
+      height={dimensions.height}
+      viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
       initial="hidden"
       animate={controls}
+      drag={true}
+      onDrag={(event, info) => handleDrag(event, info)}
+      dragMomentum={false}
+      dragElastic={0}
+      onWheel={(event) => handleWheel(event)}
     >
       <AnimatePresence>{Object.values(drawable)} </AnimatePresence>
     </motion.svg>

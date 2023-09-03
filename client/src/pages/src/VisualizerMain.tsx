@@ -29,7 +29,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState, getNextState }) =
         varName: 'curr'
       }
     }
-    const newParsedState = parser.parseInitialState(backendState, annotation);
+    const newParsedState = parser.parseInitialState(backendState, annotation, settings);
     useFrontendStateStore.getState().updateNextState(newParsedState);
   }, [backendState]);
 

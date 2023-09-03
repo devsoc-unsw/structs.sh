@@ -25,19 +25,52 @@ const DevelopmentMode = () => {
     heap: {
       '0x1': {
         addr: '0x1',
-        type: CType.SINGLE_LINED_LIST_NODE,
+        type: CType.TREE_NODE,
         is_pointer: false,
         data: {
           value: '27',
-          next: '0x0',
+          left: '0x2',
+          right: '0x3',
+        },
+      },
+      '0x2': {
+        addr: '0x2',
+        type: CType.TREE_NODE,
+        is_pointer: false,
+        data: {
+          value: '15',
+          left: '0x0',
+          right: '0x0',
+        },
+      },
+      '0x3': {
+        addr: '0x3',
+        type: CType.TREE_NODE,
+        is_pointer: false,
+        data: {
+          value: '35',
+          left: '0x0',
+          right: '0x0',
         },
       },
     },
-    stack: {},
+    stack: {
+      root: {
+        addr: '0x1',
+        type: CType.TREE_NODE,
+        is_pointer: true,
+        data: '0x1'
+      },
+    },
   });
 
   const [count, setCountState] = useState(100);
   const onSendDummyData = (data: any) => {
+    const correctedJsonString = data.replace(/'/g, '"');
+    console.log('Data', correctedJsonString);
+
+    const backendStateJson = JSON.parse(correctedJsonString as string);
+
     // Upddate will handled in this step, rn we use backendState
     setBackendState(data);
   };
@@ -62,20 +95,7 @@ const DevelopmentMode = () => {
     const onConnect = () => {
       console.log('Connected!');
       console.log('Emitting message to server...');
-      // socket.emit('getBreakpoints', '121', 'list2');
-      // socket.emit('getBreakpoints', '122', 'list2');
-      // socket.emit('getBreakpoints', '123', 'list2');
-      // socket.emit('getBreakpoints', '124', 'list2');
-      // socket.emit('getBreakpoints', '125', 'list2');
-      // socket.emit('getBreakpoints', '126', 'list2');
       socket.emit('mainDebug');
-
-      socket.emit('sendDummyData', '100');
-      socket.emit('sendDummyData', '101');
-      socket.emit('sendDummyData', '102');
-      socket.emit('sendDummyData', '103');
-      socket.emit('sendDummyData', '104');
-      socket.emit('sendDummyData', '105');
     };
 
     socket.on('connect', onConnect);

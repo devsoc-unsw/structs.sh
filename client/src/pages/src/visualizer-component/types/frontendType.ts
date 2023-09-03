@@ -32,3 +32,7 @@ export interface GenericGraph {
 export interface FrontendLinkedListGraph extends GenericGraph {
   pointers: PointerEntity[];
 }
+
+export interface FrontendTreeGraph extends GenericGraph {
+  pointers: PointerEntity[];
+}

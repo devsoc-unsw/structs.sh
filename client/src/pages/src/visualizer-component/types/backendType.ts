@@ -5,6 +5,7 @@ export type Addr = `0x${string}`;
 export enum CType {
   DOUBLE_LINED_LIST_NODE = 'struct doubly_list_node',
   SINGLE_LINED_LIST_NODE = 'struct node',
+  TREE_NODE = 'struct tree_node',
   INT = 'int',
   DOUBLE = 'double',
 
@@ -16,6 +17,12 @@ export type DoublePointerVariable = {
   prev: Addr;
   next: Addr;
 };
+
+export type TreeVariable = {
+  value: string;
+  left: Addr;
+  right: Addr;
+}
 
 export type SinglePointerVariable = {
   value: string;
@@ -30,7 +37,8 @@ export type BackendVariable =
   | SinglePointerVariable
   | IntVariable
   | DoubleVariable
-  | CharVariable;
+  | CharVariable
+  | TreeVariable;
 
 export type IsPointerType = true | false;
 export interface BackendVariableBase {
@@ -76,12 +84,19 @@ export interface BackendVariableBaseSingleLinkedList extends BackendVariableBase
   is_pointer: false;
 }
 
+export interface BackendVariableBaseTree extends BackendVariableBase {
+  data: TreeVariable;
+  type: CType.TREE_NODE;
+  is_pointer: false;
+}
+
 export type BackendVariableNonPointerConcrete =
   | BackendVariableBaseInt
   | BackendVariableBaseDouble
   | BackendVariableBaseChar
   | BackendVariableBaseDoubleLinkedList
-  | BackendVariableBaseSingleLinkedList;
+  | BackendVariableBaseSingleLinkedList
+  | BackendVariableBaseTree;
 
 // data: 0X78
 // size: 3
@@ -106,23 +121,6 @@ export interface BackendUpdate {
   };
   removed: Addr[];
 }
-
-/**
- * Code editor definition for user's own defined struct
- */
-/*export type LinkedListAnnotation = {
-  linkedListStruct: string;
-  value: {
-    type: 'int';
-    name: 'cockatoo';
-    isPointer: false;
-  };
-  next: {
-    type: 'struct pigeon';
-    name: 'magpie';
-    isPointer: true;
-  };
-}*/
 
 export type PointerAnnotation = {
   varName: string;
