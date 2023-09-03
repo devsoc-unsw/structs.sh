@@ -146,125 +146,7 @@ They serve two purposes:
 """
 
 
-class ParseTypeDeclVisitor(c_ast.NodeVisitor):
-    def __init__(self, name, file, line_num, original_line) -> None:
-        super().__init__()
-        self.name = name
-        self.file = file
-        self.line_num = line_num
-        self.original_line = original_line
-
-    def constructInfo(self, node):
-        '''
-        Expect isinstance(node, c_ast.Decl) or isinstance(node.type, c_ast.TypeDef)
-        '''
-        result = {}
-        result["name"] = self.name
-        result["file"] = self.file
-        result["line_num"] = self.line_num
-        result["original_line"] = self.original_line
-
-        parseResult = self.visit(node.type)
-        result['type'] = parseResult
-
-        return result
-
-    def visit_Typedef(self, node):
-        result = {}
-        result['name'] = node.name
-        result['type'] = self.visit(node.type)
-        return result
-
-# TODO: generalise, remove repeated code
-    def visit_Decl(self, node):
-        result = {}
-        result['name'] = node.name
-        if isinstance(node.type, c_ast.FuncDecl):
-            result['type'] = self.visit(node.type)
-        elif isinstance(node.type, c_ast.TypeDecl):
-            result['type'] = self.visit(node.type)
-        elif isinstance(node.type, c_ast.PtrDecl):
-            result['type'] = self.visit(node.type)
-        elif isinstance(node.type, c_ast.ArrayDecl):
-            result['type'] = self.visit(node.type)
-        else:
-            raise Exception(
-                f"Visiting Decl of unknown type: {type(node).__name__}")
-
-        return result
-
-    def visit_ParamList(self, node):
-        result = []
-
-        for param in node.params:
-            result.append(self.visit(param))
-
-        return result
-
-    def visit_Typename(self, node):
-        result = {}
-        result["name"] = node.name
-        result["type"] = self.visit(node.type)
-        return result
-
-    def visit_TypeDecl(self, node):
-        if isinstance(node.type, c_ast.Decl):
-            return self.visit(node.type)
-        elif isinstance(node.type, c_ast.Struct):
-            return self.visit(node.type)
-        elif isinstance(node.type, c_ast.IdentifierType):
-            return self.visit(node.type)
-        else:
-            raise Exception(
-                f"Visiting TypeDecl with unknown type: {type(node.type).__name__}")
-
-    def visit_Struct(self, node):
-        struct_name = f"struct {node.name}"
-        struct_definition_str = gdb.execute(
-            f"ptype {struct_name}", False, True)
-        print('!!!!!!!!!!!! Get gdb ptype struct:')
-        print(struct_definition_str)
-        return struct_name
-
-    def visit_PtrDecl(self, node):
-        return f"{self.visit(node.type)} *"
-
-    def visit_ArrayDecl(self, node):
-        return f"{self.visit(node.type)}[{node.dim.value if node.dim else ''}]"
-
-    def visit_IdentifierType(self, node):
-        return " ".join(node.names)
-
-
-class ParseFuncDeclVisitor(c_ast.NodeVisitor):
-    '''
-    Visitor pattern for parsing function declarations.
-    Returns a dict in the following form:
-    {
-        "name": "myFunc",
-        "func_decl": {
-            "return_type": "int",
-            "params": [
-                {
-                    "type": "int",
-                    "name": "a" ## Might be None
-                },
-                {
-                    "type": "char * *",
-                    "name": "b"
-                },
-                {
-                    "type": "struct node *",
-                    "name": "b"
-                },
-                {
-                    "type": "List *",
-                    "name": "b"
-                },
-                ...
-            ]
-        }
-    }'''
+class DeclVisitor(c_ast.NodeVisitor):
 
     def __init__(self, name, file, line_num, original_line) -> None:
         super().__init__()
@@ -356,8 +238,72 @@ class ParseFuncDeclVisitor(c_ast.NodeVisitor):
         return " ".join(node.names)
 
 
+class ParseFuncDeclVisitor(DeclVisitor):
+    '''
+    Visitor pattern for parsing function declarations.
+    Returns a dict in the following form:
+    {
+        "name": "myFunc",
+        "func_decl": {
+            "return_type": "int",
+            "params": [
+                {
+                    "type": "int",
+                    "name": "a" ## Might be None
+                },
+                {
+                    "type": "char * *",
+                    "name": "b"
+                },
+                {
+                    "type": "struct node *",
+                    "name": "b"
+                },
+                {
+                    "type": "List *",
+                    "name": "b"
+                },
+                ...
+            ]
+        }
+    }'''
+
+    def constructInfo(self, node):
+        '''
+        Expect isinstance(node, c_ast.Decl) and isinstance(node.type, c_ast.FuncDecl)
+        '''
+        result = {}
+        result["name"] = self.name
+        result["file"] = self.file
+        result["line_num"] = self.line_num
+        result["original_line"] = self.original_line
+
+        parseResult = self.visit(node.type)
+        result.update(parseResult)
+
+        return result
+
+
+class ParseTypeDeclVisitor(DeclVisitor):
+
+    def constructInfo(self, node):
+        '''
+        Expect isinstance(node, c_ast.Decl) or isinstance(node.type, c_ast.TypeDef)
+        '''
+        result = {}
+        result["name"] = self.name
+        result["file"] = self.file
+        result["line_num"] = self.line_num
+        result["original_line"] = self.original_line
+
+        parseResult = self.visit(node.type)
+        result['type'] = parseResult
+
+        return result
+
 # sio = socketio.Client()
 # sio.connect("http://localhost:8000")
+
 
 def useSocketIOConnection(func):
     def wrapper(*args, **kwargs):
