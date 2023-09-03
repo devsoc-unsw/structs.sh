@@ -26,15 +26,58 @@ def remove_non_standard_characters(input_str):
 
 
 
-# Define a custom visitor class to traverse the AST and check for malloc calls
+
+# Define a custom visitor class to traverse the AST and extract malloc information
 class MallocVisitor(c_ast.NodeVisitor):
     def __init__(self):
-        self.malloc_called = False
+        self.malloc_info = []
+        self.variable_name_2 = None  # Initialize the new variable
+
+    def visit_TypeDecl(self, node):
+        if isinstance(node, c_ast.TypeDecl) and node.declname:
+            self.variable_name_2 = node.declname
 
     def visit_FuncCall(self, node):
         if isinstance(node.name, c_ast.ID) and node.name.name == "malloc":
-            self.malloc_called = True
+            # Extract information about the malloc call
+            malloc_size = None
+            variable_name = None
+            malloc_type = None
 
+            # Find the assignment statement enclosing the malloc call
+            current_node = self.current_node
+            while current_node is not None:
+                if isinstance(current_node, c_ast.Assignment):
+                    if isinstance(current_node.rvalue, c_ast.FuncCall) and current_node.rvalue.name.name == "malloc":
+                        # Extract the variable name from the assignment statement
+                        if isinstance(current_node.lvalue, c_ast.ID):
+                            variable_name = current_node.lvalue.name
+
+                        break
+
+                current_node = getattr(current_node, 'parent', None)
+
+            # Check if the malloc call has arguments
+            if node.args and isinstance(node.args, c_ast.ExprList) and len(node.args.exprs) == 1:
+                malloc_size_node = node.args.exprs[0]
+
+                # Extract the size of malloc
+                if isinstance(malloc_size_node, c_ast.BinaryOp) and malloc_size_node.op == '*':
+                    if isinstance(malloc_size_node.left, c_ast.Constant):
+                        malloc_size = int(malloc_size_node.left.value)
+
+                    # Extract the type being malloced (if available)
+                    if isinstance(malloc_size_node.right, c_ast.UnaryOp) and malloc_size_node.right.op == 'sizeof':
+                        if isinstance(malloc_size_node.right.expr, c_ast.Typename):
+                            malloc_type = malloc_size_node.right.expr.type
+
+            # Store the malloc information
+            self.malloc_info.append({
+                'variable_name': variable_name,
+                'malloc_size': malloc_size,
+                'malloc_type': malloc_type,
+                'variable_name_2': self.variable_name_2,  # Include the new variable name
+            })
 
 # Define a custom command to extract the linked list nodes
 class NextCommand(gdb.Command):
@@ -72,21 +115,27 @@ class NextCommand(gdb.Command):
                             cpp_args=r'-Iutils/fake_libc_include')
         print(ast)
 
+
         # Create a MallocVisitor instance
         malloc_visitor = MallocVisitor()
+
+        # Set the current node to the root of the AST
+        malloc_visitor.current_node = ast
 
         # Visit the AST to check for malloc calls
         malloc_visitor.visit(ast)
 
-        if malloc_visitor.malloc_called:
-            print("malloc was called in the provided code.")
-        else:
-            print("malloc was not called in the provided code.")
+        # Print the malloc information
+        for info in malloc_visitor.malloc_info:
+            print("Malloc Information:")
+            print(f"Variable assigned to malloc: {info['variable_name']}")
+            print(f"Variable assigned to malloc V2: {info['variable_name_2']}")
+            print(f"Size of malloc: {info['malloc_size']} bytes")
+            print(f"Type malloced: {info['malloc_type']}")
 
-
-
-
+            
         # === Up date existing tracked heap memory
+        
         # for addr in self.heap_dict.keys():
         #  # update(heap_dict, addr)
 
