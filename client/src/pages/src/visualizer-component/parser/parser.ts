@@ -1,18 +1,14 @@
-import {
-  BackendStructure,
-  BackendUpdate,
-  EditorAnnotation,
-  GenericGraph,
-} from '../types/graphState';
+import { BackendState, BackendUpdate, EditorAnnotation } from '../types/backendType';
+import { GenericGraph } from '../types/frontendType';
 
 export interface Parser {
   parseInitialState: (
-    backendStructure: BackendStructure,
+    backendStructure: BackendState,
     editorAnnotation: EditorAnnotation | undefined
   ) => GenericGraph;
   updateState: (
     frontendStructure: GenericGraph,
-    backendStructure: BackendStructure,
+    backendStructure: BackendState,
     backendUpdate: BackendUpdate,
     editorAnnotation: EditorAnnotation | undefined
   ) => GenericGraph;

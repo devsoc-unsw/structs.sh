@@ -1,30 +1,93 @@
-import { useState } from 'react';
-import { StateManager } from './visualizer-component/stateManager';
-import { IMAGINARY_STATES } from './visualizer-component/util/imaginaryState';
+import { useEffect, useRef, useState } from 'react';
 import { DEFAULT_UISTATE, UiState } from './visualizer-component/types/uiState';
+import { parserFactory } from './visualizer-component/parser/parserFactory';
+import { visualizerFactory } from './visualizer-component/visulizer/visualizerFactory';
+import { BackendState } from './visualizer-component/types/backendType';
+import { Timeline } from './visualizer-component/util/timeline';
+import { Debugger } from './visualizer-component/util/debugger';
+import { useFrontendStateStore } from './visualizer-component/stateManager';
 
 export interface RoutesProps {
-  onGetBreakPoint: (breakPoint: number) => void;
+  backendState: BackendState;
+  getNextState: () => void;
 }
 
-const VisualizerMain: React.FC<RoutesProps> = ({ onGetBreakPoint }) => {
-  const [framerNodes, setFramerNodes] = useState(IMAGINARY_STATES[0]);
+// Future support different parser
+const VisualizerMain: React.FC<RoutesProps> = ({ backendState, getNextState }) => {
   const [settings, setSettings] = useState<UiState>(DEFAULT_UISTATE);
+  const VisComponent = visualizerFactory(settings);
+  const [parser] = useState(parserFactory(settings));
 
-  let idx = 0;
-  const handleButtonClick = () => {
-    idx += 1;
-    onGetBreakPoint(idx);
-    setFramerNodes(IMAGINARY_STATES[idx]);
-  };
+  const currState = useFrontendStateStore((store) => {
+    return store.currState();
+  });
+
+  useEffect(() => {
+    // Assume user have a variable called curr
+    let annotation = {
+      'curr': {
+        varName: 'curr'
+      }
+    }
+    const newParsedState = parser.parseInitialState(backendState, annotation);
+    useFrontendStateStore.getState().updateNextState(newParsedState);
+  }, [backendState]);
+
+  const visualizerRef = useRef(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const observer = new ResizeObserver((entries) => {
+      if (!visualizerRef) return;
+
+      entries.forEach((element) => {
+        if (element.target instanceof HTMLElement && element.target.className === 'visualizer') {
+          const { width, height } = element.contentRect;
+
+          if (dimensions.height === 0) {
+            setDimensions({ width, height });
+          }
+        }
+      });
+    });
+
+    if (visualizerRef.current) {
+      observer.observe(visualizerRef.current);
+    }
+    return () => {
+      if (visualizerRef.current) {
+        observer.unobserve(visualizerRef.current);
+      }
+    };
+  }, [visualizerRef]);
 
   return (
-    <StateManager
-      settings={settings}
-      setSettings={setSettings}
-      state={framerNodes}
-      nextState={handleButtonClick}
-    />
+    <div className="container">
+      <div className="linked-list">
+        <div className="visualizer" ref={visualizerRef}>
+          <VisComponent
+            settings={settings}
+            graphState={currState}
+            setSettings={setSettings}
+            dimensions={dimensions}
+          />
+        </div>
+        <div className="timeline">
+          <Timeline
+            nextState={getNextState}
+            forwardState={() => {
+              useFrontendStateStore.getState().forwardState();
+              console.log('Forward triggered', useFrontendStateStore.getState().currStateIdx);
+            }}
+            backwardState={() => {
+              useFrontendStateStore.getState().backwardState();
+              console.log('Forward triggered', useFrontendStateStore.getState().currStateIdx);
+            }}
+          />
+        </div>
+      </div>
+      <div className="debugger">{settings.debug && <Debugger src={currState} />}</div>
+    </div>
   );
 };
 
