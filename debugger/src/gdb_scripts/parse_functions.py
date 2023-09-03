@@ -301,6 +301,26 @@ class ParseTypeDeclVisitor(DeclVisitor):
 
         return result
 
+
+class ParseStructDefVisitor(DeclVisitor):
+
+    def constructInfo(self, node):
+        '''
+        Expect isinstance(node, c_ast.Struct)
+        '''
+        result = {}
+        result["name"] = f"struct {self.name}"
+        result["file"] = self.file
+        result["line_num"] = self.line_num
+        result["original_line"] = self.original_line
+        result['fields'] = []
+
+        for decl in node.decls:
+            parseResult = self.visit(decl)
+            result['fields'].append(parseResult)
+
+        return result
+
 # sio = socketio.Client()
 # sio.connect("http://localhost:8000")
 
@@ -458,21 +478,30 @@ def pycparser_parse_type_decls(user_socket_id: str = None, sio=None):
             pprint(ast)
 
             for node in ast.ext:
-                if not (isinstance(node, c_ast.Decl) or isinstance(node, c_ast.Typedef)):
-                    continue
+                if isinstance(node, c_ast.Decl) or isinstance(node, c_ast.Typedef):
 
-                type_name = node.name
-                print(f'Parsing type declaration {type_name}')
-                # node.show()
-                # print(node)
-                # print(node.type)
+                    if isinstance(node.type, c_ast.Struct):
+                        node = node.type
+                        type_name = node.name
+                        print(f'Parsing struct definition {type_name}')
 
-                typeDeclVisitor = ParseTypeDeclVisitor(
-                    type_name, current_file, line_num, type_decl_str)
-                result = typeDeclVisitor.constructInfo(node)
-                pprint(result)
+                        structDefVisitor = ParseStructDefVisitor(
+                            type_name, current_file, line_num, type_decl_str)
+                        result = structDefVisitor.constructInfo(node)
+                        pprint(result)
 
-                types.append(result)
+                        types.append(result)
+
+                    else:
+                        type_name = node.name
+                        print(f'Parsing type declaration {type_name}')
+
+                        typeDeclVisitor = ParseTypeDeclVisitor(
+                            type_name, current_file, line_num, type_decl_str)
+                        result = typeDeclVisitor.constructInfo(node)
+                        pprint(result)
+
+                        types.append(result)
 
             if user_socket_id is not None:
                 print(f"types parser: user sid is {user_socket_id}")
@@ -522,6 +551,22 @@ def get_type_decl_ast(type_decl_str):
     '''
     Similar to get_fn_decl_ast() but for types (structs, typedefs)
     '''
+
+    print("!!!!!!!!!!!!!!! In get_type_decl_ast !!!!!!!!!!!!!!!")
+    print(type_decl_str)
+
+    # Replace struct decl e.g. "struct node;" with the struct definition
+    # e.g. "struct node { int value; struct node *next; };"
+    struct_decl_pattern = r'(struct\s+[a-zA-Z_]\w*);'
+    m = re.fullmatch(struct_decl_pattern, type_decl_str)
+    if m:
+        struct_decl = m.group(1)
+        print(struct_decl)
+        struct_def_str = gdb.execute(f"ptype {struct_decl}", False, True)
+        struct_def_str = re.sub(r'type = ', "", struct_def_str)
+        print(struct_def_str)
+        type_decl_str = struct_def_str.strip() + ";"
+
     with open(USER_TYPE_DECLARATION_FILE_PATH, "w") as f:
         f.write(type_decl_str)
         f.write("\n")
