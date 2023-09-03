@@ -552,19 +552,26 @@ def get_type_decl_ast(type_decl_str):
     Similar to get_fn_decl_ast() but for types (structs, typedefs)
     '''
 
-    print("!!!!!!!!!!!!!!! In get_type_decl_ast !!!!!!!!!!!!!!!")
-    print(type_decl_str)
-
-    # Replace struct decl e.g. "struct node;" with the struct definition
-    # e.g. "struct node { int value; struct node *next; };"
+    '''
+    Replace struct decl e.g. "struct node;" with the struct definition
+    e.g. "struct node { int value; struct node *next; };"
+    See the following sample gdb output:
+    ```
+    (gdb) ptype struct node
+    type = struct node {
+        int data;
+        struct node *next;
+    }
+    ```
+    '''
     struct_decl_pattern = r'(struct\s+[a-zA-Z_]\w*);'
     m = re.fullmatch(struct_decl_pattern, type_decl_str)
     if m:
         struct_decl = m.group(1)
-        print(struct_decl)
+        print(f"{struct_decl=}")
         struct_def_str = gdb.execute(f"ptype {struct_decl}", False, True)
         struct_def_str = re.sub(r'type = ', "", struct_def_str)
-        print(struct_def_str)
+        print(f"{struct_def_str=}")
         type_decl_str = struct_def_str.strip() + ";"
 
     with open(USER_TYPE_DECLARATION_FILE_PATH, "w") as f:
