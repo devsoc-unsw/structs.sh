@@ -18,6 +18,10 @@ ENV PYTHONPATH="/root/.pyenv/versions/3.11.3/lib/python3.11/site-packages:${PYTH
 
 ENV PYTHON_VERSION=3.11.3
 
+# The following env var is needed to allow gdb to run our Python packages
+# installed from requirements.txt
+ENV PYTHONPATH="${PYENV_ROOT}/versions/${PYTHON_VERSION}/lib/python3.11/site-packages:${PYTHONPATH}"
+
 RUN pyenv install ${PYTHON_VERSION}
 RUN pyenv global ${PYTHON_VERSION}
 
@@ -42,9 +46,4 @@ COPY . .
 
 EXPOSE 8000
 
-# nodemon doesnt seem to work with docker image, maybe because 
-# when editing file on host, the file is not changed in the container.
-# CMD [ "nodemon", "--exec", "pyenv", "exec", "python3", "server.py"]
-
-# Please manually restart the container when editing files
-CMD [ "pyenv", "exec", "python3", "-u", "server.py"]
+CMD [ "nodemon", "--exec", "pyenv", "exec", "python3", "src/server.py"]
