@@ -9,7 +9,8 @@ import { BackendState, CType } from './src/visualizer-component/types/backendTyp
 
 const DevelopmentMode = () => {
   const [backendState, setBackendState] = useState<BackendState>({
-    heap :{ '0x1': {
+    heap: {
+      '0x1': {
         addr: '0x1',
         type: CType.SINGLE_LINED_LIST_NODE,
         is_pointer: false,
@@ -19,7 +20,7 @@ const DevelopmentMode = () => {
         },
       },
     },
-    stack: {}
+    stack: {},
   });
 
   const [count, setCountState] = useState(100);
@@ -31,18 +32,27 @@ const DevelopmentMode = () => {
     // Upddate will handled in this step, rn we use backendState
     setBackendState(backendStateJson);
   };
+  const onSendDummyArrayData = (data: any) => {
+    console.log('received dummy array data', data);
+    const correctedJsonString = data.replace(/'/g, '"');
+    const backendStateJson = JSON.parse(correctedJsonString as string);
+    console.log(backendStateJson);
+    setBackendState(backendStateJson);
+  };
 
   useEffect(() => {
     const onConnect = () => {};
 
     socket.on('connect', onConnect);
     socket.on('sendDummyData', onSendDummyData);
+    socket.on('sendDummyArrayData', onSendDummyArrayData);
 
     return () => {
       socket.off('connect', onConnect);
       socket.off('sendDummyData', onSendDummyData);
+      socket.off('sendDummyArrayData', onSendDummyArrayData);
     };
-  }, [onSendDummyData]);
+  }, [onSendDummyData, onSendDummyArrayData]);
 
   const DEBUG_MODE = true;
   return !DEBUG_MODE ? (
@@ -69,7 +79,8 @@ const DevelopmentMode = () => {
           <VisualizerMain
             backendState={backendState}
             getNextState={() => {
-              socket.emit('sendDummyData', count.toString());
+              // socket.emit('sendDummyData', count.toString());
+              socket.emit('sendDummyArrayData', count.toString());
               setCountState(count + 1);
             }}
           />
@@ -81,7 +92,8 @@ const DevelopmentMode = () => {
     <VisualizerMain
       backendState={backendState}
       getNextState={() => {
-        socket.emit('sendDummyData', count.toString());
+        // socket.emit('sendDummyData', count.toString());
+        socket.emit('sendDummyArrayData', count.toString());
         setCountState(count + 1);
       }}
     />

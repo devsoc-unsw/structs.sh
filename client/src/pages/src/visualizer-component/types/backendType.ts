@@ -7,8 +7,13 @@ export enum CType {
   SINGLE_LINED_LIST_NODE = 'struct node',
   INT = 'int',
   DOUBLE = 'double',
-
   CHAR = 'char',
+  INT_ARRAY = 'int_array',
+  DOUBLE_ARRAY = 'double_array',
+  CHAR_ARRAY = 'char_array',
+  INT_ARRAY_ARRAY = 'int_array_array',
+  DOUBLE_ARRAY_ARRAY = 'double_array_array',
+  CHAR_ARRAY_ARRAY = 'char_array_array',
 }
 
 export type DoublePointerVariable = {
@@ -32,10 +37,21 @@ export type BackendVariable =
   | DoubleVariable
   | CharVariable;
 
+export type BackendArrayVariable =
+  | BackendVariableBaseInt[]
+  | BackendVariableBaseDouble[]
+  | BackendVariableBaseChar[];
+
 export type IsPointerType = true | false;
 export interface BackendVariableBase {
   addr: Addr;
-  data: Addr | BackendVariable;
+  data:
+    | Addr
+    | BackendVariable
+    | BackendArrayVariable
+    | BackendVariableBaseIntArray[]
+    | BackendVariableBaseDoubleArray[]
+    | BackendVariableBaseCharArray[];
   type: CType;
   is_pointer: IsPointerType;
 }
@@ -76,12 +92,56 @@ export interface BackendVariableBaseSingleLinkedList extends BackendVariableBase
   is_pointer: false;
 }
 
+export interface BackendVariableBase2DArray extends BackendVariableBase {}
+
+export interface BackendVariableBaseIntArray extends BackendVariableBase {
+  data: BackendVariableBaseInt[];
+  type: CType.INT_ARRAY;
+  is_pointer: false;
+}
+
+export interface BackendVariableBaseCharArray extends BackendVariableBase {
+  data: BackendVariableBaseChar[];
+  type: CType.CHAR_ARRAY;
+  is_pointer: false;
+}
+
+export interface BackendVariableBaseDoubleArray extends BackendVariableBase {
+  data: BackendVariableBaseDouble[];
+  type: CType.DOUBLE_ARRAY;
+  is_pointer: false;
+}
+
+export interface BackendVariableBaseInt2DArray extends BackendVariableBase {
+  data: BackendVariableBaseIntArray[];
+  type: CType.INT_ARRAY_ARRAY;
+  is_pointer: false;
+}
+
+export interface BackendVariableBaseDouble2DArray extends BackendVariableBase2DArray {
+  data: BackendVariableBaseDoubleArray[];
+  type: CType.DOUBLE_ARRAY_ARRAY;
+  is_pointer: false;
+}
+
+export interface BackendVariableBaseChar2DArray extends BackendVariableBase2DArray {
+  data: BackendVariableBaseDoubleArray[];
+  type: CType.CHAR_ARRAY_ARRAY;
+  is_pointer: false;
+}
+
 export type BackendVariableNonPointerConcrete =
   | BackendVariableBaseInt
   | BackendVariableBaseDouble
   | BackendVariableBaseChar
   | BackendVariableBaseDoubleLinkedList
-  | BackendVariableBaseSingleLinkedList;
+  | BackendVariableBaseSingleLinkedList
+  | BackendVariableBaseIntArray
+  | BackendVariableBaseDoubleArray
+  | BackendVariableBaseCharArray
+  | BackendVariableBaseInt2DArray
+  | BackendVariableBaseDouble2DArray
+  | BackendVariableBaseChar2DArray;
 
 // data: 0X78
 // size: 3
@@ -96,8 +156,8 @@ export interface BackendVariableBasePointer extends BackendVariableBase {
 export type BackendVariableConcrete = BackendVariablePointer | BackendVariableNonPointerConcrete;
 
 export interface BackendState {
-  heap: {[address: Addr]: BackendVariableConcrete;}
-  stack: {[varName: string]: BackendVariableConcrete;}
+  heap: { [address: Addr]: BackendVariableConcrete };
+  stack: { [varName: string]: BackendVariableConcrete };
 }
 
 export interface BackendUpdate {
@@ -126,7 +186,7 @@ export interface BackendUpdate {
 
 export type PointerAnnotation = {
   varName: string;
-}
+};
 
 export type AnnotationVariableConcrete = PointerAnnotation;
 

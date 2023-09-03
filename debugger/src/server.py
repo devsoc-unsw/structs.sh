@@ -475,4 +475,74 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
     io.emit("sendDummyData", retVal, room=socket_id)
 
 
+@io.event
+def sendDummyArrayData(socket_id: str, line_number: Any) -> None:
+    print("array Received message from", socket_id, ":", line_number)
+
+    # 1D int array
+    backend_dict = {
+        'heap': {
+            '0x1000': {
+                'addr': '0x1000',
+                'data': [
+                    {
+                        'addr': '0x1000',
+                        'data': 42,
+                        'type': 'int',
+                        'is_pointer': 'false',
+                    },
+                    {
+                        'addr': '0x1004',
+                        'data': 73,
+                        'type': 'int',
+                        'is_pointer': 'false',
+                    },
+                ],
+                'type': 'int',
+                'is_pointer': 'false',
+            },
+        },
+        'stack': {},
+    }
+
+    # 2D int array
+    backend_dict = {
+        "heap": {
+            "0x1000": {
+                "addr": "0x1000",
+                "data": [
+                    {
+                        "addr": "0x1001",
+                        "data": [
+                            {"addr": "0x2000", "data": 42,
+                             "type": "int", "is_pointer": "false"},
+                            {"addr": "0x2001", "data": 73,
+                             "type": "int", "is_pointer": "false"},
+                        ],
+                        "type": "int_array",
+                        "is_pointer": "false",
+                    },
+                    {
+                        "addr": "0x1002",
+                        "data": [
+                            {"addr": "0x2002", "data": 10,
+                             "type": "int", "is_pointer": "false"},
+                            {"addr": "0x2003", "data": 20,
+                             "type": "int", "is_pointer": "false"},
+                        ],
+                        "type": "int_array",
+                        "is_pointer": "false",
+                    },
+                ],
+                "type": "int_array_array",
+                "is_pointer": "false",
+            }
+        },
+        "stack": {}
+    }
+
+    retVal = f"{backend_dict}"
+    io.emit('sendDummyArrayData', retVal, room=socket_id)
+
+
 eventlet.wsgi.server(eventlet.listen(("", 8000)), app)

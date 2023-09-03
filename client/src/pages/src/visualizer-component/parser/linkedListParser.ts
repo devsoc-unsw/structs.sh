@@ -176,7 +176,10 @@ export class LinkedListParser implements Parser {
   /**
    * Parser functionality
    */
-  parseInitialState(backendStructure: BackendState, editorAnnotation: EditorAnnotation): FrontendLinkedListGraph {
+  parseInitialState(
+    backendStructure: BackendState,
+    editorAnnotation: EditorAnnotation
+  ): FrontendLinkedListGraph {
     const nodes: NodeEntity[] = [];
     const edges: EdgeEntity[] = [];
     const cacheEntity: { [uid: string]: EntityConcrete } = {};
@@ -214,7 +217,8 @@ export class LinkedListParser implements Parser {
             break;
           }
           default:
-            assertUnreachable(entity);
+            break;
+          // assertUnreachable(entity);
         }
       }
     });
@@ -275,24 +279,25 @@ export class LinkedListParser implements Parser {
         /**
          * Find variable from stack
          */
-        let stackVariable: BackendVariableConcrete | undefined = backendStructure.stack[annotation.varName];
+        let stackVariable: BackendVariableConcrete | undefined =
+          backendStructure.stack[annotation.varName];
         if (!stackVariable) return;
 
         const annotationEntity: PointerEntity = {
           uid: `${annotation.varName}`,
           type: EntityType.POINTER,
           attachedUid: cacheEntity[stackVariable.addr].uid,
-          varName: annotation.varName
+          varName: annotation.varName,
         };
         pointers.push(annotationEntity);
         cacheEntity[annotationEntity.uid] = annotationEntity;
-      })
+      });
 
       return {
         nodes,
         edges,
         cacheEntity,
-        pointers
+        pointers,
       };
     } catch (e) {
       // Not silent fail
