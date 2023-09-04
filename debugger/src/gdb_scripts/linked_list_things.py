@@ -70,33 +70,33 @@ class NextCommand(gdb.Command):
         subprocess.run(f"gcc -E {MALLOC_TEST_FILE} > {MALLOC_PREPROCESSED}",
                        shell=True)
 
-        try:
-            # Parse the preprocessed C code into an AST
-            # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
-            ast = parse_file(MALLOC_PREPROCESSED, use_cpp=True,
-                             cpp_args=r'-Iutils/fake_libc_include')
+        #try:
+        # Parse the preprocessed C code into an AST
+        # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
+        ast = parse_file(MALLOC_PREPROCESSED, use_cpp=True,
+                            cpp_args=r'-Iutils/fake_libc_include')
 
-            # Create a MallocVisitor instance
-            malloc_visitor = MallocVisitor()
+        # Create a MallocVisitor instance
+        malloc_visitor = MallocVisitor()
 
-            # Set the current node to the root of the AST
-            malloc_visitor.current_node = ast
+        # Set the current node to the root of the AST
+        malloc_visitor.current_node = ast
 
-            # Visit the AST to check for malloc calls
-            malloc_visitor.visit(ast)
+        # Visit the AST to check for malloc calls
+        malloc_visitor.visit(ast)
 
-            for info in malloc_visitor.malloc_info:
-                print("Malloc Information:")
-                try:
-                    if info['variable_name'] is None:
-                        print(f"Variable assigned to malloc V2: {info['variable_name_2']}")
-                    else:
-                        print(f"Variable assigned to malloc: {info['variable_name']}")
-                except gdb.error as e:
-                    print(f"Error occurred: {e}")
+        for info in malloc_visitor.malloc_info:
+            print("Malloc Information:")
+            try:
+                if info['variable_name'] is None:
+                    print(f"Variable assigned to malloc V2: {info['variable_name_2']}")
+                else:
+                    print(f"Variable assigned to malloc: {info['variable_name']}")
+            except gdb.error as e:
+                print(f"Error occurred: {e}")
 
-        except Exception as e:
-            print(f"Cannot be parsed, Error: {e}")
+        #except Exception as e:
+        #    print(f"Cannot be parsed, Error: {e}")
 
         if any(t.is_running() for t in gdb.selected_inferior().threads()):
             gdb.execute('next')

@@ -1,0 +1,23 @@
+# 1 "temp.c"
+# 1 "<built-in>" 1
+# 1 "<built-in>" 3
+# 414 "<built-in>" 3
+# 1 "<command line>" 1
+# 1 "<built-in>" 2
+# 1 "temp.c" 2
+# 1 "./malloc2.h" 1
+struct node {
+  int data;
+  struct node *next;
+};
+
+typedef struct list {
+  struct node *head;
+  int size;
+} List;
+# 2 "temp.c" 2
+
+int main(int argc, char **argv) {
+
+    l->head = malloc(sizeof(struct node));
+}
