@@ -96,7 +96,8 @@ export interface BackendVariableBasePointer extends BackendVariableBase {
 export type BackendVariableConcrete = BackendVariablePointer | BackendVariableNonPointerConcrete;
 
 export interface BackendState {
-  [address: Addr]: BackendVariableConcrete;
+  heap: {[address: Addr]: BackendVariableConcrete;}
+  stack: {[varName: string]: BackendVariableConcrete;}
 }
 
 export interface BackendUpdate {
@@ -109,7 +110,7 @@ export interface BackendUpdate {
 /**
  * Code editor definition for user's own defined struct
  */
-export type LinkedListType = {
+/*export type LinkedListAnnotation = {
   linkedListStruct: string;
   value: {
     type: 'int';
@@ -121,8 +122,14 @@ export type LinkedListType = {
     name: 'magpie';
     isPointer: true;
   };
-};
+}*/
+
+export type PointerAnnotation = {
+  varName: string;
+}
+
+export type AnnotationVariableConcrete = PointerAnnotation;
 
 export interface EditorAnnotation {
-  [name: string]: LinkedListType;
+  [name: string]: AnnotationVariableConcrete;
 }

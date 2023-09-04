@@ -1,6 +1,6 @@
 import { UiState, VisualizerType } from '../types/uiState';
 import { assertUnreachable } from '../util/util';
-import LinkedList from './linkedList';
+import LinkedList from './linkedListVisualizer';
 import { VisualizerComponent } from './visualizer';
 
 export function visualizerFactory(uiState: UiState): VisualizerComponent {
