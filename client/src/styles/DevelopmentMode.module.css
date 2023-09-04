@@ -24,6 +24,7 @@ body {
 .pane {
   height: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
@@ -47,6 +48,7 @@ body {
   grid-column: 2;
   grid-row: 2 / 4;
   border-right: var(--border);
+  align-items: end;
 }
 
 .inspector {

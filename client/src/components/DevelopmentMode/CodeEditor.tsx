@@ -2,8 +2,9 @@ import React, { FC } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 // import { javascript } from '@codemirror/lang-javascript';
 import { cpp } from '@codemirror/lang-cpp';
+import { socket } from 'utils/socket';
 import Button from '@mui/material/Button';
-import SendIcon from '@mui/icons-material/Send';
+import UploadIcon from '@mui/icons-material/Upload';
 import 'styles/CodeEditor.css';
 
 const CodeEditor: FC = () => {
@@ -11,22 +12,26 @@ const CodeEditor: FC = () => {
   const [code, setCode] = React.useState(placeholder);
 
   const onChange = React.useCallback((value) => {
-    console.log('value:', value);
     setCode(value);
   }, []);
 
-  const sendCode = ( ) => {
-    console.log('codeSent:', code);
+  const sendCode = () => {
+    socket.send("mainDebug", code);
   }
 
   return (
-    <CodeMirror
-      value={placeholder}
-      height="100%"
-      extensions={[cpp()]}
-      onChange={onChange}
-      theme="light"
-    />
+    <>
+      <CodeMirror
+        value={placeholder}
+        height="100%"
+        extensions={[cpp()]}
+        onChange={onChange}
+        theme="light"
+      />
+      <Button onClick={sendCode} variant="contained" endIcon={<UploadIcon />}>
+        Run
+      </Button>
+    </>
   );
 };
 
