@@ -158,8 +158,7 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
     else:
         backend_dict = "LINE NOT FOUND"
 
-    retVal = f"{backend_dict}"
-    io.emit("sendDummyData", retVal, room=socket_id)
+    io.emit("sendDummyData", backend_dict, room=socket_id)
 
 
 @io.event
