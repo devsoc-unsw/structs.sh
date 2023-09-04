@@ -1,13 +1,4 @@
-'''
-Getting this error in gdb:
-```
-Python Exception <class 'gdb.error'>: No symbol "variable_name" in current context.
-Error occurred in Python: No symbol "variable_name" in current context.
-```
-'''
-
 import gdb
-import json
 import subprocess
 from pycparser import parse_file, c_ast
 import re
@@ -55,31 +46,13 @@ class MallocVisitor(c_ast.NodeVisitor):
 
                 current_node = getattr(current_node, 'parent', None)
 
-            # Check if the malloc call has arguments
-            if node.args and isinstance(node.args, c_ast.ExprList) and len(node.args.exprs) == 1:
-                malloc_size_node = node.args.exprs[0]
-
-                # Extract the size of malloc
-                if isinstance(malloc_size_node, c_ast.BinaryOp) and malloc_size_node.op == '*':
-                    if isinstance(malloc_size_node.left, c_ast.Constant):
-                        malloc_size = int(malloc_size_node.left.value)
-
-                    # Extract the type being malloced (if available)
-                    if isinstance(malloc_size_node.right, c_ast.UnaryOp) and malloc_size_node.right.op == 'sizeof':
-                        if isinstance(malloc_size_node.right.expr, c_ast.Typename):
-                            malloc_type = malloc_size_node.right.expr.type
-
             # Store the malloc information
             self.malloc_info.append({
                 'variable_name': variable_name,
-                'malloc_size': malloc_size,
-                'malloc_type': malloc_type,
                 'variable_name_2': self.variable_name_2,  # Include the new variable name
             })
 
 # Define a custom command to extract the linked list nodes
-
-
 class NextCommand(gdb.Command):
     def __init__(self, cmd_name, user_functions):
         super(NextCommand, self).__init__(cmd_name, gdb.COMMAND_USER)
@@ -92,63 +65,44 @@ class NextCommand(gdb.Command):
         raw_str = (temp_line.split('\n')[1]).split('\t')[1]
         line_str = remove_non_standard_characters(raw_str)
 
-        # TODO parse line, find call to malloc,
-        # step into malloc for args (num bytes malloced) and return address on `finish`
-
-        # === Add new heap memory to heap_dict
-        # Intercept malloc
-        # if line has call to malloc
-        #   # if the type of data malloced is the user's annotate linked list type
-        #   # get the address to the malloc'ed memory
-        #   # store address and memory in heap dictionary
-
         with open(MALLOC_TEST_FILE, "w") as f:
             f.write(line_str)
         subprocess.run(f"gcc -E {MALLOC_TEST_FILE} > {MALLOC_PREPROCESSED}",
                        shell=True)
 
-        # Parse the preprocessed C code into an AST
-        # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
-        ast = parse_file(MALLOC_PREPROCESSED, use_cpp=True,
-                         cpp_args=r'-Iutils/fake_libc_include')
-        print(ast)
+        try:
+            # Parse the preprocessed C code into an AST
+            # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
+            ast = parse_file(MALLOC_PREPROCESSED, use_cpp=True,
+                             cpp_args=r'-Iutils/fake_libc_include')
 
-        # Create a MallocVisitor instance
-        malloc_visitor = MallocVisitor()
+            # Create a MallocVisitor instance
+            malloc_visitor = MallocVisitor()
 
-        # Set the current node to the root of the AST
-        malloc_visitor.current_node = ast
+            # Set the current node to the root of the AST
+            malloc_visitor.current_node = ast
 
-        # Visit the AST to check for malloc calls
-        malloc_visitor.visit(ast)
+            # Visit the AST to check for malloc calls
+            malloc_visitor.visit(ast)
 
-        # Print the malloc information
-        for info in malloc_visitor.malloc_info:
-            print("Malloc Information:")
-            print(f"Variable assigned to malloc: {info['variable_name']}")
-            print(f"Variable assigned to malloc V2: {info['variable_name_2']}")
-            print(f"Size of malloc: {info['malloc_size']} bytes")
-            print(f"Type malloced: {info['malloc_type']}")
+            for info in malloc_visitor.malloc_info:
+                print("Malloc Information:")
+                try:
+                    if info['variable_name'] is None:
+                        print(f"Variable assigned to malloc V2: {info['variable_name_2']}")
+                    else:
+                        print(f"Variable assigned to malloc: {info['variable_name']}")
+                except gdb.error as e:
+                    print(f"Error occurred: {e}")
 
-        # === Up date existing tracked heap memory
-
-        # for addr in self.heap_dict.keys():
-        #  # update(heap_dict, addr)
-
-        # === Remove freed heap memory from heap_dict
-        # Intercept free
-        # if line has call to free
-        #   # what address is being freed
-        #   # look for the address in heap dictionary
+        except Exception as e:
+            print(f"Cannot be parsed, Error: {e}")
 
         if any(t.is_running() for t in gdb.selected_inferior().threads()):
             gdb.execute('next')
 
         return self.heap_dict
 
-
-# Run in gdb with `python NodeListCommand("nodelist", "list2")`
-# NodeListCommand("nodelist", "list2")
 
 def myNext():
     print("next (stub, does nothing)")
