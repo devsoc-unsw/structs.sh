@@ -85,8 +85,10 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState, getNextState }) =
             }}
           />
         </div>
+        <div className="debugger">
+          {settings.debug && <Debugger src={currState} />}
+        </div>
       </div>
-      <div className="debugger">{settings.debug && <Debugger src={currState} />}</div>
     </div>
   );
 };
