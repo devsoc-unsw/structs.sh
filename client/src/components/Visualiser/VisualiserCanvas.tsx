@@ -1,4 +1,4 @@
-import { PointerEvent, useEffect, useRef, useState } from 'react';
+import React, { PointerEvent, useEffect, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
