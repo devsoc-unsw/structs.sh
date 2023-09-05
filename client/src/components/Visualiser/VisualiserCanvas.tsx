@@ -67,9 +67,10 @@ const VisualiserCanvas: React.FC = () => {
 
     event.preventDefault();
 
+    // Ensure x is between -width and width and y is between -height and height
     setNewViewBox({
-      x: viewBox.x - (event.clientX - pointerOrigin.x),
-      y: viewBox.y - (event.clientY - pointerOrigin.y),
+      x: Math.min(width, Math.max(-width, viewBox.x - (event.clientX - pointerOrigin.x))),
+      y: Math.min(height, Math.max(-height, viewBox.y - (event.clientY - pointerOrigin.y))),
     });
   };
 
