@@ -103,6 +103,7 @@ const VisualiserCanvas: React.FC = () => {
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerUp}
     >
       <ZoomableSvg
         ref={svgRef}
