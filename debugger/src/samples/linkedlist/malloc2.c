@@ -10,5 +10,5 @@ typedef struct list {
 
 
 int main(int argc, char **argv) {
-    struct node *node3 = malloc(sizeof(struct node));
+    int *arr = malloc(100 * sizeof(int));
 }
