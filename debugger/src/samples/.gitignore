@@ -10,3 +10,5 @@ program
 program.o
 buggy
 buggy.o
+printing
+printing.o
