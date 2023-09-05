@@ -16,47 +16,44 @@ def remove_non_standard_characters(input_str):
     return clean_str
 
 
-# Define a custom visitor class to traverse the AST and extract malloc information
+# Define a visitor class to traverse the AST and find malloc assignments
 class MallocVisitor(c_ast.NodeVisitor):
     def __init__(self):
-        self.malloc_info = []
-        self.variable_name_2 = None  # Initialize the new variable
+        self.malloc_variables = []
 
-    def visit_TypeDecl(self, node):
-        if isinstance(node, c_ast.TypeDecl) and node.declname:
-            self.variable_name_2 = node.declname
+    def visit_Assignment(self, node):
+        # Check if the assignment is of the form "variable = malloc(...)"
+        if isinstance(node.rvalue, c_ast.FuncCall) and isinstance(node.rvalue.name, c_ast.ID) and node.rvalue.name.name == 'malloc':
+            if isinstance(node.lvalue, c_ast.StructRef):
+                var_name = self.get_variable_name(node.lvalue)
+                self.malloc_variables.append(var_name)
+            elif isinstance(node.lvalue, c_ast.ID):
+                self.malloc_variables.append(node.lvalue.name)
+        self.generic_visit(node)
 
-    def visit_FuncCall(self, node):
-        if isinstance(node.name, c_ast.ID) and node.name.name == "malloc":
-            # Extract information about the malloc call
-            malloc_size = None
-            variable_name = None
-            malloc_type = None
+    def visit_Decl(self, node):
+        # Check if the declaration initializes with malloc, e.g., "Type *var = malloc(...)"
+        if node.init and isinstance(node.init, c_ast.FuncCall) and isinstance(node.init.name, c_ast.ID) and node.init.name.name == 'malloc':
+            if isinstance(node.type, c_ast.PtrDecl):
+                var_name = node.name
+                self.malloc_variables.append(var_name)
+        self.generic_visit(node)
 
-            # Find the assignment statement enclosing the malloc call
-            current_node = self.current_node
-            while current_node is not None:
-                if isinstance(current_node, c_ast.Assignment):
-                    if isinstance(current_node.rvalue, c_ast.FuncCall) and current_node.rvalue.name.name == "malloc":
-                        # Extract the variable name from the assignment statement
-                        if isinstance(current_node.lvalue, c_ast.ID):
-                            variable_name = current_node.lvalue.name
+    def get_variable_name(self, node):
+        # Recursively get the variable name from the pointer chain
+        if isinstance(node, c_ast.StructRef):
+            base = self.get_variable_name(node.name)
+            field = node.field.name
+            return f"{base}->{field}"
+        elif isinstance(node, c_ast.ID):
+            return node.name
+        return None
 
-                        break
-
-                current_node = getattr(current_node, 'parent', None)
-
-            # Store the malloc information
-            self.malloc_info.append({
-                'variable_name': variable_name,
-                'variable_name_2': self.variable_name_2,  # Include the new variable name
-            })
 
 # Define a custom command to extract the linked list nodes
 class NextCommand(gdb.Command):
-    def __init__(self, cmd_name, user_functions):
-        super(NextCommand, self).__init__(cmd_name, gdb.COMMAND_USER)
-        self.user_functions = user_functions
+    def __init__(self):
+        super(NextCommand, self).__init__("myNext", gdb.COMMAND_USER)
         self.heap_dict = {}
 
     def invoke(self, arg, from_tty):
@@ -65,16 +62,34 @@ class NextCommand(gdb.Command):
         raw_str = (temp_line.split('\n')[1]).split('\t')[1]
         line_str = remove_non_standard_characters(raw_str)
 
+        # Create a complete C code file with function prototypes, main, and variable line
+        complete_c_code = f"""
+struct node {{
+  int data;
+  struct node *next;
+}};
+
+typedef struct list {{
+  struct node *head;
+  int size;
+}} List;
+
+int main(int argc, char **argv) {{
+{line_str}
+}}
+"""
+
+        # Write the complete C code to a file
         with open(MALLOC_TEST_FILE, "w") as f:
-            f.write(line_str)
+            f.write(complete_c_code)
+
         subprocess.run(f"gcc -E {MALLOC_TEST_FILE} > {MALLOC_PREPROCESSED}",
                        shell=True)
 
-        #try:
         # Parse the preprocessed C code into an AST
         # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
         ast = parse_file(MALLOC_PREPROCESSED, use_cpp=True,
-                            cpp_args=r'-Iutils/fake_libc_include')
+                         cpp_args=r'-Iutils/fake_libc_include')
 
         # Create a MallocVisitor instance
         malloc_visitor = MallocVisitor()
@@ -85,18 +100,10 @@ class NextCommand(gdb.Command):
         # Visit the AST to check for malloc calls
         malloc_visitor.visit(ast)
 
-        for info in malloc_visitor.malloc_info:
-            print("Malloc Information:")
-            try:
-                if info['variable_name'] is None:
-                    print(f"Variable assigned to malloc V2: {info['variable_name_2']}")
-                else:
-                    print(f"Variable assigned to malloc: {info['variable_name']}")
-            except gdb.error as e:
-                print(f"Error occurred: {e}")
-
-        #except Exception as e:
-        #    print(f"Cannot be parsed, Error: {e}")
+        # Print the variable names assigned to malloc
+        print("Variables assigned to malloc:")
+        for var in malloc_visitor.malloc_variables:
+            print(var)
 
         if any(t.is_running() for t in gdb.selected_inferior().threads()):
             gdb.execute('next')
@@ -106,3 +113,6 @@ class NextCommand(gdb.Command):
 
 def myNext():
     print("next (stub, does nothing)")
+
+
+NextCommand()
