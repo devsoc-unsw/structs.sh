@@ -1,4 +1,4 @@
-import { PointerEvent, useRef, useState } from 'react';
+import { PointerEvent, useEffect, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -20,6 +20,8 @@ const ZoomableSvg = styled('svg')(({ scale }) => ({
 const VisualiserCanvas: React.FC = () => {
   const [scale, setScale] = useState(1);
   const svgRef = useRef(null);
+  const [height, setHeight] = useState(1000);
+  const [width, setWidth] = useState(1000);
 
   const ZOOM_SPEED = 0.05;
   const MAX_SCALE = 2;
@@ -39,7 +41,7 @@ const VisualiserCanvas: React.FC = () => {
     y: 0,
   });
 
-  const handlePointerDown = (event: PointerEvent<SVGSVGElement>) => {
+  const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
     setIsPointerDown(true);
 
     setPointerOrigin({
@@ -51,8 +53,6 @@ const VisualiserCanvas: React.FC = () => {
   const [viewBox, setViewBox] = useState({
     x: 0,
     y: 0,
-    width: 1000,
-    height: 1000,
   });
 
   const [newViewBox, setNewViewBox] = useState({
@@ -60,7 +60,7 @@ const VisualiserCanvas: React.FC = () => {
     y: 0,
   });
 
-  const handlePointerMove = (event: PointerEvent<SVGSVGElement>) => {
+  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
     if (!isPointerDown) {
       return;
     }
@@ -76,8 +76,23 @@ const VisualiserCanvas: React.FC = () => {
   const handlePointerUp = () => {
     setIsPointerDown(false);
 
-    setViewBox((prevViewBox) => ({ ...prevViewBox, x: newViewBox.x, y: newViewBox.y }));
+    setViewBox({
+      x: newViewBox.x,
+      y: newViewBox.y,
+    });
   };
+
+  useEffect(() => {
+    setHeight(svgRef.current.clientHeight);
+    setWidth(svgRef.current.clientWidth);
+    // console.log(svgRef.current.clientHeight);
+    // console.log(svgRef.current.clientWidth);
+    setViewBox((prevViewBox) => ({
+      ...prevViewBox,
+      height,
+      width,
+    }));
+  }, []);
 
   return (
     <Box
@@ -86,16 +101,15 @@ const VisualiserCanvas: React.FC = () => {
       margin="auto"
       height="100vh"
       width={window.screen.width}
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
+      onPointerMove={handlePointerMove}
     >
       <ZoomableSvg
         ref={svgRef}
-        onWheel={onScroll}
         id="visualiser-canvas"
         scale={scale}
-        onPointerDown={handlePointerDown}
-        onPointerUp={handlePointerUp}
-        onPointerMove={handlePointerMove}
-        viewBox={`${newViewBox.x} ${newViewBox.y} ${viewBox.width} ${viewBox.height}`}
+        viewBox={`${newViewBox.x} ${newViewBox.y} ${width} ${height}`}
       />
     </Box>
   );
