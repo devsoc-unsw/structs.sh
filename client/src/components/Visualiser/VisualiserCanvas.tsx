@@ -85,8 +85,6 @@ const VisualiserCanvas: React.FC = () => {
   useEffect(() => {
     setHeight(svgRef.current.clientHeight);
     setWidth(svgRef.current.clientWidth);
-    // console.log(svgRef.current.clientHeight);
-    // console.log(svgRef.current.clientWidth);
     setViewBox((prevViewBox) => ({
       ...prevViewBox,
       height,
