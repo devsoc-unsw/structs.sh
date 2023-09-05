@@ -48,6 +48,12 @@ fn_declarations: fn_declarations.o
 fn_declarations.o: fn_declarations.c
 
 # ===
+stack_frames: stack_frames.o
+	$(CC) $(CFLAGS) -o $@ $^
+
+stack_frames.o: stack_frames.c
+
+# ===
 .PHONY: clean
 clean:
 	rm -f *.o linkedlist/*.o program buggy linkedlist/main1 linkedlist/main2 linkedlist/main3

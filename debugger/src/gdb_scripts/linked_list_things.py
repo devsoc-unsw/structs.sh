@@ -81,9 +81,15 @@ class MallocVisitor(c_ast.NodeVisitor):
 
 
 class NextCommand(gdb.Command):
-    def __init__(self, cmd_name, user_functions):
+    '''
+    Run in gdb:
+
+    (gdb) python NextCommand("my_next")
+
+    '''
+
+    def __init__(self, cmd_name):
         super(NextCommand, self).__init__(cmd_name, gdb.COMMAND_USER)
-        self.user_functions = user_functions
         self.heap_dict = {}
 
     def invoke(self, arg, from_tty):
@@ -141,14 +147,24 @@ class NextCommand(gdb.Command):
         #   # what address is being freed
         #   # look for the address in heap dictionary
 
+        # Extract stack frame information (state of local variables)
+        # and send to frontend client
+        stack_frame()
+
         if any(t.is_running() for t in gdb.selected_inferior().threads()):
             gdb.execute('next')
 
         return self.heap_dict
 
 
-# Run in gdb with `python NodeListCommand("nodelist", "list2")`
-# NodeListCommand("nodelist", "list2")
+def stack_frame():
 
-def myNext():
-    print("next (stub, does nothing)")
+    #  TODO: validate this copilot autogen
+    # Extract stack frame information (state of local variables)
+    # and send to frontend client
+    frame = gdb.selected_frame()
+    block = frame.block()
+    for symbol in block:
+        if symbol.is_argument or symbol.is_variable:
+            print(symbol.name)
+            print(symbol.value(frame))

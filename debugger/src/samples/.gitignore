@@ -10,3 +10,5 @@ program
 program.o
 buggy
 buggy.o
+stack_frames
+stack_frames.o
