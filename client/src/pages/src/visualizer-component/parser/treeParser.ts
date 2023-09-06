@@ -20,61 +20,86 @@ type TreeNode = {
   left: Addr;
   right: Addr;
 };
-const TREE_GAP = 100;
+const TREE_GAP = 140;
 
 export class TreeParser implements Parser {
   assignPositionsRecursion(
-    currNode: TreeNode,
+    currNode: TreeNode | null,
     posCache: Map<Addr, { x: number; y: number }>,
     nodeCache: Map<Addr, TreeNode>,
-    xMin: number,
-    xMax: number,
+    leftBoundary: number,
+    rightBoundary: number,
     y: number
   ): {
-    xMin: number;
-    xMax: number;
+    leftBoundary: number;
+    rightBoundary: number;
     y: number;
-  } {
-    const positions: { xMin: number; xMax: number; y: number }[] = [];
+  } | null {
+    if (!currNode) return null;
+
+    let leftRange: { leftBoundary: number; rightBoundary: number; y: number } | null = null;
+    let rightRange: { leftBoundary: number; rightBoundary: number; y: number } | null = null;
 
     if (currNode.left) {
       const leftNode = nodeCache.get(currNode.left);
       if (leftNode) {
-        positions.push(
-          this.assignPositionsRecursion(
-            leftNode,
-            posCache,
-            nodeCache,
-            xMin,
-            xMax,
-            y + TREE_GAP * 1.4
-          )
+        leftRange = this.assignPositionsRecursion(
+          leftNode,
+          posCache,
+          nodeCache,
+          leftBoundary,
+          rightBoundary,
+          y + TREE_GAP * 1.4
         );
       }
-      xMin += 100;
+    }
+
+    // If there'e range in the left, we need to assign the current node on the right side of range
+    if (leftRange) {
+      posCache.set(currNode.uid, { x: leftRange.rightBoundary + TREE_GAP / 2, y });
+      leftBoundary = leftRange.rightBoundary + TREE_GAP / 2;
+    } // We put the current node on the left boundry
+    else {
+      posCache.set(currNode.uid, { x: leftBoundary + TREE_GAP / 2, y });
+      leftBoundary += TREE_GAP / 2;
     }
 
     if (currNode.right) {
       const rightNode = nodeCache.get(currNode.right);
       if (rightNode) {
-        positions.push(
-          this.assignPositionsRecursion(
-            rightNode,
-            posCache,
-            nodeCache,
-            xMin += 100,
-            xMax,
-            y + TREE_GAP * 1.4
-          )
+        rightRange = this.assignPositionsRecursion(
+          rightNode,
+          posCache,
+          nodeCache,
+          leftBoundary,
+          rightBoundary,
+          y + TREE_GAP * 1.4
         );
       }
     }
 
-    posCache.set(currNode.uid, { x: (xMin + xMax) / 2, y });
+    // Now we merge range
+    let leftBoundaryRet = posCache.get(currNode.uid).x - TREE_GAP / 2;
+    let rightBoundaryRet = posCache.get(currNode.uid).x + TREE_GAP / 2;
+    if (leftRange) {
+      leftBoundaryRet = Math.min(leftRange.leftBoundary, leftBoundaryRet);
+      rightBoundaryRet = Math.max(leftRange.rightBoundary, rightBoundaryRet);
+    }
+    if (rightRange) {
+      leftBoundaryRet = Math.min(rightRange.leftBoundary, leftBoundaryRet);
+      rightBoundaryRet = Math.max(rightRange.rightBoundary, rightBoundaryRet);
+    }
+    // Pick the middle reassign currNode
+    if (currNode.left && currNode.right) {
+      let posLeft = posCache.get(currNode.left);
+      let posRight = posCache.get(currNode.right);
+      posCache.set(currNode.uid, { x: (posLeft.x + posRight.x) / 2, y });
+    }
+
     return {
-      xMin: xMin,
-      xMax: xMax,
-      y: y, 
+      leftBoundary: leftBoundaryRet,
+      rightBoundary: rightBoundaryRet,
+      y: y,
     };
   }
 

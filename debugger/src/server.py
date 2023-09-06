@@ -145,6 +145,10 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
         backend_dict = TREE_PLACEHOLDER_HEAP_DICTS[2]
     elif line_number == "103":
         backend_dict = TREE_PLACEHOLDER_HEAP_DICTS[3]
+    elif line_number == "104":
+        backend_dict = TREE_PLACEHOLDER_HEAP_DICTS[4]
+    elif line_number == "105":
+        backend_dict = TREE_PLACEHOLDER_HEAP_DICTS[5]
     else:
         backend_dict = "LINE NOT FOUND"
 
