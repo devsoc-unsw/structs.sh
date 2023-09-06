@@ -23,6 +23,7 @@ import { Link, useParams } from 'react-router-dom';
 import { titleToUrl, toTitleCase, urlToTitle } from 'utils/url';
 import { getTopics } from '../../visualiser-src/common/helpers';
 import axios from 'axios';
+import Login from 'components/Login/Login';
 
 const LogoText = styled(Typography)({
   textTransform: 'none',
@@ -39,47 +40,6 @@ interface Props {
 const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
   const theme = useTheme();
 
-  // Handle login toggle
-  const [canLogin, setCanLogin] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("")
-
-  // Handle login button
-  const handleLogin = () => {
-    if (username.length == 0 || password.length == 0) {
-      alert("Please enter username or password");
-      return;
-    }
-    console.log("logging on");
-    const data = {
-      username: username,
-      password: password
-    };
-    axios
-      .post("http://localhost:3000/api/register", data)
-      .then((response) => {
-        console.log("User saved", response.data);
-        alert("User Saved");
-      })
-      .catch((error) => {
-        console.error("Error registering user:", error);
-      });
-    setUsername("");
-    setPassword("");
-  }
-
-  // for developing purposes only, clear user database
-  const handleClear = () => {
-    axios
-      .delete("http://localhost:3000/api/deleteAllUsers")
-      .then((response) => {
-        alert("Users cleared");
-      })
-      .catch((error) => {
-        console.error("Error deleting users:", error);
-      });
-  }
-
   // Get current topic by the url parameter
   const currTopic = toTitleCase(urlToTitle(useParams().topic || ''));
 
@@ -91,6 +51,13 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
   const handleCloseMenu = () => {
     setMenuAnchorEl(null);
   };
+
+  const [loggedIn, setLoggedIn] = useState(localStorage.getItem('user') != null);
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    setLoggedIn(false);
+  }
 
   return (
     <Box>
@@ -140,21 +107,17 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
                 </LogoText>
               </Button>
             </Grid>
-            {
-              canLogin ?
-                <>
-                  <Grid item xs={4} display="flex" justifyContent="end">
-                    <Input placeholder="Username" value={username} onChange={(event) => setUsername(event.target.value)} />
-                    <Input placeholder="Password" value={password} type="password" onChange={(event) => setPassword(event.target.value)} />
-                    <Button color="inherit" onClick={handleLogin}>Login</Button>
-                    <Button color="inherit" onClick={handleClear}>clear</Button>
-                  </Grid>
-                </>
-                :
-                <Grid item xs={4} display="flex" justifyContent="end">
-                  <Button color="inherit" onClick={() => setCanLogin(true)}>Login</Button>
-                </Grid>
-            }
+            <Grid item xs={4} display="flex" justifyContent="end">
+              {
+                loggedIn ?
+                  <>
+                    <Button style={{ color: 'white' }} >{localStorage.getItem('user')}</Button>
+                    <Button onClick={handleLogout}>Log Out</Button>
+                  </>
+                  :
+                  <Login handleLogon={setLoggedIn} />
+              }
+            </Grid>
           </Grid>
         </Toolbar>
       </AppBar>

@@ -58,6 +58,11 @@ router.delete('/api/deleteAllUsers', async (req: Request, res: Response) => {
     return res.status(201).send();
 })
 
+router.get('/api/getAllUsers', [], async (req: Request, res: Response) => {
+    const dataStructureDocuments = await users.find({})
+    return res.status(200).send(dataStructureDocuments)
+})
+
 router.post('/api/register', async (req: Request, res: Response) => {
     const { username, password } = req.body;
     console.log("regisering this person: ");
