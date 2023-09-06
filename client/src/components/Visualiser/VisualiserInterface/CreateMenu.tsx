@@ -5,6 +5,7 @@ import VisualiserContext from './VisualiserContext';
 import axios from 'axios';
 import LoadOptions from './LoadOptions';
 import styles from './Control.module.scss';
+import { SERVER_URL } from 'utils/constants';
 
 const MenuButton = styled(Button)({
   backgroundColor: '#46B693',
@@ -57,7 +58,7 @@ const CreateMenu = () => {
     };
     console.log(controller.getData());
     axios
-      .post("http://localhost:3000/api/save", data)
+      .post(SERVER_URL + "/api/save", data)
       .then((response) => {
         console.log("Linked List saved:", response.data);
         alert("Saved");
@@ -69,7 +70,7 @@ const CreateMenu = () => {
 
   const handleLoad = () => {
     axios
-      .get("http://localhost:3000/api/getAll")
+      .get(SERVER_URL + "/api/getAll")
       .then((response) => {
         // Handle the response data
         console.log(response.data);
@@ -106,7 +107,7 @@ const CreateMenu = () => {
   // for developing purpoeses only to clear datastructures
   const clearDb = () => {
     axios
-      .delete("http://localhost:3000/api/deleteAll", {
+      .delete(SERVER_URL + "/api/deleteAll", {
         data: {
           owner: "Hanyuan Li"
         }

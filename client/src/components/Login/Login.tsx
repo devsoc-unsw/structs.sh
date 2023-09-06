@@ -3,6 +3,7 @@ import { Box, Typography, useTheme, Button, Input } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import { Block } from '@mui/icons-material';
+import { SERVER_URL } from 'utils/constants';
 
 interface Props {
     handleLogon: any;
@@ -59,7 +60,7 @@ const Login: FC<Props> = (
     // Handle login button
     const handleLogin = () => {
         axios
-            .get("http://localhost:3000/api/getAllUsers")
+            .get(SERVER_URL + "/api/getAllUsers")
             .then((response) => {
                 let found = false;
                 setCanLogin(false);
@@ -96,7 +97,7 @@ const Login: FC<Props> = (
             password: password
         };
         axios
-            .post("http://localhost:3000/api/register", data)
+            .post(SERVER_URL + "/api/register", data)
             .then((response) => {
                 console.log("User saved", response.data);
                 alert("User Saved");
@@ -112,7 +113,7 @@ const Login: FC<Props> = (
     // for developing purposes only, clear user database
     const handleClear = () => {
         axios
-            .delete("http://localhost:3000/api/deleteAllUsers")
+            .delete(SERVER_URL + "/api/deleteAllUsers")
             .then((response) => {
                 handleBack();
                 handleLogon(false);
