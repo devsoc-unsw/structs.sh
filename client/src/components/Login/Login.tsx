@@ -66,7 +66,7 @@ const Login: FC<Props> = (
                 response.data.forEach((item, index) => {
                     if (item['username'] == username && item['password'] == password) {
                         localStorage.setItem("user", username);
-                        alert("Logged In as" + username);
+                        alert("Logged In as " + username);
                         found = true;
                         handleLogon(true);
                         handleBack();
@@ -106,6 +106,7 @@ const Login: FC<Props> = (
             });
         setUsername("");
         setPassword("");
+        setRegister(false);
     }
 
     // for developing purposes only, clear user database
