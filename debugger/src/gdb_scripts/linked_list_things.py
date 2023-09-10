@@ -1,13 +1,19 @@
+import os
 import gdb
 import subprocess
 from pycparser import parse_file, c_ast
 import re
 
-# C file storing malloc line
-MALLOC_TEST_FILE = "samples/malloc.c"
+# Parent directory of this python script e.g. "/user/.../debugger/src/gdb_scripts"
+# In the docker container this will be "/app/src/gdb_scripts"
+# You can then use this to reference files relative to this directory.
+abs_file_path = os.path.dirname(os.path.abspath(__file__))
+
+# File to write the user-written malloc calls extracted from gdb
+USER_MALLOC_CALL_FILE_PATH = f"{abs_file_path}/user_malloc_call.c"
 
 # File to write the preprocessed C code to, before parsing with pycparser
-MALLOC_PREPROCESSED = "malloc_preprocessed"
+USER_MALLOC_CALL_PREPROCESSED = f"{abs_file_path}/user_malloc_call_preprocessed"
 
 
 def remove_non_standard_characters(input_str):
@@ -31,7 +37,6 @@ class MallocVisitor(c_ast.NodeVisitor):
             elif isinstance(node.lvalue, c_ast.ID):
                 self.malloc_variables.append(node.lvalue.name)
         self.generic_visit(node)
-
 
     def visit_FuncCall(self, node):
         # Check if the function call is to "free(variable)"
@@ -58,7 +63,6 @@ class MallocVisitor(c_ast.NodeVisitor):
         elif isinstance(node, c_ast.ID):
             return node.name
         return None
-
 
 
 # Define a custom command to extract the linked list nodes
@@ -91,15 +95,15 @@ int main(int argc, char **argv) {{
 """
 
         # Write the complete C code to a file
-        with open(MALLOC_TEST_FILE, "w") as f:
+        with open(USER_MALLOC_CALL_FILE_PATH, "w") as f:
             f.write(complete_c_code)
 
-        subprocess.run(f"gcc -E {MALLOC_TEST_FILE} > {MALLOC_PREPROCESSED}",
+        subprocess.run(f"gcc -E {USER_MALLOC_CALL_FILE_PATH} > {USER_MALLOC_CALL_PREPROCESSED}",
                        shell=True)
 
         # Parse the preprocessed C code into an AST
         # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
-        ast = parse_file(MALLOC_PREPROCESSED, use_cpp=True,
+        ast = parse_file(USER_MALLOC_CALL_PREPROCESSED, use_cpp=True,
                          cpp_args=r'-Iutils/fake_libc_include')
 
         # Create a MallocVisitor instance
@@ -115,14 +119,12 @@ int main(int argc, char **argv) {{
         print("Variables assigned to malloc:")
         for var in malloc_visitor.malloc_variables:
             print(var)
-        
+
         # Print the variable names being freed
         print(malloc_visitor.free)
         print("Variables being freed:")
         for var in malloc_visitor.free_variables:
             print(var)
-
-
 
         if any(t.is_running() for t in gdb.selected_inferior().threads()):
             gdb.execute('next')
