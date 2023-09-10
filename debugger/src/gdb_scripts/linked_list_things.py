@@ -16,10 +16,11 @@ def remove_non_standard_characters(input_str):
     return clean_str
 
 
-# Define a visitor class to traverse the AST and find malloc assignments
 class MallocVisitor(c_ast.NodeVisitor):
     def __init__(self):
         self.malloc_variables = []
+        self.free_variables = []
+        self.free = "False"
 
     def visit_Assignment(self, node):
         # Check if the assignment is of the form "variable = malloc(...)"
@@ -29,6 +30,15 @@ class MallocVisitor(c_ast.NodeVisitor):
                 self.malloc_variables.append(var_name)
             elif isinstance(node.lvalue, c_ast.ID):
                 self.malloc_variables.append(node.lvalue.name)
+        self.generic_visit(node)
+
+
+    def visit_FuncCall(self, node):
+        # Check if the function call is to "free(variable)"
+        if isinstance(node.name, c_ast.ID) and node.name.name == 'free':
+            self.free = "True"
+            if len(node.args.exprs) == 1 and isinstance(node.args.exprs[0], c_ast.ID):
+                self.free_variables.append(node.args.exprs[0].name)
         self.generic_visit(node)
 
     def visit_Decl(self, node):
@@ -48,6 +58,7 @@ class MallocVisitor(c_ast.NodeVisitor):
         elif isinstance(node, c_ast.ID):
             return node.name
         return None
+
 
 
 # Define a custom command to extract the linked list nodes
@@ -104,6 +115,14 @@ int main(int argc, char **argv) {{
         print("Variables assigned to malloc:")
         for var in malloc_visitor.malloc_variables:
             print(var)
+        
+        # Print the variable names being freed
+        print(malloc_visitor.free)
+        print("Variables being freed:")
+        for var in malloc_visitor.free_variables:
+            print(var)
+
+
 
         if any(t.is_running() for t in gdb.selected_inferior().threads()):
             gdb.execute('next')
