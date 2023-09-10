@@ -1,6 +1,6 @@
 # To use this compile the printing.c file
 # Then run:
-# gdb samples/printing --batch x printing.py
+# gdb samples/printing --batch -x printing.py
 import importlib
 import pty
 import os
