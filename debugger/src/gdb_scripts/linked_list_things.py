@@ -126,14 +126,14 @@ int main(int argc, char **argv) {{
         for var in malloc_visitor.free_variables:
             print(var)
 
-        if any(t.is_running() for t in gdb.selected_inferior().threads()):
-            gdb.execute('next')
+        # TODO: Need a way to detect if program exits, then send signal to server
+        # which should tell the client that the debugging session is over.
+        gdb.execute('next')
 
         return self.heap_dict
 
+    def get_heap_dict(self):
+        return self.heap_dict
 
-def myNext():
-    print("next (stub, does nothing)")
 
-
-NextCommand()
+nextCommand = NextCommand()
