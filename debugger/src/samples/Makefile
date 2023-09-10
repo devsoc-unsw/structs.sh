@@ -6,7 +6,7 @@ CC = gcc
 CFLAGS = -ggdb
 
 .PHONY: all
-all: program buggy linkedlist/main1 linkedlist/main2 linkedlist/main3 fn_declarations
+all: program buggy linkedlist/main1 linkedlist/main2 linkedlist/main3 fn_declarations printing
 
 # ===
 program: program.o
@@ -48,6 +48,12 @@ fn_declarations: fn_declarations.o
 fn_declarations.o: fn_declarations.c
 
 # ===
+printing: printing.o
+	$(CC) $(CFLAGS) -o $@ $^
+
+printing.o: printing.c
+
+# ===
 .PHONY: clean
 clean:
-	rm -f *.o linkedlist/*.o program buggy linkedlist/main1 linkedlist/main2 linkedlist/main3
+	rm -f *.o linkedlist/*.o program buggy linkedlist/main1 linkedlist/main2 linkedlist/main3 fn_declarations printing

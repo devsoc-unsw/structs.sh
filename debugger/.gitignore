@@ -4,7 +4,5 @@ user_fn_declarations.o
 user_type_declarations_preprocessed
 user_type_declarations.c
 user_type_declarations.o
-fn_declarations
-fn_declarations.o
 *.dYSM
 __pycache__
