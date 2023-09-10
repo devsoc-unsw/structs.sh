@@ -10,5 +10,7 @@ program
 program.o
 buggy
 buggy.o
+fn_declarations
+fn_declarations.o
 printing
 printing.o
