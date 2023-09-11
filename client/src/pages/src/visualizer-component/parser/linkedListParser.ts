@@ -217,8 +217,7 @@ export class LinkedListParser implements Parser {
             break;
           }
           default:
-            break;
-          // assertUnreachable(entity);
+            assertUnreachable(entity as never, false);
         }
       }
     });

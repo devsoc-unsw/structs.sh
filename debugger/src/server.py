@@ -166,7 +166,7 @@ def sendDummyArrayData(socket_id: str, line_number: Any) -> None:
     print("array Received message from", socket_id, ":", line_number)
 
     # 1D int array
-    # backend_dict = PLACEHOLDER_HEAP_DICTS_1D_ARRAY
+    backend_dict = PLACEHOLDER_HEAP_DICTS_1D_ARRAY
 
     # 2D int array
     backend_dict = PLACEHOLDER_HEAP_DICTS_2D_ARRAY

@@ -39,7 +39,15 @@ const DevelopmentMode = () => {
   const [count, setCountState] = useState(100);
   const onSendDummyData = (data: any) => {
     // Upddate will handled in this step, rn we use backendState
+    console.log('received dummy data:', data);
     setBackendState(data);
+  };
+  const onSendDummyArrayData = (data: any) => {
+    console.log('received dummy array data:', data);
+    const correctedJsonString = data.replace(/'/g, '"');
+    const backendStateJson = JSON.parse(correctedJsonString as string);
+    console.log(backendStateJson);
+    setBackendState(backendStateJson);
   };
 
   const onGetBreakpoints = useCallback((data: any) => {
@@ -54,9 +62,13 @@ const DevelopmentMode = () => {
     console.log(`Received event onMainDebug:\n`, data);
   }, []);
 
-  // const onSendDummyData = useCallback((data: any) => {
-  //   console.log(`Received message: ${data}`);
-  // }, []);
+  const onSendFunctionDeclaration = useCallback((data: any) => {
+    console.log(`Received function declaration:\n`, data);
+  }, []);
+
+  const onSendTypeDeclaration = useCallback((data: any) => {
+    console.log(`Received type declaration:\n`, data);
+  }, []);
 
   useEffect(() => {
     const onConnect = () => {
@@ -82,19 +94,19 @@ const DevelopmentMode = () => {
     socket.on('disconnect', onDisconnect);
     socket.on('getBreakpoints', onGetBreakpoints);
     socket.on('sendDummyData', onSendDummyData);
+    socket.on('sendDummyArrayData', onSendDummyArrayData);
     socket.on('mainDebug', onMainDebug);
-    socket.on('sendFunctionDeclaration', (data: any) => {
-      console.log(`Received function declaration:\n`, data);
-    });
-    socket.on('sendTypeDeclaration', (data: any) => {
-      console.log(`Received type declaration:\n`, data);
-    });
+    socket.on('sendFunctionDeclaration', onSendFunctionDeclaration);
+    socket.on('sendTypeDeclaration', onSendTypeDeclaration);
 
     return () => {
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
       socket.off('getBreakpoints', onGetBreakpoints);
-      // socket.off('sendDummyData', onSendDummyData);
+      socket.off('sendDummyData', onSendDummyData);
+      socket.off('sendDummyArrayData', onSendDummyArrayData);
+      socket.off('mainDebug', onMainDebug);
+      socket.off('sendFunctionDeclaration', onSendFunctionDeclaration);
     };
   }, [onSendDummyData]);
 
