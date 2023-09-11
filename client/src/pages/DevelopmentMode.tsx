@@ -37,21 +37,32 @@ const DevelopmentMode = () => {
   });
 
   const [count, setCountState] = useState(100);
-  const onSendDummyData = (data: any) => {
-    // Upddate will handled in this step, rn we use backendState
-    console.log('received dummy data:', data);
-    setBackendState(data);
-  };
-  const onSendDummyArrayData = (data: any) => {
-    console.log('received dummy array data:', data);
-    const correctedJsonString = data.replace(/'/g, '"');
-    const backendStateJson = JSON.parse(correctedJsonString as string);
-    console.log(backendStateJson);
-    setBackendState(backendStateJson);
-  };
 
-  const onGetBreakpoints = useCallback((data: any) => {
-    console.log(`Received data:\n`, data);
+  const onConnect = useCallback(() => {
+    console.log('Connected!');
+    console.log('Emitting message to server...');
+
+    socket.emit('mainDebug');
+
+    // === Uncomment these socket.emit() calls to emit event to
+    // === the server and get the response in corresponding event handlers
+    // === defined above.
+
+    // socket.emit('getBreakpoints', '121', 'list2');
+    // socket.emit('getBreakpoints', '122', 'list2');
+    // socket.emit('getBreakpoints', '123', 'list2');
+    // socket.emit('getBreakpoints', '124', 'list2');
+    // socket.emit('getBreakpoints', '125', 'list2');
+    // socket.emit('getBreakpoints', '126', 'list2');
+
+    // socket.emit('sendDummyData', '100');
+    // socket.emit('sendDummyData', '101');
+    // socket.emit('sendDummyData', '102');
+    // socket.emit('sendDummyData', '103');
+    // socket.emit('sendDummyData', '104');
+    // socket.emit('sendDummyData', '105');
+
+    // socket.emit('sendDummyArrayData', 2);
   }, []);
 
   const onDisconnect = useCallback(() => {
@@ -70,43 +81,39 @@ const DevelopmentMode = () => {
     console.log(`Received type declaration:\n`, data);
   }, []);
 
+  const onSendDummyData = (data: any) => {
+    // Upddate will handled in this step, rn we use backendState
+    console.log('received dummy data:', data);
+    setBackendState(data);
+  };
+  const onSendDummyArrayData = (data: any) => {
+    console.log('received dummy array data:', data);
+    setBackendState(data);
+  };
+
+  const onGetBreakpoints = useCallback((data: any) => {
+    console.log(`Received data:\n`, data);
+  }, []);
+
   useEffect(() => {
-    const onConnect = () => {
-      console.log('Connected!');
-      console.log('Emitting message to server...');
-      // socket.emit('getBreakpoints', '121', 'list2');
-      // socket.emit('getBreakpoints', '122', 'list2');
-      // socket.emit('getBreakpoints', '123', 'list2');
-      // socket.emit('getBreakpoints', '124', 'list2');
-      // socket.emit('getBreakpoints', '125', 'list2');
-      // socket.emit('getBreakpoints', '126', 'list2');
-      socket.emit('mainDebug');
-
-      socket.emit('sendDummyData', '100');
-      socket.emit('sendDummyData', '101');
-      socket.emit('sendDummyData', '102');
-      socket.emit('sendDummyData', '103');
-      socket.emit('sendDummyData', '104');
-      socket.emit('sendDummyData', '105');
-    };
-
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
-    socket.on('getBreakpoints', onGetBreakpoints);
-    socket.on('sendDummyData', onSendDummyData);
-    socket.on('sendDummyArrayData', onSendDummyArrayData);
     socket.on('mainDebug', onMainDebug);
     socket.on('sendFunctionDeclaration', onSendFunctionDeclaration);
     socket.on('sendTypeDeclaration', onSendTypeDeclaration);
+    socket.on('getBreakpoints', onGetBreakpoints);
+    socket.on('sendDummyData', onSendDummyData);
+    socket.on('sendDummyArrayData', onSendDummyArrayData);
 
     return () => {
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
+      socket.off('mainDebug', onMainDebug);
+      socket.off('sendFunctionDeclaration', onSendFunctionDeclaration);
+      socket.off('sendTypeDeclaration', onSendTypeDeclaration);
       socket.off('getBreakpoints', onGetBreakpoints);
       socket.off('sendDummyData', onSendDummyData);
       socket.off('sendDummyArrayData', onSendDummyArrayData);
-      socket.off('mainDebug', onMainDebug);
-      socket.off('sendFunctionDeclaration', onSendFunctionDeclaration);
     };
   }, [onSendDummyData]);
 

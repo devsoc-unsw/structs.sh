@@ -162,14 +162,25 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
 
 
 @io.event
-def sendDummyArrayData(socket_id: str, line_number: Any) -> None:
-    print("array Received message from", socket_id, ":", line_number)
+def sendDummyArrayData(socket_id: str, dimensions) -> None:
+    '''
+    Send hard-coded heap dictionaries to the frontend user.
+    Args:
+        - socket_id: The socket id of the frontend user
+        - dimensions: The number of dimensions of the dummy array data.
+                Can choose between 1 and 2 so far, see placeholder_data.py.
+    '''
+    print("sendDummyData: Received message from", socket_id,
+          ":", f"{dimensions}-dimensional array requested")
 
-    # 1D int array
-    backend_dict = PLACEHOLDER_HEAP_DICTS_1D_ARRAY
-
-    # 2D int array
-    backend_dict = PLACEHOLDER_HEAP_DICTS_2D_ARRAY
+    if (dimensions == 1):
+        # 1D int array
+        backend_dict = PLACEHOLDER_HEAP_DICTS_1D_ARRAY[0]
+    elif (dimensions == 2):
+        # 2D int array
+        backend_dict = PLACEHOLDER_HEAP_DICTS_2D_ARRAY[0]
+    else:
+        backend_dict = {}
 
     io.emit('sendDummyArrayData', backend_dict, room=socket_id)
 
