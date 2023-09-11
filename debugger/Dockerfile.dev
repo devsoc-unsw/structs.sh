@@ -12,19 +12,38 @@ RUN curl https://pyenv.run | bash
 ENV HOME="/root"
 ENV PYENV_ROOT="${HOME}/.pyenv"
 ENV PATH="${PYENV_ROOT}/bin:${PATH}"
+# The following env var is needed to allow gdb to run our Python packages
+# installed from requirements.txt
+ENV PYTHONPATH="/root/.pyenv/versions/3.11.3/lib/python3.11/site-packages:${PYTHONPATH}"
 
 ENV PYTHON_VERSION=3.11.3
+
+# The following env var is needed to allow gdb to run our Python packages
+# installed from requirements.txt
+ENV PYTHONPATH="${PYENV_ROOT}/versions/${PYTHON_VERSION}/lib/python3.11/site-packages:${PYTHONPATH}"
 
 RUN pyenv install ${PYTHON_VERSION}
 RUN pyenv global ${PYTHON_VERSION}
 
-WORKDIR /app
-
 COPY requirements.txt .
 RUN pyenv exec pip3 install -r requirements.txt
+
+ENV NODE_VERSION=20.0.0
+RUN apt install -y curl
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+ENV NVM_DIR=/root/.nvm
+RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
+ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
+RUN node --version
+RUN npm --version
+RUN npm install -g nodemon
+
+WORKDIR /app
 
 COPY . .
 
 EXPOSE 8000
 
-CMD ["pyenv", "exec", "python3", "src/server.py"]
+CMD [ "nodemon", "--exec", "pyenv", "exec", "python3", "src/server.py"]

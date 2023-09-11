@@ -4,10 +4,23 @@ import styles from 'styles/DevelopmentMode.module.css';
 import globalStyles from 'styles/global.module.css';
 import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
+import { Socket } from 'socket.io-client';
 import VisualizerMain from './src/VisualizerMain';
 import { BackendState, CType } from './src/visualizer-component/types/backendType';
+import CodeEditor from 'components/DevelopmentMode/CodeEditor';
+
+type ExtendedWindow = Window &
+  typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
 
 const DevelopmentMode = () => {
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      console.log('Attach socket to window for debugging: ', socket);
+      (window as ExtendedWindow).socket = socket;
+      (window as ExtendedWindow).getBreakpoints = (line: string, listName: string) =>
+        socket.emit('getBreakpoints', line, listName);
+    }
+  }, []);
   const [backendState, setBackendState] = useState<BackendState>({
     heap: {
       '0x1': {
@@ -25,43 +38,75 @@ const DevelopmentMode = () => {
 
   const [count, setCountState] = useState(100);
   const onSendDummyData = (data: any) => {
-    const correctedJsonString = data.replace(/'/g, '"');
-
-    const backendStateJson = JSON.parse(correctedJsonString as string);
-
     // Upddate will handled in this step, rn we use backendState
-    setBackendState(backendStateJson);
+    setBackendState(data);
   };
-  const onSendDummyArrayData = (data: any) => {
-    console.log('received dummy array data', data);
-    const correctedJsonString = data.replace(/'/g, '"');
-    const backendStateJson = JSON.parse(correctedJsonString as string);
-    console.log(backendStateJson);
-    setBackendState(backendStateJson);
-  };
+
+  const onGetBreakpoints = useCallback((data: any) => {
+    console.log(`Received data:\n`, data);
+  }, []);
+
+  const onDisconnect = useCallback(() => {
+    console.log('Disconnected!');
+  }, []);
+
+  const onMainDebug = useCallback((data: any) => {
+    console.log(`Received event onMainDebug:\n`, data);
+  }, []);
+
+  // const onSendDummyData = useCallback((data: any) => {
+  //   console.log(`Received message: ${data}`);
+  // }, []);
 
   useEffect(() => {
-    const onConnect = () => {};
+    const onConnect = () => {
+      console.log('Connected!');
+      console.log('Emitting message to server...');
+      // socket.emit('getBreakpoints', '121', 'list2');
+      // socket.emit('getBreakpoints', '122', 'list2');
+      // socket.emit('getBreakpoints', '123', 'list2');
+      // socket.emit('getBreakpoints', '124', 'list2');
+      // socket.emit('getBreakpoints', '125', 'list2');
+      // socket.emit('getBreakpoints', '126', 'list2');
+      socket.emit('mainDebug');
+
+      socket.emit('sendDummyData', '100');
+      socket.emit('sendDummyData', '101');
+      socket.emit('sendDummyData', '102');
+      socket.emit('sendDummyData', '103');
+      socket.emit('sendDummyData', '104');
+      socket.emit('sendDummyData', '105');
+    };
 
     socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
+    socket.on('getBreakpoints', onGetBreakpoints);
     socket.on('sendDummyData', onSendDummyData);
-    socket.on('sendDummyArrayData', onSendDummyArrayData);
+    socket.on('mainDebug', onMainDebug);
+    socket.on('sendFunctionDeclaration', (data: any) => {
+      console.log(`Received function declaration:\n`, data);
+    });
+    socket.on('sendTypeDeclaration', (data: any) => {
+      console.log(`Received type declaration:\n`, data);
+    });
 
     return () => {
       socket.off('connect', onConnect);
-      socket.off('sendDummyData', onSendDummyData);
-      socket.off('sendDummyArrayData', onSendDummyArrayData);
+      socket.off('disconnect', onDisconnect);
+      socket.off('getBreakpoints', onGetBreakpoints);
+      // socket.off('sendDummyData', onSendDummyData);
     };
-  }, [onSendDummyData, onSendDummyArrayData]);
+  }, [onSendDummyData]);
 
-  const DEBUG_MODE = true;
+  const DEBUG_MODE = false;
   return !DEBUG_MODE ? (
-    <div className={classNames(globalStyles.root, styles.dark)}>
-      Parser
+    <div className={classNames(globalStyles.root, styles.light)}>
       <div className={styles.layout}>
         <div className={classNames(styles.pane, styles.nav)}>Nav bar</div>
         <div className={classNames(styles.pane, styles.files)}>File tree</div>
-        <div className={classNames(styles.pane, styles.editor)}>Code editor</div>
+        <div className={classNames(styles.pane, styles.editor)}>
+          <CodeEditor />
+        </div>
         <div className={classNames(styles.pane, styles.inspector)}>
           <Tabs>
             <Tab label="Console">
@@ -79,8 +124,7 @@ const DevelopmentMode = () => {
           <VisualizerMain
             backendState={backendState}
             getNextState={() => {
-              // socket.emit('sendDummyData', count.toString());
-              socket.emit('sendDummyArrayData', count.toString());
+              socket.emit('sendDummyData', count.toString());
               setCountState(count + 1);
             }}
           />
@@ -92,8 +136,7 @@ const DevelopmentMode = () => {
     <VisualizerMain
       backendState={backendState}
       getNextState={() => {
-        // socket.emit('sendDummyData', count.toString());
-        socket.emit('sendDummyArrayData', count.toString());
+        socket.emit('sendDummyData', count.toString());
         setCountState(count + 1);
       }}
     />
