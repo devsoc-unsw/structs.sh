@@ -38,33 +38,6 @@ const DevelopmentMode = () => {
 
   const [count, setCountState] = useState(100);
 
-  const onConnect = useCallback(() => {
-    console.log('Connected!');
-    console.log('Emitting message to server...');
-
-    socket.emit('mainDebug');
-
-    // === Uncomment these socket.emit() calls to emit event to
-    // === the server and get the response in corresponding event handlers
-    // === defined above.
-
-    // socket.emit('getBreakpoints', '121', 'list2');
-    // socket.emit('getBreakpoints', '122', 'list2');
-    // socket.emit('getBreakpoints', '123', 'list2');
-    // socket.emit('getBreakpoints', '124', 'list2');
-    // socket.emit('getBreakpoints', '125', 'list2');
-    // socket.emit('getBreakpoints', '126', 'list2');
-
-    // socket.emit('sendDummyData', '100');
-    // socket.emit('sendDummyData', '101');
-    // socket.emit('sendDummyData', '102');
-    // socket.emit('sendDummyData', '103');
-    // socket.emit('sendDummyData', '104');
-    // socket.emit('sendDummyData', '105');
-
-    // socket.emit('sendDummyArrayData', 2);
-  }, []);
-
   const onDisconnect = useCallback(() => {
     console.log('Disconnected!');
   }, []);
@@ -96,6 +69,33 @@ const DevelopmentMode = () => {
   }, []);
 
   useEffect(() => {
+    const onConnect = () => {
+      console.log('Connected!');
+      console.log('Emitting message to server...');
+
+      socket.emit('mainDebug');
+
+      // === Uncomment these socket.emit() calls to emit event to
+      // === the server and get the response in corresponding event handlers
+      // === defined above.
+
+      // socket.emit('getBreakpoints', '121', 'list2');
+      // socket.emit('getBreakpoints', '122', 'list2');
+      // socket.emit('getBreakpoints', '123', 'list2');
+      // socket.emit('getBreakpoints', '124', 'list2');
+      // socket.emit('getBreakpoints', '125', 'list2');
+      // socket.emit('getBreakpoints', '126', 'list2');
+
+      // socket.emit('sendDummyData', '100');
+      // socket.emit('sendDummyData', '101');
+      // socket.emit('sendDummyData', '102');
+      // socket.emit('sendDummyData', '103');
+      // socket.emit('sendDummyData', '104');
+      // socket.emit('sendDummyData', '105');
+
+      // socket.emit('sendDummyArrayData', 2);
+    };
+
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
     socket.on('mainDebug', onMainDebug);
@@ -115,7 +115,15 @@ const DevelopmentMode = () => {
       socket.off('sendDummyData', onSendDummyData);
       socket.off('sendDummyArrayData', onSendDummyArrayData);
     };
-  }, [onSendDummyData]);
+  }, [
+    onSendDummyData,
+    onSendDummyArrayData,
+    onDisconnect,
+    onMainDebug,
+    onSendFunctionDeclaration,
+    onSendTypeDeclaration,
+    onGetBreakpoints,
+  ]);
 
   const DEBUG_MODE = false;
   return !DEBUG_MODE ? (
