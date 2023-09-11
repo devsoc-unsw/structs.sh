@@ -482,3 +482,68 @@ PLACEHOLDER_LINKED_LIST_NODES = [
         }
     }
 ]
+
+
+PLACEHOLDER_HEAP_DICTS_1D_ARRAY = [
+    {
+        'heap': {
+            '0x1000': {
+                'addr': '0x1000',
+                'data': [
+                    {
+                        'addr': '0x1000',
+                        'data': 42,
+                        'type': 'int',
+                        'is_pointer': 'false',
+                    },
+                    {
+                        'addr': '0x1004',
+                        'data': 73,
+                        'type': 'int',
+                        'is_pointer': 'false',
+                    },
+                ],
+                'type': 'int',
+                'is_pointer': 'false',
+            },
+        },
+        'stack': {},
+    }
+]
+
+PLACEHOLDER_HEAP_DICTS_2D_ARRAY = [
+    {
+        "heap": {
+            "0x1000": {
+                "addr": "0x1000",
+                "data": [
+                    {
+                        "addr": "0x1001",
+                        "data": [
+                            {"addr": "0x2000", "data": 42,
+                             "type": "int", "is_pointer": "false"},
+                            {"addr": "0x2001", "data": 73,
+                             "type": "int", "is_pointer": "false"},
+                        ],
+                        "type": "int_array",
+                        "is_pointer": "false",
+                    },
+                    {
+                        "addr": "0x1002",
+                        "data": [
+                            {"addr": "0x2002", "data": 10,
+                             "type": "int", "is_pointer": "false"},
+                            {"addr": "0x2003", "data": 20,
+                             "type": "int", "is_pointer": "false"},
+                        ],
+                        "type": "int_array",
+                        "is_pointer": "false",
+                    },
+                ],
+                "type": "int_array_array",
+                "is_pointer": "false",
+            }
+        },
+        "stack": {}
+    }
+]
