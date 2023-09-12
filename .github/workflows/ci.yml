@@ -3,17 +3,17 @@ name: Continuous Integration
 on:
   pull_request:
     branches:
-      - master 
+      - master
       - production
 
 jobs:
   client:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install dependencies
         working-directory: ./client
-        run: yarn
+        run: npm install
       - name: Lint
         working-directory: ./client
-        run: yarn lint
+        run: npm run lint
