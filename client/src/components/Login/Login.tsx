@@ -59,29 +59,28 @@ const Login: FC<Props> = (
 
     // Handle login button
     const handleLogin = () => {
+        const data = {
+            username: username,
+            password: password
+        };
         axios
-            .get(SERVER_URL + "/api/getAllUsers")
+            .post(SERVER_URL + "/auth/login", data)
             .then((response) => {
-                let found = false;
                 setCanLogin(false);
-                response.data.forEach((item, index) => {
-                    if (item['username'] == username && item['password'] == password) {
-                        localStorage.setItem("user", username);
-                        alert("Logged In as " + username);
-                        found = true;
-                        handleLogon(true);
-                        handleBack();
-                    }
-                })
+                if (response.data["found"]) {
+                    localStorage.setItem("user", username);
 
-                if (!found) {
+                    alert("Logged In as " + username);
+
+                    handleLogon(true);
+                    handleBack();
+                } else {
                     alert("Username or Password not found");
                     setUsername("");
                     setPassword("");
                 }
             })
             .catch((error) => {
-                // Handle the error
                 console.error("Error:", error);
             });
     }
@@ -91,23 +90,25 @@ const Login: FC<Props> = (
             alert("Please enter username or password");
             return;
         }
-        console.log("logging on");
+
         const data = {
             username: username,
             password: password
         };
         axios
-            .post(SERVER_URL + "/api/register", data)
+            .post(SERVER_URL + "/auth/register", data)
             .then((response) => {
-                console.log("User saved", response.data);
-                alert("User Saved");
+                if (response.data["registered"]) {
+                    handleLogin();
+                } else {
+                    alert("Username already exists. Please Try again");
+                }
             })
             .catch((error) => {
                 console.error("Error registering user:", error);
             });
         setUsername("");
         setPassword("");
-        setRegister(false);
     }
 
     // for developing purposes only, clear user database
@@ -124,6 +125,16 @@ const Login: FC<Props> = (
             });
     }
 
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            if (register) {
+                handleRegister();
+            } else {
+                handleLogin();
+            }
+        }
+    };
+
     return (
         <>
             {
@@ -133,8 +144,8 @@ const Login: FC<Props> = (
                     <Overlay>
                         <LoginMenu>
                             <Button onClick={() => handleBack()}>Back</Button>
-                            <Input placeholder="Username" value={username} onChange={(event) => setUsername(event.target.value)} />
-                            <Input placeholder="Password" value={password} type="password" onChange={(event) => setPassword(event.target.value)} />
+                            <Input placeholder="Username" value={username} onChange={(event) => setUsername(event.target.value)} onKeyDown={handleKeyPress} />
+                            <Input placeholder="Password" value={password} type="password" onChange={(event) => setPassword(event.target.value)} onKeyDown={handleKeyPress} />
                             {
                                 register ?
                                     <Button color="inherit" onClick={handleRegister}>Register</Button>
