@@ -40,7 +40,8 @@ export default class LinkedListAnimationProducer extends AnimationProducer {
 
   public initialisePointer(pointerId: string) {
     const pointerSvg: Element = SVG(pointerId);
-    pointerSvg.move(nodePathWidth + strokeWidth / 2, topOffset + actualNodeDiameter / 2);
+    // FIXME: 10 IS A MAGIC NUMBER LOL
+    pointerSvg.move(10 + nodePathWidth + strokeWidth / 2, topOffset + actualNodeDiameter / 2);
     this.addSequenceAnimation(pointerSvg.animate().attr({ opacity: 1 }));
   }
 
@@ -99,7 +100,11 @@ export default class LinkedListAnimationProducer extends AnimationProducer {
     this.resetColorNode(node);
   }
 
-  public resetListAndColor(headPointer: Path, head: GraphicalLinkedListNode, node: GraphicalLinkedListNode) {
+  public resetListAndColor(
+    headPointer: Path,
+    head: GraphicalLinkedListNode,
+    node: GraphicalLinkedListNode
+  ) {
     this.resetList(headPointer, head);
     this.resetColorNode(node);
   }

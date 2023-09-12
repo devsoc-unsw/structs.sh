@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
+import { FC, MouseEvent, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import {
   AppBar,
@@ -10,9 +10,7 @@ import {
   Typography,
   ListItemText,
   Button,
-  FormControl,
   ListItemIcon,
-  TextField,
   useTheme,
   Input
 } from '@mui/material';
@@ -34,7 +32,7 @@ const StyledCheckIcon = styled(CheckIcon)(({ theme }) => ({
 }));
 
 interface Props {
-  position?: 'fixed' | 'static';
+  position?: 'fixed' | 'static' | 'sticky';
 }
 
 const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
@@ -45,7 +43,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
 
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
   const menuOpen = Boolean(menuAnchorEl);
-  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleOpenMenu = (event: MouseEvent<HTMLElement>) => {
     setMenuAnchorEl(event.currentTarget);
   };
   const handleCloseMenu = () => {

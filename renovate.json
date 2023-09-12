@@ -1,0 +1,48 @@
+{
+  "extends": ["config:base"],
+  "lockFileMaintenance": { "enabled": true, "automerge": true },
+  "prHourlyLimit": 5,
+  "labels": ["dependencies"],
+  "reviewersFromCodeOwners": true,
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": false,
+      "automergeType": "branch"
+    },
+    {
+      "groupName": "ci-actions",
+      "managers": ["github-actions", "dockerfile"],
+      "automerge": false,
+      "automergeType": "branch",
+      "addLabels": ["deps: ci-actions"]
+    },
+    {
+      "matchPackageNames": ["node"],
+      "allowedVersions": "<19.0.0"
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "matchPackageNames": ["vite", "@vitejs/plugin-react"],
+      "groupName": "vite & plugins",
+      "addLabels": ["deps: vite"]
+    },
+    {
+      "matchUpdateTypes": ["patch"],
+      "groupName": "weekly patch updates",
+      "schedule": ["before 5am every monday"],
+      "addLabels": ["deps: patches"]
+    },
+    {
+      "matchUpdateTypes": ["minor"],
+      "groupName": "weekly minor updates",
+      "schedule": ["before 5am every monday"],
+      "addLabels": ["deps: minor"]
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "addLabels": ["deps: major"]
+    }
+  ]
+}

@@ -1,5 +1,5 @@
-import React, { FC, useState, useContext } from 'react';
-import { Box, Collapse, useTheme } from '@mui/material';
+import { FC, useContext } from 'react';
+import { Box } from '@mui/material';
 import FloatingWindow from 'components/FloatingWindow';
 import VisualiserContext from './VisualiserContext';
 

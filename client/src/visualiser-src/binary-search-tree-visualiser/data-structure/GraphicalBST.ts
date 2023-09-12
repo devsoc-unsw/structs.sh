@@ -1,4 +1,3 @@
-import { Line, Marker } from '@svgdotjs/svg.js';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import { injectIds } from 'visualiser-src/common/helpers';

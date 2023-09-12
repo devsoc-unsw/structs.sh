@@ -1,4 +1,4 @@
-import { Svg, SVG } from '@svgdotjs/svg.js';
+import { SVG } from '@svgdotjs/svg.js';
 import AnimationProducer from 'visualiser-src/common/AnimationProducer';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
@@ -14,11 +14,10 @@ import SortsQuickAnimationProducer from '../animation-producer/SortsQuickAnimati
 import SortsSelectionAnimationProducer from '../animation-producer/SortsSelectionAnimationProducer';
 import {
   sortedColour,
-  checkingColour,
   defaultColour,
   comparingColor,
   selectedColor,
-  redColour
+  redColour,
 } from '../util/constants';
 
 export default class GraphicalSortList extends GraphicalDataStructure {
@@ -53,8 +52,8 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     },
     quick: {
       args: [],
-      description: 'Quick Sort'
-    }
+      description: 'Quick Sort',
+    },
   });
 
   public get data(): number[] {
@@ -147,7 +146,12 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     return producer;
   }
 
-  public mergeSort(producer: SortsMergeAnimationProducer, low: number, high: number, tmpList: GraphicalSortsElement[]) {
+  public mergeSort(
+    producer: SortsMergeAnimationProducer,
+    low: number,
+    high: number,
+    tmpList: GraphicalSortsElement[]
+  ) {
     if (high <= low) {
       return;
     }
@@ -162,30 +166,18 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     let pointerLeft = low;
     let pointerRight = mid + 1;
 
-    producer.doAnimationAndHighlight(
-      1,
-      producer.highlightSorting,
-      low,
-      high,
-      this.elementList
-    );
+    producer.doAnimationAndHighlight(1, producer.highlightSorting, low, high, this.elementList);
 
     while (pointerLeft <= mid && pointerRight <= high) {
-
       if (this.elementList[pointerLeft].data.value <= this.elementList[pointerRight].data.value) {
         producer.doAnimationAndHighlight(
           13,
           producer.compareElements,
           this.elementList[pointerLeft],
-          this.elementList[pointerRight],
+          this.elementList[pointerRight]
         );
 
-        producer.doAnimationAndHighlight(
-          14,
-          producer.moveDown,
-          this.elementList[pointerLeft],
-          p,
-        );
+        producer.doAnimationAndHighlight(14, producer.moveDown, this.elementList[pointerLeft], p);
         tmpList[p] = this.elementList[pointerLeft];
         p += 1;
         pointerLeft += 1;
@@ -194,15 +186,10 @@ export default class GraphicalSortList extends GraphicalDataStructure {
           15,
           producer.compareElements,
           this.elementList[pointerLeft],
-          this.elementList[pointerRight],
+          this.elementList[pointerRight]
         );
 
-        producer.doAnimationAndHighlight(
-          16,
-          producer.moveDown,
-          this.elementList[pointerRight],
-          p,
-        );
+        producer.doAnimationAndHighlight(16, producer.moveDown, this.elementList[pointerRight], p);
         tmpList[p] = this.elementList[pointerRight];
         p += 1;
         pointerRight += 1;
@@ -211,24 +198,14 @@ export default class GraphicalSortList extends GraphicalDataStructure {
 
     if (pointerLeft === mid + 1) {
       while (pointerRight <= high) {
-        producer.doAnimationAndHighlight(
-          20,
-          producer.moveDown,
-          this.elementList[pointerRight],
-          p,
-        );
+        producer.doAnimationAndHighlight(20, producer.moveDown, this.elementList[pointerRight], p);
         tmpList[p] = this.elementList[pointerRight];
         p += 1;
         pointerRight += 1;
       }
     } else {
       while (pointerLeft <= mid) {
-        producer.doAnimationAndHighlight(
-          19,
-          producer.moveDown,
-          this.elementList[pointerLeft],
-          p,
-        );
+        producer.doAnimationAndHighlight(19, producer.moveDown, this.elementList[pointerLeft], p);
         tmpList[p] = this.elementList[pointerLeft];
         p += 1;
         pointerLeft += 1;
@@ -240,13 +217,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     }
 
     for (let i = low; i <= high; i += 1) {
-      producer.doAnimationAndHighlightTimestamp(
-        24,
-        false,
-        producer.moveUp,
-        this.elementList[i],
-        i
-      );
+      producer.doAnimationAndHighlightTimestamp(24, false, producer.moveUp, this.elementList[i], i);
     }
   }
 
@@ -314,8 +285,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
           this.elementList[j - 1],
           j - 1,
           this.elementList[j],
-          j,
-          !(j > 1)
+          j
         );
         [this.elementList[j], this.elementList[j - 1]] = [
           this.elementList[j - 1],
@@ -338,7 +308,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
   }
 
   public quick() {
-    const ipointer = GraphicalSortsElement.pointer(0, "#36CBCC");
+    const ipointer = GraphicalSortsElement.pointer(0, '#36CBCC');
     const jpointer = GraphicalSortsElement.pointer(0, redColour);
 
     const producer = new SortsQuickAnimationProducer();
@@ -351,11 +321,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
 
     // End quicksort
     producer.hidePointers(ipointer, jpointer);
-    producer.doAnimationAndHighlight(
-      4,
-      producer.makeSolved,
-      this.elementList
-    );
+    producer.doAnimationAndHighlight(4, producer.makeSolved, this.elementList);
     return producer;
   }
 
@@ -370,7 +336,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         comparingColor,
         jpointer,
         comparingColor
-      )
+      );
       return;
     }
 
@@ -381,11 +347,11 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       producer.initialisePointers,
       ipointer,
       lo,
-      "#36CBCC",
+      '#36CBCC',
       jpointer,
       hi,
       redColour
-    )
+    );
     const i = this.partition(lo, hi, producer, ipointer, jpointer);
 
     // producer.greyOut(this.elementList, 0, -1);
@@ -397,21 +363,15 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       producer.initialisePointers,
       ipointer,
       lo,
-      "#36CBCC",
+      '#36CBCC',
       jpointer,
       i - 1,
       redColour
-    )
+    );
     this.quicksort(lo, i - 1, producer, ipointer, jpointer);
 
     producer.greyOut(this.elementList, i + 1, hi);
-    producer.initialisePointers(ipointer,
-      i + 1,
-      "#36CBCC",
-      jpointer,
-      hi,
-      redColour
-    );
+    producer.initialisePointers(ipointer, i + 1, '#36CBCC', jpointer, hi, redColour);
     // Make everything left of recursing array solved
     producer.doAnimationAndHighlightTimestamp(
       7,
@@ -419,12 +379,12 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       producer.highlightBoxes,
       this.elementList.slice(0, i + 1),
       sortedColour
-    )
+    );
     this.quicksort(i + 1, hi, producer, ipointer, jpointer);
   }
 
   public partition(lo, hi, producer, ipointer, jpointer) {
-    const v = this.elementList[lo].data.value;  // pivot
+    const v = this.elementList[lo].data.value; // pivot
     // Highligh pivot
     producer.doAnimationAndHighlightTimestamp(
       11,
@@ -432,9 +392,9 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       producer.highlightBoxes,
       [this.elementList[lo]],
       comparingColor
-    )
+    );
 
-    let i = lo + 1
+    let i = lo + 1;
     // Set i pointer
     producer.doAnimationAndHighlightTimestamp(
       12,
@@ -442,32 +402,20 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       producer.initialisePointer,
       ipointer,
       i,
-      "#36CBCC"
-    )
+      '#36CBCC'
+    );
     let j = hi;
 
     for (; ;) {
       // Shift i pointer
       while (this.elementList[i].data.value <= v && i < j) {
         i += 1;
-        producer.doAnimationAndHighlightTimestamp(
-          14,
-          true,
-          producer.movePointer,
-          ipointer,
-          i
-        );
+        producer.doAnimationAndHighlightTimestamp(14, true, producer.movePointer, ipointer, i);
       }
       // Shift j pointer
       while (v < this.elementList[j].data.value && j > i) {
         j -= 1;
-        producer.doAnimationAndHighlightTimestamp(
-          15,
-          true,
-          producer.movePointer,
-          jpointer,
-          j
-        );
+        producer.doAnimationAndHighlightTimestamp(15, true, producer.movePointer, jpointer, j);
       }
 
       if (i === j) {
@@ -480,14 +428,14 @@ export default class GraphicalSortList extends GraphicalDataStructure {
         }
 
         // Highlight partition
-        producer.highlightBoxes(this.elementList.slice(lo + 1, end), "#36CBCC");
+        producer.highlightBoxes(this.elementList.slice(lo + 1, end), '#36CBCC');
         producer.doAnimationAndHighlightTimestamp(
           16,
           true,
           producer.highlightBoxes,
           this.elementList.slice(end, hi + 1),
           redColour
-        )
+        );
         break;
       }
       // Swap blocks at i and j
@@ -503,16 +451,9 @@ export default class GraphicalSortList extends GraphicalDataStructure {
       [this.elementList[i], this.elementList[j]] = [this.elementList[j], this.elementList[i]];
     }
 
-
     // Swap Pivot with number at the center of partition that is less than it
     j = this.elementList[i].data.value < v ? i : i - 1;
-    producer.doAnimationAndHighlightTimestamp(
-      19,
-      true,
-      producer.movePointer,
-      jpointer,
-      j
-    )
+    producer.doAnimationAndHighlightTimestamp(19, true, producer.movePointer, jpointer, j);
     producer.doAnimationAndHighlightTimestamp(
       20,
       true,

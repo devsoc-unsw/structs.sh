@@ -1,4 +1,4 @@
-import { Box, Typography, useTheme, Button } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React, { useCallback, useContext, useState } from 'react';
 import VisualiserContext from './VisualiserContext';
@@ -33,7 +33,6 @@ const LoadingButton = styled(Button)({
  */
 const CreateMenu = () => {
   const { controller, topicTitle } = useContext(VisualiserContext);
-  const theme = useTheme();
 
   const [loadOptions, setLoadOptions] = useState([]);
 

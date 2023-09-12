@@ -1,4 +1,4 @@
-import React, { EventHandler, FC, useCallback, useContext, useEffect, useState } from 'react';
+import { MouseEvent, useCallback, useContext, useState } from 'react';
 import {
   Box,
   IconButton,
@@ -50,10 +50,10 @@ const StyledCheckIcon = styled(CheckIcon)(({ theme }) => ({
   fill: theme.palette.text.primary,
 }));
 
-const SpeedMenuButton = styled(Button)(({ theme }) => ({
+const SpeedMenuButton = styled(Button)({
   width: 50,
   marginRight: 10,
-}));
+});
 
 /**
  * Contains all the visualiser controller UI, ie. the play/pause buttons, the
@@ -130,7 +130,7 @@ const VisualiserControls = () => {
     [controller]
   );
 
-  const handleClickSpeedMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClickSpeedMenu = (event: MouseEvent<HTMLButtonElement>) => {
     setSpeedMenuAnchorEl(event.currentTarget);
   };
 
@@ -138,7 +138,7 @@ const VisualiserControls = () => {
     setSpeedMenuAnchorEl(null);
   };
 
-  const handleSelectSpeed = (event: React.MouseEvent<HTMLElement>, index: number) => {
+  const handleSelectSpeed = (event: MouseEvent<HTMLElement>, index: number) => {
     setSelectedIndex(index);
     handleSetSpeed(speedOptions[index] / 2);
     setSpeedMenuAnchorEl(null);
