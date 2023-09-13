@@ -13,21 +13,13 @@ function StackInspector({debuggerData}) {
   return (
     // table version -- should be replaced with nested dropdown version later
     <table>
-      <colgroup>
-        <col className={styles.name} />
-        <col className={styles.type} />
-        <col className={styles.value} />
-      </colgroup>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Value</th>
-        </tr>
-      </thead>
-      <tbody>
+      
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+      </tr>
       {tableRows}
-      </tbody>
     </table>
   );
 }

@@ -2,11 +2,6 @@ table {
     border-collapse: collapse;
 }
 
-thead {
-    position: -webkit-sticky; // these don't work
-    position: sticky;
-}
-
 th {
     padding: 5px 15px;
     background-color: white;
