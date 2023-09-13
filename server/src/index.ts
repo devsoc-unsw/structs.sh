@@ -1,7 +1,7 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import { json } from 'body-parser'
-import { router } from './routes/dataStructureRouter'
+import { router } from './routes/routes'
 import cors from 'cors'
 
 const app = express()

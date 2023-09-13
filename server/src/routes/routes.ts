@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express'
 import { dataStructure } from '../models/dataStructure'
 import { users } from '../models/users'
+import { authLogin, authRegister } from '../service'
 
 const router = express.Router()
 
@@ -63,14 +64,18 @@ router.get('/api/getAllUsers', [], async (req: Request, res: Response) => {
     return res.status(200).send(dataStructureDocuments)
 })
 
-router.post('/api/register', async (req: Request, res: Response) => {
+router.post('/auth/register', async (req: Request, res: Response) => {
     const { username, password } = req.body;
-    console.log("regisering this person: ");
-    console.log(req.body);
 
-    const ds = users.build({ username, password });
-    await ds.save()
-    return res.status(201).send(ds);
+    const registered = await authRegister(username, password);
+    res.json({ registered });
+})
+
+router.post('/auth/login', async (req: Request, res: Response) => {
+    const { username, password } = req.body;
+
+    const found = await authLogin(username, password);
+    res.json({ found });
 })
 
 export { router }
