@@ -80,9 +80,6 @@ const Login: FC<Props> = (
                     setPassword("");
                 }
             })
-            .catch((error) => {
-                console.error("Error:", error);
-            });
     }
 
     const handleRegister = () => {
@@ -104,9 +101,6 @@ const Login: FC<Props> = (
                     alert("Username already exists. Please Try again");
                 }
             })
-            .catch((error) => {
-                console.error("Error registering user:", error);
-            });
         setUsername("");
         setPassword("");
     }

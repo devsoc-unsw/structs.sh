@@ -1,4 +1,4 @@
-import { users } from './models/users'
+import { users } from '../models/users'
 
 const authRegister = async (username, password) => {
   const user = await users.findOne({ username });

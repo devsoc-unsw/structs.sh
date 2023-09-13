@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'
 import { dataStructure } from '../models/dataStructure'
 import { users } from '../models/users'
-import { authLogin, authRegister } from '../service'
+import { authLogin, authRegister } from '../service/service'
 
 const router = express.Router()
 
