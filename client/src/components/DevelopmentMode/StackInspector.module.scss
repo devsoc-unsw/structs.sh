@@ -1,25 +1,68 @@
-table {
-    border-collapse: collapse;
+// Stack frame formatting
+
+.frame {
+    border: 1px solid #999;
+    padding: 20px;
+    margin: 20px;
+    width: 400px; // Arbitrary narrow value
 }
 
-th {
-    padding: 5px 15px;
+.frameHeader {
+    // TODO -- would be nice to make it look like a fieldset legend
+}
+
+// CSS grid formatting to get <dl> terms and descriptions on same line
+
+dl {
+    // background-color: yellow;
     background-color: white;
-    border: 1px grey;
-    border-style: none solid; // why doesn't this work when it works for td?
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: min-content;
 }
 
-td {
-    font-family: monospace;
+dd {
+    justify-self: end;
+    margin: 5px;
+}
+
+dt {
+    align-self: center;
+}
+
+// Misc. span formatting
+
+.function {
+    font-weight: bold;
+}
+
+.location {
+    color: #555;
+    font-style: italic;
+}
+
+.name, .type {
     padding: 5px;
-    border: 1px grey;
-    border-style: none solid;
-}
-
-tr:nth-child(2n+1) {
-    background-color: lightgrey;
-}
-
-tr:nth-child(2n) {
     background-color: white;
+}
+
+.name {
+    // Variable name
+}
+
+.type {
+    // Variable type
+    color: rebeccapurple;
+}
+
+.value {
+    // TODO: Syntax highlighting?
+    padding: 5px;
+    border: 1px solid lightgrey;
+    border-radius: 4px;
+    background: lightgrey;
+    color: darkgreen;
 }

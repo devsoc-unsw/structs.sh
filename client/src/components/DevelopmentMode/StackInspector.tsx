@@ -2,25 +2,27 @@ import React from "react";
 import styles from "./StackInspector.module.scss";
 
 function StackInspector({debuggerData}) {
-  const tableRows = debuggerData.map((variable) => (
-    <tr>
-      <td>{variable.name}</td>
-      <td>{variable.type}</td>
-      <td>{variable.value}</td>
-    </tr>
-  ));
-
   return (
-    // table version -- should be replaced with nested dropdown version later
-    <table>
-      
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Value</th>
-      </tr>
-      {tableRows}
-    </table>
+    <>
+      { debuggerData.stack.map((stackFrame) => (
+        <div className={styles.frame}>
+          <div className={styles.frameHeader}>
+            <code className={styles.function}>{stackFrame.callerLocation.function}()</code> <span className={styles.location}>@ {stackFrame.callerLocation.file}:{stackFrame.callerLocation.line}:{stackFrame.callerLocation.column}</span>
+          </div>
+          <dl>
+            { stackFrame.locals.map((stackLocal) => (
+              <>
+                <dt>
+                  <code className={styles.type}>{stackLocal.type}</code>
+                  <code className={styles.name}>{stackLocal.name}</code>
+                </dt>
+                <dd><code className={styles.value}>{stackLocal.value}</code></dd>
+              </>
+            ))}
+          </dl>
+        </div>
+      ))}
+    </>
   );
 }
 
