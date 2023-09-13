@@ -116,9 +116,30 @@ int main(int argc, char **argv) {{
         malloc_visitor.visit(ast)
 
         # Print the variable names assigned to malloc
-        print("Variables assigned to malloc:")
-        for var in malloc_visitor.malloc_variables:
-            print(var)
+        if len(malloc_visitor.malloc_variables) > 0:
+            print("Variables assigned to malloc:")
+            for var in malloc_visitor.malloc_variables:
+                print(var)
+                # Break on malloc
+                gdb.execute('break')
+
+                # Step into malloc
+                gdb.execute('step')
+
+                # Use p bytes to get the bytes allocated
+                temp_bytes = gdb.execute('p bytes', to_string=True)
+                bytes = temp_bytes.split(" ")[2]
+                print(f"Bytes allocated: {bytes}")
+
+                # Get the address returned by malloc
+                # CURRENTLY NOT WORKING:
+                mallocRetVal = gdb.execute('finish', to_string=True)
+                print(f"---------\n\n {mallocRetVal} \n\n ---------\n")
+                gdb.execute('finish')
+
+        else:
+            print("No variable being malloced")
+
 
         # Print the variable names being freed
         print(malloc_visitor.free)
