@@ -55,46 +55,42 @@ export default class GraphicalTreeGenerate {
     let preIndex: number = 0;
     function _constructTreeUtil(createNode, pre, low, high) {
       // Base Case
-      if (low > high)
-        return null
+      if (low > high) return null;
 
       // The first node in preorder traversal is root. So take
       // the node at preIndex from pre[] and make it root,
       // and increment preIndex
-      let root = createNode(pre[preIndex]);
+      const root = createNode(pre[preIndex]);
       preIndex++;
 
       // If the current subarray has only one element,
       // no need to recur
-      if (low == high)
-        return root
+      if (low == high) return root;
 
-      let r_root = -1
+      let r_root = -1;
 
       // Search for the first element greater than root
       for (let i = low; i <= high; i++) {
         if (pre[i] > root._data.value) {
-          r_root = i
-          break
+          r_root = i;
+          break;
         }
       }
 
       // If no elements are greater than the current root,
       // all elements are left children
       // so assign root appropriately
-      if (r_root == -1)
-        r_root = preIndex + (high - low)
+      if (r_root == -1) r_root = preIndex + (high - low);
 
       // Use the index of element found in preorder to divide
       // preorder array in two parts. Left subtree and right
       // subtree
-      root.left = _constructTreeUtil(createNode, pre, preIndex, r_root - 1)
+      root.left = _constructTreeUtil(createNode, pre, preIndex, r_root - 1);
 
-      root.right = _constructTreeUtil(createNode, pre, r_root, high)
+      root.right = _constructTreeUtil(createNode, pre, r_root, high);
 
-      return root
+      return root;
     }
     return _constructTreeUtil(createNode, pre, low, high);
   }
 }
-

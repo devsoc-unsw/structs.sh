@@ -479,7 +479,7 @@ class GraphicalBST extends GraphicalDataStructure {
   }
 
   public get data(): number[] {
-    let data: number[] = [];
+    const data: number[] = [];
 
     this.saveInPreOrder(this.root, data);
 
@@ -487,8 +487,7 @@ class GraphicalBST extends GraphicalDataStructure {
   }
 
   private saveInPreOrder(node: GraphicalBSTNode, data: number[]) {
-    if (node == null)
-      return;
+    if (node == null) return;
 
     data.push(node.value);
 
@@ -499,7 +498,7 @@ class GraphicalBST extends GraphicalDataStructure {
 
   public load(data: number[]): void {
     this.root = GraphicalTreeGenerate.loadTree<GraphicalBSTNode>(GraphicalBSTNode.from, data);
-  };
+  }
 }
 
 export default GraphicalBST;

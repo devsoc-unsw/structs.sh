@@ -12,16 +12,16 @@ import {
   Button,
   ListItemIcon,
   useTheme,
-  Input
+  Input,
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CheckIcon from '@mui/icons-material/Check';
 import logo from 'assets/img/logo.png';
 import { Link, useParams } from 'react-router-dom';
 import { titleToUrl, toTitleCase, urlToTitle } from 'utils/url';
-import { getTopics } from '../../visualiser-src/common/helpers';
 import axios from 'axios';
 import Login from 'components/Login/Login';
+import { getTopics } from '../../visualiser-src/common/helpers';
 
 const LogoText = styled(Typography)({
   textTransform: 'none',
@@ -55,7 +55,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
   const handleLogout = () => {
     localStorage.removeItem('user');
     setLoggedIn(false);
-  }
+  };
 
   return (
     <Box>
@@ -106,20 +106,19 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
               </Button>
             </Grid>
             <Grid item xs={4} display="flex" justifyContent="end">
-              {
-                loggedIn ?
-                  <>
-                    <Button style={{ color: 'white' }} >{localStorage.getItem('user')}</Button>
-                    <Button onClick={handleLogout}>Log Out</Button>
-                  </>
-                  :
-                  <Login handleLogon={setLoggedIn} />
-              }
+              {loggedIn ? (
+                <>
+                  <Button style={{ color: 'white' }}>{localStorage.getItem('user')}</Button>
+                  <Button onClick={handleLogout}>Log Out</Button>
+                </>
+              ) : (
+                <Login handleLogon={setLoggedIn} />
+              )}
             </Grid>
           </Grid>
         </Toolbar>
       </AppBar>
-    </Box >
+    </Box>
   );
 };
 

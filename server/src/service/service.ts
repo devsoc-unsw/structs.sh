@@ -1,17 +1,17 @@
-import { users } from '../models/users'
+import { users } from '../models/users';
 
-const authRegister = async (username, password) => {
+const authRegister = async (username: string, password: string) => {
   const user = await users.findOne({ username });
   if (user) {
     return false;
   }
 
   const ds = users.build({ username, password });
-  await ds.save()
+  await ds.save();
   return true;
 };
 
-const authLogin = async (username, password) => {
+const authLogin = async (username: string, password: string) => {
   const user = await users.findOne({ username });
   if (user) {
     if (password != user.password) {
@@ -24,4 +24,4 @@ const authLogin = async (username, password) => {
   }
 };
 
-export { authLogin, authRegister }
+export { authLogin, authRegister };

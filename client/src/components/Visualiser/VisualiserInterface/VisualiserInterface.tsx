@@ -64,7 +64,7 @@ const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle }) => {
       documentation,
       timeline: { isTimelineComplete, handleTimelineUpdate, isPlaying, handleUpdateIsPlaying },
       codeSnippet: { isCodeSnippetExpanded, handleSetCodeSnippetExpansion },
-      loadOptionsContext: { isLoadOptionsExpanded, handleSetLoadOptionsExpansion }
+      loadOptionsContext: { isLoadOptionsExpanded, handleSetLoadOptionsExpansion },
     }),
     [
       controllerRef.current,
@@ -77,7 +77,7 @@ const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle }) => {
       isCodeSnippetExpanded,
       handleSetCodeSnippetExpansion,
       isLoadOptionsExpanded,
-      handleSetLoadOptionsExpansion
+      handleSetLoadOptionsExpansion,
     ]
   );
 

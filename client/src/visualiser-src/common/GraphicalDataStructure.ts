@@ -20,9 +20,7 @@ abstract class GraphicalDataStructure {
   }
 
   // Loads data structure from given data
-  public load(data: number[]): void {
-
-  };
+  public load(data: number[]): void {}
 }
 
 export default GraphicalDataStructure;

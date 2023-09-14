@@ -269,7 +269,7 @@ class GraphicalAVL extends GraphicalDataStructure {
   }
 
   public get data(): number[] {
-    let data: number[] = [];
+    const data: number[] = [];
 
     this.saveInPreOrder(this.root, data);
 
@@ -277,8 +277,7 @@ class GraphicalAVL extends GraphicalDataStructure {
   }
 
   private saveInPreOrder(node: GraphicalAVLNode, data: number[]) {
-    if (node == null)
-      return;
+    if (node == null) return;
 
     data.push(node.value);
 
@@ -289,7 +288,7 @@ class GraphicalAVL extends GraphicalDataStructure {
 
   public load(data: number[]): void {
     this.root = GraphicalTreeGenerate.loadTree<GraphicalAVLNode>(GraphicalAVLNode.from, data);
-  };
+  }
 }
 
 export default GraphicalAVL;
