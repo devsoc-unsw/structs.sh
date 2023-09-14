@@ -42,8 +42,8 @@ def get_stack_data():
     return variables
 
 # Use this for testing
-if __name__ == "__main__":
-    print(get_stack_data())
-    print(get_frame_info())
+# if __name__ == "__main__":
+#     print(get_stack_data())
+#     print(get_frame_info())
 
 
