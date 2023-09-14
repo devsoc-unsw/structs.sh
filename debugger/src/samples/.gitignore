@@ -14,3 +14,4 @@ fn_declarations
 fn_declarations.o
 printing
 printing.o
+stack_test
