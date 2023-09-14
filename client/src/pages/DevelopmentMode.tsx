@@ -61,24 +61,31 @@ const DevelopmentMode = () => {
   //   console.log(`Received message: ${data}`);
   // }, []);
 
+  const onSendBackendStateToUser = useCallback((data: any) => {
+    console.log(`Received backend state:\n`, data);
+  }, []);
+
   useEffect(() => {
     const onConnect = () => {
       console.log('Connected!');
       console.log('Emitting message to server...');
+      socket.emit('mainDebug');
+
       // socket.emit('getBreakpoints', '121', 'list2');
       // socket.emit('getBreakpoints', '122', 'list2');
       // socket.emit('getBreakpoints', '123', 'list2');
       // socket.emit('getBreakpoints', '124', 'list2');
       // socket.emit('getBreakpoints', '125', 'list2');
       // socket.emit('getBreakpoints', '126', 'list2');
-      socket.emit('mainDebug');
 
-      socket.emit('sendDummyData', '100');
-      socket.emit('sendDummyData', '101');
-      socket.emit('sendDummyData', '102');
-      socket.emit('sendDummyData', '103');
-      socket.emit('sendDummyData', '104');
-      socket.emit('sendDummyData', '105');
+      // socket.emit('sendDummyData', '100');
+      // socket.emit('sendDummyData', '101');
+      // socket.emit('sendDummyData', '102');
+      // socket.emit('sendDummyData', '103');
+      // socket.emit('sendDummyData', '104');
+      // socket.emit('sendDummyData', '105');
+
+      socket.emit('executeNext');
     };
 
     socket.on('connect', onConnect);
@@ -92,6 +99,10 @@ const DevelopmentMode = () => {
     socket.on('sendTypeDeclaration', (data: any) => {
       console.log(`Received type declaration:\n`, data);
     });
+    socket.on('executeNext', () => {
+      console.log('Executing next line...');
+    });
+    socket.on('sendBackendStateToUser', onSendBackendStateToUser);
 
     return () => {
       socket.off('connect', onConnect);
@@ -127,6 +138,7 @@ const DevelopmentMode = () => {
             backendState={backendState}
             getNextState={() => {
               socket.emit('sendDummyData', count.toString());
+              socket.emit('executeNext');
               setCountState(count + 1);
             }}
           />
@@ -139,6 +151,7 @@ const DevelopmentMode = () => {
       backendState={backendState}
       getNextState={() => {
         socket.emit('sendDummyData', count.toString());
+        socket.emit('executeNext');
         setCountState(count + 1);
       }}
     />

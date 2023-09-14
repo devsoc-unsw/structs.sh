@@ -41,18 +41,11 @@ comments in the C code. Pass the C code through a preprocessor to
 remove comments before parsing with pycparser.
 """
 import os
-import socket
-import urllib3
-from urllib3.connection import HTTPConnection
 from pprint import pprint
 import re
 import subprocess
-import sys
-import time
 import gdb
 from pycparser import parse_file, c_ast
-import requests
-import socketio
 
 # Parent directory of this python script e.g. "/user/.../debugger/src/gdb_scripts"
 # In the docker container this will be "/app/src/gdb_scripts"
@@ -325,49 +318,6 @@ class ParseStructDefVisitor(DeclVisitor):
 # sio.connect("http://localhost:8000")
 
 
-def useSocketIOConnection(func):
-    def wrapper(*args, **kwargs):
-        # Increase socket buffer size to reduce chance of connection failure
-        # due to insufficient buffer size.
-        # https://stackoverflow.com/a/67732984/17815949
-        HTTPConnection.default_socket_options = (
-            HTTPConnection.default_socket_options + [
-                (socket.SOL_SOCKET, socket.SO_SNDBUF, 1000000),  # 1MB in byte
-                (socket.SOL_SOCKET, socket.SO_RCVBUF, 1000000)
-            ])
-
-        # Disable verifying server-side SSL certificate
-        http_session = requests.Session()
-        http_session.verify = False
-        sio = socketio.Client(http_session=http_session)
-
-        # Try connect to server loop
-        NUM_RETRIES = 5
-        for i in range(NUM_RETRIES):
-            try:
-                sio.connect('http://localhost:8000', wait_timeout=100)
-                print(
-                    f"Parser client successfully established socket connection to server. Socket ID: {sio.sid}")
-                break
-            except Exception as ex:
-                print(ex)
-                print("Parser client failed to establish socket connection to server:",
-                      type(ex).__name__)
-                if i == NUM_RETRIES - 1:
-                    print("Exiting parser client...")
-                    sys.exit(1)
-                else:
-                    print("Retrying in 2 seconds...")
-                    time.sleep(2)
-
-        result = func(*args, **kwargs, sio=sio)
-
-        sio.disconnect()
-        return result
-
-    return wrapper
-
-
 # @sio.event
 # def connect():
 #     print("Parser socketio client connected")
@@ -454,11 +404,14 @@ def pycparser_parse_type_decls(user_socket_id: str = None, sio=None):
     Using pycparser to parse type declarations by constructing AST.
     '''
 
+    print("\n=== Running pycparser_parse_type_decls in gdb instance\n\n")
+
     types = []
 
     types_str = gdb.execute("info types", False, True)
     types_str_lines = re.split("\n", types_str.strip())
     types = []
+    print(types_str_lines)
 
     current_file = None
     for line in types_str_lines:

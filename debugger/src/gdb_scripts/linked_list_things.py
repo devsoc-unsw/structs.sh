@@ -7,13 +7,12 @@ Error occurred in Python: No symbol "variable_name" in current context.
 '''
 
 import gdb
-import json
 import subprocess
 from pycparser import parse_file, c_ast
 import re
 
 # C file storing malloc line
-MALLOC_TEST_FILE = "samples/malloc.c"
+MALLOC_TEST_FILE = "user_malloc.c"
 
 # File to write the preprocessed C code to, before parsing with pycparser
 MALLOC_PREPROCESSED = "malloc_preprocessed"
@@ -82,17 +81,21 @@ class MallocVisitor(c_ast.NodeVisitor):
 
 class NextCommand(gdb.Command):
     '''
-    Run in gdb:
+    To be run in gdb:
 
     (gdb) python NextCommand("my_next")
+    (gdb) my_next
 
     '''
 
-    def __init__(self, cmd_name):
+    def __init__(self, cmd_name, user_socket_id):
         super(NextCommand, self).__init__(cmd_name, gdb.COMMAND_USER)
+        self.user_socket_id = user_socket_id
         self.heap_dict = {}
 
     def invoke(self, arg, from_tty):
+
+        print("\n=== Running my_next command in gdb...")
 
         temp_line = gdb.execute('frame', to_string=True)
         raw_str = (temp_line.split('\n')[1]).split('\t')[1]
@@ -108,8 +111,9 @@ class NextCommand(gdb.Command):
         #   # get the address to the malloc'ed memory
         #   # store address and memory in heap dictionary
 
-        with open(MALLOC_TEST_FILE, "w") as f:
+        with open(MALLOC_TEST_FILE, "w+") as f:
             f.write(line_str)
+
         subprocess.run(f"gcc -E {MALLOC_TEST_FILE} > {MALLOC_PREPROCESSED}",
                        shell=True)
 
@@ -149,22 +153,29 @@ class NextCommand(gdb.Command):
 
         # Extract stack frame information (state of local variables)
         # and send to frontend client
-        stack_frame()
+        # self.extract_stack_data()
+
+        send_heap_dict_to_server(self.user_socket_id, self.heap_dict)
 
         if any(t.is_running() for t in gdb.selected_inferior().threads()):
             gdb.execute('next')
 
         return self.heap_dict
 
+    def extract_stack_data(self):
 
-def stack_frame():
+        #  TODO: validate this copilot autogen
+        # Extract stack frame information (state of local variables)
+        # and send to frontend client
+        frame = gdb.selected_frame()
+        block = frame.block()
+        for symbol in block:
+            if symbol.is_argument or symbol.is_variable:
+                print(symbol.name)
+                print(symbol.value(frame))
 
-    #  TODO: validate this copilot autogen
-    # Extract stack frame information (state of local variables)
-    # and send to frontend client
-    frame = gdb.selected_frame()
-    block = frame.block()
-    for symbol in block:
-        if symbol.is_argument or symbol.is_variable:
-            print(symbol.name)
-            print(symbol.value(frame))
+
+@useSocketIOConnection
+def send_heap_dict_to_server(user_socket_id: str, heap_dict: dict, sio=None):
+    sio.emit("sendBackendStateToUser",
+             user_socket_id, heap_dict)
