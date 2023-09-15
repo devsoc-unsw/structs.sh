@@ -1,5 +1,5 @@
 '''
-Main debugger server. Hosts the socketio server and handles events from frontend 
+Main debugger server. Hosts the socketio server and handles events from frontend
 clients as well as gdb instance clients.
 
 Must run in /debugger/src directory (because the gdb commands will source a python file by relative path e.g. ./gdb_scripts/linked_list_things.py)
@@ -130,8 +130,7 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
     else:
         backend_dict = "LINE NOT FOUND"
 
-    retVal = f"{backend_dict}"
-    io.emit("sendDummyData", retVal, room=socket_id)
+    io.emit("sendDummyData", backend_dict, room=socket_id)
 
 
 @io.event

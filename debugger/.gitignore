@@ -7,7 +7,5 @@ user_type_declarations.o
 malloc_preprocessed
 user_malloc.c
 user_malloc.o
-fn_declarations
-fn_declarations.o
 *.dYSM
 __pycache__

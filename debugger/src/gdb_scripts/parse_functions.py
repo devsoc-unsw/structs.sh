@@ -33,8 +33,7 @@ File linkedlist/main1.c:
 8:	int main(int, char **);
 ```
 
-See "debugger/samples/fn_declarations.c" for test function declarations,
-or "debugger/samples/fn_declarations_nocomment.c" 
+See "debugger/samples/fn_declarations.c" for test function declarations
 
 Not: pycparser does not support C comments and will fail if there are
 comments in the C code. Pass the C code through a preprocessor to

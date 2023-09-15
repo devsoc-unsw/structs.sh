@@ -12,3 +12,9 @@ buggy
 buggy.o
 stack_frames
 stack_frames.o
+fn_declarations
+fn_declarations.o
+printing
+printing.o
+stack_test
+stack_test.o
