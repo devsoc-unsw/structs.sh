@@ -63,7 +63,9 @@ const PointerDrawable: DrawablePointerComponent = ({ entity, attachedEntity, pos
         strokeWidth={6}
         markerEnd={`url(#${markerId})`}
       />
-      <motion.text x={5} y={coords.y2 - coords.y1 + 20} fontSize={15}>{entity.varName}</motion.text>
+      <motion.text x={5} y={coords.y2 - coords.y1 + 20} fontSize={15}>
+        {entity.varName}
+      </motion.text>
     </motion.g>
   );
 };
@@ -71,16 +73,20 @@ const PointerDrawable: DrawablePointerComponent = ({ entity, attachedEntity, pos
 PointerDrawable.displayName = 'PointerDrawable';
 export default React.forwardRef(PointerDrawable);
 
-function calculateCoordinates(to: MotionCoord, attachedEntity: AttachableEntity, offsetDistance = 40) {
-  let shape = getAttachableEntityShape(attachedEntity);
+function calculateCoordinates(
+  to: MotionCoord,
+  attachedEntity: AttachableEntity,
+  offsetDistance = 40
+) {
+  const shape = getAttachableEntityShape(attachedEntity);
 
   // We want the arrow appear below it
   return {
     x2: shape.center.x,
     x1: shape.center.x,
-    y2: shape.center.y + shape.radius + 1/2* offsetDistance,
+    y2: shape.center.y + shape.radius + (1 / 2) * offsetDistance,
     y1: shape.center.y + shape.radius + offsetDistance,
-  }
+  };
 }
 
 const ArrowMarker = ({ id, color }: { id: string; color: string }) => (

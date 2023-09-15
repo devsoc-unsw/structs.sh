@@ -27,6 +27,17 @@ class VisualiserController {
     }
   }
 
+  // Return data in form of integer array
+  public getData(): number[] {
+    return this.dataStructure.data;
+  }
+
+  // Set data structure to loaded data
+  public loadData(data: number[]): void {
+    this.resetDataStructure();
+    this.dataStructure.load(data);
+  }
+
   public getCurrentTimeline(): Timeline {
     return this.currentTimeline;
   }

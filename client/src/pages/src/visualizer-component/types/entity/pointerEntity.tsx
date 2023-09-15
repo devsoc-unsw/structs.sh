@@ -1,4 +1,4 @@
-import { BaseEntity, EntityType } from "./baseEntity";
+import { BaseEntity, EntityType } from './baseEntity';
 
 export interface PointerEntity extends BaseEntity {
   uid: string;

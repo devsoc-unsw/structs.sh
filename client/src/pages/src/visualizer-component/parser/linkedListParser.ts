@@ -272,13 +272,13 @@ export class LinkedListParser implements Parser {
         }
       });
 
-      let pointers: PointerEntity[] = [];
+      const pointers: PointerEntity[] = [];
       // Add annotation entity on top
       Object.values(editorAnnotation).forEach((annotation) => {
         /**
          * Find variable from stack
          */
-        let stackVariable: BackendVariableConcrete | undefined =
+        const stackVariable: BackendVariableConcrete | undefined =
           backendStructure.stack[annotation.varName];
         if (!stackVariable) return;
 

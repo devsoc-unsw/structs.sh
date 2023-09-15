@@ -24,11 +24,11 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState, getNextState }) =
 
   useEffect(() => {
     // Assume user have a variable called curr
-    let annotation = {
-      'curr': {
-        varName: 'curr'
-      }
-    }
+    const annotation = {
+      curr: {
+        varName: 'curr',
+      },
+    };
     const newParsedState = parser.parseInitialState(backendState, annotation);
     useFrontendStateStore.getState().updateNextState(newParsedState);
   }, [backendState]);
@@ -85,9 +85,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState, getNextState }) =
             }}
           />
         </div>
-        <div className="debugger">
-          {settings.debug && <Debugger src={currState} />}
-        </div>
+        <div className="debugger">{settings.debug && <Debugger src={currState} />}</div>
       </div>
     </div>
   );

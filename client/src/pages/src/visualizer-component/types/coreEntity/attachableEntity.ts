@@ -1,7 +1,7 @@
-import { assertUnreachable } from "../../util/util";
-import { EntityType } from "../entity/baseEntity";
-import { NodeEntity } from "../entity/nodeEntity";
-import { Circle, ShapeType } from "../geometry/geometry";
+import { assertUnreachable } from '../../util/util';
+import { EntityType } from '../entity/baseEntity';
+import { NodeEntity } from '../entity/nodeEntity';
+import { Circle, ShapeType } from '../geometry/geometry';
 
 export type AttachableEntity = NodeEntity;
 
@@ -12,7 +12,7 @@ export function getAttachableEntityShape(entity: AttachableEntity): Circle {
         type: ShapeType.Circle,
         center: {
           x: entity.x,
-          y: entity.y
+          y: entity.y,
         },
         radius: entity.size,
       };
