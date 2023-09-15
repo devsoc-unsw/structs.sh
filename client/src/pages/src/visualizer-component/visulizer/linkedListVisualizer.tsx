@@ -79,12 +79,13 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
           );
           break;
         case EntityType.POINTER:
-          let entityAttached = graphState.cacheEntity[entity.attachedUid];
+          const entityAttached = graphState.cacheEntity[entity.attachedUid];
           if (entityAttached && isAttachableEntity(entityAttached)) {
             renderDrawable[entity.uid] = (
               <Pointer
                 ref={(ref) => {
-                  if (nodeRefs.current[entity.uid] === undefined) nodeRefs.current[entity.uid] = ref;
+                  if (nodeRefs.current[entity.uid] === undefined)
+                    nodeRefs.current[entity.uid] = ref;
                   return nodeRefs.current[entity.uid];
                 }}
                 key={entity.uid}
@@ -94,7 +95,7 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
               />
             );
           }
-          
+
           break;
         default:
           assertUnreachable(entity);
@@ -111,9 +112,9 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
 
   return (
     <motion.svg
-      width={dimensions.width}
-      height={dimensions.height}
-      viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
+      width="100%"
+      height="100%"
+      viewBox="0 0 100% 100%"
       initial="hidden"
       animate={controls}
     >

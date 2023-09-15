@@ -1,4 +1,4 @@
-import { BaseEntity, EntityType } from "./baseEntity";
+import { BaseEntity, EntityType } from './baseEntity';
 
 export const DEFAULT_NODE_SIZE = 50;
 export interface NodeEntity extends BaseEntity {
