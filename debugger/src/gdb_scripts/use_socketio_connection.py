@@ -21,7 +21,8 @@ def useSocketIOConnection(func):
         # Disable verifying server-side SSL certificate
         http_session = requests.Session()
         http_session.verify = False
-        sio = socketio.Client()
+        # sio = socketio.Client()
+        sio = socketio.Client(http_session=http_session)
 
         # Try connect to server loop
         NUM_RETRIES = 2

@@ -61,6 +61,14 @@ const DevelopmentMode = () => {
   //   console.log(`Received message: ${data}`);
   // }, []);
 
+  const onSendFunctionDeclaration = useCallback((data: any) => {
+    console.log(`Received function declaration:\n`, data);
+  }, []);
+
+  const onSendTypeDeclaration = useCallback((data: any) => {
+    console.log(`Received type declaration:\n`, data);
+  }, []);
+
   const onSendBackendStateToUser = useCallback((data: any) => {
     console.log(`Received backend state:\n`, data);
   }, []);
@@ -93,12 +101,8 @@ const DevelopmentMode = () => {
     socket.on('getBreakpoints', onGetBreakpoints);
     socket.on('sendDummyData', onSendDummyData);
     socket.on('mainDebug', onMainDebug);
-    socket.on('sendFunctionDeclaration', (data: any) => {
-      console.log(`Received function declaration:\n`, data);
-    });
-    socket.on('sendTypeDeclaration', (data: any) => {
-      console.log(`Received type declaration:\n`, data);
-    });
+    socket.on('sendFunctionDeclaration', onSendFunctionDeclaration);
+    socket.on('sendTypeDeclaration', onSendTypeDeclaration);
     socket.on('executeNext', () => {
       console.log('Executing next line...');
     });
@@ -108,7 +112,11 @@ const DevelopmentMode = () => {
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
       socket.off('getBreakpoints', onGetBreakpoints);
-      // socket.off('sendDummyData', onSendDummyData);
+      socket.off('sendDummyData', onSendDummyData);
+      socket.off('mainDebug', onMainDebug);
+      socket.off('sendFunctionDeclaration', onSendFunctionDeclaration);
+      socket.off('sendTypeDeclaration', onSendTypeDeclaration);
+      socket.off('sendBackendStateToUser', onSendBackendStateToUser);
     };
   }, [onSendDummyData]);
 
