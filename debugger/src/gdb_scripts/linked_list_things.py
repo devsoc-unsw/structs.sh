@@ -79,23 +79,31 @@ class MallocVisitor(c_ast.NodeVisitor):
 # Define a custom command to extract the linked list nodes
 
 
-class NextCommand(gdb.Command):
+class CustomNextCommand(gdb.Command):
     '''
     To be run in gdb:
 
-    (gdb) python NextCommand("my_next")
-    (gdb) my_next
+    (gdb) python CustomNextCommand("custom_next")
+    (gdb) custom_next
+    (gdb) # alternatively, run with python...
+    (gdb) python backend_dict = gdb.execute("custom_next", to_string=True)
 
     '''
 
     def __init__(self, cmd_name, user_socket_id):
-        super(NextCommand, self).__init__(cmd_name, gdb.COMMAND_USER)
+        super(CustomNextCommand, self).__init__(cmd_name, gdb.COMMAND_USER)
         self.user_socket_id = user_socket_id
         self.heap_dict = {}
 
     def invoke(self, arg=None, from_tty=None):
+        # TODO: detect end of debug session
+        # if any(t.is_running() for t in gdb.selected_inferior().threads()):
+        #     print("\n=== Running CustomNextCommand in gdb...")
+        # else:
+        #     print("\n=== CustomNextCommand not run because no debuggin session is active")
+        #     return
 
-        print("\n=== Running my_next command in gdb...")
+        print("\n=== Running CustomNextCommand in gdb...")
 
         temp_line = gdb.execute('frame', to_string=True)
         raw_str = (temp_line.split('\n')[1]).split('\t')[1]
@@ -151,30 +159,13 @@ class NextCommand(gdb.Command):
         #   # what address is being freed
         #   # look for the address in heap dictionary
 
-        # Extract stack frame information (state of local variables)
-        # and send to frontend client
-        # self.extract_stack_data()
-
         send_heap_dict_to_server(self.user_socket_id, self.heap_dict)
 
-        if any(t.is_running() for t in gdb.selected_inferior().threads()):
-            gdb.execute('next')
+        gdb.execute('next')
 
         print(f"\n=== Finished running update_backend_state in gdb instance\n\n")
 
         return self.heap_dict
-
-    def extract_stack_data(self):
-
-        #  TODO: validate this copilot autogen
-        # Extract stack frame information (state of local variables)
-        # and send to frontend client
-        frame = gdb.selected_frame()
-        block = frame.block()
-        for symbol in block:
-            if symbol.is_argument or symbol.is_variable:
-                print(symbol.name)
-                print(symbol.value(frame))
 
 
 @useSocketIOConnection

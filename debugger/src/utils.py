@@ -78,7 +78,7 @@ def get_gdb_script(script_name: str, program_name: str, abs_file_path: str, sock
         set pagination off
         source {abs_file_path}/gdb_scripts/use_socketio_connection.py
         source {abs_file_path}/gdb_scripts/linked_list_things.py
-        python NextCommand("my_next", "{socket_id}")
+        python CustomNextCommand("custom_next", "{socket_id}")
         python print("FE client socket io:", "{socket_id}")
         start
         next
@@ -95,7 +95,7 @@ def get_gdb_script(script_name: str, program_name: str, abs_file_path: str, sock
         python print("FE client socket io:")
         python print("{socket_id}")
         source {abs_file_path}/gdb_scripts/linked_list_things.py
-        python NextCommand("my_next", "{socket_id}")
+        python CustomNextCommand("custom_next", "{socket_id}")
         python pycparser_parse_fn_decls("{socket_id}")
         python pycparser_parse_type_decls("{socket_id}")
         start
@@ -131,7 +131,7 @@ source {abs_file_path}/gdb_scripts/linked_list_things.py
 # python my_functions = parseFunctionNames(info_functions_output)
 # python breakOnUserFunctions(my_functions)
 
-python StepCommand("my_next", my_functions)
+python StepCommand("custom_next", my_functions)
 
 file {program_name}
 start

@@ -197,8 +197,8 @@ def executeNext(socket_id: str) -> None:
     print(f"process at FE client socket_id {socket_id}:")
     print(proc)
 
-    print(f"\n=== Sending 'my_next' command to gdb instance {proc.pid}")
-    proc.stdin.write(f'my_next\n')
+    print(f"\n=== Sending 'custom_next' command to gdb instance {proc.pid}")
+    proc.stdin.write(f'custom_next\n')
 
     proc.stdin.flush()
 
@@ -247,7 +247,7 @@ def updatedBackendState(socket_id: str, user_socket_id, data) -> None:
     '''
     Event to send the current backend state (including stack and heap data) to
     the specified frontend client.
-    Should be emitted by a gdb instance while running a `my_next` custom command.
+    Should be emitted by a gdb instance while running a `custom_next` custom command.
     '''
     print(
         f"Event updatedBackendState received from gdb instance with socket_id {socket_id}:")
