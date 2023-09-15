@@ -5,6 +5,8 @@ import subprocess
 import time
 from typing import IO
 
+from constants import CUSTOM_NEXT_COMMAND_NAME
+
 
 def compile_program(file_names: list[str], user_program_name: str) -> None:
     '''
@@ -62,11 +64,12 @@ def get_subprocess_output(proc: subprocess.Popen, timeout_duration: int):
             break
 
 
-def get_gdb_script(script_name: str, program_name: str, abs_file_path: str, socket_id: str):
+def get_gdb_script(program_name: str, abs_file_path: str, socket_id: str, script_name: str = "default"):
     GDB_SCRIPTS = {
         "test_declarations_parser": f"""
-        file {program_name}
+        set python print-stack full
         set pagination off
+        file {program_name}
         source {abs_file_path}/gdb_scripts/use_socketio_connection.py
         python print("FE client socket io:", "{socket_id}")
         source {abs_file_path}/gdb_scripts/parse_functions.py
@@ -74,11 +77,12 @@ def get_gdb_script(script_name: str, program_name: str, abs_file_path: str, sock
         start""",
 
         "test_custom_next": f"""
-        file {program_name}
+        set python print-stack full
         set pagination off
+        file {program_name}
         source {abs_file_path}/gdb_scripts/use_socketio_connection.py
         source {abs_file_path}/gdb_scripts/linked_list_things.py
-        python CustomNextCommand("custom_next", "{socket_id}")
+        python CustomNextCommand("{CUSTOM_NEXT_COMMAND_NAME}", "{socket_id}")
         python print("FE client socket io:", "{socket_id}")
         start
         next
@@ -87,13 +91,13 @@ def get_gdb_script(script_name: str, program_name: str, abs_file_path: str, sock
         """,
 
         "default": f"""
-        file {program_name}
         set python print-stack full
         set pagination off
-        source {abs_file_path}/gdb_scripts/use_socketio_connection.py
-        source {abs_file_path}/gdb_scripts/parse_functions.py
+        file {program_name}
         python print("FE client socket io:")
         python print("{socket_id}")
+        source {abs_file_path}/gdb_scripts/use_socketio_connection.py
+        source {abs_file_path}/gdb_scripts/parse_functions.py
         source {abs_file_path}/gdb_scripts/linked_list_things.py
         python CustomNextCommand("custom_next", "{socket_id}")
         python pycparser_parse_fn_decls("{socket_id}")

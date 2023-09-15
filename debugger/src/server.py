@@ -5,18 +5,15 @@ clients as well as gdb instance clients.
 Must run in /debugger/src directory (because the gdb commands will source a python file by relative path e.g. ./gdb_scripts/linked_list_things.py)
 '''
 
-import fcntl
 import os
-import select
-import time
 import socketio
 import eventlet
 from typing import Any
 import subprocess
 import json
-from utils import make_non_blocking, compile_program, get_gdb_script, get_subprocess_output, create_ll_script, create_ll_script_2
-
-from placeholder_data import PLACEHOLDER_HEAP_DICTS
+from src.constants import CUSTOM_NEXT_COMMAND_NAME
+from src.utils import make_non_blocking, compile_program, get_gdb_script, get_subprocess_output, create_ll_script, create_ll_script_2
+from src.placeholder_data import PLACEHOLDER_HEAP_DICTS
 
 # Parent directory of this python script e.g. "/user/.../debugger/src"
 # In the docker container this will be "/app/src"
@@ -142,7 +139,7 @@ def mainDebug(socket_id: str) -> None:
     print(compilation_out)
 
     gdb_script = get_gdb_script(
-        "test_custom_next", TEST_PROGRAM_NAME, abs_file_path, socket_id)
+        TEST_PROGRAM_NAME, abs_file_path, socket_id, script_name="test_custom_next")
     print("\n=== Running gdb script...")
     print(f"gdb_script:\n{gdb_script}")
 
@@ -196,8 +193,9 @@ def executeNext(socket_id: str) -> None:
     print(f"process at FE client socket_id {socket_id}:")
     print(proc)
 
-    print(f"\n=== Sending 'custom_next' command to gdb instance {proc.pid}")
-    proc.stdin.write(f'custom_next\n')
+    print(
+        f"\n=== Sending '{CUSTOM_NEXT_COMMAND_NAME}' command to gdb instance {proc.pid}")
+    proc.stdin.write(f'{CUSTOM_NEXT_COMMAND_NAME}\n')
 
     proc.stdin.flush()
 
