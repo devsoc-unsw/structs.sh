@@ -87,11 +87,24 @@ const DevelopmentMode = () => {
   //   console.log(`Received message: ${data}`);
   // }, []);
 
+  const onSendFunctionDeclaration = useCallback((data: any) => {
+    console.log(`Received function declaration:\n`, data);
+  }, []);
+
+  const onSendTypeDeclaration = useCallback((data: any) => {
+    console.log(`Received type declaration:\n`, data);
+  }, []);
+
+  const onSendBackendStateToUser = useCallback((data: any) => {
+    console.log(`Received backend state:\n`, data);
+  }, []);
+
   useEffect(() => {
     const onConnect = () => {
       console.log('Connected!');
       console.log('Emitting message to server...');
       socket.emit('mainDebug');
+      socket.emit('executeNext');
     };
 
     socket.on('connect', onConnect);
@@ -99,18 +112,22 @@ const DevelopmentMode = () => {
     socket.on('getBreakpoints', onGetBreakpoints);
     socket.on('sendDummyBinaryTreeData', onsendDummyBinaryTreeData);
     socket.on('mainDebug', onMainDebug);
-    socket.on('sendFunctionDeclaration', (data: any) => {
-      console.log(`Received function declaration:\n`, data);
+    socket.on('sendFunctionDeclaration', onSendFunctionDeclaration);
+    socket.on('sendTypeDeclaration', onSendTypeDeclaration);
+    socket.on('executeNext', () => {
+      console.log('Executing next line...');
     });
-    socket.on('sendTypeDeclaration', (data: any) => {
-      console.log(`Received type declaration:\n`, data);
-    });
+    socket.on('sendBackendStateToUser', onSendBackendStateToUser);
 
     return () => {
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
       socket.off('getBreakpoints', onGetBreakpoints);
       socket.off('sendDummyBinaryTreeData', onsendDummyBinaryTreeData);
+      socket.off('mainDebug', onMainDebug);
+      socket.off('sendFunctionDeclaration', onSendFunctionDeclaration);
+      socket.off('sendTypeDeclaration', onSendTypeDeclaration);
+      socket.off('sendBackendStateToUser', onSendBackendStateToUser);
     };
   }, [onsendDummyBinaryTreeData]);
 
@@ -141,6 +158,7 @@ const DevelopmentMode = () => {
             backendState={backendState}
             getNextState={() => {
               socket.emit('sendDummyBinaryTreeData', count.toString());
+              socket.emit('executeNext');
               setCountState(count + 1);
             }}
           />
@@ -153,6 +171,7 @@ const DevelopmentMode = () => {
       backendState={backendState}
       getNextState={() => {
         socket.emit('sendDummyBinaryTreeData', count.toString());
+        socket.emit('executeNext');
         setCountState(count + 1);
       }}
     />
