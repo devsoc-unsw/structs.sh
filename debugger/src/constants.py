@@ -1,0 +1,1 @@
+CUSTOM_NEXT_COMMAND_NAME = "custom_next"
