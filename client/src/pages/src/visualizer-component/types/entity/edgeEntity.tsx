@@ -1,5 +1,4 @@
-import { BaseEntity, EntityType } from "./baseEntity";
-
+import { BaseEntity, EntityType } from './baseEntity';
 
 export interface EdgeEntity extends BaseEntity {
   uid: string;

@@ -125,7 +125,7 @@ export interface BackendUpdate {
 /**
  * Code editor definition for user's own defined struct
  */
-/*export type LinkedListAnnotation = {
+/* export type LinkedListAnnotation = {
   linkedListStruct: string;
   value: {
     type: 'int';

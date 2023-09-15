@@ -5,9 +5,9 @@ import globalStyles from 'styles/global.module.css';
 import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
 import { Socket } from 'socket.io-client';
+import CodeEditor from 'components/DevelopmentMode/CodeEditor';
 import VisualizerMain from './src/VisualizerMain';
 import { BackendState, CType } from './src/visualizer-component/types/backendType';
-import CodeEditor from 'components/DevelopmentMode/CodeEditor';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };

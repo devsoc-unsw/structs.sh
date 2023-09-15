@@ -44,6 +44,35 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     },
   });
 
+  public get data(): number[] {
+    const data: number[] = [];
+    let curr: GraphicalLinkedListNode = this.head;
+    while (curr != null) {
+      data.push(curr.data.value);
+      curr = curr.next;
+    }
+    return data;
+  }
+
+  public load(data: number[]): void {
+    const numbers = data;
+    this.length = numbers.length;
+    const producer = new LinkedListAnimationProducer();
+    let currNode = null;
+    producer.initialiseHead(this.headPointer);
+    for (let i = 0; i < numbers.length; i += 1) {
+      const newNode = GraphicalLinkedListNode.from(numbers[i]);
+      producer.createNodeAt(i, newNode, i + 1);
+      if (currNode === null) {
+        this.head = newNode;
+      } else {
+        currNode.next = newNode;
+        producer.linkLastToNew(currNode);
+      }
+      currNode = newNode;
+    }
+  }
+
   public headPointer: Path;
 
   public head: GraphicalLinkedListNode = null;
@@ -254,21 +283,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
 
   public generate(): void {
     const numbers = generateNumbers();
-    this.length = numbers.length;
-    const producer = new LinkedListAnimationProducer();
-    let currNode = null;
-    producer.initialiseHead(this.headPointer);
-    for (let i = 0; i < numbers.length; i += 1) {
-      const newNode = GraphicalLinkedListNode.from(numbers[i]);
-      producer.createNodeAt(i, newNode, i + 1);
-      if (currNode === null) {
-        this.head = newNode;
-      } else {
-        currNode.next = newNode;
-        producer.linkLastToNew(currNode);
-      }
-      currNode = newNode;
-    }
+    this.load(numbers);
   }
 
   public reset(): void {

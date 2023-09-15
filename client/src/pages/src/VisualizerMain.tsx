@@ -25,10 +25,10 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState, getNextState }) =
   useEffect(() => {
     // Assume user have a variable called curr
     let annotation = {
-      'curr': {
-        varName: 'curr'
-      }
-    }
+      curr: {
+        varName: 'curr',
+      },
+    };
     const newParsedState = parser.parseInitialState(backendState, annotation, settings);
     useFrontendStateStore.getState().updateNextState(newParsedState);
   }, [backendState]);
@@ -46,7 +46,6 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState, getNextState }) =
 
           if (dimensions.height === 0) {
             setDimensions({ width, height });
-            dimensions.height = height;
           }
         }
       });
@@ -86,9 +85,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState, getNextState }) =
             }}
           />
         </div>
-        <div className="debugger">
-          {settings.debug && <Debugger src={currState} />}
-        </div>
+        <div className="debugger">{settings.debug && <Debugger src={currState} />}</div>
       </div>
     </div>
   );
