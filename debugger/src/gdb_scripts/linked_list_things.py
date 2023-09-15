@@ -12,10 +12,10 @@ from pycparser import parse_file, c_ast
 import re
 
 # C file storing malloc line
-MALLOC_TEST_FILE = "user_malloc.c"
+MALLOC_TEST_FILE = "src/user_malloc.c"
 
 # File to write the preprocessed C code to, before parsing with pycparser
-MALLOC_PREPROCESSED = "malloc_preprocessed"
+MALLOC_PREPROCESSED = "src/malloc_preprocessed"
 
 
 def remove_non_standard_characters(input_str):
@@ -93,7 +93,7 @@ class NextCommand(gdb.Command):
         self.user_socket_id = user_socket_id
         self.heap_dict = {}
 
-    def invoke(self, arg, from_tty):
+    def invoke(self, arg=None, from_tty=None):
 
         print("\n=== Running my_next command in gdb...")
 
@@ -160,6 +160,8 @@ class NextCommand(gdb.Command):
         if any(t.is_running() for t in gdb.selected_inferior().threads()):
             gdb.execute('next')
 
+        print(f"\n=== Finished running update_backend_state in gdb instance\n\n")
+
         return self.heap_dict
 
     def extract_stack_data(self):
@@ -176,6 +178,17 @@ class NextCommand(gdb.Command):
 
 
 @useSocketIOConnection
-def send_heap_dict_to_server(user_socket_id: str, heap_dict: dict, sio=None):
-    sio.emit("sendBackendStateToUser",
-             user_socket_id, heap_dict)
+def send_heap_dict_to_server(user_socket_id: str = None, heap_dict: dict = {}, sio=None):
+    if user_socket_id is not None:
+        print(
+            f"Sending heap_dict to server, for user with socket_id {user_socket_id}")
+        sio.emit("updatedBackendState",
+                 (user_socket_id, heap_dict))
+        # I don't know why but apparently opening a file is NECESSARY for
+        # the above sio.emit() call to work. Discovered from extensive debugging.
+        # If you figure out how to get the above sio.emit() call to work without
+        # this weird hack please let @dqna64 know.
+        with open("random_useless_file_to_open.txt", "w") as f:
+            f.read()
+    else:
+        print("No user_socket_id provided, so not sending heap_dict to server")

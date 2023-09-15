@@ -314,24 +314,6 @@ class ParseStructDefVisitor(DeclVisitor):
 
         return result
 
-# sio = socketio.Client()
-# sio.connect("http://localhost:8000")
-
-
-# @sio.event
-# def connect():
-#     print("Parser socketio client connected")
-
-
-# @sio.event
-# def connect_error(data):
-#     print("Parser socketio client connection failed")
-
-
-# @sio.event
-# def disconnect():
-#     print("Parser socketio client disconnected")
-
 
 @useSocketIOConnection
 def pycparser_parse_fn_decls(user_socket_id: str = None, sio=None):
