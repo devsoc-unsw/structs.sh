@@ -175,7 +175,7 @@ class CustomNextCommand(gdb.Command):
             "stack_data": get_stack_data(),
             "heap_data": self.heap_data
         }
-        send_heap_dict_to_server(
+        send_backend_data_to_server(
             self.user_socket_id, backend_data=backend_data)
 
         gdb.execute('next')
@@ -186,7 +186,7 @@ class CustomNextCommand(gdb.Command):
 
 
 @useSocketIOConnection
-def send_heap_dict_to_server(user_socket_id: str = None, backend_data: dict = {}, sio=None):
+def send_backend_data_to_server(user_socket_id: str = None, backend_data: dict = {}, sio=None):
     '''
     Args:
         - backend_data: dict containing data for the current stack frame and 

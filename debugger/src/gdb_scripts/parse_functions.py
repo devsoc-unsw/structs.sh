@@ -318,6 +318,8 @@ class ParseStructDefVisitor(DeclVisitor):
 def pycparser_parse_fn_decls(user_socket_id: str = None, sio=None):
     '''
     Using pycparser to parse type declarations by constructing AST. Including structs and typedefs.
+
+    NOTE: Must run this function BEFORE starting the program in gdb, otherwise you get strange output from the 'info functions -n' command.
     '''
 
     # typedef and struct declarations need to be declared in the files of the
@@ -383,6 +385,8 @@ def pycparser_parse_fn_decls(user_socket_id: str = None, sio=None):
 def pycparser_parse_type_decls(user_socket_id: str = None, sio=None):
     '''
     Using pycparser to parse type declarations by constructing AST.
+
+    NOTE: Must run this function BEFORE starting the program in gdb, otherwise you get strange output from the 'info types' command.
     '''
 
     print("\n=== Running pycparser_parse_type_decls in gdb instance\n\n")
