@@ -70,6 +70,7 @@ def get_gdb_script(program_name: str, abs_file_path: str, socket_id: str, script
         set python print-stack full
         set pagination off
         file {program_name}
+        python print("FE client socket io:", "{socket_id}")
         source {abs_file_path}/gdb_scripts/use_socketio_connection.py
         python print("FE client socket io:", "{socket_id}")
         source {abs_file_path}/gdb_scripts/parse_functions.py
@@ -80,10 +81,10 @@ def get_gdb_script(program_name: str, abs_file_path: str, socket_id: str, script
         set python print-stack full
         set pagination off
         file {program_name}
+        python print("FE client socket io:", "{socket_id}")
         source {abs_file_path}/gdb_scripts/use_socketio_connection.py
         source {abs_file_path}/gdb_scripts/linked_list_things.py
         python CustomNextCommand("{CUSTOM_NEXT_COMMAND_NAME}", "{socket_id}")
-        python print("FE client socket io:", "{socket_id}")
         start
         next
         step
@@ -94,12 +95,11 @@ def get_gdb_script(program_name: str, abs_file_path: str, socket_id: str, script
         set python print-stack full
         set pagination off
         file {program_name}
-        python print("FE client socket io:")
-        python print("{socket_id}")
+        python print("FE client socket io:", "{socket_id}")
         source {abs_file_path}/gdb_scripts/use_socketio_connection.py
         source {abs_file_path}/gdb_scripts/parse_functions.py
         source {abs_file_path}/gdb_scripts/linked_list_things.py
-        python CustomNextCommand("custom_next", "{socket_id}")
+        python CustomNextCommand("{CUSTOM_NEXT_COMMAND_NAME}", "{socket_id}")
         python pycparser_parse_fn_decls("{socket_id}")
         python pycparser_parse_type_decls("{socket_id}")
         start

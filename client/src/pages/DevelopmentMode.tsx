@@ -22,7 +22,13 @@ const DevelopmentMode = () => {
     }
   }, []);
   const [backendState, setBackendState] = useState<BackendState>({
-    heap: {
+    frame_info: {
+      file: 'test.c',
+      line: 12,
+      function: 'main',
+    },
+    stack_data: {},
+    heap_data: {
       '0x1': {
         addr: '0x1',
         type: CType.SINGLE_LINED_LIST_NODE,
@@ -33,7 +39,6 @@ const DevelopmentMode = () => {
         },
       },
     },
-    stack: {},
   });
 
   const [count, setCountState] = useState(100);

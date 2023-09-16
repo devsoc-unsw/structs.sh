@@ -13,7 +13,7 @@ import subprocess
 import json
 from src.constants import CUSTOM_NEXT_COMMAND_NAME
 from src.utils import make_non_blocking, compile_program, get_gdb_script, get_subprocess_output, create_ll_script, create_ll_script_2
-from src.placeholder_data import PLACEHOLDER_HEAP_DICTS
+from src.placeholder_data import PLACEHOLDER_BACKEND_STATES
 
 # Parent directory of this python script e.g. "/user/.../debugger/src"
 # In the docker container this will be "/app/src"
@@ -107,23 +107,23 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
     backend_dict = {}
     # Our initial linked list node has been alloced with data value 27
     if line_number == "100":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[0]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[0]
     elif line_number == "101":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[1]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[1]
     elif line_number == "102":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[2]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[2]
     elif line_number == "103":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[3]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[3]
     elif line_number == "104":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[4]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[4]
     elif line_number == "105":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[5]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[5]
     elif line_number == "106":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[6]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[6]
     elif line_number == "107":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[7]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[7]
     elif line_number == "108":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[8]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[8]
     else:
         backend_dict = "LINE NOT FOUND"
 
