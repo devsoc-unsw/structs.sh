@@ -1,6 +1,7 @@
 import gdb
 import re
 
+
 def get_frame_info():
     gdb_frame_data: str = gdb.execute("bt", to_string=True)
     gdb_frame_data: str = gdb_frame_data.split("\n", 1)[0]
@@ -8,11 +9,21 @@ def get_frame_info():
     frame_info: dict = {}
     split_data = gdb_frame_data.strip().split(") at", 1)
 
-    frame_info["line"] = re.search(r"[0-9]+$", split_data[1]).group(0)
+    frame_info["line_num"] = re.search(r"[0-9]+$", split_data[1]).group(0)
 
     file_name = split_data[1].strip().rstrip("0123456789")[:-1]
     frame_info["file"] = file_name
-    frame_info["function"] = split_data[0].replace("#0", "").strip().split(" ")[0]
+    frame_info["function"] = split_data[0].replace(
+        "#0", "").strip().split(" ")[0]
+
+    # Extract the actual line of code
+    line = gdb.execute("frame", to_string=True)
+    line = line.split("\n")[1].strip()
+
+    if m := re.fullmatch(r"^[0-9]+\t(.*)$", line):
+        frame_info["line"] = m.group(1)
+    else:
+        frame_info["line"] = ""
 
     return frame_info
 
@@ -45,5 +56,3 @@ def get_stack_data():
 # if __name__ == "__main__":
 #     print(get_stack_data())
 #     print(get_frame_info())
-
-

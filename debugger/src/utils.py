@@ -45,16 +45,16 @@ def get_subprocess_output(proc: subprocess.Popen, timeout_duration: int):
         for fileno in events:
             if fileno == proc.stdout.fileno():
                 print(
-                    f"=== Read from gdb subprocess stdout fileno = {fileno}:")
+                    f"VVVVVVVVVV Read from gdb subprocess stdout fileno = {fileno}:")
                 proc.stdout.flush()
                 raw_output = proc.stdout.read()
-                print(raw_output, end="\n=== End read stdout\n\n")
+                print(raw_output, end="\n^^^^^^^^^^ End read stdout\n\n")
             elif proc.stderr and fileno == proc.stderr.fileno():
                 print(
-                    f"=== Read from gdb subprocess stderr fileno = {fileno}:")
+                    f"VVVVVVVVVV Read from gdb subprocess stderr fileno = {fileno}:")
                 proc.stderr.flush()
                 raw_output = proc.stderr.read()
-                print(raw_output, end="\n=== End read stderr\n\n")
+                print(raw_output, end="\n^^^^^^^^^^ End read stderr\n\n")
 
         if timeout_duration == 0:
             break
@@ -70,6 +70,7 @@ def get_gdb_script(program_name: str, abs_file_path: str, socket_id: str, script
         set python print-stack full
         set pagination off
         file {program_name}
+        python print("FE client socket io:", "{socket_id}")
         source {abs_file_path}/gdb_scripts/use_socketio_connection.py
         python print("FE client socket io:", "{socket_id}")
         source {abs_file_path}/gdb_scripts/parse_functions.py
@@ -80,28 +81,61 @@ def get_gdb_script(program_name: str, abs_file_path: str, socket_id: str, script
         set python print-stack full
         set pagination off
         file {program_name}
+        python print("FE client socket io:", "{socket_id}")
         source {abs_file_path}/gdb_scripts/use_socketio_connection.py
         source {abs_file_path}/gdb_scripts/linked_list_things.py
         python CustomNextCommand("{CUSTOM_NEXT_COMMAND_NAME}", "{socket_id}")
-        python print("FE client socket io:", "{socket_id}")
         start
         next
         step
         step
         """,
 
+        "test_io": f"""
+        set python print-stack full
+        set pagination off
+        file {abs_file_path}/samples/test_io
+        python print("FE client socket io:", "{socket_id}")
+        source {abs_file_path}/gdb_scripts/use_socketio_connection.py
+        source {abs_file_path}/gdb_scripts/linked_list_things.py
+        python CustomNextCommand("{CUSTOM_NEXT_COMMAND_NAME}", "{socket_id}")
+        source {abs_file_path}/gdb_scripts/iomanager.py
+        source {abs_file_path}/gdb_scripts/test_io.py
+        start
+        """,
+
+        "test_stdout": f"""
+        set python print-stack full
+        set pagination off
+        file {abs_file_path}/samples/stdout
+        python print("FE client socket io:", "{socket_id}")
+        source {abs_file_path}/gdb_scripts/use_socketio_connection.py
+        source {abs_file_path}/gdb_scripts/linked_list_things.py
+        python CustomNextCommand("{CUSTOM_NEXT_COMMAND_NAME}", "{socket_id}")
+        source {abs_file_path}/gdb_scripts/iomanager.py
+        python io_manager = IOManager(user_socket_id="{socket_id}")
+        start
+        # skip the setbuf call
+        next
+        {CUSTOM_NEXT_COMMAND_NAME}
+        python io_manager.read_and_send()
+        {CUSTOM_NEXT_COMMAND_NAME}
+        python io_manager.read_and_send()
+        """,
+
         "default": f"""
         set python print-stack full
         set pagination off
         file {program_name}
-        python print("FE client socket io:")
-        python print("{socket_id}")
+        python print("FE client socket io:", "{socket_id}")
         source {abs_file_path}/gdb_scripts/use_socketio_connection.py
         source {abs_file_path}/gdb_scripts/parse_functions.py
-        source {abs_file_path}/gdb_scripts/linked_list_things.py
-        python CustomNextCommand("custom_next", "{socket_id}")
         python pycparser_parse_fn_decls("{socket_id}")
         python pycparser_parse_type_decls("{socket_id}")
+        source {abs_file_path}/gdb_scripts/linked_list_things.py
+        python CustomNextCommand("{CUSTOM_NEXT_COMMAND_NAME}", "{socket_id}")
+        source {abs_file_path}/gdb_scripts/iomanager.py
+        python io_manager = IOManager(user_socket_id="{socket_id}")
         start
         """
     }

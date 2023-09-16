@@ -22,7 +22,14 @@ const DevelopmentMode = () => {
     }
   }, []);
   const [backendState, setBackendState] = useState<BackendState>({
-    heap: {
+    frame_info: {
+      file: 'test.c',
+      line_num: 12,
+      line: 'printf("Hello World!");',
+      function: 'main',
+    },
+    stack_data: {},
+    heap_data: {
       '0x1': {
         addr: '0x1',
         type: CType.SINGLE_LINED_LIST_NODE,
@@ -33,7 +40,6 @@ const DevelopmentMode = () => {
         },
       },
     },
-    stack: {},
   });
 
   const [count, setCountState] = useState(100);
@@ -70,6 +76,10 @@ const DevelopmentMode = () => {
     console.log(`Received backend state:\n`, data);
   }, []);
 
+  const onSendStdoutToUser = useCallback((data: any) => {
+    console.log(`Received program stdout:\n`, data);
+  }, []);
+
   useEffect(() => {
     const onConnect = () => {
       console.log('Connected!');
@@ -104,6 +114,7 @@ const DevelopmentMode = () => {
       console.log('Executing next line...');
     });
     socket.on('sendBackendStateToUser', onSendBackendStateToUser);
+    socket.on('sendStdoutToUser', onSendStdoutToUser);
 
     return () => {
       socket.off('connect', onConnect);
