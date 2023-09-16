@@ -10,6 +10,9 @@ import gdb
 import subprocess
 from pycparser import parse_file, c_ast
 import re
+from src.gdb_scripts.use_socketio_connection import useSocketIOConnection
+from src.gdb_scripts.stack_variables import get_stack_data, get_frame_info
+from src.gdb_scripts.gdb_utils import enable_socketio_client_emit
 
 # C file storing malloc line
 MALLOC_TEST_FILE = "src/user_malloc.c"
@@ -93,7 +96,7 @@ class CustomNextCommand(gdb.Command):
     def __init__(self, cmd_name, user_socket_id):
         super(CustomNextCommand, self).__init__(cmd_name, gdb.COMMAND_USER)
         self.user_socket_id = user_socket_id
-        self.heap_dict = {}
+        self.heap_data = {}
 
     def invoke(self, arg=None, from_tty=None):
         # TODO: detect end of debug session
@@ -125,28 +128,36 @@ class CustomNextCommand(gdb.Command):
         subprocess.run(f"gcc -E {MALLOC_TEST_FILE} > {MALLOC_PREPROCESSED}",
                        shell=True)
 
-        # Parse the preprocessed C code into an AST
-        # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
-        ast = parse_file(MALLOC_PREPROCESSED, use_cpp=True,
-                         cpp_args=r'-Iutils/fake_libc_include')
-        print(ast)
+        # Only attempt to parse this line of C code if it might contain a malloc call
+        # This is a hacky way to allow calling custom next command without failing
+        # due to the line not being a typedef, global variable declartion, function
+        # declaration, type declaratio or function definition (only allowed things
+        # at the top level of C file)
+        # TODO: The better thing to do would be to put the line inside a main function body, then preprocess, then parse.
+        if "malloc" in line_str:
+            # Parse the preprocessed C code into an AST
+            # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
+            ast = parse_file(MALLOC_PREPROCESSED, use_cpp=True,
+                             cpp_args=r'-Iutils/fake_libc_include')
+            print(ast)
 
-        # Create a MallocVisitor instance
-        malloc_visitor = MallocVisitor()
+            # Create a MallocVisitor instance
+            malloc_visitor = MallocVisitor()
 
-        # Set the current node to the root of the AST
-        malloc_visitor.current_node = ast
+            # Set the current node to the root of the AST
+            malloc_visitor.current_node = ast
 
-        # Visit the AST to check for malloc calls
-        malloc_visitor.visit(ast)
+            # Visit the AST to check for malloc calls
+            malloc_visitor.visit(ast)
 
-        # Print the malloc information
-        for info in malloc_visitor.malloc_info:
-            print("Malloc Information:")
-            print(f"Variable assigned to malloc: {info['variable_name']}")
-            print(f"Variable assigned to malloc V2: {info['variable_name_2']}")
-            print(f"Size of malloc: {info['malloc_size']} bytes")
-            print(f"Type malloced: {info['malloc_type']}")
+            # Print the malloc information
+            for info in malloc_visitor.malloc_info:
+                print("Malloc Information:")
+                print(f"Variable assigned to malloc: {info['variable_name']}")
+                print(
+                    f"Variable assigned to malloc V2: {info['variable_name_2']}")
+                print(f"Size of malloc: {info['malloc_size']} bytes")
+                print(f"Type malloced: {info['malloc_type']}")
 
         # === Up date existing tracked heap memory
 
@@ -159,27 +170,59 @@ class CustomNextCommand(gdb.Command):
         #   # what address is being freed
         #   # look for the address in heap dictionary
 
-        send_heap_dict_to_server(self.user_socket_id, self.heap_dict)
+        backend_data = {
+            "frame_info": get_frame_info(),
+            "stack_data": get_stack_data(),
+            "heap_data": self.heap_data
+        }
+        send_backend_data_to_server(
+            self.user_socket_id, backend_data=backend_data)
 
         gdb.execute('next')
 
         print(f"\n=== Finished running update_backend_state in gdb instance\n\n")
 
-        return self.heap_dict
+        return self.heap_data
 
 
 @useSocketIOConnection
-def send_heap_dict_to_server(user_socket_id: str = None, heap_dict: dict = {}, sio=None):
+def send_backend_data_to_server(user_socket_id: str = None, backend_data: dict = {}, sio=None):
+    '''
+    Args:
+        - backend_data: dict containing data for the current stack frame and 
+            also the heap, in the following format:
+            {
+                "frame_info": {
+                    "file": "file_name",
+                    "line": "line_number",
+                    "function": "function_name"
+                },
+                "stack_data": [
+                    {
+                        "name": "var_name",
+                        "value": "var_value",
+                        "type": "var_type"
+                    },
+                    ...
+                ],
+                "heap_data": {
+                    "addr1": {
+                        ...
+                    },
+                    "addr2": {
+                        ...
+                    },
+                    ...
+                }
+            }
+    '''
     if user_socket_id is not None:
         print(
-            f"Sending heap_dict to server, for user with socket_id {user_socket_id}")
+            f"Sending backend_data to server, for user with socket_id {user_socket_id}")
         sio.emit("updatedBackendState",
-                 (user_socket_id, heap_dict))
-        # I don't know why but apparently opening a file is NECESSARY for
-        # the above sio.emit() call to work. Discovered from extensive debugging.
-        # If you figure out how to get the above sio.emit() call to work without
-        # this weird hack please let @dqna64 know.
-        with open("random_useless_file_to_open.txt", "w") as f:
-            f.read()
+                 (user_socket_id, backend_data))
+
+        enable_socketio_client_emit()
+
     else:
-        print("No user_socket_id provided, so not sending heap_dict to server")
+        print("No user_socket_id provided, so not sending backend_data to server")

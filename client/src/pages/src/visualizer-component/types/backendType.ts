@@ -111,8 +111,14 @@ export interface BackendVariableBasePointer extends BackendVariableBase {
 export type BackendVariableConcrete = BackendVariablePointer | BackendVariableNonPointerConcrete;
 
 export interface BackendState {
-  heap: { [address: Addr]: BackendVariableConcrete };
-  stack: { [varName: string]: BackendVariableConcrete };
+  frame_info: {
+    file: string;
+    line: string;
+    line_num: number;
+    function: string;
+  };
+  stack_data: { [varName: string]: BackendVariableConcrete };
+  heap_data: { [address: Addr]: BackendVariableConcrete };
 }
 
 export interface BackendUpdate {

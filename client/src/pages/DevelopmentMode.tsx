@@ -22,7 +22,21 @@ const DevelopmentMode = () => {
     }
   }, []);
   const [backendState, setBackendState] = useState<BackendState>({
-    heap: {
+    frame_info: {
+      file: 'test.c',
+      line_num: 12,
+      line: 'printf("Hello World!");',
+      function: 'main',
+    },
+    stack_data: {
+      root: {
+        addr: '0x1',
+        type: CType.TREE_NODE,
+        is_pointer: true,
+        data: '0x1',
+      },
+    },,
+    heap_data: {
       '0x1': {
         addr: '0x1',
         type: CType.TREE_NODE,
@@ -52,14 +66,6 @@ const DevelopmentMode = () => {
           left: '0x0',
           right: '0x0',
         },
-      },
-    },
-    stack: {
-      root: {
-        addr: '0x1',
-        type: CType.TREE_NODE,
-        is_pointer: true,
-        data: '0x1',
       },
     },
   });
@@ -99,6 +105,10 @@ const DevelopmentMode = () => {
     console.log(`Received backend state:\n`, data);
   }, []);
 
+  const onSendStdoutToUser = useCallback((data: any) => {
+    console.log(`Received program stdout:\n`, data);
+  }, []);
+
   useEffect(() => {
     const onConnect = () => {
       console.log('Connected!');
@@ -118,6 +128,7 @@ const DevelopmentMode = () => {
       console.log('Executing next line...');
     });
     socket.on('sendBackendStateToUser', onSendBackendStateToUser);
+    socket.on('sendStdoutToUser', onSendStdoutToUser);
 
     return () => {
       socket.off('connect', onConnect);

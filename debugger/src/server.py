@@ -15,7 +15,7 @@ from placeholder_data import TREE_PLACEHOLDER_HEAP_DICTS
 from placeholder_data import PLACEHOLDER_HEAP_DICTS
 from src.constants import CUSTOM_NEXT_COMMAND_NAME
 from src.utils import make_non_blocking, compile_program, get_gdb_script, get_subprocess_output, create_ll_script, create_ll_script_2
-from src.placeholder_data import PLACEHOLDER_HEAP_DICTS
+from src.placeholder_data import PLACEHOLDER_BACKEND_STATES
 
 # Parent directory of this python script e.g. "/user/.../debugger/src"
 # In the docker container this will be "/app/src"
@@ -31,6 +31,7 @@ FILE_NAMES = [f"{abs_file_path}/samples/linkedlist/main1.c",
               f"{abs_file_path}/samples/linkedlist/linkedlist.c"]
 USER_PROGRAM_NAME = f"{abs_file_path}/user_program"
 TEST_PROGRAM_NAME = f"{abs_file_path}/samples/linkedlist/main1"
+GDB_SCRIPT_NAME = "default"  # Can just use "default"
 
 TIMEOUT_DURATION = 0.3
 
@@ -43,7 +44,6 @@ procs = {
 }
 '''
 procs = {}
-
 
 io = socketio.Server(cors_allowed_origins='*')
 
@@ -109,23 +109,23 @@ def sendDummyLinkedListData(socket_id: str, line_number: Any) -> None:
     backend_dict = {}
     # Our initial linked list node has been alloced with data value 27
     if line_number == "100":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[0]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[0]
     elif line_number == "101":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[1]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[1]
     elif line_number == "102":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[2]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[2]
     elif line_number == "103":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[3]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[3]
     elif line_number == "104":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[4]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[4]
     elif line_number == "105":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[5]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[5]
     elif line_number == "106":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[6]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[6]
     elif line_number == "107":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[7]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[7]
     elif line_number == "108":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[8]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[8]
     else:
         backend_dict = "LINE NOT FOUND"
 
@@ -171,7 +171,7 @@ def mainDebug(socket_id: str) -> None:
     print(compilation_out)
 
     gdb_script = get_gdb_script(
-        TEST_PROGRAM_NAME, abs_file_path, socket_id, script_name="test_custom_next")
+        TEST_PROGRAM_NAME, abs_file_path, socket_id, script_name=GDB_SCRIPT_NAME)
     print("\n=== Running gdb script...")
     print(f"gdb_script:\n{gdb_script}")
 
@@ -228,12 +228,14 @@ def executeNext(socket_id: str) -> None:
     print(
         f"\n=== Sending '{CUSTOM_NEXT_COMMAND_NAME}' command to gdb instance {proc.pid}")
     proc.stdin.write(f'{CUSTOM_NEXT_COMMAND_NAME}\n')
-
     proc.stdin.flush()
+    get_subprocess_output(proc, TIMEOUT_DURATION)
 
-    # TODO: Send send program stdout output, if any, to FE client
-    # io.emit("send_stdout", room=socket_id)
-
+    # Reading new output from the program relies on the fact that next was
+    # executed just before. This is expected to happen in the call to the custom
+    # next command above.
+    proc.stdin.write(f'python io_manager.read_and_send()\n')
+    proc.stdin.flush()
     get_subprocess_output(proc, TIMEOUT_DURATION)
 
     io.emit("executeNext", f"Finished executeNext event on server-side")
@@ -283,6 +285,18 @@ def updatedBackendState(socket_id: str, user_socket_id, data) -> None:
     print(f"Sending backend state to client {user_socket_id}:")
     print(data)
     io.emit("sendBackendStateToUser", data, room=user_socket_id)
+
+
+@io.event
+def produced_stdout_output(socket_id: str, user_socket_id: str, data: str):
+    '''
+    Send program stdout to FE client
+    '''
+    print(
+        f"Event produced_stdout_output received from gdb instance with socket_id {socket_id}:")
+    print(f"Sending stdout output to client {user_socket_id}:")
+    print(data)
+    io.emit("sendStdoutToUser", data, room=user_socket_id)
 
 
 print("Starting server...")
