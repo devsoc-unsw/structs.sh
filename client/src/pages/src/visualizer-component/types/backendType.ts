@@ -98,7 +98,8 @@ export type BackendVariableConcrete = BackendVariablePointer | BackendVariableNo
 export interface BackendState {
   frame_info: {
     file: string;
-    line: number;
+    line: string;
+    line_num: number;
     function: string;
   };
   stack_data: { [varName: string]: BackendVariableConcrete };

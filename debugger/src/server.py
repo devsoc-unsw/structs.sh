@@ -28,7 +28,8 @@ LINE_NUMBERS = ["28"]
 FILE_NAMES = [f"{abs_file_path}/samples/linkedlist/main1.c",
               f"{abs_file_path}/samples/linkedlist/linkedlist.c"]
 USER_PROGRAM_NAME = f"{abs_file_path}/user_program"
-TEST_PROGRAM_NAME = f"{abs_file_path}/samples/linkedlist/main1"
+TEST_PROGRAM_NAME = f"{abs_file_path}/samples/linked_list/main1"
+GDB_SCRIPT_NAME = "default"  # Can just use "default"
 
 TIMEOUT_DURATION = 0.3
 
@@ -41,7 +42,6 @@ procs = {
 }
 '''
 procs = {}
-
 
 io = socketio.Server(cors_allowed_origins='*')
 
@@ -139,7 +139,7 @@ def mainDebug(socket_id: str) -> None:
     print(compilation_out)
 
     gdb_script = get_gdb_script(
-        TEST_PROGRAM_NAME, abs_file_path, socket_id, script_name="test_custom_next")
+        TEST_PROGRAM_NAME, abs_file_path, socket_id, script_name=GDB_SCRIPT_NAME)
     print("\n=== Running gdb script...")
     print(f"gdb_script:\n{gdb_script}")
 
@@ -196,12 +196,14 @@ def executeNext(socket_id: str) -> None:
     print(
         f"\n=== Sending '{CUSTOM_NEXT_COMMAND_NAME}' command to gdb instance {proc.pid}")
     proc.stdin.write(f'{CUSTOM_NEXT_COMMAND_NAME}\n')
-
     proc.stdin.flush()
+    get_subprocess_output(proc, TIMEOUT_DURATION)
 
-    # TODO: Send send program stdout output, if any, to FE client
-    # io.emit("send_stdout", room=socket_id)
-
+    # Reading new output from the program relies on the fact that next was
+    # executed just before. This is expected to happen in the call to the custom
+    # next command above.
+    proc.stdin.write(f'python io_manager.read_and_send()\n')
+    proc.stdin.flush()
     get_subprocess_output(proc, TIMEOUT_DURATION)
 
     io.emit("executeNext", f"Finished executeNext event on server-side")
@@ -251,6 +253,18 @@ def updatedBackendState(socket_id: str, user_socket_id, data) -> None:
     print(f"Sending backend state to client {user_socket_id}:")
     print(data)
     io.emit("sendBackendStateToUser", data, room=user_socket_id)
+
+
+@io.event
+def produced_stdout_output(socket_id: str, user_socket_id: str, data: str):
+    '''
+    Send program stdout to FE client
+    '''
+    print(
+        f"Event produced_stdout_output received from gdb instance with socket_id {socket_id}:")
+    print(f"Sending stdout output to client {user_socket_id}:")
+    print(data)
+    io.emit("sendStdoutToUser", data, room=user_socket_id)
 
 
 print("Starting server...")

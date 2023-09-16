@@ -10,7 +10,9 @@ import gdb
 import subprocess
 from pycparser import parse_file, c_ast
 import re
+from src.gdb_scripts.use_socketio_connection import useSocketIOConnection
 from src.gdb_scripts.stack_variables import get_stack_data, get_frame_info
+from src.gdb_scripts.gdb_utils import enable_socketio_client_emit
 
 # C file storing malloc line
 MALLOC_TEST_FILE = "src/user_malloc.c"
@@ -219,11 +221,8 @@ def send_heap_dict_to_server(user_socket_id: str = None, backend_data: dict = {}
             f"Sending backend_data to server, for user with socket_id {user_socket_id}")
         sio.emit("updatedBackendState",
                  (user_socket_id, backend_data))
-        # I don't know why but apparently opening a file is NECESSARY for
-        # the above sio.emit() call to work. Discovered from extensive debugging.
-        # If you figure out how to get the above sio.emit() call to work without
-        # this weird hack please let @dqna64 know.
-        with open("random_useless_file_to_open.txt", "w") as f:
-            f.write("hello world")
+
+        enable_socketio_client_emit()
+
     else:
         print("No user_socket_id provided, so not sending backend_data to server")

@@ -2,7 +2,8 @@ PLACEHOLDER_BACKEND_STATES = [
     {
         'frame_info': {
             'file': 'test_linked_list.c',
-            'line': '100',
+            'line_num': '100',
+            'line': 'printf("Hello world!");',
             'function': 'main',
         },
         'heap_data': {
@@ -29,7 +30,8 @@ PLACEHOLDER_BACKEND_STATES = [
     {
         'frame_info': {
             'file': 'test_linked_list.c',
-            'line': '100',
+            'line_num': '100',
+            'line': 'printf("Hello world!");',
             'function': 'main',
         },
         'heap_data': {
@@ -65,7 +67,8 @@ PLACEHOLDER_BACKEND_STATES = [
     {
         'frame_info': {
             'file': 'test_linked_list.c',
-            'line': '100',
+            'line_num': '100',
+            'line': 'printf("Hello world!");',
             'function': 'main',
         },
         'heap_data': {
@@ -110,7 +113,8 @@ PLACEHOLDER_BACKEND_STATES = [
     {
         'frame_info': {
             'file': 'test_linked_list.c',
-            'line': '100',
+            'line_num': '100',
+            'line': 'printf("Hello world!");',
             'function': 'main',
         },
         'heap_data': {
@@ -147,7 +151,8 @@ PLACEHOLDER_BACKEND_STATES = [
     {
         'frame_info': {
             'file': 'test_linked_list.c',
-            'line': '100',
+            'line_num': '100',
+            'line': 'printf("Hello world!");',
             'function': 'main',
         },
         'heap_data': {
@@ -193,7 +198,8 @@ PLACEHOLDER_BACKEND_STATES = [
     {
         'frame_info': {
             'file': 'test_linked_list.c',
-            'line': '100',
+            'line_num': '100',
+            'line': 'printf("Hello world!");',
             'function': 'main',
         },
         'heap_data': {
@@ -245,7 +251,8 @@ PLACEHOLDER_BACKEND_STATES = [
     {
         'frame_info': {
             'file': 'test_linked_list.c',
-            'line': '100',
+            'line_num': '100',
+            'line': 'printf("Hello world!");',
             'function': 'main',
         },
         'heap_data': {
@@ -288,7 +295,8 @@ PLACEHOLDER_BACKEND_STATES = [
     {
         'frame_info': {
             'file': 'test_linked_list.c',
-            'line': '100',
+            'line_num': '100',
+            'line': 'printf("Hello world!");',
             'function': 'main',
         },
         'heap_data': {
@@ -340,7 +348,8 @@ PLACEHOLDER_BACKEND_STATES = [
     {
         'frame_info': {
             'file': 'test_linked_list.c',
-            'line': '100',
+            'line_num': '100',
+            'line': 'printf("Hello world!");',
             'function': 'main',
         },
         'heap_data': {
