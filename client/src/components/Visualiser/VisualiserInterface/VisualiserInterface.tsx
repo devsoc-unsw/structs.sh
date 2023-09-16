@@ -1,5 +1,4 @@
-import React, { useCallback, useMemo, useEffect, useRef, useState } from 'react';
-import { Box } from '@mui/material';
+import { FC, useCallback, useMemo, useEffect, useRef, useState } from 'react';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import VisualiserController from 'visualiser-src/controller/VisualiserController';
 import VisualiserContext from './VisualiserContext';
@@ -22,12 +21,13 @@ interface VisualiserInterfaceProps {
  *     them off to the controller components (basically the play/pause buttons,
  *     sliders, etc.).
  */
-const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle }) => {
+const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle }) => {
   const topicTitleRef = useRef<string>();
   const controllerRef = useRef<VisualiserController>();
   const [isTimelineComplete, setIsTimelineComplete] = useState<boolean>(false);
   const [documentation, setDocumentation] = useState<Documentation>({});
   const [isCodeSnippetExpanded, setIsCodeSnippetExpanded] = useState<boolean>(false);
+  const [isLoadOptionsExpanded, setIsLoadOptionsExpanded] = useState<boolean>(false);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   useEffect(() => {
@@ -49,6 +49,10 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
     setIsCodeSnippetExpanded(val);
   }, []);
 
+  const handleSetLoadOptionsExpansion = useCallback((val) => {
+    setIsLoadOptionsExpanded(val);
+  }, []);
+
   const handleUpdateIsPlaying = useCallback((val) => {
     setIsPlaying(val);
   }, []);
@@ -60,6 +64,7 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
       documentation,
       timeline: { isTimelineComplete, handleTimelineUpdate, isPlaying, handleUpdateIsPlaying },
       codeSnippet: { isCodeSnippetExpanded, handleSetCodeSnippetExpansion },
+      loadOptionsContext: { isLoadOptionsExpanded, handleSetLoadOptionsExpansion },
     }),
     [
       controllerRef.current,
@@ -71,6 +76,8 @@ const VisualiserInterface: React.FC<VisualiserInterfaceProps> = ({ topicTitle })
       handleUpdateIsPlaying,
       isCodeSnippetExpanded,
       handleSetCodeSnippetExpansion,
+      isLoadOptionsExpanded,
+      handleSetLoadOptionsExpansion,
     ]
   );
 

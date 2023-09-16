@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
+import { FC, MouseEvent, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import {
   AppBar,
@@ -10,16 +10,17 @@ import {
   Typography,
   ListItemText,
   Button,
-  FormControl,
   ListItemIcon,
-  TextField,
   useTheme,
+  Input,
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CheckIcon from '@mui/icons-material/Check';
 import logo from 'assets/img/logo.png';
 import { Link, useParams } from 'react-router-dom';
 import { titleToUrl, toTitleCase, urlToTitle } from 'utils/url';
+import axios from 'axios';
+import Login from 'components/Login/Login';
 import { getTopics } from '../../visualiser-src/common/helpers';
 
 const LogoText = styled(Typography)({
@@ -31,7 +32,7 @@ const StyledCheckIcon = styled(CheckIcon)(({ theme }) => ({
 }));
 
 interface Props {
-  position?: 'fixed' | 'static';
+  position?: 'fixed' | 'static' | 'sticky';
 }
 
 const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
@@ -42,11 +43,18 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
 
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
   const menuOpen = Boolean(menuAnchorEl);
-  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleOpenMenu = (event: MouseEvent<HTMLElement>) => {
     setMenuAnchorEl(event.currentTarget);
   };
   const handleCloseMenu = () => {
     setMenuAnchorEl(null);
+  };
+
+  const [loggedIn, setLoggedIn] = useState(localStorage.getItem('user') != null);
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    setLoggedIn(false);
   };
 
   return (
@@ -96,6 +104,16 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
                   Structs.sh
                 </LogoText>
               </Button>
+            </Grid>
+            <Grid item xs={4} display="flex" justifyContent="end">
+              {loggedIn ? (
+                <>
+                  <Button style={{ color: 'white' }}>{localStorage.getItem('user')}</Button>
+                  <Button onClick={handleLogout}>Log Out</Button>
+                </>
+              ) : (
+                <Login handleLogon={setLoggedIn} />
+              )}
             </Grid>
           </Grid>
         </Toolbar>

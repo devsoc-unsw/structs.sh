@@ -1,4 +1,3 @@
-import React, { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Helmet from 'react-helmet';
@@ -32,7 +31,7 @@ const VisualiserPage = () => {
 
   return topic ? (
     <Box height="100vh" overflow="hidden">
-      <TopNavbar position="static" />
+      <TopNavbar position="sticky" />
       <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="exit">
         <Helmet>
           <title>{topic !== undefined ? topic : 'Structs.sh'}</title>

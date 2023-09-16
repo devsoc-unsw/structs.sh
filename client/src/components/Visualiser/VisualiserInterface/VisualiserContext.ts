@@ -16,6 +16,10 @@ interface VisualiserContextValues {
     isCodeSnippetExpanded: boolean;
     handleSetCodeSnippetExpansion: (val: boolean) => void;
   };
+  loadOptionsContext?: {
+    isLoadOptionsExpanded: boolean;
+    handleSetLoadOptionsExpansion: (val: boolean) => void;
+  };
 }
 
 const VisualiserContext = React.createContext<VisualiserContextValues>({});

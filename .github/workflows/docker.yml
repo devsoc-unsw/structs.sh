@@ -17,7 +17,7 @@ jobs:
         component: [client]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
         with:
@@ -31,7 +31,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GH_TOKEN }}
       - name: Build and push Docker image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: ${{ matrix.component }}
           push: ${{ github.event_name != 'pull_request' }}
@@ -50,12 +50,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: csesoc/deployment
           token: ${{ secrets.GH_TOKEN }}
       - name: Install yq
-        uses: mikefarah/yq@v4.27.5
+        uses: mikefarah/yq@v4.35.1
       - name: Update deployment
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

@@ -2,42 +2,37 @@ import React, { FC } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 // import { javascript } from '@codemirror/lang-javascript';
 import { cpp } from '@codemirror/lang-cpp';
+import { socket } from 'utils/socket';
 import Button from '@mui/material/Button';
-import SendIcon from '@mui/icons-material/Send';
-import StackInspector from './StackInspector';
-
-import dummyData from './dummyData.json';
-
-const sampleData = dummyData;
+import UploadIcon from '@mui/icons-material/Upload';
+import 'styles/CodeEditor.css';
 
 const CodeEditor: FC = () => {
-  const placeholder = "// Code your stuff below!";
+  const placeholder = '// Code your stuff below!';
   const [code, setCode] = React.useState(placeholder);
 
   const onChange = React.useCallback((value) => {
-    console.log('value:', value);
     setCode(value);
   }, []);
 
-  const sendCode = ( ) => {
-    console.log('codeSent:', code);
-  }
+  const sendCode = () => {
+    socket.send('mainDebug', code);
+  };
 
-	return (
-		<>
-			<div>Hello, world!</div>
-			<CodeMirror
+  return (
+    <>
+      <CodeMirror
         value={placeholder}
-        height="200px"
+        height="100%"
         extensions={[cpp()]}
         onChange={onChange}
+        theme="light"
       />
-      <Button onClick={sendCode} variant="contained" endIcon={<SendIcon />}>
-        Send Code
+      <Button onClick={sendCode} variant="contained" endIcon={<UploadIcon />}>
+        Run
       </Button>
-      <StackInspector debuggerData={sampleData} />
-		</>
-	);
-}
+    </>
+  );
+};
 
 export default CodeEditor;
