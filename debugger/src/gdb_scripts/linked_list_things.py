@@ -153,8 +153,6 @@ int main(int argc, char **argv) {{
                 else:
                     print("No struct names found in the AST.")
 
-
-
                 # Break on malloc
                 gdb.execute('break')
 
@@ -169,12 +167,9 @@ int main(int argc, char **argv) {{
                 print(f"Bytes allocated: {bytes}")
 
                 # Get the address returned by malloc
-                # CURRENTLY NOT WORKING:
-                #mallocRetVal = gdb.execute('finish', to_string=True)
-                #print(f"---------\n\n {mallocRetVal} \n\n ---------\n")
                 gdb.execute('finish')
-                address = gdb.execute('info registers x0', to_string=True)
-                address = address.split()[1]
+                temp_address = gdb.execute('print $', to_string=True)
+                address = re.sub(r'\n', '', temp_address.split(' ')[-1])
                 print(f"address EXTRACTED: {address}")
 
                 obj = {
