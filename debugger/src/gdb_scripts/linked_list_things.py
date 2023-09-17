@@ -15,6 +15,12 @@ USER_MALLOC_CALL_FILE_PATH = f"{abs_file_path}/user_malloc_call.c"
 # File to write the preprocessed C code to, before parsing with pycparser
 USER_MALLOC_CALL_PREPROCESSED = f"{abs_file_path}/user_malloc_call_preprocessed"
 
+# File to write ptype output
+USER_PTYPE = f"{abs_file_path}/ptype_output.c"
+
+# File to write preprocessed ptype output, befor parsing with pycparser
+USER_PTYPE_PREPROCESSED = f"{abs_file_path}/ptype_preprocessed"
+
 
 def remove_non_standard_characters(input_str):
     # Remove color codes and non-standard characters using a regular expression
@@ -122,7 +128,25 @@ int main(int argc, char **argv) {{
                 print(var)
 
                 var_type = gdb.execute(f"ptype {var}", to_string=True)
-                print(f"VARIABLE TYPE: {var_type}")
+                var_type = var_type.split('= ')[1]
+                var_type = var_type.replace('} *', '};')
+                print(f"{var_type}")
+
+                # Write the ptype to a file
+                with open(USER_PTYPE, "w") as f:
+                    f.write(var_type)
+
+                subprocess.run(f"gcc -E {USER_PTYPE} > {USER_PTYPE_PREPROCESSED}",
+                            shell=True)
+
+                # Parse the preprocessed C code into an AST
+                # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
+                ast = parse_file(USER_PTYPE_PREPROCESSED, use_cpp=True,
+                                cpp_args=r'-Iutils/fake_libc_include')
+                print(ast)
+
+
+
 
                 # Break on malloc
                 gdb.execute('break')
