@@ -120,6 +120,10 @@ int main(int argc, char **argv) {{
             print("Variables assigned to malloc:")
             for var in malloc_visitor.malloc_variables:
                 print(var)
+
+                var_type = gdb.execute(f"ptype {var}", to_string=True)
+                print(f"VARIABLE TYPE: {var_type}")
+
                 # Break on malloc
                 gdb.execute('break')
 
@@ -129,13 +133,27 @@ int main(int argc, char **argv) {{
                 # Use p bytes to get the bytes allocated
                 temp_bytes = gdb.execute('p bytes', to_string=True)
                 bytes = temp_bytes.split(" ")[2]
+                # Remove \n from bytes
+                bytes = re.sub(r'\n', '', bytes)
                 print(f"Bytes allocated: {bytes}")
 
                 # Get the address returned by malloc
                 # CURRENTLY NOT WORKING:
-                mallocRetVal = gdb.execute('finish', to_string=True)
-                print(f"---------\n\n {mallocRetVal} \n\n ---------\n")
+                #mallocRetVal = gdb.execute('finish', to_string=True)
+                #print(f"---------\n\n {mallocRetVal} \n\n ---------\n")
                 gdb.execute('finish')
+                address = gdb.execute('info registers x0', to_string=True)
+                address = address.split()[1]
+                print(f"address EXTRACTED: {address}")
+
+                obj = {
+                    "variable": var,
+                    "type": var_type,
+                    "size": bytes
+                }
+                self.heap_dict[address] = obj
+                print(self.heap_dict)
+
 
         else:
             print("No variable being malloced")
