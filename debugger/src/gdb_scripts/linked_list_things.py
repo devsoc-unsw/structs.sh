@@ -84,7 +84,22 @@ class NextCommand(gdb.Command):
         line_str = remove_non_standard_characters(raw_str)
 
         # Create a complete C code file with function prototypes, main, and variable line
-        complete_c_code = f"""
+        complete_c_code = """
+struct node {
+    int data;
+    struct node *next;
+};
+
+typedef struct list {
+    struct node *head;
+    int size;
+} List;
+int main(int argc, char **argv) {
+"""
+        complete_c_code = complete_c_code + line_str + "\n}"
+        #print(complete_c_code)
+
+        complete_c_code_2 = f"""
 struct node {{
   int data;
   struct node *next;
@@ -100,102 +115,108 @@ int main(int argc, char **argv) {{
 }}
 """
 
+
         # Write the complete C code to a file
         with open(USER_MALLOC_CALL_FILE_PATH, "w") as f:
             f.write(complete_c_code)
 
         subprocess.run(f"gcc -E {USER_MALLOC_CALL_FILE_PATH} > {USER_MALLOC_CALL_PREPROCESSED}",
                        shell=True)
+        try:
+            # Parse the preprocessed C code into an AST
+            # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
+            ast = parse_file(USER_MALLOC_CALL_PREPROCESSED, use_cpp=True,
+                            cpp_args=r'-Iutils/fake_libc_include')
 
-        # Parse the preprocessed C code into an AST
-        # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
-        ast = parse_file(USER_MALLOC_CALL_PREPROCESSED, use_cpp=True,
-                         cpp_args=r'-Iutils/fake_libc_include')
+            # Create a MallocVisitor instance
+            malloc_visitor = MallocVisitor()
 
-        # Create a MallocVisitor instance
-        malloc_visitor = MallocVisitor()
+            # Set the current node to the root of the AST
+            malloc_visitor.current_node = ast
 
-        # Set the current node to the root of the AST
-        malloc_visitor.current_node = ast
+            # Visit the AST to check for malloc calls
+            malloc_visitor.visit(ast)
 
-        # Visit the AST to check for malloc calls
-        malloc_visitor.visit(ast)
+            # Print the variable names assigned to malloc
+            if len(malloc_visitor.malloc_variables) > 0:
+                print("Variables assigned to malloc:")
+                for var in malloc_visitor.malloc_variables:
+                    print(var)
 
-        # Print the variable names assigned to malloc
-        if len(malloc_visitor.malloc_variables) > 0:
-            print("Variables assigned to malloc:")
-            for var in malloc_visitor.malloc_variables:
+                    var_type = gdb.execute(f"ptype {var}", to_string=True)
+                    var_type = var_type.split('= ')[1]
+                    var_type = var_type.replace('} *', '};')
+                    print(f"{var_type}")
+
+                    # Write the ptype to a file
+                    with open(USER_PTYPE, "w") as f:
+                        f.write(var_type)
+
+                    subprocess.run(f"gcc -E {USER_PTYPE} > {USER_PTYPE_PREPROCESSED}",
+                                shell=True)
+
+                    # Parse the preprocessed C code into an AST
+                    # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
+                    ast = parse_file(USER_PTYPE_PREPROCESSED, use_cpp=True,
+                                    cpp_args=r'-Iutils/fake_libc_include')
+                    #print(ast)
+
+                    # Print the outermost struct name found in the AST
+                    struct_name = self.find_outermost_struct_name(ast)
+                    if struct_name:
+                        struct_name = 'struct ' + struct_name
+                        print(f"Struct name: {struct_name}")
+                    else:
+                        print("No struct names found in the AST.")
+
+                    # Break on malloc
+                    gdb.execute('break')
+
+                    # Step into malloc
+                    gdb.execute('step')
+
+                    # Use p bytes to get the bytes allocated
+                    temp_bytes = gdb.execute('p bytes', to_string=True)
+                    bytes = temp_bytes.split(" ")[2]
+                    # Remove \n from bytes
+                    bytes = re.sub(r'\n', '', bytes)
+                    print(f"Bytes allocated: {bytes}")
+
+                    # Get the address returned by malloc
+                    gdb.execute('finish')
+                    temp_address = gdb.execute('print $', to_string=True)
+                    address = re.sub(r'\n', '', temp_address.split(' ')[-1])
+                    print(f"address EXTRACTED: {address}")
+
+                    obj = {
+                        "variable": var,
+                        "type": struct_name,
+                        "size": bytes
+                    }
+                    self.heap_dict[address] = obj
+                    print(self.heap_dict)
+
+
+            else:
+                print("No variable being malloced")
+
+
+            # Print the variable names being freed
+            print(malloc_visitor.free)
+            print("Variables being freed:")
+            for var in malloc_visitor.free_variables:
                 print(var)
 
-                var_type = gdb.execute(f"ptype {var}", to_string=True)
-                var_type = var_type.split('= ')[1]
-                var_type = var_type.replace('} *', '};')
-                print(f"{var_type}")
+            # TODO: Need a way to detect if program exits, then send signal to server
+            # which should tell the client that the debugging session is over.
+            gdb.execute('next')
+        except Exception as e:
+            #print(f"An error occurred: {e}")
+            # Go to next line if curr line cannot be parsed
+            gdb.execute('next')
 
-                # Write the ptype to a file
-                with open(USER_PTYPE, "w") as f:
-                    f.write(var_type)
+            return self.heap_dict
 
-                subprocess.run(f"gcc -E {USER_PTYPE} > {USER_PTYPE_PREPROCESSED}",
-                            shell=True)
-
-                # Parse the preprocessed C code into an AST
-                # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
-                ast = parse_file(USER_PTYPE_PREPROCESSED, use_cpp=True,
-                                cpp_args=r'-Iutils/fake_libc_include')
-                #print(ast)
-
-                # Print the outermost struct name found in the AST
-                struct_name = self.find_outermost_struct_name(ast)
-                if struct_name:
-                    struct_name = 'struct ' + struct_name
-                    print(f"Struct name: {struct_name}")
-                else:
-                    print("No struct names found in the AST.")
-
-                # Break on malloc
-                gdb.execute('break')
-
-                # Step into malloc
-                gdb.execute('step')
-
-                # Use p bytes to get the bytes allocated
-                temp_bytes = gdb.execute('p bytes', to_string=True)
-                bytes = temp_bytes.split(" ")[2]
-                # Remove \n from bytes
-                bytes = re.sub(r'\n', '', bytes)
-                print(f"Bytes allocated: {bytes}")
-
-                # Get the address returned by malloc
-                gdb.execute('finish')
-                temp_address = gdb.execute('print $', to_string=True)
-                address = re.sub(r'\n', '', temp_address.split(' ')[-1])
-                print(f"address EXTRACTED: {address}")
-
-                obj = {
-                    "variable": var,
-                    "type": struct_name,
-                    "size": bytes
-                }
-                self.heap_dict[address] = obj
-                print(self.heap_dict)
-
-
-        else:
-            print("No variable being malloced")
-
-
-        # Print the variable names being freed
-        print(malloc_visitor.free)
-        print("Variables being freed:")
-        for var in malloc_visitor.free_variables:
-            print(var)
-
-        # TODO: Need a way to detect if program exits, then send signal to server
-        # which should tell the client that the debugging session is over.
-        gdb.execute('next')
-
-        return self.heap_dict
 
     def get_heap_dict(self):
         return self.heap_dict
