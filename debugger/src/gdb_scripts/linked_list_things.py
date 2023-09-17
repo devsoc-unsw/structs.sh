@@ -143,8 +143,15 @@ int main(int argc, char **argv) {{
                 # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
                 ast = parse_file(USER_PTYPE_PREPROCESSED, use_cpp=True,
                                 cpp_args=r'-Iutils/fake_libc_include')
-                print(ast)
+                #print(ast)
 
+                # Print the outermost struct name found in the AST
+                struct_name = self.find_outermost_struct_name(ast)
+                if struct_name:
+                    struct_name = 'struct ' + struct_name
+                    print(f"Struct name: {struct_name}")
+                else:
+                    print("No struct names found in the AST.")
 
 
 
@@ -172,7 +179,7 @@ int main(int argc, char **argv) {{
 
                 obj = {
                     "variable": var,
-                    "type": var_type,
+                    "type": struct_name,
                     "size": bytes
                 }
                 self.heap_dict[address] = obj
@@ -198,5 +205,13 @@ int main(int argc, char **argv) {{
     def get_heap_dict(self):
         return self.heap_dict
 
+    def find_outermost_struct_name(self, node):
+        if isinstance(node, c_ast.Struct):
+            return node.name
+        for _, child in node.children():
+            result = self.find_outermost_struct_name(child)
+            if result:
+                return result
+        return None
 
 nextCommand = NextCommand()
