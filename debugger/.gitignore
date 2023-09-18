@@ -7,5 +7,8 @@ user_type_declarations.o
 user_malloc_call_preprocessed
 user_malloc_call.c
 user_malloc_call.o
+ptype_preprocessed
+ptype_output.c
+ptype_output.o
 *.dYSM
 __pycache__

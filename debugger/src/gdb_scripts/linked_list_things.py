@@ -197,10 +197,39 @@ int main(int argc, char **argv) {
                     address = re.sub(r'\n', '', temp_address.split(' ')[-1])
                     print(f"address EXTRACTED: {address}")
 
+                    # === Extract linked list node data given the variable name
+                    print(f"Attempting to print \"{var}\"")
+                    node_data_str = gdb.execute(
+                        f'p *(struct node *) {address}', to_string=True)
+                    # f'p *(struct node *) l->head', to_string=True)
+
+                    # Convention struct node might look like this
+                    # $4 = {data = 542543, next = 0x0}
+
+                    # User's struct node might look like this:
+                    # $4 = {cockatoo = 0, pigeon = 0x0}
+
+                    # Beware uninitialised struct nodes might look like this:
+                    # $3 = {data = -670244016, next = 0xffffa15f74cc <__libc_start_main_impl+152>}
+
+                    node_data_str = node_data_str.split("=", 1)[1].strip()
+                    node_data_str = node_data_str.strip("{}")
+                    print(node_data_str)
+                    # node_data_str == "data = 542543, next = 0x0"
+
+                    data = {}
+                    for field in node_data_str.split(','):
+                        field = field.strip()
+                        field_name = field.split('=')[0].strip()
+                        field_value = field.split('=')[1].strip()
+                        print(f"{field_name} = {field_value}")
+                        data[field_name] = field_value
+
                     obj = {
                         "variable": var,
                         "type": struct_name,
-                        "size": bytes
+                        "size": bytes,
+                        "data": data
                     }
                     self.heap_data[address] = obj
                     print(self.heap_data)
@@ -214,17 +243,9 @@ int main(int argc, char **argv) {
             for var in malloc_visitor.free_variables:
                 print(var)
 
-            # TODO: Need a way to detect if program exits, then send signal to server
-            # which should tell the client that the debugging session is over.
-            gdb.execute('next')
         except Exception as e:
-            # print(f"An error occurred: {e}")
-            # Go to next line if curr line cannot be parsed
-            gdb.execute('next')
-
-        # TODO: === Up date existing tracked heap data
-        # for addr in self.heap_data.keys():
-        #  # update(self.heap_data, addr)
+            print(f"An error occurred while intercepting malloc: {e}")
+            pass
 
         backend_data = {
             "frame_info": get_frame_info(),
@@ -234,7 +255,14 @@ int main(int argc, char **argv) {
         send_backend_data_to_server(
             self.user_socket_id, backend_data=backend_data)
 
+        # TODO: Need a way to detect if program exits, then send signal to server
+        # which should tell the client that the debugging session is over.
         gdb.execute('next')
+
+        # TODO: === Up date existing tracked heap data
+        # Make sure to do this after the next command, so that the heap is actually updated
+        # for addr in self.heap_data.keys():
+        #  # update(self.heap_data, addr)
 
         print(f"\n=== Finished running update_backend_state in gdb instance\n\n")
         return self.heap_data
@@ -293,3 +321,16 @@ def send_backend_data_to_server(user_socket_id: str = None, backend_data: dict =
 
     else:
         print("No user_socket_id provided, so not sending backend_data to server")
+
+
+def break_on_all_user_defined_functions():
+    '''
+    Break on all user-defined functions in the program so that the custom next command will step into it.
+    '''
+    functions = pycparser_parse_fn_decls()
+    for func_name in functions.keys():
+        gdb.execute(f"break {func_name}")
+
+
+if __name__ == '__main__':
+    break_on_all_user_defined_functions()
