@@ -26,12 +26,6 @@ USER_PTYPE = f"{abs_file_path}/ptype_output.c"
 USER_PTYPE_PREPROCESSED = f"{abs_file_path}/ptype_preprocessed"
 
 
-def remove_non_standard_characters(input_str):
-    # Remove color codes and non-standard characters using a regular expression
-    clean_str = re.sub(r'\x1b\[[0-9;]*[mK]', '', input_str)
-    return clean_str
-
-
 class MallocVisitor(c_ast.NodeVisitor):
     def __init__(self):
         self.malloc_variables = []
@@ -321,6 +315,12 @@ def send_backend_data_to_server(user_socket_id: str = None, backend_data: dict =
 
     else:
         print("No user_socket_id provided, so not sending backend_data to server")
+
+
+def remove_non_standard_characters(input_str):
+    # Remove color codes and non-standard characters using a regular expression
+    clean_str = re.sub(r'\x1b\[[0-9;]*[mK]', '', input_str)
+    return clean_str
 
 
 def break_on_all_user_defined_functions():
