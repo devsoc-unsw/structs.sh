@@ -84,7 +84,8 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
             renderDrawable[entity.uid] = (
               <Pointer
                 ref={(ref) => {
-                  if (nodeRefs.current[entity.uid] === undefined) nodeRefs.current[entity.uid] = ref;
+                  if (nodeRefs.current[entity.uid] === undefined)
+                    nodeRefs.current[entity.uid] = ref;
                   return nodeRefs.current[entity.uid];
                 }}
                 key={entity.uid}
@@ -94,7 +95,7 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
               />
             );
           }
-          
+
           break;
         default:
           assertUnreachable(entity);

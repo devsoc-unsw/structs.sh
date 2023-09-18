@@ -1,6 +1,7 @@
 import { UiState, VisualizerType } from '../types/uiState';
 import { assertUnreachable } from '../util/util';
 import LinkedList from './linkedListVisualizer';
+import Array from './ArrayVisualizer';
 import { VisualizerComponent } from './visualizer';
 
 export function visualizerFactory(uiState: UiState): VisualizerComponent {
@@ -11,7 +12,7 @@ export function visualizerFactory(uiState: UiState): VisualizerComponent {
     case VisualizerType.BINARY_TREE:
     case VisualizerType.GRAPH:
     case VisualizerType.ARRAY: {
-      throw new Error('Not implemented');
+      return Array;
     }
     default:
       assertUnreachable(uiState.visualizerType);

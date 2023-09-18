@@ -20,7 +20,7 @@ export const DEFAULT_UISTATE: UiState = {
   canDrag: true,
   debug: true,
   clickedEntity: null,
-  visualizerType: VisualizerType.LINKED_LIST,
+  visualizerType: VisualizerType.ARRAY,
 };
 
 export const NODE_SIZE = 30;

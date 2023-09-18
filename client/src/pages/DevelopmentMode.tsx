@@ -93,7 +93,7 @@ const DevelopmentMode = () => {
       // socket.emit('sendDummyData', '104');
       // socket.emit('sendDummyData', '105');
 
-      // socket.emit('sendDummyArrayData', 2);
+      socket.emit('sendDummyArrayData', 1);
     };
 
     socket.on('connect', onConnect);

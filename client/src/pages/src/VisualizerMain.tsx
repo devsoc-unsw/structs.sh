@@ -25,12 +25,12 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState, getNextState }) =
   useEffect(() => {
     // Assume user have a variable called curr
     let annotation = {
-      'curr': {
-        varName: 'curr'
-      }
-    }
+      curr: {
+        varName: 'curr',
+      },
+    };
     const newParsedState = parser.parseInitialState(backendState, annotation);
-    useFrontendStateStore.getState().updateNextState(newParsedState);
+    // useFrontendStateStore.getState().updateNextState(newParsedState);
   }, [backendState]);
 
   const visualizerRef = useRef(null);
@@ -70,6 +70,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState, getNextState }) =
             graphState={currState}
             setSettings={setSettings}
             dimensions={dimensions}
+            backendState={backendState}
           />
         </div>
         <div className="timeline">
@@ -85,9 +86,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState, getNextState }) =
             }}
           />
         </div>
-        <div className="debugger">
-          {settings.debug && <Debugger src={currState} />}
-        </div>
+        <div className="debugger">{settings.debug && <Debugger src={currState} />}</div>
       </div>
     </div>
   );

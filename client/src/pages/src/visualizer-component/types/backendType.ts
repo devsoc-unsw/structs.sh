@@ -98,36 +98,42 @@ export interface BackendVariableBaseIntArray extends BackendVariableBase {
   data: BackendVariableBaseInt[];
   type: CType.INT_ARRAY;
   is_pointer: false;
+  size: Number;
 }
 
 export interface BackendVariableBaseCharArray extends BackendVariableBase {
   data: BackendVariableBaseChar[];
   type: CType.CHAR_ARRAY;
   is_pointer: false;
+  size: Number;
 }
 
 export interface BackendVariableBaseDoubleArray extends BackendVariableBase {
   data: BackendVariableBaseDouble[];
   type: CType.DOUBLE_ARRAY;
   is_pointer: false;
+  size: Number;
 }
 
 export interface BackendVariableBaseInt2DArray extends BackendVariableBase {
   data: BackendVariableBaseIntArray[];
   type: CType.INT_ARRAY_ARRAY;
   is_pointer: false;
+  size: Number;
 }
 
 export interface BackendVariableBaseDouble2DArray extends BackendVariableBase2DArray {
   data: BackendVariableBaseDoubleArray[];
   type: CType.DOUBLE_ARRAY_ARRAY;
   is_pointer: false;
+  size: Number;
 }
 
 export interface BackendVariableBaseChar2DArray extends BackendVariableBase2DArray {
   data: BackendVariableBaseDoubleArray[];
   type: CType.CHAR_ARRAY_ARRAY;
   is_pointer: false;
+  size: Number;
 }
 
 export type BackendVariableNonPointerConcrete =

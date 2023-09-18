@@ -1,6 +1,7 @@
 import { UiState, VisualizerType } from '../types/uiState';
 import { assertUnreachable } from '../util/util';
 import { LinkedListParser } from './linkedListParser';
+import { ArrayParser } from './ArrayParser';
 import { Parser } from './parser';
 
 export function parserFactory(uiState: UiState): Parser {
@@ -11,7 +12,7 @@ export function parserFactory(uiState: UiState): Parser {
     case VisualizerType.BINARY_TREE:
     case VisualizerType.GRAPH:
     case VisualizerType.ARRAY: {
-      throw new Error('Not implemented');
+      return new ArrayParser();
     }
     default:
       assertUnreachable(uiState.visualizerType);

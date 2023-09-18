@@ -5,6 +5,7 @@
 import React from 'react';
 import { GenericGraph } from '../types/frontendType';
 import { UiState } from '../types/uiState';
+import { BackendState } from '../types/backendType';
 
 export interface VisualizerState {
   graphState: GenericGraph;
@@ -14,6 +15,7 @@ export interface VisualizerState {
     width: number;
     height: number;
   };
+  backendState: BackendState;
 }
 
 export type VisualizerComponent = React.FC<VisualizerState>;

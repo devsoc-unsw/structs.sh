@@ -1,6 +1,6 @@
-import { EdgeEntity } from "./entity/edgeEntity";
-import { NodeEntity } from "./entity/nodeEntity";
-import { PointerEntity } from "./entity/pointerEntity";
+import { EdgeEntity } from './entity/edgeEntity';
+import { NodeEntity } from './entity/nodeEntity';
+import { PointerEntity } from './entity/pointerEntity';
 
 export type EntityConcrete = NodeEntity | EdgeEntity | PointerEntity;
 
@@ -16,6 +16,7 @@ export const INITIAL_GRAPH = {
   edges: [],
   cacheEntity: {},
 };
+
 export interface GenericGraph {
   nodes: NodeEntity[];
   edges: EdgeEntity[];

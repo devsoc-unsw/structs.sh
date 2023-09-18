@@ -39,6 +39,7 @@
     "resize-observer-polyfill": "^1.5.1",
     "sass": "^1.56.1",
     "socket.io-client": "^4.6.1",
+    "svg.js": "^2.7.1",
     "uuid": "^9.0.0",
     "zustand": "^4.4.1"
   },

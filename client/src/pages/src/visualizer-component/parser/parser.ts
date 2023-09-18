@@ -5,7 +5,7 @@ export interface Parser {
   parseInitialState: (
     backendStructure: BackendState,
     editorAnnotation: EditorAnnotation | undefined
-  ) => GenericGraph;
+  ) => GenericGraph | BackendState;
   updateState: (
     frontendStructure: GenericGraph,
     backendStructure: BackendState,
