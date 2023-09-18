@@ -114,8 +114,6 @@ int main(int argc, char **argv) {{
 {line_str}
 }}
 """
-
-
         # Write the complete C code to a file
         with open(USER_MALLOC_CALL_FILE_PATH, "w") as f:
             f.write(complete_c_code)
