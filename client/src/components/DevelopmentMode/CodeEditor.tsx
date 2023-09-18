@@ -8,7 +8,7 @@ import UploadIcon from '@mui/icons-material/Upload';
 import 'styles/CodeEditor.css';
 
 const CodeEditor: FC = () => {
-  const placeholder = "// Code your stuff below!";
+  const placeholder = '// Code your stuff below!';
   const [code, setCode] = React.useState(placeholder);
 
   const onChange = React.useCallback((value) => {
@@ -16,8 +16,8 @@ const CodeEditor: FC = () => {
   }, []);
 
   const sendCode = () => {
-    socket.send("mainDebug", code);
-  }
+    socket.send('mainDebug', code);
+  };
 
   return (
     <>

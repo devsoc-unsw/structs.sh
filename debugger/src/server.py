@@ -11,8 +11,9 @@ import eventlet
 from typing import Any
 import subprocess
 import json
-
-from placeholder_data import PLACEHOLDER_HEAP_DICTS
+from src.constants import CUSTOM_NEXT_COMMAND_NAME
+from src.utils import make_non_blocking, compile_program, get_gdb_script, get_subprocess_output, create_ll_script, create_ll_script_2
+from src.placeholder_data import PLACEHOLDER_BACKEND_STATES
 
 # Parent directory of this python script e.g. "/user/.../debugger/src"
 # In the docker container this will be "/app/src"
@@ -28,52 +29,19 @@ FILE_NAMES = [f"{abs_file_path}/samples/linkedlist/main1.c",
               f"{abs_file_path}/samples/linkedlist/linkedlist.c"]
 USER_PROGRAM_NAME = f"{abs_file_path}/user_program"
 TEST_PROGRAM_NAME = f"{abs_file_path}/samples/linkedlist/main1"
+GDB_SCRIPT_NAME = "default"  # Can just use "default"
 
-# Should this go in server.py or in python interpretter running inside the
-# gdb instance? Probably latter, because the state of
-# the data structures is read within the gdb instance so it's easier to store
-# the heap dictionary there as well.
-heap_dict = {}
+TIMEOUT_DURATION = 0.3
 
-
-def compile_program(file_names: list[str]):
-    subprocess.run(["gcc", "-ggdb", *file_names, "-o", USER_PROGRAM_NAME])
-
-
-def create_ll_script(line_numbers, program_name):
-    gdb_script = f"""
-source {abs_file_path}/gdb_scripts/traverse_linked_list.py
-python NodeListCommand("nodelist", "l")
-
-file {program_name}
-""" \
-+ "\n".join([f"break {n}" for n in line_numbers]) \
-        + f"""
-run
-nodelist
-continue
-quit
-"""
-    return gdb_script
-
-
-def create_ll_script_2(program_name):
-    gdb_script = f"""
-source {abs_file_path}/gdb_scripts/linked_list_things.py
-# python info_functions_output = gdb.execute("info functions -n", False, True)
-# python my_functions = parseFunctionNames(info_functions_output)
-# python breakOnUserFunctions(my_functions)
-
-python StepCommand("my_next", my_functions)
-
-file {program_name}
-start
-python newHeapDict = myNext()
-python print(newHeapDict)
-
-"""
-    return gdb_script
-
+'''
+Map from a FE client socket_id to the subprocess that is running a gdb instance
+E.g.
+procs = {
+    "socket_id_1": <subprocess.Popen object at 0x7f9b1c0b5d90>,
+    ...
+}
+'''
+procs = {}
 
 io = socketio.Server(cors_allowed_origins='*')
 
@@ -90,7 +58,7 @@ def disconnect(socket_id: str) -> None:
 
 @io.event
 def getBreakpoints(socket_id: str, line_numbers: list[int], listName: list[str]) -> None:
-    print("Received message from", socket_id)
+    print("Received message from", socket_id, "at event getBreakpoints")
     print("Echoing message back to client...")
 
     # Compile C program
@@ -134,27 +102,28 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
     This function will send
     the heap dictionary at that point during the program's runtime.
     """
-    print("Received message from", socket_id, ":", line_number)
+    print("Received message from", socket_id, ":",
+          line_number, "at event sendDummyData")
     backend_dict = {}
     # Our initial linked list node has been alloced with data value 27
     if line_number == "100":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[0]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[0]
     elif line_number == "101":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[1]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[1]
     elif line_number == "102":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[2]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[2]
     elif line_number == "103":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[3]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[3]
     elif line_number == "104":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[4]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[4]
     elif line_number == "105":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[5]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[5]
     elif line_number == "106":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[6]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[6]
     elif line_number == "107":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[7]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[7]
     elif line_number == "108":
-        backend_dict = PLACEHOLDER_HEAP_DICTS[8]
+        backend_dict = PLACEHOLDER_BACKEND_STATES[8]
     else:
         backend_dict = "LINE NOT FOUND"
 
@@ -169,25 +138,15 @@ def mainDebug(socket_id: str) -> None:
     compilation_out = ret.stdout.decode()
     print(compilation_out)
 
-    # python print(user_fn_decls)
+    gdb_script = get_gdb_script(
+        TEST_PROGRAM_NAME, abs_file_path, socket_id, script_name=GDB_SCRIPT_NAME)
     print("\n=== Running gdb script...")
-    gdb_script = f"""
-    file {TEST_PROGRAM_NAME}
-    set python print-stack full
-    set pagination off
-    source {abs_file_path}/gdb_scripts/parse_functions.py
-    python print("fe client socket io")
-    python print("{socket_id}")
-    python pycparser_parse_fn_decls("{socket_id}")
-    python pycparser_parse_type_decls("{socket_id}")
-    start
-    """
     print(f"gdb_script:\n{gdb_script}")
 
-    stuff = []
-    for line in gdb_script.split('\n'):
-        stuff.append("-ex")
-        stuff.append(line)
+    commands = []
+    for line in gdb_script.strip().split('\n'):
+        commands.append("-ex")
+        commands.append(line)
 
     # === Method 1: echo gdb_script to gdb and run gdb in a subprocess
     # command = f"echo '{gdb_script}' | gdb -q"
@@ -195,30 +154,120 @@ def mainDebug(socket_id: str) -> None:
     # gdb_out = ret.stdout.decode()
     # print(gdb_out)
 
-    # === Method 2: use subprocess.Popen and Popen.communicate
-    # TODO: subprocess.Popen and Popen.communicate
-    subprocess.Popen(["gdb", "-batch", *stuff])
+    # === Method 2: Use subprocess.Popen to start a gdb instance and pass in a
+    # list of commands to gdb.
+    # proc = subprocess.Popen(["gdb", "-batch", *commands], stdin=subprocess.PIPE,
+    #                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, shell=False)
 
-    io.emit("mainDebug", f"Finished mainDebug event on server-side")
+    # === Method 3: Use subprocess.Popen to start a gdb instance and write to
+    # subprocess.Popen.stdin in a loop. Also enables reading the output from
+    # subprocess.Popen.stdout
+    proc = subprocess.Popen(["gdb"], stdin=subprocess.PIPE,
+                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, shell=False)
+
+    # Make subprocess writer streams non-blocking
+    make_non_blocking(proc.stdout)
+    if proc.stderr:
+        make_non_blocking(proc.stderr)
+
+    procs[socket_id] = proc
+
+    for line in map(lambda line: line.strip(), gdb_script.strip().split('\n')):
+        proc.stdin.write(line + '\n')
+        proc.stdin.flush()
+        print("\n=== Wrote one line to gdb debugging session: ", line)
+
+        # Read any output from the gdb instance after writing a line to it.
+        get_subprocess_output(proc, TIMEOUT_DURATION)
+
+    io.emit("mainDebug", f"Finished mainDebug event on server")
+
+
+@io.event
+def executeNext(socket_id: str) -> None:
+    proc: subprocess.Popen = procs[socket_id]
+    if proc is None:
+        print(f"ERROR: No gdb instance running for socket_id {socket_id}")
+        return
+
+    print(f"process at FE client socket_id {socket_id}:")
+    print(proc)
+
+    print(
+        f"\n=== Sending '{CUSTOM_NEXT_COMMAND_NAME}' command to gdb instance {proc.pid}")
+    proc.stdin.write(f'{CUSTOM_NEXT_COMMAND_NAME}\n')
+    proc.stdin.flush()
+    get_subprocess_output(proc, TIMEOUT_DURATION)
+
+    # Reading new output from the program relies on the fact that next was
+    # executed just before. This is expected to happen in the call to the custom
+    # next command above.
+    proc.stdin.write(f'python io_manager.read_and_send()\n')
+    proc.stdin.flush()
+    get_subprocess_output(proc, TIMEOUT_DURATION)
+
+    io.emit("executeNext", f"Finished executeNext event on server-side")
+
+
+@io.event
+def send_stdin(socket_id: str):
+    '''
+    TODO: Send stdin from FE client to gdb instance'''
+    print('send_stdin event not yet implemented')
 
 
 @io.event
 def createdFunctionDeclaration(socket_id: str, user_socket_id, function) -> None:
-    print(f"Received function declaration from {user_socket_id}:")
+    '''
+    Event to receive parsed function declaration from gdb instance and 
+    send it to the specified frontend client.
+    '''
+    print(
+        f"Event createdFunctionDeclaration received from gdb instance with socket_id {socket_id}:")
+    print(f"Sending function declaration to client {user_socket_id}:")
     print(function)
-    print("Sending function declaration to client...")
     io.emit("sendFunctionDeclaration", function, room=user_socket_id)
 
 
 @io.event
 def createdTypeDeclaration(socket_id: str, user_socket_id, type) -> None:
+    '''
+    Event to receive parsed type declaration (struct, typedef) from gdb instance and 
+    send it to the specified frontend client.
+    '''
     print(f"Received type declaration from {user_socket_id}:")
     print(type)
     print("Sending type declaration to client...")
     io.emit("sendTypeDeclaration", type, room=user_socket_id)
 
 
+@io.event
+def updatedBackendState(socket_id: str, user_socket_id, data) -> None:
+    '''
+    Event to send the current backend state (including stack and heap data) to
+    the specified frontend client.
+    Should be emitted by a gdb instance while running a `custom_next` custom command.
+    '''
+    print(
+        f"Event updatedBackendState received from gdb instance with socket_id {socket_id}:")
+    print(f"Sending backend state to client {user_socket_id}:")
+    print(data)
+    io.emit("sendBackendStateToUser", data, room=user_socket_id)
+
+
+@io.event
+def produced_stdout_output(socket_id: str, user_socket_id: str, data: str):
+    '''
+    Send program stdout to FE client
+    '''
+    print(
+        f"Event produced_stdout_output received from gdb instance with socket_id {socket_id}:")
+    print(f"Sending stdout output to client {user_socket_id}:")
+    print(data)
+    io.emit("sendStdoutToUser", data, room=user_socket_id)
+
+
 print("Starting server...")
 app = socketio.WSGIApp(io)
 eventlet.wsgi.server(eventlet.listen(("", 8000)), app)
-# Server start will stall python script until server terminated
+# Server start will block python script until server terminated

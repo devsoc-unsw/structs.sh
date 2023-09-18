@@ -4,6 +4,10 @@ import subprocess
 from pycparser import parse_file, c_ast
 import re
 
+from src.gdb_scripts.use_socketio_connection import useSocketIOConnection
+from src.gdb_scripts.stack_variables import get_stack_data, get_frame_info
+from src.gdb_scripts.gdb_utils import enable_socketio_client_emit
+
 # Parent directory of this python script e.g. "/user/.../debugger/src/gdb_scripts"
 # In the docker container this will be "/app/src/gdb_scripts"
 # You can then use this to reference files relative to this directory.
@@ -71,13 +75,35 @@ class MallocVisitor(c_ast.NodeVisitor):
         return None
 
 
-# Define a custom command to extract the linked list nodes
-class NextCommand(gdb.Command):
-    def __init__(self):
-        super(NextCommand, self).__init__("myNext", gdb.COMMAND_USER)
-        self.heap_dict = {}
+class CustomNextCommand(gdb.Command):
+    '''
+    To be run in gdb:
 
-    def invoke(self, arg, from_tty):
+    (gdb) python CustomNextCommand("custom_next")
+    (gdb) custom_next
+    (gdb) # alternatively, run with python...
+    (gdb) python backend_dict = gdb.execute("custom_next", to_string=True)
+
+    '''
+
+    def __init__(self, cmd_name, user_socket_id):
+        super(CustomNextCommand, self).__init__(cmd_name, gdb.COMMAND_USER)
+        self.user_socket_id = user_socket_id
+        self.heap_data = {}
+
+    def invoke(self, arg=None, from_tty=None):
+        # TODO: detect end of debug session
+        # if any(t.is_running() for t in gdb.selected_inferior().threads()):
+        #     print("\n=== Running CustomNextCommand in gdb...")
+        # else:
+        #     print("\n=== CustomNextCommand not run because no debuggin session is active")
+        #     return
+
+        print("\n=== Running CustomNextCommand in gdb...")
+
+        temp_line = gdb.execute('frame', to_string=True)
+        raw_str = (temp_line.split('\n')[1]).split('\t')[1]
+        line_str = remove_non_standard_characters(raw_str)
 
         temp_line = gdb.execute('frame', to_string=True)
         raw_str = (temp_line.split('\n')[1]).split('\t')[1]
@@ -97,23 +123,8 @@ typedef struct list {
 int main(int argc, char **argv) {
 """
         complete_c_code = complete_c_code + line_str + "\n}"
-        #print(complete_c_code)
+        # print(complete_c_code)
 
-        complete_c_code_2 = f"""
-struct node {{
-  int data;
-  struct node *next;
-}};
-
-typedef struct list {{
-  struct node *head;
-  int size;
-}} List;
-
-int main(int argc, char **argv) {{
-{line_str}
-}}
-"""
         # Write the complete C code to a file
         with open(USER_MALLOC_CALL_FILE_PATH, "w") as f:
             f.write(complete_c_code)
@@ -123,17 +134,17 @@ int main(int argc, char **argv) {{
         try:
             # Parse the preprocessed C code into an AST
             # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
-            ast = parse_file(USER_MALLOC_CALL_PREPROCESSED, use_cpp=True,
-                            cpp_args=r'-Iutils/fake_libc_include')
+            line_ast = parse_file(USER_MALLOC_CALL_PREPROCESSED, use_cpp=True,
+                                  cpp_args=r'-Iutils/fake_libc_include')
 
             # Create a MallocVisitor instance
             malloc_visitor = MallocVisitor()
 
             # Set the current node to the root of the AST
-            malloc_visitor.current_node = ast
+            malloc_visitor.current_node = line_ast
 
             # Visit the AST to check for malloc calls
-            malloc_visitor.visit(ast)
+            malloc_visitor.visit(line_ast)
 
             # Print the variable names assigned to malloc
             if len(malloc_visitor.malloc_variables) > 0:
@@ -151,16 +162,16 @@ int main(int argc, char **argv) {{
                         f.write(var_type)
 
                     subprocess.run(f"gcc -E {USER_PTYPE} > {USER_PTYPE_PREPROCESSED}",
-                                shell=True)
+                                   shell=True)
 
                     # Parse the preprocessed C code into an AST
                     # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
-                    ast = parse_file(USER_PTYPE_PREPROCESSED, use_cpp=True,
-                                    cpp_args=r'-Iutils/fake_libc_include')
-                    #print(ast)
+                    ptype_ast = parse_file(USER_PTYPE_PREPROCESSED, use_cpp=True,
+                                           cpp_args=r'-Iutils/fake_libc_include')
+                    # print(ptype_ast)
 
                     # Print the outermost struct name found in the AST
-                    struct_name = self.find_outermost_struct_name(ast)
+                    struct_name = self.find_outermost_struct_name(ptype_ast)
                     if struct_name:
                         struct_name = 'struct ' + struct_name
                         print(f"Struct name: {struct_name}")
@@ -191,13 +202,11 @@ int main(int argc, char **argv) {{
                         "type": struct_name,
                         "size": bytes
                     }
-                    self.heap_dict[address] = obj
-                    print(self.heap_dict)
-
+                    self.heap_data[address] = obj
+                    print(self.heap_data)
 
             else:
                 print("No variable being malloced")
-
 
             # Print the variable names being freed
             print(malloc_visitor.free)
@@ -209,15 +218,29 @@ int main(int argc, char **argv) {{
             # which should tell the client that the debugging session is over.
             gdb.execute('next')
         except Exception as e:
-            #print(f"An error occurred: {e}")
+            # print(f"An error occurred: {e}")
             # Go to next line if curr line cannot be parsed
             gdb.execute('next')
 
-            return self.heap_dict
+        # TODO: === Up date existing tracked heap data
+        # for addr in self.heap_data.keys():
+        #  # update(self.heap_data, addr)
 
+        backend_data = {
+            "frame_info": get_frame_info(),
+            "stack_data": get_stack_data(),
+            "heap_data": self.heap_data
+        }
+        send_backend_data_to_server(
+            self.user_socket_id, backend_data=backend_data)
+
+        gdb.execute('next')
+
+        print(f"\n=== Finished running update_backend_state in gdb instance\n\n")
+        return self.heap_data
 
     def get_heap_dict(self):
-        return self.heap_dict
+        return self.heap_data
 
     def find_outermost_struct_name(self, node):
         if isinstance(node, c_ast.Struct):
@@ -228,4 +251,45 @@ int main(int argc, char **argv) {{
                 return result
         return None
 
-nextCommand = NextCommand()
+
+@useSocketIOConnection
+def send_backend_data_to_server(user_socket_id: str = None, backend_data: dict = {}, sio=None):
+    '''
+    Args:
+        - backend_data: dict containing data for the current stack frame and 
+            also the heap, in the following format:
+            {
+                "frame_info": {
+                    "file": "file_name",
+                    "line": "line_number",
+                    "function": "function_name"
+                },
+                "stack_data": [
+                    {
+                        "name": "var_name",
+                        "value": "var_value",
+                        "type": "var_type"
+                    },
+                    ...
+                ],
+                "heap_data": {
+                    "addr1": {
+                        ...
+                    },
+                    "addr2": {
+                        ...
+                    },
+                    ...
+                }
+            }
+    '''
+    if user_socket_id is not None:
+        print(
+            f"Sending backend_data to server, for user with socket_id {user_socket_id}")
+        sio.emit("updatedBackendState",
+                 (user_socket_id, backend_data))
+
+        enable_socketio_client_emit()
+
+    else:
+        print("No user_socket_id provided, so not sending backend_data to server")

@@ -46,4 +46,7 @@ COPY . .
 
 EXPOSE 8000
 
-CMD [ "nodemon", "--exec", "pyenv", "exec", "python3", "src/server.py"]
+# `python3 -u` option to prevent buffering output of print statements
+# in the python server. Print to docker logs immediately. For easier
+# debugging.
+CMD [ "nodemon", "--exec", "pyenv", "exec", "python3", "-u", "src/server.py"]

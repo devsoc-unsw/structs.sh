@@ -186,8 +186,8 @@ export class LinkedListParser implements Parser {
 
     // Later need to add an additional step to parse user defined struct into generic struct
     const linkedList: LinkedListNode[] = [];
-    Object.keys(backendStructure.heap).forEach((uid) => {
-      const entity = backendStructure.heap[uid] as BackendVariableConcrete;
+    Object.keys(backendStructure.heap_data).forEach((uid) => {
+      const entity = backendStructure.heap_data[uid] as BackendVariableConcrete;
 
       if (entity.is_pointer === true) {
         // Let it go, I am unsure why we need this
@@ -272,14 +272,14 @@ export class LinkedListParser implements Parser {
         }
       });
 
-      let pointers: PointerEntity[] = [];
+      const pointers: PointerEntity[] = [];
       // Add annotation entity on top
       Object.values(editorAnnotation).forEach((annotation) => {
         /**
          * Find variable from stack
          */
-        let stackVariable: BackendVariableConcrete | undefined =
-          backendStructure.stack[annotation.varName];
+        const stackVariable: BackendVariableConcrete | undefined =
+          backendStructure.stack_data[annotation.varName];
         if (!stackVariable) return;
 
         const annotationEntity: PointerEntity = {

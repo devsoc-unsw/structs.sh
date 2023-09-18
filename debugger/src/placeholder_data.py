@@ -1,6 +1,12 @@
-PLACEHOLDER_HEAP_DICTS = [
+PLACEHOLDER_BACKEND_STATES = [
     {
-        'heap': {
+        'frame_info': {
+            'file': 'test_linked_list.c',
+            'line_num': '100',
+            'line': 'printf("Hello world!");',
+            'function': 'main',
+        },
+        'heap_data': {
             "0x1": {
                 "addr": "0x1",
                 "type": "struct node",
@@ -11,7 +17,7 @@ PLACEHOLDER_HEAP_DICTS = [
                 }
             }
         },
-        'stack': {
+        'stack_data': {
             'curr': {
                 "addr": "0x1",
                 "type": "struct node",
@@ -22,7 +28,13 @@ PLACEHOLDER_HEAP_DICTS = [
 
     # Append the value 34 to the end of the list
     {
-        'heap': {
+        'frame_info': {
+            'file': 'test_linked_list.c',
+            'line_num': '100',
+            'line': 'printf("Hello world!");',
+            'function': 'main',
+        },
+        'heap_data': {
             "0x1": {
                 "addr": "0x1",
                 "type": "struct node",
@@ -42,7 +54,7 @@ PLACEHOLDER_HEAP_DICTS = [
                 }
             }
         },
-        'stack': {
+        'stack_data': {
             'curr': {
                 "addr": "0x2",
                 "type": "struct node",
@@ -53,7 +65,13 @@ PLACEHOLDER_HEAP_DICTS = [
 
     # Append the value 56 to the end of the list
     {
-        'heap': {
+        'frame_info': {
+            'file': 'test_linked_list.c',
+            'line_num': '100',
+            'line': 'printf("Hello world!");',
+            'function': 'main',
+        },
+        'heap_data': {
             "0x1": {
                 "addr": "0x1",
                 "type": "struct node",
@@ -82,7 +100,7 @@ PLACEHOLDER_HEAP_DICTS = [
                 }
             }
         },
-        'stack': {
+        'stack_data': {
             'curr': {
                 "addr": "0x3",
                 "type": "struct node",
@@ -93,7 +111,13 @@ PLACEHOLDER_HEAP_DICTS = [
 
     # Remove the second element from the linked list (i.e. remove 34)
     {
-        'heap': {
+        'frame_info': {
+            'file': 'test_linked_list.c',
+            'line_num': '100',
+            'line': 'printf("Hello world!");',
+            'function': 'main',
+        },
+        'heap_data': {
             "0x1": {
                 "addr": "0x1",
                 "type": "struct node",
@@ -113,7 +137,7 @@ PLACEHOLDER_HEAP_DICTS = [
                 }
             }
         },
-        'stack': {
+        'stack_data': {
             'curr': {
                 "addr": "0x3",
                 "type": "struct node",
@@ -125,7 +149,13 @@ PLACEHOLDER_HEAP_DICTS = [
     # Append the value 72 to the start of the list (order of list nodes in heap_dict shouldn"t
     # matter as long as the next pointers are in the correct order)
     {
-        'heap': {
+        'frame_info': {
+            'file': 'test_linked_list.c',
+            'line_num': '100',
+            'line': 'printf("Hello world!");',
+            'function': 'main',
+        },
+        'heap_data': {
             "0x1": {
                 "addr": "0x1",
                 "type": "struct node",
@@ -154,7 +184,7 @@ PLACEHOLDER_HEAP_DICTS = [
                 }
             }
         },
-        'stack': {
+        'stack_data': {
             'curr': {
                 "addr": "0x4",
                 "type": "struct node",
@@ -166,7 +196,13 @@ PLACEHOLDER_HEAP_DICTS = [
     # Append the value 21 to the second element of the linked list
     # (will be placed AFTER the second element i.e. the third element)
     {
-        'heap': {
+        'frame_info': {
+            'file': 'test_linked_list.c',
+            'line_num': '100',
+            'line': 'printf("Hello world!");',
+            'function': 'main',
+        },
+        'heap_data': {
             "0x1": {
                 "addr": "0x1",
                 "type": "struct node",
@@ -204,7 +240,7 @@ PLACEHOLDER_HEAP_DICTS = [
                 }
             }
         },
-        'stack': {
+        'stack_data': {
             'curr': {
                 "addr": "0x5",
                 "type": "struct node",
@@ -213,7 +249,13 @@ PLACEHOLDER_HEAP_DICTS = [
         }
     },
     {
-        'heap': {
+        'frame_info': {
+            'file': 'test_linked_list.c',
+            'line_num': '100',
+            'line': 'printf("Hello world!");',
+            'function': 'main',
+        },
+        'heap_data': {
             "0x1": {
                 "addr": "0x1",
                 "type": "struct node",
@@ -242,7 +284,7 @@ PLACEHOLDER_HEAP_DICTS = [
                 }
             }
         },
-        'stack': {
+        'stack_data': {
             'curr': {
                 "addr": "0x5",
                 "type": "struct node",
@@ -251,54 +293,13 @@ PLACEHOLDER_HEAP_DICTS = [
         }
     },
     {
-        'heap': {
-            "0x1": {
-                "addr": "0x1",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "27",
-                        "next": "0x0"
-                }
-            },
-            "0x4": {
-                "addr": "0x4",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "72",
-                        "next": "0x1"
-                }
-            },
-            "0x5": {
-                "addr": "0x5",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "21",
-                        "next": "0x6"
-                }
-            },
-            "0x6": {
-                "addr": "0x6",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "45",
-                        "next": "0x4"
-                }
-            }
+        'frame_info': {
+            'file': 'test_linked_list.c',
+            'line_num': '100',
+            'line': 'printf("Hello world!");',
+            'function': 'main',
         },
-        'stack': {
-            'curr': {
-                "addr": "0x6",
-                "type": "struct node",
-                "is_pointer": "true",
-            }
-        }
-    },
-    {
-        'heap': {
+        'heap_data': {
             "0x1": {
                 "addr": "0x1",
                 "type": "struct node",
@@ -336,7 +337,60 @@ PLACEHOLDER_HEAP_DICTS = [
                 }
             }
         },
-        'stack': {
+        'stack_data': {
+            'curr': {
+                "addr": "0x6",
+                "type": "struct node",
+                "is_pointer": "true",
+            }
+        }
+    },
+    {
+        'frame_info': {
+            'file': 'test_linked_list.c',
+            'line_num': '100',
+            'line': 'printf("Hello world!");',
+            'function': 'main',
+        },
+        'heap_data': {
+            "0x1": {
+                "addr": "0x1",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                        "value": "27",
+                        "next": "0x0"
+                }
+            },
+            "0x4": {
+                "addr": "0x4",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                        "value": "72",
+                        "next": "0x1"
+                }
+            },
+            "0x5": {
+                "addr": "0x5",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                        "value": "21",
+                        "next": "0x6"
+                }
+            },
+            "0x6": {
+                "addr": "0x6",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                        "value": "45",
+                        "next": "0x4"
+                }
+            }
+        },
+        'stack_data': {
             'curr': {
                 "addr": "0x6",
                 "type": "struct node",

@@ -27,6 +27,7 @@ const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle }) => {
   const [isTimelineComplete, setIsTimelineComplete] = useState<boolean>(false);
   const [documentation, setDocumentation] = useState<Documentation>({});
   const [isCodeSnippetExpanded, setIsCodeSnippetExpanded] = useState<boolean>(false);
+  const [isLoadOptionsExpanded, setIsLoadOptionsExpanded] = useState<boolean>(false);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   useEffect(() => {
@@ -48,6 +49,10 @@ const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle }) => {
     setIsCodeSnippetExpanded(val);
   }, []);
 
+  const handleSetLoadOptionsExpansion = useCallback((val) => {
+    setIsLoadOptionsExpanded(val);
+  }, []);
+
   const handleUpdateIsPlaying = useCallback((val) => {
     setIsPlaying(val);
   }, []);
@@ -59,6 +64,7 @@ const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle }) => {
       documentation,
       timeline: { isTimelineComplete, handleTimelineUpdate, isPlaying, handleUpdateIsPlaying },
       codeSnippet: { isCodeSnippetExpanded, handleSetCodeSnippetExpansion },
+      loadOptionsContext: { isLoadOptionsExpanded, handleSetLoadOptionsExpansion },
     }),
     [
       controllerRef.current,
@@ -70,6 +76,8 @@ const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle }) => {
       handleUpdateIsPlaying,
       isCodeSnippetExpanded,
       handleSetCodeSnippetExpansion,
+      isLoadOptionsExpanded,
+      handleSetLoadOptionsExpansion,
     ]
   );
 
