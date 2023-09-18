@@ -13,9 +13,6 @@ int main(int argc, char **argv) {
 
   // Initialise first node
   List *l = malloc(sizeof(*l));
-  if (l == NULL) {
-    printf("ERRROROROR");
-  }
   l->head = malloc(sizeof(struct node));
   l->head->data = 1;
   l->head->next = NULL;

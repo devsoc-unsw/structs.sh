@@ -320,18 +320,6 @@ def pycparser_parse_fn_decls(user_socket_id: str = None, sio=None):
     Using pycparser to parse type declarations by constructing AST. Including structs and typedefs.
 
     NOTE: Must run this function BEFORE starting the program in gdb, otherwise you get strange output from the 'info functions -n' command.
-
-    Constructs a file that looks like this, to parse with the pycparser library:
-    ```
-    typedef struct node *List;
-
-    struct node {
-        int data;
-        struct node *next;
-    }
-
-    List * appendNode(struct node *head, int data);
-    ```
     '''
 
     # typedef and struct declarations need to be declared in the files of the

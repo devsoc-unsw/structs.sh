@@ -1,72 +1,85 @@
-import os
+'''
+Getting this error in gdb:
+```
+Python Exception <class 'gdb.error'>: No symbol "variable_name" in current context.
+Error occurred in Python: No symbol "variable_name" in current context.
+```
+'''
+
 import gdb
 import subprocess
 from pycparser import parse_file, c_ast
 import re
-
 from src.gdb_scripts.use_socketio_connection import useSocketIOConnection
 from src.gdb_scripts.stack_variables import get_stack_data, get_frame_info
 from src.gdb_scripts.gdb_utils import enable_socketio_client_emit
 
-# Parent directory of this python script e.g. "/user/.../debugger/src/gdb_scripts"
-# In the docker container this will be "/app/src/gdb_scripts"
-# You can then use this to reference files relative to this directory.
-abs_file_path = os.path.dirname(os.path.abspath(__file__))
-
-# File to write the user-written malloc calls extracted from gdb
-USER_MALLOC_CALL_FILE_PATH = f"{abs_file_path}/user_malloc_call.c"
+# C file storing malloc line
+MALLOC_TEST_FILE = "src/user_malloc.c"
 
 # File to write the preprocessed C code to, before parsing with pycparser
-USER_MALLOC_CALL_PREPROCESSED = f"{abs_file_path}/user_malloc_call_preprocessed"
-
-# File to write ptype output
-USER_PTYPE = f"{abs_file_path}/ptype_output.c"
-
-# File to write preprocessed ptype output, befor parsing with pycparser
-USER_PTYPE_PREPROCESSED = f"{abs_file_path}/ptype_preprocessed"
+MALLOC_PREPROCESSED = "src/malloc_preprocessed"
 
 
+def remove_non_standard_characters(input_str):
+    # Remove color codes and non-standard characters using a regular expression
+    clean_str = re.sub(r'\x1b\[[0-9;]*[mK]', '', input_str)
+    return clean_str
+
+
+# Define a custom visitor class to traverse the AST and extract malloc information
 class MallocVisitor(c_ast.NodeVisitor):
     def __init__(self):
-        self.malloc_variables = []
-        self.free_variables = []
-        self.free = "False"
+        self.malloc_info = []
+        self.variable_name_2 = None  # Initialize the new variable
 
-    def visit_Assignment(self, node):
-        # Check if the assignment is of the form "variable = malloc(...)"
-        if isinstance(node.rvalue, c_ast.FuncCall) and isinstance(node.rvalue.name, c_ast.ID) and node.rvalue.name.name == 'malloc':
-            if isinstance(node.lvalue, c_ast.StructRef):
-                var_name = self.get_variable_name(node.lvalue)
-                self.malloc_variables.append(var_name)
-            elif isinstance(node.lvalue, c_ast.ID):
-                self.malloc_variables.append(node.lvalue.name)
-        self.generic_visit(node)
+    def visit_TypeDecl(self, node):
+        if isinstance(node, c_ast.TypeDecl) and node.declname:
+            self.variable_name_2 = node.declname
 
     def visit_FuncCall(self, node):
-        # Check if the function call is to "free(variable)"
-        if isinstance(node.name, c_ast.ID) and node.name.name == 'free':
-            self.free = "True"
-            if len(node.args.exprs) == 1 and isinstance(node.args.exprs[0], c_ast.ID):
-                self.free_variables.append(node.args.exprs[0].name)
-        self.generic_visit(node)
+        if isinstance(node.name, c_ast.ID) and node.name.name == "malloc":
+            # Extract information about the malloc call
+            malloc_size = None
+            variable_name = None
+            malloc_type = None
 
-    def visit_Decl(self, node):
-        # Check if the declaration initializes with malloc, e.g., "Type *var = malloc(...)"
-        if node.init and isinstance(node.init, c_ast.FuncCall) and isinstance(node.init.name, c_ast.ID) and node.init.name.name == 'malloc':
-            if isinstance(node.type, c_ast.PtrDecl):
-                var_name = node.name
-                self.malloc_variables.append(var_name)
-        self.generic_visit(node)
+            # Find the assignment statement enclosing the malloc call
+            current_node = self.current_node
+            while current_node is not None:
+                if isinstance(current_node, c_ast.Assignment):
+                    if isinstance(current_node.rvalue, c_ast.FuncCall) and current_node.rvalue.name.name == "malloc":
+                        # Extract the variable name from the assignment statement
+                        if isinstance(current_node.lvalue, c_ast.ID):
+                            variable_name = current_node.lvalue.name
 
-    def get_variable_name(self, node):
-        # Recursively get the variable name from the pointer chain
-        if isinstance(node, c_ast.StructRef):
-            base = self.get_variable_name(node.name)
-            field = node.field.name
-            return f"{base}->{field}"
-        elif isinstance(node, c_ast.ID):
-            return node.name
-        return None
+                        break
+
+                current_node = getattr(current_node, 'parent', None)
+
+            # Check if the malloc call has arguments
+            if node.args and isinstance(node.args, c_ast.ExprList) and len(node.args.exprs) == 1:
+                malloc_size_node = node.args.exprs[0]
+
+                # Extract the size of malloc
+                if isinstance(malloc_size_node, c_ast.BinaryOp) and malloc_size_node.op == '*':
+                    if isinstance(malloc_size_node.left, c_ast.Constant):
+                        malloc_size = int(malloc_size_node.left.value)
+
+                    # Extract the type being malloced (if available)
+                    if isinstance(malloc_size_node.right, c_ast.UnaryOp) and malloc_size_node.right.op == 'sizeof':
+                        if isinstance(malloc_size_node.right.expr, c_ast.Typename):
+                            malloc_type = malloc_size_node.right.expr.type
+
+            # Store the malloc information
+            self.malloc_info.append({
+                'variable_name': variable_name,
+                'malloc_size': malloc_size,
+                'malloc_type': malloc_type,
+                'variable_name_2': self.variable_name_2,  # Include the new variable name
+            })
+
+# Define a custom command to extract the linked list nodes
 
 
 class CustomNextCommand(gdb.Command):
@@ -99,147 +112,63 @@ class CustomNextCommand(gdb.Command):
         raw_str = (temp_line.split('\n')[1]).split('\t')[1]
         line_str = remove_non_standard_characters(raw_str)
 
-        temp_line = gdb.execute('frame', to_string=True)
-        raw_str = (temp_line.split('\n')[1]).split('\t')[1]
-        line_str = remove_non_standard_characters(raw_str)
+        # TODO parse line, find call to malloc,
+        # step into malloc for args (num bytes malloced) and return address on `finish`
 
-        # Create a complete C code file with function prototypes, main, and variable line
-        complete_c_code = """
-struct node {
-    int data;
-    struct node *next;
-};
+        # === Add new heap memory to heap_dict
+        # Intercept malloc
+        # if line has call to malloc
+        #   # if the type of data malloced is the user's annotate linked list type
+        #   # get the address to the malloc'ed memory
+        #   # store address and memory in heap dictionary
 
-typedef struct list {
-    struct node *head;
-    int size;
-} List;
-int main(int argc, char **argv) {
-"""
-        complete_c_code = complete_c_code + line_str + "\n}"
-        # print(complete_c_code)
+        with open(MALLOC_TEST_FILE, "w+") as f:
+            f.write(line_str)
 
-        # Write the complete C code to a file
-        with open(USER_MALLOC_CALL_FILE_PATH, "w") as f:
-            f.write(complete_c_code)
-
-        subprocess.run(f"gcc -E {USER_MALLOC_CALL_FILE_PATH} > {USER_MALLOC_CALL_PREPROCESSED}",
+        subprocess.run(f"gcc -E {MALLOC_TEST_FILE} > {MALLOC_PREPROCESSED}",
                        shell=True)
-        try:
+
+        # Only attempt to parse this line of C code if it might contain a malloc call
+        # This is a hacky way to allow calling custom next command without failing
+        # due to the line not being a typedef, global variable declartion, function
+        # declaration, type declaratio or function definition (only allowed things
+        # at the top level of C file)
+        # TODO: The better thing to do would be to put the line inside a main function body, then preprocess, then parse.
+        if "malloc" in line_str:
             # Parse the preprocessed C code into an AST
             # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
-            line_ast = parse_file(USER_MALLOC_CALL_PREPROCESSED, use_cpp=True,
-                                  cpp_args=r'-Iutils/fake_libc_include')
+            ast = parse_file(MALLOC_PREPROCESSED, use_cpp=True,
+                             cpp_args=r'-Iutils/fake_libc_include')
+            print(ast)
 
             # Create a MallocVisitor instance
             malloc_visitor = MallocVisitor()
 
             # Set the current node to the root of the AST
-            malloc_visitor.current_node = line_ast
+            malloc_visitor.current_node = ast
 
             # Visit the AST to check for malloc calls
-            malloc_visitor.visit(line_ast)
+            malloc_visitor.visit(ast)
 
-            # Print the variable names assigned to malloc
-            if len(malloc_visitor.malloc_variables) > 0:
-                print("Variables assigned to malloc:")
-                for var in malloc_visitor.malloc_variables:
-                    print(var)
+            # Print the malloc information
+            for info in malloc_visitor.malloc_info:
+                print("Malloc Information:")
+                print(f"Variable assigned to malloc: {info['variable_name']}")
+                print(
+                    f"Variable assigned to malloc V2: {info['variable_name_2']}")
+                print(f"Size of malloc: {info['malloc_size']} bytes")
+                print(f"Type malloced: {info['malloc_type']}")
 
-                    var_type = gdb.execute(f"ptype {var}", to_string=True)
-                    var_type = var_type.split('= ')[1]
-                    var_type = var_type.replace('} *', '};')
-                    print(f"{var_type}")
+        # === Up date existing tracked heap memory
 
-                    # Write the ptype to a file
-                    with open(USER_PTYPE, "w") as f:
-                        f.write(var_type)
+        # for addr in self.heap_dict.keys():
+        #  # update(heap_dict, addr)
 
-                    subprocess.run(f"gcc -E {USER_PTYPE} > {USER_PTYPE_PREPROCESSED}",
-                                   shell=True)
-
-                    # Parse the preprocessed C code into an AST
-                    # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
-                    ptype_ast = parse_file(USER_PTYPE_PREPROCESSED, use_cpp=True,
-                                           cpp_args=r'-Iutils/fake_libc_include')
-                    # print(ptype_ast)
-
-                    # Print the outermost struct name found in the AST
-                    struct_name = self.find_outermost_struct_name(ptype_ast)
-                    if struct_name:
-                        struct_name = 'struct ' + struct_name
-                        print(f"Struct name: {struct_name}")
-                    else:
-                        print("No struct names found in the AST.")
-
-                    # Break on malloc
-                    gdb.execute('break')
-
-                    # Step into malloc
-                    gdb.execute('step')
-
-                    # Use p bytes to get the bytes allocated
-                    temp_bytes = gdb.execute('p bytes', to_string=True)
-                    bytes = temp_bytes.split(" ")[2]
-                    # Remove \n from bytes
-                    bytes = re.sub(r'\n', '', bytes)
-                    print(f"Bytes allocated: {bytes}")
-
-                    # Get the address returned by malloc
-                    gdb.execute('finish')
-                    temp_address = gdb.execute('print $', to_string=True)
-                    address = re.sub(r'\n', '', temp_address.split(' ')[-1])
-                    print(f"address EXTRACTED: {address}")
-
-                    # === Extract linked list node data given the variable name
-                    print(f"Attempting to print \"{var}\"")
-                    node_data_str = gdb.execute(
-                        f'p *(struct node *) {address}', to_string=True)
-                    # f'p *(struct node *) l->head', to_string=True)
-
-                    # Convention struct node might look like this
-                    # $4 = {data = 542543, next = 0x0}
-
-                    # User's struct node might look like this:
-                    # $4 = {cockatoo = 0, pigeon = 0x0}
-
-                    # Beware uninitialised struct nodes might look like this:
-                    # $3 = {data = -670244016, next = 0xffffa15f74cc <__libc_start_main_impl+152>}
-
-                    node_data_str = node_data_str.split("=", 1)[1].strip()
-                    node_data_str = node_data_str.strip("{}")
-                    print(node_data_str)
-                    # node_data_str == "data = 542543, next = 0x0"
-
-                    data = {}
-                    for field in node_data_str.split(','):
-                        field = field.strip()
-                        field_name = field.split('=')[0].strip()
-                        field_value = field.split('=')[1].strip()
-                        print(f"{field_name} = {field_value}")
-                        data[field_name] = field_value
-
-                    obj = {
-                        "variable": var,
-                        "type": struct_name,
-                        "size": bytes,
-                        "data": data
-                    }
-                    self.heap_data[address] = obj
-                    print(self.heap_data)
-
-            else:
-                print("No variable being malloced")
-
-            # Print the variable names being freed
-            print(malloc_visitor.free)
-            print("Variables being freed:")
-            for var in malloc_visitor.free_variables:
-                print(var)
-
-        except Exception as e:
-            print(f"An error occurred while intercepting malloc: {e}")
-            pass
+        # === Remove freed heap memory from heap_dict
+        # Intercept free
+        # if line has call to free
+        #   # what address is being freed
+        #   # look for the address in heap dictionary
 
         backend_data = {
             "frame_info": get_frame_info(),
@@ -249,29 +178,11 @@ int main(int argc, char **argv) {
         send_backend_data_to_server(
             self.user_socket_id, backend_data=backend_data)
 
-        # TODO: Need a way to detect if program exits, then send signal to server
-        # which should tell the client that the debugging session is over.
         gdb.execute('next')
 
-        # TODO: === Up date existing tracked heap data
-        # Make sure to do this after the next command, so that the heap is actually updated
-        # for addr in self.heap_data.keys():
-        #  # update(self.heap_data, addr)
-
         print(f"\n=== Finished running update_backend_state in gdb instance\n\n")
-        return self.heap_data
 
-    def get_heap_dict(self):
         return self.heap_data
-
-    def find_outermost_struct_name(self, node):
-        if isinstance(node, c_ast.Struct):
-            return node.name
-        for _, child in node.children():
-            result = self.find_outermost_struct_name(child)
-            if result:
-                return result
-        return None
 
 
 @useSocketIOConnection
@@ -315,22 +226,3 @@ def send_backend_data_to_server(user_socket_id: str = None, backend_data: dict =
 
     else:
         print("No user_socket_id provided, so not sending backend_data to server")
-
-
-def remove_non_standard_characters(input_str):
-    # Remove color codes and non-standard characters using a regular expression
-    clean_str = re.sub(r'\x1b\[[0-9;]*[mK]', '', input_str)
-    return clean_str
-
-
-def break_on_all_user_defined_functions():
-    '''
-    Break on all user-defined functions in the program so that the custom next command will step into it.
-    '''
-    functions = pycparser_parse_fn_decls()
-    for func_name in functions.keys():
-        gdb.execute(f"break {func_name}")
-
-
-if __name__ == '__main__':
-    break_on_all_user_defined_functions()
