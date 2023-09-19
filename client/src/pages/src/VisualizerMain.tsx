@@ -46,6 +46,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState, getNextState }) =
 
           if (dimensions.height === 0) {
             setDimensions({ width, height });
+            dimensions.height = height;
           }
         }
       });
