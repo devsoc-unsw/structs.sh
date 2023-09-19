@@ -1,4 +1,4 @@
-struct list {
-    struct node *head;
-    int size;
+struct node {
+    int data;
+    struct node *next;
 };

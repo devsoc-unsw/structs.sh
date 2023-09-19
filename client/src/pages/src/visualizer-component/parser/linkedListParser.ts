@@ -14,6 +14,7 @@ import { EntityConcrete, FrontendLinkedListGraph, GenericGraph } from '../types/
 import { UiState } from '../types/uiState';
 import { assertUnreachable, cloneSimple } from '../util/util';
 import { Parser } from './parser';
+import { UnionFind } from './util/unionFind';
 
 type LinkedListNode = {
   uid: Addr;
@@ -46,7 +47,7 @@ export class LinkedListParser implements Parser {
     });
 
     if (root === null) {
-      throw new Error('No root node found! Not a valid tree');
+      return [null, prevNodeMap];
     }
 
     const stack: LinkedListNode[] = [root];
@@ -121,7 +122,8 @@ export class LinkedListParser implements Parser {
     currNode: LinkedListNode,
     prevNodeMap: Map<Addr, LinkedListNode[]>,
     cacheLinkedListNode: Map<Addr, LinkedListNode>,
-    horizontalDepth: number
+    horizontalDepth: number,
+    initialYRange: [number, number]
   ): Map<Addr, { x: number; y: number }> {
     const posCache: Map<Addr, { x: number; y: number }> = new Map();
     this.assignPositionsRecursion(
@@ -130,7 +132,7 @@ export class LinkedListParser implements Parser {
       cacheLinkedListNode,
       posCache,
       horizontalDepth * LINKED_LIST_GAP,
-      [0, 600]
+      initialYRange
     );
     return posCache;
   }
@@ -185,6 +187,7 @@ export class LinkedListParser implements Parser {
     const nodes: NodeEntity[] = [];
     const edges: EdgeEntity[] = [];
     const cacheEntity: { [uid: string]: EntityConcrete } = {};
+    const pointers: PointerEntity[] = [];
 
     // Later need to add an additional step to parse user defined struct into generic struct
     const linkedList: LinkedListNode[] = [];
@@ -201,11 +204,12 @@ export class LinkedListParser implements Parser {
              */
             break;
           }
-          case CType.SINGLE_LINED_LIST_NODE: {
+          case CType.LINKED_LIST_NODE:
+          case CType.LINKED_LIST_HEAD: {
             linkedList.push(
               cloneSimple({
                 uid: uid as Addr,
-                data: entity.data.value,
+                data: entity.data.data,
                 next: entity.data.next,
               })
             );
@@ -229,27 +233,74 @@ export class LinkedListParser implements Parser {
       cacheLinkedListNode.set(node.uid, node);
     });
 
+    let unionNodes = new Set<string>();
+    linkedList.forEach((node) => {
+      unionNodes.add(node.uid);
+      if (node.next !== '0x0') {
+        unionNodes.add(node.next);
+      }
+    });
+    let unionFind = new UnionFind(unionNodes);
+    // Combine
+    linkedList.forEach((node) => {
+      if (node.next !== '0x0') {
+        unionFind.union(node.uid, node.next);
+      }
+    });
+
+    let nodesPosition: Map<
+      Addr,
+      {
+        x: number;
+        y: number;
+      }
+    > = new Map();
     try {
-      const [rootedTree, prevNodeMap] = this.convertToRootedTree(linkedList, cacheLinkedListNode);
-      const maxDepth = this.findMaxDepth(prevNodeMap, linkedList);
-      const positions = this.assignPositions(
-        rootedTree,
-        prevNodeMap,
-        cacheLinkedListNode,
-        maxDepth
-      );
+      const groups = unionFind.getGroups();
+      let idx = 0;
+
+      groups.forEach((group) => {
+        let linkedListGroupNodes: LinkedListNode[] = [];
+        group.forEach((uid) => {
+          const node = cacheLinkedListNode.get(uid as Addr);
+          if (node) linkedListGroupNodes.push(node);
+        });
+
+        if (linkedListGroupNodes.length === 0) {
+          return;
+        }
+
+        const [rootedTree, prevNodeMap] = this.convertToRootedTree(
+          linkedListGroupNodes,
+          cacheLinkedListNode
+        );
+        const maxDepth = this.findMaxDepth(prevNodeMap, linkedListGroupNodes);
+        const positions = this.assignPositions(
+          rootedTree,
+          prevNodeMap,
+          cacheLinkedListNode,
+          maxDepth,
+          [600 * idx, 600 + 600 * idx]
+        );
+
+        positions.forEach((pos, uid) => {
+          nodesPosition.set(uid, pos);
+        })
+
+        idx++;
+      });
 
       cacheLinkedListNode.forEach((node, uid) => {
         // Create NodeEntity from LinkedListNode
         const nodeEntity: NodeEntity = {
           uid,
           type: EntityType.NODE,
-          title: node.data ? node.data.toString() : '',
+          title: node.data ? node.data.toString() : '??',
           colorHex: '#FFFFFF',
           size: DEFAULT_NODE_SIZE,
           edges: [],
-          x: positions.get(uid).x,
-          y: positions.get(uid).y,
+          x: nodesPosition.get(uid).x,
+          y: nodesPosition.get(uid).y,
         };
         nodes.push(nodeEntity);
         cacheEntity[uid] = nodeEntity;
@@ -274,13 +325,7 @@ export class LinkedListParser implements Parser {
           }
         }
       });
-
-      const pointers: PointerEntity[] = [];
-      // Add annotation entity on top
       Object.values(editorAnnotation).forEach((annotation) => {
-        /**
-         * Find variable from stack
-         */
         const stackVariable: BackendVariableConcrete | undefined =
           backendStructure.stack_data[annotation.varName];
         if (!stackVariable) return;

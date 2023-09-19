@@ -4,7 +4,8 @@
 export type Addr = `0x${string}`;
 export enum CType {
   DOUBLE_LINED_LIST_NODE = 'struct doubly_list_node',
-  SINGLE_LINED_LIST_NODE = 'struct node',
+  LINKED_LIST_NODE = 'struct node',
+  LINKED_LIST_HEAD = 'struct list',
   TREE_NODE = 'struct tree_node',
   INT = 'int',
   DOUBLE = 'double',
@@ -25,9 +26,10 @@ export type TreeVariable = {
 };
 
 export type SinglePointerVariable = {
-  value: string;
+  data: string;
   next: Addr;
 };
+
 export type IntVariable = number;
 export type DoubleVariable = number;
 export type CharVariable = string;
@@ -46,6 +48,7 @@ export interface BackendVariableBase {
   data: Addr | BackendVariable;
   type: CType;
   is_pointer: IsPointerType;
+  variable: string;
 }
 
 export interface BackendVariablePointer extends BackendVariableBase {
@@ -80,7 +83,7 @@ export interface BackendVariableBaseDoubleLinkedList extends BackendVariableBase
 
 export interface BackendVariableBaseSingleLinkedList extends BackendVariableBase {
   data: SinglePointerVariable;
-  type: CType.SINGLE_LINED_LIST_NODE;
+  type: CType.LINKED_LIST_NODE | CType.LINKED_LIST_HEAD;
   is_pointer: false;
 }
 
