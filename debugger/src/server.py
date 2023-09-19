@@ -20,8 +20,8 @@ from src.utils import make_non_blocking, get_gdb_script, get_subprocess_output
 # You can then use this to reference files relative to this directory.
 abs_file_path = os.path.dirname(os.path.abspath(__file__))
 
-TEST_PROGRAM_NAME = f"{abs_file_path}/samples/linkedlist/main4"
 GDB_SCRIPT_NAME = "default"  # Can just use "default"
+TEST_PROGRAM_NAME = f"{abs_file_path}/samples/linkedlist/main4"
 
 TIMEOUT_DURATION = 0.3
 

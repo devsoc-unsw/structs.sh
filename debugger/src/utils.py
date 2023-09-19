@@ -128,7 +128,7 @@ def get_gdb_script(program_name: str, abs_file_path: str, socket_id: str, script
 
         "default": f"""
         source {abs_file_path}/gdb_scripts/DebugSession.py
-        python {DEBUG_SESSION_VAR_NAME} = DebugSession("{socket_id}", "{abs_file_path}/samples/linkedlist/main1")
+        python {DEBUG_SESSION_VAR_NAME} = DebugSession("{socket_id}", "{program_name}")
         """,
 
         "default_legacy": f"""
