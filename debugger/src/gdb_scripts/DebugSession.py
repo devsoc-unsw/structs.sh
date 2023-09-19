@@ -36,6 +36,12 @@ class DebugSession:
 
         self.io_manager = IOManager(user_socket_id=self.user_socket_id)
 
+        # Start the debug session
+        gdb.execute("start")
+
+        # Make stdout stream unbuffered
+        # gdb.execute("call setbuf(stdout, NULL)")
+
     def get_cached_type_decl_strs(self):
         return self.type_decl_strs
 

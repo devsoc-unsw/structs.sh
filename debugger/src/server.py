@@ -11,7 +11,7 @@ import socketio
 import eventlet
 from typing import Any
 import subprocess
-from src.constants import CUSTOM_NEXT_COMMAND_NAME
+from src.constants import CUSTOM_NEXT_COMMAND_NAME, DEBUG_SESSION_VAR_NAME
 from src.utils import make_non_blocking, get_gdb_script, get_subprocess_output
 from src.placeholder_data import PLACEHOLDER_BACKEND_STATES
 
@@ -164,7 +164,8 @@ def executeNext(socket_id: str) -> None:
     # Reading new output from the program relies on the fact that next was
     # executed just before. This is expected to happen in the call to the custom
     # next command above.
-    proc.stdin.write(f'python io_manager.read_and_send()\n')
+    proc.stdin.write(
+        f'python {DEBUG_SESSION_VAR_NAME}.io_manager.read_and_send()\n')
     proc.stdin.flush()
     get_subprocess_output(proc, TIMEOUT_DURATION)
 

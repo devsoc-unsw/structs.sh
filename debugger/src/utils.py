@@ -98,40 +98,11 @@ def get_gdb_script(program_name: str, abs_file_path: str, socket_id: str, script
         "test_stdout": f"""
         source {abs_file_path}/gdb_scripts/DebugSession.py
         python {DEBUG_SESSION_VAR_NAME} = DebugSession("{socket_id}", "{abs_file_path}/samples/stdout")
-        python io_manager = {DEBUG_SESSION_VAR_NAME}.io_manager
-        start
-        # skip the setbuf call
-        next
-        {CUSTOM_NEXT_COMMAND_NAME}
-        python io_manager.read_and_send()
-        {CUSTOM_NEXT_COMMAND_NAME}
-        python io_manager.read_and_send()
-        """,
-
-        "test_stdout_legacy": f"""
-        set python print-stack full
-        set pagination off
-        file {abs_file_path}/samples/stdout
-        python print("FE client socket io:", "{socket_id}")
-        source {abs_file_path}/gdb_scripts/use_socketio_connection.py
-        source {abs_file_path}/gdb_scripts/linked_list_things.py
-        python CustomNextCommand("{CUSTOM_NEXT_COMMAND_NAME}", "{socket_id}")
-        source {abs_file_path}/gdb_scripts/iomanager.py
-        python io_manager = IOManager(user_socket_id="{socket_id}")
-        start
-        # skip the setbuf call
-        next
-        {CUSTOM_NEXT_COMMAND_NAME}
-        python io_manager.read_and_send()
-        {CUSTOM_NEXT_COMMAND_NAME}
-        python io_manager.read_and_send()
         """,
 
         "test_linked_list": f"""
         source {abs_file_path}/gdb_scripts/DebugSession.py
         python {DEBUG_SESSION_VAR_NAME} = DebugSession("{socket_id}", "{program_name}")
-        python io_manager = {DEBUG_SESSION_VAR_NAME}.io_manager
-        start
         """,
 
         "test_linked_list_legacy": f"""
