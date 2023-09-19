@@ -32,41 +32,37 @@ const DevelopmentMode = () => {
     heap_data: {},
   });
 
-  const [editorCollapsed, setEditorCollapsed] = useState(true);
-
   const [count, setCountState] = useState(100);
+
   const updateState = (data: any) => {
-    console.log('Update backendState:', data);
+    console.log('Update dummy backendState:');
     setBackendState(data);
   };
 
-  const onGetBreakpoints = useCallback((data: any) => {
-    // console.log(`Received data:\n`, data);
-  }, []);
-
   const onDisconnect = useCallback(() => {
-    // console.log('Disconnected!');
+    console.log('Disconnected!');
   }, []);
 
   const onSendDummyData = useCallback((data: any) => {
+    console.log(`Received dummy data:\n`, data);
     if (data !== 'LINE NOT FOUND') {
       updateState(data);
-      setCountState(count + 1);
+      // setCountState(count + 1);
     } else {
       console.log('!!! No more dummy data');
     }
   }, []);
 
   const onMainDebug = useCallback((data: any) => {
-    // console.log(`Received event onMainDebug:\n`, data);
+    console.log(`Received event onMainDebug:\n`, data);
   }, []);
 
   const onSendFunctionDeclaration = useCallback((data: any) => {
-    // console.log(`Received function declaration:\n`, data);
+    console.log(`Received function declaration:\n`, data);
   }, []);
 
   const onSendTypeDeclaration = useCallback((data: any) => {
-    // console.log(`Received type declaration:\n`, data);
+    console.log(`Received type declaration:\n`, data);
   }, []);
 
   const onSendBackendStateToUser = useCallback((data: any) => {
@@ -89,7 +85,6 @@ const DevelopmentMode = () => {
 
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
-    socket.on('getBreakpoints', onGetBreakpoints);
     socket.on('sendDummyLinkedListData', onSendDummyData);
     socket.on('sendDummyBinaryTreeData', onSendDummyData);
     socket.on('mainDebug', onMainDebug);
@@ -104,7 +99,6 @@ const DevelopmentMode = () => {
     return () => {
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
-      socket.off('getBreakpoints', onGetBreakpoints);
       socket.off('sendDummyLinkedListData', onSendDummyData);
       socket.off('sendDummyBinaryTreeData', onSendDummyData);
       socket.off('mainDebug', onMainDebug);
@@ -120,22 +114,10 @@ const DevelopmentMode = () => {
       <div className={styles.layout}>
         <div className={classNames(styles.pane, styles.nav)}>Nav bar</div>
         <div className={classNames(styles.pane, styles.files)}>File tree</div>
-        <div
-          className={classNames(
-            styles.pane,
-            styles.editor,
-            editorCollapsed && styles.editorCollapsed
-          )}
-        >
+        <div className={classNames(styles.pane, styles.editor)}>
           <CodeEditor />
         </div>
-        <div
-          className={classNames(
-            styles.pane,
-            styles.inspector,
-            editorCollapsed && styles.inspectorExpanded
-          )}
-        >
+        <div className={classNames(styles.pane, styles.inspector)}>
           <Tabs>
             <Tab label="Console">
               <div className={styles.pane}>Console</div>
@@ -153,6 +135,7 @@ const DevelopmentMode = () => {
             backendState={backendState}
             getDummyNextState={() => {
               socket.emit('sendDummyLinkedListData', count);
+              setCountState(count + 1);
             }}
             getNextState={() => {
               socket.emit('executeNext');
@@ -167,6 +150,7 @@ const DevelopmentMode = () => {
       backendState={backendState}
       getDummyNextState={() => {
         socket.emit('sendDummyLinkedListData', count);
+        setCountState(count + 1);
       }}
       getNextState={() => {
         socket.emit('executeNext');
