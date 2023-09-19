@@ -126,7 +126,43 @@ def echo(socket_id: str, data: Any) -> None:
 
 
 @io.event
-def sendDummyData(socket_id: str, line_number: Any) -> None:
+def sendDummyLinkedListData(socket_id: str, line_number: Any) -> None:
+    """
+    Send hard-coded heap dictionaries to the frontend user.
+    Mainly for development purposes.
+    Supposing the GDB debug session is currently at `line_number` in the program.
+    This function will send
+    the heap dictionary at that point during the program's runtime.
+    """
+    print("Received message from", socket_id, ":", line_number)
+    backend_dict = {}
+    # Our initial linked list node has been alloced with data value 27
+    if line_number == "100":
+        backend_dict = PLACEHOLDER_HEAP_DICTS[0]
+    elif line_number == "101":
+        backend_dict = PLACEHOLDER_HEAP_DICTS[1]
+    elif line_number == "102":
+        backend_dict = PLACEHOLDER_HEAP_DICTS[2]
+    elif line_number == "103":
+        backend_dict = PLACEHOLDER_HEAP_DICTS[3]
+    elif line_number == "104":
+        backend_dict = PLACEHOLDER_HEAP_DICTS[4]
+    elif line_number == "105":
+        backend_dict = PLACEHOLDER_HEAP_DICTS[5]
+    elif line_number == "106":
+        backend_dict = PLACEHOLDER_HEAP_DICTS[6]
+    elif line_number == "107":
+        backend_dict = PLACEHOLDER_HEAP_DICTS[7]
+    elif line_number == "108":
+        backend_dict = PLACEHOLDER_HEAP_DICTS[8]
+    else:
+        backend_dict = "LINE NOT FOUND"
+
+    io.emit("sendDummyLinkedListData", backend_dict, room=socket_id)
+
+
+@io.event
+def sendDummyBinaryTreeData(socket_id: str, line_number: Any) -> None:
     """
     Send hard-coded heap dictionaries to the frontend user.
     Mainly for development purposes.
@@ -152,7 +188,7 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
     else:
         backend_dict = "LINE NOT FOUND"
 
-    io.emit("sendDummyData", backend_dict, room=socket_id)
+    io.emit("sendDummyBinaryTreeData", backend_dict, room=socket_id)
 
 
 @io.event
