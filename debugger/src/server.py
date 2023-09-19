@@ -21,7 +21,7 @@ from src.placeholder_data import PLACEHOLDER_BACKEND_STATES
 abs_file_path = os.path.dirname(os.path.abspath(__file__))
 
 TEST_PROGRAM_NAME = f"{abs_file_path}/samples/linkedlist/main4"
-GDB_SCRIPT_NAME = "test_linked_list"  # Can just use "default"
+GDB_SCRIPT_NAME = "default"  # Can just use "default"
 
 TIMEOUT_DURATION = 0.3
 
