@@ -22,7 +22,7 @@ export const DEFAULT_UISTATE: UiState = {
   canDrag: true,
   debug: true,
   clickedEntity: null,
-  visualizerType: VisualizerType.BINARY_TREE,
+  visualizerType: VisualizerType.LINKED_LIST,
   x: 800,
   y: 400
 };

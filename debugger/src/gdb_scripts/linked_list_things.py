@@ -223,7 +223,8 @@ int main(int argc, char **argv) {
                         "variable": var,
                         "type": struct_name,
                         "size": bytes,
-                        "data": data
+                        "data": data,
+                        "addr": address
                     }
                     self.heap_data[address] = obj
                     print(self.heap_data)
@@ -287,10 +288,11 @@ def send_backend_data_to_server(user_socket_id: str = None, backend_data: dict =
                     "function": "function_name"
                 },
                 "stack_data": [
-                    {
+                    "addr": {
                         "name": "var_name",
                         "value": "var_value",
                         "type": "var_type"
+                        "addr": "var_addr",
                     },
                     ...
                 ],
