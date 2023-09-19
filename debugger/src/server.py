@@ -15,7 +15,6 @@ from placeholder_data import TREE_PLACEHOLDER_HEAP_DICTS
 from placeholder_data import PLACEHOLDER_HEAP_DICTS
 from src.constants import CUSTOM_NEXT_COMMAND_NAME
 from src.utils import make_non_blocking, compile_program, get_gdb_script, get_subprocess_output, create_ll_script, create_ll_script_2
-from src.placeholder_data import PLACEHOLDER_BACKEND_STATES
 
 # Parent directory of this python script e.g. "/user/.../debugger/src"
 # In the docker container this will be "/app/src"

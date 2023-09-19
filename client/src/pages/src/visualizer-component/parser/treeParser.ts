@@ -123,8 +123,8 @@ export class TreeParser implements Parser {
     const cacheEntity: { [uid: string]: EntityConcrete } = {};
 
     const treeNodes: TreeNode[] = [];
-    Object.keys(backendStructure.heap).forEach((uid) => {
-      const entity = backendStructure.heap[uid] as BackendVariableConcrete;
+    Object.keys(backendStructure.heap_data).forEach((uid) => {
+      const entity = backendStructure.heap_data[uid] as BackendVariableConcrete;
       // TODO: handle other entity types and pointer types
       if (entity.is_pointer === true) {
         // Let it go, I am unsure why we need this
