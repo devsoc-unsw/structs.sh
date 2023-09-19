@@ -1,4 +1,4 @@
-PLACEHOLDER_BACKEND_STATES = [
+PLACEHOLDER_BACKEND_STATES_LINKED_LIST = [
     {
         'frame_info': {
             'file': 'test_linked_list.c',
@@ -400,8 +400,7 @@ PLACEHOLDER_BACKEND_STATES = [
     }
 ]
 
-<<<<<<< HEAD
-TREE_PLACEHOLDER_HEAP_DICTS = [
+PLACEHOLDER_BACKEND_STATES_BINARY_TREE = [
     {
         'heap': {
             "0x1": {
@@ -828,8 +827,7 @@ TREE_PLACEHOLDER_HEAP_DICTS = [
             }
         }
     }
-
-=======
+]
 PLACEHOLDER_LINKED_LIST_NODES = [
     {
         '0x1': {
@@ -965,5 +963,4 @@ PLACEHOLDER_LINKED_LIST_NODES = [
             }
         }
     }
->>>>>>> acd1d5cc (Interactive `next` (#531))
 ]

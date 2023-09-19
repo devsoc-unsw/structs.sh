@@ -35,7 +35,7 @@ const DevelopmentMode = () => {
         is_pointer: true,
         data: '0x1',
       },
-    },,
+    },
     heap_data: {
       '0x1': {
         addr: '0x1',
@@ -168,7 +168,7 @@ const DevelopmentMode = () => {
           <VisualizerMain
             backendState={backendState}
             getNextState={() => {
-              socket.emit('sendDummyBinaryTreeData', count.toString());
+              socket.emit('sendDummyBinaryTreeData', count);
               socket.emit('executeNext');
               setCountState(count + 1);
             }}
@@ -181,7 +181,7 @@ const DevelopmentMode = () => {
     <VisualizerMain
       backendState={backendState}
       getNextState={() => {
-        socket.emit('sendDummyBinaryTreeData', count.toString());
+        socket.emit('sendDummyBinaryTreeData', count);
         socket.emit('executeNext');
         setCountState(count + 1);
       }}
