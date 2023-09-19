@@ -210,10 +210,10 @@ class CustomNextCommand(gdb.Command):
                     # === Extract linked list node data given the variable name
                     print(f"Attempting to print \"{var}\"")
                     node_data_str = gdb.execute(
-                        f'p *(struct node *) {address}', to_string=True)
+                        f'p *({struct_name} *) {address}', to_string=True)
                     # f'p *(struct node *) l->head', to_string=True)
 
-                    # Convention struct node might look like this
+                    # Conventional struct node might look like this
                     # $4 = {data = 542543, next = 0x0}
 
                     # User's struct node might look like this:
@@ -242,7 +242,9 @@ class CustomNextCommand(gdb.Command):
                         "data": data
                     }
                     self.heap_data[address] = obj
-                    pprint(self.heap_data)
+
+                print("Extracted heap data:")
+                pprint(self.heap_data)
 
             else:
                 print("No variable being malloced")
