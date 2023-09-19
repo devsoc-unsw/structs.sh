@@ -8,6 +8,7 @@ import { Socket } from 'socket.io-client';
 import CodeEditor from 'components/DevelopmentMode/CodeEditor';
 import VisualizerMain from './src/VisualizerMain';
 import { BackendState, CType } from './src/visualizer-component/types/backendType';
+import Configuration from 'components/DevelopmentMode/Configuration';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -146,7 +147,9 @@ const DevelopmentMode = () => {
               <div className={styles.pane}>Inspect</div>
             </Tab>
             <Tab label="Configure">
-              <div className={styles.pane}>Configure</div>
+              <div className={styles.pane}>
+                <Configuration />
+              </div>
             </Tab>
           </Tabs>
         </div>
