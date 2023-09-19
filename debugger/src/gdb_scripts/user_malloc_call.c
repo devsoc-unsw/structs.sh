@@ -9,5 +9,5 @@ typedef struct list {
     int size;
 } List;
 int main(int argc, char **argv) {
-  l->head->data = 1;
+  l->head->next->data = 2;
 }
