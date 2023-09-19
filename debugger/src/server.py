@@ -30,7 +30,7 @@ FILE_NAMES = [f"{abs_file_path}/samples/linkedlist/main1.c",
               f"{abs_file_path}/samples/linkedlist/linkedlist.c"]
 USER_PROGRAM_NAME = f"{abs_file_path}/user_program"
 TEST_PROGRAM_NAME = f"{abs_file_path}/samples/linkedlist/main3"
-GDB_SCRIPT_NAME = "test_linked_list"  # Can just use "default"
+GDB_SCRIPT_NAME = "test_stdout"  # Can just use "default"
 
 TIMEOUT_DURATION = 0.3
 

@@ -105,6 +105,19 @@ def get_gdb_script(program_name: str, abs_file_path: str, socket_id: str, script
         """,
 
         "test_stdout": f"""
+        source {abs_file_path}/gdb_scripts/DebugSession.py
+        python {DEBUG_SESSION_VAR_NAME} = DebugSession("{socket_id}", "{abs_file_path}/samples/stdout")
+        python io_manager = {DEBUG_SESSION_VAR_NAME}.io_manager
+        start
+        # skip the setbuf call
+        next
+        {CUSTOM_NEXT_COMMAND_NAME}
+        python io_manager.read_and_send()
+        {CUSTOM_NEXT_COMMAND_NAME}
+        python io_manager.read_and_send()
+        """,
+
+        "test_stdout_legacy": f"""
         set python print-stack full
         set pagination off
         file {abs_file_path}/samples/stdout

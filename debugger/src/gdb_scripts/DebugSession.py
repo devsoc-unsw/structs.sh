@@ -8,9 +8,10 @@ from src.constants import CUSTOM_NEXT_COMMAND_NAME
 
 class DebugSession:
     def __init__(self, user_socket_id: str, program_name: str):
-        self.user_socket_id = user_socket_id
-
         print("Initializing DebugSession instance...")
+
+        self.user_socket_id = user_socket_id
+        print(f"FE client socket io: {self.user_socket_id}")
 
         gdb.execute("set python print-stack full")
         gdb.execute("set pagination off")

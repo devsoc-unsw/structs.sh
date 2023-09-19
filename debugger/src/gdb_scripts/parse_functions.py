@@ -352,7 +352,13 @@ def pycparser_parse_type_decls(user_socket_id: str = None, sio=None):
 
     print("\n=== Running pycparser_parse_type_decls in gdb instance\n\n")
 
-    types = []
+    # typedef and struct declarations need to be declared in the files of the
+    # user-defined types for pycparser to parse them correctly.
+    type_decl_strs = get_type_decl_strs()
+    '''
+    For example, to parse the user-defined type `struct list`, we need to include
+    the type declaration `struct node` in the preprocessed file before we can parse.
+    '''
 
     types_str = gdb.execute("info types", False, True)
     types_str_lines = re.split("\n", types_str.strip())
@@ -373,10 +379,14 @@ def pycparser_parse_type_decls(user_socket_id: str = None, sio=None):
             type_decl_str = m.group(2)
 
             ast = get_type_decl_ast(
+                type_decl_strs,
                 type_decl_str)
             pprint(ast)
 
-            for node in ast.ext:
+            if len(ast.ext) > 0:
+                # We are concerned with the last type/typedef that we put in
+                # the preprocessed file, which is the one we want to parse.
+                node = ast.ext[-1]
                 if isinstance(node, c_ast.Decl) or isinstance(node, c_ast.Typedef):
 
                     if isinstance(node.type, c_ast.Struct):
@@ -447,7 +457,7 @@ def get_fn_decl_ast(type_decl_strs, fn_decl_str):
     return ast
 
 
-def get_type_decl_ast(type_decl_str):
+def get_type_decl_ast(type_decl_strs, type_decl_str_to_parse):
     '''
     Similar to get_fn_decl_ast() but for types (structs, typedefs)
     '''
@@ -464,18 +474,23 @@ def get_type_decl_ast(type_decl_str):
     }
     ```
     '''
+
+    # If type (rather than typedef) is declared, expand into struct definition
     struct_decl_pattern = r'(struct\s+[a-zA-Z_]\w*);'
-    m = re.fullmatch(struct_decl_pattern, type_decl_str)
-    if m:
+    if m := re.fullmatch(struct_decl_pattern, type_decl_str_to_parse):
         struct_decl = m.group(1)
         print(f"{struct_decl=}")
         struct_def_str = gdb.execute(f"ptype {struct_decl}", False, True)
         struct_def_str = re.sub(r'type = ', "", struct_def_str)
         print(f"{struct_def_str=}")
-        type_decl_str = struct_def_str.strip() + ";"
+        type_decl_str_to_parse = struct_def_str.strip() + ";"
 
     with open(USER_TYPE_DECLARATION_FILE_PATH, "w") as f:
-        f.write(type_decl_str)
+        # Write all user-defined type and typedef declarations that might be
+        # necessary to parse the struct definition
+        f.write("\n".join(type_decl_strs))
+        f.write("\n")
+        f.write(type_decl_str_to_parse)
         f.write("\n")
 
     subprocess.run(f"gcc -E {USER_TYPE_DECLARATION_FILE_PATH} > {TYPE_DECLARATION_PREPROCESSED}",
@@ -557,6 +572,8 @@ def get_type_decl_strs():
             # Valid type
             types.append(m.group(2))
 
+    print("\nUser-defined type declaration strings:")
+    pprint(types)
     return types
 
 
