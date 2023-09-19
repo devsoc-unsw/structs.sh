@@ -12,6 +12,8 @@ export type UiState = {
   debug: boolean;
   clickedEntity: string | null;
   visualizerType: VisualizerType;
+  x: number;
+  y: number;
 };
 
 export const DEFAULT_UISTATE: UiState = {
@@ -20,7 +22,9 @@ export const DEFAULT_UISTATE: UiState = {
   canDrag: true,
   debug: true,
   clickedEntity: null,
-  visualizerType: VisualizerType.LINKED_LIST,
+  visualizerType: VisualizerType.BINARY_TREE,
+  x: 800,
+  y: 400
 };
 
 export const NODE_SIZE = 30;

@@ -1,10 +1,12 @@
 import { BackendState, BackendUpdate, EditorAnnotation } from '../types/backendType';
 import { GenericGraph } from '../types/frontendType';
+import { UiState } from '../types/uiState';
 
 export interface Parser {
   parseInitialState: (
     backendStructure: BackendState,
-    editorAnnotation: EditorAnnotation | undefined
+    editorAnnotation: EditorAnnotation | undefined,
+    uiState: UiState
   ) => GenericGraph;
   updateState: (
     frontendStructure: GenericGraph,
