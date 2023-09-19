@@ -1,4 +1,4 @@
-PLACEHOLDER_BACKEND_STATES = [
+PLACEHOLDER_BACKEND_STATES_LINKED_LIST = [
     {
         'frame_info': {
             'file': 'test_linked_list.c',
@@ -400,6 +400,434 @@ PLACEHOLDER_BACKEND_STATES = [
     }
 ]
 
+PLACEHOLDER_BACKEND_STATES_BINARY_TREE = [
+    {
+        'heap': {
+            "0x1": {
+                "addr": "0x1",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "27",
+                    "left": "0x2",
+                    "right": "0x3",
+                }
+            },
+            "0x2": {
+                "addr": "0x2",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "15",
+                    "left": "0x0",
+                    "right": "0x0",
+                }
+            },
+            "0x3": {
+                "addr": "0x3",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "35",
+                    "left": "0x0",
+                    "right": "0x0",
+                }
+            }
+        },
+        'stack': {
+            'root': {
+                "addr": "0x1",
+                "type": "struct tree_node",
+                "is_pointer": "true",
+            }
+        }
+    },
+    {
+        'heap': {
+            "0x1": {
+                "addr": "0x1",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "27",
+                    "left": "0x2",
+                    "right": "0x3",
+                }
+            },
+            "0x2": {
+                "addr": "0x2",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "15",
+                    "left": "0x0",
+                    "right": "0x0",
+                }
+            },
+            "0x3": {
+                "addr": "0x3",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "35",
+                    "left": "0x0",
+                    "right": "0x4",
+                }
+            },
+            "0x4": {
+                "addr": "0x4",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "50",
+                    "left": "0x0",
+                    "right": "0x0",
+                }
+            }
+        },
+        'stack': {
+            'root': {
+                "addr": "0x1",
+                "type": "struct tree_node",
+                "is_pointer": "true",
+            }
+        }
+    },
+    {
+        'heap': {
+            "0x1": {
+                "addr": "0x1",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "27",
+                    "left": "0x2",
+                    "right": "0x3",
+                }
+            },
+            "0x2": {
+                "addr": "0x2",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "15",
+                    "left": "0x5",
+                    "right": "0x0",
+                }
+            },
+            "0x3": {
+                "addr": "0x3",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "35",
+                    "left": "0x0",
+                    "right": "0x4",
+                }
+            },
+            "0x4": {
+                "addr": "0x4",
+                "type": "struct node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "50",
+                    "left": "0x0",
+                    "right": "0x0",
+                }
+            },
+            "0x5": {
+                "addr": "0x5",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "10",
+                    "left": "0x0",
+                    "right": "0x0",
+                }
+            }
+        },
+        'stack': {
+            'root': {
+                "addr": "0x1",
+                "type": "struct tree_node",
+                "is_pointer": "true",
+            }
+        }
+    },
+    {
+        'heap': {
+            "0x1": {
+                "addr": "0x1",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "27",
+                    "left": "0x2",
+                    "right": "0x3",
+                }
+            },
+            "0x2": {
+                "addr": "0x2",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "15",
+                    "left": "0x5",
+                    "right": "0x6",
+                }
+            },
+            "0x3": {
+                "addr": "0x3",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "35",
+                    "left": "0x0",
+                    "right": "0x4",
+                }
+            },
+            "0x4": {
+                "addr": "0x4",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "50",
+                    "left": "0x0",
+                    "right": "0x0",
+                }
+            },
+            "0x5": {
+                "addr": "0x5",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "10",
+                    "left": "0x0",
+                    "right": "0x0",
+                }
+            },
+            "0x6": {
+                "addr": "0x6",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "20",
+                    "left": "0x0",
+                    "right": "0x0",
+                }
+            }
+        },
+        'stack': {
+            'root': {
+                "addr": "0x1",
+                "type": "struct tree_node",
+                "is_pointer": "true",
+            }
+        }
+    },
+    {
+        'heap': {
+            "0x1": {
+                "addr": "0x1",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "27",
+                    "left": "0x2",
+                    "right": "0x3",
+                }
+            },
+            "0x2": {
+                "addr": "0x2",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "15",
+                    "left": "0x5",
+                    "right": "0x6",
+                }
+            },
+            "0x3": {
+                "addr": "0x3",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "35",
+                    "left": "0x0",
+                    "right": "0x4",
+                }
+            },
+            "0x4": {
+                "addr": "0x4",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "50",
+                    "left": "0x0",
+                    "right": "0x0",
+                }
+            },
+            "0x5": {
+                "addr": "0x5",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "10",
+                    "left": "0x0",
+                    "right": "0x0",
+                }
+            },
+            "0x6": {
+                "addr": "0x6",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "20",
+                    "left": "0x7",
+                    "right": "0x0",
+                }
+            },
+            "0x7": {
+                "addr": "0x7",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "20",
+                    "left": "0x9",
+                    "right": "0x8",
+                }
+            },
+            "0x8": {
+                "addr": "0x8",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "20",
+                    "left": "0x0",
+                    "right": "0x0",
+                }
+            },
+            "0x9": {
+                "addr": "0x9",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "20",
+                    "left": "0x0",
+                    "right": "0x0",
+                }
+            }
+        },
+        'stack': {
+            'root': {
+                "addr": "0x1",
+                "type": "struct tree_node",
+                "is_pointer": "true",
+            }
+        }
+    },
+    {
+        'heap': {
+            "0x1": {
+                "addr": "0x1",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "27",
+                    "left": "0x2",
+                    "right": "0x3",
+                }
+            },
+            "0x2": {
+                "addr": "0x2",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "15",
+                    "left": "0x5",
+                    "right": "0x6",
+                }
+            },
+            "0x3": {
+                "addr": "0x3",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "35",
+                    "left": "0x0",
+                    "right": "0x4",
+                }
+            },
+            "0x4": {
+                "addr": "0x4",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "50",
+                    "left": "0x0",
+                    "right": "0x0",
+                }
+            },
+            "0x5": {
+                "addr": "0x5",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "10",
+                    "left": "0x0",
+                    "right": "0x0",
+                }
+            },
+            "0x6": {
+                "addr": "0x6",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "20",
+                    "left": "0x7",
+                    "right": "0x8",
+                }
+            },
+            "0x7": {
+                "addr": "0x7",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "20",
+                    "left": "0x0",
+                    "right": "0x0",
+                }
+            },
+            "0x8": {
+                "addr": "0x8",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "20",
+                    "left": "0x0",
+                    "right": "0x9",
+                }
+            },
+            "0x9": {
+                "addr": "0x9",
+                "type": "struct tree_node",
+                "is_pointer": "false",
+                "data": {
+                    "value": "20",
+                    "left": "0x0",
+                    "right": "0x0",
+                }
+            }
+        },
+        'stack': {
+            'root': {
+                "addr": "0x1",
+                "type": "struct tree_node",
+                "is_pointer": "true",
+            }
+        }
+    }
+]
 PLACEHOLDER_LINKED_LIST_NODES = [
     {
         '0x1': {

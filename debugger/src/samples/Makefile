@@ -6,7 +6,7 @@ CC = gcc
 CFLAGS = -ggdb
 
 .PHONY: all
-all: program buggy linkedlist/main1 linkedlist/main2 linkedlist/main3 fn_declarations stack_frames printing test_io stdout
+all: program buggy linkedlist/main1 linkedlist/main2 linkedlist/main3 linkedlist/main4 fn_declarations printing test_io stdout
 
 # ===
 program: program.o
@@ -37,6 +37,12 @@ linkedlist/main3: linkedlist/main3.o linkedlist/linkedlist.o
 	$(CC) $(CFLAGS) -o $@ $^
 
 linkedlist/main3.o: linkedlist/main3.c linkedlist/linkedlist.h
+
+# ===
+linkedlist/main4: linkedlist/main4.o linkedlist/linkedlist.o
+	$(CC) $(CFLAGS) -o $@ $^
+
+linkedlist/main4.o: linkedlist/main4.c linkedlist/linkedlist.h
 
 # ===
 linkedlist/linkedlist.o: linkedlist/linkedlist.c linkedlist/linkedlist.h
@@ -80,4 +86,4 @@ stdout.o: stdout.c
 # ===
 .PHONY: clean
 clean:
-	rm -f *.o linkedlist/*.o program buggy linkedlist/main1 linkedlist/main2 linkedlist/main3 fn_declarations stack_frames printing test_io stdout
+	rm -f *.o linkedlist/*.o program buggy linkedlist/main1 linkedlist/main2 linkedlist/main3 linkedlist/main4 fn_declarations printing test_io stdout

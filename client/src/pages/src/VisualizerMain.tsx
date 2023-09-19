@@ -24,12 +24,12 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState, getNextState }) =
 
   useEffect(() => {
     // Assume user have a variable called curr
-    const annotation = {
+    let annotation = {
       curr: {
         varName: 'curr',
       },
     };
-    const newParsedState = parser.parseInitialState(backendState, annotation);
+    const newParsedState = parser.parseInitialState(backendState, annotation, settings);
     useFrontendStateStore.getState().updateNextState(newParsedState);
   }, [backendState]);
 
@@ -46,6 +46,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState, getNextState }) =
 
           if (dimensions.height === 0) {
             setDimensions({ width, height });
+            dimensions.height = height;
           }
         }
       });
@@ -64,7 +65,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState, getNextState }) =
   return (
     <div className="container">
       <div className="linked-list">
-        <div className="visualizer" ref={visualizerRef}>
+        <div className="visualizer" ref={visualizerRef} style={{overflow: 'hidden'}}>
           <VisComponent
             settings={settings}
             graphState={currState}
