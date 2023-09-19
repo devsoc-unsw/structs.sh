@@ -41,11 +41,11 @@ const DevelopmentMode = () => {
   };
 
   const onGetBreakpoints = useCallback((data: any) => {
-    console.log(`Received data:\n`, data);
+    // console.log(`Received data:\n`, data);
   }, []);
 
   const onDisconnect = useCallback(() => {
-    console.log('Disconnected!');
+    // console.log('Disconnected!');
   }, []);
 
   const onSendDummyData = useCallback((data: any) => {
@@ -58,15 +58,15 @@ const DevelopmentMode = () => {
   }, []);
 
   const onMainDebug = useCallback((data: any) => {
-    console.log(`Received event onMainDebug:\n`, data);
+    // console.log(`Received event onMainDebug:\n`, data);
   }, []);
 
   const onSendFunctionDeclaration = useCallback((data: any) => {
-    console.log(`Received function declaration:\n`, data);
+    // console.log(`Received function declaration:\n`, data);
   }, []);
 
   const onSendTypeDeclaration = useCallback((data: any) => {
-    console.log(`Received type declaration:\n`, data);
+    // console.log(`Received type declaration:\n`, data);
   }, []);
 
   const onSendBackendStateToUser = useCallback((data: any) => {
@@ -96,7 +96,7 @@ const DevelopmentMode = () => {
     socket.on('sendFunctionDeclaration', onSendFunctionDeclaration);
     socket.on('sendTypeDeclaration', onSendTypeDeclaration);
     socket.on('executeNext', () => {
-      console.log('Executing next line...');
+      // console.log('Executing next line...');
     });
     socket.on('sendBackendStateToUser', onSendBackendStateToUser);
     socket.on('sendStdoutToUser', onSendStdoutToUser);
@@ -167,7 +167,6 @@ const DevelopmentMode = () => {
       backendState={backendState}
       getDummyNextState={() => {
         socket.emit('sendDummyLinkedListData', count);
-        setCountState(count + 1);
       }}
       getNextState={() => {
         socket.emit('executeNext');
