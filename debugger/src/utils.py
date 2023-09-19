@@ -123,6 +123,18 @@ def get_gdb_script(program_name: str, abs_file_path: str, socket_id: str, script
         python io_manager.read_and_send()
         """,
 
+        "test_linked_list_2": f"""
+        set python print-stack full
+        set pagination off
+        source {abs_file_path}/gdb_scripts/DebugSession.py
+        python debug_session = DebugSession("{socket_id}", "{program_name}")
+        source {abs_file_path}/gdb_scripts/linked_list_things.py
+        python CustomNextCommand("{CUSTOM_NEXT_COMMAND_NAME}", "{socket_id}", debug_session)
+        source {abs_file_path}/gdb_scripts/iomanager.py
+        python io_manager = IOManager(user_socket_id="{socket_id}")
+        start
+        """,
+
         "test_linked_list": f"""
         set python print-stack full
         set pagination off

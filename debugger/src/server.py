@@ -6,6 +6,7 @@ Must run in /debugger/src directory (because the gdb commands will source a pyth
 '''
 
 import os
+from pprint import pprint
 import socketio
 import eventlet
 from typing import Any
@@ -29,7 +30,7 @@ FILE_NAMES = [f"{abs_file_path}/samples/linkedlist/main1.c",
               f"{abs_file_path}/samples/linkedlist/linkedlist.c"]
 USER_PROGRAM_NAME = f"{abs_file_path}/user_program"
 TEST_PROGRAM_NAME = f"{abs_file_path}/samples/linkedlist/main3"
-GDB_SCRIPT_NAME = "test_linked_list"  # Can just use "default"
+GDB_SCRIPT_NAME = "test_linked_list_2"  # Can just use "default"
 
 TIMEOUT_DURATION = 0.3
 
@@ -242,7 +243,7 @@ def createdTypeDeclaration(socket_id: str, user_socket_id, type) -> None:
 
 
 @io.event
-def updatedBackendState(socket_id: str, user_socket_id, data) -> None:
+def updatedBackendState(socket_id: str, user_socket_id, backend_data) -> None:
     '''
     Event to send the current backend state (including stack and heap data) to
     the specified frontend client.
@@ -251,8 +252,8 @@ def updatedBackendState(socket_id: str, user_socket_id, data) -> None:
     print(
         f"Event updatedBackendState received from gdb instance with socket_id {socket_id}:")
     print(f"Sending backend state to client {user_socket_id}:")
-    print(data)
-    io.emit("sendBackendStateToUser", data, room=user_socket_id)
+    pprint(backend_data)
+    io.emit("sendBackendStateToUser", backend_data, room=user_socket_id)
 
 
 @io.event

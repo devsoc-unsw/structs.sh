@@ -1,4 +1,5 @@
 import os
+from pprint import pprint
 import gdb
 import subprocess
 from pycparser import parse_file, c_ast
@@ -7,6 +8,7 @@ import re
 from src.gdb_scripts.use_socketio_connection import useSocketIOConnection
 from src.gdb_scripts.stack_variables import get_stack_data, get_frame_info
 from src.gdb_scripts.gdb_utils import enable_socketio_client_emit
+from src.gdb_scripts.parse_functions import get_type_decl_strs
 
 # Parent directory of this python script e.g. "/user/.../debugger/src/gdb_scripts"
 # In the docker container this will be "/app/src/gdb_scripts"
@@ -80,9 +82,10 @@ class CustomNextCommand(gdb.Command):
 
     '''
 
-    def __init__(self, cmd_name, user_socket_id):
+    def __init__(self, cmd_name, user_socket_id, debug_session=None):
         super(CustomNextCommand, self).__init__(cmd_name, gdb.COMMAND_USER)
         self.user_socket_id = user_socket_id
+        self.debug_session = debug_session
         self.heap_data = {}
 
     def invoke(self, arg=None, from_tty=None):
@@ -103,25 +106,38 @@ class CustomNextCommand(gdb.Command):
         raw_str = (temp_line.split('\n')[1]).split('\t')[1]
         line_str = remove_non_standard_characters(raw_str)
 
-        # Create a complete C code file with function prototypes, main, and variable line
-        complete_c_code = """
-struct node {
-    int data;
-    struct node *next;
-};
+        assert self.debug_session is not None
 
-typedef struct list {
-    struct node *head;
-    int size;
-} List;
-int main(int argc, char **argv) {
-"""
-        complete_c_code = complete_c_code + line_str + "\n}"
-        # print(complete_c_code)
+        # Create a complete C code file with function prototypes, main, and variable line
+        c_code_for_preprocessing = "\n".join(
+            self.debug_session.get_cached_type_decl_strs()) + "\nint main(int argc, char **argv) {\n" + line_str + "\n}"
+#         c_code_for_preprocessing = """
+# struct node {
+#     int data;
+#     struct node *next;
+# };
+
+# typedef struct list {
+#     struct node *head;
+#     int size;
+# } List;
+# int main(int argc, char **argv) {
+# """
+#         c_code_for_preprocessing = c_code_for_preprocessing + line_str + "\n}"
+        print(f"{c_code_for_preprocessing=}")
+        '''
+        c_code_for_preprocessing will be a string looking like this:
+        ```
+        typedef struct list List;
+        struct list;
+        struct node;
+
+        List *l = malloc(sizeof(List));
+        '''
 
         # Write the complete C code to a file
         with open(USER_MALLOC_CALL_FILE_PATH, "w") as f:
-            f.write(complete_c_code)
+            f.write(c_code_for_preprocessing)
 
         subprocess.run(f"gcc -E {USER_MALLOC_CALL_FILE_PATH} > {USER_MALLOC_CALL_PREPROCESSED}",
                        shell=True)
@@ -226,7 +242,7 @@ int main(int argc, char **argv) {
                         "data": data
                     }
                     self.heap_data[address] = obj
-                    print(self.heap_data)
+                    pprint(self.heap_data)
 
             else:
                 print("No variable being malloced")
@@ -238,8 +254,7 @@ int main(int argc, char **argv) {
                 print(var)
 
         except Exception as e:
-            print(f"An error occurred while intercepting malloc: {e}")
-            pass
+            print("An error occurred while intercepting malloc: ", e)
 
         backend_data = {
             "frame_info": get_frame_info(),

@@ -45,6 +45,8 @@ import re
 import subprocess
 import gdb
 from pycparser import parse_file, c_ast
+from src.gdb_scripts.use_socketio_connection import useSocketIOConnection
+
 
 # Parent directory of this python script e.g. "/user/.../debugger/src/gdb_scripts"
 # In the docker container this will be "/app/src/gdb_scripts"
@@ -82,59 +84,6 @@ functions = {
     ],
     ...
 }
-"""
-
-# sys.path.extend(['.', '..'])
-
-
-"""
-Output of the gdb command `info types` looks something like this:
-
-```
-All defined types:
-
-File /usr/lib/gcc/aarch64-linux-gnu/11/include/stddef.h:
-209:	typedef unsigned long size_t;
-
-File linkedlist/linkedlist.c:
-	char
-	int
-	long
-	long long
-	unsigned long long
-	unsigned long
-	short
-	unsigned short
-	signed char
-	unsigned char
-	unsigned int
-
-File linkedlist/linkedlist.h:
-17:	typedef struct list List;
-14:	struct list;
-9:	struct node;
-
-File linkedlist/main1.c:
-	char
-	int
-	long
-	long long
-	unsigned long long
-	unsigned long
-	short
-	unsigned short
-	signed char
-	unsigned char
-	unsigned int
-```
-
-We need to extract the user-defined types and typedefs as well as other std types and typedefs.
-They serve two purposes:
-1. Allow user to annotate their types on the frontend to inform the visual debugger
-    what types to treat as specific data structures e.g. linked list nodes.
-2. Allow the parser to parse function declarations that use the user-defined types.
-    E.g. `List * insert(List *head, struct node *new_node);`
-
 """
 
 
@@ -481,6 +430,7 @@ def get_fn_decl_ast(type_decl_strs, fn_decl_str):
     ```
     typedef struct list List;
     struct list;
+    struct node;
 
     void append(List * a, int a);
     ```
@@ -540,6 +490,65 @@ def get_type_decl_ast(type_decl_str):
 
 
 def get_type_decl_strs():
+    '''
+    Output from gdb command `info types` looks something like this:
+    ```
+    (gdb) info types
+    All defined types:
+
+    File /usr/lib/gcc/aarch64-linux-gnu/11/include/stddef.h:
+    209:	typedef unsigned long size_t;
+
+    File linkedlist/linkedlist.c:
+        char
+        int
+        long
+        long long
+        unsigned long long
+        unsigned long
+        short
+        unsigned short
+        signed char
+        unsigned char
+        unsigned int
+
+    File linkedlist/linkedlist.h:
+    17:	typedef struct list List;
+    14:	struct list;
+    9:	struct node;
+
+    File linkedlist/main3.c:
+        char
+        int
+        long
+        long long
+        unsigned long long
+        unsigned long
+        short
+        unsigned short
+        signed char
+        unsigned char
+        unsigned int
+    ```
+
+    This function will extract the user-defined types and typedefs as well as other std types and typedefs, and return in following list format:
+
+    [
+        "typedef unsigned long size_t;",
+        "typedef struct list List;",
+        "struct list;",
+        "struct node;",
+    ]
+
+    This information serves a variety of purposes:
+    1. Allow user to annotate their types on the frontend to inform the visual debugger
+        what types to treat as specific data structures e.g. linked list nodes.
+    2. Allow the parser to parse function declarations that use the user-defined types.
+        E.g. `List * insert(List *head, struct node *new_node);`
+    3. Allow the malloc interceptor to know what user-defined types exist when parsing lines
+        like `List *head = malloc(sizeof(List));`
+
+    '''
     types_str = gdb.execute("info types", False, True)
     types_str_lines = re.split("\n", types_str.strip())
     types = []
@@ -620,6 +629,7 @@ def manual_regex_parse_fn_decl():
 
 
 if __name__ == '__main__':
+    # For testing purposes
     # _ = pycparser_parse_fn_decls()
     # _ = pycparser_parse_type_decls()
     pass
