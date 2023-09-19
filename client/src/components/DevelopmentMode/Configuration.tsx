@@ -1,9 +1,7 @@
 import { useState } from 'react';
+import styles from 'styles/Configuration.module.css';
+// import * as Select from '@radix-ui/react-select';
 
-const annotationString = `struct node {
-    int data;
-    struct node* next;
-}`;
 interface LinkedListAnnotations {
   nodeVariable: string;
   dataType: string; //TODO: custom types
@@ -20,6 +18,7 @@ const Configuration = () => {
   });
 
   const handleChangeNodeVariable = (newNodeVariable: string) => {
+    console.log(newNodeVariable);
     setAnnotations((prevAnnotations: LinkedListAnnotations) => ({
       ...prevAnnotations,
       nodeVariable: newNodeVariable,
@@ -44,28 +43,25 @@ const Configuration = () => {
     <>
       <pre>
         struct{' '}
-        <span
-          contentEditable
-          onInput={(e) => handleChangeNodeVariable(e.currentTarget.textContent)}
-        >
-          {annotations.nodeVariable}
-        </span>{' '}
-        {'{'} <br />
+        <input
+          value={annotations.nodeVariable}
+          onChange={(e) => handleChangeNodeVariable(e.target.value)}
+          className={styles.annotatorInput}
+        />
+        {' {'} <br />
         {'    '} {annotations.dataType}{' '}
-        <span
-          contentEditable
-          onInput={(e) => handleChangeDataVariable(e.currentTarget.textContent)}
-        >
-          {annotations.dataVariable}
-        </span>
+        <input
+          value={annotations.dataVariable}
+          onChange={(e) => handleChangeDataVariable(e.target.value)}
+          className={styles.annotatorInput}
+        />
         ; <br />
         {'    '} struct {annotations.nodeVariable} *
-        <span
-          contentEditable
-          onInput={(e) => handleChangeNextVariable(e.currentTarget.textContent)}
-        >
-          {annotations.nextVariable}
-        </span>
+        <input
+          value={annotations.nextVariable}
+          onChange={(e) => handleChangeNextVariable(e.target.value)}
+          className={styles.annotatorInput}
+        />
         ; <br />
         {'}'};
       </pre>

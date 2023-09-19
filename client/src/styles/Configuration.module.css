@@ -1,0 +1,8 @@
+@import '@radix-ui/colors/slate.css';
+@import '@radix-ui/colors/slate-dark.css';
+@import './global.module.css';
+
+.annotatorInput {
+  font-family: monospace;
+  width: 4rem;
+}
