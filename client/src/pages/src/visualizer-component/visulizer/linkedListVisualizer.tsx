@@ -143,9 +143,9 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
   return (
     <motion.svg
       ref={svgRef}
-      width={dimensions.width}
-      height={dimensions.height}
-      viewBox="0 0 1000 1000"
+      width="100%"
+      height="100%"
+      viewBox="0 0 100% 100%"
       initial="hidden"
       animate={controls}
       drag={true}

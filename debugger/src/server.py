@@ -139,7 +139,8 @@ def sendDummyBinaryTreeData(socket_id: str, line_number: int) -> None:
     This function will send
     the heap dictionary at that point during the program's runtime.
     """
-    print("Received message from", socket_id, ":", line_number)
+    print("Received message from", socket_id, ":",
+          line_number, "at event sendDummyData")
     backend_dict = {}
     # Our initial linked list node has been alloced with data value 27
     if line_number == 100:
