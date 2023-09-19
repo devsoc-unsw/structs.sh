@@ -5,7 +5,7 @@ import subprocess
 import time
 from typing import IO
 
-from constants import CUSTOM_NEXT_COMMAND_NAME
+from constants import CUSTOM_NEXT_COMMAND_NAME, DEBUG_SESSION_VAR_NAME
 
 
 def compile_program(file_names: list[str], user_program_name: str) -> None:
@@ -123,19 +123,14 @@ def get_gdb_script(program_name: str, abs_file_path: str, socket_id: str, script
         python io_manager.read_and_send()
         """,
 
-        "test_linked_list_2": f"""
-        set python print-stack full
-        set pagination off
+        "test_linked_list": f"""
         source {abs_file_path}/gdb_scripts/DebugSession.py
-        python debug_session = DebugSession("{socket_id}", "{program_name}")
-        source {abs_file_path}/gdb_scripts/linked_list_things.py
-        python CustomNextCommand("{CUSTOM_NEXT_COMMAND_NAME}", "{socket_id}", debug_session)
-        source {abs_file_path}/gdb_scripts/iomanager.py
-        python io_manager = IOManager(user_socket_id="{socket_id}")
+        python {DEBUG_SESSION_VAR_NAME} = DebugSession("{socket_id}", "{program_name}")
+        python io_manager = {DEBUG_SESSION_VAR_NAME}.io_manager
         start
         """,
 
-        "test_linked_list": f"""
+        "test_linked_list_legacy": f"""
         set python print-stack full
         set pagination off
         file {program_name}

@@ -5,9 +5,8 @@ import subprocess
 from pycparser import parse_file, c_ast
 import re
 
-from src.gdb_scripts.use_socketio_connection import useSocketIOConnection
+from src.gdb_scripts.use_socketio_connection import useSocketIOConnection, enable_socketio_client_emit
 from src.gdb_scripts.stack_variables import get_stack_data, get_frame_info
-from src.gdb_scripts.gdb_utils import enable_socketio_client_emit
 from src.gdb_scripts.parse_functions import get_type_decl_strs
 
 # Parent directory of this python script e.g. "/user/.../debugger/src/gdb_scripts"
@@ -87,6 +86,7 @@ class CustomNextCommand(gdb.Command):
         self.user_socket_id = user_socket_id
         self.debug_session = debug_session
         self.heap_data = {}
+        self.break_on_all_user_defined_functions()
 
     def invoke(self, arg=None, from_tty=None):
         # TODO: detect end of debug session
@@ -288,6 +288,14 @@ class CustomNextCommand(gdb.Command):
                 return result
         return None
 
+    def break_on_all_user_defined_functions(self):
+        '''
+        Break on all user-defined functions in the program so that the custom next command will step into it.
+        '''
+        functions = self.debug_session.get_cached_parsed_fn_decls()
+        for func_name in functions.keys():
+            gdb.execute(f"break {func_name}")
+
 
 @useSocketIOConnection
 def send_backend_data_to_server(user_socket_id: str = None, backend_data: dict = {}, sio=None):
@@ -336,16 +344,3 @@ def remove_non_standard_characters(input_str):
     # Remove color codes and non-standard characters using a regular expression
     clean_str = re.sub(r'\x1b\[[0-9;]*[mK]', '', input_str)
     return clean_str
-
-
-def break_on_all_user_defined_functions():
-    '''
-    Break on all user-defined functions in the program so that the custom next command will step into it.
-    '''
-    functions = pycparser_parse_fn_decls()
-    for func_name in functions.keys():
-        gdb.execute(f"break {func_name}")
-
-
-if __name__ == '__main__':
-    break_on_all_user_defined_functions()

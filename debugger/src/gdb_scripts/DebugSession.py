@@ -1,6 +1,9 @@
 import gdb
 
+from src.gdb_scripts.linked_list_things import CustomNextCommand
 from src.gdb_scripts.parse_functions import get_type_decl_strs, pycparser_parse_type_decls, pycparser_parse_fn_decls
+from src.gdb_scripts.iomanager import IOManager
+from src.constants import CUSTOM_NEXT_COMMAND_NAME
 
 
 class DebugSession:
@@ -8,6 +11,9 @@ class DebugSession:
         self.user_socket_id = user_socket_id
 
         print("Initializing DebugSession instance...")
+
+        gdb.execute("set python print-stack full")
+        gdb.execute("set pagination off")
 
         # Load program to debug. Make sure it is compiled with -g flag to
         # include debug symbols
@@ -23,6 +29,11 @@ class DebugSession:
         self.parsed_type_decls = pycparser_parse_type_decls(
             self.user_socket_id)
         self.parsed_fn_decls = pycparser_parse_fn_decls(self.user_socket_id)
+
+        self.custom_next_command = CustomNextCommand(
+            CUSTOM_NEXT_COMMAND_NAME, self.user_socket_id, self)
+
+        self.io_manager = IOManager(user_socket_id=self.user_socket_id)
 
     def get_cached_type_decl_strs(self):
         return self.type_decl_strs
