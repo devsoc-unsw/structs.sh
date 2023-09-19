@@ -45,6 +45,8 @@ import re
 import subprocess
 import gdb
 from pycparser import parse_file, c_ast
+from src.gdb_scripts.use_socketio_connection import useSocketIOConnection
+
 
 # Parent directory of this python script e.g. "/user/.../debugger/src/gdb_scripts"
 # In the docker container this will be "/app/src/gdb_scripts"
@@ -82,59 +84,6 @@ functions = {
     ],
     ...
 }
-"""
-
-# sys.path.extend(['.', '..'])
-
-
-"""
-Output of the gdb command `info types` looks something like this:
-
-```
-All defined types:
-
-File /usr/lib/gcc/aarch64-linux-gnu/11/include/stddef.h:
-209:	typedef unsigned long size_t;
-
-File linkedlist/linkedlist.c:
-	char
-	int
-	long
-	long long
-	unsigned long long
-	unsigned long
-	short
-	unsigned short
-	signed char
-	unsigned char
-	unsigned int
-
-File linkedlist/linkedlist.h:
-17:	typedef struct list List;
-14:	struct list;
-9:	struct node;
-
-File linkedlist/main1.c:
-	char
-	int
-	long
-	long long
-	unsigned long long
-	unsigned long
-	short
-	unsigned short
-	signed char
-	unsigned char
-	unsigned int
-```
-
-We need to extract the user-defined types and typedefs as well as other std types and typedefs.
-They serve two purposes:
-1. Allow user to annotate their types on the frontend to inform the visual debugger
-    what types to treat as specific data structures e.g. linked list nodes.
-2. Allow the parser to parse function declarations that use the user-defined types.
-    E.g. `List * insert(List *head, struct node *new_node);`
-
 """
 
 
@@ -403,7 +352,13 @@ def pycparser_parse_type_decls(user_socket_id: str = None, sio=None):
 
     print("\n=== Running pycparser_parse_type_decls in gdb instance\n\n")
 
-    types = []
+    # typedef and struct declarations need to be declared in the files of the
+    # user-defined types for pycparser to parse them correctly.
+    type_decl_strs = get_type_decl_strs()
+    '''
+    For example, to parse the user-defined type `struct list`, we need to include
+    the type declaration `struct node` in the preprocessed file before we can parse.
+    '''
 
     types_str = gdb.execute("info types", False, True)
     types_str_lines = re.split("\n", types_str.strip())
@@ -424,10 +379,14 @@ def pycparser_parse_type_decls(user_socket_id: str = None, sio=None):
             type_decl_str = m.group(2)
 
             ast = get_type_decl_ast(
+                type_decl_strs,
                 type_decl_str)
             pprint(ast)
 
-            for node in ast.ext:
+            if len(ast.ext) > 0:
+                # We are concerned with the last type/typedef that we put in
+                # the preprocessed file, which is the one we want to parse.
+                node = ast.ext[-1]
                 if isinstance(node, c_ast.Decl) or isinstance(node, c_ast.Typedef):
 
                     if isinstance(node.type, c_ast.Struct):
@@ -481,6 +440,7 @@ def get_fn_decl_ast(type_decl_strs, fn_decl_str):
     ```
     typedef struct list List;
     struct list;
+    struct node;
 
     void append(List * a, int a);
     ```
@@ -497,7 +457,7 @@ def get_fn_decl_ast(type_decl_strs, fn_decl_str):
     return ast
 
 
-def get_type_decl_ast(type_decl_str):
+def get_type_decl_ast(type_decl_strs, type_decl_str_to_parse):
     '''
     Similar to get_fn_decl_ast() but for types (structs, typedefs)
     '''
@@ -514,18 +474,23 @@ def get_type_decl_ast(type_decl_str):
     }
     ```
     '''
+
+    # If type (rather than typedef) is declared, expand into struct definition
     struct_decl_pattern = r'(struct\s+[a-zA-Z_]\w*);'
-    m = re.fullmatch(struct_decl_pattern, type_decl_str)
-    if m:
+    if m := re.fullmatch(struct_decl_pattern, type_decl_str_to_parse):
         struct_decl = m.group(1)
         print(f"{struct_decl=}")
         struct_def_str = gdb.execute(f"ptype {struct_decl}", False, True)
         struct_def_str = re.sub(r'type = ', "", struct_def_str)
         print(f"{struct_def_str=}")
-        type_decl_str = struct_def_str.strip() + ";"
+        type_decl_str_to_parse = struct_def_str.strip() + ";"
 
     with open(USER_TYPE_DECLARATION_FILE_PATH, "w") as f:
-        f.write(type_decl_str)
+        # Write all user-defined type and typedef declarations that might be
+        # necessary to parse the struct definition
+        f.write("\n".join(type_decl_strs))
+        f.write("\n")
+        f.write(type_decl_str_to_parse)
         f.write("\n")
 
     subprocess.run(f"gcc -E {USER_TYPE_DECLARATION_FILE_PATH} > {TYPE_DECLARATION_PREPROCESSED}",
@@ -540,6 +505,65 @@ def get_type_decl_ast(type_decl_str):
 
 
 def get_type_decl_strs():
+    '''
+    Output from gdb command `info types` looks something like this:
+    ```
+    (gdb) info types
+    All defined types:
+
+    File /usr/lib/gcc/aarch64-linux-gnu/11/include/stddef.h:
+    209:	typedef unsigned long size_t;
+
+    File linkedlist/linkedlist.c:
+        char
+        int
+        long
+        long long
+        unsigned long long
+        unsigned long
+        short
+        unsigned short
+        signed char
+        unsigned char
+        unsigned int
+
+    File linkedlist/linkedlist.h:
+    17:	typedef struct list List;
+    14:	struct list;
+    9:	struct node;
+
+    File linkedlist/main3.c:
+        char
+        int
+        long
+        long long
+        unsigned long long
+        unsigned long
+        short
+        unsigned short
+        signed char
+        unsigned char
+        unsigned int
+    ```
+
+    This function will extract the user-defined types and typedefs as well as other std types and typedefs, and return in following list format:
+
+    [
+        "typedef unsigned long size_t;",
+        "typedef struct list List;",
+        "struct list;",
+        "struct node;",
+    ]
+
+    This information serves a variety of purposes:
+    1. Allow user to annotate their types on the frontend to inform the visual debugger
+        what types to treat as specific data structures e.g. linked list nodes.
+    2. Allow the parser to parse function declarations that use the user-defined types.
+        E.g. `List * insert(List *head, struct node *new_node);`
+    3. Allow the malloc interceptor to know what user-defined types exist when parsing lines
+        like `List *head = malloc(sizeof(List));`
+
+    '''
     types_str = gdb.execute("info types", False, True)
     types_str_lines = re.split("\n", types_str.strip())
     types = []
@@ -548,6 +572,8 @@ def get_type_decl_strs():
             # Valid type
             types.append(m.group(2))
 
+    print("\nUser-defined type declaration strings:")
+    pprint(types)
     return types
 
 
@@ -620,6 +646,7 @@ def manual_regex_parse_fn_decl():
 
 
 if __name__ == '__main__':
+    # For testing purposes
     # _ = pycparser_parse_fn_decls()
     # _ = pycparser_parse_type_decls()
     pass

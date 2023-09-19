@@ -33,34 +33,42 @@ const DevelopmentMode = () => {
   });
 
   const [count, setCountState] = useState(100);
+
   const updateState = (data: any) => {
-    // console.log('Received dummy binary tree data:', data);
+    console.log('Update dummy backendState:');
     setBackendState(data);
   };
 
-  const onGetBreakpoints = useCallback((data: any) => {
-    // console.log(`Received data:\n`, data);
+  const onDisconnect = useCallback(() => {
+    console.log('Disconnected!');
   }, []);
 
-  const onDisconnect = useCallback(() => {
-    // console.log('Disconnected!');
+  const onSendDummyData = useCallback((data: any) => {
+    console.log(`Received dummy data:\n`, data);
+    if (data !== 'LINE NOT FOUND') {
+      updateState(data);
+      // setCountState(count + 1);
+    } else {
+      console.log('!!! No more dummy data');
+    }
   }, []);
 
   const onMainDebug = useCallback((data: any) => {
-    // console.log(`Received event onMainDebug:\n`, data);
+    console.log(`Received event onMainDebug:\n`, data);
   }, []);
 
   const onSendFunctionDeclaration = useCallback((data: any) => {
-    // console.log(`Received function declaration:\n`, data);
+    console.log(`Received function declaration:\n`, data);
   }, []);
 
   const onSendTypeDeclaration = useCallback((data: any) => {
-    // console.log(`Received type declaration:\n`, data);
+    console.log(`Received type declaration:\n`, data);
   }, []);
 
   const onSendBackendStateToUser = useCallback((data: any) => {
     console.log(`Received backend state:\n`, data);
-    updateState(data);
+    // Can't use real debugger backend state yet, not in the right format
+    // updateState(data);
   }, []);
 
   const onSendStdoutToUser = useCallback((data: any) => {
@@ -77,8 +85,8 @@ const DevelopmentMode = () => {
 
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
-    socket.on('getBreakpoints', onGetBreakpoints);
-    socket.on('sendDummyBinaryTreeData', updateState);
+    socket.on('sendDummyLinkedListData', onSendDummyData);
+    socket.on('sendDummyBinaryTreeData', onSendDummyData);
     socket.on('mainDebug', onMainDebug);
     socket.on('sendFunctionDeclaration', onSendFunctionDeclaration);
     socket.on('sendTypeDeclaration', onSendTypeDeclaration);
@@ -91,8 +99,8 @@ const DevelopmentMode = () => {
     return () => {
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
-      socket.off('getBreakpoints', onGetBreakpoints);
-      socket.off('sendDummyBinaryTreeData', updateState);
+      socket.off('sendDummyLinkedListData', onSendDummyData);
+      socket.off('sendDummyBinaryTreeData', onSendDummyData);
       socket.off('mainDebug', onMainDebug);
       socket.off('sendFunctionDeclaration', onSendFunctionDeclaration);
       socket.off('sendTypeDeclaration', onSendTypeDeclaration);
@@ -125,9 +133,12 @@ const DevelopmentMode = () => {
         <div className={classNames(styles.pane, styles.visualiser)}>
           <VisualizerMain
             backendState={backendState}
+            getDummyNextState={() => {
+              socket.emit('sendDummyLinkedListData', count);
+              setCountState(count + 1);
+            }}
             getNextState={() => {
               socket.emit('executeNext');
-              setCountState(count + 1);
             }}
           />
         </div>
@@ -137,9 +148,12 @@ const DevelopmentMode = () => {
   ) : (
     <VisualizerMain
       backendState={backendState}
+      getDummyNextState={() => {
+        socket.emit('sendDummyLinkedListData', count);
+        setCountState(count + 1);
+      }}
       getNextState={() => {
         socket.emit('executeNext');
-        setCountState(count + 1);
       }}
     />
   );

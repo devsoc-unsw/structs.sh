@@ -10,10 +10,15 @@ import { useFrontendStateStore } from './visualizer-component/stateManager';
 export interface RoutesProps {
   backendState: BackendState;
   getNextState: () => void;
+  getDummyNextState: () => void;
 }
 
 // Future support different parser
-const VisualizerMain: React.FC<RoutesProps> = ({ backendState, getNextState }) => {
+const VisualizerMain: React.FC<RoutesProps> = ({
+  backendState,
+  getDummyNextState,
+  getNextState,
+}) => {
   const [settings, setSettings] = useState<UiState>(DEFAULT_UISTATE);
   const VisComponent = visualizerFactory(settings);
   const [parser] = useState(parserFactory(settings));
@@ -65,7 +70,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState, getNextState }) =
   return (
     <div className="container">
       <div className="linked-list">
-        <div className="visualizer" ref={visualizerRef} style={{overflow: 'hidden'}}>
+        <div className="visualizer" ref={visualizerRef} style={{ overflow: 'hidden' }}>
           <VisComponent
             settings={settings}
             graphState={currState}
@@ -75,6 +80,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState, getNextState }) =
         </div>
         <div className="timeline">
           <Timeline
+            nextStateDummy={getDummyNextState}
             nextState={getNextState}
             forwardState={() => {
               useFrontendStateStore.getState().forwardState();

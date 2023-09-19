@@ -5,16 +5,7 @@ import subprocess
 import time
 from typing import IO
 
-from constants import CUSTOM_NEXT_COMMAND_NAME
-
-
-def compile_program(file_names: list[str], user_program_name: str) -> None:
-    '''
-    Args:
-        - file_names: list of file names to compile
-        - user_program_name: name to call the compiled program
-    '''
-    subprocess.run(["gcc", "-ggdb", *file_names, "-o", user_program_name])
+from constants import CUSTOM_NEXT_COMMAND_NAME, DEBUG_SESSION_VAR_NAME
 
 
 def make_non_blocking(file_obj: IO) -> None:
@@ -92,6 +83,12 @@ def get_gdb_script(program_name: str, abs_file_path: str, socket_id: str, script
         """,
 
         "test_io": f"""
+        source {abs_file_path}/gdb_scripts/DebugSession.py
+        python {DEBUG_SESSION_VAR_NAME} = DebugSession("{socket_id}", "{abs_file_path}/samples/test_io")
+        source {abs_file_path}/gdb_scripts/test_io.py
+        """,
+
+        "test_io_legacy": f"""
         set python print-stack full
         set pagination off
         file {abs_file_path}/samples/test_io
@@ -105,40 +102,36 @@ def get_gdb_script(program_name: str, abs_file_path: str, socket_id: str, script
         """,
 
         "test_stdout": f"""
-        set python print-stack full
-        set pagination off
-        file {abs_file_path}/samples/stdout
-        python print("FE client socket io:", "{socket_id}")
-        source {abs_file_path}/gdb_scripts/use_socketio_connection.py
-        source {abs_file_path}/gdb_scripts/linked_list_things.py
-        python CustomNextCommand("{CUSTOM_NEXT_COMMAND_NAME}", "{socket_id}")
-        source {abs_file_path}/gdb_scripts/iomanager.py
-        python io_manager = IOManager(user_socket_id="{socket_id}")
-        start
-        # skip the setbuf call
-        next
-        {CUSTOM_NEXT_COMMAND_NAME}
-        python io_manager.read_and_send()
-        {CUSTOM_NEXT_COMMAND_NAME}
-        python io_manager.read_and_send()
+        source {abs_file_path}/gdb_scripts/DebugSession.py
+        python {DEBUG_SESSION_VAR_NAME} = DebugSession("{socket_id}", "{abs_file_path}/samples/stdout")
         """,
 
-        "test_linked_list": f"""
-        set python print-stack full
-        set pagination off
-        file {program_name}
-        source {abs_file_path}/gdb_scripts/use_socketio_connection.py
-        source {abs_file_path}/gdb_scripts/parse_functions.py
-        python pycparser_parse_fn_decls("{socket_id}")
-        python pycparser_parse_type_decls("{socket_id}")
-        source {abs_file_path}/gdb_scripts/linked_list_things.py
-        python CustomNextCommand("{CUSTOM_NEXT_COMMAND_NAME}", "{socket_id}")
-        source {abs_file_path}/gdb_scripts/iomanager.py
-        python io_manager = IOManager(user_socket_id="{socket_id}")
-        start
+        "test_linked_list_1": f"""
+        source {abs_file_path}/gdb_scripts/DebugSession.py
+        python {DEBUG_SESSION_VAR_NAME} = DebugSession("{socket_id}", "{abs_file_path}/samples/linkedlist/main1")
+        """,
+
+        "test_linked_list_2": f"""
+        source {abs_file_path}/gdb_scripts/DebugSession.py
+        python {DEBUG_SESSION_VAR_NAME} = DebugSession("{socket_id}", "{abs_file_path}/samples/linkedlist/main2")
+        """,
+
+        "test_linked_list_3": f"""
+        source {abs_file_path}/gdb_scripts/DebugSession.py
+        python {DEBUG_SESSION_VAR_NAME} = DebugSession("{socket_id}", "{abs_file_path}/samples/linkedlist/main3")
+        """,
+
+        "test_linked_list_4": f"""
+        source {abs_file_path}/gdb_scripts/DebugSession.py
+        python {DEBUG_SESSION_VAR_NAME} = DebugSession("{socket_id}", "{abs_file_path}/samples/linkedlist/main4")
         """,
 
         "default": f"""
+        source {abs_file_path}/gdb_scripts/DebugSession.py
+        python {DEBUG_SESSION_VAR_NAME} = DebugSession("{socket_id}", "{abs_file_path}/samples/linkedlist/main1")
+        """,
+
+        "default_legacy": f"""
         set python print-stack full
         set pagination off
         file {program_name}
