@@ -5,11 +5,10 @@ import { VisualizerComponent } from './visualizer';
 
 export function visualizerFactory(uiState: UiState): VisualizerComponent {
   switch (uiState.visualizerType) {
-    case VisualizerType.LINKED_LIST: {
+    case VisualizerType.LINKED_LIST:
+    case VisualizerType.BINARY_TREE: {
       return LinkedList;
     }
-    case VisualizerType.BINARY_TREE:
-    // return new TreeVisualizer;    ??
     case VisualizerType.GRAPH:
     case VisualizerType.ARRAY: {
       throw new Error('Not implemented');
