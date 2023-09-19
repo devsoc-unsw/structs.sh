@@ -11,9 +11,9 @@ import socketio
 import eventlet
 from typing import Any
 import subprocess
+from placeholder_data import PLACEHOLDER_BACKEND_STATES_BINARY_TREE, PLACEHOLDER_BACKEND_STATES_LINKED_LIST
 from src.constants import CUSTOM_NEXT_COMMAND_NAME, DEBUG_SESSION_VAR_NAME
 from src.utils import make_non_blocking, get_gdb_script, get_subprocess_output
-from src.placeholder_data import PLACEHOLDER_BACKEND_STATES
 
 # Parent directory of this python script e.g. "/user/.../debugger/src"
 # In the docker container this will be "/app/src"
@@ -56,7 +56,7 @@ def echo(socket_id: str, data: Any) -> None:
 
 
 @io.event
-def sendDummyData(socket_id: str, line_number: Any) -> None:
+def sendDummyLinkedListData(socket_id: str, line_number: int) -> None:
     """
     Send hard-coded heap dictionaries to the frontend user.
     Mainly for development purposes.
@@ -68,28 +68,59 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
           line_number, "at event sendDummyData")
     backend_dict = {}
     # Our initial linked list node has been alloced with data value 27
-    if line_number == "100":
-        backend_dict = PLACEHOLDER_BACKEND_STATES[0]
-    elif line_number == "101":
-        backend_dict = PLACEHOLDER_BACKEND_STATES[1]
-    elif line_number == "102":
-        backend_dict = PLACEHOLDER_BACKEND_STATES[2]
-    elif line_number == "103":
-        backend_dict = PLACEHOLDER_BACKEND_STATES[3]
-    elif line_number == "104":
-        backend_dict = PLACEHOLDER_BACKEND_STATES[4]
-    elif line_number == "105":
-        backend_dict = PLACEHOLDER_BACKEND_STATES[5]
-    elif line_number == "106":
-        backend_dict = PLACEHOLDER_BACKEND_STATES[6]
-    elif line_number == "107":
-        backend_dict = PLACEHOLDER_BACKEND_STATES[7]
-    elif line_number == "108":
-        backend_dict = PLACEHOLDER_BACKEND_STATES[8]
+    if line_number == 100:
+        backend_dict = PLACEHOLDER_BACKEND_STATES_LINKED_LIST[0]
+    elif line_number == 101:
+        backend_dict = PLACEHOLDER_BACKEND_STATES_LINKED_LIST[1]
+    elif line_number == 102:
+        backend_dict = PLACEHOLDER_BACKEND_STATES_LINKED_LIST[2]
+    elif line_number == 103:
+        backend_dict = PLACEHOLDER_BACKEND_STATES_LINKED_LIST[3]
+    elif line_number == 104:
+        backend_dict = PLACEHOLDER_BACKEND_STATES_LINKED_LIST[4]
+    elif line_number == 105:
+        backend_dict = PLACEHOLDER_BACKEND_STATES_LINKED_LIST[5]
+    elif line_number == 106:
+        backend_dict = PLACEHOLDER_BACKEND_STATES_LINKED_LIST[6]
+    elif line_number == 107:
+        backend_dict = PLACEHOLDER_BACKEND_STATES_LINKED_LIST[7]
+    elif line_number == 108:
+        backend_dict = PLACEHOLDER_BACKEND_STATES_LINKED_LIST[8]
     else:
         backend_dict = "LINE NOT FOUND"
 
-    io.emit("sendDummyData", backend_dict, room=socket_id)
+    io.emit("sendDummyLinkedListData", backend_dict, room=socket_id)
+
+
+@io.event
+def sendDummyBinaryTreeData(socket_id: str, line_number: int) -> None:
+    """
+    Send hard-coded heap dictionaries to the frontend user.
+    Mainly for development purposes.
+    Supposing the GDB debug session is currently at `line_number` in the program.
+    This function will send
+    the heap dictionary at that point during the program's runtime.
+    """
+    print("Received message from", socket_id, ":",
+          line_number, "at event sendDummyData")
+    backend_dict = {}
+    # Our initial linked list node has been alloced with data value 27
+    if line_number == 100:
+        backend_dict = PLACEHOLDER_BACKEND_STATES_BINARY_TREE[0]
+    elif line_number == 101:
+        backend_dict = PLACEHOLDER_BACKEND_STATES_BINARY_TREE[1]
+    elif line_number == 102:
+        backend_dict = PLACEHOLDER_BACKEND_STATES_BINARY_TREE[2]
+    elif line_number == 103:
+        backend_dict = PLACEHOLDER_BACKEND_STATES_BINARY_TREE[3]
+    elif line_number == 104:
+        backend_dict = PLACEHOLDER_BACKEND_STATES_BINARY_TREE[4]
+    elif line_number == 105:
+        backend_dict = PLACEHOLDER_BACKEND_STATES_BINARY_TREE[5]
+    else:
+        backend_dict = "LINE NOT FOUND"
+
+    io.emit("sendDummyBinaryTreeData", backend_dict, room=socket_id)
 
 
 @io.event

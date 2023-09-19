@@ -239,7 +239,8 @@ class CustomNextCommand(gdb.Command):
                         "variable": var,
                         "type": struct_name,
                         "size": bytes,
-                        "data": data
+                        "data": data,
+                        "addr": address
                     }
                     self.heap_data[address] = obj
 
@@ -312,19 +313,21 @@ def send_backend_data_to_server(user_socket_id: str = None, backend_data: dict =
                     "function": "function_name"
                 },
                 "stack_data": [
-                    {
+                    "addr": {
                         "name": "var_name",
                         "value": "var_value",
                         "type": "var_type"
+                        "addr": "var_addr",
                     },
                     ...
                 ],
                 "heap_data": {
-                    "addr1": {
-                        ...
-                    },
-                    "addr2": {
-                        ...
+                    "addr": {
+                        "variable": ...,
+                        "type": ...,
+                        "size": ...,
+                        "data": ...,
+                        "addr": ...
                     },
                     ...
                 }
