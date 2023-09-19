@@ -11,8 +11,7 @@ import eventlet
 from typing import Any
 import subprocess
 import json
-from placeholder_data import PLACEHOLDER_BACKEND_STATES_BINARY_TREE
-from placeholder_data import PLACEHOLDER_HEAP_DICTS
+from placeholder_data import PLACEHOLDER_BACKEND_STATES_BINARY_TREE, PLACEHOLDER_BACKEND_STATES_LINKED_LIST
 from src.constants import CUSTOM_NEXT_COMMAND_NAME
 from src.utils import make_non_blocking, compile_program, get_gdb_script, get_subprocess_output, create_ll_script, create_ll_script_2
 
