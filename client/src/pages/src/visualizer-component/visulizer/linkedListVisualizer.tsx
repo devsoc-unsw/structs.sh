@@ -112,9 +112,10 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
 
   const svgRef = useRef(null);
   const handleDrag = (event, info) => {
+    event.preventDefault();
     const viewBox = svgRef.current.viewBox.baseVal;
-    viewBox.x -= info.delta.x / 2;
-    viewBox.y -= info.delta.y / 2;
+    viewBox.x -= info.delta.x;
+    viewBox.y -= info.delta.y;
   };
 
   const handleWheel = (event) => {
@@ -123,28 +124,37 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
     const viewBox = svgRef.current.viewBox.baseVal;
     const zoomFactor = 1.045;
 
-    if (event.deltaY < 0) {
+    const dx = viewBox.width * (zoomFactor - 1) / 2;
+    const dy = viewBox.height * (zoomFactor - 1) / 2;
+
+    if (event.deltaY < 0) { // zoom in
       viewBox.width /= zoomFactor;
       viewBox.height /= zoomFactor;
-    } else {
+      viewBox.x += dx;
+      viewBox.y += dy;
+    } else { // zoom out
       viewBox.width *= zoomFactor;
       viewBox.height *= zoomFactor;
+      viewBox.x -= dx;
+      viewBox.y -= dy;
     }
   };
 
   return (
     <motion.svg
       ref={svgRef}
-      width="100%"
-      height="100%"
-      viewBox="0 0 100% 100%"
+      width={dimensions.width}
+      height={dimensions.height}
+      viewBox="0 0 1000 1000"
       initial="hidden"
       animate={controls}
       drag={true}
       onDrag={(event, info) => handleDrag(event, info)}
+      dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }} 
       dragMomentum={false}
       dragElastic={0}
       onWheel={(event) => handleWheel(event)}
+      overflow="hidden"
     >
       <AnimatePresence>{Object.values(drawable)} </AnimatePresence>
     </motion.svg>
