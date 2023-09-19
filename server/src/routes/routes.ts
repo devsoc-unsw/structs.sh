@@ -2,6 +2,7 @@ import express, { type Request, type Response } from 'express';
 import { dataStructure } from '../models/dataStructure';
 import { users } from '../models/users';
 import { authLogin, authRegister } from '../service/service';
+import { writeFileSync, existsSync, mkdirSync } from 'fs';
 
 const router = express.Router();
 
@@ -77,5 +78,20 @@ router.post('/auth/login', async (req: Request, res: Response) => {
   const found = await authLogin(username, password);
   res.json({ found });
 });
+
+let counter = 0;
+router.post('/api/saveFile', async (req : Request, res: Response) => {
+  counter++;
+  const username = 'ben123';
+  const filename = 'tempfile' + counter;
+  if (!existsSync('./user-files/' + username)) {
+    mkdirSync('./user-files/' + username);
+  }
+
+
+  await writeFileSync('./user-files/' + username + '/' + filename, 'hello world');
+  // save to volume here
+  })
+
 
 export { router };

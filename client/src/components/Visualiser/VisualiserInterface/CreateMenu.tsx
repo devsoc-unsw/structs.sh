@@ -48,6 +48,11 @@ const CreateMenu = () => {
     controller.generateDataStructure();
   }, [controller]);
 
+  const saveFileTemp = () => {
+    axios.post(SERVER_URL + '/api/saveFile', {});
+  }
+
+
   const handleSave = () => {
     const data = {
       owner: 'Hanyuan Li',
@@ -161,6 +166,11 @@ const CreateMenu = () => {
           }}
         />
       ) : null}
+      <MenuButton onClick={saveFileTemp}>
+        <Typography color="textPrimary" whiteSpace="nowrap">
+          save file
+        </Typography>
+      </MenuButton>
     </Box>
   );
 };
