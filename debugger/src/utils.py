@@ -8,15 +8,6 @@ from typing import IO
 from constants import CUSTOM_NEXT_COMMAND_NAME, DEBUG_SESSION_VAR_NAME
 
 
-def compile_program(file_names: list[str], user_program_name: str) -> None:
-    '''
-    Args:
-        - file_names: list of file names to compile
-        - user_program_name: name to call the compiled program
-    '''
-    subprocess.run(["gcc", "-ggdb", *file_names, "-o", user_program_name])
-
-
 def make_non_blocking(file_obj: IO) -> None:
     '''
     Make a file object non-blocking so the program is not blocked when reading from

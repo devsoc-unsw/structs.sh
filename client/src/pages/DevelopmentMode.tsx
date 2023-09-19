@@ -154,7 +154,7 @@ const DevelopmentMode = () => {
           <VisualizerMain
             backendState={backendState}
             getNextState={() => {
-              socket.emit('sendDummyData', count.toString());
+              // socket.emit('sendDummyData', count.toString());
               socket.emit('executeNext');
               setCountState(count + 1);
             }}
@@ -167,7 +167,7 @@ const DevelopmentMode = () => {
     <VisualizerMain
       backendState={backendState}
       getNextState={() => {
-        socket.emit('sendDummyData', count.toString());
+        // socket.emit('sendDummyData', count.toString());
         socket.emit('executeNext');
         setCountState(count + 1);
       }}

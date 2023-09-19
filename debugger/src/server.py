@@ -11,9 +11,8 @@ import socketio
 import eventlet
 from typing import Any
 import subprocess
-import json
 from src.constants import CUSTOM_NEXT_COMMAND_NAME
-from src.utils import make_non_blocking, compile_program, get_gdb_script, get_subprocess_output, create_ll_script, create_ll_script_2
+from src.utils import make_non_blocking, get_gdb_script, get_subprocess_output
 from src.placeholder_data import PLACEHOLDER_BACKEND_STATES
 
 # Parent directory of this python script e.g. "/user/.../debugger/src"
@@ -21,16 +20,8 @@ from src.placeholder_data import PLACEHOLDER_BACKEND_STATES
 # You can then use this to reference files relative to this directory.
 abs_file_path = os.path.dirname(os.path.abspath(__file__))
 
-# Hard-coded variables for now.
-# Later we want to receive the line numbers and file names from the client
-
-# Line numbers that the user wants to set breakpoints on.
-LINE_NUMBERS = ["28"]
-FILE_NAMES = [f"{abs_file_path}/samples/linkedlist/main1.c",
-              f"{abs_file_path}/samples/linkedlist/linkedlist.c"]
-USER_PROGRAM_NAME = f"{abs_file_path}/user_program"
-TEST_PROGRAM_NAME = f"{abs_file_path}/samples/linkedlist/main3"
-GDB_SCRIPT_NAME = "test_stdout"  # Can just use "default"
+TEST_PROGRAM_NAME = f"{abs_file_path}/samples/linkedlist/main4"
+GDB_SCRIPT_NAME = "test_linked_list"  # Can just use "default"
 
 TIMEOUT_DURATION = 0.3
 
@@ -55,36 +46,6 @@ def connect(socket_id: str, *_) -> None:
 @io.event
 def disconnect(socket_id: str) -> None:
     print("Client disconnected: ", socket_id)
-
-
-@io.event
-def getBreakpoints(socket_id: str, line_numbers: list[int], listName: list[str]) -> None:
-    print("Received message from", socket_id, "at event getBreakpoints")
-    print("Echoing message back to client...")
-
-    # Compile C program
-    compile_program(FILE_NAMES)
-
-    # Run GDB with the script
-    gdb_script = create_ll_script(LINE_NUMBERS, USER_PROGRAM_NAME)
-
-    command = f"echo '{gdb_script}' | gdb -q"
-    output = subprocess.check_output(command, shell=True).decode("utf-8")
-
-    print(output)
-
-    # Find the JSON data in the GDB output
-    json_start = output.find("{")
-    json_end = output.rfind("}") + 1
-    json_data = output[json_start:json_end]
-
-    # Parse the JSON data into a Python dictionary
-    nodes_dict = json.loads(json_data)
-    nodes = nodes_dict["Nodes"]
-    nodes2 = f"{nodes}"
-
-    # Send linked list nodes back to the client
-    io.emit("getBreakpoints", nodes2, room=socket_id)
 
 
 @io.event
