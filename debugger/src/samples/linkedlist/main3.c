@@ -14,7 +14,7 @@ int main(int argc, char **argv) {
   // Initialise first node
   List *l = malloc(sizeof(*l));
   if (l == NULL) {
-    printf("ERRROROROR");
+    printf("Error");
   }
   l->head = malloc(sizeof(struct node));
   l->head->data = 1;
@@ -25,12 +25,10 @@ int main(int argc, char **argv) {
   l->head->next = malloc(sizeof(struct node));
   l->head->next->data = 2;
   l->head->next->next = NULL;
-  l->size++;                                        // gdb script breaks here
-  l->size++;                                        // gdb script breaks here
+  l->size++;
 
   // Append third node
-  struct node *node3 = malloc(sizeof(struct node));   // gdb script adds this to dict but breaks afterwards somewhere (and before next malloc)
-  node3->data = 3;
+  struct node *node3 = malloc(sizeof(struct node));
   node3->next = NULL;
   l->head->next->next->next = node3;
   l->size++; // 3
