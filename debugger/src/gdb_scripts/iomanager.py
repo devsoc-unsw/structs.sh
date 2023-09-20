@@ -4,6 +4,8 @@ import select
 from typing import Optional
 import gdb
 
+from src.gdb_scripts.use_socketio_connection import useSocketIOConnection, enable_socketio_client_emit
+
 
 class IOManager:
     max_read_bytes = 24 * 1024

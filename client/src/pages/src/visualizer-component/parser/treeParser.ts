@@ -145,7 +145,8 @@ export class TreeParser implements Parser {
           case CType.DOUBLE:
           case CType.DOUBLE_LINED_LIST_NODE:
           case CType.INT:
-          case CType.SINGLE_LINED_LIST_NODE:
+          case CType.LINKED_LIST_NODE:
+          case CType.LINKED_LIST_HEAD:
             break;
           default:
             assertUnreachable(entity);

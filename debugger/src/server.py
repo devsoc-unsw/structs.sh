@@ -6,30 +6,22 @@ Must run in /debugger/src directory (because the gdb commands will source a pyth
 '''
 
 import os
+from pprint import pprint
 import socketio
 import eventlet
 from typing import Any
 import subprocess
-import json
 from placeholder_data import PLACEHOLDER_BACKEND_STATES_BINARY_TREE, PLACEHOLDER_BACKEND_STATES_LINKED_LIST
-from src.constants import CUSTOM_NEXT_COMMAND_NAME
-from src.utils import make_non_blocking, compile_program, get_gdb_script, get_subprocess_output, create_ll_script, create_ll_script_2
+from src.constants import CUSTOM_NEXT_COMMAND_NAME, DEBUG_SESSION_VAR_NAME
+from src.utils import make_non_blocking, get_gdb_script, get_subprocess_output
 
 # Parent directory of this python script e.g. "/user/.../debugger/src"
 # In the docker container this will be "/app/src"
 # You can then use this to reference files relative to this directory.
 abs_file_path = os.path.dirname(os.path.abspath(__file__))
 
-# Hard-coded variables for now.
-# Later we want to receive the line numbers and file names from the client
-
-# Line numbers that the user wants to set breakpoints on.
-LINE_NUMBERS = ["28"]
-FILE_NAMES = [f"{abs_file_path}/samples/linkedlist/main1.c",
-              f"{abs_file_path}/samples/linkedlist/linkedlist.c"]
-USER_PROGRAM_NAME = f"{abs_file_path}/user_program"
-TEST_PROGRAM_NAME = f"{abs_file_path}/samples/linkedlist/main3"
-GDB_SCRIPT_NAME = "test_linked_list"  # Can just use "default"
+GDB_SCRIPT_NAME = "default"  # Can just use "default"
+TEST_PROGRAM_NAME = f"{abs_file_path}/samples/linkedlist/main4"
 
 TIMEOUT_DURATION = 0.3
 
@@ -54,36 +46,6 @@ def connect(socket_id: str, *_) -> None:
 @io.event
 def disconnect(socket_id: str) -> None:
     print("Client disconnected: ", socket_id)
-
-
-@io.event
-def getBreakpoints(socket_id: str, line_numbers: list[int], listName: list[str]) -> None:
-    print("Received message from", socket_id, "at event getBreakpoints")
-    print("Echoing message back to client...")
-
-    # Compile C program
-    compile_program(FILE_NAMES)
-
-    # Run GDB with the script
-    gdb_script = create_ll_script(LINE_NUMBERS, USER_PROGRAM_NAME)
-
-    command = f"echo '{gdb_script}' | gdb -q"
-    output = subprocess.check_output(command, shell=True).decode("utf-8")
-
-    print(output)
-
-    # Find the JSON data in the GDB output
-    json_start = output.find("{")
-    json_end = output.rfind("}") + 1
-    json_data = output[json_start:json_end]
-
-    # Parse the JSON data into a Python dictionary
-    nodes_dict = json.loads(json_data)
-    nodes = nodes_dict["Nodes"]
-    nodes2 = f"{nodes}"
-
-    # Send linked list nodes back to the client
-    io.emit("getBreakpoints", nodes2, room=socket_id)
 
 
 @io.event
@@ -233,7 +195,8 @@ def executeNext(socket_id: str) -> None:
     # Reading new output from the program relies on the fact that next was
     # executed just before. This is expected to happen in the call to the custom
     # next command above.
-    proc.stdin.write(f'python io_manager.read_and_send()\n')
+    proc.stdin.write(
+        f'python {DEBUG_SESSION_VAR_NAME}.io_manager.read_and_send()\n')
     proc.stdin.flush()
     get_subprocess_output(proc, TIMEOUT_DURATION)
 
@@ -273,7 +236,7 @@ def createdTypeDeclaration(socket_id: str, user_socket_id, type) -> None:
 
 
 @io.event
-def updatedBackendState(socket_id: str, user_socket_id, data) -> None:
+def updatedBackendState(socket_id: str, user_socket_id, backend_data) -> None:
     '''
     Event to send the current backend state (including stack and heap data) to
     the specified frontend client.
@@ -282,8 +245,8 @@ def updatedBackendState(socket_id: str, user_socket_id, data) -> None:
     print(
         f"Event updatedBackendState received from gdb instance with socket_id {socket_id}:")
     print(f"Sending backend state to client {user_socket_id}:")
-    print(data)
-    io.emit("sendBackendStateToUser", data, room=user_socket_id)
+    pprint(backend_data)
+    io.emit("sendBackendStateToUser", backend_data, room=user_socket_id)
 
 
 @io.event

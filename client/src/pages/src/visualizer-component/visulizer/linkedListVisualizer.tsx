@@ -20,7 +20,7 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
   const [pos, _] = useState<{ [uid: string]: MotionCoord }>({});
 
   const renderNodes = useCallback(() => {
-    console.log('Graph State', graphState);
+    if (graphState === undefined) return;
     if (Object.keys(nodeRefs.current).length !== 0) {
       Object.keys(nodeRefs.current).forEach((key) => {
         if (graphState.cacheEntity[key] === undefined) {
@@ -143,9 +143,9 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
   return (
     <motion.svg
       ref={svgRef}
-      width="100%"
-      height="100%"
-      viewBox="0 0 100% 100%"
+      width={dimensions.width}
+      height={dimensions.height}
+      viewBox="0 0 1000 1000"
       initial="hidden"
       animate={controls}
       drag={true}
