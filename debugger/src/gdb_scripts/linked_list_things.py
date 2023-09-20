@@ -258,49 +258,49 @@ int main(int argc, char **argv) {
         # for addr in self.heap_data.keys():
         #  # update(self.heap_data, addr)
 
-        # Update heap dictionary
-        for addr, obj in self.heap_data.items():
-            if ("struct node" in obj["type"]):
-                print("Updating struct node: ")
-                print(addr)
-                # Get struct info by passing in address
-                node_str = gdb.execute(
-                    f'p *(struct node *) {addr}', to_string=True)       # Can replace struct node with type stored in object
-                # Extract data and next field from return value         # But need to change the 'data' and 'next' extraction method
-                node_str = node_str.split("=", 1)[1].strip()            # to generalise it for all types of structs (e.g. those with > 2 fields)
-                node_str = node_str.strip("{}")                         # or those with diff names
-                print(node_str)
-                strings = node_str.split(',')
-                data_str = strings[0].split(' = ')[1]
-                print(f"Data: {data_str}")
-                next_str = strings[1].split(' = ')[1]
-                print(f"Next: {next_str}")
+        # # Update heap dictionary
+        # for addr, obj in self.heap_data.items():
+        #     if ("struct node" in obj["type"]):
+        #         print("Updating struct node: ")
+        #         print(addr)
+        #         # Get struct info by passing in address
+        #         node_str = gdb.execute(
+        #             f'p *(struct node *) {addr}', to_string=True)       # Can replace struct node with type stored in object
+        #         # Extract data and next field from return value         # But need to change the 'data' and 'next' extraction method
+        #         node_str = node_str.split("=", 1)[1].strip()            # to generalise it for all types of structs (e.g. those with > 2 fields)
+        #         node_str = node_str.strip("{}")                         # or those with diff names
+        #         print(node_str)
+        #         strings = node_str.split(',')
+        #         data_str = strings[0].split(' = ')[1]
+        #         print(f"Data: {data_str}")
+        #         next_str = strings[1].split(' = ')[1]
+        #         print(f"Next: {next_str}")
 
-                obj["data"]["data"] = data_str
-                obj["data"]["next"] = next_str
+        #         obj["data"]["data"] = data_str
+        #         obj["data"]["next"] = next_str
 
-            elif ("struct list" in obj["type"]):
-                print("Updating struct list: ")
-                print(addr)
-                # p *(struct list *) l
-                # p *(struct list *) 0xaaab1feed2a0
+        #     elif ("struct list" in obj["type"]):
+        #         print("Updating struct list: ")
+        #         print(addr)
+        #         # p *(struct list *) l
+        #         # p *(struct list *) 0xaaab1feed2a0
 
-                # Get struct info by passing in address
-                node_str = gdb.execute(
-                    f'p *(struct list *) {addr}', to_string=True)       # Can replace struct list with type stored in object (see comment above)
-                # Extract data and next field from return value
-                print(f"-----{node_str}")
-                node_str = node_str.split("=", 1)[1].strip()
-                node_str = node_str.strip("{}")
-                print(node_str)
-                strings = node_str.split(',')
-                data_str = strings[0].split(' = ')[1]
-                print(f"Head: {data_str}")
-                next_str = strings[1].split(' = ')[1]
-                print(f"Size: {next_str}")
+        #         # Get struct info by passing in address
+        #         node_str = gdb.execute(
+        #             f'p *(struct list *) {addr}', to_string=True)       # Can replace struct list with type stored in object (see comment above)
+        #         # Extract data and next field from return value
+        #         print(f"-----{node_str}")
+        #         node_str = node_str.split("=", 1)[1].strip()
+        #         node_str = node_str.strip("{}")
+        #         print(node_str)
+        #         strings = node_str.split(',')
+        #         data_str = strings[0].split(' = ')[1]
+        #         print(f"Head: {data_str}")
+        #         next_str = strings[1].split(' = ')[1]
+        #         print(f"Size: {next_str}")
 
-                obj["data"]["head"] = data_str
-                obj["data"]["size"] = next_str
+        #         obj["data"]["head"] = data_str
+        #         obj["data"]["size"] = next_str
 
 
         print(f"\n=== Finished running update_backend_state in gdb instance\n\n")

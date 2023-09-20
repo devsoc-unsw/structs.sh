@@ -25,7 +25,8 @@ int main(int argc, char **argv) {
   l->head->next = malloc(sizeof(struct node));
   l->head->next->data = 2;
   l->head->next->next = NULL;
-  //l->size++;                                        // gdb script breaks here
+  l->size++;                                        // gdb script breaks here
+  l->size++;                                        // gdb script breaks here
 
   // Append third node
   struct node *node3 = malloc(sizeof(struct node));   // gdb script adds this to dict but breaks afterwards somewhere (and before next malloc)
