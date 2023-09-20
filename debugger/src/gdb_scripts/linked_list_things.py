@@ -1,12 +1,12 @@
 import os
+from pprint import pprint
 import gdb
 import subprocess
 from pycparser import parse_file, c_ast
 import re
 
-from src.gdb_scripts.use_socketio_connection import useSocketIOConnection
+from src.gdb_scripts.use_socketio_connection import useSocketIOConnection, enable_socketio_client_emit
 from src.gdb_scripts.stack_variables import get_stack_data, get_frame_info
-from src.gdb_scripts.gdb_utils import enable_socketio_client_emit
 
 # Parent directory of this python script e.g. "/user/.../debugger/src/gdb_scripts"
 # In the docker container this will be "/app/src/gdb_scripts"
@@ -80,10 +80,12 @@ class CustomNextCommand(gdb.Command):
 
     '''
 
-    def __init__(self, cmd_name, user_socket_id):
+    def __init__(self, cmd_name, user_socket_id, debug_session=None):
         super(CustomNextCommand, self).__init__(cmd_name, gdb.COMMAND_USER)
         self.user_socket_id = user_socket_id
+        self.debug_session = debug_session
         self.heap_data = {}
+        self.break_on_all_user_defined_functions()
 
     def invoke(self, arg=None, from_tty=None):
         # TODO: detect end of debug session
@@ -95,6 +97,8 @@ class CustomNextCommand(gdb.Command):
 
         print("\n=== Running CustomNextCommand in gdb...")
 
+        frame_info = get_frame_info()
+
         temp_line = gdb.execute('frame', to_string=True)
         raw_str = (temp_line.split('\n')[1]).split('\t')[1]
         line_str = remove_non_standard_characters(raw_str)
@@ -102,33 +106,45 @@ class CustomNextCommand(gdb.Command):
         temp_line = gdb.execute('frame', to_string=True)
         raw_str = (temp_line.split('\n')[1]).split('\t')[1]
         line_str = remove_non_standard_characters(raw_str)
+
+        assert self.debug_session is not None
 
         # Create a complete C code file with function prototypes, main, and variable line
-        complete_c_code = """
-struct node {
-    int data;
-    struct node *next;
-};
+        c_code_for_preprocessing = "\n".join(
+            self.debug_session.get_cached_type_decl_strs()) + "\nint main(int argc, char **argv) {\n" + line_str + "\n}"
+#         c_code_for_preprocessing = """
+# struct node {
+#     int data;
+#     struct node *next;
+# };
 
-typedef struct list {
-    struct node *head;
-    int size;
-} List;
-int main(int argc, char **argv) {
-"""
-        complete_c_code = complete_c_code + line_str + "\n}"
-        # print(complete_c_code)
+# typedef struct list {
+#     struct node *head;
+#     int size;
+# } List;
+# int main(int argc, char **argv) {
+# """
+#         c_code_for_preprocessing = c_code_for_preprocessing + line_str + "\n}"
+        print(f"{c_code_for_preprocessing=}")
+        '''
+        c_code_for_preprocessing will be a string looking like this:
+        ```
+        typedef struct list List;
+        struct list;
+        struct node;
+
+        List *l = malloc(sizeof(List));
+        '''
+
+        # === Intercept call to malloc, if present
 
         # Write the complete C code to a file
         with open(USER_MALLOC_CALL_FILE_PATH, "w") as f:
-            f.write(complete_c_code)
+            f.write(c_code_for_preprocessing)
 
         subprocess.run(f"gcc -E {USER_MALLOC_CALL_FILE_PATH} > {USER_MALLOC_CALL_PREPROCESSED}",
                        shell=True)
-        if "malloc" in line_str:
-            print("---------------------LLLLLL--------------")
-            print(line_str)
-            # Try
+        try:
             # Parse the preprocessed C code into an AST
             # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
             line_ast = parse_file(USER_MALLOC_CALL_PREPROCESSED, use_cpp=True,
@@ -202,7 +218,7 @@ int main(int argc, char **argv) {
                         f'p *({struct_name} *) {address}', to_string=True)
                     # f'p *(struct node *) l->head', to_string=True)
 
-                    # Convention struct node might look like this
+                    # Conventional struct node might look like this
                     # $4 = {data = 542543, next = 0x0}
 
                     # User's struct node might look like this:
@@ -228,44 +244,34 @@ int main(int argc, char **argv) {
                         "variable": var,
                         "type": struct_name,
                         "size": bytes,
-                        "data": data
+                        "data": data,
+                        "address": address
                     }
                     self.heap_data[address] = obj
-                    print(self.heap_data)
+                    print("Heap data:")
+                    pprint(self.heap_data)
 
             else:
-                print("No variable being malloced")
+                print("Current line does not contain call to malloc")
 
             # Print the variable names being freed
             print(malloc_visitor.free)
             print("Variables being freed:")
             for var in malloc_visitor.free_variables:
                 print(var)
-        else:
-            print("--------------WWWW--------------------")
 
-        #except Exception as e:
-        #    print(f"An error occurred while intercepting malloc: {e}")
-        #    pass
-
-        backend_data = {
-            "frame_info": get_frame_info(),
-            "stack_data": get_stack_data(),
-            "heap_data": self.heap_data
-        }
-        send_backend_data_to_server(
-            self.user_socket_id, backend_data=backend_data)
+        except Exception as e:
+            print("An error occurred while intercepting potential malloc: ", e)
 
         # TODO: Need a way to detect if program exits, then send signal to server
         # which should tell the client that the debugging session is over.
         gdb.execute('next')
 
-        # TODO: === Up date existing tracked heap data
-        # Make sure to do this after the next command, so that the heap is actually updated
-        # for addr in self.heap_data.keys():
-        #  # update(self.heap_data, addr)
+        # == Get stack data after executing next command
+        stack_data = get_stack_data()
 
-        # Update heap dictionary
+        # === Up date existing tracked heap data
+        # Make sure this is done AFTER executing the next command, so that the heap is actually updated
         for addr, obj in self.heap_data.items():
             if ("struct node" in obj["type"]):
                 print("Updating struct node: ")
@@ -274,8 +280,10 @@ int main(int argc, char **argv) {
                 node_str = gdb.execute(
                     f'p *(struct node *) {addr}', to_string=True)       # Can replace struct node with type stored in object
                 # Extract data and next field from return value         # But need to change the 'data' and 'next' extraction method
-                node_str = node_str.split("=", 1)[1].strip()            # to generalise it for all types of structs (e.g. those with > 2 fields)
-                node_str = node_str.strip("{}")                         # or those with diff names
+                # to generalise it for all types of structs (e.g. those with > 2 fields)
+                node_str = node_str.split("=", 1)[1].strip()
+                # or those with diff names
+                node_str = node_str.strip("{}")
                 print(node_str)
                 strings = node_str.split(',')
                 data_str = strings[0].split(' = ')[1]
@@ -309,9 +317,16 @@ int main(int argc, char **argv) {
                 obj["data"]["head"] = data_str
                 obj["data"]["size"] = next_str
 
+        backend_data = {
+            "frame_info": frame_info,
+            "stack_data": stack_data,
+            "heap_data": self.heap_data
+        }
+        send_backend_data_to_server(
+            self.user_socket_id, backend_data=backend_data)
 
         print(f"\n=== Finished running update_backend_state in gdb instance\n\n")
-        return self.heap_data
+        return backend_data
 
     def get_heap_dict(self):
         return self.heap_data
@@ -324,6 +339,14 @@ int main(int argc, char **argv) {
             if result:
                 return result
         return None
+
+    def break_on_all_user_defined_functions(self):
+        '''
+        Break on all user-defined functions in the program so that the custom next command will step into it.
+        '''
+        functions = self.debug_session.get_cached_parsed_fn_decls()
+        for func_name in functions.keys():
+            gdb.execute(f"break {func_name}")
 
 
 @useSocketIOConnection
@@ -347,11 +370,12 @@ def send_backend_data_to_server(user_socket_id: str = None, backend_data: dict =
                     ...
                 ],
                 "heap_data": {
-                    "addr1": {
-                        ...
-                    },
-                    "addr2": {
-                        ...
+                    "addr": {
+                        "variable": ..., ## Name of stack var storing the address of this piece of heap data
+                        "type": ...,
+                        "size": ...,
+                        "data": ...,
+                        "addr": ...
                     },
                     ...
                 }
@@ -373,16 +397,3 @@ def remove_non_standard_characters(input_str):
     # Remove color codes and non-standard characters using a regular expression
     clean_str = re.sub(r'\x1b\[[0-9;]*[mK]', '', input_str)
     return clean_str
-
-
-def break_on_all_user_defined_functions():
-    '''
-    Break on all user-defined functions in the program so that the custom next command will step into it.
-    '''
-    functions = pycparser_parse_fn_decls()
-    for func_name in functions.keys():
-        gdb.execute(f"break {func_name}")
-
-
-if __name__ == '__main__':
-    break_on_all_user_defined_functions()
