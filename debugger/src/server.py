@@ -21,7 +21,7 @@ from src.utils import make_non_blocking, get_gdb_script, get_subprocess_output
 abs_file_path = os.path.dirname(os.path.abspath(__file__))
 
 GDB_SCRIPT_NAME = "default"  # Can just use "default"
-TEST_PROGRAM_NAME = f"{abs_file_path}/samples/linkedlist/main4"
+TEST_PROGRAM_NAME = f"{abs_file_path}/samples/linkedlist/main3"
 
 TIMEOUT_DURATION = 0.3
 
