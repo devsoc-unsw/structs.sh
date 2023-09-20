@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
   // Append third node
   struct node *node3 = malloc(sizeof(struct node));
   node3->next = NULL;
-  l->head->next->next->next = node3;
+  l->head->next->next = node3;
   l->size++; // 3
 
   // Append fourth node
