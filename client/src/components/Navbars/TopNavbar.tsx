@@ -29,7 +29,7 @@ const StyledCheckIcon = styled(CheckIcon)(({ theme }) => ({
 }));
 
 interface Props {
-  position?: 'fixed' | 'static' | 'sticky';
+  position?: 'fixed' | 'static' | 'sticky' | 'relative';
 }
 
 const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {

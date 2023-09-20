@@ -29,7 +29,7 @@ const generateRoutes = async (pages: any) => {
   for (const path in pages) {
     const module = await pages[path]();
     const PageComponent = module.default;
-    const routePath = '/' + path.slice(12, -4); // remove './edu_pages/' and '.mdx'
+    const routePath = '/learning/' + path.slice(12, -4); // remove './edu_pages/' and '.mdx'
     routes.push(
       <Route 
         key={routePath} 

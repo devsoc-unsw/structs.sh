@@ -32,7 +32,7 @@ const SidebarItem: React.FC<SidebarItemProps> = (item) => {
 	};
 
 	const handleTopicClick = (url: string) => {
-		navigate(`${url}`);
+		navigate(`/learning${url}`);
 	};
 
 	if (item.children.length !== 0) {
