@@ -6,3 +6,8 @@
   font-family: monospace;
   width: 4rem;
 }
+
+.configuratorItem {
+  display: flex;
+  justify-content: space-between;
+}

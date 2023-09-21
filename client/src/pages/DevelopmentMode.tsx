@@ -35,6 +35,8 @@ const DevelopmentMode = () => {
 
   const [count, setCountState] = useState(100);
 
+  const [typeDeclarations, setTypeDeclarations] = useState([])
+
   const updateState = (data: any) => {
     console.log('Update dummy backendState:');
     setBackendState(data);
@@ -64,6 +66,7 @@ const DevelopmentMode = () => {
 
   const onSendTypeDeclaration = useCallback((data: any) => {
     console.log(`Received type declaration:\n`, data);
+    setTypeDeclarations((prev) => [...prev, data]) 
   }, []);
 
   const onSendBackendStateToUser = useCallback((data: any) => {
@@ -128,7 +131,7 @@ const DevelopmentMode = () => {
             </Tab>
             <Tab label="Configure">
               <div className={styles.pane}>
-                <Configuration />
+                <Configuration typeDeclarations={typeDeclarations}/>
               </div>
             </Tab>
           </Tabs>
