@@ -1,7 +1,7 @@
 .sidebar {
   color: #212427;
   width: 270px;
-  height: 100vh;
+  height: calc(100vh - 65px);
   flex-shrink: 0;
   font-size: 1.3rem;
   font-weight: 500;

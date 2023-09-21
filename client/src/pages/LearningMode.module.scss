@@ -1,49 +1,57 @@
 .learning {
+  // display: flex;
+  justify-content: center;
 	min-height: 100vh;
-	background: rgb(179,135,222);
-	background: radial-gradient(circle, rgba(179,135,222,1) 0%, rgba(140,162,220,1) 100%);
 }
 
 .learningLayout {
   display: flex;
+  // margin-top: 100px;
+  align-items: flex-start;
 }
 
 .learningLeft {
-  flex: 1;
-  position: fixed;
-  height: auto;
+  position: sticky;
+  margin-left: 2rem;
   width: 300px;
+  top: 100px;
+  color: #212427;
   background: rgba(255,255,255,0.4);
-  border-radius: 20px;
-  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 10px;
+  border: 1px solid rgba(206, 206, 206, 0.7);
   backdrop-filter: blur(5px);
-  top: 10%;
-  left: 300px;
+}
+
+.learningLeftTitle {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(206, 206, 206, 0.7);
+}
+
+.learningLeftTitle h2 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.learningLeftTopic button {
+  display: block;
+  font-size: 1rem;
+  height: 2rem;
+  padding: 0.5rem 1.5rem;
+  cursor: pointer;
+  width: 85%;
+}
+
+.activeLink {
+  border-left: 3px solid rgb(58, 21, 189);
+  font-weight: 700;
+}
+
+.inactiveLink {
+  font-weight: 500;
 }
 
 .learningRight {
   flex: 2;
   scroll-behavior: smooth;
-}
-
-.learningLeftTitle {
-  padding: 0 24px;
-  padding-top: 16px;
-}
-
-.learningLeftTitle h2 {
-  margin: 0;
-}
-
-.learningLeftTopic {
-  padding: 8px 24px;
-}
-
-.learningLeftTopic a {
-  color: white;
-  text-decoration: none;
-}
-
-.activeLink {
-  font-weight: bold;
+  color: #212427;
 }

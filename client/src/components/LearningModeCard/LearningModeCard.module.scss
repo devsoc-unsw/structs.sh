@@ -1,55 +1,22 @@
 .card {
+  margin: 0 1.75rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  top: 100px;
 	background: rgba(255,255,255,0.4);
   border-radius: 10px;
-	border: 1px solid rgba(255,255,255,0.2);
+	border: 1px solid rgba(199, 199, 199, 0.7);
 	backdrop-filter: blur(5px);
 	-webkit-backdrop-filter: blur(5px);
 }
 
-.card_parent {
-  margin: 120px auto;
-	max-width: 450px;
-	width: 47%;
-  height: auto;
-  top: 156px;
-  z-index: 2;
-	padding: 20px;
-  background: rgba( 255, 255, 255, 0.2 );
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+.topic {
+  padding: 0 24px;
+  border-bottom: 1px solid rgba(199, 199, 199, 0.7);
 }
 
-.card_first {
-	position: absolute;
-	width: 40px;
-  height: 40px;
-  top: -20px;
-  left: 10%;
-  z-index: 4;
-  box-shadow: 0 4px 8px 0 rgba( 31, 38, 135, 0.17 );
-}
-
-.card_second {
-	position: absolute;
-	width: 60px;
-  height: 60px;
-  z-index: 3;
-  left: 65%;
-  box-shadow: 0 4px 8px 0 rgba( 31, 38, 135, 0.17 );
-}
-
-.card_third {
-	position: absolute;
-	width: 40px;
-	height: 40px;
-	border-radius: 50%;
-  top: -50px;
-  left: 80%;
-  box-shadow: 0 4px 8px 0 rgba( 31, 38, 135, 0.17 );
-}
-
-.subtopics a {
-	color: white;
-	text-decoration: none;
+.subtopics p {
+  margin: 0;
+  padding: 12px 24px;
+  cursor: pointer;
 }

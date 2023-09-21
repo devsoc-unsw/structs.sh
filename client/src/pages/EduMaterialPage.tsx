@@ -5,7 +5,7 @@ import style from './EduMaterialPage.module.scss'
 const EduMaterialPage = ({ sidebar, mdxContent }) => {
 	return (
 		<div>
-      <TopNavbar position="relative" />
+      <TopNavbar position="fixed" />
 			<div className={style.eduMaterialPage}>
 				<div className={style.sidebar}>{sidebar}</div>
 				<div className={style.mdxContent}>
