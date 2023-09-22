@@ -75,7 +75,7 @@ const Configuration = ({ typeDeclarations }) => {
       >
         {typeDeclarations.filter(isSelfReferencing).map((typeDeclaration, index: number) => (
           <div key={index}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div className={styles.RadioGroupRow}>
               <RadioGroup.Item value={typeDeclaration.name} className={styles.RadioGroupItem}>
                 <RadioGroup.Indicator className={styles.RadioGroupIndicator} />
               </RadioGroup.Item>

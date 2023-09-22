@@ -23,6 +23,11 @@
   gap: 10px;
 }
 
+.RadioGroupRow {
+  display: flex;
+  align-items: center;
+}
+
 .RadioGroupItem {
   background-color: white;
   width: 25px;
@@ -58,7 +63,7 @@
   line-height: 1;
   padding-left: 15px;
   font-family: monospace;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .monospaceFont {
