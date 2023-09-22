@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import * as RadioGroup from '@radix-ui/react-radio-group';
+import SyntaxHighlighter from 'react-syntax-highlighter';
 import ConfigurationSelect from './ConfigurationSelect';
 import styles from 'styles/Configuration.module.css';
-import { useState } from 'react';
+import { github } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 interface NodeAnnotation {
   dataType: string;
@@ -79,7 +81,11 @@ const Configuration = ({ typeDeclarations }) => {
               <RadioGroup.Item value={typeDeclaration.name} className={styles.RadioGroupItem}>
                 <RadioGroup.Indicator className={styles.RadioGroupIndicator} />
               </RadioGroup.Item>
-              <label className={styles.Label}>{typeDeclaration.name}</label>
+              <label className={styles.Label}>
+                <SyntaxHighlighter language="c" style={github}>
+                  {typeDeclaration.name}
+                </SyntaxHighlighter>
+              </label>
             </div>
 
             <div className={styles.configuratorField}>
