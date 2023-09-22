@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import ConfigurationSelect from './ConfigurationSelect';
 import styles from 'styles/Configuration.module.css';
@@ -57,7 +56,6 @@ const Configuration = ({ typeDeclarations }) => {
   };
 
   const isSelfReferencing = (typeDeclaration) => {
-    console.log(typeDeclaration);
     if (!('fields' in typeDeclaration)) {
       return false;
     }
@@ -97,7 +95,9 @@ const Configuration = ({ typeDeclarations }) => {
               <span>Next Node</span>
               <ConfigurationSelect
                 type={typeDeclaration.name}
-                fields={typeDeclaration.fields}
+                fields={typeDeclaration.fields.filter((field) =>
+                  field.type.includes(typeDeclaration.name)
+                )}
                 handleUpdateAnnotation={handleUpdateNodeNext}
               />
             </div>

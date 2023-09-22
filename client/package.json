@@ -8,7 +8,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint './src/**/*.{tsx,ts}'",
-    "lint-fix": "eslint './src/**/*.{tsx,ts,jsx,js}' --fix"
+    "lint-fix": "eslint './src/**/*.{tsx,ts,jsx,js}' --fix",
+    "tsc": "tsc"
   },
   "dependencies": {
     "@codemirror/lang-cpp": "^6.0.2",
