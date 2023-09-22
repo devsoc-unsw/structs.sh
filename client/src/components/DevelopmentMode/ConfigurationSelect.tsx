@@ -1,10 +1,19 @@
 import * as Select from '@radix-ui/react-select';
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons';
 import styles from 'styles/Configuration.module.css';
+import { useState } from 'react';
 
-const ConfigurationSelect = ({ fields }) => {
+const ConfigurationSelect = ({ type, fields, handleUpdateAnnotation }) => {
+  const [value, setValue] = useState('');
+
+  const handleValueChange = (newValue: string) => {
+    const field = fields.find((field) => field.name === newValue);
+    setValue(newValue);
+    handleUpdateAnnotation(type, field.name, field.type);
+  };
+
   return (
-    <Select.Root>
+    <Select.Root value={value} onValueChange={handleValueChange}>
       <Select.Trigger className={styles.SelectTrigger}>
         <Select.Value placeholder="Select annotation..." />
         <Select.Icon className={styles.SelectIcon}>

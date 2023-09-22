@@ -16,7 +16,7 @@ const Configuration = ({ typeDeclarations }) => {
 
   const handleSelectNodeType = (newNodeVariable: string) => {
     setCurrNodeVariable(newNodeVariable);
-    if (newNodeVariable in nodeAnnotations) {
+    if (!(newNodeVariable in nodeAnnotations)) {
       const newNodeAnnotations = { ...nodeAnnotations };
       newNodeAnnotations[newNodeVariable] = {
         dataType: '',
@@ -25,6 +25,35 @@ const Configuration = ({ typeDeclarations }) => {
       };
       setNodeAnnotations(newNodeAnnotations);
     }
+  };
+
+  const handleUpdateNodeAnnotation = (nodeVariable: string, newAnnotation: NodeAnnotation) => {
+    const updatedNodeAnnotations = { ...nodeAnnotations };
+    updatedNodeAnnotations[nodeVariable] = newAnnotation;
+    setNodeAnnotations(updatedNodeAnnotations);
+  };
+
+  const handleUpdateNodeData = (
+    nodeVariable: string,
+    newNodeData: string,
+    newNodeDataType: string
+  ) => {
+    handleUpdateNodeAnnotation(nodeVariable, {
+      ...nodeAnnotations[nodeVariable],
+      dataVariable: newNodeData,
+      dataType: newNodeDataType,
+    });
+  };
+
+  const handleUpdateNodeNext = (
+    nodeVariable: string,
+    newNodeNext: string,
+    newNodeNextType: string
+  ) => {
+    handleUpdateNodeAnnotation(nodeVariable, {
+      ...nodeAnnotations[nodeVariable],
+      nextVariable: newNodeNext,
+    });
   };
 
   const isSelfReferencing = (typeDeclaration) => {
@@ -57,12 +86,20 @@ const Configuration = ({ typeDeclarations }) => {
 
             <div className={styles.configuratorField}>
               <span>Node Data</span>
-              <ConfigurationSelect fields={typeDeclaration.fields} />
+              <ConfigurationSelect
+                type={typeDeclaration.name}
+                fields={typeDeclaration.fields}
+                handleUpdateAnnotation={handleUpdateNodeData}
+              />
             </div>
 
             <div className={styles.configuratorField}>
               <span>Next Node</span>
-              <ConfigurationSelect fields={typeDeclaration.fields} />
+              <ConfigurationSelect
+                type={typeDeclaration.name}
+                fields={typeDeclaration.fields}
+                handleUpdateAnnotation={handleUpdateNodeNext}
+              />
             </div>
           </div>
         ))}
