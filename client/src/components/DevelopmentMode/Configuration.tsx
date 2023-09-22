@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import * as RadioGroup from '@radix-ui/react-radio-group';
 import ConfigurationSelect from './ConfigurationSelect';
 import styles from 'styles/Configuration.module.css';
 
@@ -23,23 +24,28 @@ const Configuration = ({ typeDeclarations }) => {
   };
   return (
     <div>
-      {typeDeclarations.filter(isSelfReferencing).map((typeDeclaration, index: number) => (
-        <div key={index}>
-          <div className={styles.configuratorItem}>
-            <span>{typeDeclaration.name}</span>
-            <ConfigurationSelect />
+      <RadioGroup.Root className={styles.RadioGroupRoot}>
+        {typeDeclarations.filter(isSelfReferencing).map((typeDeclaration, index: number) => (
+          <div key={index}>
+            <div style={{ display: 'flex', alignItems: 'center' }} key={index}>
+              <RadioGroup.Item value={typeDeclaration.name} className={styles.RadioGroupItem}>
+                <RadioGroup.Indicator className={styles.RadioGroupIndicator} />
+              </RadioGroup.Item>
+              <label className={styles.Label}>{typeDeclaration.name}</label>
+            </div>
+
+            {isSelfReferencing(typeDeclaration) &&
+              typeDeclaration.fields.map((field) => (
+                <div className={classNames(styles.configuratorItem, styles.field)}>
+                  <span>
+                    {field.type} {field.name}
+                  </span>
+                  <ConfigurationSelect />
+                </div>
+              ))}
           </div>
-          {isSelfReferencing(typeDeclaration) &&
-            typeDeclaration.fields.map((field) => (
-              <div className={classNames(styles.configuratorItem, styles.field)}>
-                <span>
-                  {field.type} {field.name}
-                </span>
-                <ConfigurationSelect />
-              </div>
-            ))}
-        </div>
-      ))}
+        ))}
+      </RadioGroup.Root>
     </div>
   );
 };
