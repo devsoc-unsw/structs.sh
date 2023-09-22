@@ -2,7 +2,7 @@ import * as Select from '@radix-ui/react-select';
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons';
 import styles from 'styles/Configuration.module.css';
 
-const ConfigurationSelect = () => {
+const ConfigurationSelect = ({ fields }) => {
   return (
     <Select.Root>
       <Select.Trigger className={styles.SelectTrigger}>
@@ -17,18 +17,16 @@ const ConfigurationSelect = () => {
             <ChevronUpIcon />
           </Select.ScrollUpButton>
           <Select.Viewport className={styles.SelectViewPort}>
-            <Select.Item value="Data" className={styles.SelectItem}>
-              <Select.ItemText>Data</Select.ItemText>
-              <Select.ItemIndicator className={styles.SelectItemIndicator}>
-                <CheckIcon />
-              </Select.ItemIndicator>
-            </Select.Item>
-            <Select.Item value="Next" className={styles.SelectItem}>
-              <Select.ItemText>Next Node</Select.ItemText>
-              <Select.ItemIndicator className={styles.SelectItemIndicator}>
-                <CheckIcon />
-              </Select.ItemIndicator>
-            </Select.Item>
+            {fields.map((field, index) => (
+              <Select.Item value={field.name} className={styles.SelectItem} key={index}>
+                <Select.ItemText>
+                  {field.type} {field.name}
+                </Select.ItemText>
+                <Select.ItemIndicator className={styles.SelectItemIndicator}>
+                  <CheckIcon />
+                </Select.ItemIndicator>
+              </Select.Item>
+            ))}
           </Select.Viewport>
           <Select.ScrollDownButton>
             <ChevronDownIcon />

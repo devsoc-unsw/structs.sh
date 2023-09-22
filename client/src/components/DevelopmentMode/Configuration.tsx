@@ -2,15 +2,31 @@ import classNames from 'classnames';
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import ConfigurationSelect from './ConfigurationSelect';
 import styles from 'styles/Configuration.module.css';
+import { useState } from 'react';
 
-interface LinkedListAnnotations {
-  nodeVariable: string;
-  dataType: string; //TODO: custom types
+interface NodeAnnotation {
+  dataType: string;
   dataVariable: string;
   nextVariable: string;
 }
 
 const Configuration = ({ typeDeclarations }) => {
+  const [currNodeVariable, setCurrNodeVariable] = useState('');
+  const [nodeAnnotations, setNodeAnnotations] = useState<Record<string, NodeAnnotation>>({});
+
+  const handleSelectNodeType = (newNodeVariable: string) => {
+    setCurrNodeVariable(newNodeVariable);
+    if (newNodeVariable in nodeAnnotations) {
+      const newNodeAnnotations = { ...nodeAnnotations };
+      newNodeAnnotations[newNodeVariable] = {
+        dataType: '',
+        dataVariable: '',
+        nextVariable: '',
+      };
+      setNodeAnnotations(newNodeAnnotations);
+    }
+  };
+
   const isSelfReferencing = (typeDeclaration) => {
     console.log(typeDeclaration);
     if (!('fields' in typeDeclaration)) {
@@ -24,25 +40,30 @@ const Configuration = ({ typeDeclarations }) => {
   };
   return (
     <div>
-      <RadioGroup.Root className={styles.RadioGroupRoot}>
+      <h4>Select Linked List Node</h4>
+      <RadioGroup.Root
+        className={styles.RadioGroupRoot}
+        value={currNodeVariable}
+        onValueChange={handleSelectNodeType}
+      >
         {typeDeclarations.filter(isSelfReferencing).map((typeDeclaration, index: number) => (
           <div key={index}>
-            <div style={{ display: 'flex', alignItems: 'center' }} key={index}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
               <RadioGroup.Item value={typeDeclaration.name} className={styles.RadioGroupItem}>
                 <RadioGroup.Indicator className={styles.RadioGroupIndicator} />
               </RadioGroup.Item>
               <label className={styles.Label}>{typeDeclaration.name}</label>
             </div>
 
-            {isSelfReferencing(typeDeclaration) &&
-              typeDeclaration.fields.map((field) => (
-                <div className={classNames(styles.configuratorItem, styles.field)}>
-                  <span>
-                    {field.type} {field.name}
-                  </span>
-                  <ConfigurationSelect />
-                </div>
-              ))}
+            <div className={styles.configuratorField}>
+              <span>Node Data</span>
+              <ConfigurationSelect fields={typeDeclaration.fields} />
+            </div>
+
+            <div className={styles.configuratorField}>
+              <span>Next Node</span>
+              <ConfigurationSelect fields={typeDeclaration.fields} />
+            </div>
           </div>
         ))}
       </RadioGroup.Root>

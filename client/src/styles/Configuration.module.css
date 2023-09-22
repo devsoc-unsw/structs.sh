@@ -10,13 +10,10 @@
   width: 4rem;
 }
 
-.configuratorItem {
+.configuratorField {
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.field {
   margin-left: 3rem;
 }
 
@@ -58,7 +55,6 @@
 }
 
 .Label {
-  font-size: 15px;
   line-height: 1;
   padding-left: 15px;
 }
