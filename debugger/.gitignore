@@ -12,3 +12,4 @@ ptype_output.c
 ptype_output.o
 *.dYSM
 __pycache__
+venv

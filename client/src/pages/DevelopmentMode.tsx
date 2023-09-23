@@ -9,7 +9,8 @@ import CodeEditor from 'components/DevelopmentMode/CodeEditor';
 import StackInspector from 'components/DevelopmentMode/StackInspector';
 import * as dummyData from 'components/DevelopmentMode/dummyData.json';
 import VisualizerMain from './src/VisualizerMain';
-import { BackendState } from './src/visualizer-component/types/backendType';
+import { BackendState, CType } from './src/visualizer-component/types/backendType';
+import Configuration from 'components/DevelopmentMode/Configuration';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -35,6 +36,8 @@ const DevelopmentMode = () => {
   });
 
   const [count, setCountState] = useState(100);
+
+  const [typeDeclarations, setTypeDeclarations] = useState([]);
 
   const updateState = (data: any) => {
     console.log('Update dummy backendState:');
@@ -65,6 +68,7 @@ const DevelopmentMode = () => {
 
   const onSendTypeDeclaration = useCallback((data: any) => {
     console.log(`Received type declaration:\n`, data);
+    setTypeDeclarations((prev) => [...prev, data]);
   }, []);
 
   const onSendBackendStateToUser = useCallback((data: any) => {
@@ -93,7 +97,7 @@ const DevelopmentMode = () => {
     socket.on('sendFunctionDeclaration', onSendFunctionDeclaration);
     socket.on('sendTypeDeclaration', onSendTypeDeclaration);
     socket.on('executeNext', () => {
-      // console.log('Executing next line...');
+      console.log('Executing next line...');
     });
     socket.on('sendBackendStateToUser', onSendBackendStateToUser);
     socket.on('sendStdoutToUser', onSendStdoutToUser);
@@ -128,7 +132,9 @@ const DevelopmentMode = () => {
               <StackInspector debuggerData={dummyData} />
             </Tab>
             <Tab label="Configure">
-              <div className={styles.pane}>Configure</div>
+              <div className={styles.pane}>
+                <Configuration typeDeclarations={typeDeclarations} />
+              </div>
             </Tab>
           </Tabs>
         </div>

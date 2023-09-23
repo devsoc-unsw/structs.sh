@@ -11,6 +11,7 @@ class IOManager:
     max_read_bytes = 24 * 1024
 
     def __init__(self, user_socket_id: str = None):
+        print("\nInitializing IOManager instance...")
         (master, slave) = pty.openpty()
         self.stdin = master
         self.stdout = master
