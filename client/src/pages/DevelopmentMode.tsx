@@ -8,6 +8,7 @@ import { Socket } from 'socket.io-client';
 import CodeEditor from 'components/DevelopmentMode/CodeEditor';
 import VisualizerMain from './src/VisualizerMain';
 import { BackendState, CType } from './src/visualizer-component/types/backendType';
+import Configuration from 'components/DevelopmentMode/Configuration';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -33,6 +34,8 @@ const DevelopmentMode = () => {
   });
 
   const [count, setCountState] = useState(100);
+
+  const [typeDeclarations, setTypeDeclarations] = useState([])
 
   const updateState = (data: any) => {
     console.log('Update dummy backendState:');
@@ -63,6 +66,7 @@ const DevelopmentMode = () => {
 
   const onSendTypeDeclaration = useCallback((data: any) => {
     console.log(`Received type declaration:\n`, data);
+    setTypeDeclarations((prev) => [...prev, data]) 
   }, []);
 
   const onSendBackendStateToUser = useCallback((data: any) => {
@@ -126,7 +130,9 @@ const DevelopmentMode = () => {
               <div className={styles.pane}>Inspect</div>
             </Tab>
             <Tab label="Configure">
-              <div className={styles.pane}>Configure</div>
+              <div className={styles.pane}>
+                <Configuration typeDeclarations={typeDeclarations}/>
+              </div>
             </Tab>
           </Tabs>
         </div>
