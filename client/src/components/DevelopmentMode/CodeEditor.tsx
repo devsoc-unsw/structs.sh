@@ -9,20 +9,21 @@ import 'styles/CodeEditor.css';
 
 const CodeEditor: FC = () => {
   const placeholder = '// Code your stuff below!';
-  const [code, setCode] = React.useState(placeholder);
+  const [code, setCode] = React.useState(localStorage.getItem("code") || placeholder);
 
-  const onChange = React.useCallback((value) => {
-    setCode(value);
+  const onChange = React.useCallback((newCode: string) => {
+    localStorage.setItem("code", newCode)
+    setCode(newCode);
   }, []);
 
   const sendCode = () => {
-    socket.send('mainDebug', code);
+    socket.emit('mainDebug', code);
   };
 
   return (
     <>
       <CodeMirror
-        value={placeholder}
+        value={code}
         height="100%"
         extensions={[cpp()]}
         onChange={onChange}
