@@ -136,10 +136,10 @@ def mainDebug(socket_id: str) -> None:
     print("\n=== Running gdb script...")
     print(f"gdb_script:\n{gdb_script}")
 
-    commands = []
-    for line in gdb_script.strip().split('\n'):
-        commands.append("-ex")
-        commands.append(line)
+    # commands = []
+    # for line in gdb_script.strip().split('\n'):
+    #     commands.append("-ex")
+    #     commands.append(line)
 
     # === Method 1: echo gdb_script to gdb and run gdb in a subprocess
     # command = f"echo '{gdb_script}' | gdb -q"

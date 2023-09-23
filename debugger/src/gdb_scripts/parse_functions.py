@@ -45,7 +45,7 @@ import re
 import subprocess
 import gdb
 from pycparser import parse_file, c_ast
-from src.gdb_scripts.use_socketio_connection import useSocketIOConnection
+from src.gdb_scripts.use_socketio_connection import enable_socketio_client_emit, useSocketIOConnection
 
 
 # Parent directory of this python script e.g. "/user/.../debugger/src/gdb_scripts"
@@ -334,6 +334,7 @@ def pycparser_parse_fn_decls(user_socket_id: str = None, sio=None):
                     print("Sending parsed function declaration to server...")
                     sio.emit("createdFunctionDeclaration",
                              (user_socket_id, result))
+                    enable_socketio_client_emit()
 
                 functions[func_name] = result
 
@@ -417,6 +418,7 @@ def pycparser_parse_type_decls(user_socket_id: str = None, sio=None):
                 print("Sending parsed type declaration -> server -> FE client...")
                 sio.emit("createdTypeDeclaration",
                          (user_socket_id, result))
+                enable_socketio_client_emit()
 
     print(f"\n=== Finished running pycparser_parse_type_decls in gdb instance\n\n")
 

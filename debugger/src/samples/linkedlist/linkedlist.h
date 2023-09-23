@@ -6,12 +6,14 @@ int remove_at(struct list *l, int index);
 int remove_head(struct list *l);
 void print_list(struct list *list);
 
+struct list {
+  struct node *head;
+  int size;
+};
+
 struct node {
   int data;
   struct node *next;
 };
 
-typedef struct list {
-  struct node *head;
-  int size;
-} List;
+typedef struct list List;

@@ -40,7 +40,7 @@ class DebugSession:
         gdb.execute("start")
 
         # Make stdout stream unbuffered
-        gdb.execute("call setbuf(stdout, NULL)")
+        gdb.execute("call setbuf(stdout, (void *) 0)")
 
     def get_cached_type_decl_strs(self):
         return self.type_decl_strs

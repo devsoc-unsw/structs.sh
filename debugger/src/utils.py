@@ -146,6 +146,18 @@ def get_gdb_script(program_name: str, abs_file_path: str, socket_id: str, script
         python {DEBUG_SESSION_VAR_NAME} = DebugSession("{socket_id}", "{program_name}")
         """,
 
+        "default_manual_start": f"""
+        source {abs_file_path}/gdb_scripts/DebugSession.py
+        python {DEBUG_SESSION_VAR_NAME} = DebugSession("{socket_id}", "{program_name}")
+        python {DEBUG_SESSION_VAR_NAME}.type_decl_strs = get_type_decl_strs()
+        python {DEBUG_SESSION_VAR_NAME}.parsed_type_decls = pycparser_parse_type_decls({DEBUG_SESSION_VAR_NAME}.user_socket_id)
+        python {DEBUG_SESSION_VAR_NAME}.parsed_fn_decls = pycparser_parse_fn_decls({DEBUG_SESSION_VAR_NAME}.user_socket_id)
+        python {DEBUG_SESSION_VAR_NAME}.custom_next_command = CustomNextCommand(CUSTOM_NEXT_COMMAND_NAME, {DEBUG_SESSION_VAR_NAME}.user_socket_id, {DEBUG_SESSION_VAR_NAME})
+        python {DEBUG_SESSION_VAR_NAME}.io_manager = IOManager(user_socket_id=python {DEBUG_SESSION_VAR_NAME}.user_socket_id)
+        start
+        call setbuf(stdout, NULL)
+        """,
+
         "default_legacy": f"""
         set python print-stack full
         set pagination off

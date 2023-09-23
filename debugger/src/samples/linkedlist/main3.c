@@ -14,7 +14,7 @@ int main(int argc, char **argv) {
   // Initialise first node
   List *l = malloc(sizeof(*l));
   if (l == NULL) {
-    fprintf(stderr, "error: out of memory\n");
+    perror("error: out of memory\n");
     exit(EXIT_FAILURE);
   }
   l->head = malloc(sizeof(struct node));
