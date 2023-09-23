@@ -2,7 +2,7 @@ import express, { type Request, type Response } from 'express';
 import { dataStructure } from '../models/dataStructure';
 import { users } from '../models/users';
 import { authLogin, authRegister } from '../service/service';
-import { writeFileSync, existsSync, mkdirSync } from 'fs';
+import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'fs';
 
 const router = express.Router();
 
@@ -79,19 +79,35 @@ router.post('/auth/login', async (req: Request, res: Response) => {
   res.json({ found });
 });
 
-let counter = 0;
-router.post('/api/saveFile', async (req : Request, res: Response) => {
-  counter++;
-  const username = 'ben123';
-  const filename = 'tempfile' + counter;
-  if (!existsSync('./user-files/' + username)) {
-    mkdirSync('./user-files/' + username);
+router.post('/api/saveFile', (req : Request, res: Response) => {
+  const { username, filename, fileData } = req.body;
+
+  try {
+    if (!existsSync('./user-files/' + username)) {
+      mkdirSync('./user-files/' + username);
+    }
+
+    let path = './user-files/' + username + '/' + filename;
+    writeFileSync(path, fileData);
+    // save to volume here
+    res.json({ path: path });
+  } catch (err) {
+    res.json({ error: err });
   }
+});
 
+router.get('/api/retrieveFile', (req: Request, res: Response) => {
+  const username = req.query.username;
+  const filename = req.query.filename;
+  let path = './user-files/' + username + '/' + filename;
 
-  await writeFileSync('./user-files/' + username + '/' + filename, 'hello world');
-  // save to volume here
-  })
+  try {
+    let file = readFileSync(path).toString();
+    res.send({ content: file });
+  } catch (err) {
+    res.send({ error: err });
+  }
+});
 
 
 export { router };

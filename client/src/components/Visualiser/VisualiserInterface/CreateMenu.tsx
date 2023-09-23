@@ -49,8 +49,27 @@ const CreateMenu = () => {
   }, [controller]);
 
   const saveFileTemp = () => {
-    axios.post(SERVER_URL + '/api/saveFile', {});
-  }
+    const data = {
+      username: 'benp123',
+      filename: 'file.c',
+      fileData: '#include <stdio.h> int main(void) { printf("hello"); }'
+    };
+
+    axios.post(SERVER_URL + '/api/saveFile', data).then((respsonse) => {
+      console.log(respsonse.data);
+    });
+  };
+
+  const retrieveFileTemp = () => {
+    axios.get(SERVER_URL + '/api/retrieveFile', {
+      params: {
+        username: 'benp123',
+        filename: 'file.c',
+      }
+    }).then((response) => {
+      console.log(response.data);
+    });
+  };
 
 
   const handleSave = () => {
@@ -169,6 +188,11 @@ const CreateMenu = () => {
       <MenuButton onClick={saveFileTemp}>
         <Typography color="textPrimary" whiteSpace="nowrap">
           save file
+        </Typography>
+      </MenuButton>
+      <MenuButton onClick={retrieveFileTemp}>
+        <Typography color="textPrimary" whiteSpace="nowrap">
+          retrieve file
         </Typography>
       </MenuButton>
     </Box>
