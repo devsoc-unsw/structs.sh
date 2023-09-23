@@ -7,7 +7,6 @@ import re
 
 from src.gdb_scripts.use_socketio_connection import useSocketIOConnection, enable_socketio_client_emit
 from src.gdb_scripts.stack_variables import get_stack_data, get_frame_info
-from src.gdb_scripts.parse_functions import get_type_decl_strs
 
 # Parent directory of this python script e.g. "/user/.../debugger/src/gdb_scripts"
 # In the docker container this will be "/app/src/gdb_scripts"
@@ -246,12 +245,11 @@ class CustomNextCommand(gdb.Command):
                         "type": struct_name,
                         "size": bytes,
                         "data": data,
-                        "addr": address
+                        "address": address
                     }
                     self.heap_data[address] = obj
-
-                print("Extracted heap data:")
-                pprint(self.heap_data)
+                    print("Heap data:")
+                    pprint(self.heap_data)
 
             else:
                 print("Current line does not contain call to malloc")
@@ -364,11 +362,10 @@ def send_backend_data_to_server(user_socket_id: str = None, backend_data: dict =
                     "function": "function_name"
                 },
                 "stack_data": [
-                    "addr": {
+                    {
                         "name": "var_name",
                         "value": "var_value",
                         "type": "var_type"
-                        "addr": "var_addr",
                     },
                     ...
                 ],
