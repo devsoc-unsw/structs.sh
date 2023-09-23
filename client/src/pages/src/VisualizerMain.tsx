@@ -6,6 +6,11 @@ import { BackendState } from './visualizer-component/types/backendType';
 import { Timeline } from './visualizer-component/util/timeline';
 import { Debugger } from './visualizer-component/util/debugger';
 import { useFrontendStateStore } from './visualizer-component/stateManager';
+import {
+  DataStructureAnnotation,
+  LinkedListAnnotation,
+  LocalsAnnotations,
+} from './visualizer-component/types/AnnotationType';
 
 export interface RoutesProps {
   backendState: BackendState;
@@ -29,12 +34,28 @@ const VisualizerMain: React.FC<RoutesProps> = ({
 
   useEffect(() => {
     // Assume user have a variable called curr
-    let annotation = {
+    const localsAnnotations: LocalsAnnotations = {
       curr: {
-        varName: 'curr',
+        typeName: 'struct node*',
       },
     };
-    const newParsedState = parser.parseInitialState(backendState, annotation, settings);
+    const dataStructureAnnotation: LinkedListAnnotation = {
+      typeName: 'struct node',
+      value: {
+        name: 'data',
+        typeName: 'int',
+      },
+      next: {
+        name: 'next',
+        typeName: 'struct node*',
+      },
+    };
+    const newParsedState = parser.parseInitialState(
+      backendState,
+      localsAnnotations,
+      dataStructureAnnotation,
+      settings
+    );
     useFrontendStateStore.getState().updateNextState(newParsedState);
   }, [backendState]);
 

@@ -131,6 +131,8 @@ def mainDebug(socket_id: str) -> None:
     compilation_out = ret.stdout.decode()
     print(compilation_out)
 
+    # == compile user's c program'
+
     gdb_script = get_gdb_script(
         TEST_PROGRAM_NAME, abs_file_path, socket_id, script_name=GDB_SCRIPT_NAME)
     print("\n=== Running gdb script...")

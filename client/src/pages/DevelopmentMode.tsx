@@ -9,7 +9,7 @@ import CodeEditor from 'components/DevelopmentMode/CodeEditor';
 import StackInspector from 'components/DevelopmentMode/StackInspector';
 import * as dummyData from 'components/DevelopmentMode/dummyData.json';
 import VisualizerMain from './src/VisualizerMain';
-import { BackendState, CType } from './src/visualizer-component/types/backendType';
+import { BackendState } from './src/visualizer-component/types/backendType';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -121,11 +121,11 @@ const DevelopmentMode = () => {
         </div>
         <div className={classNames(styles.pane, styles.inspector)}>
           <Tabs>
-            <Tab label="Console" >
+            <Tab label="Console">
               <div className={styles.pane}>Console</div>
             </Tab>
             <Tab label="Inspect">
-              <StackInspector debuggerData={dummyData}/>
+              <StackInspector debuggerData={dummyData} />
             </Tab>
             <Tab label="Configure">
               <div className={styles.pane}>Configure</div>

@@ -45,7 +45,7 @@ import re
 import subprocess
 import gdb
 from pycparser import parse_file, c_ast
-from src.gdb_scripts.use_socketio_connection import useSocketIOConnection
+from src.gdb_scripts.use_socketio_connection import enable_socketio_client_emit, useSocketIOConnection
 
 
 # Parent directory of this python script e.g. "/user/.../debugger/src/gdb_scripts"
@@ -334,6 +334,7 @@ def pycparser_parse_fn_decls(user_socket_id: str = None, sio=None):
                     print("Sending parsed function declaration to server...")
                     sio.emit("createdFunctionDeclaration",
                              (user_socket_id, result))
+                    enable_socketio_client_emit()
 
                 functions[func_name] = result
 
@@ -417,6 +418,7 @@ def pycparser_parse_type_decls(user_socket_id: str = None, sio=None):
                 print("Sending parsed type declaration -> server -> FE client...")
                 sio.emit("createdTypeDeclaration",
                          (user_socket_id, result))
+                enable_socketio_client_emit()
 
     print(f"\n=== Finished running pycparser_parse_type_decls in gdb instance\n\n")
 
@@ -485,6 +487,10 @@ def get_type_decl_ast(type_decl_strs, type_decl_str_to_parse):
         print(f"{struct_def_str=}")
         type_decl_str_to_parse = struct_def_str.strip() + ";"
 
+    # Remove the typedecl that we are parsing from the list of type
+    # declarations to write to the file before the typedecl that we are parsing.
+    type_decl_strs = filter(
+        lambda s: s != type_decl_str_to_parse, type_decl_strs)
     with open(USER_TYPE_DECLARATION_FILE_PATH, "w") as f:
         # Write all user-defined type and typedef declarations that might be
         # necessary to parse the struct definition

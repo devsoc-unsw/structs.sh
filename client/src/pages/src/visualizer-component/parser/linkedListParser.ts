@@ -1,11 +1,10 @@
 import {
-  Addr,
-  BackendState,
-  EditorAnnotation,
-  BackendVariableConcrete,
-  CType,
-  BackendUpdate,
-} from '../types/backendType';
+  DataStructureAnnotation,
+  LinkedListAnnotation,
+  LocalsAnnotations,
+  isLinkedListNode,
+} from '../types/AnnotationType';
+import { Addr, BackendState, MemoryValue } from '../types/backendType';
 import { EntityType } from '../types/entity/baseEntity';
 import { EdgeEntity } from '../types/entity/edgeEntity';
 import { DEFAULT_NODE_SIZE, NodeEntity } from '../types/entity/nodeEntity';
@@ -181,7 +180,8 @@ export class LinkedListParser implements Parser {
    */
   parseInitialState(
     backendStructure: BackendState,
-    editorAnnotation: EditorAnnotation,
+    localsAnnotations: LocalsAnnotations,
+    linkedListAnnotation: LinkedListAnnotation,
     uiState: UiState
   ): FrontendLinkedListGraph {
     const nodes: NodeEntity[] = [];
@@ -191,41 +191,18 @@ export class LinkedListParser implements Parser {
 
     // Later need to add an additional step to parse user defined struct into generic struct
     const linkedList: LinkedListNode[] = [];
-    Object.keys(backendStructure.heap_data).forEach((uid) => {
-      const entity = backendStructure.heap_data[uid] as BackendVariableConcrete;
 
-      if (entity.is_pointer === true) {
-        // Let it go, I am unsure why we need this
-      } else {
-        switch (entity.type) {
-          case CType.DOUBLE_LINED_LIST_NODE: {
-            /**
-             * We need to think how to handle doubly linked list yep
-             */
-            break;
-          }
-          case CType.LINKED_LIST_NODE:
-          case CType.LINKED_LIST_HEAD: {
-            linkedList.push(
-              cloneSimple({
-                uid: uid as Addr,
-                data: entity.data.data,
-                next: entity.data.next,
-              })
-            );
-            break;
-          }
-          case CType.INT:
-          case CType.DOUBLE:
-          case CType.CHAR:
-          case CType.TREE_NODE: {
-            // Here is normal user variable??
-            // We will handle this case later
-            break;
-          }
-          default:
-            assertUnreachable(entity);
-        }
+    // === Get all linked list nodes from backend heap data
+    Object.entries(backendStructure.heap_data).forEach(([uid, heapValue]) => {
+      // Get all linked list nodes
+      console.log(heapValue, linkedListAnnotation);
+      if (isLinkedListNode(heapValue, linkedListAnnotation) || true) {
+        const linkedListNode: LinkedListNode = {
+          uid: uid as Addr,
+          data: heapValue.value[linkedListAnnotation.value.name].value,
+          next: heapValue.value[linkedListAnnotation.next.name].value,
+        };
+        linkedList.push(linkedListNode);
       }
     });
     const cacheLinkedListNode: Map<Addr, LinkedListNode> = new Map();
@@ -285,7 +262,7 @@ export class LinkedListParser implements Parser {
 
         positions.forEach((pos, uid) => {
           nodesPosition.set(uid, pos);
-        })
+        });
 
         idx++;
       });
@@ -325,16 +302,16 @@ export class LinkedListParser implements Parser {
           }
         }
       });
-      Object.values(editorAnnotation).forEach((annotation) => {
-        const stackVariable: BackendVariableConcrete | undefined =
-          backendStructure.stack_data[annotation.varName];
+
+      Object.entries(localsAnnotations).forEach(([name, localAnnotation]) => {
+        const stackVariable: MemoryValue | undefined = backendStructure.stack_data[name];
         if (!stackVariable) return;
 
         const annotationEntity: PointerEntity = {
-          uid: `${annotation.varName}`,
+          uid: `${name}`,
           type: EntityType.POINTER,
           attachedUid: cacheEntity[stackVariable.addr].uid,
-          varName: annotation.varName,
+          varName: name,
         };
         pointers.push(annotationEntity);
         cacheEntity[annotationEntity.uid] = annotationEntity;
@@ -356,8 +333,8 @@ export class LinkedListParser implements Parser {
   updateState(
     frontendStructure: GenericGraph,
     backendStructure: BackendState,
-    backendUpdate: BackendUpdate,
-    editorAnnotation: EditorAnnotation
+    dataStructureAnnotation: DataStructureAnnotation,
+    linkedListAnnotation: LinkedListAnnotation
   ) {
     return undefined;
   }

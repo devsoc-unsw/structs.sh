@@ -1,11 +1,4 @@
-import {
-  Addr,
-  BackendState,
-  EditorAnnotation,
-  BackendVariableConcrete,
-  BackendUpdate,
-  CType,
-} from '../types/backendType';
+import { Addr, BackendState } from '../types/backendType';
 import { EntityType } from '../types/entity/baseEntity';
 import { EdgeEntity } from '../types/entity/edgeEntity';
 import { DEFAULT_NODE_SIZE, NodeEntity } from '../types/entity/nodeEntity';
@@ -134,9 +127,9 @@ export class TreeParser implements Parser {
             treeNodes.push(
               cloneSimple({
                 uid: uid as Addr,
-                data: entity.data.value,
-                left: entity.data.left,
-                right: entity.data.right,
+                data: entity.value.value,
+                left: entity.value.left,
+                right: entity.value.right,
               })
             );
             break;
