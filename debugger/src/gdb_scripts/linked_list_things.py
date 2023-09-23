@@ -98,6 +98,8 @@ class CustomNextCommand(gdb.Command):
 
         print("\n=== Running CustomNextCommand in gdb...")
 
+        frame_info = get_frame_info()
+
         temp_line = gdb.execute('frame', to_string=True)
         raw_str = (temp_line.split('\n')[1]).split('\t')[1]
         line_str = remove_non_standard_characters(raw_str)
@@ -135,6 +137,8 @@ class CustomNextCommand(gdb.Command):
         List *l = malloc(sizeof(List));
         '''
 
+        # === Intercept call to malloc, if present
+
         # Write the complete C code to a file
         with open(USER_MALLOC_CALL_FILE_PATH, "w") as f:
             f.write(c_code_for_preprocessing)
@@ -146,6 +150,8 @@ class CustomNextCommand(gdb.Command):
             # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
             line_ast = parse_file(USER_MALLOC_CALL_PREPROCESSED, use_cpp=True,
                                   cpp_args=r'-Iutils/fake_libc_include')
+
+            # print(line_ast)
 
             # Create a MallocVisitor instance
             malloc_visitor = MallocVisitor()
@@ -248,7 +254,7 @@ class CustomNextCommand(gdb.Command):
                 pprint(self.heap_data)
 
             else:
-                print("No variable being malloced")
+                print("Current line does not contain call to malloc")
 
             # Print the variable names being freed
             print(malloc_visitor.free)
@@ -257,27 +263,72 @@ class CustomNextCommand(gdb.Command):
                 print(var)
 
         except Exception as e:
-            print("An error occurred while intercepting malloc: ", e)
-
-        backend_data = {
-            "frame_info": get_frame_info(),
-            "stack_data": get_stack_data(),
-            "heap_data": self.heap_data
-        }
-        send_backend_data_to_server(
-            self.user_socket_id, backend_data=backend_data)
+            print("An error occurred while intercepting potential malloc: ", e)
 
         # TODO: Need a way to detect if program exits, then send signal to server
         # which should tell the client that the debugging session is over.
         gdb.execute('next')
 
-        # TODO: === Up date existing tracked heap data
-        # Make sure to do this after the next command, so that the heap is actually updated
-        # for addr in self.heap_data.keys():
-        #  # update(self.heap_data, addr)
+        # == Get stack data after executing next command
+        stack_data = get_stack_data()
+
+        # === Up date existing tracked heap data
+        # Make sure this is done AFTER executing the next command, so that the heap is actually updated
+        for addr, obj in self.heap_data.items():
+            if ("struct node" in obj["type"]):
+                print("Updating struct node: ")
+                print(addr)
+                # Get struct info by passing in address
+                node_str = gdb.execute(
+                    f'p *(struct node *) {addr}', to_string=True)       # Can replace struct node with type stored in object
+                # Extract data and next field from return value         # But need to change the 'data' and 'next' extraction method
+                # to generalise it for all types of structs (e.g. those with > 2 fields)
+                node_str = node_str.split("=", 1)[1].strip()
+                # or those with diff names
+                node_str = node_str.strip("{}")
+                print(node_str)
+                strings = node_str.split(',')
+                data_str = strings[0].split(' = ')[1]
+                print(f"Data: {data_str}")
+                next_str = strings[1].split(' = ')[1]
+                print(f"Next: {next_str}")
+
+                obj["data"]["data"] = data_str
+                obj["data"]["next"] = next_str
+
+            elif ("struct list" in obj["type"]):
+                print("Updating struct list: ")
+                print(addr)
+                # p *(struct list *) l
+                # p *(struct list *) 0xaaab1feed2a0
+
+                # Get struct info by passing in address
+                node_str = gdb.execute(
+                    f'p *(struct list *) {addr}', to_string=True)       # Can replace struct list with type stored in object (see comment above)
+                # Extract data and next field from return value
+                print(f"-----{node_str}")
+                node_str = node_str.split("=", 1)[1].strip()
+                node_str = node_str.strip("{}")
+                print(node_str)
+                strings = node_str.split(',')
+                data_str = strings[0].split(' = ')[1]
+                print(f"Head: {data_str}")
+                next_str = strings[1].split(' = ')[1]
+                print(f"Size: {next_str}")
+
+                obj["data"]["head"] = data_str
+                obj["data"]["size"] = next_str
+
+        backend_data = {
+            "frame_info": frame_info,
+            "stack_data": stack_data,
+            "heap_data": self.heap_data
+        }
+        send_backend_data_to_server(
+            self.user_socket_id, backend_data=backend_data)
 
         print(f"\n=== Finished running update_backend_state in gdb instance\n\n")
-        return self.heap_data
+        return backend_data
 
     def get_heap_dict(self):
         return self.heap_data
@@ -323,7 +374,7 @@ def send_backend_data_to_server(user_socket_id: str = None, backend_data: dict =
                 ],
                 "heap_data": {
                     "addr": {
-                        "variable": ...,
+                        "variable": ..., ## Name of stack var storing the address of this piece of heap data
                         "type": ...,
                         "size": ...,
                         "data": ...,
