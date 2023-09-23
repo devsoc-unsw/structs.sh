@@ -21,16 +21,28 @@ const DevelopmentMode = () => {
         socket.emit('getBreakpoints', line, listName);
     }
   }, []);
-  const [backendState, setBackendState] = useState<BackendState>({
+  const [backendState, setBackendState] = useState<any>({
+    // todo: Change type back to BackendState
     heap: {
-      '0x1': {
-        addr: '0x1',
-        type: CType.SINGLE_LINED_LIST_NODE,
+      '0x1000': {
+        addr: '0x1000',
+        data: [
+          {
+            addr: '0x1000',
+            data: 42,
+            type: 'int',
+            is_pointer: false,
+          },
+          {
+            addr: '0x1004',
+            data: 73,
+            type: 'int',
+            is_pointer: false,
+          },
+        ],
+        type: 'array',
         is_pointer: false,
-        data: {
-          value: '27',
-          next: '0x0',
-        },
+        size: 4,
       },
     },
     stack: {},
@@ -94,6 +106,12 @@ const DevelopmentMode = () => {
       // socket.emit('sendDummyData', '105');
 
       socket.emit('sendDummyArrayData', 1);
+      setTimeout(() => {
+        socket.emit('sendDummyArrayData', 1, 1);
+      }, 2000);
+      setTimeout(() => {
+        socket.emit('sendDummyArrayData', 1, 2);
+      }, 4000);
     };
 
     socket.on('connect', onConnect);
@@ -151,7 +169,8 @@ const DevelopmentMode = () => {
           <VisualizerMain
             backendState={backendState}
             getNextState={() => {
-              socket.emit('sendDummyData', count.toString());
+              // socket.emit('sendDummyData', count.toString());
+              socket.emit('sendDummyArrayData', 1);
               setCountState(count + 1);
             }}
           />
@@ -163,7 +182,9 @@ const DevelopmentMode = () => {
     <VisualizerMain
       backendState={backendState}
       getNextState={() => {
-        socket.emit('sendDummyData', count.toString());
+        // socket.emit('sendDummyData', count.toString());
+        socket.emit('sendDummyArrayData', 1);
+
         setCountState(count + 1);
       }}
     />

@@ -162,7 +162,7 @@ def sendDummyData(socket_id: str, line_number: Any) -> None:
 
 
 @io.event
-def sendDummyArrayData(socket_id: str, dimensions) -> None:
+def sendDummyArrayData(socket_id: str, dimensions, num=0) -> None:
     '''
     Send hard-coded heap dictionaries to the frontend user.
     Args:
@@ -175,7 +175,7 @@ def sendDummyArrayData(socket_id: str, dimensions) -> None:
 
     if (dimensions == 1):
         # 1D int array
-        backend_dict = PLACEHOLDER_HEAP_DICTS_1D_ARRAY[0]
+        backend_dict = PLACEHOLDER_HEAP_DICTS_1D_ARRAY[num]
     elif (dimensions == 2):
         # 2D int array
         backend_dict = PLACEHOLDER_HEAP_DICTS_2D_ARRAY[0]

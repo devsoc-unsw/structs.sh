@@ -492,13 +492,81 @@ PLACEHOLDER_HEAP_DICTS_1D_ARRAY = [
                 'data': [
                     {
                         'addr': '0x1000',
-                        'data': 42,
+                        'data': 4,
                         'type': 'int',
                         'is_pointer': 'false',
                     },
                     {
                         'addr': '0x1004',
                         'data': 73,
+                        'type': 'int',
+                        'is_pointer': 'false',
+                    },
+                ],
+                'type': 'array',
+                'is_pointer': 'false',
+                'size': 4,
+            },
+        },
+        'stack': {},
+    },
+    {
+        'heap': {
+            '0x1000': {
+                'addr': '0x1000',
+                'data': [
+                    {
+                        'addr': '0x1000',
+                        'data': 4,
+                        'type': 'int',
+                        'is_pointer': 'false',
+                    },
+                    {
+                        'addr': '0x1004',
+                        'data': 73,
+                        'type': 'int',
+                        'is_pointer': 'false',
+                    },
+                    {
+                        'addr': '0x1008',
+                        'data': 21,
+                        'type': 'int',
+                        'is_pointer': 'false',
+                    },
+                ],
+                'type': 'array',
+                'is_pointer': 'false',
+                'size': 4,
+            },
+        },
+        'stack': {},
+    },
+    {
+        'heap': {
+            '0x1000': {
+                'addr': '0x1000',
+                'data': [
+                    {
+                        'addr': '0x1000',
+                        'data': 4,
+                        'type': 'int',
+                        'is_pointer': 'false',
+                    },
+                    {
+                        'addr': '0x1004',
+                        'data': 73,
+                        'type': 'int',
+                        'is_pointer': 'false',
+                    },
+                    {
+                        'addr': '0x1008',
+                        'data': 21,
+                        'type': 'int',
+                        'is_pointer': 'false',
+                    },
+                    {
+                        'addr': '0x1012',
+                        'data': 22,
                         'type': 'int',
                         'is_pointer': 'false',
                     },
