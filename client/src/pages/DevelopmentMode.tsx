@@ -10,12 +10,7 @@ import StackInspector from 'components/DevelopmentMode/StackInspector';
 import * as dummyData from 'components/DevelopmentMode/dummyData.json';
 import Configuration from 'components/DevelopmentMode/Configuration';
 import VisualizerMain from './src/VisualizerMain';
-import {
-  BackendState,
-  NativeTypeName,
-  IntType,
-  isNativeTypeName,
-} from './src/visualizer-component/types/backendType';
+import { BackendState } from './src/visualizer-component/types/backendType';
 import { LinkedListAnnotation } from './src/visualizer-component/types/annotationType';
 
 type ExtendedWindow = Window &
@@ -121,11 +116,8 @@ const DevelopmentMode = () => {
     };
   }, [updateState]);
 
-  const getLinkedListAnnotation = (linkedListAnnotation: LinkedListAnnotation) => {
-    console.log(
-      'DevMode.tsx received linked list annotation from Configuration.tsx: ',
-      linkedListAnnotation
-    );
+  const getLinkedListAnnotation = (annotation: LinkedListAnnotation) => {
+    console.log('DevMode.tsx received linked list annotation from Configuration.tsx: ', annotation);
     setLinkedListAnnotation(linkedListAnnotation);
   };
 

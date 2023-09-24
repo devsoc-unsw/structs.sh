@@ -264,7 +264,7 @@ export class LinkedListParser implements Parser {
           nodesPosition.set(uid, pos);
         });
 
-        idx++;
+        idx += 1;
       });
 
       cacheLinkedListNode.forEach((node, uid) => {
