@@ -1,6 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { parserFactory } from './visualizer-component/parser/parserFactory';
-import { visualizerFactory } from './visualizer-component/visulizer/visualizerFactory';
 import { BackendState } from './visualizer-component/types/backendType';
 import { Timeline } from './visualizer-component/util/timeline';
 import { useFrontendStateStore } from './visualizer-component/visaulizerStateStore';
@@ -18,9 +16,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({
   getDummyNextState,
   getNextState,
 }: RoutesProps) => {
-  const { userAnnotation, visualizerType } = useUiStateStore();
-  const VisComponent = visualizerFactory(visualizerType);
-  const [parser] = useState(parserFactory(visualizerType));
+  const { userAnnotation, parser, visComponent: VisComponent } = useUiStateStore();
 
   const currState = useFrontendStateStore((store) => {
     return store.currState();

@@ -5,6 +5,7 @@ import { EdgeEntity } from '../types/entity/edgeEntity';
 import { DEFAULT_NODE_SIZE, NodeEntity } from '../types/entity/nodeEntity';
 import { EntityConcrete, FrontendTreeGraph } from '../types/frontendType';
 import { UiState } from '../types/uiState';
+import { useUiStateStore } from '../uiStateStore';
 import { assertUnreachable } from '../util/util';
 import { Parser } from './parser';
 
@@ -151,12 +152,12 @@ export class TreeParser implements Parser {
 
   parseInitialState(
     backendStructure: BackendState,
-    editorAnnotation: UserAnnotation,
-    uiState: UiState
+    editorAnnotation: UserAnnotation
   ): FrontendTreeGraph {
     const nodes: NodeEntity[] = [];
     const edges: EdgeEntity[] = [];
     const cacheEntity: { [uid: string]: EntityConcrete } = {};
+    const uiState = useUiStateStore.getState();
 
     const treeNodes: TreeNode[] = this.parseHeapData(backendStructure, editorAnnotation);
 
