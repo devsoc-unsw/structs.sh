@@ -96,6 +96,17 @@ export type BackendState = {
   heap_data: Heap;
 };
 
+export type BackendTypeDeclarations = {
+  fields: {
+    name: string;
+    type: NativeType;
+  }[];
+  file: string;
+  line_num: string;
+  name: string;
+  original_line: string;
+};
+
 export const isStructTypeName = (typeName: string): typeName is StructType['typeName'] => {
   return typeName.startsWith('struct ');
 };

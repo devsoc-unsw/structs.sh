@@ -4,8 +4,8 @@ import { EntityType } from '../types/entity/baseEntity';
 import { EdgeEntity } from '../types/entity/edgeEntity';
 import { DEFAULT_NODE_SIZE, NodeEntity } from '../types/entity/nodeEntity';
 import { EntityConcrete, FrontendTreeGraph } from '../types/frontendType';
-import { UiState } from '../types/uiState';
-import { useUiStateStore } from '../uiStateStore';
+import { GlobalStateStore } from '../types/globalState';
+import { useGlobalStore } from '../globalStateStore';
 import { assertUnreachable } from '../util/util';
 import { Parser } from './parser';
 
@@ -103,7 +103,7 @@ export class TreeParser implements Parser {
   private assignPositions(
     rootNode: TreeNode,
     treeNodes: Map<Addr, TreeNode>,
-    uiState: UiState
+    uiState: GlobalStateStore
   ): Map<Addr, { x: number; y: number }> {
     const posCache: Map<Addr, { x: number; y: number }> = new Map();
     this.assignPositionsRecursion(rootNode, posCache, treeNodes, 0, uiState.width, 100);
@@ -157,7 +157,7 @@ export class TreeParser implements Parser {
     const nodes: NodeEntity[] = [];
     const edges: EdgeEntity[] = [];
     const cacheEntity: { [uid: string]: EntityConcrete } = {};
-    const uiState = useUiStateStore.getState();
+    const uiState = useGlobalStore.getState();
 
     const treeNodes: TreeNode[] = this.parseHeapData(backendStructure, editorAnnotation);
 

@@ -17,7 +17,7 @@ import {
   LinkedListAnnotation,
 } from 'pages/src/visualizer-component/types/annotationType';
 import ConfigurationSelect from './ConfigurationSelect';
-import { useUiStateStore } from '../../pages/src/visualizer-component/uiStateStore';
+import { useGlobalStore } from '../../pages/src/visualizer-component/globalStateStore';
 
 export type PossibleLinkedListAnnotation = {
   typeName: StructType['typeName'];
@@ -78,7 +78,7 @@ const Configuration = ({ typeDeclarations }: { typeDeclarations: any }) => {
   const [possibleTypeDeclsForLinkedList, setPossibleTypeDeclsForLinkedList] = useState<
     PossibleLinkedListAnnotation[]
   >([]);
-  const { updateUserAnnotation, userAnnotation } = useUiStateStore();
+  const { updateUserAnnotation, userAnnotation } = useGlobalStore();
 
   useEffect(() => {
     const possibleTypeDecls = createPossibleLinkedListTypeDecls(typeDeclarations);

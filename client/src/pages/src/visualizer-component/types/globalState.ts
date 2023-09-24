@@ -5,7 +5,7 @@ import { VisualizerType } from './visaulizerType';
 import { visualizerFactory } from '../visulizer/visualizerFactory';
 import { parserFactory } from '../parser/parserFactory';
 
-export type UiState = {
+export type GlobalStateStore = {
   visualizerType: VisualizerType;
   width: number;
   height: number;
@@ -14,7 +14,7 @@ export type UiState = {
   parser: Parser;
 };
 
-export const DEFAULT_UISTATE: UiState = {
+export const DEFAULT_GLOBAL_STORE: GlobalStateStore = {
   visualizerType: VisualizerType.LINKED_LIST,
   width: 800,
   height: 400,

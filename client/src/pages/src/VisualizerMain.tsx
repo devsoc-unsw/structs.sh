@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { BackendState } from './visualizer-component/types/backendType';
 import { Timeline } from './visualizer-component/util/timeline';
 import { useFrontendStateStore } from './visualizer-component/visaulizerStateStore';
-import { useUiStateStore } from './visualizer-component/uiStateStore';
+import { useGlobalStore } from './visualizer-component/globalStateStore';
 
 export interface RoutesProps {
   backendState: BackendState;
@@ -16,7 +16,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({
   getDummyNextState,
   getNextState,
 }: RoutesProps) => {
-  const { userAnnotation, parser, visComponent: VisComponent } = useUiStateStore();
+  const { userAnnotation, parser, visComponent: VisComponent } = useGlobalStore();
 
   const currState = useFrontendStateStore((store) => {
     return store.currState();

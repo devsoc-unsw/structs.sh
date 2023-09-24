@@ -1,6 +1,6 @@
 import React from 'react';
 import { StoreApi, UseBoundStore, create } from 'zustand';
-import { UiState } from './types/uiState';
+import { GlobalStateStore } from './types/globalState';
 import './css/stateManager.css';
 import { GenericGraph, INITIAL_GRAPH } from './types/frontendType';
 import { VisualizerComponent } from './visulizer/visualizer';
@@ -56,8 +56,8 @@ export const useFrontendStateStore: UseBoundStore<StoreApi<State & Action>> = cr
 
 export interface StateManagerProp {
   state: GenericGraph;
-  settings: UiState;
-  setSettings: React.Dispatch<React.SetStateAction<UiState>>;
+  settings: GlobalStateStore;
+  setSettings: React.Dispatch<React.SetStateAction<GlobalStateStore>>;
   nextState: () => void;
 
   Visualizer: VisualizerComponent;
