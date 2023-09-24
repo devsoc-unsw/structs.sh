@@ -4,26 +4,15 @@ import gdb
 import subprocess
 from pycparser import parse_file, c_ast
 import re
+from src.constants import USER_MALLOC_CALL_FILE_NAME, USER_MALLOC_CALL_PREPROCESSED, USER_PTYPE_FILE_NAME, USER_PTYPE_PREPROCESSED
+from src.utils import create_abs_file_path
 
 from src.gdb_scripts.use_socketio_connection import useSocketIOConnection, enable_socketio_client_emit
-from src.gdb_scripts.stack_variables import get_stack_data, get_frame_info
 
 # Parent directory of this python script e.g. "/user/.../debugger/src/gdb_scripts"
 # In the docker container this will be "/app/src/gdb_scripts"
 # You can then use this to reference files relative to this directory.
 abs_file_path = os.path.dirname(os.path.abspath(__file__))
-
-# File to write the user-written malloc calls extracted from gdb
-USER_MALLOC_CALL_FILE_PATH = f"{abs_file_path}/user_malloc_call.c"
-
-# File to write the preprocessed C code to, before parsing with pycparser
-USER_MALLOC_CALL_PREPROCESSED = f"{abs_file_path}/user_malloc_call_preprocessed"
-
-# File to write ptype output
-USER_PTYPE = f"{abs_file_path}/ptype_output.c"
-
-# File to write preprocessed ptype output, befor parsing with pycparser
-USER_PTYPE_PREPROCESSED = f"{abs_file_path}/ptype_preprocessed"
 
 
 class MallocVisitor(c_ast.NodeVisitor):
@@ -33,6 +22,8 @@ class MallocVisitor(c_ast.NodeVisitor):
         self.free = "False"
 
     def visit_Assignment(self, node):
+        print("MallocVisitor.vist_Assignment:")
+        print(node)
         # Check if the assignment is of the form "variable = malloc(...)"
         if isinstance(node.rvalue, c_ast.FuncCall) and isinstance(node.rvalue.name, c_ast.ID) and node.rvalue.name.name == 'malloc':
             if isinstance(node.lvalue, c_ast.StructRef):
@@ -139,15 +130,15 @@ class CustomNextCommand(gdb.Command):
         # === Intercept call to malloc, if present
 
         # Write the complete C code to a file
-        with open(USER_MALLOC_CALL_FILE_PATH, "w") as f:
+        with open(create_abs_file_path(USER_MALLOC_CALL_FILE_NAME), "w") as f:
             f.write(c_code_for_preprocessing)
 
-        subprocess.run(f"gcc -E {USER_MALLOC_CALL_FILE_PATH} > {USER_MALLOC_CALL_PREPROCESSED}",
+        subprocess.run(f"gcc -E {create_abs_file_path(USER_MALLOC_CALL_FILE_NAME)} > {create_abs_file_path(USER_MALLOC_CALL_PREPROCESSED)}",
                        shell=True)
         try:
             # Parse the preprocessed C code into an AST
             # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
-            line_ast = parse_file(USER_MALLOC_CALL_PREPROCESSED, use_cpp=True,
+            line_ast = parse_file(create_abs_file_path(USER_MALLOC_CALL_PREPROCESSED), use_cpp=True,
                                   cpp_args=r'-Iutils/fake_libc_include')
 
             # print(line_ast)
@@ -164,34 +155,12 @@ class CustomNextCommand(gdb.Command):
             # Print the variable names assigned to malloc
             if len(malloc_visitor.malloc_variables) > 0:
                 print("Variables assigned to malloc:")
-                for var in malloc_visitor.malloc_variables:
-                    print(var)
+                for var_assigned_to_malloc in malloc_visitor.malloc_variables:
+                    print(f"{var_assigned_to_malloc=}")
 
-                    var_type = gdb.execute(f"ptype {var}", to_string=True)
-                    var_type = var_type.split('= ')[1]
-                    var_type = var_type.replace('} *', '};')
-                    print(f"{var_type}")
-
-                    # Write the ptype to a file
-                    with open(USER_PTYPE, "w") as f:
-                        f.write(var_type)
-
-                    subprocess.run(f"gcc -E {USER_PTYPE} > {USER_PTYPE_PREPROCESSED}",
-                                   shell=True)
-
-                    # Parse the preprocessed C code into an AST
-                    # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
-                    ptype_ast = parse_file(USER_PTYPE_PREPROCESSED, use_cpp=True,
-                                           cpp_args=r'-Iutils/fake_libc_include')
-
-                    # Print the outermost struct name found in the AST
-                    struct_name = self.find_outermost_struct_name(ptype_ast)
-                    if struct_name:
-                        struct_name = 'struct ' + struct_name
-                        # e.g. "struct node"
-                        print(f"Struct name: {struct_name}")
-                    else:
-                        print("No struct names found in the AST.")
+                    stack_var_type_name = get_type_name_of_stack_var(
+                        var_assigned_to_malloc)
+                    # stack_var_type_name == "struct node*"
 
                     # Break on malloc
                     gdb.execute('break')
@@ -213,9 +182,9 @@ class CustomNextCommand(gdb.Command):
                     print(f"address EXTRACTED: {address}")
 
                     # === Extract linked list node data given the variable name
-                    print(f"Attempting to print \"{var}\"")
+                    print(f"Attempting to print \"{var_assigned_to_malloc}\"")
                     struct_fields_str = gdb.execute(
-                        f'p *({struct_name} *) {address}', to_string=True)
+                        f'p *({stack_var_type_name}) {address}', to_string=True)
 
                     # Conventional struct node might look like this
                     # $4 = {data = 542543, next = 0x0}
@@ -232,12 +201,13 @@ class CustomNextCommand(gdb.Command):
                     print(f"{struct_fields_str=}")
                     # struct_fields_str == "data = 542543, next = 0x0"
 
+                    struct_type_name = stack_var_type_name.strip('*').strip()
                     new_struct_value = create_struct_value(
-                        self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_name, address)
+                        self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_type_name, address)
 
                     heap_memory_value = {
                         # "variable": var, ## Name of stack var storing the address of this piece of heap data
-                        "typeName": struct_name,
+                        "typeName": struct_type_name,
                         # "size": bytes, ## Size of the type in bytes
                         "value": new_struct_value,
                         "addr": address
@@ -253,8 +223,8 @@ class CustomNextCommand(gdb.Command):
             # Print the variable names being freed
             print(malloc_visitor.free)
             print("Variables being freed:")
-            for var in malloc_visitor.free_variables:
-                print(var)
+            for var_assigned_to_malloc in malloc_visitor.free_variables:
+                print(var_assigned_to_malloc)
 
         except Exception as e:
             print("An error occurred while intercepting potential malloc: ", e)
@@ -269,25 +239,22 @@ class CustomNextCommand(gdb.Command):
         # === Up date existing tracked heap data
         # Make sure this is done AFTER executing the next command, so that the heap is actually updated
         for addr, heap_memory_value in self.heap_data.items():
-            struct_name = heap_memory_value["typeName"]
+            struct_type_name = heap_memory_value["typeName"]
             address = heap_memory_value["addr"]
 
             # Get struct info by passing in address
             struct_fields_str = gdb.execute(
-                f'p *({struct_name} *) {addr}', to_string=True)       # Can replace struct node with type stored in object
+                f'p *({struct_type_name} *) {addr}', to_string=True)       # Can replace struct node with type stored in object
             # TODO: Heap dictionary assumes its working with structs, should ideally be generalised to all types
             # Extract all struct fields
             struct_fields_str = struct_fields_str.split("=", 1)[1].strip()
             # or those with diff names
-            struct_fields_str = struct_fields_str.strip("{}")
+            struct_fields_str = struct_fields_str.strip("{}").strip()
+            # struct_fields_str == "data = 542543, next = 0x0"
 
             new_heap_memory_value = create_struct_value(
-                self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_name, address)
+                self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_type_name, address)
 
-            # struct_fields_str == "data = 542543, next = 0x0"
-            #     struct_name, struct_value = assignment.split(' = ')
-            #     struct_name = struct_name.strip()
-            #     struct_value = struct_value.strip()
             self.heap_data[addr] = new_heap_memory_value
 
         backend_data = {
@@ -303,15 +270,6 @@ class CustomNextCommand(gdb.Command):
 
     def get_heap_dict(self):
         return self.heap_data
-
-    def find_outermost_struct_name(self, node):
-        if isinstance(node, c_ast.Struct):
-            return node.name
-        for _, child in node.children():
-            result = self.find_outermost_struct_name(child)
-            if result:
-                return result
-        return None
 
     def break_on_all_user_defined_functions(self):
         '''
@@ -381,7 +339,6 @@ def create_struct_value(parsed_type_decls, struct_fields_str, struct_name, addre
     if corresponding_type_decl is None:
         raise Exception(
             f"No corresponding type declaration found for {struct_name}")
-        return
 
     value = {}
     for field in struct_fields_str.split(','):
@@ -400,3 +357,110 @@ def create_struct_value(parsed_type_decls, struct_fields_str, struct_name, addre
         "value": value,
         "addr": address
     }
+
+
+def get_type_name_of_stack_var(var: str):
+    ptype_output_str = gdb.execute(f"ptype {var}", to_string=True)
+    type_name_str = ptype_output_str.strip("type = ")
+    return get_type_name(type_name_str.strip())
+
+
+def get_type_name(type_name_str: str):
+    print(f"{type_name_str=}")
+    if (type_name_str.endswith('*')):
+        type_name_str = type_name_str[:-1]
+        sub_type_name = get_type_name(type_name_str.strip())
+        return f"{sub_type_name}*"
+    elif (type_name_str.startswith('struct ')):
+        # == No longer need this after accounting for pointers recursively
+        # STRUCT_PTR_STR = '} *'
+        # if (type_name_str.endswith(STRUCT_PTR_STR)):
+        #     type_name_str = type_name_str.replace(STRUCT_PTR_STR, '};')
+
+        if (type_name_str.endswith('}')):
+            type_name_str = type_name_str + ';'
+        # Write the ptype to a file
+        with open(create_abs_file_path(USER_PTYPE_FILE_NAME), "w") as f:
+            f.write(type_name_str)
+
+        subprocess.run(f"gcc -E {create_abs_file_path(USER_PTYPE_FILE_NAME)} > {USER_PTYPE_PREPROCESSED}",
+                       shell=True)
+
+        # Parse the preprocessed C code into an AST
+        # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
+        ptype_ast = parse_file(USER_PTYPE_PREPROCESSED, use_cpp=True,
+                               cpp_args=r'-Iutils/fake_libc_include')
+
+        # Print the outermost struct name found in the AST
+        type_name = "struct " + find_outermost_struct_name(ptype_ast)
+    else:
+        type_name = type_name_str.strip()
+
+    return type_name
+
+
+def find_outermost_struct_name(node):
+    if isinstance(node, c_ast.Struct):
+        return node.name
+    for _, child in node.children():
+        result = find_outermost_struct_name(child)
+        if result:
+            return result
+    return None
+
+
+def get_frame_info():
+    gdb_frame_data: str = gdb.execute("bt", to_string=True)
+    gdb_frame_data: str = gdb_frame_data.split("\n", 1)[0]
+
+    frame_info: dict = {}
+    split_data = gdb_frame_data.strip().split(") at", 1)
+
+    frame_info["line_num"] = int(re.search(r"[0-9]+$", split_data[1]).group(0))
+
+    file_name = split_data[1].strip().rstrip("0123456789")[:-1]
+    frame_info["file"] = file_name
+    frame_info["function"] = split_data[0].replace(
+        "#0", "").strip().split(" ")[0]
+
+    # Extract the actual line of code
+    line = gdb.execute("frame", to_string=True)
+    line = line.split("\n")[1].strip()
+
+    if m := re.fullmatch(r"^[0-9]+\t(.*)$", line):
+        frame_info["line"] = m.group(1)
+    else:
+        frame_info["line"] = ""
+
+    return frame_info
+
+
+def get_stack_data():
+    locals: str = gdb.execute("info locals", to_string=True)
+    args: str = gdb.execute("info args", to_string=True)
+
+    variable_list: list[str] = []
+
+    if locals.strip() != "No locals.":
+        variable_list += locals.strip().split("\n")
+
+    if args.strip() != "No arguments.":
+        variable_list += args.strip().split("\n")
+
+    variables: dict = {}
+    for var in variable_list:
+        stack_memory_value: dict = {}
+        assert (" = " in var)
+        name, value_str = var.split(" = ", 1)
+
+        # TODO: parse value_str to correct python type
+        stack_memory_value["value"] = value_str
+
+        type_name = get_type_name_of_stack_var(name)
+        stack_memory_value["type"] = type_name
+
+        # TODO: get address of this memory value
+        stack_memory_value["address"] = "0x0"
+        variables[name] = stack_memory_value
+
+    return variables
