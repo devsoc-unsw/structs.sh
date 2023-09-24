@@ -40,11 +40,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({
     //   },
     // };
     if (backendState && userAnnotation) {
-      const newParsedState = parser.parseInitialState(
-        backendState,
-        userAnnotation,
-        useUiStateStore()
-      );
+      const newParsedState = parser.parseInitialState(backendState, userAnnotation);
       useFrontendStateStore.getState().updateNextState(newParsedState);
     } else {
       let issue = 'something';

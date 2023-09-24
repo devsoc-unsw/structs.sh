@@ -1,6 +1,9 @@
 import { UseBoundStore, StoreApi, create } from 'zustand';
 import { UserAnnotation } from './types/annotationType';
-import { VisualizerType, UiState, DEFAULT_UISTATE } from './types/uiState';
+import { UiState, DEFAULT_UISTATE } from './types/uiState';
+import { VisualizerType } from './types/visaulizerType';
+import { visualizerFactory } from './visulizer/visualizerFactory';
+import { parserFactory } from './parser/parserFactory';
 
 type UiStateActions = {
   setVisualizerType: (type: VisualizerType) => void;
@@ -13,7 +16,11 @@ export const useUiStateStore: UseBoundStore<StoreApi<UiState & UiStateActions>> 
 >((set) => ({
   ...DEFAULT_UISTATE,
   setVisualizerType: (type: VisualizerType) => {
-    set({ visualizerType: type });
+    set({
+      visualizerType: type,
+      visComponent: visualizerFactory(type),
+      parser: parserFactory(type),
+    });
   },
   updateDimensions: (width: number, height: number) => {
     set({ width, height });

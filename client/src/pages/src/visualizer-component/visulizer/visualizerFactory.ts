@@ -1,4 +1,4 @@
-import { VisualizerType } from '../types/uiState';
+import { VisualizerType } from '../types/visaulizerType';
 import { assertUnreachable } from '../util/util';
 import LinkedList from './linkedListVisualizer';
 import { VisualizerComponent } from './visualizer';
