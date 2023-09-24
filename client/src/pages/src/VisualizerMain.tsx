@@ -5,16 +5,13 @@ import { visualizerFactory } from './visualizer-component/visulizer/visualizerFa
 import { BackendState } from './visualizer-component/types/backendType';
 import { Timeline } from './visualizer-component/util/timeline';
 import { useFrontendStateStore } from './visualizer-component/visaulizerStateStore';
-import {
-  DataStructureAnnotationBase,
-  LocalAnnotationBase,
-} from './visualizer-component/types/annotationType';
+import { LocalAnnotationBase, UserAnnotation } from './visualizer-component/types/annotationType';
+import { useUiStateStore } from './visualizer-component/uiStateStore';
 
 export interface RoutesProps {
   backendState: BackendState;
   getNextState: () => void;
   getDummyNextState: () => void;
-  dataStructureAnnotation: DataStructureAnnotationBase;
 }
 
 // Future support different parser
@@ -22,26 +19,19 @@ const VisualizerMain: React.FC<RoutesProps> = ({
   backendState,
   getDummyNextState,
   getNextState,
-  dataStructureAnnotation,
 }: RoutesProps) => {
   const [settings, setSettings] = useState<UiState>(DEFAULT_UISTATE);
   const VisComponent = visualizerFactory(settings);
   const [parser] = useState(parserFactory(settings));
+  const { userAnnotation } = useUiStateStore();
 
   const currState = useFrontendStateStore((store) => {
     return store.currState();
   });
 
   useEffect(() => {
-    // Assume user have a variable called curr
-    const localsAnnotations: LocalAnnotationBase = {
-      curr: {
-        typeName: 'struct node*',
-      },
-    };
-
     // === Dummy linked list node annotation
-    // const dataStructureAnnotation: LinkedListAnnotation = {
+    // const userAnnotation: LinkedListAnnotation = {
     //   typeName: 'struct node', // Name for the user's linked list struct
     //   value: {
     //     name: 'data', // Name for the user's linked list "value" field
@@ -52,22 +42,15 @@ const VisualizerMain: React.FC<RoutesProps> = ({
     //     typeName: 'struct node*',
     //   },
     // };
-    if (backendState && localsAnnotations && dataStructureAnnotation) {
-      const newParsedState = parser.parseInitialState(
-        backendState,
-        localsAnnotations,
-        dataStructureAnnotation,
-        settings
-      );
+    if (backendState && userAnnotation) {
+      const newParsedState = parser.parseInitialState(backendState, userAnnotation, settings);
       useFrontendStateStore.getState().updateNextState(newParsedState);
     } else {
       let issue = 'something';
       if (backendState === undefined) {
         issue = 'backendState';
-      } else if (localsAnnotations === undefined) {
+      } else if (userAnnotation === undefined) {
         issue = 'localsAnnotations';
-      } else if (dataStructureAnnotation === undefined) {
-        issue = 'dataStructureAnnotation';
       }
 
       console.error(`Unable to parse backend state: ${issue} is undefined`);

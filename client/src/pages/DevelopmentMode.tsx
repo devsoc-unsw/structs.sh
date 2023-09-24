@@ -12,6 +12,7 @@ import Configuration from 'components/DevelopmentMode/Configuration';
 import VisualizerMain from './src/VisualizerMain';
 import { BackendState } from './src/visualizer-component/types/backendType';
 import { LinkedListAnnotation } from './src/visualizer-component/types/annotationType';
+import { useUiStateStore } from './src/visualizer-component/uiStateStore';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -40,9 +41,7 @@ const DevelopmentMode = () => {
 
   const [typeDeclarations, setTypeDeclarations] = useState([]);
 
-  const [linkedListAnnotation, setLinkedListAnnotation] = useState<
-    LinkedListAnnotation | undefined
-  >();
+  const { updateUserAnnotation, userAnnotation } = useUiStateStore();
 
   const updateState = (data: any) => {
     setBackendState(data);
@@ -118,7 +117,10 @@ const DevelopmentMode = () => {
 
   const getLinkedListAnnotation = (annotation: LinkedListAnnotation) => {
     console.log('DevMode.tsx received linked list annotation from Configuration.tsx: ', annotation);
-    setLinkedListAnnotation(annotation);
+    updateUserAnnotation({
+      stackAnnotation: userAnnotation.stackAnnotation,
+      typeAnnotation: { ...userAnnotation.typeAnnotation, [annotation.typeName]: annotation },
+    });
   };
 
   const DEBUG_MODE = false;
@@ -158,7 +160,6 @@ const DevelopmentMode = () => {
             getNextState={() => {
               socket.emit('executeNext');
             }}
-            dataStructureAnnotation={linkedListAnnotation}
           />
         </div>
         <div className={classNames(styles.pane, styles.timeline)}>Timeline</div>
@@ -174,7 +175,6 @@ const DevelopmentMode = () => {
       getNextState={() => {
         socket.emit('executeNext');
       }}
-      dataStructureAnnotation={linkedListAnnotation}
     />
   );
 };
