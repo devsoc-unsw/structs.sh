@@ -4,12 +4,12 @@ import Select from 'components/Select';
 import { SelectItem } from 'components/Select/Select';
 
 const ConfigurationSelect = ({ type, fields, handleUpdateAnnotation }) => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(fields[0].name);
 
   const handleValueChange = (newValue: string) => {
     const field = fields.find((field) => field.name === newValue);
     setValue(newValue);
-    handleUpdateAnnotation(type, field.name, field.type);
+    handleUpdateAnnotation(type, field.name, field.typeName);
   };
 
   return (
@@ -21,7 +21,7 @@ const ConfigurationSelect = ({ type, fields, handleUpdateAnnotation }) => {
     >
       {fields.map((field, index: number) => (
         <SelectItem className={styles.monospaceFont} value={field.name} key={index}>
-          {field.type} {field.name}
+          {field.typeName} {field.name}
         </SelectItem>
       ))}
     </Select>

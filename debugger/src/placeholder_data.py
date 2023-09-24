@@ -25,7 +25,7 @@ PLACEHOLDER_BACKEND_STATES_LINKED_LIST = [
         'stack_data': {
             'curr': {
                 "addr": "0x1",
-                "typeName": "struct node",
+                "typeName": "struct node*",
                 "is_pointer": "true",
             }
         }
@@ -72,7 +72,7 @@ PLACEHOLDER_BACKEND_STATES_LINKED_LIST = [
         'stack_data': {
             'curr': {
                 "addr": "0x2",
-                "typeName": "struct node",
+                "typeName": "struct node*",
                 "is_pointer": "true",
             }
         }
@@ -133,7 +133,7 @@ PLACEHOLDER_BACKEND_STATES_LINKED_LIST = [
         'stack_data': {
             'curr': {
                 "addr": "0x3",
-                "typeName": "struct node",
+                "typeName": "struct node*",
                 "is_pointer": "true",
             }
         }
@@ -180,7 +180,7 @@ PLACEHOLDER_BACKEND_STATES_LINKED_LIST = [
         'stack_data': {
             'curr': {
                 "addr": "0x3",
-                "typeName": "struct node",
+                "typeName": "struct node*",
                 "is_pointer": "true",
             }
         }
@@ -242,7 +242,7 @@ PLACEHOLDER_BACKEND_STATES_LINKED_LIST = [
         'stack_data': {
             'curr': {
                 "addr": "0x4",
-                "type": "struct node",
+                "type": "struct node*",
                 "is_pointer": "true",
             }
         }
@@ -318,7 +318,7 @@ PLACEHOLDER_BACKEND_STATES_LINKED_LIST = [
         'stack_data': {
             'curr': {
                 "addr": "0x5",
-                "type": "struct node",
+                "type": "struct node*",
                 "is_pointer": "true",
             }
         }

@@ -2,7 +2,7 @@ import {
   DataStructureAnnotation,
   LinkedListAnnotation,
   LocalsAnnotations,
-} from '../types/AnnotationType';
+} from '../types/annotationType';
 import { BackendState } from '../types/backendType';
 import { GenericGraph } from '../types/frontendType';
 import { UiState } from '../types/uiState';

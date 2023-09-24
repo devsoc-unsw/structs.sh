@@ -10,12 +10,13 @@ import {
   DataStructureAnnotation,
   LinkedListAnnotation,
   LocalsAnnotations,
-} from './visualizer-component/types/AnnotationType';
+} from './visualizer-component/types/annotationType';
 
 export interface RoutesProps {
   backendState: BackendState;
   getNextState: () => void;
   getDummyNextState: () => void;
+  dataStructureAnnotation: DataStructureAnnotation;
 }
 
 // Future support different parser
@@ -23,6 +24,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({
   backendState,
   getDummyNextState,
   getNextState,
+  dataStructureAnnotation,
 }) => {
   const [settings, setSettings] = useState<UiState>(DEFAULT_UISTATE);
   const VisComponent = visualizerFactory(settings);
@@ -39,24 +41,30 @@ const VisualizerMain: React.FC<RoutesProps> = ({
         typeName: 'struct node*',
       },
     };
-    const dataStructureAnnotation: LinkedListAnnotation = {
-      typeName: 'struct node',
-      value: {
-        name: 'data',
-        typeName: 'int',
-      },
-      next: {
-        name: 'next',
-        typeName: 'struct node*',
-      },
-    };
-    const newParsedState = parser.parseInitialState(
-      backendState,
-      localsAnnotations,
-      dataStructureAnnotation,
-      settings
-    );
-    useFrontendStateStore.getState().updateNextState(newParsedState);
+    // === Dummy linked list node annotation
+    // const dataStructureAnnotation: LinkedListAnnotation = {
+    //   typeName: 'struct node', // Name for the user's linked list struct
+    //   value: {
+    //     name: 'data', // Name for the user's linked list "value" field
+    //     typeName: 'int',
+    //   },
+    //   next: {
+    //     name: 'next', // Name for the user's linked list "next" field
+    //     typeName: 'struct node*',
+    //   },
+    // };
+    console.log(dataStructureAnnotation);
+    if (backendState && localsAnnotations && dataStructureAnnotation) {
+      const newParsedState = parser.parseInitialState(
+        backendState,
+        localsAnnotations,
+        dataStructureAnnotation,
+        settings
+      );
+      useFrontendStateStore.getState().updateNextState(newParsedState);
+    } else {
+      console.error('Unable to parse backend state: Invalid argument(s)');
+    }
   }, [backendState]);
 
   const visualizerRef = useRef(null);

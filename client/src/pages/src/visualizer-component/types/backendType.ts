@@ -96,6 +96,30 @@ export type BackendState = {
   heap_data: Heap;
 };
 
+export const isStructTypeName = (typeName: string): typeName is StructType['typeName'] => {
+  return typeName.startsWith('struct ');
+};
+
+export const isPointerType = (typeName: string): typeName is PointerType['typeName'] => {
+  return typeName.endsWith('*');
+};
+
+export const isArrayType = (typeName: string): typeName is ArrayType['typeName'] => {
+  return typeName.endsWith('[]');
+};
+
+export const isNativeTypeName = (typeName: string): typeName is NativeTypeName => {
+  return (
+    typeName === 'int' ||
+    typeName === 'float' ||
+    typeName === 'double' ||
+    typeName === 'char' ||
+    isStructTypeName(typeName) ||
+    isPointerType(typeName) ||
+    isArrayType(typeName)
+  );
+};
+
 /*
 === Examples ===
 Stack will look like Heap, except the keys are variable names instead of addresses.

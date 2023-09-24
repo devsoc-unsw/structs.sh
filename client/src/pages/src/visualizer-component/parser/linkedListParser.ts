@@ -3,7 +3,7 @@ import {
   LinkedListAnnotation,
   LocalsAnnotations,
   isLinkedListNode,
-} from '../types/AnnotationType';
+} from '../types/annotationType';
 import { Addr, BackendState, MemoryValue } from '../types/backendType';
 import { EntityType } from '../types/entity/baseEntity';
 import { EdgeEntity } from '../types/entity/edgeEntity';
@@ -196,7 +196,7 @@ export class LinkedListParser implements Parser {
     Object.entries(backendStructure.heap_data).forEach(([uid, heapValue]) => {
       // Get all linked list nodes
       console.log(heapValue, linkedListAnnotation);
-      if (isLinkedListNode(heapValue, linkedListAnnotation) || true) {
+      if (isLinkedListNode(heapValue, linkedListAnnotation)) {
         const linkedListNode: LinkedListNode = {
           uid: uid as Addr,
           data: heapValue.value[linkedListAnnotation.value.name].value,
@@ -303,19 +303,20 @@ export class LinkedListParser implements Parser {
         }
       });
 
-      Object.entries(localsAnnotations).forEach(([name, localAnnotation]) => {
-        const stackVariable: MemoryValue | undefined = backendStructure.stack_data[name];
-        if (!stackVariable) return;
+      // === Get linked list node pointers from the backend stack data
+      // Object.entries(localsAnnotations).forEach(([name, localAnnotation]) => {
+      //   const stackVariable: MemoryValue | undefined = backendStructure.stack_data[name];
+      //   if (!stackVariable) return;
 
-        const annotationEntity: PointerEntity = {
-          uid: `${name}`,
-          type: EntityType.POINTER,
-          attachedUid: cacheEntity[stackVariable.addr].uid,
-          varName: name,
-        };
-        pointers.push(annotationEntity);
-        cacheEntity[annotationEntity.uid] = annotationEntity;
-      });
+      //   const annotationEntity: PointerEntity = {
+      //     uid: `${name}`,
+      //     type: EntityType.POINTER,
+      //     attachedUid: cacheEntity[stackVariable.addr].uid,
+      //     varName: name,
+      //   };
+      //   pointers.push(annotationEntity);
+      //   cacheEntity[annotationEntity.uid] = annotationEntity;
+      // });
 
       return {
         nodes,
