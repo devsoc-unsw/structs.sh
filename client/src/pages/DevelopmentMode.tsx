@@ -50,8 +50,6 @@ const DevelopmentMode = () => {
   >();
 
   const updateState = (data: any) => {
-    console.log('Update dummy backendState:');
-    console.log(data);
     setBackendState(data);
   };
 

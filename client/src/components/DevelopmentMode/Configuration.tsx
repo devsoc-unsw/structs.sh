@@ -43,10 +43,15 @@ const Configuration = ({
   useEffect(() => {
     const possibleTypeDecls = createPossibleLinkedListTypeDecls(typeDeclarations);
     setPossibleTypeDeclsForLinkedList(possibleTypeDecls);
-    if (possibleTypeDecls.length > 0) {
-      handleSelectNodeType(possibleTypeDecls[0].typeName);
-    }
   }, [typeDeclarations]);
+
+  useEffect(() => {
+    if (possibleTypeDeclsForLinkedList.length > 0) {
+      handleSelectNodeType(possibleTypeDeclsForLinkedList[0].typeName);
+    } else {
+      console.error('No possible linked list type declarations found!');
+    }
+  }, [possibleTypeDeclsForLinkedList]);
 
   const handleSelectNodeType = (newNodeVariable: string) => {
     setCurrNodeVariable(newNodeVariable);
