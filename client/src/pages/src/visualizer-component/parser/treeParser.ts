@@ -84,15 +84,15 @@ export class TreeParser implements Parser {
     }
     // Pick the middle reassign currNode
     if (currNode.left && currNode.right) {
-      let posLeft = posCache.get(currNode.left);
-      let posRight = posCache.get(currNode.right);
+      const posLeft = posCache.get(currNode.left);
+      const posRight = posCache.get(currNode.right);
       posCache.set(currNode.uid, { x: (posLeft.x + posRight.x) / 2, y });
     }
 
     return {
       leftBoundary: leftBoundaryRet,
       rightBoundary: rightBoundaryRet,
-      y: y,
+      y,
     };
   }
 

@@ -8,6 +8,7 @@ import { Socket } from 'socket.io-client';
 import CodeEditor from 'components/DevelopmentMode/CodeEditor';
 import StackInspector from 'components/DevelopmentMode/StackInspector';
 import * as dummyData from 'components/DevelopmentMode/dummyData.json';
+import Configuration from 'components/DevelopmentMode/Configuration';
 import VisualizerMain from './src/VisualizerMain';
 import {
   BackendState,
@@ -15,7 +16,6 @@ import {
   IntType,
   isNativeTypeName,
 } from './src/visualizer-component/types/backendType';
-import Configuration from 'components/DevelopmentMode/Configuration';
 import { LinkedListAnnotation } from './src/visualizer-component/types/annotationType';
 
 type ExtendedWindow = Window &
@@ -33,7 +33,7 @@ const DevelopmentMode = () => {
   const [backendState, setBackendState] = useState<BackendState>({
     frame_info: {
       file: 'test.c',
-      line_num: 12,
+      line_num: 0,
       line: 'printf("Hello World!");',
       function: 'main',
     },
@@ -136,7 +136,7 @@ const DevelopmentMode = () => {
         <div className={classNames(styles.pane, styles.nav)}>Nav bar</div>
         <div className={classNames(styles.pane, styles.files)}>File tree</div>
         <div className={classNames(styles.pane, styles.editor)}>
-          <CodeEditor />
+          <CodeEditor currLine={backendState.frame_info.line_num} />
         </div>
         <div className={classNames(styles.pane, styles.inspector)}>
           <Tabs>

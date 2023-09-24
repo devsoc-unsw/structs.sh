@@ -210,14 +210,14 @@ export class LinkedListParser implements Parser {
       cacheLinkedListNode.set(node.uid, node);
     });
 
-    let unionNodes = new Set<string>();
+    const unionNodes = new Set<string>();
     linkedList.forEach((node) => {
       unionNodes.add(node.uid);
       if (node.next !== '0x0') {
         unionNodes.add(node.next);
       }
     });
-    let unionFind = new UnionFind(unionNodes);
+    const unionFind = new UnionFind(unionNodes);
     // Combine
     linkedList.forEach((node) => {
       if (node.next !== '0x0') {
@@ -225,7 +225,7 @@ export class LinkedListParser implements Parser {
       }
     });
 
-    let nodesPosition: Map<
+    const nodesPosition: Map<
       Addr,
       {
         x: number;
@@ -237,7 +237,7 @@ export class LinkedListParser implements Parser {
       let idx = 0;
 
       groups.forEach((group) => {
-        let linkedListGroupNodes: LinkedListNode[] = [];
+        const linkedListGroupNodes: LinkedListNode[] = [];
         group.forEach((uid) => {
           const node = cacheLinkedListNode.get(uid as Addr);
           if (node) linkedListGroupNodes.push(node);

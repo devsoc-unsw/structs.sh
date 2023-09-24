@@ -11,6 +11,7 @@ export interface GraphEdge {
 
 export class Graph {
   nodes: Map<string, GraphNode>;
+
   edges: Map<string, GraphEdge[]>;
 
   constructor() {

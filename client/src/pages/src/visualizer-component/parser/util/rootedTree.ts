@@ -2,6 +2,7 @@ import { Graph, GraphNode } from './graph';
 
 export class RootedTree {
   root: GraphNode;
+
   children: Map<string, RootedTree>;
 
   constructor(graph: Graph, rootUid: string) {

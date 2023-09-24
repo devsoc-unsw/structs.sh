@@ -1,20 +1,32 @@
 import React, { FC } from 'react';
-import CodeMirror from '@uiw/react-codemirror';
-// import { javascript } from '@codemirror/lang-javascript';
-import { cpp } from '@codemirror/lang-cpp';
+import AceEditor, { IMarker } from 'react-ace';
 import { socket } from 'utils/socket';
 import Button from '@mui/material/Button';
 import UploadIcon from '@mui/icons-material/Upload';
 import 'styles/CodeEditor.css';
 
-const CodeEditor: FC = () => {
-  const placeholder = '// Code your stuff below!';
-  const [code, setCode] = React.useState(localStorage.getItem("code") || placeholder);
+import 'ace-builds/src-noconflict/mode-c_cpp';
 
-  const onChange = React.useCallback((newCode: string) => {
-    localStorage.setItem("code", newCode)
+const CodeEditor = ({ currLine }: { currLine: number }) => {
+  const placeholder = '// Code your stuff below!';
+  const [code, setCode] = React.useState(localStorage.getItem('code') || placeholder);
+
+  const markers: IMarker[] = [
+    {
+      startRow: currLine - 1,
+      startCol: 0,
+      endRow: currLine - 1,
+      endCol: 100,
+      className: 'current-line-marker',
+      type: 'fullLine',
+    },
+  ];
+
+  const handleChange = (newCode: string) => {
+    localStorage.setItem('code', newCode);
     setCode(newCode);
-  }, []);
+    console.log(currLine);
+  };
 
   const sendCode = () => {
     socket.emit('mainDebug', code);
@@ -22,12 +34,13 @@ const CodeEditor: FC = () => {
 
   return (
     <>
-      <CodeMirror
+      <AceEditor
         value={code}
+        onChange={handleChange}
         height="100%"
-        extensions={[cpp()]}
-        onChange={onChange}
-        theme="light"
+        width="100%"
+        mode="c_cpp"
+        markers={markers}
       />
       <Button onClick={sendCode} variant="contained" endIcon={<UploadIcon />}>
         Run

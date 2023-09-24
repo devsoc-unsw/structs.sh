@@ -24,7 +24,7 @@ export const DEFAULT_UISTATE: UiState = {
   clickedEntity: null,
   visualizerType: VisualizerType.LINKED_LIST,
   x: 800,
-  y: 400
+  y: 400,
 };
 
 export const NODE_SIZE = 30;

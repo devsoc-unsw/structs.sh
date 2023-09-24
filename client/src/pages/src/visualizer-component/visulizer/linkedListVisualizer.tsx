@@ -124,15 +124,17 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
     const viewBox = svgRef.current.viewBox.baseVal;
     const zoomFactor = 1.045;
 
-    const dx = viewBox.width * (zoomFactor - 1) / 2;
-    const dy = viewBox.height * (zoomFactor - 1) / 2;
+    const dx = (viewBox.width * (zoomFactor - 1)) / 2;
+    const dy = (viewBox.height * (zoomFactor - 1)) / 2;
 
-    if (event.deltaY < 0) { // zoom in
+    if (event.deltaY < 0) {
+      // zoom in
       viewBox.width /= zoomFactor;
       viewBox.height /= zoomFactor;
       viewBox.x += dx;
       viewBox.y += dy;
-    } else { // zoom out
+    } else {
+      // zoom out
       viewBox.width *= zoomFactor;
       viewBox.height *= zoomFactor;
       viewBox.x -= dx;
@@ -148,9 +150,9 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
       viewBox="0 0 1000 1000"
       initial="hidden"
       animate={controls}
-      drag={true}
+      drag
       onDrag={(event, info) => handleDrag(event, info)}
-      dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }} 
+      dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
       dragMomentum={false}
       dragElastic={0}
       onWheel={(event) => handleWheel(event)}
