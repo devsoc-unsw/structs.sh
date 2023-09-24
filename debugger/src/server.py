@@ -217,10 +217,11 @@ def executeNext(socket_id: str) -> None:
 
 
 @io.event
-def send_stdin(socket_id: str):
+def send_stdin(socket_id: str, data: str):
     """
     TODO: Send stdin from FE client to gdb instance"""
     print("send_stdin event not yet implemented")
+    io.emit("sendStdoutToUser", f"echo: {data}\n")
 
 
 @io.event

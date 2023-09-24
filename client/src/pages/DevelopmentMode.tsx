@@ -13,6 +13,7 @@ import VisualizerMain from './src/VisualizerMain';
 import { BackendState } from './src/visualizer-component/types/backendType';
 import { LinkedListAnnotation } from './src/visualizer-component/types/annotationType';
 import { useUiStateStore } from './src/visualizer-component/uiStateStore';
+import Console from 'components/DevelopmentMode/Console';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -135,18 +136,16 @@ const DevelopmentMode = () => {
         <div className={classNames(styles.pane, styles.inspector)}>
           <Tabs>
             <Tab label="Console">
-              <div className={styles.pane}>Console</div>
+              <Console />
             </Tab>
             <Tab label="Inspect">
               <StackInspector debuggerData={dummyData} />
             </Tab>
             <Tab label="Configure">
-              <div className={styles.pane}>
-                <Configuration
-                  typeDeclarations={typeDeclarations}
-                  sendLinkedListAnnotation={getLinkedListAnnotation}
-                />
-              </div>
+              <Configuration
+                typeDeclarations={typeDeclarations}
+                sendLinkedListAnnotation={getLinkedListAnnotation}
+              />
             </Tab>
           </Tabs>
         </div>

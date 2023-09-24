@@ -1,0 +1,17 @@
+.console {
+	height: 100%;
+	overflow-y: auto;
+	padding-top: 6px;
+	padding-bottom: 6px;
+	cursor: text;
+	word-break: break-all;
+	white-space: pre-wrap;
+	box-sizing: border-box;
+}
+
+.input {
+	display: inline-block;
+	min-width: 1em;
+	min-height: 1em;
+	outline: none;
+}
