@@ -202,14 +202,16 @@ class CustomNextCommand(gdb.Command):
                     # struct_fields_str == "data = 542543, next = 0x0"
 
                     struct_type_name = stack_var_type_name.strip('*').strip()
-                    new_struct_value = create_struct_value(
-                        self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_type_name, address)
+                    # "struct node*" => "struct node"
+
+                    updated_struct_value = create_struct_value(
+                        self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_type_name)
 
                     heap_memory_value = {
                         # "variable": var, ## Name of stack var storing the address of this piece of heap data
                         "typeName": struct_type_name,
                         # "size": bytes, ## Size of the type in bytes
-                        "value": new_struct_value,
+                        "value": updated_struct_value,
                         "addr": address
                     }
 
@@ -234,7 +236,7 @@ class CustomNextCommand(gdb.Command):
         gdb.execute('next')
 
         # == Get stack data after executing next command
-        stack_data = get_stack_data()
+        stack_data = self.get_stack_data()
 
         # === Up date existing tracked heap data
         # Make sure this is done AFTER executing the next command, so that the heap is actually updated
@@ -252,10 +254,16 @@ class CustomNextCommand(gdb.Command):
             struct_fields_str = struct_fields_str.strip("{}").strip()
             # struct_fields_str == "data = 542543, next = 0x0"
 
-            new_heap_memory_value = create_struct_value(
-                self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_type_name, address)
+            updated_struct_value = create_struct_value(
+                self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_type_name)
 
-            self.heap_data[addr] = new_heap_memory_value
+            self.heap_data[addr] = {
+                # "variable": var, ## Name of stack var storing the address of this piece of heap data
+                "typeName": struct_type_name,
+                # "size": bytes, ## Size of the type in bytes
+                "value": updated_struct_value,
+                "addr": address
+            }
 
         backend_data = {
             "frame_info": frame_info,
@@ -267,6 +275,58 @@ class CustomNextCommand(gdb.Command):
 
         print(f"\n=== Finished running update_backend_state in gdb instance\n\n")
         return backend_data
+
+    def get_stack_data(self):
+        locals: str = gdb.execute("info locals", to_string=True)
+        args: str = gdb.execute("info args", to_string=True)
+
+        variable_list: list[str] = []
+
+        if locals.strip() != "No locals.":
+            variable_list += locals.strip().split("\n")
+
+        if args.strip() != "No arguments.":
+            variable_list += args.strip().split("\n")
+
+        variables: dict = {}
+        for var in variable_list:
+            stack_memory_value: dict = {}
+            assert (" = " in var)
+            name, value_str = var.split(" = ", 1)
+
+            # === Extract type
+            type_name = get_type_name_of_stack_var(name)
+            stack_memory_value["typeName"] = type_name
+
+            print(f"Extracted type name of stack variable {name}: {type_name}")
+
+            # === Extract address
+            address_str = gdb.execute(f"p &{name}", to_string=True)
+            # address_str == "$1 = (int *) 0x7fffffffe1c4"
+            address = address_str.split(" ")[-1].strip()
+            # address == "0x7fffffffe1c4"
+
+            print(f"Extracted address of stack variable {name}: {address}")
+            stack_memory_value["addr"] = address
+
+            # === Extract value
+            if type_name.startswith("struct") and not type_name.endswith("*") and not type_name.endswith("[]"):
+                value_str = value_str.strip().strip("{}").strip()
+                # value_str == "data = 542543, next = 0xaaa67b32f2e"
+
+                value = create_struct_value(
+                    self.debug_session.get_cached_parsed_type_decls(), value_str, type_name)
+            # TODO: handle arrays
+            else:
+                value = value_str
+
+            print(f"Extracted value of stack variable {name}: {value}")
+            stack_memory_value["value"] = value
+            # ===
+
+            variables[name] = stack_memory_value
+
+        return variables
 
     def get_heap_dict(self):
         return self.heap_data
@@ -330,12 +390,15 @@ def remove_non_standard_characters(input_str):
     return clean_str
 
 
-def create_struct_value(parsed_type_decls, struct_fields_str, struct_name, address):
+def create_struct_value(parsed_type_decls, struct_fields_str, struct_name):
+    '''
+    Expects struct_fields_str in format: "data = 542543, next = 0x0"
+    '''
     # Find the type declaration for the struct type being malloced
     print("parsed type decls")
     pprint(parsed_type_decls)
-    corresponding_type_decl = next((x for x in parsed_type_decls if (
-        lambda x: "name" in x and x['name'] == struct_name)), None)
+    corresponding_type_decl = next(
+        (x for x in parsed_type_decls if "name" in x and x['name'] == struct_name), None)
     if corresponding_type_decl is None:
         raise Exception(
             f"No corresponding type declaration found for {struct_name}")
@@ -350,13 +413,7 @@ def create_struct_value(parsed_type_decls, struct_fields_str, struct_name, addre
             "typeName": next((field['type'] for field in corresponding_type_decl['fields'] if field['name'] == field_name), ""),
             "value": field_value}
 
-    return {
-        # "variable": var, ## Name of stack var storing the address of this piece of heap data
-        "typeName": struct_name,
-        # "size": bytes, ## Size of the type in bytes
-        "value": value,
-        "addr": address
-    }
+    return value
 
 
 def get_type_name_of_stack_var(var: str):
@@ -433,34 +490,3 @@ def get_frame_info():
         frame_info["line"] = ""
 
     return frame_info
-
-
-def get_stack_data():
-    locals: str = gdb.execute("info locals", to_string=True)
-    args: str = gdb.execute("info args", to_string=True)
-
-    variable_list: list[str] = []
-
-    if locals.strip() != "No locals.":
-        variable_list += locals.strip().split("\n")
-
-    if args.strip() != "No arguments.":
-        variable_list += args.strip().split("\n")
-
-    variables: dict = {}
-    for var in variable_list:
-        stack_memory_value: dict = {}
-        assert (" = " in var)
-        name, value_str = var.split(" = ", 1)
-
-        # TODO: parse value_str to correct python type
-        stack_memory_value["value"] = value_str
-
-        type_name = get_type_name_of_stack_var(name)
-        stack_memory_value["type"] = type_name
-
-        # TODO: get address of this memory value
-        stack_memory_value["address"] = "0x0"
-        variables[name] = stack_memory_value
-
-    return variables
