@@ -13,6 +13,7 @@ import VisualizerMain from './src/VisualizerMain';
 import { BackendState } from './src/visualizer-component/types/backendType';
 import { LinkedListAnnotation } from './src/visualizer-component/types/annotationType';
 import { useUiStateStore } from './src/visualizer-component/uiStateStore';
+import DevelopmentModeNavbar from 'components/Navbars/DevelopmentModeNavbar';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -127,7 +128,9 @@ const DevelopmentMode = () => {
   return !DEBUG_MODE ? (
     <div className={classNames(globalStyles.root, styles.light)}>
       <div className={styles.layout}>
-        <div className={classNames(styles.pane, styles.nav)}>Nav bar</div>
+        <div className={classNames(styles.pane, styles.nav)}>
+          <DevelopmentModeNavbar />
+        </div>
         <div className={classNames(styles.pane, styles.files)}>File tree</div>
         <div className={classNames(styles.pane, styles.editor)}>
           <CodeEditor currLine={backendState.frame_info.line_num} />
