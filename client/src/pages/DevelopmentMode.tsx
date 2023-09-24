@@ -9,11 +9,11 @@ import CodeEditor from 'components/DevelopmentMode/CodeEditor';
 import StackInspector from 'components/DevelopmentMode/StackInspector';
 import * as dummyData from 'components/DevelopmentMode/dummyData.json';
 import Configuration from 'components/DevelopmentMode/Configuration';
+import Console from 'components/DevelopmentMode/Console';
 import VisualizerMain from './src/VisualizerMain';
 import { BackendState } from './src/visualizer-component/types/backendType';
 import { LinkedListAnnotation } from './src/visualizer-component/types/annotationType';
 import { useUiStateStore } from './src/visualizer-component/uiStateStore';
-import Console from 'components/DevelopmentMode/Console';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
