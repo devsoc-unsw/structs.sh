@@ -187,7 +187,11 @@ const createPossibleLinkedListTypeDecls = (typeDeclarations: any[]) => {
           typeName: field.type,
         });
       }
-      if (isPointerType(field.type) && isStructTypeName(field.type.slice(0, -1))) {
+      if (
+        isPointerType(field.type) &&
+        isStructTypeName(field.type.slice(0, -1)) &&
+        field.type.includes(typeDecl.name)
+      ) {
         possibleTypeDecl.possibleNexts.push({
           name: field.name,
           typeName: field.type,
