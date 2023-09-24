@@ -17,6 +17,7 @@ import {
   LinkedListAnnotation,
 } from 'pages/src/visualizer-component/types/annotationType';
 import ConfigurationSelect from './ConfigurationSelect';
+import { useUiStateStore } from '../../pages/src/visualizer-component/uiStateStore';
 
 export type PossibleLinkedListAnnotation = {
   typeName: StructType['typeName'];
@@ -71,18 +72,13 @@ const createPossibleLinkedListTypeDecls = (typeDeclarations: any[]) => {
   return possibleTypeDecls;
 };
 
-const Configuration = ({
-  typeDeclarations,
-  sendLinkedListAnnotation,
-}: {
-  typeDeclarations: any;
-  sendLinkedListAnnotation: (linkedListAnnotation: LinkedListAnnotation) => void;
-}) => {
+const Configuration = ({ typeDeclarations }: { typeDeclarations: any }) => {
   const [currNodeVariable, setCurrNodeVariable] = useState('');
   const [nodeAnnotations, setNodeAnnotations] = useState<Record<string, LinkedListAnnotation>>({});
   const [possibleTypeDeclsForLinkedList, setPossibleTypeDeclsForLinkedList] = useState<
     PossibleLinkedListAnnotation[]
   >([]);
+  const { updateUserAnnotation, userAnnotation } = useUiStateStore();
 
   useEffect(() => {
     const possibleTypeDecls = createPossibleLinkedListTypeDecls(typeDeclarations);
@@ -112,9 +108,21 @@ const Configuration = ({
         },
       };
       setNodeAnnotations(newNodeAnnotations);
-      sendLinkedListAnnotation(newNodeAnnotations[newNodeVariable] as LinkedListAnnotation);
+      updateUserAnnotation({
+        stackAnnotation: userAnnotation.stackAnnotation,
+        typeAnnotation: {
+          ...userAnnotation.typeAnnotation,
+          [newNodeAnnotations[newNodeVariable].typeName]: newNodeAnnotations[newNodeVariable],
+        },
+      });
     } else {
-      sendLinkedListAnnotation(nodeAnnotations[newNodeVariable] as LinkedListAnnotation);
+      updateUserAnnotation({
+        stackAnnotation: userAnnotation.stackAnnotation,
+        typeAnnotation: {
+          ...userAnnotation.typeAnnotation,
+          [nodeAnnotations[newNodeVariable].typeName]: nodeAnnotations[newNodeVariable],
+        },
+      });
     }
   };
 
@@ -134,7 +142,13 @@ const Configuration = ({
     updatedNodeAnnotations[nodeVariable] = newAnnotation;
     setNodeAnnotations(updatedNodeAnnotations);
     if (currNodeVariable === nodeVariable) {
-      sendLinkedListAnnotation(updatedNodeAnnotations[currNodeVariable] as LinkedListAnnotation);
+      updateUserAnnotation({
+        stackAnnotation: userAnnotation.stackAnnotation,
+        typeAnnotation: {
+          ...userAnnotation.typeAnnotation,
+          [newAnnotation.typeName]: newAnnotation,
+        },
+      });
     }
   };
 

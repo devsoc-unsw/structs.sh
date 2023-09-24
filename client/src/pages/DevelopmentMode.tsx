@@ -142,10 +142,7 @@ const DevelopmentMode = () => {
             </Tab>
             <Tab label="Configure">
               <div className={styles.pane}>
-                <Configuration
-                  typeDeclarations={typeDeclarations}
-                  sendLinkedListAnnotation={getLinkedListAnnotation}
-                />
+                <Configuration typeDeclarations={typeDeclarations} />
               </div>
             </Tab>
           </Tabs>
