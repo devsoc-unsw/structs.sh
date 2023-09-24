@@ -1,17 +1,11 @@
-import {
-  DataStructureAnnotation,
-  LinkedListAnnotation,
-  LocalsAnnotations,
-  isLinkedListNode,
-} from '../types/annotationType';
-import { Addr, BackendState, MemoryValue } from '../types/backendType';
+import { DataStructureType, UserAnnotation, isLinkedListNode } from '../types/annotationType';
+import { Addr, BackendState } from '../types/backendType';
 import { EntityType } from '../types/entity/baseEntity';
 import { EdgeEntity } from '../types/entity/edgeEntity';
 import { DEFAULT_NODE_SIZE, NodeEntity } from '../types/entity/nodeEntity';
 import { PointerEntity } from '../types/entity/pointerEntity';
-import { EntityConcrete, FrontendLinkedListGraph, GenericGraph } from '../types/frontendType';
-import { UiState } from '../types/uiState';
-import { assertUnreachable, cloneSimple } from '../util/util';
+import { EntityConcrete, FrontendLinkedListGraph } from '../types/frontendType';
+import { assertUnreachable } from '../util/util';
 import { Parser } from './parser';
 import { UnionFind } from './util/unionFind';
 
@@ -23,9 +17,8 @@ type LinkedListNode = {
 
 const LINKED_LIST_GAP = 200;
 export class LinkedListParser implements Parser {
-  convertToRootedTree(
-    linkedList: LinkedListNode[],
-    cacheLinkedListNode?: Map<Addr, LinkedListNode>
+  private convertToRootedTree(
+    linkedList: LinkedListNode[]
   ): [LinkedListNode, Map<Addr, LinkedListNode[]>] {
     let root: LinkedListNode | null = null;
     const prevNodeMap: Map<Addr, LinkedListNode[]> = new Map();
@@ -65,7 +58,7 @@ export class LinkedListParser implements Parser {
   }
 
   // Recursion algorithm
-  assignPositionsRecursion(
+  private assignPositionsRecursion(
     currNode: LinkedListNode,
     prevNodeMap: Map<Addr, LinkedListNode[]>,
     cacheLinkedListNode: Map<Addr, LinkedListNode>,
@@ -117,7 +110,7 @@ export class LinkedListParser implements Parser {
   }
 
   // TODO: Rewrite
-  assignPositions(
+  private assignPositions(
     currNode: LinkedListNode,
     prevNodeMap: Map<Addr, LinkedListNode[]>,
     cacheLinkedListNode: Map<Addr, LinkedListNode>,
@@ -136,7 +129,7 @@ export class LinkedListParser implements Parser {
     return posCache;
   }
 
-  findMaxDepth(
+  private findMaxDepth(
     cacheLinkedListNode: Map<Addr, LinkedListNode[]>,
     linkedList: LinkedListNode[]
   ): number {
@@ -175,14 +168,43 @@ export class LinkedListParser implements Parser {
     return maximumDepth + 1;
   }
 
+  parseHeapData(backendStructure: BackendState, annotation: UserAnnotation): LinkedListNode[] {
+    // Later need to add an additional step to parse user defined struct into generic struct
+    const linkedList: LinkedListNode[] = [];
+
+    // === Get all linked list nodes from backend heap data
+    Object.entries(annotation.typeAnnotation).forEach(([_, linkedListAnnotation]) => {
+      switch (linkedListAnnotation.type) {
+        case DataStructureType.BinaryTree: {
+          break;
+        }
+        case DataStructureType.LinkedList: {
+          Object.entries(backendStructure.heap_data).forEach(([uid, heapValue]) => {
+            if (isLinkedListNode(heapValue, linkedListAnnotation)) {
+              const linkedListNode: LinkedListNode = {
+                uid: uid as Addr,
+                data: heapValue.value[linkedListAnnotation.value.name].value,
+                next: heapValue.value[linkedListAnnotation.next.name].value,
+              };
+              linkedList.push(linkedListNode);
+            }
+          });
+          break;
+        }
+        default: {
+          assertUnreachable(linkedListAnnotation);
+        }
+      }
+    });
+    return linkedList;
+  }
+
   /**
    * Parser functionality
    */
   parseInitialState(
     backendStructure: BackendState,
-    localsAnnotations: LocalsAnnotations,
-    linkedListAnnotation: LinkedListAnnotation,
-    uiState: UiState
+    annotation: UserAnnotation
   ): FrontendLinkedListGraph {
     const nodes: NodeEntity[] = [];
     const edges: EdgeEntity[] = [];
@@ -190,25 +212,13 @@ export class LinkedListParser implements Parser {
     const pointers: PointerEntity[] = [];
 
     // Later need to add an additional step to parse user defined struct into generic struct
-    const linkedList: LinkedListNode[] = [];
+    const linkedList: LinkedListNode[] = this.parseHeapData(backendStructure, annotation);
 
-    // === Get all linked list nodes from backend heap data
-    Object.entries(backendStructure.heap_data).forEach(([uid, heapValue]) => {
-      // Get all linked list nodes
-      console.log(heapValue, linkedListAnnotation);
-      if (isLinkedListNode(heapValue, linkedListAnnotation)) {
-        const linkedListNode: LinkedListNode = {
-          uid: uid as Addr,
-          data: heapValue.value[linkedListAnnotation.value.name].value,
-          next: heapValue.value[linkedListAnnotation.next.name].value,
-        };
-        linkedList.push(linkedListNode);
-      }
-    });
     const cacheLinkedListNode: Map<Addr, LinkedListNode> = new Map();
     linkedList.forEach((node) => {
       cacheLinkedListNode.set(node.uid, node);
     });
+    console.log('Executed', backendStructure, annotation, linkedList);
 
     const unionNodes = new Set<string>();
     linkedList.forEach((node) => {
@@ -218,6 +228,7 @@ export class LinkedListParser implements Parser {
       }
     });
     const unionFind = new UnionFind(unionNodes);
+
     // Combine
     linkedList.forEach((node) => {
       if (node.next !== '0x0') {
@@ -247,10 +258,7 @@ export class LinkedListParser implements Parser {
           return;
         }
 
-        const [rootedTree, prevNodeMap] = this.convertToRootedTree(
-          linkedListGroupNodes,
-          cacheLinkedListNode
-        );
+        const [rootedTree, prevNodeMap] = this.convertToRootedTree(linkedListGroupNodes);
         const maxDepth = this.findMaxDepth(prevNodeMap, linkedListGroupNodes);
         const positions = this.assignPositions(
           rootedTree,
@@ -329,14 +337,5 @@ export class LinkedListParser implements Parser {
       console.error(e.message);
       return undefined;
     }
-  }
-
-  updateState(
-    frontendStructure: GenericGraph,
-    backendStructure: BackendState,
-    dataStructureAnnotation: DataStructureAnnotation,
-    linkedListAnnotation: LinkedListAnnotation
-  ) {
-    return undefined;
   }
 }

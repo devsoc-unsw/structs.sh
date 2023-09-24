@@ -1,10 +1,11 @@
+import { DataStructureType, UserAnnotation, isTreeNode } from '../types/annotationType';
 import { Addr, BackendState } from '../types/backendType';
 import { EntityType } from '../types/entity/baseEntity';
 import { EdgeEntity } from '../types/entity/edgeEntity';
 import { DEFAULT_NODE_SIZE, NodeEntity } from '../types/entity/nodeEntity';
-import { EntityConcrete, FrontendTreeGraph, GenericGraph } from '../types/frontendType';
+import { EntityConcrete, FrontendTreeGraph } from '../types/frontendType';
 import { UiState } from '../types/uiState';
-import { assertUnreachable, cloneSimple } from '../util/util';
+import { assertUnreachable } from '../util/util';
 import { Parser } from './parser';
 
 type TreeNode = {
@@ -16,7 +17,7 @@ type TreeNode = {
 const TREE_GAP = 140;
 
 export class TreeParser implements Parser {
-  assignPositionsRecursion(
+  private assignPositionsRecursion(
     currNode: TreeNode | null,
     posCache: Map<Addr, { x: number; y: number }>,
     nodeCache: Map<Addr, TreeNode>,
@@ -29,6 +30,8 @@ export class TreeParser implements Parser {
     y: number;
   } | null {
     if (!currNode) return null;
+    let leftBoundaryRet = leftBoundary;
+    let rightBoundaryRet = leftBoundary;
 
     let leftRange: { leftBoundary: number; rightBoundary: number; y: number } | null = null;
     let rightRange: { leftBoundary: number; rightBoundary: number; y: number } | null = null;
@@ -50,11 +53,11 @@ export class TreeParser implements Parser {
     // If there'e range in the left, we need to assign the current node on the right side of range
     if (leftRange) {
       posCache.set(currNode.uid, { x: leftRange.rightBoundary + TREE_GAP / 2, y });
-      leftBoundary = leftRange.rightBoundary + TREE_GAP / 2;
+      leftBoundaryRet = leftRange.rightBoundary + TREE_GAP / 2;
     } // We put the current node on the left boundry
     else {
       posCache.set(currNode.uid, { x: leftBoundary + TREE_GAP / 2, y });
-      leftBoundary += TREE_GAP / 2;
+      leftBoundaryRet += TREE_GAP / 2;
     }
 
     if (currNode.right) {
@@ -72,8 +75,8 @@ export class TreeParser implements Parser {
     }
 
     // Now we merge range
-    let leftBoundaryRet = posCache.get(currNode.uid).x - TREE_GAP / 2;
-    let rightBoundaryRet = posCache.get(currNode.uid).x + TREE_GAP / 2;
+    leftBoundaryRet = posCache.get(currNode.uid).x - TREE_GAP / 2;
+    rightBoundaryRet = posCache.get(currNode.uid).x + TREE_GAP / 2;
     if (leftRange) {
       leftBoundaryRet = Math.min(leftRange.leftBoundary, leftBoundaryRet);
       rightBoundaryRet = Math.max(leftRange.rightBoundary, rightBoundaryRet);
@@ -96,56 +99,45 @@ export class TreeParser implements Parser {
     };
   }
 
-  assignPositions(
+  private assignPositions(
     rootNode: TreeNode,
     treeNodes: Map<Addr, TreeNode>,
     uiState: UiState
   ): Map<Addr, { x: number; y: number }> {
     const posCache: Map<Addr, { x: number; y: number }> = new Map();
-    this.assignPositionsRecursion(rootNode, posCache, treeNodes, 0, uiState.x, 100);
+    this.assignPositionsRecursion(rootNode, posCache, treeNodes, 0, uiState.width, 100);
     return posCache;
   }
 
-  parseInitialState(
-    backendStructure: BackendState,
-    editorAnnotation: EditorAnnotation,
-    uiState: UiState
-  ): FrontendTreeGraph {
-    const nodes: NodeEntity[] = [];
-    const edges: EdgeEntity[] = [];
-    const cacheEntity: { [uid: string]: EntityConcrete } = {};
-
+  parseHeapData(backendStructure: BackendState, annotation: UserAnnotation): TreeNode[] {
+    // Later need to add an additional step to parse user defined struct into generic struct
     const treeNodes: TreeNode[] = [];
-    Object.keys(backendStructure.heap_data).forEach((uid) => {
-      const entity = backendStructure.heap_data[uid] as BackendVariableConcrete;
-      // TODO: handle other entity types and pointer types
-      if (entity.is_pointer === true) {
-        // Let it go, I am unsure why we need this
-      } else {
-        switch (entity.type) {
-          case CType.TREE_NODE: {
-            treeNodes.push(
-              cloneSimple({
+
+    // === Get all linked list nodes from backend heap data
+    Object.entries(annotation.typeAnnotation).forEach(([_, binaryAnnotation]) => {
+      switch (binaryAnnotation.type) {
+        case DataStructureType.BinaryTree: {
+          Object.entries(backendStructure.heap_data).forEach(([uid, memoryValue]) => {
+            if (isTreeNode(memoryValue, binaryAnnotation)) {
+              treeNodes.push({
                 uid: uid as Addr,
-                data: entity.value.value,
-                left: entity.value.left,
-                right: entity.value.right,
-              })
-            );
-            break;
-          }
-          case CType.CHAR:
-          case CType.DOUBLE:
-          case CType.DOUBLE_LINED_LIST_NODE:
-          case CType.INT:
-          case CType.LINKED_LIST_NODE:
-          case CType.LINKED_LIST_HEAD:
-            break;
-          default:
-            assertUnreachable(entity);
+                data: memoryValue[binaryAnnotation.value.name].value,
+                left: memoryValue[binaryAnnotation.left.name].value,
+                right: memoryValue[binaryAnnotation.right.name].value,
+              });
+            }
+          });
+          break;
+        }
+        case DataStructureType.LinkedList: {
+          break;
+        }
+        default: {
+          assertUnreachable(binaryAnnotation);
         }
       }
     });
+
     treeNodes.forEach((node) => {
       if (node.left === '0x0') {
         node.left = null;
@@ -154,6 +146,19 @@ export class TreeParser implements Parser {
         node.right = null;
       }
     });
+    return treeNodes;
+  }
+
+  parseInitialState(
+    backendStructure: BackendState,
+    editorAnnotation: UserAnnotation,
+    uiState: UiState
+  ): FrontendTreeGraph {
+    const nodes: NodeEntity[] = [];
+    const edges: EdgeEntity[] = [];
+    const cacheEntity: { [uid: string]: EntityConcrete } = {};
+
+    const treeNodes: TreeNode[] = this.parseHeapData(backendStructure, editorAnnotation);
 
     const treeNodesMap: Map<Addr, TreeNode> = new Map();
     treeNodes.forEach((node) => {
@@ -220,15 +225,5 @@ export class TreeParser implements Parser {
       cacheEntity,
       pointers: [],
     };
-  }
-
-  updateState(
-    frontendStructure: GenericGraph,
-    backendStructure: BackendState,
-    backendUpdate: BackendUpdate,
-    editorAnnotation: EditorAnnotation
-  ) {
-    // TODO: Implement updateState method
-    return undefined;
   }
 }
