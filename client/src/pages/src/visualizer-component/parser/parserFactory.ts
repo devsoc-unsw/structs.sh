@@ -10,7 +10,7 @@ export function parserFactory(uiState: UiState): Parser {
       return new LinkedListParser();
     }
     case VisualizerType.BINARY_TREE: {
-      return new TreeParser();
+      // return new TreeParser();
     }
     case VisualizerType.GRAPH:
     case VisualizerType.ARRAY: {

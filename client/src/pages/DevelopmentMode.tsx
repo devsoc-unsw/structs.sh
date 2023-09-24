@@ -6,9 +6,17 @@ import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
 import { Socket } from 'socket.io-client';
 import CodeEditor from 'components/DevelopmentMode/CodeEditor';
+import StackInspector from 'components/DevelopmentMode/StackInspector';
+import * as dummyData from 'components/DevelopmentMode/dummyData.json';
 import VisualizerMain from './src/VisualizerMain';
-import { BackendState, CType } from './src/visualizer-component/types/backendType';
+import {
+  BackendState,
+  NativeTypeName,
+  IntType,
+  isNativeTypeName,
+} from './src/visualizer-component/types/backendType';
 import Configuration from 'components/DevelopmentMode/Configuration';
+import { LinkedListAnnotation } from './src/visualizer-component/types/annotationType';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -37,8 +45,13 @@ const DevelopmentMode = () => {
 
   const [typeDeclarations, setTypeDeclarations] = useState([]);
 
+  const [linkedListAnnotation, setLinkedListAnnotation] = useState<
+    LinkedListAnnotation | undefined
+  >();
+
   const updateState = (data: any) => {
     console.log('Update dummy backendState:');
+    console.log(data);
     setBackendState(data);
   };
 
@@ -72,7 +85,7 @@ const DevelopmentMode = () => {
   const onSendBackendStateToUser = useCallback((data: any) => {
     console.log(`Received backend state:\n`, data);
     // Can't use real debugger backend state yet, not in the right format
-    // updateState(data);
+    updateState(data);
   }, []);
 
   const onSendStdoutToUser = useCallback((data: any) => {
@@ -110,6 +123,14 @@ const DevelopmentMode = () => {
     };
   }, [updateState]);
 
+  const getLinkedListAnnotation = (linkedListAnnotation: LinkedListAnnotation) => {
+    console.log(
+      'DevMode.tsx received linked list annotation from Configuration.tsx: ',
+      linkedListAnnotation
+    );
+    setLinkedListAnnotation(linkedListAnnotation);
+  };
+
   const DEBUG_MODE = false;
   return !DEBUG_MODE ? (
     <div className={classNames(globalStyles.root, styles.light)}>
@@ -125,11 +146,14 @@ const DevelopmentMode = () => {
               <div className={styles.pane}>Console</div>
             </Tab>
             <Tab label="Inspect">
-              <div className={styles.pane}>Inspect</div>
+              <StackInspector debuggerData={dummyData} />
             </Tab>
             <Tab label="Configure">
               <div className={styles.pane}>
-                <Configuration typeDeclarations={typeDeclarations} />
+                <Configuration
+                  typeDeclarations={typeDeclarations}
+                  sendLinkedListAnnotation={getLinkedListAnnotation}
+                />
               </div>
             </Tab>
           </Tabs>
@@ -144,6 +168,7 @@ const DevelopmentMode = () => {
             getNextState={() => {
               socket.emit('executeNext');
             }}
+            dataStructureAnnotation={linkedListAnnotation}
           />
         </div>
         <div className={classNames(styles.pane, styles.timeline)}>Timeline</div>
@@ -159,6 +184,7 @@ const DevelopmentMode = () => {
       getNextState={() => {
         socket.emit('executeNext');
       }}
+      dataStructureAnnotation={linkedListAnnotation}
     />
   );
 };

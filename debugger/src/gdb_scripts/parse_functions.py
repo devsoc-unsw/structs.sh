@@ -487,6 +487,10 @@ def get_type_decl_ast(type_decl_strs, type_decl_str_to_parse):
         print(f"{struct_def_str=}")
         type_decl_str_to_parse = struct_def_str.strip() + ";"
 
+    # Remove the typedecl that we are parsing from the list of type
+    # declarations to write to the file before the typedecl that we are parsing.
+    type_decl_strs = filter(
+        lambda s: s != type_decl_str_to_parse, type_decl_strs)
     with open(USER_TYPE_DECLARATION_FILE_PATH, "w") as f:
         # Write all user-defined type and typedef declarations that might be
         # necessary to parse the struct definition
