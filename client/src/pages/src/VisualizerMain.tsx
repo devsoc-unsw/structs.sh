@@ -1,11 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { DEFAULT_UISTATE, UiState } from './visualizer-component/types/uiState';
 import { parserFactory } from './visualizer-component/parser/parserFactory';
 import { visualizerFactory } from './visualizer-component/visulizer/visualizerFactory';
 import { BackendState } from './visualizer-component/types/backendType';
 import { Timeline } from './visualizer-component/util/timeline';
 import { useFrontendStateStore } from './visualizer-component/visaulizerStateStore';
-import { LocalAnnotationBase, UserAnnotation } from './visualizer-component/types/annotationType';
 import { useUiStateStore } from './visualizer-component/uiStateStore';
 
 export interface RoutesProps {
@@ -20,10 +18,9 @@ const VisualizerMain: React.FC<RoutesProps> = ({
   getDummyNextState,
   getNextState,
 }: RoutesProps) => {
-  const [settings, setSettings] = useState<UiState>(DEFAULT_UISTATE);
-  const VisComponent = visualizerFactory(settings);
-  const [parser] = useState(parserFactory(settings));
-  const { userAnnotation } = useUiStateStore();
+  const { userAnnotation, visualizerType } = useUiStateStore();
+  const VisComponent = visualizerFactory(visualizerType);
+  const [parser] = useState(parserFactory(visualizerType));
 
   const currState = useFrontendStateStore((store) => {
     return store.currState();
@@ -43,7 +40,11 @@ const VisualizerMain: React.FC<RoutesProps> = ({
     //   },
     // };
     if (backendState && userAnnotation) {
-      const newParsedState = parser.parseInitialState(backendState, userAnnotation, settings);
+      const newParsedState = parser.parseInitialState(
+        backendState,
+        userAnnotation,
+        useUiStateStore()
+      );
       useFrontendStateStore.getState().updateNextState(newParsedState);
     } else {
       let issue = 'something';
@@ -90,12 +91,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({
     <div className="container">
       <div className="linked-list">
         <div className="visualizer" ref={visualizerRef} style={{ overflow: 'hidden' }}>
-          <VisComponent
-            settings={settings}
-            graphState={currState}
-            setSettings={setSettings}
-            dimensions={dimensions}
-          />
+          <VisComponent graphState={currState} dimensions={dimensions} />
         </div>
         <div className="timeline">
           <Timeline
