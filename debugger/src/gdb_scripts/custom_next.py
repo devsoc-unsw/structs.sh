@@ -158,14 +158,9 @@ class CustomNextCommand(gdb.Command):
                 for var_assigned_to_malloc in malloc_visitor.malloc_variables:
                     print(f"{var_assigned_to_malloc=}")
 
-                    struct_name = get_type_name_of_stack_var(
+                    stack_var_type_name = get_type_name_of_stack_var(
                         var_assigned_to_malloc)
-                    if struct_name:
-                        struct_name = 'struct ' + struct_name
-                        # e.g. "struct node"
-                        print(f"Struct name: {struct_name}")
-                    else:
-                        print("No struct names found in the AST.")
+                    # stack_var_type_name == "struct node*"
 
                     # Break on malloc
                     gdb.execute('break')
@@ -189,7 +184,7 @@ class CustomNextCommand(gdb.Command):
                     # === Extract linked list node data given the variable name
                     print(f"Attempting to print \"{var_assigned_to_malloc}\"")
                     struct_fields_str = gdb.execute(
-                        f'p *({struct_name} *) {address}', to_string=True)
+                        f'p *({stack_var_type_name}) {address}', to_string=True)
 
                     # Conventional struct node might look like this
                     # $4 = {data = 542543, next = 0x0}
@@ -206,12 +201,13 @@ class CustomNextCommand(gdb.Command):
                     print(f"{struct_fields_str=}")
                     # struct_fields_str == "data = 542543, next = 0x0"
 
+                    struct_type_name = stack_var_type_name.strip('*').strip()
                     new_struct_value = create_struct_value(
-                        self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_name, address)
+                        self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_type_name, address)
 
                     heap_memory_value = {
                         # "variable": var, ## Name of stack var storing the address of this piece of heap data
-                        "typeName": struct_name,
+                        "typeName": struct_type_name,
                         # "size": bytes, ## Size of the type in bytes
                         "value": new_struct_value,
                         "addr": address
@@ -243,25 +239,22 @@ class CustomNextCommand(gdb.Command):
         # === Up date existing tracked heap data
         # Make sure this is done AFTER executing the next command, so that the heap is actually updated
         for addr, heap_memory_value in self.heap_data.items():
-            struct_name = heap_memory_value["typeName"]
+            struct_type_name = heap_memory_value["typeName"]
             address = heap_memory_value["addr"]
 
             # Get struct info by passing in address
             struct_fields_str = gdb.execute(
-                f'p *({struct_name} *) {addr}', to_string=True)       # Can replace struct node with type stored in object
+                f'p *({struct_type_name} *) {addr}', to_string=True)       # Can replace struct node with type stored in object
             # TODO: Heap dictionary assumes its working with structs, should ideally be generalised to all types
             # Extract all struct fields
             struct_fields_str = struct_fields_str.split("=", 1)[1].strip()
             # or those with diff names
-            struct_fields_str = struct_fields_str.strip("{}")
+            struct_fields_str = struct_fields_str.strip("{}").strip()
+            # struct_fields_str == "data = 542543, next = 0x0"
 
             new_heap_memory_value = create_struct_value(
-                self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_name, address)
+                self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_type_name, address)
 
-            # struct_fields_str == "data = 542543, next = 0x0"
-            #     struct_name, struct_value = assignment.split(' = ')
-            #     struct_name = struct_name.strip()
-            #     struct_value = struct_value.strip()
             self.heap_data[addr] = new_heap_memory_value
 
         backend_data = {
@@ -346,7 +339,6 @@ def create_struct_value(parsed_type_decls, struct_fields_str, struct_name, addre
     if corresponding_type_decl is None:
         raise Exception(
             f"No corresponding type declaration found for {struct_name}")
-        return
 
     value = {}
     for field in struct_fields_str.split(','):
@@ -400,7 +392,7 @@ def get_type_name(type_name_str: str):
                                cpp_args=r'-Iutils/fake_libc_include')
 
         # Print the outermost struct name found in the AST
-        type_name = find_outermost_struct_name(ptype_ast)
+        type_name = "struct " + find_outermost_struct_name(ptype_ast)
     else:
         type_name = type_name_str.strip()
 
