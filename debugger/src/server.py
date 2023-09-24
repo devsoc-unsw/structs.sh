@@ -2,7 +2,7 @@
 Main debugger server. Hosts the socketio server and handles events from frontend
 clients as well as gdb instance clients.
 
-Must run in /debugger/src directory (because the gdb commands will source a python file by relative path e.g. ./gdb_scripts/linked_list_things.py)
+Must run in /debugger/src directory (because the gdb commands will source a python file by relative path e.g. ./gdb_scripts/custom_next.py)
 """
 
 import os
