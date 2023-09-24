@@ -133,7 +133,8 @@ def sendDummyBinaryTreeData(socket_id: str, line_number: int) -> None:
 def mainDebug(socket_id: str, code: str) -> None:
     # TODO: handle deletion of code files
     # TODO: move code to a different directory (not in samples since it is binded to the docker container)
-    new_code_dir = os.path.join(abs_file_path, "samples", "user", str(uuid.uuid4()))
+    new_code_dir = os.path.join(
+        abs_file_path, "samples", "user", str(uuid.uuid4()))
     os.mkdir(new_code_dir)
     new_code_path = os.path.join(new_code_dir, "main.c")
     new_binary_path = os.path.join(new_code_dir, "main")
@@ -193,10 +194,10 @@ def mainDebug(socket_id: str, code: str) -> None:
 def executeNext(socket_id: str) -> None:
     proc: subprocess.Popen = procs[socket_id]
     if proc is None:
-        print(f"ERROR: No gdb instance running for socket_id {socket_id}")
-        return
+        raise Exception(
+            f"executeNext: No subprocess found for user with socket_id {socket_id}")
 
-    print(f"process at FE client socket_id {socket_id}:")
+    print(f"Found subprocess for FE client socket_id {socket_id}:")
     print(proc)
 
     print(
@@ -209,7 +210,8 @@ def executeNext(socket_id: str) -> None:
     # Reading new output from the program relies on the fact that next was
     # executed just before. This is expected to happen in the call to the custom
     # next command above.
-    proc.stdin.write(f"python {DEBUG_SESSION_VAR_NAME}.io_manager.read_and_send()\n")
+    proc.stdin.write(
+        f"python {DEBUG_SESSION_VAR_NAME}.io_manager.read_and_send()\n")
     proc.stdin.flush()
     get_subprocess_output(proc, TIMEOUT_DURATION)
 
@@ -219,9 +221,22 @@ def executeNext(socket_id: str) -> None:
 @io.event
 def send_stdin(socket_id: str, data: str):
     """
-    TODO: Send stdin from FE client to gdb instance"""
-    print("send_stdin event not yet implemented")
-    io.emit("sendStdoutToUser", f"echo: {data}\n")
+    Send stdin from FE client to gdb instance
+    """
+
+    proc: subprocess.Popen = procs[socket_id]
+    if proc is None:
+        raise Exception(
+            f"executeNext: No subprocess found for user with socket_id {socket_id}")
+
+    print(f"Found subprocess for FE client socket_id {socket_id}:")
+    print(proc)
+
+    print(f"Sending stdin to gdb instance {proc.pid}:")
+    print(data)
+    proc.stdin.write(
+        f'python {DEBUG_SESSION_VAR_NAME}.io_manager.write("{data}\\n")\n')
+    proc.stdin.flush()
 
 
 @io.event
