@@ -1,3 +1,8 @@
+.current-line-marker {
+  background-color: #B1BAE5;
+  position: absolute;
+}
+
 .cm-theme-light, .cm-theme-dark {
     width: 100%;
     max-width: 100%;

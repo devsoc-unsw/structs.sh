@@ -33,7 +33,7 @@ const DevelopmentMode = () => {
   const [backendState, setBackendState] = useState<BackendState>({
     frame_info: {
       file: 'test.c',
-      line_num: 12,
+      line_num: 0,
       line: 'printf("Hello World!");',
       function: 'main',
     },
@@ -138,7 +138,7 @@ const DevelopmentMode = () => {
         <div className={classNames(styles.pane, styles.nav)}>Nav bar</div>
         <div className={classNames(styles.pane, styles.files)}>File tree</div>
         <div className={classNames(styles.pane, styles.editor)}>
-          <CodeEditor />
+          <CodeEditor currLine={backendState.frame_info.line_num} />
         </div>
         <div className={classNames(styles.pane, styles.inspector)}>
           <Tabs>
