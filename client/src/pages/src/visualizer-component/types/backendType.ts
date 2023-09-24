@@ -137,7 +137,7 @@ Heap will look something like this:
   },
   "0x80": {
     type: "double*",
-    value: 5.5,
+    value: "0x4832902",
     addr: "0x80",
   }
   "0x84": {
