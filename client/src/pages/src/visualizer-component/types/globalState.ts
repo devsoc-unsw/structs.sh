@@ -5,25 +5,37 @@ import { VisualizerType } from './visaulizerType';
 import { visualizerFactory } from '../visulizer/visualizerFactory';
 import { parserFactory } from '../parser/parserFactory';
 
-export type GlobalStateStore = {
-  visualizerType: VisualizerType;
+export type UiState = {
   width: number;
   height: number;
+};
+
+export type VisualizerParam = {
+  visualizerType: VisualizerType;
   userAnnotation: UserAnnotation;
   visComponent: VisualizerComponent;
   parser: Parser;
 };
 
+export type GlobalStateStore = {
+  uiState: UiState;
+  visualizer: VisualizerParam;
+};
+
 export const DEFAULT_GLOBAL_STORE: GlobalStateStore = {
-  visualizerType: VisualizerType.LINKED_LIST,
-  width: 800,
-  height: 400,
-  userAnnotation: {
-    stackAnnotation: {},
-    typeAnnotation: {},
+  uiState: {
+    width: 800,
+    height: 400,
   },
-  visComponent: visualizerFactory(VisualizerType.LINKED_LIST),
-  parser: parserFactory(VisualizerType.LINKED_LIST),
+  visualizer: {
+    visualizerType: VisualizerType.LINKED_LIST,
+    userAnnotation: {
+      stackAnnotation: {},
+      typeAnnotation: {},
+    },
+    visComponent: visualizerFactory(VisualizerType.LINKED_LIST),
+    parser: parserFactory(VisualizerType.LINKED_LIST),
+  },
 };
 
 export const NODE_SIZE = 30;

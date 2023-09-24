@@ -16,7 +16,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({
   getDummyNextState,
   getNextState,
 }: RoutesProps) => {
-  const { userAnnotation, parser, visComponent: VisComponent } = useGlobalStore();
+  const { userAnnotation, parser, visComponent: VisComponent } = useGlobalStore().visualizer;
 
   const currState = useFrontendStateStore((store) => {
     return store.currState();

@@ -78,7 +78,7 @@ const Configuration = ({ typeDeclarations }: { typeDeclarations: any }) => {
   const [possibleTypeDeclsForLinkedList, setPossibleTypeDeclsForLinkedList] = useState<
     PossibleLinkedListAnnotation[]
   >([]);
-  const { updateUserAnnotation, userAnnotation } = useGlobalStore();
+  const { updateUserAnnotation, visualizer } = useGlobalStore();
 
   useEffect(() => {
     const possibleTypeDecls = createPossibleLinkedListTypeDecls(typeDeclarations);
@@ -109,17 +109,17 @@ const Configuration = ({ typeDeclarations }: { typeDeclarations: any }) => {
       };
       setNodeAnnotations(newNodeAnnotations);
       updateUserAnnotation({
-        stackAnnotation: userAnnotation.stackAnnotation,
+        stackAnnotation: visualizer.userAnnotation.stackAnnotation,
         typeAnnotation: {
-          ...userAnnotation.typeAnnotation,
+          ...visualizer.userAnnotation.typeAnnotation,
           [newNodeAnnotations[newNodeVariable].typeName]: newNodeAnnotations[newNodeVariable],
         },
       });
     } else {
       updateUserAnnotation({
-        stackAnnotation: userAnnotation.stackAnnotation,
+        stackAnnotation: visualizer.userAnnotation.stackAnnotation,
         typeAnnotation: {
-          ...userAnnotation.typeAnnotation,
+          ...visualizer.userAnnotation.typeAnnotation,
           [nodeAnnotations[newNodeVariable].typeName]: nodeAnnotations[newNodeVariable],
         },
       });
@@ -143,9 +143,9 @@ const Configuration = ({ typeDeclarations }: { typeDeclarations: any }) => {
     setNodeAnnotations(updatedNodeAnnotations);
     if (currNodeVariable === nodeVariable) {
       updateUserAnnotation({
-        stackAnnotation: userAnnotation.stackAnnotation,
+        stackAnnotation: visualizer.userAnnotation.stackAnnotation,
         typeAnnotation: {
-          ...userAnnotation.typeAnnotation,
+          ...visualizer.userAnnotation.typeAnnotation,
           [newAnnotation.typeName]: newAnnotation,
         },
       });

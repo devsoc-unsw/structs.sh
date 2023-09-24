@@ -15,16 +15,24 @@ export const useGlobalStore: UseBoundStore<StoreApi<GlobalStateStore & GlobalSto
   create<GlobalStateStore & GlobalStoreActions>((set) => ({
     ...DEFAULT_GLOBAL_STORE,
     setVisualizerType: (type: VisualizerType) => {
-      set({
-        visualizerType: type,
-        visComponent: visualizerFactory(type),
-        parser: parserFactory(type),
-      });
+      set((state) => ({
+        visualizer: {
+          ...state.visualizer,
+          visualizerType: type,
+          visComponent: visualizerFactory(type),
+          parser: parserFactory(type),
+        },
+      }));
     },
     updateDimensions: (width: number, height: number) => {
-      set({ width, height });
+      set({ uiState: { width, height } });
     },
     updateUserAnnotation: (annotation: UserAnnotation) => {
-      set({ userAnnotation: annotation });
+      set((state) => ({
+        visualizer: {
+          ...state.visualizer,
+          userAnnotation: annotation,
+        },
+      }));
     },
   }));
