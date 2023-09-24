@@ -86,23 +86,14 @@ export const isLinkedListNode = (
   memoryValue: MemoryValue,
   linkedListAnnotation: LinkedListAnnotation
 ) => {
-  return (
-    'typeName' in memoryValue &&
-    memoryValue.typeName === linkedListAnnotation.typeName &&
-    linkedListAnnotation.next.typeName in memoryValue
-  );
+  return 'typeName' in memoryValue && memoryValue.typeName === linkedListAnnotation.typeName;
 };
 
 export const isTreeNode = (
   memoryValue: MemoryValue,
   binaryTreeAnnotation: BinaryTreeAnnotation
 ) => {
-  return (
-    'typeName' in memoryValue &&
-    memoryValue.typeName === binaryTreeAnnotation.typeName &&
-    binaryTreeAnnotation.left.typeName in memoryValue &&
-    binaryTreeAnnotation.right.typeName in memoryValue
-  );
+  return 'typeName' in memoryValue && memoryValue.typeName === binaryTreeAnnotation.typeName;
 };
 
 /*
