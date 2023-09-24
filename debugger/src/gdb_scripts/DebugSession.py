@@ -31,7 +31,8 @@ class DebugSession:
         starting the debug session.
         """
         self.type_decl_strs = get_type_decl_strs()
-        self.parsed_type_decls = pycparser_parse_type_decls(self.user_socket_id)
+        self.parsed_type_decls = pycparser_parse_type_decls(
+            self.user_socket_id)
         self.parsed_fn_decls = pycparser_parse_fn_decls(self.user_socket_id)
 
         self.custom_next_command = CustomNextCommand(
