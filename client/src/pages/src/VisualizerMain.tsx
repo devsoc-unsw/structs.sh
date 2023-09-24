@@ -25,7 +25,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({
   getDummyNextState,
   getNextState,
   dataStructureAnnotation,
-}) => {
+}: RoutesProps) => {
   const [settings, setSettings] = useState<UiState>(DEFAULT_UISTATE);
   const VisComponent = visualizerFactory(settings);
   const [parser] = useState(parserFactory(settings));

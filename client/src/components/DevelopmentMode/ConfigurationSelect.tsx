@@ -2,14 +2,23 @@ import styles from 'styles/Configuration.module.css';
 import { useState } from 'react';
 import Select from 'components/Select';
 import { SelectItem } from 'components/Select/Select';
+import { Name, NativeTypeName } from 'pages/src/visualizer-component/types/backendType';
 
-const ConfigurationSelect = ({ type, fields, handleUpdateAnnotation }) => {
+const ConfigurationSelect = ({
+  type,
+  fields,
+  handleUpdateAnnotation,
+}: {
+  type: string;
+  fields: { typeName: NativeTypeName; name: Name }[];
+  handleUpdateAnnotation: (type: string, name: string, typeName: string) => void;
+}) => {
   const [value, setValue] = useState(fields[0].name);
 
   const handleValueChange = (newValue: string) => {
-    const field = fields.find((field) => field.name === newValue);
+    const foundField = fields.find((field) => field.name === newValue);
     setValue(newValue);
-    handleUpdateAnnotation(type, field.name, field.typeName);
+    handleUpdateAnnotation(type, foundField.name, foundField.typeName);
   };
 
   return (

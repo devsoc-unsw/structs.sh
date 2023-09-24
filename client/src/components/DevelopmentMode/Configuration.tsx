@@ -15,7 +15,7 @@ import {
 import { LinkedListAnnotation } from 'pages/src/visualizer-component/types/annotationType';
 import ConfigurationSelect from './ConfigurationSelect';
 
-type PossibleLinkedListAnnotation = {
+export type PossibleLinkedListAnnotation = {
   typeName: StructType['typeName'];
   possibleValues: {
     name: Name;
@@ -25,6 +25,47 @@ type PossibleLinkedListAnnotation = {
     name: Name;
     typeName: PointerType['typeName'];
   }[];
+};
+
+// TODO: create type for typeDeclarations received from backend
+const createPossibleLinkedListTypeDecls = (typeDeclarations: any[]) => {
+  const possibleTypeDecls: PossibleLinkedListAnnotation[] = [];
+  // for (const typeDecl of typeDeclarations)
+  typeDeclarations.forEach((typeDecl) => {
+    if (!('fields' in typeDecl)) {
+      return;
+    }
+
+    const possibleTypeDecl: PossibleLinkedListAnnotation = {
+      typeName: typeDecl.name,
+      possibleValues: [],
+      possibleNexts: [],
+    };
+    typeDecl.fields.forEach((field: any) => {
+      if (isNativeTypeName(field.type)) {
+        possibleTypeDecl.possibleValues.push({
+          name: field.name,
+          typeName: field.type,
+        });
+      }
+      if (
+        isPointerType(field.type) &&
+        isStructTypeName(field.type.slice(0, -1)) &&
+        field.type.includes(typeDecl.name)
+      ) {
+        possibleTypeDecl.possibleNexts.push({
+          name: field.name,
+          typeName: field.type,
+        });
+      }
+    });
+
+    if (possibleTypeDecl.possibleValues.length >= 1 && possibleTypeDecl.possibleNexts.length >= 1) {
+      possibleTypeDecls.push(possibleTypeDecl);
+    }
+  });
+
+  return possibleTypeDecls;
 };
 
 const Configuration = ({
@@ -44,14 +85,6 @@ const Configuration = ({
     const possibleTypeDecls = createPossibleLinkedListTypeDecls(typeDeclarations);
     setPossibleTypeDeclsForLinkedList(possibleTypeDecls);
   }, [typeDeclarations]);
-
-  useEffect(() => {
-    if (possibleTypeDeclsForLinkedList.length > 0) {
-      handleSelectNodeType(possibleTypeDeclsForLinkedList[0].typeName);
-    } else {
-      console.error('No possible linked list type declarations found!');
-    }
-  }, [possibleTypeDeclsForLinkedList]);
 
   const handleSelectNodeType = (newNodeVariable: string) => {
     setCurrNodeVariable(newNodeVariable);
@@ -80,6 +113,14 @@ const Configuration = ({
       sendLinkedListAnnotation(nodeAnnotations[newNodeVariable] as LinkedListAnnotation);
     }
   };
+
+  useEffect(() => {
+    if (possibleTypeDeclsForLinkedList.length > 0) {
+      handleSelectNodeType(possibleTypeDeclsForLinkedList[0].typeName);
+    } else {
+      console.error('No possible linked list type declarations found!');
+    }
+  }, [possibleTypeDeclsForLinkedList]);
 
   const handleUpdateNodeAnnotation = (
     nodeVariable: string,
@@ -139,11 +180,11 @@ const Configuration = ({
               <RadioGroup.Item value={typeDeclaration.typeName} className={styles.RadioGroupItem}>
                 <RadioGroup.Indicator className={styles.RadioGroupIndicator} />
               </RadioGroup.Item>
-              <label className={styles.Label}>
+              <span className={styles.Label}>
                 <SyntaxHighlighter language="c" style={github}>
                   {typeDeclaration.typeName}
                 </SyntaxHighlighter>
-              </label>
+              </span>
             </div>
 
             <div className={styles.configuratorField}>
@@ -171,43 +212,3 @@ const Configuration = ({
 };
 
 export default Configuration;
-
-// TODO: create type for typeDeclarations received from backend
-const createPossibleLinkedListTypeDecls = (typeDeclarations: any[]) => {
-  const possibleTypeDecls: PossibleLinkedListAnnotation[] = [];
-  for (const typeDecl of typeDeclarations) {
-    if (!('fields' in typeDecl)) {
-      continue;
-    }
-
-    const possibleTypeDecl: PossibleLinkedListAnnotation = {
-      typeName: typeDecl.name,
-      possibleValues: [],
-      possibleNexts: [],
-    };
-    for (const field of typeDecl.fields) {
-      if (isNativeTypeName(field.type)) {
-        possibleTypeDecl.possibleValues.push({
-          name: field.name,
-          typeName: field.type,
-        });
-      }
-      if (
-        isPointerType(field.type) &&
-        isStructTypeName(field.type.slice(0, -1)) &&
-        field.type.includes(typeDecl.name)
-      ) {
-        possibleTypeDecl.possibleNexts.push({
-          name: field.name,
-          typeName: field.type,
-        });
-      }
-    }
-
-    if (possibleTypeDecl.possibleValues.length >= 1 && possibleTypeDecl.possibleNexts.length >= 1) {
-      possibleTypeDecls.push(possibleTypeDecl);
-    }
-  }
-
-  return possibleTypeDecls;
-};
