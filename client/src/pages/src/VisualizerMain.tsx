@@ -4,19 +4,14 @@ import { parserFactory } from './visualizer-component/parser/parserFactory';
 import { visualizerFactory } from './visualizer-component/visulizer/visualizerFactory';
 import { BackendState } from './visualizer-component/types/backendType';
 import { Timeline } from './visualizer-component/util/timeline';
-import { Debugger } from './visualizer-component/util/debugger';
-import { useFrontendStateStore } from './visualizer-component/stateManager';
-import {
-  DataStructureAnnotation,
-  LinkedListAnnotation,
-  LocalsAnnotations,
-} from './visualizer-component/types/annotationType';
+import { useFrontendStateStore } from './visualizer-component/visaulizerStateStore';
+import { LocalAnnotationBase, UserAnnotation } from './visualizer-component/types/annotationType';
+import { useUiStateStore } from './visualizer-component/uiStateStore';
 
 export interface RoutesProps {
   backendState: BackendState;
   getNextState: () => void;
   getDummyNextState: () => void;
-  dataStructureAnnotation: DataStructureAnnotation;
 }
 
 // Future support different parser
@@ -24,25 +19,19 @@ const VisualizerMain: React.FC<RoutesProps> = ({
   backendState,
   getDummyNextState,
   getNextState,
-  dataStructureAnnotation,
 }: RoutesProps) => {
   const [settings, setSettings] = useState<UiState>(DEFAULT_UISTATE);
   const VisComponent = visualizerFactory(settings);
   const [parser] = useState(parserFactory(settings));
+  const { userAnnotation } = useUiStateStore();
 
   const currState = useFrontendStateStore((store) => {
     return store.currState();
   });
 
   useEffect(() => {
-    // Assume user have a variable called curr
-    const localsAnnotations: LocalsAnnotations = {
-      curr: {
-        typeName: 'struct node*',
-      },
-    };
     // === Dummy linked list node annotation
-    // const dataStructureAnnotation: LinkedListAnnotation = {
+    // const userAnnotation: LinkedListAnnotation = {
     //   typeName: 'struct node', // Name for the user's linked list struct
     //   value: {
     //     name: 'data', // Name for the user's linked list "value" field
@@ -53,23 +42,15 @@ const VisualizerMain: React.FC<RoutesProps> = ({
     //     typeName: 'struct node*',
     //   },
     // };
-    console.log(dataStructureAnnotation);
-    if (backendState && localsAnnotations && dataStructureAnnotation) {
-      const newParsedState = parser.parseInitialState(
-        backendState,
-        localsAnnotations,
-        dataStructureAnnotation,
-        settings
-      );
+    if (backendState && userAnnotation) {
+      const newParsedState = parser.parseInitialState(backendState, userAnnotation, settings);
       useFrontendStateStore.getState().updateNextState(newParsedState);
     } else {
       let issue = 'something';
       if (backendState === undefined) {
         issue = 'backendState';
-      } else if (localsAnnotations === undefined) {
+      } else if (userAnnotation === undefined) {
         issue = 'localsAnnotations';
-      } else if (dataStructureAnnotation === undefined) {
-        issue = 'dataStructureAnnotation';
       }
 
       console.error(`Unable to parse backend state: ${issue} is undefined`);
@@ -130,7 +111,6 @@ const VisualizerMain: React.FC<RoutesProps> = ({
             }}
           />
         </div>
-        <div className="debugger">{settings.debug && <Debugger src={currState} />}</div>
       </div>
     </div>
   );

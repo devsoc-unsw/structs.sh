@@ -1,3 +1,6 @@
+import { create } from 'zustand';
+import { UserAnnotation } from './annotationType';
+
 export enum VisualizerType {
   LINKED_LIST = 'LINKED_LIST',
   BINARY_TREE = 'BINARY_TREE',
@@ -6,25 +9,20 @@ export enum VisualizerType {
 }
 
 export type UiState = {
-  showHover: boolean;
-  showClick: boolean;
-  canDrag: boolean;
-  debug: boolean;
-  clickedEntity: string | null;
   visualizerType: VisualizerType;
-  x: number;
-  y: number;
+  width: number;
+  height: number;
+  userAnnotation: UserAnnotation;
 };
 
 export const DEFAULT_UISTATE: UiState = {
-  showHover: false,
-  showClick: true,
-  canDrag: true,
-  debug: true,
-  clickedEntity: null,
   visualizerType: VisualizerType.LINKED_LIST,
-  x: 800,
-  y: 400,
+  width: 800,
+  height: 400,
+  userAnnotation: {
+    stackAnnotation: {},
+    typeAnnotation: {},
+  },
 };
 
 export const NODE_SIZE = 30;

@@ -12,7 +12,10 @@ import {
   PointerType,
   isPointerType,
 } from 'pages/src/visualizer-component/types/backendType';
-import { LinkedListAnnotation } from 'pages/src/visualizer-component/types/annotationType';
+import {
+  DataStructureType,
+  LinkedListAnnotation,
+} from 'pages/src/visualizer-component/types/annotationType';
 import ConfigurationSelect from './ConfigurationSelect';
 
 export type PossibleLinkedListAnnotation = {
@@ -98,6 +101,7 @@ const Configuration = ({
       const newNodeAnnotations = { ...nodeAnnotations };
       newNodeAnnotations[newNodeVariable] = {
         typeName: linkedListTypeDecl.typeName,
+        type: DataStructureType.LinkedList,
         value: {
           name: linkedListTypeDecl.possibleValues[0].name,
           typeName: linkedListTypeDecl.possibleValues[0].typeName,

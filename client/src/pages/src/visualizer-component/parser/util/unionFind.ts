@@ -6,10 +6,10 @@ export class UnionFind {
   constructor(nodes: Set<string>) {
     this.parent = new Map();
     this.rank = new Map();
-    for (const uid of nodes) {
+    [...nodes].forEach((uid) => {
       this.parent.set(uid, uid);
       this.rank.set(uid, 0);
-    }
+    });
   }
 
   find(uid: string): string {
