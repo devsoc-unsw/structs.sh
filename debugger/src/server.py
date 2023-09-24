@@ -1,17 +1,21 @@
-'''
+"""
 Main debugger server. Hosts the socketio server and handles events from frontend
 clients as well as gdb instance clients.
 
 Must run in /debugger/src directory (because the gdb commands will source a python file by relative path e.g. ./gdb_scripts/linked_list_things.py)
-'''
+"""
 
 import os
+import uuid
 from pprint import pprint
 import socketio
 import eventlet
 from typing import Any
 import subprocess
-from placeholder_data import PLACEHOLDER_BACKEND_STATES_BINARY_TREE, PLACEHOLDER_BACKEND_STATES_LINKED_LIST
+from placeholder_data import (
+    PLACEHOLDER_BACKEND_STATES_BINARY_TREE,
+    PLACEHOLDER_BACKEND_STATES_LINKED_LIST,
+)
 from src.constants import CUSTOM_NEXT_COMMAND_NAME, DEBUG_SESSION_VAR_NAME
 from src.utils import make_non_blocking, get_gdb_script, get_subprocess_output
 
@@ -25,17 +29,17 @@ TEST_PROGRAM_NAME = f"{abs_file_path}/samples/linkedlist/main3"
 
 TIMEOUT_DURATION = 0.3
 
-'''
+"""
 Map from a FE client socket_id to the subprocess that is running a gdb instance
 E.g.
 procs = {
     "socket_id_1": <subprocess.Popen object at 0x7f9b1c0b5d90>,
     ...
 }
-'''
+"""
 procs = {}
 
-io = socketio.Server(cors_allowed_origins='*')
+io = socketio.Server(cors_allowed_origins="*")
 
 
 @io.event
@@ -64,8 +68,9 @@ def sendDummyLinkedListData(socket_id: str, line_number: int) -> None:
     This function will send
     the heap dictionary at that point during the program's runtime.
     """
-    print("Received message from", socket_id, ":",
-          line_number, "at event sendDummyData")
+    print(
+        "Received message from", socket_id, ":", line_number, "at event sendDummyData"
+    )
     backend_dict = {}
     # Our initial linked list node has been alloced with data value 27
     if line_number == 100:
@@ -101,8 +106,9 @@ def sendDummyBinaryTreeData(socket_id: str, line_number: int) -> None:
     This function will send
     the heap dictionary at that point during the program's runtime.
     """
-    print("Received message from", socket_id, ":",
-          line_number, "at event sendDummyData")
+    print(
+        "Received message from", socket_id, ":", line_number, "at event sendDummyData"
+    )
     backend_dict = {}
     # Our initial linked list node has been alloced with data value 27
     if line_number == 100:
@@ -124,41 +130,46 @@ def sendDummyBinaryTreeData(socket_id: str, line_number: int) -> None:
 
 
 @io.event
-def mainDebug(socket_id: str) -> None:
-    print("\n=== Running make to compile sample C programs....")
-    command = "make --directory=src/samples clean; make --directory=src/samples all"
-    ret = subprocess.run(command, capture_output=True, shell=True)
-    compilation_out = ret.stdout.decode()
-    print(compilation_out)
+def mainDebug(socket_id: str, code: str) -> None:
+    # TODO: handle deletion of code files
+    # TODO: move code to a different directory (not in samples since it is binded to the docker container)
+    new_code_dir = os.path.join(abs_file_path, "samples", "user", str(uuid.uuid4()))
+    os.mkdir(new_code_dir)
+    new_code_path = os.path.join(new_code_dir, "main.c")
+    new_binary_path = os.path.join(new_code_dir, "main")
+    # os.chdir(new_code_dir)
+    with open(new_code_path, "w", encoding="utf-8") as f:
+        f.write(code)
+    subprocess.run(
+        ["gcc", "-ggdb", new_code_path, "-o", new_binary_path],
+        # capture_output=True,
+        # shell=True,
+    )
+    # compilation_out = ret.stdout.decode()
+    # print(compilation_out)
+
+    # print("\n=== Running make to compile sample C programs....")
+    # command = "make --directory=src/samples clean; make --directory=src/samples all"
+    # ret = subprocess.run(command, capture_output=True, shell=True)
+    # compilation_out = ret.stdout.decode()
+    # print(compilation_out)
 
     # == compile user's c program'
 
     gdb_script = get_gdb_script(
-        TEST_PROGRAM_NAME, abs_file_path, socket_id, script_name=GDB_SCRIPT_NAME)
+        new_binary_path, abs_file_path, socket_id, script_name=GDB_SCRIPT_NAME
+    )
     print("\n=== Running gdb script...")
     print(f"gdb_script:\n{gdb_script}")
 
-    # commands = []
-    # for line in gdb_script.strip().split('\n'):
-    #     commands.append("-ex")
-    #     commands.append(line)
-
-    # === Method 1: echo gdb_script to gdb and run gdb in a subprocess
-    # command = f"echo '{gdb_script}' | gdb -q"
-    # ret = subprocess.run(command, capture_output=True, shell=True, check=True)
-    # gdb_out = ret.stdout.decode()
-    # print(gdb_out)
-
-    # === Method 2: Use subprocess.Popen to start a gdb instance and pass in a
-    # list of commands to gdb.
-    # proc = subprocess.Popen(["gdb", "-batch", *commands], stdin=subprocess.PIPE,
-    #                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, shell=False)
-
-    # === Method 3: Use subprocess.Popen to start a gdb instance and write to
-    # subprocess.Popen.stdin in a loop. Also enables reading the output from
-    # subprocess.Popen.stdout
-    proc = subprocess.Popen(["gdb"], stdin=subprocess.PIPE,
-                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, shell=False)
+    proc = subprocess.Popen(
+        ["gdb"],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        shell=False,
+    )
 
     # Make subprocess writer streams non-blocking
     make_non_blocking(proc.stdout)
@@ -167,8 +178,8 @@ def mainDebug(socket_id: str) -> None:
 
     procs[socket_id] = proc
 
-    for line in map(lambda line: line.strip(), gdb_script.strip().split('\n')):
-        proc.stdin.write(line + '\n')
+    for line in map(lambda line: line.strip(), gdb_script.strip().split("\n")):
+        proc.stdin.write(line + "\n")
         proc.stdin.flush()
         print("\n=== Wrote one line to gdb debugging session: ", line)
 
@@ -189,16 +200,16 @@ def executeNext(socket_id: str) -> None:
     print(proc)
 
     print(
-        f"\n=== Sending '{CUSTOM_NEXT_COMMAND_NAME}' command to gdb instance {proc.pid}")
-    proc.stdin.write(f'{CUSTOM_NEXT_COMMAND_NAME}\n')
+        f"\n=== Sending '{CUSTOM_NEXT_COMMAND_NAME}' command to gdb instance {proc.pid}"
+    )
+    proc.stdin.write(f"{CUSTOM_NEXT_COMMAND_NAME}\n")
     proc.stdin.flush()
     get_subprocess_output(proc, TIMEOUT_DURATION)
 
     # Reading new output from the program relies on the fact that next was
     # executed just before. This is expected to happen in the call to the custom
     # next command above.
-    proc.stdin.write(
-        f'python {DEBUG_SESSION_VAR_NAME}.io_manager.read_and_send()\n')
+    proc.stdin.write(f"python {DEBUG_SESSION_VAR_NAME}.io_manager.read_and_send()\n")
     proc.stdin.flush()
     get_subprocess_output(proc, TIMEOUT_DURATION)
 
@@ -207,19 +218,20 @@ def executeNext(socket_id: str) -> None:
 
 @io.event
 def send_stdin(socket_id: str):
-    '''
-    TODO: Send stdin from FE client to gdb instance'''
-    print('send_stdin event not yet implemented')
+    """
+    TODO: Send stdin from FE client to gdb instance"""
+    print("send_stdin event not yet implemented")
 
 
 @io.event
 def createdFunctionDeclaration(socket_id: str, user_socket_id, function) -> None:
-    '''
-    Event to receive parsed function declaration from gdb instance and 
+    """
+    Event to receive parsed function declaration from gdb instance and
     send it to the specified frontend client.
-    '''
+    """
     print(
-        f"Event createdFunctionDeclaration received from gdb instance with socket_id {socket_id}:")
+        f"Event createdFunctionDeclaration received from gdb instance with socket_id {socket_id}:"
+    )
     print(f"Sending function declaration to client {user_socket_id}:")
     print(function)
     io.emit("sendFunctionDeclaration", function, room=user_socket_id)
@@ -227,10 +239,10 @@ def createdFunctionDeclaration(socket_id: str, user_socket_id, function) -> None
 
 @io.event
 def createdTypeDeclaration(socket_id: str, user_socket_id, type) -> None:
-    '''
-    Event to receive parsed type declaration (struct, typedef) from gdb instance and 
+    """
+    Event to receive parsed type declaration (struct, typedef) from gdb instance and
     send it to the specified frontend client.
-    '''
+    """
     print(f"Received type declaration from {user_socket_id}:")
     print(type)
     print("Sending type declaration to client...")
@@ -239,13 +251,14 @@ def createdTypeDeclaration(socket_id: str, user_socket_id, type) -> None:
 
 @io.event
 def updatedBackendState(socket_id: str, user_socket_id, backend_data) -> None:
-    '''
+    """
     Event to send the current backend state (including stack and heap data) to
     the specified frontend client.
     Should be emitted by a gdb instance while running a `custom_next` custom command.
-    '''
+    """
     print(
-        f"Event updatedBackendState received from gdb instance with socket_id {socket_id}:")
+        f"Event updatedBackendState received from gdb instance with socket_id {socket_id}:"
+    )
     print(f"Sending backend state to client {user_socket_id}:")
     pprint(backend_data)
     io.emit("sendBackendStateToUser", backend_data, room=user_socket_id)
@@ -253,11 +266,12 @@ def updatedBackendState(socket_id: str, user_socket_id, backend_data) -> None:
 
 @io.event
 def produced_stdout_output(socket_id: str, user_socket_id: str, data: str):
-    '''
+    """
     Send program stdout to FE client
-    '''
+    """
     print(
-        f"Event produced_stdout_output received from gdb instance with socket_id {socket_id}:")
+        f"Event produced_stdout_output received from gdb instance with socket_id {socket_id}:"
+    )
     print(f"Sending stdout output to client {user_socket_id}:")
     print(data)
     io.emit("sendStdoutToUser", data, room=user_socket_id)

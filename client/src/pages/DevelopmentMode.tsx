@@ -96,8 +96,6 @@ const DevelopmentMode = () => {
     const onConnect = () => {
       console.log('Connected!');
       console.log('Emitting message to server...');
-      socket.emit('mainDebug');
-      socket.emit('executeNext');
     };
 
     socket.on('connect', onConnect);
