@@ -4,19 +4,17 @@ import { parserFactory } from './visualizer-component/parser/parserFactory';
 import { visualizerFactory } from './visualizer-component/visulizer/visualizerFactory';
 import { BackendState } from './visualizer-component/types/backendType';
 import { Timeline } from './visualizer-component/util/timeline';
-import { Debugger } from './visualizer-component/util/debugger';
-import { useFrontendStateStore } from './visualizer-component/stateManager';
+import { useFrontendStateStore } from './visualizer-component/visaulizerStateStore';
 import {
-  DataStructureAnnotation,
-  LinkedListAnnotation,
-  LocalsAnnotations,
+  DataStructureAnnotationBase,
+  LocalAnnotationBase,
 } from './visualizer-component/types/annotationType';
 
 export interface RoutesProps {
   backendState: BackendState;
   getNextState: () => void;
   getDummyNextState: () => void;
-  dataStructureAnnotation: DataStructureAnnotation;
+  dataStructureAnnotation: DataStructureAnnotationBase;
 }
 
 // Future support different parser
@@ -36,11 +34,12 @@ const VisualizerMain: React.FC<RoutesProps> = ({
 
   useEffect(() => {
     // Assume user have a variable called curr
-    const localsAnnotations: LocalsAnnotations = {
+    const localsAnnotations: LocalAnnotationBase = {
       curr: {
         typeName: 'struct node*',
       },
     };
+
     // === Dummy linked list node annotation
     // const dataStructureAnnotation: LinkedListAnnotation = {
     //   typeName: 'struct node', // Name for the user's linked list struct
@@ -53,7 +52,6 @@ const VisualizerMain: React.FC<RoutesProps> = ({
     //     typeName: 'struct node*',
     //   },
     // };
-    console.log(dataStructureAnnotation);
     if (backendState && localsAnnotations && dataStructureAnnotation) {
       const newParsedState = parser.parseInitialState(
         backendState,
@@ -130,7 +128,6 @@ const VisualizerMain: React.FC<RoutesProps> = ({
             }}
           />
         </div>
-        <div className="debugger">{settings.debug && <Debugger src={currState} />}</div>
       </div>
     </div>
   );

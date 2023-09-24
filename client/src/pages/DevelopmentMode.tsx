@@ -118,7 +118,7 @@ const DevelopmentMode = () => {
 
   const getLinkedListAnnotation = (annotation: LinkedListAnnotation) => {
     console.log('DevMode.tsx received linked list annotation from Configuration.tsx: ', annotation);
-    setLinkedListAnnotation(linkedListAnnotation);
+    setLinkedListAnnotation(annotation);
   };
 
   const DEBUG_MODE = false;
