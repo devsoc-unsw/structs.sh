@@ -9,7 +9,7 @@ def get_frame_info():
     frame_info: dict = {}
     split_data = gdb_frame_data.strip().split(") at", 1)
 
-    frame_info["line_num"] = re.search(r"[0-9]+$", split_data[1]).group(0)
+    frame_info["line_num"] = int(re.search(r"[0-9]+$", split_data[1]).group(0))
 
     file_name = split_data[1].strip().rstrip("0123456789")[:-1]
     frame_info["file"] = file_name
