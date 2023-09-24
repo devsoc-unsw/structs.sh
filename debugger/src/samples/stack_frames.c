@@ -20,6 +20,11 @@ void initAndPrintMaxValues(int n) {
   }
 
   // Initialize variables for each C type with their maximum values
+  struct train my_train = {.carriage = 34, .nextCarriage = NULL};
+  struct train my_train_2 = {.carriage = 89, .nextCarriage = NULL};
+  my_train.nextCarriage = &my_train_2;
+  struct train *my_train_ptr = &my_train;
+  Station my_station = {.firstTrain = my_train_ptr};
   char my_char = CHAR_MAX;
   signed char my_signed_char = SCHAR_MAX;
   unsigned char my_unsigned_char = UCHAR_MAX;
@@ -43,8 +48,6 @@ void initAndPrintMaxValues(int n) {
   unsigned long my_unsigned_long = ULONG_MAX;
   short int my_short_int = SHRT_MAX;
   wchar_t my_wchar_t = WCHAR_MAX; // Wide character
-  struct train my_train = {.carriage = 34, .nextCarriage = NULL};
-  Station my_station = {.firstTrain = &my_train};
 
   // Print the maximum values
   printf("Iteration %d:\n", n);
