@@ -14,6 +14,8 @@ import { BackendState } from './src/visualizer-component/types/backendType';
 import { LinkedListAnnotation } from './src/visualizer-component/types/annotationType';
 import { useUiStateStore } from './src/visualizer-component/uiStateStore';
 import DevelopmentModeNavbar from 'components/Navbars/DevelopmentModeNavbar';
+import Controls from 'components/DevelopmentMode/Controls';
+import { placeholder } from 'constants/index';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -46,6 +48,21 @@ const DevelopmentMode = () => {
 
   const updateState = (data: any) => {
     setBackendState(data);
+  };
+
+  const [code, setCode] = useState(localStorage.getItem('code') || placeholder);
+
+  const handleSetCode = (newCode: string) => {
+    localStorage.setItem('code', newCode);
+    setCode(newCode);
+  };
+
+  const sendCode = () => {
+    socket.emit('mainDebug', code);
+  };
+
+  const getNextState = () => {
+    socket.emit('executeNext');
   };
 
   const onDisconnect = useCallback(() => {
@@ -133,7 +150,11 @@ const DevelopmentMode = () => {
         </div>
         <div className={classNames(styles.pane, styles.files)}>File tree</div>
         <div className={classNames(styles.pane, styles.editor)}>
-          <CodeEditor currLine={backendState.frame_info.line_num} />
+          <CodeEditor
+            code={code}
+            handleSetCode={handleSetCode}
+            currLine={backendState.frame_info.line_num}
+          />
         </div>
         <div className={classNames(styles.pane, styles.inspector)}>
           <Tabs>
@@ -160,12 +181,12 @@ const DevelopmentMode = () => {
               socket.emit('sendDummyLinkedListData', count);
               setCountState(count + 1);
             }}
-            getNextState={() => {
-              socket.emit('executeNext');
-            }}
+            getNextState={getNextState}
           />
         </div>
-        <div className={classNames(styles.pane, styles.timeline)}>Timeline</div>
+        <div className={classNames(styles.pane, styles.timeline)}>
+          <Controls getNextState={getNextState} sendCode={sendCode} />
+        </div>
       </div>
     </div>
   ) : (
@@ -175,9 +196,7 @@ const DevelopmentMode = () => {
         socket.emit('sendDummyLinkedListData', count);
         setCountState(count + 1);
       }}
-      getNextState={() => {
-        socket.emit('executeNext');
-      }}
+      getNextState={getNextState}
     />
   );
 };
