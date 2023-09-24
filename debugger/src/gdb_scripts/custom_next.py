@@ -183,12 +183,12 @@ class CustomNextCommand(gdb.Command):
                     # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
                     ptype_ast = parse_file(USER_PTYPE_PREPROCESSED, use_cpp=True,
                                            cpp_args=r'-Iutils/fake_libc_include')
-                    # print(ptype_ast)
 
                     # Print the outermost struct name found in the AST
                     struct_name = self.find_outermost_struct_name(ptype_ast)
                     if struct_name:
                         struct_name = 'struct ' + struct_name
+                        # e.g. "struct node"
                         print(f"Struct name: {struct_name}")
                     else:
                         print("No struct names found in the AST.")
@@ -214,7 +214,7 @@ class CustomNextCommand(gdb.Command):
 
                     # === Extract linked list node data given the variable name
                     print(f"Attempting to print \"{var}\"")
-                    node_data_str = gdb.execute(
+                    struct_fields_str = gdb.execute(
                         f'p *({struct_name} *) {address}', to_string=True)
 
                     # Conventional struct node might look like this
@@ -226,27 +226,24 @@ class CustomNextCommand(gdb.Command):
                     # Beware uninitialised struct nodes might look like this:
                     # $3 = {data = -670244016, next = 0xffffa15f74cc <__libc_start_main_impl+152>}
 
-                    node_data_str = node_data_str.split("=", 1)[1].strip()
-                    node_data_str = node_data_str.strip("{}")
-                    print(node_data_str)
-                    # node_data_str == "data = 542543, next = 0x0"
+                    struct_fields_str = struct_fields_str.split("=", 1)[
+                        1].strip()
+                    struct_fields_str = struct_fields_str.strip("{}")
+                    print(f"{struct_fields_str=}")
+                    # struct_fields_str == "data = 542543, next = 0x0"
 
-                    data = {}
-                    for field in node_data_str.split(','):
-                        field = field.strip()
-                        field_name = field.split('=')[0].strip()
-                        field_value = field.split('=')[1].strip()
-                        print(f"{field_name} = {field_value}")
-                        data[field_name] = field_value
+                    new_struct_value = create_struct_value(
+                        self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_name, address)
 
-                    obj = {
-                        "variable": var,
-                        "type": struct_name,
-                        "size": bytes,
-                        "data": data,
-                        "address": address
+                    heap_memory_value = {
+                        # "variable": var, ## Name of stack var storing the address of this piece of heap data
+                        "typeName": struct_name,
+                        # "size": bytes, ## Size of the type in bytes
+                        "value": new_struct_value,
+                        "addr": address
                     }
-                    self.heap_data[address] = obj
+
+                    self.heap_data[address] = heap_memory_value
                     print("Heap data:")
                     pprint(self.heap_data)
 
@@ -271,22 +268,27 @@ class CustomNextCommand(gdb.Command):
 
         # === Up date existing tracked heap data
         # Make sure this is done AFTER executing the next command, so that the heap is actually updated
-        for addr, obj in self.heap_data.items():
-            # Get struct info by passing in address
-            node_str = gdb.execute(
-                f'p *({obj["type"]} *) {addr}', to_string=True)       # Can replace struct node with type stored in object
+        for addr, heap_memory_value in self.heap_data.items():
+            struct_name = heap_memory_value["typeName"]
+            address = heap_memory_value["addr"]
 
+            # Get struct info by passing in address
+            struct_fields_str = gdb.execute(
+                f'p *({struct_name} *) {addr}', to_string=True)       # Can replace struct node with type stored in object
             # TODO: Heap dictionary assumes its working with structs, should ideally be generalised to all types
             # Extract all struct fields
-            node_str = node_str.split("=", 1)[1].strip()
+            struct_fields_str = struct_fields_str.split("=", 1)[1].strip()
             # or those with diff names
-            node_str = node_str.strip("{}")
-            strings = node_str.split(',')
-            for assignment in strings:
-                struct_name, struct_value = assignment.split(' = ')
-                struct_name = struct_name.strip()
-                struct_value = struct_value.strip()
-                obj["data"][struct_name] = struct_value
+            struct_fields_str = struct_fields_str.strip("{}")
+
+            new_heap_memory_value = create_struct_value(
+                self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_name, address)
+
+            # struct_fields_str == "data = 542543, next = 0x0"
+            #     struct_name, struct_value = assignment.split(' = ')
+            #     struct_name = struct_name.strip()
+            #     struct_value = struct_value.strip()
+            self.heap_data[addr] = new_heap_memory_value
 
         backend_data = {
             "frame_info": frame_info,
@@ -368,3 +370,33 @@ def remove_non_standard_characters(input_str):
     # Remove color codes and non-standard characters using a regular expression
     clean_str = re.sub(r'\x1b\[[0-9;]*[mK]', '', input_str)
     return clean_str
+
+
+def create_struct_value(parsed_type_decls, struct_fields_str, struct_name, address):
+    # Find the type declaration for the struct type being malloced
+    print("parsed type decls")
+    pprint(parsed_type_decls)
+    corresponding_type_decl = next((x for x in parsed_type_decls if (
+        lambda x: "name" in x and x['name'] == struct_name)), None)
+    if corresponding_type_decl is None:
+        raise Exception(
+            f"No corresponding type declaration found for {struct_name}")
+        return
+
+    value = {}
+    for field in struct_fields_str.split(','):
+        field = field.strip()
+        field_name = field.split('=')[0].strip()
+        field_value = field.split('=')[1].strip()
+        print(f"{field_name=}", f"{field_value=}")
+        value[field_name] = {
+            "typeName": next((field['type'] for field in corresponding_type_decl['fields'] if field['name'] == field_name), ""),
+            "value": field_value}
+
+    return {
+        # "variable": var, ## Name of stack var storing the address of this piece of heap data
+        "typeName": struct_name,
+        # "size": bytes, ## Size of the type in bytes
+        "value": value,
+        "addr": address
+    }

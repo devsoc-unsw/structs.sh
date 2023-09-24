@@ -63,7 +63,16 @@ const VisualizerMain: React.FC<RoutesProps> = ({
       );
       useFrontendStateStore.getState().updateNextState(newParsedState);
     } else {
-      console.error('Unable to parse backend state: Invalid argument(s)');
+      let issue = 'something';
+      if (backendState === undefined) {
+        issue = 'backendState';
+      } else if (localsAnnotations === undefined) {
+        issue = 'localsAnnotations';
+      } else if (dataStructureAnnotation === undefined) {
+        issue = 'dataStructureAnnotation';
+      }
+
+      console.error(`Unable to parse backend state: ${issue} is undefined`);
     }
   }, [backendState]);
 
