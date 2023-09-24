@@ -6,7 +6,7 @@ import 'ace-builds/src-noconflict/mode-c_cpp';
 const CodeEditor = ({
   code,
   handleSetCode,
-  currLine,
+  currLine = 0,
 }: {
   code: string;
   handleSetCode: (newCode: string) => void;

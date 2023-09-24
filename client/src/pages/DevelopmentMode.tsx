@@ -29,16 +29,7 @@ const DevelopmentMode = () => {
         socket.emit('getBreakpoints', line, listName);
     }
   }, []);
-  const [backendState, setBackendState] = useState<BackendState>({
-    frame_info: {
-      file: 'test.c',
-      line_num: 0,
-      line: 'printf("Hello World!");',
-      function: 'main',
-    },
-    stack_data: {},
-    heap_data: {},
-  });
+  const [backendState, setBackendState] = useState<BackendState>();
 
   const [count, setCountState] = useState(100);
 
@@ -153,7 +144,7 @@ const DevelopmentMode = () => {
           <CodeEditor
             code={code}
             handleSetCode={handleSetCode}
-            currLine={backendState.frame_info.line_num}
+            currLine={backendState?.frame_info?.line_num}
           />
         </div>
         <div className={classNames(styles.pane, styles.inspector)}>

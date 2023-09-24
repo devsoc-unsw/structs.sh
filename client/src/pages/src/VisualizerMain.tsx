@@ -42,9 +42,9 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) =>
       useFrontendStateStore.getState().updateNextState(newParsedState);
     } else {
       let issue = 'something';
-      if (backendState === undefined) {
+      if (!backendState) {
         issue = 'backendState';
-      } else if (userAnnotation === undefined) {
+      } else if (!userAnnotation) {
         issue = 'localsAnnotations';
       }
 
@@ -82,14 +82,14 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) =>
   // }, [visualizerRef]);
 
   return (
-        <div className="visualizer" ref={visualizerRef} style={{ overflow: 'hidden' }}>
-          <VisComponent
-            settings={settings}
-            graphState={currState}
-            setSettings={setSettings}
-            dimensions={dimensions}
-          />
-        </div>
+    <div className="visualizer" ref={visualizerRef} style={{ overflow: 'hidden' }}>
+      <VisComponent
+        settings={settings}
+        graphState={currState}
+        setSettings={setSettings}
+        dimensions={dimensions}
+      />
+    </div>
   );
 };
 
