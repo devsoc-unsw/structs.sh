@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import AceEditor, {IMarker} from 'react-ace';
+import AceEditor, { IMarker } from 'react-ace';
 import { socket } from 'utils/socket';
 import Button from '@mui/material/Button';
 import UploadIcon from '@mui/icons-material/Upload';
@@ -25,7 +25,7 @@ const CodeEditor = ({ currLine }: { currLine: number }) => {
   const handleChange = (newCode: string) => {
     localStorage.setItem('code', newCode);
     setCode(newCode);
-    console.log(currLine)
+    console.log(currLine);
   };
 
   const sendCode = () => {
@@ -34,7 +34,14 @@ const CodeEditor = ({ currLine }: { currLine: number }) => {
 
   return (
     <>
-      <AceEditor value={code} onChange={handleChange} height="100%" width="100%" mode="c_cpp" markers={markers}/>
+      <AceEditor
+        value={code}
+        onChange={handleChange}
+        height="100%"
+        width="100%"
+        mode="c_cpp"
+        markers={markers}
+      />
       <Button onClick={sendCode} variant="contained" endIcon={<UploadIcon />}>
         Run
       </Button>

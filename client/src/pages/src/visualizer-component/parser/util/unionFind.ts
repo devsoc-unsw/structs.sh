@@ -1,11 +1,12 @@
 export class UnionFind {
   private parent: Map<string, string>;
+
   private rank: Map<string, number>;
 
   constructor(nodes: Set<string>) {
     this.parent = new Map();
     this.rank = new Map();
-    for (let uid of nodes) {
+    for (const uid of nodes) {
       this.parent.set(uid, uid);
       this.rank.set(uid, 0);
     }
@@ -13,14 +14,14 @@ export class UnionFind {
 
   find(uid: string): string {
     if (this.parent.get(uid) !== uid) {
-      this.parent.set(uid, this.find(this.parent.get(uid)!));  // Path compression
+      this.parent.set(uid, this.find(this.parent.get(uid)!)); // Path compression
     }
     return this.parent.get(uid)!;
   }
 
   union(x: string, y: string): void {
-    let rootX = this.find(x);
-    let rootY = this.find(y);
+    const rootX = this.find(x);
+    const rootY = this.find(y);
 
     if (rootX !== rootY) {
       if (this.rank.get(rootX)! < this.rank.get(rootY)!) {

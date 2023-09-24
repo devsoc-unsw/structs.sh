@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import ConfigurationSelect from './ConfigurationSelect';
 import styles from 'styles/Configuration.module.css';
 import { github } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import {
@@ -14,6 +13,7 @@ import {
   isPointerType,
 } from 'pages/src/visualizer-component/types/backendType';
 import { LinkedListAnnotation } from 'pages/src/visualizer-component/types/annotationType';
+import ConfigurationSelect from './ConfigurationSelect';
 
 type PossibleLinkedListAnnotation = {
   typeName: StructType['typeName'];
@@ -170,7 +170,7 @@ export default Configuration;
 // TODO: create type for typeDeclarations received from backend
 const createPossibleLinkedListTypeDecls = (typeDeclarations: any[]) => {
   const possibleTypeDecls: PossibleLinkedListAnnotation[] = [];
-  for (let typeDecl of typeDeclarations) {
+  for (const typeDecl of typeDeclarations) {
     if (!('fields' in typeDecl)) {
       continue;
     }
@@ -180,7 +180,7 @@ const createPossibleLinkedListTypeDecls = (typeDeclarations: any[]) => {
       possibleValues: [],
       possibleNexts: [],
     };
-    for (let field of typeDecl.fields) {
+    for (const field of typeDecl.fields) {
       if (isNativeTypeName(field.type)) {
         possibleTypeDecl.possibleValues.push({
           name: field.name,

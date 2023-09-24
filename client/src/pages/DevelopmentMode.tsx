@@ -8,6 +8,7 @@ import { Socket } from 'socket.io-client';
 import CodeEditor from 'components/DevelopmentMode/CodeEditor';
 import StackInspector from 'components/DevelopmentMode/StackInspector';
 import * as dummyData from 'components/DevelopmentMode/dummyData.json';
+import Configuration from 'components/DevelopmentMode/Configuration';
 import VisualizerMain from './src/VisualizerMain';
 import {
   BackendState,
@@ -15,7 +16,6 @@ import {
   IntType,
   isNativeTypeName,
 } from './src/visualizer-component/types/backendType';
-import Configuration from 'components/DevelopmentMode/Configuration';
 import { LinkedListAnnotation } from './src/visualizer-component/types/annotationType';
 
 type ExtendedWindow = Window &
