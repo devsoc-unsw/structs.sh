@@ -5,7 +5,7 @@ import subprocess
 import time
 from typing import IO
 
-from src.constants import (
+from constants import (
     CUSTOM_NEXT_COMMAND_NAME,
     CUSTOM_NEXT_SCRIPT_NAME,
     DEBUG_SESSION_VAR_NAME,
@@ -38,14 +38,12 @@ def get_subprocess_output(proc: subprocess.Popen, timeout_duration: int):
 
         for fileno in events:
             if fileno == proc.stdout.fileno():
-                print(
-                    f"VVVVVVVVVV Read from gdb subprocess stdout fileno = {fileno}:")
+                print(f"VVVVVVVVVV Read from gdb subprocess stdout fileno = {fileno}:")
                 proc.stdout.flush()
                 raw_output = proc.stdout.read()
                 print(raw_output, end="\n^^^^^^^^^^ End read stdout\n\n")
             elif proc.stderr and fileno == proc.stderr.fileno():
-                print(
-                    f"VVVVVVVVVV Read from gdb subprocess stderr fileno = {fileno}:")
+                print(f"VVVVVVVVVV Read from gdb subprocess stderr fileno = {fileno}:")
                 proc.stderr.flush()
                 raw_output = proc.stderr.read()
                 print(raw_output, end="\n^^^^^^^^^^ End read stderr\n\n")
@@ -171,10 +169,6 @@ def get_gdb_script(
     if script_name not in GDB_SCRIPTS:
         script_name = "default"
     return GDB_SCRIPTS[script_name]
-
-
-def create_abs_file_path(file_name: str):
-    return os.path.dirname(os.path.abspath(__file__)) + "/" + file_name
 
 
 def create_ll_script(abs_file_path, line_numbers, program_name):

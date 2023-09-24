@@ -5,15 +5,6 @@
 #include <stdint.h>
 #include <stdio.h>
 
-struct train {
-  int carriage;
-  struct train *nextCarriage;
-};
-
-typedef struct station {
-  struct train *firstTrain;
-} Station;
-
 void initAndPrintMaxValues(int n) {
   if (n == 0) {
     return; // Base case: stop recursion when n reaches 0
@@ -43,8 +34,6 @@ void initAndPrintMaxValues(int n) {
   unsigned long my_unsigned_long = ULONG_MAX;
   short int my_short_int = SHRT_MAX;
   wchar_t my_wchar_t = WCHAR_MAX; // Wide character
-  struct train my_train = {.carriage = 34, .nextCarriage = NULL};
-  Station my_station = {.firstTrain = &my_train};
 
   // Print the maximum values
   printf("Iteration %d:\n", n);
@@ -70,9 +59,6 @@ void initAndPrintMaxValues(int n) {
   printf("my_unsigned_long: %lu\n", my_unsigned_long);
   printf("my_short_int: %d\n", my_short_int);
   printf("my_wchar_t: %d\n", my_wchar_t);
-  printf("my_train.carriage: %d", my_train.carriage);
-  printf("my_train.nextCarriage: %p", my_train.nextCarriage);
-  printf("my_station.train: %p\n", my_station.firstTrain);
 
   // Recursively call the function with n-1
   initAndPrintMaxValues(n - 1);
