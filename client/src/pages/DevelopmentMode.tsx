@@ -14,9 +14,7 @@ import Controls from 'components/DevelopmentMode/Controls';
 import { placeholder } from 'constants/index';
 import VisualizerMain from './src/VisualizerMain';
 import { BackendState } from './src/visualizer-component/types/backendType';
-import { LinkedListAnnotation } from './src/visualizer-component/types/annotationType';
-import { useUiStateStore } from './src/visualizer-component/uiStateStore';
-import { DEFAULT_USER_ANNOTATION } from './src/visualizer-component/types/uiState';
+import { useGlobalStore } from './src/visualizer-component/globalStateStore';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -34,11 +32,10 @@ const DevelopmentMode = () => {
 
   const [count, setCountState] = useState(100);
 
-  const [typeDeclarations, setTypeDeclarations] = useState([]);
 
   const [activeSession, setActiveSession] = useState(false);
-
-  const { updateUserAnnotation, userAnnotation } = useUiStateStore();
+  const typeDeclarations = [...useGlobalStore().visualizer.typeDeclarations];
+  const { updateTypeDeclaration } = useGlobalStore();
 
   const updateState = (data: any) => {
     setBackendState(data);
@@ -54,9 +51,9 @@ const DevelopmentMode = () => {
   const resetDebugSession = () => {
     // TODO: Reset visualiser state
     setBackendState(undefined);
-    setTypeDeclarations([]);
+    // setTypeDeclarations([]);
     setActiveSession(false);
-    updateUserAnnotation(DEFAULT_USER_ANNOTATION);
+    // updateUserAnnotation(DEFAULT_USER_ANNOTATION);
   };
 
   const sendCode = () => {
@@ -93,12 +90,11 @@ const DevelopmentMode = () => {
 
   const onSendTypeDeclaration = useCallback((data: any) => {
     console.log(`Received type declaration:\n`, data);
-    setTypeDeclarations((prev) => [...prev, data]);
+    updateTypeDeclaration(data);
   }, []);
 
   const onSendBackendStateToUser = useCallback((data: any) => {
     console.log(`Received backend state:\n`, data);
-    // Can't use real debugger backend state yet, not in the right format
     updateState(data);
   }, []);
 
@@ -137,14 +133,6 @@ const DevelopmentMode = () => {
     };
   }, [updateState]);
 
-  const getLinkedListAnnotation = (annotation: LinkedListAnnotation) => {
-    console.log('DevMode.tsx received linked list annotation from Configuration.tsx: ', annotation);
-    updateUserAnnotation({
-      stackAnnotation: userAnnotation.stackAnnotation,
-      typeAnnotation: { ...userAnnotation.typeAnnotation, [annotation.typeName]: annotation },
-    });
-  };
-
   const DEBUG_MODE = false;
   return !DEBUG_MODE ? (
     <div className={classNames(globalStyles.root, styles.light)}>
@@ -164,10 +152,7 @@ const DevelopmentMode = () => {
           <Tabs>
             <Tab label="Configure">
               <div className={styles.pane}>
-                <Configuration
-                  typeDeclarations={typeDeclarations}
-                  sendLinkedListAnnotation={getLinkedListAnnotation}
-                />
+                <Configuration typeDeclarations={typeDeclarations} />
               </div>
             </Tab>
             <Tab label="Inspect">

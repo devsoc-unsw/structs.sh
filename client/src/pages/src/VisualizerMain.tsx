@@ -1,11 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { DEFAULT_UISTATE, UiState } from './visualizer-component/types/uiState';
-import { parserFactory } from './visualizer-component/parser/parserFactory';
-import { visualizerFactory } from './visualizer-component/visulizer/visualizerFactory';
 import { BackendState } from './visualizer-component/types/backendType';
-import { useFrontendStateStore } from './visualizer-component/visaulizerStateStore';
-import { LocalAnnotationBase, UserAnnotation } from './visualizer-component/types/annotationType';
-import { useUiStateStore } from './visualizer-component/uiStateStore';
+import { useFrontendStateStore } from './visualizer-component/visualizerStateStore';
+import { useGlobalStore } from './visualizer-component/globalStateStore';
 
 export interface RoutesProps {
   backendState: BackendState;
@@ -15,10 +11,8 @@ export interface RoutesProps {
 
 // Future support different parser
 const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) => {
-  const [settings, setSettings] = useState<UiState>(DEFAULT_UISTATE);
-  const VisComponent = visualizerFactory(settings);
-  const [parser] = useState(parserFactory(settings));
-  const { userAnnotation } = useUiStateStore();
+  const { userAnnotation, parser, visComponent: VisComponent } = useGlobalStore().visualizer;
+  const { uiState } = useGlobalStore();
 
   const currState = useFrontendStateStore((store) => {
     return store.currState();
@@ -38,7 +32,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) =>
     //   },
     // };
     if (backendState && userAnnotation) {
-      const newParsedState = parser.parseInitialState(backendState, userAnnotation, settings);
+      const newParsedState = parser.parseInitialState(backendState, userAnnotation);
       useFrontendStateStore.getState().updateNextState(newParsedState);
     } else {
       let issue = 'something';
@@ -53,7 +47,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) =>
   }, [backendState]);
 
   const visualizerRef = useRef(null);
-  const [dimensions, setDimensions] = useState({ width: settings.width, height: settings.height });
+  const [dimensions, setDimensions] = useState({ width: uiState.width, height: uiState.height });
 
   // useEffect(() => {
   //   const observer = new ResizeObserver((entries) => {
@@ -84,9 +78,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) =>
   return (
     <div className="visualizer" ref={visualizerRef} style={{ overflow: 'hidden' }}>
       <VisComponent
-        settings={settings}
         graphState={currState}
-        setSettings={setSettings}
         dimensions={dimensions}
       />
     </div>

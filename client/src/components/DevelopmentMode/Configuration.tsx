@@ -11,12 +11,14 @@ import {
   NativeTypeName,
   PointerType,
   isPointerType,
+  BackendTypeDeclaration,
 } from 'pages/src/visualizer-component/types/backendType';
 import {
   DataStructureType,
   LinkedListAnnotation,
 } from 'pages/src/visualizer-component/types/annotationType';
 import ConfigurationSelect from './ConfigurationSelect';
+import { useGlobalStore } from '../../pages/src/visualizer-component/globalStateStore';
 
 export type PossibleLinkedListAnnotation = {
   typeName: StructType['typeName'];
@@ -31,34 +33,37 @@ export type PossibleLinkedListAnnotation = {
 };
 
 // TODO: create type for typeDeclarations received from backend
-const createPossibleLinkedListTypeDecls = (typeDeclarations: any[]) => {
+const createPossibleLinkedListTypeDecls = (typeDeclarations: BackendTypeDeclaration[]) => {
   const possibleTypeDecls: PossibleLinkedListAnnotation[] = [];
   // for (const typeDecl of typeDeclarations)
   typeDeclarations.forEach((typeDecl) => {
     if (!('fields' in typeDecl)) {
       return;
     }
+    if (!isStructTypeName(typeDecl.typeName)) {
+      return;
+    }
 
     const possibleTypeDecl: PossibleLinkedListAnnotation = {
-      typeName: typeDecl.name,
+      typeName: typeDecl.typeName,
       possibleValues: [],
       possibleNexts: [],
     };
-    typeDecl.fields.forEach((field: any) => {
-      if (isNativeTypeName(field.type)) {
+    typeDecl.fields.forEach((field) => {
+      if (isNativeTypeName(field.typeName)) {
         possibleTypeDecl.possibleValues.push({
           name: field.name,
-          typeName: field.type,
+          typeName: field.typeName,
         });
       }
       if (
-        isPointerType(field.type) &&
-        isStructTypeName(field.type.slice(0, -1)) &&
-        field.type.includes(typeDecl.name)
+        isPointerType(field.typeName) &&
+        isStructTypeName(field.typeName.slice(0, -1)) &&
+        field.typeName.includes(typeDecl.typeName)
       ) {
         possibleTypeDecl.possibleNexts.push({
           name: field.name,
-          typeName: field.type,
+          typeName: field.typeName,
         });
       }
     });
@@ -71,18 +76,13 @@ const createPossibleLinkedListTypeDecls = (typeDeclarations: any[]) => {
   return possibleTypeDecls;
 };
 
-const Configuration = ({
-  typeDeclarations,
-  sendLinkedListAnnotation,
-}: {
-  typeDeclarations: any;
-  sendLinkedListAnnotation: (linkedListAnnotation: LinkedListAnnotation) => void;
-}) => {
+const Configuration = ({ typeDeclarations }: { typeDeclarations: BackendTypeDeclaration[] }) => {
   const [currNodeVariable, setCurrNodeVariable] = useState('');
   const [nodeAnnotations, setNodeAnnotations] = useState<Record<string, LinkedListAnnotation>>({});
   const [possibleTypeDeclsForLinkedList, setPossibleTypeDeclsForLinkedList] = useState<
     PossibleLinkedListAnnotation[]
   >([]);
+  const { updateUserAnnotation, visualizer } = useGlobalStore();
 
   useEffect(() => {
     const possibleTypeDecls = createPossibleLinkedListTypeDecls(typeDeclarations);
@@ -112,9 +112,21 @@ const Configuration = ({
         },
       };
       setNodeAnnotations(newNodeAnnotations);
-      sendLinkedListAnnotation(newNodeAnnotations[newNodeVariable] as LinkedListAnnotation);
+      updateUserAnnotation({
+        stackAnnotation: visualizer.userAnnotation.stackAnnotation,
+        typeAnnotation: {
+          ...visualizer.userAnnotation.typeAnnotation,
+          [newNodeAnnotations[newNodeVariable].typeName]: newNodeAnnotations[newNodeVariable],
+        },
+      });
     } else {
-      sendLinkedListAnnotation(nodeAnnotations[newNodeVariable] as LinkedListAnnotation);
+      updateUserAnnotation({
+        stackAnnotation: visualizer.userAnnotation.stackAnnotation,
+        typeAnnotation: {
+          ...visualizer.userAnnotation.typeAnnotation,
+          [nodeAnnotations[newNodeVariable].typeName]: nodeAnnotations[newNodeVariable],
+        },
+      });
     }
   };
 
@@ -134,7 +146,13 @@ const Configuration = ({
     updatedNodeAnnotations[nodeVariable] = newAnnotation;
     setNodeAnnotations(updatedNodeAnnotations);
     if (currNodeVariable === nodeVariable) {
-      sendLinkedListAnnotation(updatedNodeAnnotations[currNodeVariable] as LinkedListAnnotation);
+      updateUserAnnotation({
+        stackAnnotation: visualizer.userAnnotation.stackAnnotation,
+        typeAnnotation: {
+          ...visualizer.userAnnotation.typeAnnotation,
+          [newAnnotation.typeName]: newAnnotation,
+        },
+      });
     }
   };
 

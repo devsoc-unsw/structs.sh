@@ -128,13 +128,13 @@ class DeclVisitor(c_ast.NodeVisitor):
         result = {}
         result['name'] = node.name
         if isinstance(node.type, c_ast.FuncDecl):
-            result['type'] = self.visit(node.type)
+            result['typeName'] = self.visit(node.type)
         elif isinstance(node.type, c_ast.TypeDecl):
-            result['type'] = self.visit(node.type)
+            result['typeName'] = self.visit(node.type)
         elif isinstance(node.type, c_ast.PtrDecl):
-            result['type'] = self.visit(node.type)
+            result['typeName'] = self.visit(node.type)
         elif isinstance(node.type, c_ast.ArrayDecl):
-            result['type'] = self.visit(node.type)
+            result['typeName'] = self.visit(node.type)
         else:
             raise Exception(
                 f"Visiting Decl of unknown type: {type(node).__name__}")
@@ -152,7 +152,7 @@ class DeclVisitor(c_ast.NodeVisitor):
     def visit_Typename(self, node):
         result = {}
         result["name"] = node.name
-        result["type"] = self.visit(node.type)
+        result["typeName"] = self.visit(node.type)
         return result
 
     def visit_TypeDecl(self, node):
@@ -170,10 +170,11 @@ class DeclVisitor(c_ast.NodeVisitor):
         return f"struct {node.name}"
 
     def visit_PtrDecl(self, node):
-        return f"{self.visit(node.type)} *"
+        return f"{self.visit(node.type)}*"
 
     def visit_ArrayDecl(self, node):
-        return f"{self.visit(node.type)}[{node.dim.value if node.dim else ''}]"
+        # return f"{self.visit(node.type)}[{node.dim.value if node.dim else ''}]"
+        return f"{self.visit(node.type)}[]"
 
     def visit_IdentifierType(self, node):
         return " ".join(node.names)
@@ -232,13 +233,13 @@ class ParseTypeDeclVisitor(DeclVisitor):
         Expect isinstance(node, c_ast.Decl) or isinstance(node.type, c_ast.TypeDef)
         '''
         result = {}
-        result["name"] = self.name
+        result["typeName"] = self.name
         result["file"] = self.file
         result["line_num"] = self.line_num
         result["original_line"] = self.original_line
 
         parseResult = self.visit(node.type)
-        result['type'] = parseResult
+        result['type'] = {'typeName': parseResult}
 
         return result
 
@@ -250,7 +251,7 @@ class ParseStructDefVisitor(DeclVisitor):
         Expect isinstance(node, c_ast.Struct)
         '''
         result = {}
-        result["name"] = f"struct {self.name}"
+        result["typeName"] = f"struct {self.name}"
         result["file"] = self.file
         result["line_num"] = self.line_num
         result["original_line"] = self.original_line

@@ -1,10 +1,10 @@
-import { UiState, VisualizerType } from '../types/uiState';
+import { VisualizerType } from '../types/visualizerType';
 import { assertUnreachable } from '../util/util';
 import LinkedList from './linkedListVisualizer';
 import { VisualizerComponent } from './visualizer';
 
-export function visualizerFactory(uiState: UiState): VisualizerComponent {
-  switch (uiState.visualizerType) {
+export function visualizerFactory(visualizerType: VisualizerType): VisualizerComponent {
+  switch (visualizerType) {
     case VisualizerType.LINKED_LIST:
     case VisualizerType.BINARY_TREE: {
       return LinkedList;
@@ -14,7 +14,7 @@ export function visualizerFactory(uiState: UiState): VisualizerComponent {
       throw new Error('Not implemented');
     }
     default:
-      assertUnreachable(uiState.visualizerType);
+      assertUnreachable(visualizerType);
   }
   return undefined;
 }

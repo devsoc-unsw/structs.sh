@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { AnimatePresence, motion, useAnimation } from 'framer-motion';
 import LinkedNode from '../drawableObjects/drawableNode';
 import Edge from '../drawableObjects/drawableEdge';
-import { VisualizerComponent } from './visualizer';
+import { VisualizerComponent, VisualizerState } from './visualizer';
 import { MotionCoord } from '../drawableObjects/drawable';
 import { assertUnreachable } from '../util/util';
 import Pointer from '../drawableObjects/drawablePointer';
@@ -10,14 +10,14 @@ import { EntityType } from '../types/entity/baseEntity';
 import { isAttachableEntity } from '../types/coreEntity/concreteEntity';
 
 // TODO: Expand different component for different data structure, implementing common interface
-const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, dimensions }) => {
+const LinkedList: VisualizerComponent = ({ graphState, dimensions }: VisualizerState) => {
   const nodeRefs = useRef<{ [uid: string]: SVGSVGElement | null }>({});
   const controls = useAnimation();
   const [drawable, setDrawables] = useState<{
     [key: string]: JSX.Element;
   }>({});
   // Replace by store
-  const [pos, _] = useState<{ [uid: string]: MotionCoord }>({});
+  const [pos] = useState<{ [uid: string]: MotionCoord }>({});
 
   const renderNodes = useCallback(() => {
     if (graphState === undefined) return;
@@ -50,7 +50,7 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
     // Create new drawable objects
     Object.values(graphState.cacheEntity).forEach((entity) => {
       switch (entity.type) {
-        case EntityType.NODE:
+        case EntityType.NODE: {
           renderDrawable[entity.uid] = (
             <LinkedNode
               ref={(ref) => {
@@ -63,7 +63,8 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
             />
           );
           break;
-        case EntityType.EDGE:
+        }
+        case EntityType.EDGE: {
           renderDrawable[entity.uid] = (
             <Edge
               ref={(ref) => {
@@ -78,7 +79,8 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
             />
           );
           break;
-        case EntityType.POINTER:
+        }
+        case EntityType.POINTER: {
           const entityAttached = graphState.cacheEntity[entity.attachedUid];
           if (entityAttached && isAttachableEntity(entityAttached)) {
             renderDrawable[entity.uid] = (
@@ -95,15 +97,15 @@ const LinkedList: VisualizerComponent = ({ graphState, settings, setSettings, di
               />
             );
           }
-
           break;
+        }
         default:
           assertUnreachable(entity);
       }
     });
 
     setDrawables({ ...renderDrawable });
-  }, [graphState, settings]);
+  }, [graphState]);
 
   useEffect(() => {
     renderNodes();
