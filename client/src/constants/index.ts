@@ -43,8 +43,6 @@ int main(void) {
   {
     name: 'Treelike linked list',
     text: `/**
-* Linked list program same as main3.c but all helper functions are defined in
-* this one file.
 * Treelike linked list
 * Diagram: https://imgur.com/JKtOvb8
 */
@@ -123,7 +121,7 @@ void print_list(struct node *list) {
   {
     name: 'Linked list helper functions',
     text: `/**
- * Simple linked list program, no imports.
+ * Simple linked list program using helper functions.
  */
 
 #include <stdio.h>
@@ -181,7 +179,9 @@ int main() {
   },
   {
     name: 'Sort linked list',
-    text: `// Code your stuff below!
+    text: `/**
+  * Sort linked list
+  */
 #include <stdio.h>
 #include <stdlib.h>
 
