@@ -45,10 +45,8 @@ const DevelopmentMode = () => {
   };
 
   const resetDebugSession = () => {
-    // TODO: Reset visualiser state
     setBackendState(undefined);
     setActiveSession(false);
-
     clearTypeDeclarations();
     clearUserAnnotation();
   };
@@ -70,7 +68,6 @@ const DevelopmentMode = () => {
     console.log(`Received dummy data:\n`, data);
     if (data !== 'LINE NOT FOUND') {
       updateState(data);
-      // setCountState(count + 1);
     } else {
       console.log('!!! No more dummy data');
     }

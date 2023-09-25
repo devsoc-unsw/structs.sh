@@ -13,7 +13,7 @@ import { isAttachableEntity } from '../types/coreEntity/concreteEntity';
 const LinkedList: VisualizerComponent = ({ graphState, dimension }: VisualizerState) => {
   const nodeRefs = useRef<{ [uid: string]: SVGSVGElement | null }>({});
   const controls = useAnimation();
-  const [drawable, setDrawables] = useState<{
+  const [drawable, setDrawable] = useState<{
     [key: string]: JSX.Element;
   }>({});
   // Replace by store
@@ -104,7 +104,7 @@ const LinkedList: VisualizerComponent = ({ graphState, dimension }: VisualizerSt
       }
     });
 
-    setDrawables({ ...renderDrawable });
+    setDrawable({ ...renderDrawable });
   }, [graphState]);
 
   useEffect(() => {
