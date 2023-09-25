@@ -30,15 +30,21 @@ const DevelopmentMode = () => {
   const [backendState, setBackendState] = useState<BackendState>();
   const [activeSession, setActiveSession] = useState(false);
   const [code, setCode] = useState(localStorage.getItem('code') || placeholder);
+  // Tab values correspond to their index 
+  // ('Configure' has value '0', 'Inspect' has value '1', 'Console' has value '2')
+  const [tab, setTab] = useState('0');
 
-  const globalStore = useGlobalStore()
+  const globalStore = useGlobalStore();
   const { updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation } = globalStore;
   const typeDeclarations = [...globalStore.visualizer.typeDeclarations];
+
+  const handleChangeTab = (newTabValue: string) => {
+    setTab(newTabValue);
+  };
 
   const updateState = (data: any) => {
     setBackendState(data);
   };
-
 
   const handleSetCode = (newCode: string) => {
     localStorage.setItem('code', newCode);
@@ -102,8 +108,10 @@ const DevelopmentMode = () => {
   }, []);
 
   const onCompileError = (data: any) => {
-    console.log("Received compilation error:\n", data)
-  }
+    console.log('Received compilation error:\n', data);
+    // On a compilation error, switch the tab to 'Console' so the user can see the error
+    setTab('2');
+  };
 
   useEffect(() => {
     const onConnect = () => {
@@ -154,7 +162,7 @@ const DevelopmentMode = () => {
           />
         </div>
         <div className={classNames(styles.pane, styles.inspector)}>
-          <Tabs>
+          <Tabs value={tab} onValueChange={handleChangeTab}>
             <Tab label="Configure">
               <div className={styles.pane}>
                 <Configuration typeDeclarations={typeDeclarations} />
