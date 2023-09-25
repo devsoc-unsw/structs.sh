@@ -4,6 +4,7 @@ import select
 from typing import Optional
 import gdb
 
+from src.constants import TIMEOUT_DURATION
 from src.gdb_scripts.use_socketio_connection import useSocketIOConnection, enable_socketio_client_emit
 
 
@@ -20,7 +21,8 @@ class IOManager:
         gdb.execute(f"tty {self.name}")
 
     def read(self) -> Optional[str]:
-        (data_to_read, _, _) = select.select([self.stdout], [], [], 0.2)
+        (data_to_read, _, _) = select.select(
+            [self.stdout], [], [], TIMEOUT_DURATION)
         if data_to_read:
             return os.read(self.stdout, self.max_read_bytes).decode()
         else:
@@ -31,7 +33,8 @@ class IOManager:
         Check whether the program stdin is waiting for user input.
         Note: This attempt does not work. It always returns True even when the program is not waiting for input, because the program is always waiting for input to be buffered.
         '''
-        (_, data_to_write, _) = select.select([], [self.stdin], [], 0.2)
+        (_, data_to_write, _) = select.select(
+            [], [self.stdin], [], TIMEOUT_DURATION)
         print(
             "=======================================\n=================================\n")
         print(f"{data_to_write=}")

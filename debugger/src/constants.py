@@ -13,3 +13,6 @@ USER_PTYPE_FILE_NAME = "ptype_output.c"
 
 # File to write preprocessed ptype output, befor parsing with pycparser
 USER_PTYPE_PREPROCESSED = "ptype_output_preprocessed"
+
+# Amount of time to allow select.select() to wait for program stdout before timing out
+TIMEOUT_DURATION = 0.05
