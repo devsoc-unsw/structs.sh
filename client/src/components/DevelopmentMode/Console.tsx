@@ -1,32 +1,12 @@
-import React, { Fragment, SyntheticEvent, useEffect, useRef, useState } from 'react';
+import React, { Fragment, useRef, useState } from 'react';
 import { socket } from 'utils/socket';
 
 import styles from 'styles/Console.module.css';
+import classNames from 'classnames';
 
-const Console = () => {
-  const [chunks, setChunks] = useState<string[]>([]);
+const Console = ({ chunks, handleAddChunk, scrollToBottom, isActive }) => {
   const [input, setInput] = useState('');
   const inputElement = useRef(null);
-
-  const scrollToBottom = () => {
-    if (inputElement.current) {
-      const container = inputElement.current.parentElement;
-      container.scrollTop = container.scrollHeight;
-    }
-  };
-
-  useEffect(() => {
-    const onStdout = (data: string) => {
-      setChunks((oldChunks) => [...oldChunks, data]);
-      scrollToBottom();
-    };
-
-    socket.on('sendStdoutToUser', onStdout);
-
-    return () => {
-      socket.off('sendStdoutToUser', onStdout);
-    };
-  }, []);
 
   const handleInput = () => {
     setInput(inputElement.current.innerText);
@@ -41,7 +21,7 @@ const Console = () => {
     if (event.key === 'Enter') {
       if (input.length > 0) {
         socket.emit('send_stdin', input);
-        setChunks([...chunks, `${input}\n`]);
+        handleAddChunk(`${input}\n`);
         clearInput();
         scrollToBottom();
       }
@@ -56,7 +36,7 @@ const Console = () => {
 
   return (
     <div
-      className={styles.console}
+      className={classNames(styles.console, { [styles.errorText]: !isActive })}
       onClick={focus}
       onKeyUp={(e) => {
         if (e.key === 'Space') {
@@ -67,7 +47,7 @@ const Console = () => {
       role="button"
       tabIndex={0}
     >
-      {chunks.map((chunk, index) => (
+      {chunks.map((chunk: string, index: number) => (
         <Fragment key={index}>
           <code>{chunk.replace(/\n$/, '')}</code>
           {chunk.endsWith('\n') && <br />}

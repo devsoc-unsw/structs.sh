@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useRef } from 'react';
 import { socket } from 'utils/socket';
 import styles from 'styles/DevelopmentMode.module.css';
 import globalStyles from 'styles/global.module.css';
@@ -31,6 +31,8 @@ const DevelopmentMode = () => {
   const [backendState, setBackendState] = useState<BackendState>();
   const [activeSession, setActiveSession] = useState(false);
   const [code, setCode] = useState(localStorage.getItem('code') || placeholder);
+  const [consoleChunks, setConsoleChunks] = useState([]);
+
   // Tab values correspond to their index
   // ('Configure' has value '0', 'Inspect' has value '1', 'Console' has value '2')
   const [tab, setTab] = useState('0');
@@ -38,6 +40,19 @@ const DevelopmentMode = () => {
   const globalStore = useGlobalStore();
   const { updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation } = globalStore;
   const typeDeclarations = [...globalStore.visualizer.typeDeclarations];
+
+  const inputElement = useRef(null);
+
+  const scrollToBottom = () => {
+    if (inputElement.current) {
+      const container = inputElement.current.parentElement;
+      container.scrollTop = container.scrollHeight;
+    }
+  };
+
+  const handleAddConsoleChunk = (chunk) => {
+    setConsoleChunks((oldChunks) => [...oldChunks, chunk]);
+  };
 
   const handleChangeTab = (newTabValue: string) => {
     setTab(newTabValue);
@@ -57,6 +72,7 @@ const DevelopmentMode = () => {
     setActiveSession(false);
     clearTypeDeclarations();
     clearUserAnnotation();
+    setConsoleChunks([]);
   };
 
   const sendCode = () => {
@@ -115,7 +131,13 @@ const DevelopmentMode = () => {
   const onCompileError = (data: any) => {
     console.log('Received compilation error:\n', data);
     // On a compilation error, switch the tab to 'Console' so the user can see the error
+    setConsoleChunks([data]);
     setTab('2');
+  };
+
+  const onStdout = (data: string) => {
+    setConsoleChunks((oldChunks) => [...oldChunks, data]);
+    scrollToBottom();
   };
 
   useEffect(() => {
@@ -136,6 +158,7 @@ const DevelopmentMode = () => {
     socket.on('sendStdoutToUser', onSendStdoutToUser);
     socket.on('programWaitingForInput', onProgramWaitingForInput);
     socket.on('compileError', onCompileError);
+    socket.on('sendStdoutToUser', onStdout);
 
     return () => {
       socket.off('connect', onConnect);
@@ -150,6 +173,7 @@ const DevelopmentMode = () => {
       socket.off('programWaitingForInput', onProgramWaitingForInput);
       socket.off('sendStdoutToUser', onSendStdoutToUser);
       socket.off('compileError', onCompileError);
+      socket.off('sendStdoutToUser', onStdout);
     };
   }, []);
 
@@ -177,7 +201,12 @@ const DevelopmentMode = () => {
               <StackInspector />
             </Tab>
             <Tab label="Console">
-              <Console />
+              <Console
+                chunks={consoleChunks}
+                handleAddChunk={handleAddConsoleChunk}
+                scrollToBottom={scrollToBottom}
+                isActive={activeSession}
+              />
             </Tab>
           </Tabs>
         </div>
