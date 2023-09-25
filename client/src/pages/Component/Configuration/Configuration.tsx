@@ -3,13 +3,13 @@ import { useState } from 'react';
 import styles from 'styles/Configuration.module.css';
 import { useGlobalStore } from '../../Store/globalStateStore';
 import { MotionCollapse } from './MotionCollapse';
-import { TypeAnnotation } from './TypeDeclaration';
+import { TypeAnnotation } from './TypeAnnotation';
 import { StackVarAnnotation } from './StackVarDeclaration';
 
 const Configuration = () => {
   const [isTypeAnnotationOpen, setIsAnnotationOpen] = useState(true);
 
-  const [isVariableAnnotationOpen, setIsVariableAnnotationOpen] = useState(false);
+  const [isVariableAnnotationOpen, setIsVariableAnnotationOpen] = useState(true);
   const { typeDeclarations } = useGlobalStore().visualizer;
   const { currFrame } = useGlobalStore();
   const { visualizer } = useGlobalStore();
@@ -82,11 +82,11 @@ const Configuration = () => {
 
         <MotionCollapse isOpen={isVariableAnnotationOpen}>
           {isVariableAnnotationOpen ? (
-            <>
+            <div className={styles.indentedAnnotationArea}>
               {Object.entries(currFrame.stack_data).map(([name, memoryValue]) => (
                 <StackVarAnnotation key={name} name={name} memoryValue={memoryValue} />
               ))}
-            </>
+            </div>
           ) : null}
         </MotionCollapse>
       </div>

@@ -7,7 +7,7 @@ import { Tabs, Tab } from 'components/Tabs';
 import { Socket } from 'socket.io-client';
 import Console from 'components/DevelopmentMode/Console';
 import DevelopmentModeNavbar from '../components/Navbars/DevelopmentModeNavbar';
-import { placeholder } from '../constants';
+import { PLACEHOLDER_PROGRAMS } from '../constants';
 import Configuration from './Component/Configuration/Configuration';
 import Controls from './Component/Control/Controls';
 import CodeEditor from './Component/CodeEditor/CodeEditor';
@@ -15,6 +15,8 @@ import StackInspector from './Component/StackInspector/StackInspector';
 import { useGlobalStore } from './Store/globalStateStore';
 import VisualizerMain from './Component/VisualizerMain';
 import { BackendState } from './Types/backendType';
+import FileSelector from './Component/FileTree/FileSelector';
+import AboutText from './Component/FileTree/AboutText';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -30,7 +32,10 @@ const DevelopmentMode = () => {
   }, []);
   const [backendState, setBackendState] = useState<BackendState>();
   const [activeSession, setActiveSession] = useState(false);
-  const [code, setCode] = useState(localStorage.getItem('code') || placeholder);
+  const [programName, setProgramName] = useState(
+    PLACEHOLDER_PROGRAMS[0]?.name ?? 'No placeholder programs'
+  );
+  const [code, setCode] = useState(localStorage.getItem('code') || PLACEHOLDER_PROGRAMS[0].text);
   const [consoleChunks, setConsoleChunks] = useState([]);
 
   // Tab values correspond to their index
@@ -184,7 +189,27 @@ const DevelopmentMode = () => {
         <div className={classNames(styles.pane, styles.nav)}>
           <DevelopmentModeNavbar />
         </div>
-        <div className={classNames(styles.pane, styles.files)}>File tree</div>
+        <div className={classNames(styles.pane, styles.files)} style={{ overflowY: 'scroll' }}>
+          <FileSelector
+            programName={programName}
+            onChangeProgramName={(newProgramName: string) => {
+              setProgramName(newProgramName);
+              handleSetCode(
+                PLACEHOLDER_PROGRAMS.find((program) => program.name === newProgramName)?.text ??
+                  '// Write you code here!'
+              );
+            }}
+          />
+          <div
+            style={{
+              fontSize: 'small',
+              marginTop: '1.6rem',
+              color: 'rgb(85, 85, 85)',
+            }}
+          >
+            <AboutText />
+          </div>
+        </div>
         <div className={classNames(styles.pane, styles.editor)}>
           <CodeEditor
             code={code}

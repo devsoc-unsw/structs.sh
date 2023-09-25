@@ -5,7 +5,7 @@ import { ChevronDownIcon } from '@radix-ui/react-icons';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { github } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { MotionCollapse } from './MotionCollapse';
-import './typeDeclaration.css';
+import './typeAnnotation.css';
 import { StackVariableRole } from '../../Types/annotationType';
 import { MemoryValue, isPointerType } from '../../Types/backendType';
 import { useGlobalStore } from '../../Store/globalStateStore';
@@ -35,7 +35,7 @@ export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
           </span>
         </div>
 
-        <div>
+        <div style={{ fontSize: '0.8rem' }}>
           <button
             type="button"
             style={{ color: selectedRole === StackVariableRole.Empty ? 'grey' : 'black' }}

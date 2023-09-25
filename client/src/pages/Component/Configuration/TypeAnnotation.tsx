@@ -3,7 +3,7 @@ import { ChevronDownIcon } from '@radix-ui/react-icons';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { github } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { MotionCollapse } from './MotionCollapse';
-import './typeDeclaration.css';
+import './typeAnnotation.css';
 import { BackendTypeRole } from '../../Types/annotationType';
 import {
   LinkedListNodeAnnotation,

@@ -6,6 +6,10 @@ const StackInspector = () => {
   const { stackInspector: debuggerData }: { stackInspector: any } = useGlobalStore().visualizer;
   return (
     <div className={styles.stackInspector}>
+      <div style={{ fontSize: 'small' }}>
+        Note: This is so far just a placeholder, doesn&#39;t show actual stack data from the
+        debugger yet.
+      </div>
       {debuggerData.stack.map((stackFrame, idx) => (
         <div className={styles.frame} key={idx}>
           <div className={styles.frameHeader}>
