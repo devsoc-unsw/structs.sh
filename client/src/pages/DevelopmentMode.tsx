@@ -9,13 +9,13 @@ import CodeEditor from 'components/DevelopmentMode/CodeEditor';
 import StackInspector from 'components/DevelopmentMode/StackInspector';
 import * as dummyData from 'components/DevelopmentMode/dummyData.json';
 import Configuration from 'components/DevelopmentMode/Configuration';
+import DevelopmentModeNavbar from 'components/Navbars/DevelopmentModeNavbar';
+import Controls from 'components/DevelopmentMode/Controls';
+import { placeholder } from 'constants/index';
 import VisualizerMain from './src/VisualizerMain';
 import { BackendState } from './src/visualizer-component/types/backendType';
 import { LinkedListAnnotation } from './src/visualizer-component/types/annotationType';
 import { useUiStateStore } from './src/visualizer-component/uiStateStore';
-import DevelopmentModeNavbar from 'components/Navbars/DevelopmentModeNavbar';
-import Controls from 'components/DevelopmentMode/Controls';
-import { placeholder } from 'constants/index';
 import { DEFAULT_USER_ANNOTATION } from './src/visualizer-component/types/uiState';
 
 type ExtendedWindow = Window &

@@ -34,9 +34,9 @@ const CodeEditor = ({
       height="100%"
       width="100%"
       markers={markers}
-      enableSnippets={true}
-      enableLiveAutocompletion={true}
-      enableBasicAutocompletion={true}
+      enableSnippets
+      enableLiveAutocompletion
+      enableBasicAutocompletion
     />
   );
 };
