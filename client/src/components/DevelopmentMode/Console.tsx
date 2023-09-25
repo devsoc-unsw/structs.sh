@@ -69,11 +69,11 @@ const Console = () => {
     >
       {chunks.map((chunk, index) => (
         <Fragment key={index}>
-          <span>{chunk.replace(/\n$/, '')}</span>
+          <code>{chunk.replace(/\n$/, '')}</code>
           {chunk.endsWith('\n') && <br />}
         </Fragment>
       ))}
-      <span
+      <code
         className={styles.input}
         key="input"
         onInput={handleInput}
@@ -82,7 +82,7 @@ const Console = () => {
         contentEditable
         suppressContentEditableWarning
         spellCheck={false}
-      ></span>
+      />
     </div>
   );
 };
