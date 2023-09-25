@@ -397,8 +397,10 @@ def create_struct_value(parsed_type_decls, struct_fields_str, struct_name):
     # Find the type declaration for the struct type being malloced
     print("parsed type decls")
     pprint(parsed_type_decls)
+    print(f"{struct_name=}")
+    print(f"{struct_fields_str=}")
     corresponding_type_decl = next(
-        (x for x in parsed_type_decls if "name" in x and x['name'] == struct_name), None)
+        (x for x in parsed_type_decls if "typeName" in x and x['typeName'] == struct_name), None)
     if corresponding_type_decl is None:
         raise Exception(
             f"No corresponding type declaration found for {struct_name}")

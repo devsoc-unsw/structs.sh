@@ -109,7 +109,7 @@ const DevelopmentMode = () => {
     socket.on('mainDebug', onMainDebug);
     socket.on('sendFunctionDeclaration', onSendFunctionDeclaration);
     socket.on('sendTypeDeclaration', onSendTypeDeclaration);
-    socket.on('executeNext', () => {
+    socket.once('executeNext', () => {
       console.log('Executing next line...');
     });
     socket.on('sendBackendStateToUser', onSendBackendStateToUser);
