@@ -1,5 +1,6 @@
-.red {
+.errorText {
   color: red;
+  font-size: x-small;
 }
 
 .console {

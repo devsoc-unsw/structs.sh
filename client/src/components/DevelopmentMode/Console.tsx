@@ -36,7 +36,7 @@ const Console = ({ chunks, handleAddChunk, scrollToBottom, isActive }) => {
 
   return (
     <div
-      className={classNames(styles.console, { [styles.red]: !isActive })}
+      className={classNames(styles.console, { [styles.errorText]: !isActive })}
       onClick={focus}
       onKeyUp={(e) => {
         if (e.key === 'Space') {
