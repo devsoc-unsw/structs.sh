@@ -1,4 +1,12 @@
-import { StructType, Name, PointerType, MemoryValue, IntType, NativeTypeName } from './backendType';
+import {
+  StructType,
+  Name,
+  PointerType,
+  MemoryValue,
+  IntType,
+  NativeTypeName,
+  BackendTypeDeclaration,
+} from './backendType';
 
 export enum DataStructureType {
   LinkedList,
@@ -94,4 +102,56 @@ export const isTreeNode = (
   binaryTreeAnnotation: BinaryTreeAnnotation
 ) => {
   return 'typeName' in memoryValue && memoryValue.typeName === binaryTreeAnnotation.typeName;
+};
+
+export enum FieldType {
+  RECURSIVE,
+  BASE,
+}
+
+export interface PossibleFieldBase {
+  type: FieldType;
+}
+
+export interface PossibleRecursiveField extends PossibleFieldBase {
+  name: string;
+  typeName: PointerType['typeName'];
+  type: FieldType.RECURSIVE;
+}
+
+export interface PossiblePropertyField extends PossibleFieldBase {
+  name: string;
+  typeName: NativeTypeName;
+  type: FieldType.BASE;
+}
+
+export type PossibleField = PossibleRecursiveField | PossiblePropertyField;
+
+export type PossibleStructAnnotation = {
+  typeName: string;
+  possibleFields: {
+    name: string;
+    possibleChoices: PossibleField[];
+  };
+};
+
+export type TypeAnnotationProp = {
+  typeDeclaration: BackendTypeDeclaration;
+};
+
+export enum BackendTypeRole {
+  LinkedList = 'Linked List Node',
+  Empty = 'Not Visualized',
+}
+
+export type PossibleLinkedListAnnotation = {
+  typeName: StructType['typeName'];
+  possibleValues: {
+    name: Name;
+    typeName: NativeTypeName;
+  }[];
+  possibleNexts: {
+    name: Name;
+    typeName: PointerType['typeName'];
+  }[];
 };

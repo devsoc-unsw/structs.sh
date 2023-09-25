@@ -13,7 +13,7 @@ const ConfigurationSelect = ({
   fields: { typeName: NativeTypeName; name: Name }[];
   handleUpdateAnnotation: (type: string, name: string, typeName: string) => void;
 }) => {
-  const [value, setValue] = useState(fields[0].name);
+  const [value, setValue] = useState(fields[0]?.name);
 
   const handleValueChange = (newValue: string) => {
     const foundField = fields.find((field) => field.name === newValue);

@@ -1,59 +1,16 @@
 import React, { useState } from 'react';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
-import styles from 'styles/Configuration.module.css';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { github } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { BackendTypeDeclaration, NativeTypeName, PointerType } from '../../Types/backendType';
-import { useGlobalStore } from '../../Store/globalStateStore';
 import { MotionCollapse } from './MotionCollapse';
 import './typeDeclaration.css';
-
-export enum FieldType {
-  RECURSIVE,
-  BASE,
-}
-
-export interface PossibleFieldBase {
-  type: FieldType;
-}
-
-export interface PossibleRecursiveField extends PossibleFieldBase {
-  name: string;
-  typeName: PointerType['typeName'];
-  type: FieldType.RECURSIVE;
-}
-
-export interface PossiblePropertyField extends PossibleFieldBase {
-  name: string;
-  typeName: NativeTypeName;
-  type: FieldType.BASE;
-}
-
-export type PossibleField = PossibleRecursiveField | PossiblePropertyField;
-
-export type PossibleStructAnnotation = {
-  typeName: string;
-  possibleFields: {
-    name: string;
-    possibleChoices: PossibleField[];
-  };
-};
-
-export type TypeAnnotationProp = {
-  typeDeclaration: BackendTypeDeclaration;
-};
-
-export enum BackendTypeRole {
-  LinkedList = 'Linked List Node',
-  Empty = 'Not Visualized',
-}
+import { TypeAnnotationProp, BackendTypeRole } from '../../Types/annotationType';
+import { LinkedListNodeAnnotation } from './RoleAnnotation/LinkedListAnnotation';
 
 export const TypeAnnotation: React.FC<TypeAnnotationProp> = ({
   typeDeclaration,
 }: TypeAnnotationProp) => {
   const { typeName } = typeDeclaration;
-  const { typeAnnotation } = useGlobalStore().visualizer.userAnnotation;
-
   const [selectedRole, setSelectedRole] = useState<BackendTypeRole>(BackendTypeRole.Empty);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -126,7 +83,7 @@ export const TypeAnnotation: React.FC<TypeAnnotationProp> = ({
       </div>
 
       <MotionCollapse isOpen={selectedRole === BackendTypeRole.LinkedList}>
-        <div>test</div>
+        <LinkedListNodeAnnotation backendType={typeDeclaration} />
       </MotionCollapse>
     </div>
   );

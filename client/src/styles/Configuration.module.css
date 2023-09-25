@@ -17,6 +17,16 @@
   margin-left: 3rem;
 }
 
+.highlightError {
+  color: #D32F2F;
+  font-weight: bold;
+}
+
+.highlightLinkedList {
+  color: #795548;
+  font-weight: bold;
+}
+
 .RadioGroupRoot {
   display: flex;
   flex-direction: column;
