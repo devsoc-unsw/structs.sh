@@ -27,9 +27,10 @@ int main(void) {
   struct node *curr = node1;
 
   while (curr != NULL) {
-    printf("%d\\n", curr->data);
+    printf("%d -> ", curr->data);
     curr = curr->next;
   }
+  printf("X\\n");
 }
 `;
 

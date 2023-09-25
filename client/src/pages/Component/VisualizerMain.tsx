@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { NodeEntity } from 'pages/Types/entity/nodeEntity';
 import { useGlobalStore } from '../Store/globalStateStore';
 import { useFrontendStateStore } from '../Store/visualizerStateStore';
@@ -15,6 +15,8 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) =>
     return store.currState();
   });
 
+  const [flagViewed, setFlagViewed] = useState(false);
+
   useEffect(() => {
     if (backendState && userAnnotation) {
       const newParsedState = parser.parseInitialState(backendState, userAnnotation);
@@ -26,7 +28,6 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) =>
       } else if (!userAnnotation) {
         issue = 'localsAnnotations';
       }
-
       console.error(`Unable to parse backend state: ${issue} is undefined`);
     }
 
@@ -56,12 +57,13 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) =>
       return third.title === 'v';
     };
 
-    if (isDev()) {
+    if (isDev() && !flagViewed) {
       alert(
         `Olli has now made it to the fair and is contemplating joining structs, here's the flag: ${
           import.meta.env.VITE_CTF_FLAG
         }`
       );
+      setFlagViewed(true);
     }
   }, [backendState]);
 
