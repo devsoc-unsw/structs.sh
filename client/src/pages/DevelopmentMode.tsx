@@ -5,16 +5,15 @@ import globalStyles from 'styles/global.module.css';
 import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
 import { Socket } from 'socket.io-client';
-import CodeEditor from 'components/DevelopmentMode/CodeEditor';
-import StackInspector from 'components/DevelopmentMode/StackInspector';
-import * as dummyData from 'components/DevelopmentMode/dummyData.json';
-import Configuration from 'components/DevelopmentMode/Configuration';
-import DevelopmentModeNavbar from 'components/Navbars/DevelopmentModeNavbar';
-import Controls from 'components/DevelopmentMode/Controls';
-import { placeholder } from 'constants/index';
-import VisualizerMain from './src/VisualizerMain';
-import { BackendState } from './src/visualizer-component/types/backendType';
-import { useGlobalStore } from './src/visualizer-component/globalStateStore';
+import DevelopmentModeNavbar from '../components/Navbars/DevelopmentModeNavbar';
+import { placeholder } from '../constants';
+import Configuration from './Component/Configuration/Configuration';
+import Controls from './Component/Control/Controls';
+import CodeEditor from './Component/CodeEditor/CodeEditor';
+import StackInspector from './Component/StackInspector/StackInspector';
+import { useGlobalStore } from './Store/globalStateStore';
+import VisualizerMain from './Component/VisualizerMain';
+import { BackendState } from './Types/backendType';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -150,7 +149,7 @@ const DevelopmentMode = () => {
               </div>
             </Tab>
             <Tab label="Inspect">
-              <StackInspector debuggerData={dummyData} />
+              <StackInspector />
             </Tab>
             <Tab label="Console">
               <div className={styles.pane}>Console</div>
