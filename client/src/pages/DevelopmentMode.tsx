@@ -29,14 +29,16 @@ const DevelopmentMode = () => {
   }, []);
   const [backendState, setBackendState] = useState<BackendState>();
   const [activeSession, setActiveSession] = useState(false);
-  const typeDeclarations = [...useGlobalStore().visualizer.typeDeclarations];
-  const { updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation } = useGlobalStore();
+  const [code, setCode] = useState(localStorage.getItem('code') || placeholder);
+
+  const globalStore = useGlobalStore()
+  const { updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation } = globalStore;
+  const typeDeclarations = [...globalStore.visualizer.typeDeclarations];
 
   const updateState = (data: any) => {
     setBackendState(data);
   };
 
-  const [code, setCode] = useState(localStorage.getItem('code') || placeholder);
 
   const handleSetCode = (newCode: string) => {
     localStorage.setItem('code', newCode);
@@ -99,6 +101,10 @@ const DevelopmentMode = () => {
     console.log('Executing next line...');
   }, []);
 
+  const onCompileError = (data: any) => {
+    console.log("Received compilation error:\n", data)
+  }
+
   useEffect(() => {
     const onConnect = () => {
       console.log('Connected!');
@@ -115,6 +121,7 @@ const DevelopmentMode = () => {
     socket.on('executeNext', onExecuteNext);
     socket.on('sendBackendStateToUser', onSendBackendStateToUser);
     socket.on('sendStdoutToUser', onSendStdoutToUser);
+    socket.on('compileError', onCompileError);
 
     return () => {
       socket.off('connect', onConnect);
@@ -127,6 +134,7 @@ const DevelopmentMode = () => {
       socket.off('sendTypeDeclaration', onSendTypeDeclaration);
       socket.off('sendBackendStateToUser', onSendBackendStateToUser);
       socket.off('sendStdoutToUser', onSendStdoutToUser);
+      socket.off('compileError', onCompileError);
     };
   }, []);
 
