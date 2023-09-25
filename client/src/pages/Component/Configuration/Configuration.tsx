@@ -19,7 +19,7 @@ const Configuration = () => {
         display: 'flex',
         flexDirection: 'column',
         maxHeight: '500px',
-        overflowY: 'auto',
+        // overflowY: 'auto',
         gap: '0.8rem',
       }}
     >

@@ -195,7 +195,7 @@ const DevelopmentMode = () => {
         <div className={classNames(styles.pane, styles.inspector)}>
           <Tabs value={tab} onValueChange={handleChangeTab}>
             <Tab label="Configure">
-              <div className={styles.pane}>
+              <div className={classNames(styles.pane)} style={{ overflow: 'scroll' }}>
                 <Configuration />
               </div>
             </Tab>

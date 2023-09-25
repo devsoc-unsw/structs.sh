@@ -1,9 +1,14 @@
 // Stack frame formatting
 
+.stackInspector {
+    height: 100%;
+    overflow-y: auto;
+}
+
 .frame {
     border: 1px solid #999;
-    padding: 20px;
-    margin: 20px;
+    padding: 16px;
+    margin: 16px;
     width: 400px; // Arbitrary narrow value
 }
 

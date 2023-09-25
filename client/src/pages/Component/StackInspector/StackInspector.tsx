@@ -5,7 +5,7 @@ import { useGlobalStore } from '../../Store/globalStateStore';
 const StackInspector = () => {
   const { stackInspector: debuggerData }: { stackInspector: any } = useGlobalStore().visualizer;
   return (
-    <>
+    <div className={styles.stackInspector}>
       {debuggerData.stack.map((stackFrame, idx) => (
         <div className={styles.frame} key={idx}>
           <div className={styles.frameHeader}>
@@ -30,7 +30,7 @@ const StackInspector = () => {
           </dl>
         </div>
       ))}
-    </>
+    </div>
   );
 };
 
