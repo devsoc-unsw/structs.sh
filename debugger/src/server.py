@@ -265,6 +265,15 @@ def createdTypeDeclaration(socket_id: str, user_socket_id, type) -> None:
     io.emit("sendTypeDeclaration", type, room=user_socket_id)
 
 
+@io.on("programWaitingForInput")
+def requestUserInput(socket_id: str, user_socket_id) -> None:
+    print(
+        f"Event requestUserInput received from gdb instance with socket_id {socket_id}:"
+    )
+    print(f"Requesting user input from FE user {user_socket_id}:")
+    io.emit("requestUserInput", room=user_socket_id)
+
+
 @io.event
 def updatedBackendState(socket_id: str, user_socket_id, backend_data) -> None:
     """

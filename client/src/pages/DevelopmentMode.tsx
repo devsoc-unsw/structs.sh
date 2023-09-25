@@ -85,6 +85,10 @@ const DevelopmentMode = () => {
     console.log(`Received program stdout:\n`, data);
   }, []);
 
+  const onProgramWaitingForInput = useCallback((data: any) => {
+    console.log(`Event received from debugger: program is waiting for input\n`, data);
+  }, []);
+
   useEffect(() => {
     const onConnect = () => {
       console.log('Connected!');
@@ -103,6 +107,7 @@ const DevelopmentMode = () => {
     });
     socket.on('sendBackendStateToUser', onSendBackendStateToUser);
     socket.on('sendStdoutToUser', onSendStdoutToUser);
+    socket.on('programWaitingForInput', onProgramWaitingForInput);
 
     return () => {
       socket.off('connect', onConnect);
@@ -113,6 +118,7 @@ const DevelopmentMode = () => {
       socket.off('sendFunctionDeclaration', onSendFunctionDeclaration);
       socket.off('sendTypeDeclaration', onSendTypeDeclaration);
       socket.off('sendBackendStateToUser', onSendBackendStateToUser);
+      socket.off('programWaitingForInput', onProgramWaitingForInput);
     };
   }, [updateState]);
 
