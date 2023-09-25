@@ -31,6 +31,8 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) =>
     }
 
     const isDev = () => {
+      // TODO: DEBUG THIS
+      if (!currState) return false;
       if (currState.nodes.length !== 3) {
         return false;
       }
