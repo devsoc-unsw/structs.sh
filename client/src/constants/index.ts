@@ -3,28 +3,28 @@ export const placeholder = `// Linked List Program from COMP1511 Lecture 7
 #include <stdlib.h>
 
 struct node {
-  struct node *next;
   int data;
+  struct node *next;
 };
 
 int main(void) {
   // 3 separate allocations on the heap
-  struct node *head = malloc(sizeof(struct node));
-  struct node *linked_list_2 = malloc(sizeof(struct node));
-  struct node *linked_list_3 = malloc(sizeof(struct node));
+  struct node *node1 = malloc(sizeof(struct node));
+  struct node *node2 = malloc(sizeof(struct node));
+  struct node *node3 = malloc(sizeof(struct node));
 
   // initialise the nodes
-  head->data = 1;
-  linked_list_2->data = 2;
-  linked_list_3->data = 3;
+  node1->data = 1;
+  node2->data = 2;
+  node3->data = 3;
 
-  // Set the head next pointer
-  // to point to the location of linked_list_2
-  head->next = linked_list_2;
-  linked_list_2->next = linked_list_3;
-  linked_list_3->next = NULL;
+  // Set the node1 next pointer
+  // to point to the location of node2
+  node1->next = node2;
+  node2->next = node3;
+  node3->next = NULL;
 
-  struct node *curr = head;
+  struct node *curr = node1;
 
   while (curr != NULL) {
     printf("%d\\n", curr->data);

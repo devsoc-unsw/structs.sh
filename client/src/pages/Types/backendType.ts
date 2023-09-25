@@ -136,6 +136,17 @@ export const isNativeTypeName = (typeName: string): typeName is NativeTypeName =
   );
 };
 
+export const INITIAL_BACKEND_STATE: BackendState = {
+  frame_info: {
+    file: '',
+    line: '',
+    line_num: 0,
+    function: '',
+  },
+  stack_data: {},
+  heap_data: {},
+};
+
 /*
 === Examples ===
 Stack will look like Heap, except the keys are variable names instead of addresses.

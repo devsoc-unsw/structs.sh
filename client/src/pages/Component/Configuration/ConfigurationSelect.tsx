@@ -5,20 +5,18 @@ import { SelectItem } from 'components/Select/Select';
 import { NativeTypeName, Name } from '../../Types/backendType';
 
 const ConfigurationSelect = ({
-  type,
   fields,
   handleUpdateAnnotation,
 }: {
-  type: string;
   fields: { typeName: NativeTypeName; name: Name }[];
-  handleUpdateAnnotation: (type: string, name: string, typeName: string) => void;
+  handleUpdateAnnotation: (name: string, typeName: string) => void;
 }) => {
-  const [value, setValue] = useState(fields[0].name);
+  const [value, setValue] = useState(fields[0]?.name);
 
   const handleValueChange = (newValue: string) => {
     const foundField = fields.find((field) => field.name === newValue);
     setValue(newValue);
-    handleUpdateAnnotation(type, foundField.name, foundField.typeName);
+    handleUpdateAnnotation(foundField.name, foundField.typeName);
   };
 
   return (

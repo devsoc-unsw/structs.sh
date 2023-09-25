@@ -312,19 +312,21 @@ export class LinkedListParser implements Parser {
       });
 
       // === Get linked list node pointers from the backend stack data
-      // Object.entries(localsAnnotations).forEach(([name, localAnnotation]) => {
-      //   const stackVariable: MemoryValue | undefined = backendStructure.stack_data[name];
-      //   if (!stackVariable) return;
+      const { stackAnnotation } = annotation;
+      Object.entries(backendStructure.stack_data).forEach(([name, memoryValue]) => {
+        if (stackAnnotation === undefined) return;
+        if (!stackAnnotation[name]) return;
+        if (stackAnnotation[name] === undefined || stackAnnotation[name] === null) return;
 
-      //   const annotationEntity: PointerEntity = {
-      //     uid: `${name}`,
-      //     type: EntityType.POINTER,
-      //     attachedUid: cacheEntity[stackVariable.addr].uid,
-      //     varName: name,
-      //   };
-      //   pointers.push(annotationEntity);
-      //   cacheEntity[annotationEntity.uid] = annotationEntity;
-      // });
+        const annotationEntity: PointerEntity = {
+          uid: `${name}`,
+          type: EntityType.POINTER,
+          attachedUid: cacheEntity[memoryValue.value as string].uid,
+          varName: name,
+        };
+        pointers.push(annotationEntity);
+        cacheEntity[annotationEntity.uid] = annotationEntity;
+      });
 
       return {
         nodes,

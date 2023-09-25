@@ -75,7 +75,7 @@ export type LocalAnnotationConcrete = ArrayElementPointer | LinkedListNodePointe
  * Map from variable names to user annotations of that
  */
 export interface UserAnnotation {
-  stackAnnotation: { [name: Name]: LocalAnnotationConcrete };
+  stackAnnotation: { [name: Name]: LocalAnnotationConcrete | null };
   typeAnnotation: { [name: Name]: DataStructureAnnotationConcrete };
 }
 
@@ -96,20 +96,55 @@ export const isTreeNode = (
   return 'typeName' in memoryValue && memoryValue.typeName === binaryTreeAnnotation.typeName;
 };
 
-/*
+export enum FieldType {
+  RECURSIVE,
+  BASE,
+}
 
-export type PointerAnnotation = {
-  varName: string;
+export interface PossibleFieldBase {
+  type: FieldType;
+}
+
+export interface PossibleRecursiveField extends PossibleFieldBase {
+  name: string;
+  typeName: PointerType['typeName'];
+  type: FieldType.RECURSIVE;
+}
+
+export interface PossiblePropertyField extends PossibleFieldBase {
+  name: string;
+  typeName: NativeTypeName;
+  type: FieldType.BASE;
+}
+
+export type PossibleField = PossibleRecursiveField | PossiblePropertyField;
+
+export type PossibleStructAnnotation = {
+  typeName: string;
+  possibleFields: {
+    name: string;
+    possibleChoices: PossibleField[];
+  };
 };
 
-export type AnnotationVariableConcrete = PointerAnnotation;
-
-export interface EditorAnnotation {
-  [name: string]: AnnotationVariableConcrete;
+export enum BackendTypeRole {
+  LinkedList = 'Linked List Node',
+  Empty = 'Not Visualized',
 }
 
-export interface EditorAnnotation {
-  [name: string]: any;
+export enum StackVariableRole {
+  LinkedListPointer = 'Linked List Node',
+  Empty = 'Not Visualized',
 }
 
-*/
+export type PossibleLinkedListAnnotation = {
+  typeName: StructType['typeName'];
+  possibleValues: {
+    name: Name;
+    typeName: NativeTypeName;
+  }[];
+  possibleNexts: {
+    name: Name;
+    typeName: PointerType['typeName'];
+  }[];
+};

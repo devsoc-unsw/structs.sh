@@ -4,7 +4,7 @@ import { parserFactory } from '../Component/Visualizer/parser/parserFactory';
 import { VisualizerComponent } from '../Component/Visualizer/visulizer/visualizer';
 import { visualizerFactory } from '../Component/Visualizer/visulizer/visualizerFactory';
 import { UserAnnotation } from '../Types/annotationType';
-import { BackendTypeDeclaration } from '../Types/backendType';
+import { BackendState, BackendTypeDeclaration, INITIAL_BACKEND_STATE } from '../Types/backendType';
 import { VisualizerType } from '../Types/visualizerType';
 import * as InspectorDummy from './stackInpsectorDummyData.json';
 
@@ -25,6 +25,8 @@ export type VisualizerParam = {
 export type GlobalStateStore = {
   uiState: UiState;
   visualizer: VisualizerParam;
+  // Refactor to include backend data history
+  currFrame: BackendState;
 };
 
 export const DEFAULT_GLOBAL_STORE: GlobalStateStore = {
@@ -43,6 +45,7 @@ export const DEFAULT_GLOBAL_STORE: GlobalStateStore = {
     typeDeclarations: [],
     stackInspector: InspectorDummy,
   },
+  currFrame: INITIAL_BACKEND_STATE,
 };
 
 export const NODE_SIZE = 30;
@@ -54,6 +57,7 @@ type GlobalStoreActions = {
   updateDimensions: (width: number, height: number) => void;
   updateUserAnnotation: (annotation: UserAnnotation) => void;
   updateTypeDeclaration: (type: BackendTypeDeclaration) => void;
+  updateNextFrame: (backendState: BackendState) => void;
   clearTypeDeclarations: () => void;
   clearUserAnnotation: () => void;
 };
@@ -89,6 +93,9 @@ export const useGlobalStore: UseBoundStore<StoreApi<GlobalStateStore & GlobalSto
           typeDeclarations: [...state.visualizer.typeDeclarations, type],
         },
       }));
+    },
+    updateNextFrame: (backendState: BackendState) => {
+      set({ currFrame: backendState });
     },
     clearTypeDeclarations: () => {
       set((state) => ({

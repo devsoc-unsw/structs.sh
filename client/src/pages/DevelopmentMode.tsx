@@ -38,9 +38,8 @@ const DevelopmentMode = () => {
   const [tab, setTab] = useState('0');
 
   const globalStore = useGlobalStore();
-  const { updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation } = globalStore;
-  const typeDeclarations = [...globalStore.visualizer.typeDeclarations];
-
+  const { updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation, updateNextFrame } =
+    globalStore;
   const inputElement = useRef(null);
 
   const scrollToBottom = () => {
@@ -60,6 +59,7 @@ const DevelopmentMode = () => {
 
   const updateState = (data: any) => {
     setBackendState(data);
+    updateNextFrame(data);
   };
 
   const handleSetCode = (newCode: string) => {
@@ -195,7 +195,9 @@ const DevelopmentMode = () => {
         <div className={classNames(styles.pane, styles.inspector)}>
           <Tabs value={tab} onValueChange={handleChangeTab}>
             <Tab label="Configure">
-              <Configuration typeDeclarations={typeDeclarations} />
+              <div className={classNames(styles.pane)} style={{ overflow: 'scroll' }}>
+                <Configuration />
+              </div>
             </Tab>
             <Tab label="Inspect">
               <StackInspector />

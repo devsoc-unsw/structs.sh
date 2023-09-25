@@ -9,6 +9,30 @@ import Pointer from '../drawableObjects/drawablePointer';
 import { isAttachableEntity } from '../../../Types/coreEntity/concreteEntity';
 import { EntityType } from '../../../Types/entity/baseEntity';
 
+const ScaleBar = ({ viewBoxWidth }: { viewBoxWidth: number }) => {
+  const scaleWidth = 100; // fixed width in user space (e.g., a bar that always tries to represent 100 units in the user's space)
+
+  const displayWidth = (scaleWidth / viewBoxWidth) * 1000; // This calculates the width the bar should have in the SVG.
+
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        bottom: '10px',
+        right: '10px',
+        background: 'white',
+        padding: '5px',
+        borderRadius: '5px',
+      }}
+    >
+      <svg width={displayWidth} height="20">
+        <rect x="0" y="5" width={displayWidth} height="10" fill="gray" />
+      </svg>
+      <div style={{ fontSize: '10px', textAlign: 'center' }}>{`${Math.round(displayWidth)}`}</div>
+    </div>
+  );
+};
+
 // TODO: Expand different component for different data structure, implementing common interface
 const LinkedList: VisualizerComponent = ({ graphState, dimension }: VisualizerState) => {
   const nodeRefs = useRef<{ [uid: string]: SVGSVGElement | null }>({});
@@ -112,6 +136,8 @@ const LinkedList: VisualizerComponent = ({ graphState, dimension }: VisualizerSt
     controls.start('visible');
   }, [graphState]);
 
+  const [viewBoxWidth, setViewBoxWidth] = useState(1000);
+
   /**
    * SVG Section
    */
@@ -137,33 +163,42 @@ const LinkedList: VisualizerComponent = ({ graphState, dimension }: VisualizerSt
       viewBox.height /= zoomFactor;
       viewBox.x += dx;
       viewBox.y += dy;
+
+      setViewBoxWidth((prevWidth) => prevWidth / zoomFactor);
     } else {
       // zoom out
       viewBox.width *= zoomFactor;
       viewBox.height *= zoomFactor;
       viewBox.x -= dx;
       viewBox.y -= dy;
+
+      setViewBoxWidth((prevWidth) => prevWidth * zoomFactor);
     }
   };
 
   return (
-    <motion.svg
-      ref={svgRef}
-      width={dimension.width}
-      height={dimension.height}
-      viewBox="0 0 1000 1000"
-      initial="hidden"
-      animate={controls}
-      drag
-      onDrag={(event, info) => handleDrag(event, info)}
-      dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
-      dragMomentum={false}
-      dragElastic={0}
-      onWheel={(event) => handleWheel(event)}
-      overflow="hidden"
-    >
-      <AnimatePresence>{Object.values(drawable)} </AnimatePresence>
-    </motion.svg>
+    <div>
+      <motion.svg
+        ref={svgRef}
+        width={dimension.width}
+        height={dimension.height}
+        viewBox="0 0 1000 1000"
+        initial="hidden"
+        animate={controls}
+        drag
+        onDrag={(event, info) => handleDrag(event, info)}
+        dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+        dragMomentum={false}
+        dragElastic={0}
+        onWheel={(event) => handleWheel(event)}
+        overflow="hidden"
+      >
+        <AnimatePresence>{Object.values(drawable)} </AnimatePresence>
+      </motion.svg>
+      <div>
+        <ScaleBar viewBoxWidth={viewBoxWidth} />
+      </div>
+    </div>
   );
 };
 
