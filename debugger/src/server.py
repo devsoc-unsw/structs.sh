@@ -6,7 +6,7 @@ Must run in /debugger/src directory (because the gdb commands will source a pyth
 """
 
 import os
-import uuid
+import shutil
 from pprint import pprint
 import socketio
 import eventlet
@@ -135,8 +135,9 @@ def sendDummyBinaryTreeData(socket_id: str, line_number: int) -> None:
 def mainDebug(socket_id: str, code: str) -> None:
     # TODO: handle deletion of code files
     # TODO: move code to a different directory (not in samples since it is binded to the docker container)
-    new_code_dir = os.path.join(abs_file_path, "samples", "user", str(uuid.uuid4()))
-    os.mkdir(new_code_dir)
+    new_code_dir = os.path.join(abs_file_path, "..", "code", socket_id)
+    if not os.path.exists(new_code_dir):
+        os.mkdir(new_code_dir)
     with open(os.path.join(new_code_dir, "main.c"), "w", encoding="utf-8") as f:
         f.write(code)
 
@@ -146,6 +147,7 @@ def mainDebug(socket_id: str, code: str) -> None:
 
     if compilation_process.stderr:
         io.emit("compileError", compilation_process.stderr.decode())
+        shutil.rmtree(new_code_dir)
         return
 
     gdb_script = get_gdb_script(
