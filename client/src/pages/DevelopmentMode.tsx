@@ -195,7 +195,9 @@ const DevelopmentMode = () => {
         <div className={classNames(styles.pane, styles.inspector)}>
           <Tabs value={tab} onValueChange={handleChangeTab}>
             <Tab label="Configure">
-              <Configuration typeDeclarations={typeDeclarations} />
+              <div className={styles.pane}>
+                <Configuration />
+              </div>
             </Tab>
             <Tab label="Inspect">
               <StackInspector />

@@ -3,6 +3,8 @@ import * as RadioGroup from '@radix-ui/react-radio-group';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import styles from 'styles/Configuration.module.css';
 import { github } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { useGlobalStore } from '../../Store/globalStateStore';
 import ConfigurationSelect from './ConfigurationSelect';
 import { LinkedListAnnotation, DataStructureType } from '../../Types/annotationType';
@@ -16,6 +18,7 @@ import {
   isNativeTypeName,
   isPointerType,
 } from '../../Types/backendType';
+import { MotionCollapse } from './MotionCollapse';
 
 export type PossibleLinkedListAnnotation = {
   typeName: StructType['typeName'];
@@ -32,7 +35,7 @@ export type PossibleLinkedListAnnotation = {
 // TODO: create type for typeDeclarations received from backend
 const createPossibleLinkedListTypeDecls = (typeDeclarations: BackendTypeDeclaration[]) => {
   const possibleTypeDecls: PossibleLinkedListAnnotation[] = [];
-  // for (const typeDecl of typeDeclarations)
+
   typeDeclarations.forEach((typeDecl) => {
     if (!('fields' in typeDecl)) {
       return;
@@ -73,8 +76,9 @@ const createPossibleLinkedListTypeDecls = (typeDeclarations: BackendTypeDeclarat
   return possibleTypeDecls;
 };
 
-const Configuration = ({ typeDeclarations }: { typeDeclarations: BackendTypeDeclaration[] }) => {
-  const [currNodeVariable, setCurrNodeVariable] = useState('');
+const Configuration = () => {
+  const { typeDeclarations } = useGlobalStore().visualizer;
+  /* const [currNodeVariable, setCurrNodeVariable] = useState('');
   const [nodeAnnotations, setNodeAnnotations] = useState<Record<string, LinkedListAnnotation>>({});
   const [possibleTypeDeclsForLinkedList, setPossibleTypeDeclsForLinkedList] = useState<
     PossibleLinkedListAnnotation[]
@@ -183,9 +187,8 @@ const Configuration = ({ typeDeclarations }: { typeDeclarations: BackendTypeDecl
         },
       });
     }
-  };
-
-  return (
+  }; */
+  /* return (
     <div>
       <h4>Select Linked List Node</h4>
       <RadioGroup.Root
@@ -226,6 +229,87 @@ const Configuration = ({ typeDeclarations }: { typeDeclarations: BackendTypeDecl
           </div>
         ))}
       </RadioGroup.Root>
+    </div>
+  ); */
+
+  const [isTypeAnnotationOpen, setIsAnnotationOpen] = useState(false);
+  const mockTypeDeclarations = ['Type1', 'Type2', 'Type3'];
+
+  const [isVariableAnnotationOpen, setIsVariableAnnotationOpen] = useState(false);
+  const mockVariableDeclarations = ['Variable1', 'Variable2', 'Variable3'];
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <div>
+        <button
+          onClick={() => setIsAnnotationOpen(!isTypeAnnotationOpen)}
+          type="button"
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              setIsAnnotationOpen(!isTypeAnnotationOpen);
+            }
+          }}
+        >
+          <ChevronDownIcon
+            fontWeight="bold"
+            style={{
+              transform: `rotate(${isTypeAnnotationOpen ? 180 : 0}deg)`,
+              transition: 'transform 0.3s',
+              marginRight: '10px',
+              scale: '1.35',
+            }}
+          />
+          Types
+        </button>
+
+        <MotionCollapse isOpen={isTypeAnnotationOpen}>
+          {isTypeAnnotationOpen ? (
+            <>
+              {mockTypeDeclarations.map((type, index) => (
+                <div key={index}>{type}</div> // Replace with your component or rendering logic
+              ))}
+            </>
+          ) : null}
+        </MotionCollapse>
+      </div>
+
+      {/* For Variable Annotations */}
+      <div>
+        <button
+          onClick={() => setIsVariableAnnotationOpen(!isVariableAnnotationOpen)}
+          type="button"
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              setIsVariableAnnotationOpen(!isVariableAnnotationOpen);
+            }
+          }}
+        >
+          <ChevronDownIcon
+            fontWeight="bold"
+            style={{
+              transform: `rotate(${isVariableAnnotationOpen ? 180 : 0}deg)`,
+              transition: 'transform 0.3s',
+              marginRight: '10px',
+              scale: '1.35',
+            }}
+          />
+          Locals
+        </button>
+
+        <MotionCollapse isOpen={isVariableAnnotationOpen}>
+          {isVariableAnnotationOpen ? (
+            <>
+              {mockVariableDeclarations.map((variable, index) => (
+                <div key={index}>{variable}</div> // Replace with your component or rendering logic
+              ))}
+            </>
+          ) : null}
+        </MotionCollapse>
+      </div>
+
+      <button type="button" onClick={() => console.log(typeDeclarations)}>
+        debug
+      </button>
     </div>
   );
 };

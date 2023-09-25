@@ -95,21 +95,3 @@ export const isTreeNode = (
 ) => {
   return 'typeName' in memoryValue && memoryValue.typeName === binaryTreeAnnotation.typeName;
 };
-
-/*
-
-export type PointerAnnotation = {
-  varName: string;
-};
-
-export type AnnotationVariableConcrete = PointerAnnotation;
-
-export interface EditorAnnotation {
-  [name: string]: AnnotationVariableConcrete;
-}
-
-export interface EditorAnnotation {
-  [name: string]: any;
-}
-
-*/
