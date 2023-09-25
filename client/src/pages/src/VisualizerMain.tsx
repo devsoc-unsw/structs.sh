@@ -1,48 +1,28 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { BackendState } from './visualizer-component/types/backendType';
-import { Timeline } from './visualizer-component/util/timeline';
 import { useFrontendStateStore } from './visualizer-component/visualizerStateStore';
 import { useGlobalStore } from './visualizer-component/globalStateStore';
 
 export interface RoutesProps {
   backendState: BackendState;
-  getNextState: () => void;
-  getDummyNextState: () => void;
 }
 
 // Future support different parser
-const VisualizerMain: React.FC<RoutesProps> = ({
-  backendState,
-  getDummyNextState,
-  getNextState,
-}: RoutesProps) => {
+const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) => {
   const { userAnnotation, parser, visComponent: VisComponent } = useGlobalStore().visualizer;
-
   const currState = useFrontendStateStore((store) => {
     return store.currState();
   });
 
   useEffect(() => {
-    // === Dummy linked list node annotation
-    // const userAnnotation: LinkedListAnnotation = {
-    //   typeName: 'struct node', // Name for the user's linked list struct
-    //   value: {
-    //     name: 'data', // Name for the user's linked list "value" field
-    //     typeName: 'int',
-    //   },
-    //   next: {
-    //     name: 'next', // Name for the user's linked list "next" field
-    //     typeName: 'struct node*',
-    //   },
-    // };
     if (backendState && userAnnotation) {
       const newParsedState = parser.parseInitialState(backendState, userAnnotation);
       useFrontendStateStore.getState().updateNextState(newParsedState);
     } else {
       let issue = 'something';
-      if (backendState === undefined) {
+      if (!backendState) {
         issue = 'backendState';
-      } else if (userAnnotation === undefined) {
+      } else if (!userAnnotation) {
         issue = 'localsAnnotations';
       }
 
@@ -51,55 +31,10 @@ const VisualizerMain: React.FC<RoutesProps> = ({
   }, [backendState]);
 
   const visualizerRef = useRef(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-
-  useEffect(() => {
-    const observer = new ResizeObserver((entries) => {
-      if (!visualizerRef) return;
-
-      entries.forEach((element) => {
-        if (element.target instanceof HTMLElement && element.target.className === 'visualizer') {
-          const { width, height } = element.contentRect;
-
-          if (dimensions.height === 0) {
-            setDimensions({ width, height });
-            dimensions.height = height;
-          }
-        }
-      });
-    });
-
-    if (visualizerRef.current) {
-      observer.observe(visualizerRef.current);
-    }
-    return () => {
-      if (visualizerRef.current) {
-        observer.unobserve(visualizerRef.current);
-      }
-    };
-  }, [visualizerRef]);
-
+  const { uiState } = useGlobalStore();
   return (
-    <div className="container">
-      <div className="linked-list">
-        <div className="visualizer" ref={visualizerRef} style={{ overflow: 'hidden' }}>
-          <VisComponent graphState={currState} dimensions={dimensions} />
-        </div>
-        <div className="timeline">
-          <Timeline
-            nextStateDummy={getDummyNextState}
-            nextState={getNextState}
-            forwardState={() => {
-              useFrontendStateStore.getState().forwardState();
-              console.log('Forward triggered', useFrontendStateStore.getState().currStateIdx);
-            }}
-            backwardState={() => {
-              useFrontendStateStore.getState().backwardState();
-              console.log('Forward triggered', useFrontendStateStore.getState().currStateIdx);
-            }}
-          />
-        </div>
-      </div>
+    <div className="visualizer" ref={visualizerRef} style={{ overflow: 'hidden' }}>
+      <VisComponent graphState={currState} dimension={uiState} />
     </div>
   );
 };

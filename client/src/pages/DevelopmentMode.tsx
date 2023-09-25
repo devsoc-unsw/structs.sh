@@ -9,6 +9,9 @@ import CodeEditor from 'components/DevelopmentMode/CodeEditor';
 import StackInspector from 'components/DevelopmentMode/StackInspector';
 import * as dummyData from 'components/DevelopmentMode/dummyData.json';
 import Configuration from 'components/DevelopmentMode/Configuration';
+import DevelopmentModeNavbar from 'components/Navbars/DevelopmentModeNavbar';
+import Controls from 'components/DevelopmentMode/Controls';
+import { placeholder } from 'constants/index';
 import VisualizerMain from './src/VisualizerMain';
 import { BackendState } from './src/visualizer-component/types/backendType';
 import { useGlobalStore } from './src/visualizer-component/globalStateStore';
@@ -25,23 +28,36 @@ const DevelopmentMode = () => {
         socket.emit('getBreakpoints', line, listName);
     }
   }, []);
-  const [backendState, setBackendState] = useState<BackendState>({
-    frame_info: {
-      file: 'test.c',
-      line_num: 0,
-      line: 'printf("Hello World!");',
-      function: 'main',
-    },
-    stack_data: {},
-    heap_data: {},
-  });
-
-  const [count, setCountState] = useState(100);
-
+  const [backendState, setBackendState] = useState<BackendState>();
+  const [activeSession, setActiveSession] = useState(false);
   const typeDeclarations = [...useGlobalStore().visualizer.typeDeclarations];
-  const { updateTypeDeclaration } = useGlobalStore();
+  const { updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation } = useGlobalStore();
+
   const updateState = (data: any) => {
     setBackendState(data);
+  };
+
+  const [code, setCode] = useState(localStorage.getItem('code') || placeholder);
+
+  const handleSetCode = (newCode: string) => {
+    localStorage.setItem('code', newCode);
+    setCode(newCode);
+  };
+
+  const resetDebugSession = () => {
+    setBackendState(undefined);
+    setActiveSession(false);
+    clearTypeDeclarations();
+    clearUserAnnotation();
+  };
+
+  const sendCode = () => {
+    resetDebugSession();
+    socket.emit('mainDebug', code);
+  };
+
+  const getNextState = () => {
+    socket.emit('executeNext');
   };
 
   const onDisconnect = useCallback(() => {
@@ -52,7 +68,6 @@ const DevelopmentMode = () => {
     console.log(`Received dummy data:\n`, data);
     if (data !== 'LINE NOT FOUND') {
       updateState(data);
-      // setCountState(count + 1);
     } else {
       console.log('!!! No more dummy data');
     }
@@ -60,6 +75,7 @@ const DevelopmentMode = () => {
 
   const onMainDebug = useCallback((data: any) => {
     console.log(`Received event onMainDebug:\n`, data);
+    setActiveSession(true);
   }, []);
 
   const onSendFunctionDeclaration = useCallback((data: any) => {
@@ -93,7 +109,7 @@ const DevelopmentMode = () => {
     socket.on('mainDebug', onMainDebug);
     socket.on('sendFunctionDeclaration', onSendFunctionDeclaration);
     socket.on('sendTypeDeclaration', onSendTypeDeclaration);
-    socket.on('executeNext', () => {
+    socket.once('executeNext', () => {
       console.log('Executing next line...');
     });
     socket.on('sendBackendStateToUser', onSendBackendStateToUser);
@@ -115,52 +131,42 @@ const DevelopmentMode = () => {
   return !DEBUG_MODE ? (
     <div className={classNames(globalStyles.root, styles.light)}>
       <div className={styles.layout}>
-        <div className={classNames(styles.pane, styles.nav)}>Nav bar</div>
+        <div className={classNames(styles.pane, styles.nav)}>
+          <DevelopmentModeNavbar />
+        </div>
         <div className={classNames(styles.pane, styles.files)}>File tree</div>
         <div className={classNames(styles.pane, styles.editor)}>
-          <CodeEditor currLine={backendState.frame_info.line_num} />
+          <CodeEditor
+            code={code}
+            handleSetCode={handleSetCode}
+            currLine={backendState?.frame_info?.line_num}
+          />
         </div>
         <div className={classNames(styles.pane, styles.inspector)}>
           <Tabs>
-            <Tab label="Console">
-              <div className={styles.pane}>Console</div>
-            </Tab>
-            <Tab label="Inspect">
-              <StackInspector debuggerData={dummyData} />
-            </Tab>
             <Tab label="Configure">
               <div className={styles.pane}>
                 <Configuration typeDeclarations={typeDeclarations} />
               </div>
             </Tab>
+            <Tab label="Inspect">
+              <StackInspector debuggerData={dummyData} />
+            </Tab>
+            <Tab label="Console">
+              <div className={styles.pane}>Console</div>
+            </Tab>
           </Tabs>
         </div>
         <div className={classNames(styles.pane, styles.visualiser)}>
-          <VisualizerMain
-            backendState={backendState}
-            getDummyNextState={() => {
-              socket.emit('sendDummyLinkedListData', count);
-              setCountState(count + 1);
-            }}
-            getNextState={() => {
-              socket.emit('executeNext');
-            }}
-          />
+          <VisualizerMain backendState={backendState} />
         </div>
-        <div className={classNames(styles.pane, styles.timeline)}>Timeline</div>
+        <div className={classNames(styles.pane, styles.timeline)}>
+          <Controls getNextState={getNextState} sendCode={sendCode} activeSession={activeSession} />
+        </div>
       </div>
     </div>
   ) : (
-    <VisualizerMain
-      backendState={backendState}
-      getDummyNextState={() => {
-        socket.emit('sendDummyLinkedListData', count);
-        setCountState(count + 1);
-      }}
-      getNextState={() => {
-        socket.emit('executeNext');
-      }}
-    />
+    <VisualizerMain backendState={backendState} />
   );
 };
 

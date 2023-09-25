@@ -11,6 +11,8 @@ type GlobalStoreActions = {
   updateDimensions: (width: number, height: number) => void;
   updateUserAnnotation: (annotation: UserAnnotation) => void;
   updateTypeDeclaration: (type: BackendTypeDeclaration) => void;
+  clearTypeDeclarations: () => void;
+  clearUserAnnotation: () => void;
 };
 
 export const useGlobalStore: UseBoundStore<StoreApi<GlobalStateStore & GlobalStoreActions>> =
@@ -42,6 +44,25 @@ export const useGlobalStore: UseBoundStore<StoreApi<GlobalStateStore & GlobalSto
         visualizer: {
           ...state.visualizer,
           typeDeclarations: [...state.visualizer.typeDeclarations, type],
+        },
+      }));
+    },
+    clearTypeDeclarations: () => {
+      set((state) => ({
+        visualizer: {
+          ...state.visualizer,
+          typeDeclarations: [],
+        },
+      }));
+    },
+    clearUserAnnotation: () => {
+      set((state) => ({
+        visualizer: {
+          ...state.visualizer,
+          userAnnotation: {
+            stackAnnotation: {},
+            typeAnnotation: {},
+          },
         },
       }));
     },
