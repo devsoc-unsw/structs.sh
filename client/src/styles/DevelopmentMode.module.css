@@ -68,4 +68,6 @@ body {
   grid-column: 2 / -1;
   grid-row: 4;
   border-top: var(--border);
+  display: flex;
+  align-items: center;
 }

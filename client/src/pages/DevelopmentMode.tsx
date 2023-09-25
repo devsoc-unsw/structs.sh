@@ -5,15 +5,16 @@ import globalStyles from 'styles/global.module.css';
 import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
 import { Socket } from 'socket.io-client';
-import CodeEditor from 'components/DevelopmentMode/CodeEditor';
-import StackInspector from 'components/DevelopmentMode/StackInspector';
-import * as dummyData from 'components/DevelopmentMode/dummyData.json';
-import Configuration from 'components/DevelopmentMode/Configuration';
 import Console from 'components/DevelopmentMode/Console';
-import VisualizerMain from './src/VisualizerMain';
-import { BackendState } from './src/visualizer-component/types/backendType';
-import { LinkedListAnnotation } from './src/visualizer-component/types/annotationType';
-import { useUiStateStore } from './src/visualizer-component/uiStateStore';
+import DevelopmentModeNavbar from '../components/Navbars/DevelopmentModeNavbar';
+import { placeholder } from '../constants';
+import Configuration from './Component/Configuration/Configuration';
+import Controls from './Component/Control/Controls';
+import CodeEditor from './Component/CodeEditor/CodeEditor';
+import StackInspector from './Component/StackInspector/StackInspector';
+import { useGlobalStore } from './Store/globalStateStore';
+import VisualizerMain from './Component/VisualizerMain';
+import { BackendState } from './Types/backendType';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -27,25 +28,44 @@ const DevelopmentMode = () => {
         socket.emit('getBreakpoints', line, listName);
     }
   }, []);
-  const [backendState, setBackendState] = useState<BackendState>({
-    frame_info: {
-      file: 'test.c',
-      line_num: 0,
-      line: 'printf("Hello World!");',
-      function: 'main',
-    },
-    stack_data: {},
-    heap_data: {},
-  });
+  const [backendState, setBackendState] = useState<BackendState>();
+  const [activeSession, setActiveSession] = useState(false);
+  const [code, setCode] = useState(localStorage.getItem('code') || placeholder);
+  // Tab values correspond to their index
+  // ('Configure' has value '0', 'Inspect' has value '1', 'Console' has value '2')
+  const [tab, setTab] = useState('0');
 
-  const [count, setCountState] = useState(100);
+  const globalStore = useGlobalStore();
+  const { updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation } = globalStore;
+  const typeDeclarations = [...globalStore.visualizer.typeDeclarations];
 
-  const [typeDeclarations, setTypeDeclarations] = useState([]);
-
-  const { updateUserAnnotation, userAnnotation } = useUiStateStore();
+  const handleChangeTab = (newTabValue: string) => {
+    setTab(newTabValue);
+  };
 
   const updateState = (data: any) => {
     setBackendState(data);
+  };
+
+  const handleSetCode = (newCode: string) => {
+    localStorage.setItem('code', newCode);
+    setCode(newCode);
+  };
+
+  const resetDebugSession = () => {
+    setBackendState(undefined);
+    setActiveSession(false);
+    clearTypeDeclarations();
+    clearUserAnnotation();
+  };
+
+  const sendCode = () => {
+    resetDebugSession();
+    socket.emit('mainDebug', code);
+  };
+
+  const getNextState = () => {
+    socket.emit('executeNext');
   };
 
   const onDisconnect = useCallback(() => {
@@ -56,7 +76,6 @@ const DevelopmentMode = () => {
     console.log(`Received dummy data:\n`, data);
     if (data !== 'LINE NOT FOUND') {
       updateState(data);
-      // setCountState(count + 1);
     } else {
       console.log('!!! No more dummy data');
     }
@@ -64,6 +83,7 @@ const DevelopmentMode = () => {
 
   const onMainDebug = useCallback((data: any) => {
     console.log(`Received event onMainDebug:\n`, data);
+    setActiveSession(true);
   }, []);
 
   const onSendFunctionDeclaration = useCallback((data: any) => {
@@ -72,12 +92,11 @@ const DevelopmentMode = () => {
 
   const onSendTypeDeclaration = useCallback((data: any) => {
     console.log(`Received type declaration:\n`, data);
-    setTypeDeclarations((prev) => [...prev, data]);
+    updateTypeDeclaration(data);
   }, []);
 
   const onSendBackendStateToUser = useCallback((data: any) => {
     console.log(`Received backend state:\n`, data);
-    // Can't use real debugger backend state yet, not in the right format
     updateState(data);
   }, []);
 
@@ -85,9 +104,19 @@ const DevelopmentMode = () => {
     console.log(`Received program stdout:\n`, data);
   }, []);
 
+  const onExecuteNext = useCallback(() => {
+    console.log('Executing next line...');
+  }, []);
+
   const onProgramWaitingForInput = useCallback((data: any) => {
     console.log(`Event received from debugger: program is waiting for input\n`, data);
   }, []);
+
+  const onCompileError = (data: any) => {
+    console.log('Received compilation error:\n', data);
+    // On a compilation error, switch the tab to 'Console' so the user can see the error
+    setTab('2');
+  };
 
   useEffect(() => {
     const onConnect = () => {
@@ -102,12 +131,11 @@ const DevelopmentMode = () => {
     socket.on('mainDebug', onMainDebug);
     socket.on('sendFunctionDeclaration', onSendFunctionDeclaration);
     socket.on('sendTypeDeclaration', onSendTypeDeclaration);
-    socket.on('executeNext', () => {
-      console.log('Executing next line...');
-    });
+    socket.on('executeNext', onExecuteNext);
     socket.on('sendBackendStateToUser', onSendBackendStateToUser);
     socket.on('sendStdoutToUser', onSendStdoutToUser);
     socket.on('programWaitingForInput', onProgramWaitingForInput);
+    socket.on('compileError', onCompileError);
 
     return () => {
       socket.off('connect', onConnect);
@@ -115,72 +143,54 @@ const DevelopmentMode = () => {
       socket.off('sendDummyLinkedListData', onSendDummyData);
       socket.off('sendDummyBinaryTreeData', onSendDummyData);
       socket.off('mainDebug', onMainDebug);
+      socket.off('executeNext', onExecuteNext);
       socket.off('sendFunctionDeclaration', onSendFunctionDeclaration);
       socket.off('sendTypeDeclaration', onSendTypeDeclaration);
       socket.off('sendBackendStateToUser', onSendBackendStateToUser);
       socket.off('programWaitingForInput', onProgramWaitingForInput);
+      socket.off('sendStdoutToUser', onSendStdoutToUser);
+      socket.off('compileError', onCompileError);
     };
-  }, [updateState]);
-
-  const getLinkedListAnnotation = (annotation: LinkedListAnnotation) => {
-    console.log('DevMode.tsx received linked list annotation from Configuration.tsx: ', annotation);
-    updateUserAnnotation({
-      stackAnnotation: userAnnotation.stackAnnotation,
-      typeAnnotation: { ...userAnnotation.typeAnnotation, [annotation.typeName]: annotation },
-    });
-  };
+  }, []);
 
   const DEBUG_MODE = false;
   return !DEBUG_MODE ? (
     <div className={classNames(globalStyles.root, styles.light)}>
       <div className={styles.layout}>
-        <div className={classNames(styles.pane, styles.nav)}>Nav bar</div>
+        <div className={classNames(styles.pane, styles.nav)}>
+          <DevelopmentModeNavbar />
+        </div>
         <div className={classNames(styles.pane, styles.files)}>File tree</div>
         <div className={classNames(styles.pane, styles.editor)}>
-          <CodeEditor currLine={backendState.frame_info.line_num} />
+          <CodeEditor
+            code={code}
+            handleSetCode={handleSetCode}
+            currLine={backendState?.frame_info?.line_num}
+          />
         </div>
         <div className={classNames(styles.pane, styles.inspector)}>
-          <Tabs>
-            <Tab label="Console">
-              <Console />
+          <Tabs value={tab} onValueChange={handleChangeTab}>
+            <Tab label="Configure">
+              <Configuration typeDeclarations={typeDeclarations} />
             </Tab>
             <Tab label="Inspect">
-              <StackInspector debuggerData={dummyData} />
+              <StackInspector />
             </Tab>
-            <Tab label="Configure">
-              <Configuration
-                typeDeclarations={typeDeclarations}
-                sendLinkedListAnnotation={getLinkedListAnnotation}
-              />
+            <Tab label="Console">
+              <Console />
             </Tab>
           </Tabs>
         </div>
         <div className={classNames(styles.pane, styles.visualiser)}>
-          <VisualizerMain
-            backendState={backendState}
-            getDummyNextState={() => {
-              socket.emit('sendDummyLinkedListData', count);
-              setCountState(count + 1);
-            }}
-            getNextState={() => {
-              socket.emit('executeNext');
-            }}
-          />
+          <VisualizerMain backendState={backendState} />
         </div>
-        <div className={classNames(styles.pane, styles.timeline)}>Timeline</div>
+        <div className={classNames(styles.pane, styles.timeline)}>
+          <Controls getNextState={getNextState} sendCode={sendCode} activeSession={activeSession} />
+        </div>
       </div>
     </div>
   ) : (
-    <VisualizerMain
-      backendState={backendState}
-      getDummyNextState={() => {
-        socket.emit('sendDummyLinkedListData', count);
-        setCountState(count + 1);
-      }}
-      getNextState={() => {
-        socket.emit('executeNext');
-      }}
-    />
+    <VisualizerMain backendState={backendState} />
   );
 };
 

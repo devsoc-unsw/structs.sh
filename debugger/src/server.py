@@ -141,11 +141,17 @@ def mainDebug(socket_id: str, code: str) -> None:
     # os.chdir(new_code_dir)
     with open(new_code_path, "w", encoding="utf-8") as f:
         f.write(code)
-    subprocess.run(
+
+    compilation_process = subprocess.run(
         ["gcc", "-ggdb", new_code_path, "-o", new_binary_path],
-        # capture_output=True,
-        # shell=True,
+        capture_output=True,
     )
+
+    if compilation_process.stderr:
+        io.emit("compileError", compilation_process.stderr.decode())
+        return
+
+        
     # compilation_out = ret.stdout.decode()
     # print(compilation_out)
 
