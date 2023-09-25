@@ -16,7 +16,7 @@ from placeholder_data import (
     PLACEHOLDER_BACKEND_STATES_BINARY_TREE,
     PLACEHOLDER_BACKEND_STATES_LINKED_LIST,
 )
-from src.constants import CUSTOM_NEXT_COMMAND_NAME, DEBUG_SESSION_VAR_NAME
+from src.constants import CUSTOM_NEXT_COMMAND_NAME, DEBUG_SESSION_VAR_NAME, TIMEOUT_DURATION
 from src.utils import make_non_blocking, get_gdb_script, get_subprocess_output
 
 # Parent directory of this python script e.g. "/user/.../debugger/src"
@@ -26,8 +26,6 @@ abs_file_path = os.path.dirname(os.path.abspath(__file__))
 
 GDB_SCRIPT_NAME = "default"  # Can just use "default"
 TEST_PROGRAM_NAME = f"{abs_file_path}/samples/linkedlist/main3"
-
-TIMEOUT_DURATION = 0.3
 
 """
 Map from a FE client socket_id to the subprocess that is running a gdb instance
@@ -151,7 +149,6 @@ def mainDebug(socket_id: str, code: str) -> None:
         io.emit("compileError", compilation_process.stderr.decode())
         return
 
-        
     # compilation_out = ret.stdout.decode()
     # print(compilation_out)
 

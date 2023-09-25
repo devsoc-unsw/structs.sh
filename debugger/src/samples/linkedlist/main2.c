@@ -31,10 +31,10 @@ int main(int argc, char **argv) {
   print_list(l2); // 2 -> 5 -> 7 -> X
 
   struct list *l3 = new_list();
-  l3->head = node2;
+  l3->head = node3;
   print_list(l3); // 3 -> 6 -> 7 -> X
 
   struct list *l4 = new_list();
-  l4->head = node2;
+  l4->head = node4;
   print_list(l4); // 4 -> 6 -> 7 -> X
 }
