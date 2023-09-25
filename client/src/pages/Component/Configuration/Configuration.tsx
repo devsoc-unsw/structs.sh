@@ -19,6 +19,7 @@ import {
   isPointerType,
 } from '../../Types/backendType';
 import { MotionCollapse } from './MotionCollapse';
+import { TypeAnnotation } from './TypeDeclaration';
 
 export type PossibleLinkedListAnnotation = {
   typeName: StructType['typeName'];
@@ -77,7 +78,6 @@ const createPossibleLinkedListTypeDecls = (typeDeclarations: BackendTypeDeclarat
 };
 
 const Configuration = () => {
-  const { typeDeclarations } = useGlobalStore().visualizer;
   /* const [currNodeVariable, setCurrNodeVariable] = useState('');
   const [nodeAnnotations, setNodeAnnotations] = useState<Record<string, LinkedListAnnotation>>({});
   const [possibleTypeDeclsForLinkedList, setPossibleTypeDeclsForLinkedList] = useState<
@@ -238,6 +238,8 @@ const Configuration = () => {
   const [isVariableAnnotationOpen, setIsVariableAnnotationOpen] = useState(false);
   const mockVariableDeclarations = ['Variable1', 'Variable2', 'Variable3'];
 
+  const { typeDeclarations } = useGlobalStore().visualizer;
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <div>
@@ -265,8 +267,8 @@ const Configuration = () => {
         <MotionCollapse isOpen={isTypeAnnotationOpen}>
           {isTypeAnnotationOpen ? (
             <>
-              {mockTypeDeclarations.map((type, index) => (
-                <div key={index}>{type}</div> // Replace with your component or rendering logic
+              {typeDeclarations.map((declaration, index) => (
+                <TypeAnnotation typeDeclaration={declaration} key={index} />
               ))}
             </>
           ) : null}
