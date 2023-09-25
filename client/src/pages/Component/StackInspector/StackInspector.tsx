@@ -3,11 +3,11 @@ import styles from './StackInspector.module.scss';
 import { useGlobalStore } from '../../Store/globalStateStore';
 
 const StackInspector = () => {
-  const { stackInspector: debuggerData } = useGlobalStore().visualizer;
+  const { stackInspector: debuggerData }: { stackInspector: any } = useGlobalStore().visualizer;
   return (
     <>
-      {debuggerData.stack.map((stackFrame) => (
-        <div className={styles.frame}>
+      {debuggerData.stack.map((stackFrame, idx) => (
+        <div className={styles.frame} key={idx}>
           <div className={styles.frameHeader}>
             <code className={styles.function}>{stackFrame.callerLocation.function}()</code>{' '}
             <span className={styles.location}>

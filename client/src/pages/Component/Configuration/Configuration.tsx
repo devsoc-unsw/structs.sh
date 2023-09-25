@@ -131,7 +131,7 @@ const Configuration = ({ typeDeclarations }: { typeDeclarations: BackendTypeDecl
     if (possibleTypeDeclsForLinkedList.length > 0) {
       handleSelectNodeType(possibleTypeDeclsForLinkedList[0].typeName);
     } else {
-      console.error('No possible linked list type declarations found!');
+      console.log('No possible linked list type declarations found!');
     }
   }, [possibleTypeDeclsForLinkedList]);
 
