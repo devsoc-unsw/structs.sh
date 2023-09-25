@@ -10,7 +10,7 @@ import { EntityType } from '../types/entity/baseEntity';
 import { isAttachableEntity } from '../types/coreEntity/concreteEntity';
 
 // TODO: Expand different component for different data structure, implementing common interface
-const LinkedList: VisualizerComponent = ({ graphState, dimensions }: VisualizerState) => {
+const LinkedList: VisualizerComponent = ({ graphState, dimension }: VisualizerState) => {
   const nodeRefs = useRef<{ [uid: string]: SVGSVGElement | null }>({});
   const controls = useAnimation();
   const [drawable, setDrawables] = useState<{
@@ -112,6 +112,9 @@ const LinkedList: VisualizerComponent = ({ graphState, dimensions }: VisualizerS
     controls.start('visible');
   }, [graphState]);
 
+  /**
+   * SVG Section
+   */
   const svgRef = useRef(null);
   const handleDrag = (event, info) => {
     event.preventDefault();
@@ -119,7 +122,6 @@ const LinkedList: VisualizerComponent = ({ graphState, dimensions }: VisualizerS
     viewBox.x -= info.delta.x;
     viewBox.y -= info.delta.y;
   };
-
   const handleWheel = (event) => {
     event.preventDefault();
 
@@ -147,8 +149,8 @@ const LinkedList: VisualizerComponent = ({ graphState, dimensions }: VisualizerS
   return (
     <motion.svg
       ref={svgRef}
-      width={dimensions.width}
-      height={dimensions.height}
+      width={dimension.width}
+      height={dimension.height}
       viewBox="0 0 1000 1000"
       initial="hidden"
       animate={controls}

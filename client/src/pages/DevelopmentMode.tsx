@@ -29,13 +29,9 @@ const DevelopmentMode = () => {
     }
   }, []);
   const [backendState, setBackendState] = useState<BackendState>();
-
-  const [count, setCountState] = useState(100);
-
-
   const [activeSession, setActiveSession] = useState(false);
   const typeDeclarations = [...useGlobalStore().visualizer.typeDeclarations];
-  const { updateTypeDeclaration } = useGlobalStore();
+  const { updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation } = useGlobalStore();
 
   const updateState = (data: any) => {
     setBackendState(data);
@@ -51,9 +47,10 @@ const DevelopmentMode = () => {
   const resetDebugSession = () => {
     // TODO: Reset visualiser state
     setBackendState(undefined);
-    // setTypeDeclarations([]);
     setActiveSession(false);
-    // updateUserAnnotation(DEFAULT_USER_ANNOTATION);
+
+    clearTypeDeclarations();
+    clearUserAnnotation();
   };
 
   const sendCode = () => {
@@ -164,14 +161,7 @@ const DevelopmentMode = () => {
           </Tabs>
         </div>
         <div className={classNames(styles.pane, styles.visualiser)}>
-          <VisualizerMain
-            backendState={backendState}
-            getDummyNextState={() => {
-              socket.emit('sendDummyLinkedListData', count);
-              setCountState(count + 1);
-            }}
-            getNextState={getNextState}
-          />
+          <VisualizerMain backendState={backendState} />
         </div>
         <div className={classNames(styles.pane, styles.timeline)}>
           <Controls getNextState={getNextState} sendCode={sendCode} activeSession={activeSession} />
@@ -179,14 +169,7 @@ const DevelopmentMode = () => {
       </div>
     </div>
   ) : (
-    <VisualizerMain
-      backendState={backendState}
-      getDummyNextState={() => {
-        socket.emit('sendDummyLinkedListData', count);
-        setCountState(count + 1);
-      }}
-      getNextState={getNextState}
-    />
+    <VisualizerMain backendState={backendState} />
   );
 };
 

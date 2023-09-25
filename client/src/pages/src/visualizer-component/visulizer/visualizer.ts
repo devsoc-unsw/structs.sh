@@ -3,7 +3,7 @@ import { GenericGraph } from '../types/frontendType';
 
 export interface VisualizerState {
   graphState: GenericGraph;
-  dimensions: {
+  dimension: {
     width: number;
     height: number;
   };
