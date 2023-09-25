@@ -1,9 +1,10 @@
-import React, { Fragment, SyntheticEvent, useEffect, useRef, useState } from 'react';
+import React, { Fragment, useRef, useState } from 'react';
 import { socket } from 'utils/socket';
 
 import styles from 'styles/Console.module.css';
+import classNames from 'classnames';
 
-const Console = ({ chunks, handleAddChunk, scrollToBottom }) => {
+const Console = ({ chunks, handleAddChunk, scrollToBottom, isActive }) => {
   const [input, setInput] = useState('');
   const inputElement = useRef(null);
 
@@ -35,7 +36,7 @@ const Console = ({ chunks, handleAddChunk, scrollToBottom }) => {
 
   return (
     <div
-      className={styles.console}
+      className={classNames(styles.console, { [styles.red]: !isActive })}
       onClick={focus}
       onKeyUp={(e) => {
         if (e.key === 'Space') {
@@ -46,7 +47,7 @@ const Console = ({ chunks, handleAddChunk, scrollToBottom }) => {
       role="button"
       tabIndex={0}
     >
-      {chunks.map((chunk, index) => (
+      {chunks.map((chunk: string, index: number) => (
         <Fragment key={index}>
           <code>{chunk.replace(/\n$/, '')}</code>
           {chunk.endsWith('\n') && <br />}

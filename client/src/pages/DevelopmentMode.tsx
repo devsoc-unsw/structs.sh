@@ -205,6 +205,7 @@ const DevelopmentMode = () => {
                 chunks={consoleChunks}
                 handleAddChunk={handleAddConsoleChunk}
                 scrollToBottom={scrollToBottom}
+                isActive={activeSession}
               />
             </Tab>
           </Tabs>

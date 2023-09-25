@@ -16,7 +16,11 @@ from placeholder_data import (
     PLACEHOLDER_BACKEND_STATES_BINARY_TREE,
     PLACEHOLDER_BACKEND_STATES_LINKED_LIST,
 )
-from src.constants import CUSTOM_NEXT_COMMAND_NAME, DEBUG_SESSION_VAR_NAME, TIMEOUT_DURATION
+from src.constants import (
+    CUSTOM_NEXT_COMMAND_NAME,
+    DEBUG_SESSION_VAR_NAME,
+    TIMEOUT_DURATION,
+)
 from src.utils import make_non_blocking, get_gdb_script, get_subprocess_output
 
 # Parent directory of this python script e.g. "/user/.../debugger/src"
@@ -131,37 +135,24 @@ def sendDummyBinaryTreeData(socket_id: str, line_number: int) -> None:
 def mainDebug(socket_id: str, code: str) -> None:
     # TODO: handle deletion of code files
     # TODO: move code to a different directory (not in samples since it is binded to the docker container)
-    new_code_dir = os.path.join(
-        abs_file_path, "samples", "user", str(uuid.uuid4()))
+    new_code_dir = os.path.join(abs_file_path, "samples", "user", str(uuid.uuid4()))
     os.mkdir(new_code_dir)
-    new_code_path = os.path.join(new_code_dir, "main.c")
-    new_binary_path = os.path.join(new_code_dir, "main")
-    # os.chdir(new_code_dir)
-    with open(new_code_path, "w", encoding="utf-8") as f:
+    with open(os.path.join(new_code_dir, "main.c"), "w", encoding="utf-8") as f:
         f.write(code)
 
     compilation_process = subprocess.run(
-        ["gcc", "-ggdb", new_code_path, "-o", new_binary_path],
-        capture_output=True,
+        ["gcc", "-ggdb", "main.c", "-o", "main"], capture_output=True, cwd=new_code_dir
     )
 
     if compilation_process.stderr:
         io.emit("compileError", compilation_process.stderr.decode())
         return
 
-    # compilation_out = ret.stdout.decode()
-    # print(compilation_out)
-
-    # print("\n=== Running make to compile sample C programs....")
-    # command = "make --directory=src/samples clean; make --directory=src/samples all"
-    # ret = subprocess.run(command, capture_output=True, shell=True)
-    # compilation_out = ret.stdout.decode()
-    # print(compilation_out)
-
-    # == compile user's c program'
-
     gdb_script = get_gdb_script(
-        new_binary_path, abs_file_path, socket_id, script_name=GDB_SCRIPT_NAME
+        os.path.join(new_code_dir, "main"),
+        abs_file_path,
+        socket_id,
+        script_name=GDB_SCRIPT_NAME,
     )
     print("\n=== Running gdb script...")
     print(f"gdb_script:\n{gdb_script}")
@@ -198,7 +189,8 @@ def executeNext(socket_id: str) -> None:
     proc: subprocess.Popen = procs[socket_id]
     if proc is None:
         raise Exception(
-            f"executeNext: No subprocess found for user with socket_id {socket_id}")
+            f"executeNext: No subprocess found for user with socket_id {socket_id}"
+        )
 
     print(f"Found subprocess for FE client socket_id {socket_id}:")
     print(proc)
@@ -213,8 +205,7 @@ def executeNext(socket_id: str) -> None:
     # Reading new output from the program relies on the fact that next was
     # executed just before. This is expected to happen in the call to the custom
     # next command above.
-    proc.stdin.write(
-        f"python {DEBUG_SESSION_VAR_NAME}.io_manager.read_and_send()\n")
+    proc.stdin.write(f"python {DEBUG_SESSION_VAR_NAME}.io_manager.read_and_send()\n")
     proc.stdin.flush()
     get_subprocess_output(proc, TIMEOUT_DURATION)
 
@@ -230,15 +221,15 @@ def send_stdin(socket_id: str, data: str):
     proc: subprocess.Popen = procs[socket_id]
     if proc is None:
         raise Exception(
-            f"executeNext: No subprocess found for user with socket_id {socket_id}")
+            f"executeNext: No subprocess found for user with socket_id {socket_id}"
+        )
 
     print(f"Found subprocess for FE client socket_id {socket_id}:")
     print(proc)
 
     print(f"Sending stdin to gdb instance {proc.pid}:")
     print(data)
-    proc.stdin.write(
-        f'python {DEBUG_SESSION_VAR_NAME}.io_manager.write("{data}\\n")\n')
+    proc.stdin.write(f'python {DEBUG_SESSION_VAR_NAME}.io_manager.write("{data}\\n")\n')
     proc.stdin.flush()
 
 
