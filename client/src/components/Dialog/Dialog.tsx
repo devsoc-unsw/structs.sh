@@ -1,8 +1,9 @@
 import * as Internal from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
+import { ReactNode } from 'react';
 import styles from 'styles/Dialog.module.css';
 
-const Dialog = ({ trigger, children }) => {
+const Dialog = ({ trigger, children }: { trigger: ReactNode; children: ReactNode }) => {
   return (
     <Internal.Root>
       <Internal.Trigger asChild>{trigger}</Internal.Trigger>
