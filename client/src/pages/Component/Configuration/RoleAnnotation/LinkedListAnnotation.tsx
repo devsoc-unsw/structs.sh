@@ -16,7 +16,7 @@ import {
 } from '../../../Types/backendType';
 import ConfigurationSelect from '../ConfigurationSelect';
 
-const createPossibleLinkedListTypeDecl = (
+export const createPossibleLinkedListTypeDecl = (
   typeDecl: BackendTypeDeclaration
 ): PossibleLinkedListAnnotation | null => {
   if (!('fields' in typeDecl)) {
@@ -139,7 +139,7 @@ export const LinkedListNodeAnnotation: AnnotationComponent = ({ backendType }: A
   }
 
   return (
-    <div style={{ paddingTop: '10px' }}>
+    <div style={{ paddingTop: '10px', fontSize: '0.8rem' }}>
       <RadioGroup.Root className={styles.RadioGroupRoot} value="Stub">
         <div className={styles.configuratorField}>
           <span>Node Data</span>

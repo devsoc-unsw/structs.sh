@@ -1,12 +1,13 @@
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
+import styles from 'styles/Configuration.module.css';
 import { useGlobalStore } from '../../Store/globalStateStore';
 import { MotionCollapse } from './MotionCollapse';
 import { TypeAnnotation } from './TypeDeclaration';
 import { StackVarAnnotation } from './StackVarDeclaration';
 
 const Configuration = () => {
-  const [isTypeAnnotationOpen, setIsAnnotationOpen] = useState(false);
+  const [isTypeAnnotationOpen, setIsAnnotationOpen] = useState(true);
 
   const [isVariableAnnotationOpen, setIsVariableAnnotationOpen] = useState(false);
   const { typeDeclarations } = useGlobalStore().visualizer;
@@ -14,8 +15,15 @@ const Configuration = () => {
   const { visualizer } = useGlobalStore();
   return (
     <div
-      style={{ display: 'flex', flexDirection: 'column', maxHeight: '500px', overflowY: 'auto' }}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        maxHeight: '500px',
+        overflowY: 'auto',
+        gap: '0.8rem',
+      }}
     >
+      {/* For Type Annotations */}
       <div>
         <button
           onClick={() => setIsAnnotationOpen(!isTypeAnnotationOpen)}
@@ -40,11 +48,11 @@ const Configuration = () => {
 
         <MotionCollapse isOpen={isTypeAnnotationOpen}>
           {isTypeAnnotationOpen ? (
-            <>
+            <div className={styles.indentedAnnotationArea}>
               {typeDeclarations.map((declaration, index) => (
                 <TypeAnnotation typeDeclaration={declaration} key={index} />
               ))}
-            </>
+            </div>
           ) : null}
         </MotionCollapse>
       </div>

@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { github } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { MotionCollapse } from './MotionCollapse';
 import './typeDeclaration.css';
 import { BackendTypeRole } from '../../Types/annotationType';
-import { LinkedListNodeAnnotation } from './RoleAnnotation/LinkedListAnnotation';
+import {
+  LinkedListNodeAnnotation,
+  createPossibleLinkedListTypeDecl,
+} from './RoleAnnotation/LinkedListAnnotation';
 import { BackendTypeDeclaration } from '../../Types/backendType';
 
 export type TypeAnnotationProp = {
@@ -19,6 +22,12 @@ export const TypeAnnotation: React.FC<TypeAnnotationProp> = ({
   const [selectedRole, setSelectedRole] = useState<BackendTypeRole>(BackendTypeRole.Empty);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  useEffect(() => {
+    if (createPossibleLinkedListTypeDecl(typeDeclaration) !== null) {
+      setSelectedRole(BackendTypeRole.LinkedList);
+    }
+  }, []);
+
   return (
     <div style={{ paddingBottom: '8px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -30,7 +39,7 @@ export const TypeAnnotation: React.FC<TypeAnnotationProp> = ({
           </span>
         </div>
 
-        <div>
+        <div style={{ fontSize: '0.8rem' }}>
           <button
             type="button"
             style={{ color: selectedRole === BackendTypeRole.Empty ? 'grey' : 'black' }}

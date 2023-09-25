@@ -79,3 +79,7 @@
 .monospaceFont {
   font-family: monospace;
 }
+
+.indentedAnnotationArea {
+  margin-left: 1.4rem;
+}
