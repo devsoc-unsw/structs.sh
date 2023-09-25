@@ -347,7 +347,7 @@ def create_struct_value(parsed_type_decls, struct_fields_str, struct_name, addre
         field_value = field.split('=')[1].strip()
         print(f"{field_name=}", f"{field_value=}")
         value[field_name] = {
-            "typeName": next((field['type'] for field in corresponding_type_decl['fields'] if field['name'] == field_name), ""),
+            "typeName": next((field['typeName'] for field in corresponding_type_decl['fields'] if field['name'] == field_name), ""),
             "value": field_value}
 
     return {

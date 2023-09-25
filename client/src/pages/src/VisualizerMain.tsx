@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { BackendState } from './visualizer-component/types/backendType';
 import { Timeline } from './visualizer-component/util/timeline';
-import { useFrontendStateStore } from './visualizer-component/visaulizerStateStore';
+import { useFrontendStateStore } from './visualizer-component/visualizerStateStore';
 import { useGlobalStore } from './visualizer-component/globalStateStore';
 
 export interface RoutesProps {

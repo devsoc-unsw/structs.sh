@@ -38,7 +38,7 @@ const DevelopmentMode = () => {
 
   const [count, setCountState] = useState(100);
 
-  const typeDeclarations = useGlobalStore().visualizer.userAnnotation;
+  const typeDeclarations = [...useGlobalStore().visualizer.typeDeclarations];
   const { updateTypeDeclaration } = useGlobalStore();
   const updateState = (data: any) => {
     setBackendState(data);

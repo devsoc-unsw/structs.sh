@@ -4,7 +4,7 @@ import { Parser } from '../parser/parser';
 import { VisualizerType } from './visualizerType';
 import { visualizerFactory } from '../visulizer/visualizerFactory';
 import { parserFactory } from '../parser/parserFactory';
-import { BackendTypeDeclarations } from './backendType';
+import { BackendTypeDeclaration } from './backendType';
 
 export type UiState = {
   width: number;
@@ -16,7 +16,7 @@ export type VisualizerParam = {
   userAnnotation: UserAnnotation;
   visComponent: VisualizerComponent;
   parser: Parser;
-  typeDeclaration: BackendTypeDeclarations[];
+  typeDeclarations: BackendTypeDeclaration[];
 };
 
 export type GlobalStateStore = {
@@ -37,7 +37,7 @@ export const DEFAULT_GLOBAL_STORE: GlobalStateStore = {
     },
     visComponent: visualizerFactory(VisualizerType.LINKED_LIST),
     parser: parserFactory(VisualizerType.LINKED_LIST),
-    typeDeclaration: [],
+    typeDeclarations: [],
   },
 };
 
