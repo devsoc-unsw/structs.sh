@@ -1,7 +1,7 @@
 import { UserAnnotation } from './annotationType';
 import { VisualizerComponent } from '../visulizer/visualizer';
 import { Parser } from '../parser/parser';
-import { VisualizerType } from './visaulizerType';
+import { VisualizerType } from './visualizerType';
 import { visualizerFactory } from '../visulizer/visualizerFactory';
 import { parserFactory } from '../parser/parserFactory';
 import { BackendTypeDeclarations } from './backendType';

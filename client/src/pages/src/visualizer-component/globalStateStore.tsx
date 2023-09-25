@@ -1,7 +1,7 @@
 import { UseBoundStore, StoreApi, create } from 'zustand';
 import { UserAnnotation } from './types/annotationType';
 import { GlobalStateStore, DEFAULT_GLOBAL_STORE } from './types/globalState';
-import { VisualizerType } from './types/visaulizerType';
+import { VisualizerType } from './types/visualizerType';
 import { visualizerFactory } from './visulizer/visualizerFactory';
 import { parserFactory } from './parser/parserFactory';
 import { BackendTypeDeclarations } from './types/backendType';

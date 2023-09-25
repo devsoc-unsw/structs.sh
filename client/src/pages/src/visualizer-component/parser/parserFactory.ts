@@ -1,4 +1,4 @@
-import { VisualizerType } from '../types/visaulizerType';
+import { VisualizerType } from '../types/visualizerType';
 import { assertUnreachable } from '../util/util';
 import { LinkedListParser } from './linkedListParser';
 import { Parser } from './parser';
