@@ -11,7 +11,7 @@ const Configuration = () => {
   const mockVariableDeclarations = ['Variable1', 'Variable2', 'Variable3'];
 
   const { typeDeclarations } = useGlobalStore().visualizer;
-
+  const { visualizer } = useGlobalStore();
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <div>
@@ -81,7 +81,10 @@ const Configuration = () => {
         </MotionCollapse>
       </div>
 
-      <button type="button" onClick={() => console.log(typeDeclarations)}>
+      <button
+        type="button"
+        onClick={() => console.log(typeDeclarations, visualizer.userAnnotation.typeAnnotation)}
+      >
         debug
       </button>
     </div>

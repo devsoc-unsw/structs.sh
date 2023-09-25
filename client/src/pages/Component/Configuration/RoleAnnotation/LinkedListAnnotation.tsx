@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import styles from 'styles/Configuration.module.css';
-import SyntaxHighlighter from 'react-syntax-highlighter';
-import { github } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { AnnotationComponent, AnnotationProp } from './AnnotationComponentBase';
-import { LinkedListAnnotation, PossibleLinkedListAnnotation } from '../../../Types/annotationType';
+import {
+  DataStructureType,
+  LinkedListAnnotation,
+  PossibleLinkedListAnnotation,
+} from '../../../Types/annotationType';
 import { useGlobalStore } from '../../../Store/globalStateStore';
 import {
   BackendTypeDeclaration,
@@ -57,26 +59,11 @@ const createPossibleLinkedListTypeDecl = (
 };
 
 export const LinkedListNodeAnnotation: AnnotationComponent = ({ backendType }: AnnotationProp) => {
-  const [nodeAnnotations, setNodeAnnotations] = useState<Record<string, LinkedListAnnotation>>({});
   const [possibleTypeDeclForLinkedList, setPossibleTypeDeclForLinkedList] =
     useState<PossibleLinkedListAnnotation>(createPossibleLinkedListTypeDecl(backendType));
   const { updateUserAnnotation, visualizer } = useGlobalStore();
-
-  useEffect(() => {
-    const possibleTypeDecls = createPossibleLinkedListTypeDecl(backendType);
-    setPossibleTypeDeclForLinkedList(possibleTypeDecls);
-
-    console.log('debug', possibleTypeDecls);
-  }, [backendType]);
-
-  const handleUpdateNodeAnnotation = (
-    nodeVariable: string,
-    newAnnotation: LinkedListAnnotation
-  ) => {
-    const updatedNodeAnnotations = { ...nodeAnnotations };
-    updatedNodeAnnotations[nodeVariable] = newAnnotation;
-    setNodeAnnotations(updatedNodeAnnotations);
-
+  const [nodeAnnotation, setNodeAnnotation] = useState<LinkedListAnnotation>(null);
+  const handleUpdateNodeAnnotation = (newAnnotation: LinkedListAnnotation) => {
     updateUserAnnotation({
       stackAnnotation: visualizer.userAnnotation.stackAnnotation,
       typeAnnotation: {
@@ -85,36 +72,58 @@ export const LinkedListNodeAnnotation: AnnotationComponent = ({ backendType }: A
       },
     });
   };
+  const handleLinkedNodeAnnotation = (possibleTypeAnnotation: PossibleLinkedListAnnotation) => {
+    if (possibleTypeAnnotation === null) return;
+    const linkedNodeAnnotation: LinkedListAnnotation = {
+      typeName: backendType.typeName as `struct ${string}`,
+      type: DataStructureType.LinkedList,
+      value: {
+        name: possibleTypeAnnotation.possibleValues[0].name,
+        typeName: possibleTypeAnnotation.possibleValues[0].typeName,
+      },
+      next: {
+        name: possibleTypeAnnotation.possibleNexts[0].name,
+        typeName: possibleTypeAnnotation.possibleNexts[0].typeName,
+      },
+    };
+    setNodeAnnotation(linkedNodeAnnotation);
+    handleUpdateNodeAnnotation(linkedNodeAnnotation);
+  };
 
-  const handleUpdateNodeData = (
-    nodeVariable: string,
-    newNodeData: string,
-    newNodeDataType: string
-  ) => {
+  useEffect(() => {
+    handleLinkedNodeAnnotation(possibleTypeDeclForLinkedList);
+  }, [possibleTypeDeclForLinkedList]);
+
+  useEffect(() => {
+    const possibleTypeDecls = createPossibleLinkedListTypeDecl(backendType);
+    setPossibleTypeDeclForLinkedList(possibleTypeDecls);
+  }, [backendType]);
+
+  const handleUpdateNodeData = (newNodeData: string, newNodeDataType: string) => {
     if (isNativeTypeName(newNodeDataType)) {
-      handleUpdateNodeAnnotation(nodeVariable, {
-        ...nodeAnnotations[nodeVariable],
+      const newAnnotation: LinkedListAnnotation = {
+        ...nodeAnnotation,
         value: {
-          typeName: newNodeDataType,
           name: newNodeData,
+          typeName: newNodeDataType,
         },
-      });
+      };
+      handleUpdateNodeAnnotation(newAnnotation);
+      setNodeAnnotation(newAnnotation);
     }
   };
 
-  const handleUpdateNodeNext = (
-    nodeVariable: string,
-    newNodeNext: string,
-    newNodeNextType: string
-  ) => {
+  const handleUpdateNodeNext = (newNodeNext: string, newNodeNextType: string) => {
     if (isPointerType(newNodeNextType) && isStructTypeName(newNodeNextType.slice(0, -1))) {
-      handleUpdateNodeAnnotation(nodeVariable, {
-        ...nodeAnnotations[nodeVariable],
+      const newAnnotation: LinkedListAnnotation = {
+        ...nodeAnnotation,
         next: {
-          typeName: newNodeNextType,
           name: newNodeNext,
+          typeName: newNodeNextType,
         },
-      });
+      };
+      handleUpdateNodeAnnotation(newAnnotation);
+      setNodeAnnotation(newAnnotation);
     }
   };
 
@@ -135,7 +144,6 @@ export const LinkedListNodeAnnotation: AnnotationComponent = ({ backendType }: A
         <div className={styles.configuratorField}>
           <span>Node Data</span>
           <ConfigurationSelect
-            type={possibleTypeDeclForLinkedList.typeName}
             fields={possibleTypeDeclForLinkedList.possibleValues}
             handleUpdateAnnotation={handleUpdateNodeData}
           />
@@ -144,7 +152,6 @@ export const LinkedListNodeAnnotation: AnnotationComponent = ({ backendType }: A
         <div className={styles.configuratorField}>
           <span>Next Node</span>
           <ConfigurationSelect
-            type={possibleTypeDeclForLinkedList.typeName}
             fields={possibleTypeDeclForLinkedList.possibleNexts}
             handleUpdateAnnotation={handleUpdateNodeNext}
           />
