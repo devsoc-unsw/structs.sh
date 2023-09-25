@@ -1,12 +1,4 @@
-import {
-  StructType,
-  Name,
-  PointerType,
-  MemoryValue,
-  IntType,
-  NativeTypeName,
-  BackendTypeDeclaration,
-} from './backendType';
+import { StructType, Name, PointerType, MemoryValue, IntType, NativeTypeName } from './backendType';
 
 export enum DataStructureType {
   LinkedList,
@@ -83,7 +75,7 @@ export type LocalAnnotationConcrete = ArrayElementPointer | LinkedListNodePointe
  * Map from variable names to user annotations of that
  */
 export interface UserAnnotation {
-  stackAnnotation: { [name: Name]: LocalAnnotationConcrete };
+  stackAnnotation: { [name: Name]: LocalAnnotationConcrete | null };
   typeAnnotation: { [name: Name]: DataStructureAnnotationConcrete };
 }
 
@@ -135,12 +127,13 @@ export type PossibleStructAnnotation = {
   };
 };
 
-export type TypeAnnotationProp = {
-  typeDeclaration: BackendTypeDeclaration;
-};
-
 export enum BackendTypeRole {
   LinkedList = 'Linked List Node',
+  Empty = 'Not Visualized',
+}
+
+export enum StackVariableRole {
+  LinkedListPointer = 'Linked List Node',
   Empty = 'Not Visualized',
 }
 

@@ -1,23 +1,28 @@
+// @ts-expect-error
 import React, { useState } from 'react';
+import styles from 'styles/Configuration.module.css';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { github } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { MotionCollapse } from './MotionCollapse';
 import './typeDeclaration.css';
-import { BackendTypeRole } from '../../Types/annotationType';
-import { LinkedListNodeAnnotation } from './RoleAnnotation/LinkedListAnnotation';
-import { BackendTypeDeclaration } from '../../Types/backendType';
+import { StackVariableRole } from '../../Types/annotationType';
+import { MemoryValue, isPointerType } from '../../Types/backendType';
+import { useGlobalStore } from '../../Store/globalStateStore';
 
-export type TypeAnnotationProp = {
-  typeDeclaration: BackendTypeDeclaration;
+export type StackVariableAnnotationProp = {
+  name: string;
+  memoryValue: MemoryValue;
 };
 
-export const TypeAnnotation: React.FC<TypeAnnotationProp> = ({
-  typeDeclaration,
-}: TypeAnnotationProp) => {
-  const { typeName } = typeDeclaration;
-  const [selectedRole, setSelectedRole] = useState<BackendTypeRole>(BackendTypeRole.Empty);
+export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
+  name,
+  memoryValue,
+}: StackVariableAnnotationProp) => {
+  const [selectedRole, setSelectedRole] = useState<StackVariableRole>(StackVariableRole.Empty);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { userAnnotation } = useGlobalStore().visualizer;
+  const { updateUserAnnotation } = useGlobalStore();
 
   return (
     <div style={{ paddingBottom: '8px' }}>
@@ -25,7 +30,7 @@ export const TypeAnnotation: React.FC<TypeAnnotationProp> = ({
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
           <span>
             <SyntaxHighlighter language="c" style={github} className="syntax-highlighter-custom">
-              {typeName}
+              {`${memoryValue.typeName} ${name}`}
             </SyntaxHighlighter>
           </span>
         </div>
@@ -33,7 +38,7 @@ export const TypeAnnotation: React.FC<TypeAnnotationProp> = ({
         <div>
           <button
             type="button"
-            style={{ color: selectedRole === BackendTypeRole.Empty ? 'grey' : 'black' }}
+            style={{ color: selectedRole === StackVariableRole.Empty ? 'grey' : 'black' }}
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             {selectedRole}
@@ -51,12 +56,31 @@ export const TypeAnnotation: React.FC<TypeAnnotationProp> = ({
           <MotionCollapse isOpen={isDropdownOpen}>
             {isDropdownOpen ? (
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                {Object.entries(BackendTypeRole).map((role) => (
+                {Object.entries(StackVariableRole).map((role) => (
                   <button
                     key={role[0]}
                     type="button"
                     onClick={() => {
                       setSelectedRole(role[1]);
+                      if (role[1] === StackVariableRole.LinkedListPointer) {
+                        updateUserAnnotation({
+                          typeAnnotation: userAnnotation.typeAnnotation,
+                          stackAnnotation: {
+                            ...userAnnotation.stackAnnotation,
+                            [name]: {
+                              typeName: memoryValue.typeName,
+                            },
+                          },
+                        });
+                      } else {
+                        updateUserAnnotation({
+                          typeAnnotation: userAnnotation.typeAnnotation,
+                          stackAnnotation: {
+                            ...userAnnotation.stackAnnotation,
+                            [name]: null,
+                          },
+                        });
+                      }
                       setIsDropdownOpen(false);
                     }}
                     style={{
@@ -87,8 +111,16 @@ export const TypeAnnotation: React.FC<TypeAnnotationProp> = ({
         </div>
       </div>
 
-      <MotionCollapse isOpen={selectedRole === BackendTypeRole.LinkedList}>
-        <LinkedListNodeAnnotation backendType={typeDeclaration} />
+      <MotionCollapse isOpen={selectedRole === StackVariableRole.LinkedListPointer}>
+        {!isPointerType(memoryValue.typeName) ? (
+          <div className={styles.configuratorField}>
+            <span>
+              <span className={styles.highlightError}>Error:</span> Local Variable is not a pointer{' '}
+              <span className={styles.highlightLinkedList}>linked list</span> annotation can be
+              made.
+            </span>
+          </div>
+        ) : null}
       </MotionCollapse>
     </div>
   );

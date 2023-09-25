@@ -3,17 +3,19 @@ import { useState } from 'react';
 import { useGlobalStore } from '../../Store/globalStateStore';
 import { MotionCollapse } from './MotionCollapse';
 import { TypeAnnotation } from './TypeDeclaration';
+import { StackVarAnnotation } from './StackVarDeclaration';
 
 const Configuration = () => {
   const [isTypeAnnotationOpen, setIsAnnotationOpen] = useState(false);
 
   const [isVariableAnnotationOpen, setIsVariableAnnotationOpen] = useState(false);
-  const mockVariableDeclarations = ['Variable1', 'Variable2', 'Variable3'];
-
   const { typeDeclarations } = useGlobalStore().visualizer;
+  const { currFrame } = useGlobalStore();
   const { visualizer } = useGlobalStore();
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
+    <div
+      style={{ display: 'flex', flexDirection: 'column', maxHeight: '500px', overflowY: 'auto' }}
+    >
       <div>
         <button
           onClick={() => setIsAnnotationOpen(!isTypeAnnotationOpen)}
@@ -73,8 +75,8 @@ const Configuration = () => {
         <MotionCollapse isOpen={isVariableAnnotationOpen}>
           {isVariableAnnotationOpen ? (
             <>
-              {mockVariableDeclarations.map((variable, index) => (
-                <div key={index}>{variable}</div> // Replace with your component or rendering logic
+              {Object.entries(currFrame.stack_data).map(([name, memoryValue]) => (
+                <StackVarAnnotation key={name} name={name} memoryValue={memoryValue} />
               ))}
             </>
           ) : null}
@@ -83,7 +85,13 @@ const Configuration = () => {
 
       <button
         type="button"
-        onClick={() => console.log(typeDeclarations, visualizer.userAnnotation.typeAnnotation)}
+        onClick={() =>
+          console.log(
+            typeDeclarations,
+            visualizer.userAnnotation,
+            visualizer.userAnnotation.stackAnnotation
+          )
+        }
       >
         debug
       </button>
