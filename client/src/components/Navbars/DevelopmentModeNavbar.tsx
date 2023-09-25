@@ -37,6 +37,12 @@ const DevelopmentModeNavbar = () => {
               We currently only support visualising linked lists, but more data structures (arrays,
               trees and graphs) are on their way!
             </p>
+            <p>
+              If you want some code to try out our debugger with, check out the{' '}
+              <a href="https://cgi.cse.unsw.edu.au/~cs1511/23T2/live/week_07/ll_intro.c">
+                COMP1511 Programming Fundamentals week 7 lecture code for linked lists
+              </a>
+            </p>
           </DialogDescription>
         </Dialog>
       </div>

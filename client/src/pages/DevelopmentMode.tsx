@@ -162,12 +162,6 @@ const DevelopmentMode = () => {
         </div>
         <div className={classNames(styles.pane, styles.inspector)}>
           <Tabs>
-            <Tab label="Console">
-              <div className={styles.pane}>Console</div>
-            </Tab>
-            <Tab label="Inspect">
-              <StackInspector debuggerData={dummyData} />
-            </Tab>
             <Tab label="Configure">
               <div className={styles.pane}>
                 <Configuration
@@ -175,6 +169,12 @@ const DevelopmentMode = () => {
                   sendLinkedListAnnotation={getLinkedListAnnotation}
                 />
               </div>
+            </Tab>
+            <Tab label="Inspect">
+              <StackInspector debuggerData={dummyData} />
+            </Tab>
+            <Tab label="Console">
+              <div className={styles.pane}>Console</div>
             </Tab>
           </Tabs>
         </div>
