@@ -82,19 +82,6 @@ const Configuration = () => {
           ) : null}
         </MotionCollapse>
       </div>
-
-      <button
-        type="button"
-        onClick={() =>
-          console.log(
-            typeDeclarations,
-            visualizer.userAnnotation,
-            visualizer.userAnnotation.stackAnnotation
-          )
-        }
-      >
-        debug
-      </button>
     </div>
   );
 };

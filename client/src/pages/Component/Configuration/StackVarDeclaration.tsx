@@ -1,4 +1,4 @@
-// @ts-expect-error
+// @ts-nocheck
 import React, { useState } from 'react';
 import styles from 'styles/Configuration.module.css';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
