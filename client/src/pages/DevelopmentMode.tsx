@@ -29,14 +29,22 @@ const DevelopmentMode = () => {
   }, []);
   const [backendState, setBackendState] = useState<BackendState>();
   const [activeSession, setActiveSession] = useState(false);
-  const typeDeclarations = [...useGlobalStore().visualizer.typeDeclarations];
-  const { updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation } = useGlobalStore();
+  const [code, setCode] = useState(localStorage.getItem('code') || placeholder);
+  // Tab values correspond to their index
+  // ('Configure' has value '0', 'Inspect' has value '1', 'Console' has value '2')
+  const [tab, setTab] = useState('0');
+
+  const globalStore = useGlobalStore();
+  const { updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation } = globalStore;
+  const typeDeclarations = [...globalStore.visualizer.typeDeclarations];
+
+  const handleChangeTab = (newTabValue: string) => {
+    setTab(newTabValue);
+  };
 
   const updateState = (data: any) => {
     setBackendState(data);
   };
-
-  const [code, setCode] = useState(localStorage.getItem('code') || placeholder);
 
   const handleSetCode = (newCode: string) => {
     localStorage.setItem('code', newCode);
@@ -99,6 +107,12 @@ const DevelopmentMode = () => {
     console.log('Executing next line...');
   }, []);
 
+  const onCompileError = (data: any) => {
+    console.log('Received compilation error:\n', data);
+    // On a compilation error, switch the tab to 'Console' so the user can see the error
+    setTab('2');
+  };
+
   useEffect(() => {
     const onConnect = () => {
       console.log('Connected!');
@@ -115,6 +129,7 @@ const DevelopmentMode = () => {
     socket.on('executeNext', onExecuteNext);
     socket.on('sendBackendStateToUser', onSendBackendStateToUser);
     socket.on('sendStdoutToUser', onSendStdoutToUser);
+    socket.on('compileError', onCompileError);
 
     return () => {
       socket.off('connect', onConnect);
@@ -127,6 +142,7 @@ const DevelopmentMode = () => {
       socket.off('sendTypeDeclaration', onSendTypeDeclaration);
       socket.off('sendBackendStateToUser', onSendBackendStateToUser);
       socket.off('sendStdoutToUser', onSendStdoutToUser);
+      socket.off('compileError', onCompileError);
     };
   }, []);
 
@@ -146,7 +162,7 @@ const DevelopmentMode = () => {
           />
         </div>
         <div className={classNames(styles.pane, styles.inspector)}>
-          <Tabs>
+          <Tabs value={tab} onValueChange={handleChangeTab}>
             <Tab label="Configure">
               <div className={styles.pane}>
                 <Configuration typeDeclarations={typeDeclarations} />
