@@ -5,6 +5,7 @@ import globalStyles from 'styles/global.module.css';
 import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
 import { Socket } from 'socket.io-client';
+import Console from 'components/DevelopmentMode/Console';
 import DevelopmentModeNavbar from '../components/Navbars/DevelopmentModeNavbar';
 import { placeholder } from '../constants';
 import Configuration from './Component/Configuration/Configuration';
@@ -107,6 +108,10 @@ const DevelopmentMode = () => {
     console.log('Executing next line...');
   }, []);
 
+  const onProgramWaitingForInput = useCallback((data: any) => {
+    console.log(`Event received from debugger: program is waiting for input\n`, data);
+  }, []);
+
   const onCompileError = (data: any) => {
     console.log('Received compilation error:\n', data);
     // On a compilation error, switch the tab to 'Console' so the user can see the error
@@ -129,6 +134,7 @@ const DevelopmentMode = () => {
     socket.on('executeNext', onExecuteNext);
     socket.on('sendBackendStateToUser', onSendBackendStateToUser);
     socket.on('sendStdoutToUser', onSendStdoutToUser);
+    socket.on('programWaitingForInput', onProgramWaitingForInput);
     socket.on('compileError', onCompileError);
 
     return () => {
@@ -141,6 +147,7 @@ const DevelopmentMode = () => {
       socket.off('sendFunctionDeclaration', onSendFunctionDeclaration);
       socket.off('sendTypeDeclaration', onSendTypeDeclaration);
       socket.off('sendBackendStateToUser', onSendBackendStateToUser);
+      socket.off('programWaitingForInput', onProgramWaitingForInput);
       socket.off('sendStdoutToUser', onSendStdoutToUser);
       socket.off('compileError', onCompileError);
     };
@@ -164,15 +171,13 @@ const DevelopmentMode = () => {
         <div className={classNames(styles.pane, styles.inspector)}>
           <Tabs value={tab} onValueChange={handleChangeTab}>
             <Tab label="Configure">
-              <div className={styles.pane}>
-                <Configuration typeDeclarations={typeDeclarations} />
-              </div>
+              <Configuration typeDeclarations={typeDeclarations} />
             </Tab>
             <Tab label="Inspect">
               <StackInspector />
             </Tab>
             <Tab label="Console">
-              <div className={styles.pane}>Console</div>
+              <Console />
             </Tab>
           </Tabs>
         </div>

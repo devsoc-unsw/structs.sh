@@ -20,11 +20,22 @@ class IOManager:
         gdb.execute(f"tty {self.name}")
 
     def read(self) -> Optional[str]:
-        (data_to_read, _, _) = select.select([self.stdout], [], [], 0)
+        (data_to_read, _, _) = select.select([self.stdout], [], [], 0.2)
         if data_to_read:
             return os.read(self.stdout, self.max_read_bytes).decode()
         else:
             return None
+
+    def check_is_waiting_for_input(self) -> bool:
+        '''
+        Check whether the program stdin is waiting for user input.
+        Note: This attempt does not work. It always returns True even when the program is not waiting for input, because the program is always waiting for input to be buffered.
+        '''
+        (_, data_to_write, _) = select.select([], [self.stdin], [], 0.2)
+        print(
+            "=======================================\n=================================\n")
+        print(f"{data_to_write=}")
+        return bool(data_to_write)
 
     def write(self, data: str):
         os.write(self.stdin, data.encode())

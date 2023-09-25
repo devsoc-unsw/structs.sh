@@ -235,6 +235,15 @@ class CustomNextCommand(gdb.Command):
         # which should tell the client that the debugging session is over.
         gdb.execute('next')
 
+        # TODO: Immediately after executing next, we need to check whether the program
+        # is waiting for stdin. If it is, then we need to send a signal to the
+        # server to tell the client to prompt the user for input.
+        if (self.debug_session.io_manager.check_is_waiting_for_input()):
+            print("Program is waiting for input")
+            wait_for_user_input(self.user_socket_id)
+            # print("Early exit from custom next")
+            # return
+
         # == Get stack data after executing next command
         stack_data = self.get_stack_data()
 
@@ -377,6 +386,20 @@ def send_backend_data_to_server(user_socket_id: str = None, backend_data: dict =
             f"Sending backend_data to server, for user with socket_id {user_socket_id}")
         sio.emit("updatedBackendState",
                  (user_socket_id, backend_data))
+
+        enable_socketio_client_emit()
+
+    else:
+        print("No user_socket_id provided, so not sending backend_data to server")
+
+
+@useSocketIOConnection
+def wait_for_user_input(user_socket_id: str = None, sio=None):
+    if user_socket_id is not None:
+        print(
+            f"Sending backend_data to server, for user with socket_id {user_socket_id}")
+        sio.emit("requestUserInput",
+                 (user_socket_id, ))
 
         enable_socketio_client_emit()
 
