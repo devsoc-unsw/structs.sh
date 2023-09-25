@@ -53,7 +53,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) =>
   }, [backendState]);
 
   const visualizerRef = useRef(null);
-  const [dimensions, setDimensions] = useState({ width: 1000, height: 1000 });
+  const [dimensions, setDimensions] = useState({ width: settings.width, height: settings.height });
 
   // useEffect(() => {
   //   const observer = new ResizeObserver((entries) => {

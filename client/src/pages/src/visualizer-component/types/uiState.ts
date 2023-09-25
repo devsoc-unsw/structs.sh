@@ -15,14 +15,16 @@ export type UiState = {
   userAnnotation: UserAnnotation;
 };
 
+export const DEFAULT_USER_ANNOTATION: UserAnnotation = {
+  stackAnnotation: {},
+  typeAnnotation: {},
+};
+
 export const DEFAULT_UISTATE: UiState = {
   visualizerType: VisualizerType.LINKED_LIST,
   width: 800,
   height: 400,
-  userAnnotation: {
-    stackAnnotation: {},
-    typeAnnotation: {},
-  },
+  userAnnotation: DEFAULT_USER_ANNOTATION,
 };
 
 export const NODE_SIZE = 30;

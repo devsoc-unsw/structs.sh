@@ -16,6 +16,7 @@ import { useUiStateStore } from './src/visualizer-component/uiStateStore';
 import DevelopmentModeNavbar from 'components/Navbars/DevelopmentModeNavbar';
 import Controls from 'components/DevelopmentMode/Controls';
 import { placeholder } from 'constants/index';
+import { DEFAULT_USER_ANNOTATION } from './src/visualizer-component/types/uiState';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -50,7 +51,16 @@ const DevelopmentMode = () => {
     setCode(newCode);
   };
 
+  const resetDebugSession = () => {
+    // TODO: Reset visualiser state
+    setBackendState(undefined);
+    setTypeDeclarations([]);
+    setActiveSession(false);
+    updateUserAnnotation(DEFAULT_USER_ANNOTATION);
+  };
+
   const sendCode = () => {
+    resetDebugSession();
     socket.emit('mainDebug', code);
   };
 
