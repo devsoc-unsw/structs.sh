@@ -23,3 +23,9 @@
 .Button:active {
   background: var(--slate-5);
 }
+
+.Button:disabled {
+  color: var(--slate-10);
+  background: var(--slate-7);
+  cursor: auto;
+}

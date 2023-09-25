@@ -35,6 +35,8 @@ const DevelopmentMode = () => {
 
   const [typeDeclarations, setTypeDeclarations] = useState([]);
 
+  const [activeSession, setActiveSession] = useState(false);
+
   const { updateUserAnnotation, userAnnotation } = useUiStateStore();
 
   const updateState = (data: any) => {
@@ -72,6 +74,7 @@ const DevelopmentMode = () => {
 
   const onMainDebug = useCallback((data: any) => {
     console.log(`Received event onMainDebug:\n`, data);
+    setActiveSession(true);
   }, []);
 
   const onSendFunctionDeclaration = useCallback((data: any) => {
@@ -176,7 +179,7 @@ const DevelopmentMode = () => {
           />
         </div>
         <div className={classNames(styles.pane, styles.timeline)}>
-          <Controls getNextState={getNextState} sendCode={sendCode} />
+          <Controls getNextState={getNextState} sendCode={sendCode} activeSession={activeSession} />
         </div>
       </div>
     </div>
