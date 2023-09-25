@@ -16,6 +16,7 @@ import { useGlobalStore } from './Store/globalStateStore';
 import VisualizerMain from './Component/VisualizerMain';
 import { BackendState } from './Types/backendType';
 import FileSelector from './Component/FileTree/FileSelector';
+import AboutText from './Component/FileTree/AboutText';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -188,7 +189,7 @@ const DevelopmentMode = () => {
         <div className={classNames(styles.pane, styles.nav)}>
           <DevelopmentModeNavbar />
         </div>
-        <div className={classNames(styles.pane, styles.files)}>
+        <div className={classNames(styles.pane, styles.files)} style={{ overflowY: 'scroll' }}>
           <FileSelector
             programName={programName}
             onChangeProgramName={(newProgramName: string) => {
@@ -199,6 +200,15 @@ const DevelopmentMode = () => {
               );
             }}
           />
+          <div
+            style={{
+              fontSize: 'small',
+              marginTop: '1.6rem',
+              color: 'rgb(85, 85, 85)',
+            }}
+          >
+            <AboutText />
+          </div>
         </div>
         <div className={classNames(styles.pane, styles.editor)}>
           <CodeEditor

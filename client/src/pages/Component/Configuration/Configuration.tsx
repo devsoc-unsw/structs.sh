@@ -9,7 +9,7 @@ import { StackVarAnnotation } from './StackVarDeclaration';
 const Configuration = () => {
   const [isTypeAnnotationOpen, setIsAnnotationOpen] = useState(true);
 
-  const [isVariableAnnotationOpen, setIsVariableAnnotationOpen] = useState(false);
+  const [isVariableAnnotationOpen, setIsVariableAnnotationOpen] = useState(true);
   const { typeDeclarations } = useGlobalStore().visualizer;
   const { currFrame } = useGlobalStore();
   const { visualizer } = useGlobalStore();
