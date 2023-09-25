@@ -96,6 +96,10 @@ const DevelopmentMode = () => {
     console.log(`Received program stdout:\n`, data);
   }, []);
 
+  const onExecuteNext = useCallback(() => {
+    console.log('Executing next line...');
+  }, []);
+
   useEffect(() => {
     const onConnect = () => {
       console.log('Connected!');
@@ -109,9 +113,7 @@ const DevelopmentMode = () => {
     socket.on('mainDebug', onMainDebug);
     socket.on('sendFunctionDeclaration', onSendFunctionDeclaration);
     socket.on('sendTypeDeclaration', onSendTypeDeclaration);
-    socket.once('executeNext', () => {
-      console.log('Executing next line...');
-    });
+    socket.on('executeNext', onExecuteNext);
     socket.on('sendBackendStateToUser', onSendBackendStateToUser);
     socket.on('sendStdoutToUser', onSendStdoutToUser);
 
@@ -121,11 +123,13 @@ const DevelopmentMode = () => {
       socket.off('sendDummyLinkedListData', onSendDummyData);
       socket.off('sendDummyBinaryTreeData', onSendDummyData);
       socket.off('mainDebug', onMainDebug);
+      socket.off('executeNext', onExecuteNext);
       socket.off('sendFunctionDeclaration', onSendFunctionDeclaration);
       socket.off('sendTypeDeclaration', onSendTypeDeclaration);
       socket.off('sendBackendStateToUser', onSendBackendStateToUser);
+      socket.off('sendStdoutToUser', onSendStdoutToUser);
     };
-  }, [updateState]);
+  }, []);
 
   const DEBUG_MODE = false;
   return !DEBUG_MODE ? (
