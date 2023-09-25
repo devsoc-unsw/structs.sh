@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
-import { Root, Trigger, Content, Item } from '@radix-ui/react-dropdown-menu';
+import styles from 'styles/Configuration.module.css';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { github } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { BackendTypeDeclaration, NativeTypeName, PointerType } from '../../Types/backendType';
 import { useGlobalStore } from '../../Store/globalStateStore';
 import { MotionCollapse } from './MotionCollapse';
+import './typeDeclaration.css';
 
 export enum FieldType {
   RECURSIVE,
@@ -57,7 +60,13 @@ export const TypeAnnotation: React.FC<TypeAnnotationProp> = ({
   return (
     <div style={{ paddingBottom: '8px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div style={{ flex: 1 }}>{typeName}</div>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
+          <span>
+            <SyntaxHighlighter language="c" style={github} className="syntax-highlighter-custom">
+              {typeName}
+            </SyntaxHighlighter>
+          </span>
+        </div>
 
         <div>
           <button
@@ -85,16 +94,17 @@ export const TypeAnnotation: React.FC<TypeAnnotationProp> = ({
                     key={role[0]}
                     type="button"
                     onClick={() => {
-                      setSelectedRole(role[1] as BackendTypeRole);
+                      setSelectedRole(role[1]);
                       setIsDropdownOpen(false);
                     }}
                     style={{
                       background: '#f7f7f7',
                       border: '1px solid #e0e0e0',
-                      borderRadius: '5px',
                       paddingTop: '3px',
                       paddingBottom: '3px',
-                      marginRight: '5px',
+                      paddingRight: '5px',
+                      paddingLeft: '5px',
+                      marginLeft: '-5px',
                       cursor: 'pointer',
                       textAlign: 'left',
                       transition: 'background 0.2s',
@@ -114,6 +124,10 @@ export const TypeAnnotation: React.FC<TypeAnnotationProp> = ({
           </MotionCollapse>
         </div>
       </div>
+
+      <MotionCollapse isOpen={selectedRole === BackendTypeRole.LinkedList}>
+        <div>test</div>
+      </MotionCollapse>
     </div>
   );
 };
