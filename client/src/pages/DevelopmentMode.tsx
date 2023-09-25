@@ -30,7 +30,7 @@ const DevelopmentMode = () => {
   const [backendState, setBackendState] = useState<BackendState>();
   const [activeSession, setActiveSession] = useState(false);
   const [code, setCode] = useState(localStorage.getItem('code') || placeholder);
-  // Tab values correspond to their index 
+  // Tab values correspond to their index
   // ('Configure' has value '0', 'Inspect' has value '1', 'Console' has value '2')
   const [tab, setTab] = useState('0');
 
