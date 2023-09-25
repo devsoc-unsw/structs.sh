@@ -432,10 +432,15 @@ def create_struct_value(parsed_type_decls, struct_fields_str, struct_name):
     for field in struct_fields_str.split(','):
         field = field.strip()
         field_name = field.split('=')[0].strip()
+        type_name = next(
+            (field['typeName'] for field in corresponding_type_decl['fields'] if field['name'] == field_name), "")
         field_value = field.split('=')[1].strip()
+        if type_name == "char" and "'" in field_value:
+            # field_value will look like "49 '1'"
+            field_value = field_value.split("'")[1]
         print(f"{field_name=}", f"{field_value=}")
         value[field_name] = {
-            "typeName": next((field['typeName'] for field in corresponding_type_decl['fields'] if field['name'] == field_name), ""),
+            "typeName": type_name,
             "value": field_value}
 
     return value
