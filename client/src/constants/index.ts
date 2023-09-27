@@ -115,7 +115,7 @@ void print_list(struct node *list) {
     curr = curr->next;
   }
   printf("X\\n");
-}   
+}
 `,
   },
   {
@@ -187,7 +187,7 @@ int main() {
 
 struct node {
     int data;
-    struct node *next; 
+    struct node *next;
 };
 
 struct list {

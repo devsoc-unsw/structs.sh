@@ -212,6 +212,7 @@ const DevelopmentMode = () => {
         </div>
         <div className={classNames(styles.pane, styles.editor)}>
           <CodeEditor
+            programName={programName}
             code={code}
             handleSetCode={handleSetCode}
             currLine={backendState?.frame_info?.line_num}
