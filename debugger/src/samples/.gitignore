@@ -26,3 +26,4 @@ stack_test
 stack_test.o
 stdout
 stdout.o
+user/

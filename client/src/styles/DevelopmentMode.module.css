@@ -16,17 +16,17 @@ body {
   color: var(--slate-12);
 }
 
-.layout > * {
+.layout>* {
   min-width: 0;
   min-height: 0;
 }
 
 .pane {
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* justify-content: center; */
+  /* align-items: center; */
   box-sizing: border-box;
   padding: 10px;
 }
@@ -52,6 +52,7 @@ body {
 }
 
 .inspector {
+  padding-bottom: 0;
   grid-column: 3;
   grid-row: 2;
   border-bottom: var(--border);
@@ -67,4 +68,6 @@ body {
   grid-column: 2 / -1;
   grid-row: 4;
   border-top: var(--border);
+  display: flex;
+  align-items: center;
 }

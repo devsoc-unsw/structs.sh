@@ -5,12 +5,26 @@
 #include <stdint.h>
 #include <stdio.h>
 
+struct train {
+  int carriage;
+  struct train *nextCarriage;
+};
+
+typedef struct station {
+  struct train *firstTrain;
+} Station;
+
 void initAndPrintMaxValues(int n) {
   if (n == 0) {
     return; // Base case: stop recursion when n reaches 0
   }
 
   // Initialize variables for each C type with their maximum values
+  struct train my_train = {.carriage = 34, .nextCarriage = NULL};
+  struct train my_train_2 = {.carriage = 89, .nextCarriage = NULL};
+  my_train.nextCarriage = &my_train_2;
+  struct train *my_train_ptr = &my_train;
+  Station my_station = {.firstTrain = my_train_ptr};
   char my_char = CHAR_MAX;
   signed char my_signed_char = SCHAR_MAX;
   unsigned char my_unsigned_char = UCHAR_MAX;
@@ -59,6 +73,9 @@ void initAndPrintMaxValues(int n) {
   printf("my_unsigned_long: %lu\n", my_unsigned_long);
   printf("my_short_int: %d\n", my_short_int);
   printf("my_wchar_t: %d\n", my_wchar_t);
+  printf("my_train.carriage: %d", my_train.carriage);
+  printf("my_train.nextCarriage: %p", my_train.nextCarriage);
+  printf("my_station.train: %p\n", my_station.firstTrain);
 
   // Recursively call the function with n-1
   initAndPrintMaxValues(n - 1);
