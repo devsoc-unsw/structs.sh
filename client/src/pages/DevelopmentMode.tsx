@@ -45,7 +45,13 @@ const DevelopmentMode = () => {
         size: 4,
       },
     },
-    stack: {},
+    stack: {
+      '0x5300': {
+        name: 'i',
+        value: '0',
+        type: 'pointer',
+      },
+    },
   });
 
   const [count, setCountState] = useState(100);

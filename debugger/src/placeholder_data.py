@@ -508,7 +508,13 @@ PLACEHOLDER_HEAP_DICTS_1D_ARRAY = [
                 'size': 4,
             },
         },
-        'stack': {},
+        'stack': {
+            '0x5300': {
+                'name': 'i',
+                'value': '1',
+                'type': 'pointer',
+            }
+        },
     },
     {
         'heap': {
@@ -539,7 +545,13 @@ PLACEHOLDER_HEAP_DICTS_1D_ARRAY = [
                 'size': 4,
             },
         },
-        'stack': {},
+        'stack': {
+            '0x5300': {
+                'name': 'i',
+                'value': '0',
+                'type': 'pointer',
+            }
+        },
     },
     {
         'heap': {
@@ -576,7 +588,13 @@ PLACEHOLDER_HEAP_DICTS_1D_ARRAY = [
                 'size': 4,
             },
         },
-        'stack': {},
+        'stack': {
+            '0x5300': {
+                'name': 'i',
+                'value': '0',
+                'type': 'pointer',
+            }
+        },
     }
 ]
 
