@@ -4,5 +4,12 @@ user_fn_declarations.o
 user_type_declarations_preprocessed
 user_type_declarations.c
 user_type_declarations.o
+user_malloc_call_preprocessed
+user_malloc_call.c
+user_malloc_call.o
+ptype_output_preprocessed
+ptype_output.c
+ptype_output.o
 *.dYSM
 __pycache__
+venv

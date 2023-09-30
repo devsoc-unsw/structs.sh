@@ -479,7 +479,11 @@ class GraphicalBST extends GraphicalDataStructure {
   }
 
   public get data(): number[] {
+<<<<<<< HEAD
     let data: number[] = [];
+=======
+    const data: number[] = [];
+>>>>>>> 9664a69cb9210b8ac89d475b837fc4b5aac3b250
 
     this.saveInPreOrder(this.root, data);
 
@@ -487,8 +491,12 @@ class GraphicalBST extends GraphicalDataStructure {
   }
 
   private saveInPreOrder(node: GraphicalBSTNode, data: number[]) {
+<<<<<<< HEAD
     if (node == null)
       return;
+=======
+    if (node == null) return;
+>>>>>>> 9664a69cb9210b8ac89d475b837fc4b5aac3b250
 
     data.push(node.value);
 
@@ -499,7 +507,11 @@ class GraphicalBST extends GraphicalDataStructure {
 
   public load(data: number[]): void {
     this.root = GraphicalTreeGenerate.loadTree<GraphicalBSTNode>(GraphicalBSTNode.from, data);
+<<<<<<< HEAD
   };
+=======
+  }
+>>>>>>> 9664a69cb9210b8ac89d475b837fc4b5aac3b250
 }
 
 export default GraphicalBST;

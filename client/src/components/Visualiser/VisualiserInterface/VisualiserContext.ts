@@ -19,7 +19,11 @@ interface VisualiserContextValues {
   loadOptionsContext?: {
     isLoadOptionsExpanded: boolean;
     handleSetLoadOptionsExpansion: (val: boolean) => void;
+<<<<<<< HEAD
   }
+=======
+  };
+>>>>>>> 9664a69cb9210b8ac89d475b837fc4b5aac3b250
 }
 
 const VisualiserContext = React.createContext<VisualiserContextValues>({});

@@ -64,7 +64,11 @@ const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle }) => {
       documentation,
       timeline: { isTimelineComplete, handleTimelineUpdate, isPlaying, handleUpdateIsPlaying },
       codeSnippet: { isCodeSnippetExpanded, handleSetCodeSnippetExpansion },
+<<<<<<< HEAD
       loadOptionsContext: { isLoadOptionsExpanded, handleSetLoadOptionsExpansion }
+=======
+      loadOptionsContext: { isLoadOptionsExpanded, handleSetLoadOptionsExpansion },
+>>>>>>> 9664a69cb9210b8ac89d475b837fc4b5aac3b250
     }),
     [
       controllerRef.current,
@@ -77,7 +81,11 @@ const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle }) => {
       isCodeSnippetExpanded,
       handleSetCodeSnippetExpansion,
       isLoadOptionsExpanded,
+<<<<<<< HEAD
       handleSetLoadOptionsExpansion
+=======
+      handleSetLoadOptionsExpansion,
+>>>>>>> 9664a69cb9210b8ac89d475b837fc4b5aac3b250
     ]
   );
 

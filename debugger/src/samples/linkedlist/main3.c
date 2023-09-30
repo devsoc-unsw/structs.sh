@@ -13,6 +13,10 @@ int main(int argc, char **argv) {
 
   // Initialise first node
   List *l = malloc(sizeof(*l));
+  if (l == NULL) {
+    perror("error: out of memory\n");
+    exit(EXIT_FAILURE);
+  }
   l->head = malloc(sizeof(struct node));
   l->head->data = 1;
   l->head->next = NULL;
@@ -26,9 +30,8 @@ int main(int argc, char **argv) {
 
   // Append third node
   struct node *node3 = malloc(sizeof(struct node));
-  node3->data = 3;
   node3->next = NULL;
-  l->head->next->next->next = node3;
+  l->head->next->next = node3;
   l->size++; // 3
 
   // Append fourth node

@@ -59,6 +59,14 @@ The `structssh-debugger-1` above refers to the image name, which you can see by 
 $ docker images
 ```
 
+## Notes
+
+- The debugger/src/gdb_scripts directory only contains python files that should be run within a gdb instance, for example like this:
+  - ```
+    (gdb) source file_name.py
+  ```
+  - The `import` statements in these python files don't have any practical implication because all python scripts sourced within a gdb instance share the same namespace (it's like running lines from all files in a single interpretter). These `import` statements are just to satisfy the code editor's intellisense.
+
 ## Resources
 
 - [GDB Sourceware documentation](https://sourceware.org/gdb/download/onlinedocs/gdb/index.html#Top)

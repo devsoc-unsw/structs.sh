@@ -22,19 +22,19 @@ int main(int argc, char **argv) {
   node5->next = node7;
   node6->next = node7;
 
-  List *l1 = new_list();
+  struct list *l1 = new_list();
   l1->head = node1;
   print_list(l1); // 1 -> 5 -> 7 -> X
 
-  List *l2 = new_list();
+  struct list *l2 = new_list();
   l2->head = node2;
   print_list(l2); // 2 -> 5 -> 7 -> X
 
-  List *l3 = new_list();
-  l3->head = node2;
+  struct list *l3 = new_list();
+  l3->head = node3;
   print_list(l3); // 3 -> 6 -> 7 -> X
 
-  List *l4 = new_list();
-  l4->head = node2;
+  struct list *l4 = new_list();
+  l4->head = node4;
   print_list(l4); // 4 -> 6 -> 7 -> X
 }

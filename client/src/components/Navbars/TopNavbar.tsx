@@ -12,13 +12,19 @@ import {
   Button,
   ListItemIcon,
   useTheme,
+<<<<<<< HEAD
   Input
+=======
+  Input,
+>>>>>>> 9664a69cb9210b8ac89d475b837fc4b5aac3b250
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CheckIcon from '@mui/icons-material/Check';
 import logo from 'assets/img/logo.png';
 import { Link, useParams } from 'react-router-dom';
 import { titleToUrl, toTitleCase, urlToTitle } from 'utils/url';
+import axios from 'axios';
+import Login from 'components/Login/Login';
 import { getTopics } from '../../visualiser-src/common/helpers';
 import axios from 'axios';
 import Login from 'components/Login/Login';
@@ -55,7 +61,11 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
   const handleLogout = () => {
     localStorage.removeItem('user');
     setLoggedIn(false);
+<<<<<<< HEAD
   }
+=======
+  };
+>>>>>>> 9664a69cb9210b8ac89d475b837fc4b5aac3b250
 
   return (
     <Box>
@@ -106,6 +116,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
               </Button>
             </Grid>
             <Grid item xs={4} display="flex" justifyContent="end">
+<<<<<<< HEAD
               {
                 loggedIn ?
                   <>
@@ -115,6 +126,16 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
                   :
                   <Login handleLogon={setLoggedIn} />
               }
+=======
+              {loggedIn ? (
+                <>
+                  <Button style={{ color: 'white' }}>{localStorage.getItem('user')}</Button>
+                  <Button onClick={handleLogout}>Log Out</Button>
+                </>
+              ) : (
+                <Login handleLogon={setLoggedIn} />
+              )}
+>>>>>>> 9664a69cb9210b8ac89d475b837fc4b5aac3b250
             </Grid>
           </Grid>
         </Toolbar>

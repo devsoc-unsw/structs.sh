@@ -1,9 +1,18 @@
 {
   "name": "server",
   "version": "1.0.0",
+<<<<<<< HEAD
   "main": "index.ts",
   "scripts": {
     "dev": "ts-node-dev src/index.ts"
+=======
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "ts-node-dev src/index.ts",
+    "tsc": "tsc",
+    "lint": "eslint --ext .js,.ts src/",
+    "lint-fix": "eslint --fix --ext .js,.ts src/"
+>>>>>>> 9664a69cb9210b8ac89d475b837fc4b5aac3b250
   },
   "license": "MIT",
   "dependencies": {
@@ -13,10 +22,22 @@
     "mongoose": "^7.0.1"
   },
   "devDependencies": {
+<<<<<<< HEAD
     "@types/express": "^4.17.17",
     "@types/mongoose": "^5.11.97",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^4.9.5"
+=======
+    "@types/cors": "^2.8.14",
+    "@types/express": "^4.17.17",
+    "@types/mongoose": "^5.11.97",
+    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/parser": "^6.7.0",
+    "eslint": "^8.49.0",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.2.2"
+>>>>>>> 9664a69cb9210b8ac89d475b837fc4b5aac3b250
   }
 }

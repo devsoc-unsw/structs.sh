@@ -20,9 +20,13 @@ abstract class GraphicalDataStructure {
   }
 
   // Loads data structure from given data
+<<<<<<< HEAD
   public load(data: number[]): void {
 
   };
+=======
+  public load(data: number[]): void {}
+>>>>>>> 9664a69cb9210b8ac89d475b837fc4b5aac3b250
 }
 
 export default GraphicalDataStructure;

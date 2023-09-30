@@ -1,0 +1,73 @@
+// Stack frame formatting
+
+.stackInspector {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.frame {
+    border: 1px solid #999;
+    padding: 16px;
+    margin: 16px;
+    width: 400px; // Arbitrary narrow value
+}
+
+.frameHeader {
+    // TODO -- would be nice to make it look like a fieldset legend
+}
+
+// CSS grid formatting to get <dl> terms and descriptions on same line
+
+dl {
+    // background-color: yellow;
+    background-color: white;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: min-content;
+}
+
+dd {
+    justify-self: end;
+    margin: 5px;
+}
+
+dt {
+    align-self: center;
+}
+
+// Misc. span formatting
+
+.function {
+    font-weight: bold;
+}
+
+.location {
+    color: #555;
+    font-style: italic;
+}
+
+.name, .type {
+    padding: 5px;
+    background-color: white;
+}
+
+.name {
+    // Variable name
+}
+
+.type {
+    // Variable type
+    color: rebeccapurple;
+}
+
+.value {
+    // TODO: Syntax highlighting?
+    padding: 5px;
+    border: 1px solid lightgrey;
+    border-radius: 4px;
+    background: lightgrey;
+    color: darkgreen;
+}

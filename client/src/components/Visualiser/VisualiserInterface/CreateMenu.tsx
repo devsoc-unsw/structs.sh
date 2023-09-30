@@ -1,11 +1,11 @@
 import { Box, Typography, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React, { useCallback, useContext, useState } from 'react';
-import VisualiserContext from './VisualiserContext';
 import axios from 'axios';
+import { SERVER_URL } from 'utils/constants';
+import VisualiserContext from './VisualiserContext';
 import LoadOptions from './LoadOptions';
 import styles from './Control.module.scss';
-import { SERVER_URL } from 'utils/constants';
 
 const MenuButton = styled(Button)({
   backgroundColor: '#46B693',
@@ -15,12 +15,11 @@ const MenuButton = styled(Button)({
 });
 
 const LoadingButton = styled(Button)({
-
   backgroundColor: '#C81437',
   '&:hover': {
     backgroundColor: '#F05C79',
   },
-})
+});
 
 /**
  * Contains the ability to reset and create new data structures
@@ -38,7 +37,7 @@ const CreateMenu = () => {
 
   // just using this to handle load options
   const {
-    loadOptionsContext: { isLoadOptionsExpanded, handleSetLoadOptionsExpansion }
+    loadOptionsContext: { isLoadOptionsExpanded, handleSetLoadOptionsExpansion },
   } = useContext(VisualiserContext);
 
   const handleReset = useCallback(() => {
@@ -51,42 +50,40 @@ const CreateMenu = () => {
 
   const handleSave = () => {
     const data = {
-      owner: "Hanyuan Li",
+      owner: 'Hanyuan Li',
       type: topicTitle,
-      data: controller.getData()
+      data: controller.getData(),
     };
     console.log(controller.getData());
     axios
-      .post(SERVER_URL + "/api/save", data)
+      .post(`${SERVER_URL}/api/save`, data)
       .then((response) => {
-        console.log("Linked List saved:", response.data);
-        alert("Saved");
+        console.log('Linked List saved:', response.data);
+        alert('Saved');
       })
       .catch((error) => {
-        console.error("Error saving data structure:", error);
+        console.error('Error saving data structure:', error);
       });
   };
 
   const handleLoad = () => {
     axios
-      .get(SERVER_URL + "/api/getAll")
+      .get(`${SERVER_URL}/api/getAll`)
       .then((response) => {
         // Handle the response data
         console.log(response.data);
-        let newOptions: any[] = [];
+        const newOptions: any[] = [];
 
         response.data.forEach((item, index) => {
-          if (item['type'] == topicTitle) {
-            newOptions.push(
-              {
-                key: index,
-                name: item['owner'],
-                type: item['type'],
-                data: item['data']
-              }
-            )
+          if (item.type == topicTitle) {
+            newOptions.push({
+              key: index,
+              name: item.owner,
+              type: item.type,
+              data: item.data,
+            });
           }
-        })
+        });
         setLoadOptions(newOptions);
         console.log(isLoadOptionsExpanded);
         handleSetLoadOptionsExpansion(true);
@@ -94,31 +91,31 @@ const CreateMenu = () => {
       })
       .catch((error) => {
         // Handle the error
-        console.error("Error saving data structure:", error);
+        console.error('Error saving data structure:', error);
       });
-  }
+  };
 
   const load = (data: number[]) => {
     controller.loadData(data);
     handleSetLoadOptionsExpansion(false);
-  }
+  };
 
   // for developing purpoeses only to clear datastructures
   const clearDb = () => {
     axios
-      .delete(SERVER_URL + "/api/deleteAll", {
+      .delete(`${SERVER_URL}/api/deleteAll`, {
         data: {
-          owner: "Hanyuan Li"
-        }
+          owner: 'Hanyuan Li',
+        },
       })
       .then((response) => {
-        alert("cleared db")
+        alert('cleared db');
       })
       .catch((error) => {
         // Handle the error
-        console.error("Error deleting everything:", error);
+        console.error('Error deleting everything:', error);
       });
-  }
+  };
 
   return (
     <Box
@@ -155,10 +152,16 @@ const CreateMenu = () => {
           Load
         </Typography>
       </LoadingButton>
-      {isLoadOptionsExpanded ? <LoadOptions options={loadOptions} handleLoad={load} handleToggleExpansion={() => {
-        handleSetLoadOptionsExpansion(false);
-      }} /> : null}
-    </Box>
+      {isLoadOptionsExpanded ? (
+        <LoadOptions
+          options={loadOptions}
+          handleLoad={load}
+          handleToggleExpansion={() => {
+            handleSetLoadOptionsExpansion(false);
+          }}
+        />
+      ) : null}
+    </Box >
   );
 };
 
