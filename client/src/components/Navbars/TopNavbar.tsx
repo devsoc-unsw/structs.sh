@@ -12,11 +12,7 @@ import {
   Button,
   ListItemIcon,
   useTheme,
-<<<<<<< HEAD
-  Input
-=======
   Input,
->>>>>>> 9664a69cb9210b8ac89d475b837fc4b5aac3b250
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CheckIcon from '@mui/icons-material/Check';
@@ -26,8 +22,6 @@ import { titleToUrl, toTitleCase, urlToTitle } from 'utils/url';
 import axios from 'axios';
 import Login from 'components/Login/Login';
 import { getTopics } from '../../visualiser-src/common/helpers';
-import axios from 'axios';
-import Login from 'components/Login/Login';
 
 const LogoText = styled(Typography)({
   textTransform: 'none',
@@ -61,11 +55,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
   const handleLogout = () => {
     localStorage.removeItem('user');
     setLoggedIn(false);
-<<<<<<< HEAD
-  }
-=======
   };
->>>>>>> 9664a69cb9210b8ac89d475b837fc4b5aac3b250
 
   return (
     <Box>
@@ -116,26 +106,14 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
               </Button>
             </Grid>
             <Grid item xs={4} display="flex" justifyContent="end">
-<<<<<<< HEAD
-              {
-                loggedIn ?
-                  <>
-                    <Button style={{ color: 'white' }} >{localStorage.getItem('user')}</Button>
-                    <Button onClick={handleLogout}>Log Out</Button>
-                  </>
-                  :
-                  <Login handleLogon={setLoggedIn} />
-              }
-=======
               {loggedIn ? (
                 <>
-                  <Button style={{ color: 'white' }}>{localStorage.getItem('user')}</Button>
-                  <Button onClick={handleLogout}>Log Out</Button>
+                  <Button style={{ color: '#0288D1' }}>{localStorage.getItem('user')}</Button>
+                  <Button style={{ color: '#0288D1' }} onClick={handleLogout}>Log Out</Button>
                 </>
               ) : (
                 <Login handleLogon={setLoggedIn} />
               )}
->>>>>>> 9664a69cb9210b8ac89d475b837fc4b5aac3b250
             </Grid>
           </Grid>
         </Toolbar>

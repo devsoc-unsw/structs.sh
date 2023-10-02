@@ -57,16 +57,6 @@ export default class GraphicalSortList extends GraphicalDataStructure {
   });
 
   public get data(): number[] {
-<<<<<<< HEAD
-    var data: number[] = [];
-    this.elementList.forEach((element) => {
-      data.push(element.data.value);
-    })
-    return data;
-  }
-
-
-=======
     const data: number[] = [];
     this.elementList.forEach((element) => {
       data.push(element.data.value);
@@ -74,7 +64,6 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     return data;
   }
 
->>>>>>> 9664a69cb9210b8ac89d475b837fc4b5aac3b250
   public append(values: number[]): AnimationProducer {
     const producer = new SortsCreateAnimationProducer();
     values.forEach((value) => {
@@ -559,9 +548,5 @@ export default class GraphicalSortList extends GraphicalDataStructure {
   public load(data: number[]): void {
     console.log(data);
     this.append(data);
-<<<<<<< HEAD
-  };
-=======
   }
->>>>>>> 9664a69cb9210b8ac89d475b837fc4b5aac3b250
 }

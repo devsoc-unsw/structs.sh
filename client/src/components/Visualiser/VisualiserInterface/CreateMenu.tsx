@@ -49,8 +49,14 @@ const CreateMenu = () => {
   }, [controller]);
 
   const handleSave = () => {
+    const owner = localStorage.getItem('user')
+    if (!owner) {
+      alert("Please Log In to Save");
+      return;
+    }
+
     const data = {
-      owner: 'Hanyuan Li',
+      owner: owner,
       type: topicTitle,
       data: controller.getData(),
     };
@@ -75,7 +81,7 @@ const CreateMenu = () => {
         const newOptions: any[] = [];
 
         response.data.forEach((item, index) => {
-          if (item.type == topicTitle) {
+          if (item.type == topicTitle && item.owner == localStorage.getItem("user")) {
             newOptions.push({
               key: index,
               name: item.owner,

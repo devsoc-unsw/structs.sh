@@ -45,13 +45,8 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
   });
 
   public get data(): number[] {
-<<<<<<< HEAD
-    var data: number[] = [];
-    var curr: GraphicalLinkedListNode = this.head;
-=======
     const data: number[] = [];
     let curr: GraphicalLinkedListNode = this.head;
->>>>>>> 9664a69cb9210b8ac89d475b837fc4b5aac3b250
     while (curr != null) {
       data.push(curr.data.value);
       curr = curr.next;
@@ -76,11 +71,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
       }
       currNode = newNode;
     }
-<<<<<<< HEAD
-  };
-=======
   }
->>>>>>> 9664a69cb9210b8ac89d475b837fc4b5aac3b250
 
   public headPointer: Path;
 
