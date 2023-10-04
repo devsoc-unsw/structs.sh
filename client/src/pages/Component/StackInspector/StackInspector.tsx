@@ -9,30 +9,30 @@ const StackInspector = () => {
   const localDivs = [];
 
   for (const [name, memoryValue] of Object.entries(debuggerData.stack_data)) {
+    // NOTE: this processes the actual output of the debugger correctly, but
+    // does not conform to the backend types (i.e. debugger is sending data in
+    // slightly incorrect format at the moment)
     const typeName = memoryValue.typeName;
     var localValue;
     if (isStructTypeName(typeName)) {
-      localValue = "struct";
+      // todo: actually display these special cases
+      localValue = "<struct>";
     } else if (isPointerType(typeName)) {
-      localValue = "pointer";
+      localValue = "<pointer>";
     } else if (isArrayType(typeName)) {
-      localValue = "array";
+      localValue = "<array>";
     } else {
       localValue = memoryValue.value;
     }
       
-    localDivs.push(
-      <>
-        <dt>
-          <code className={styles.type}>{memoryValue.type.typeName}</code>
-          <code className={styles.name}>{name}</code>
-        </dt>
-        <dd>
-          <code className={styles.value}>{localValue}</code>
-        </dd>
-      </>
-    );
+    localDivs.push({
+      type: memoryValue.typeName,
+      name: name,
+      value: localValue
+    });
   }
+
+  console.log(localDivs);
 
   return (
     <div className={styles.stackInspector}>
@@ -44,7 +44,17 @@ const StackInspector = () => {
           </span>
         </div>
         <dl>
-          {localDivs.join("\r\n")}
+          {localDivs.map((localDiv) => (
+            <>
+              <dt>
+                <code className={styles.type}>{localDiv.type}</code>
+                <code className={styles.name}>{localDiv.name}</code>
+              </dt>
+              <dd>
+                <code className={styles.value}>{localDiv.value}</code>
+              </dd>
+            </>
+          ))}
         </dl>
       </div>
     </div>
