@@ -222,9 +222,20 @@ class CustomNextCommand(gdb.Command):
             else:
                 print("Current line does not contain call to malloc")
 
+
+
             # Print the variable names being freed
             print(malloc_visitor.free)
             print("Variables being freed:")
+
+            if (malloc_visitor.free):
+                gdb.execute('step')
+                address_freed = gdb.execute('p mem', to_string=True)
+                print(address_freed)
+                address_freed = address_freed.strip()
+                address_freed = address_freed.split[' '][-1].strip()
+                del self.heap_data[address_freed]
+
             for var_assigned_to_malloc in malloc_visitor.free_variables:
                 print(var_assigned_to_malloc)
 
