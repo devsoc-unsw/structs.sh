@@ -18,7 +18,7 @@ const App = () => (
           <Route path="/" element={<DevelopmentMode />} />
 
           {/* Visualiser routes */}
-          <Route path="/visualiser/:topic" element={<VisualiserPage />} />
+          <Route path="/visualiser/:topic/:data?" element={<VisualiserPage />} />
 
           {/* Feedback and feature request page */}
           <Route path="/feedback" element={<Feedback />} />

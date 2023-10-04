@@ -7,6 +7,8 @@ import { TopNavbar } from 'components/Navbars';
 import { LineLoader } from 'components/Loader';
 import Visualiser from 'components/Visualiser';
 import { Box } from '@mui/material';
+import { useContext, useEffect } from 'react';
+import VisualiserContext from 'components/Visualiser/VisualiserInterface/VisualiserContext';
 
 const containerVariants = {
   hidden: {
@@ -29,6 +31,16 @@ const containerVariants = {
 const VisualiserPage = () => {
   const topic = toTitleCase(urlToTitle(useParams().topic));
 
+  const data = useParams().data;
+
+  var integerArray = undefined;
+
+  if (data !== undefined) {
+    const digitArray = data.match(/.{1,2}/g) || [];
+    console.log(digitArray);
+    integerArray = digitArray.map((char) => parseInt(char, 10));
+  }
+
   return topic ? (
     <Box height="100vh" overflow="hidden">
       <TopNavbar position="sticky" />
@@ -36,7 +48,7 @@ const VisualiserPage = () => {
         <Helmet>
           <title>{topic !== undefined ? topic : 'Structs.sh'}</title>
         </Helmet>
-        <Visualiser topicTitle={topic} />
+        <Visualiser topicTitle={topic} data={integerArray} />
       </motion.div>
     </Box>
   ) : (

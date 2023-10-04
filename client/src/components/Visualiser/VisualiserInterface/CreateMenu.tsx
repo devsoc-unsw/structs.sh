@@ -6,6 +6,9 @@ import { SERVER_URL } from 'utils/constants';
 import VisualiserContext from './VisualiserContext';
 import LoadOptions from './LoadOptions';
 import styles from './Control.module.scss';
+import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom'
+
 
 const MenuButton = styled(Button)({
   backgroundColor: '#46B693',
@@ -35,6 +38,7 @@ const CreateMenu = () => {
 
   const [loadOptions, setLoadOptions] = useState([]);
 
+
   // just using this to handle load options
   const {
     loadOptionsContext: { isLoadOptionsExpanded, handleSetLoadOptionsExpansion },
@@ -60,7 +64,6 @@ const CreateMenu = () => {
       type: topicTitle,
       data: controller.getData(),
     };
-    console.log(controller.getData());
     axios
       .post(`${SERVER_URL}/api/save`, data)
       .then((response) => {
@@ -123,6 +126,15 @@ const CreateMenu = () => {
       });
   };
 
+  const location = useLocation();
+  const showLink = () => {
+    const pieces = location.pathname.split("/");
+    // console.log(pieces);
+    // console.log(controller.getData());
+    const dataString = controller.getData().join('');
+    alert("http://localhost:3000/" + pieces[1] + "/" + pieces[2] + "/" + dataString);
+  }
+
   return (
     <Box
       display="flex"
@@ -167,6 +179,11 @@ const CreateMenu = () => {
           }}
         />
       ) : null}
+      <MenuButton onClick={showLink}>
+        <Typography color="textPrimary" whiteSpace="nowrap">
+          Create Link
+        </Typography>
+      </MenuButton>
     </Box >
   );
 };
