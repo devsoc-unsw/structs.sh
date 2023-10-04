@@ -1,39 +1,52 @@
 import React from 'react';
 import styles from './StackInspector.module.scss';
+import {isStructTypeName, isPointerType, isArrayType} from '../../Types/backendType';
 import { useGlobalStore } from '../../Store/globalStateStore';
 
 const StackInspector = () => {
-  const { stackInspector: debuggerData }: { stackInspector: any } = useGlobalStore().visualizer;
+  const debuggerData = useGlobalStore().currFrame;
+  // array of html divs each representing a local
+  const localDivs = [];
+
+  for (const [name, memoryValue] of Object.entries(debuggerData.stack_data)) {
+    const typeName = memoryValue.typeName;
+    var localValue;
+    if (isStructTypeName(typeName)) {
+      localValue = "struct";
+    } else if (isPointerType(typeName)) {
+      localValue = "pointer";
+    } else if (isArrayType(typeName)) {
+      localValue = "array";
+    } else {
+      localValue = memoryValue.value;
+    }
+      
+    localDivs.push(
+      <>
+        <dt>
+          <code className={styles.type}>{memoryValue.type.typeName}</code>
+          <code className={styles.name}>{name}</code>
+        </dt>
+        <dd>
+          <code className={styles.value}>{localValue}</code>
+        </dd>
+      </>
+    );
+  }
+
   return (
     <div className={styles.stackInspector}>
-      <div style={{ fontSize: 'small' }}>
-        Note: This is so far just a placeholder, doesn&#39;t show actual stack data from the
-        debugger yet.
-      </div>
-      {debuggerData.stack.map((stackFrame, idx) => (
-        <div className={styles.frame} key={idx}>
-          <div className={styles.frameHeader}>
-            <code className={styles.function}>{stackFrame.callerLocation.function}()</code>{' '}
-            <span className={styles.location}>
-              @ {stackFrame.callerLocation.file}:{stackFrame.callerLocation.line}:
-              {stackFrame.callerLocation.column}
-            </span>
-          </div>
-          <dl>
-            {stackFrame.locals.map((stackLocal) => (
-              <>
-                <dt>
-                  <code className={styles.type}>{stackLocal.type}</code>
-                  <code className={styles.name}>{stackLocal.name}</code>
-                </dt>
-                <dd>
-                  <code className={styles.value}>{stackLocal.value}</code>
-                </dd>
-              </>
-            ))}
-          </dl>
+      <div className={styles.frame}>
+        <div className={styles.frameHeader}>
+          <code className={styles.function}>{debuggerData.frame_info.function}()</code>{' '}
+          <span className={styles.location}>
+            @ {debuggerData.frame_info.file}:{debuggerData.frame_info.line_num}
+          </span>
         </div>
-      ))}
+        <dl>
+          {localDivs.join("\r\n")}
+        </dl>
+      </div>
     </div>
   );
 };
