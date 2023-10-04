@@ -8,19 +8,24 @@ PLACEHOLDER_BACKEND_STATES_LINKED_LIST = [
         },
         'heap_data': {
             "0x1": {
+                "typeName": "struct node",
+                "value": {
+                    "data": {
+                        "typeName": "int",
+                        "value": 11,
+                    },
+                    "next": {
+                        "typeName": "struct node*",
+                        "value": "0x0",
+                    }
+                },
                 "addr": "0x1",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "27",
-                        "next": "0x0"
-                }
             }
         },
         'stack_data': {
             'curr': {
                 "addr": "0x1",
-                "type": "struct node",
+                "typeName": "struct node*",
                 "is_pointer": "true",
             }
         }
@@ -36,28 +41,38 @@ PLACEHOLDER_BACKEND_STATES_LINKED_LIST = [
         },
         'heap_data': {
             "0x1": {
+                "typeName": "struct node",
+                "value": {
+                    "data": {
+                        "typeName": "int",
+                        "value": 11,
+                    },
+                    "next": {
+                        "typeName": "struct node*",
+                        "value": "0x2",
+                    }
+                },
                 "addr": "0x1",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "27",
-                        "next": "0x2"
-                }
             },
             "0x2": {
+                "typeName": "struct node",
+                "value": {
+                    "data": {
+                        "typeName": "int",
+                        "value": 34,
+                    },
+                    "next": {
+                        "typeName": "struct node*",
+                        "value": "0x0",
+                    }
+                },
                 "addr": "0x2",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "34",
-                        "next": "0x0"
-                }
             }
         },
         'stack_data': {
             'curr': {
                 "addr": "0x2",
-                "type": "struct node",
+                "typeName": "struct node*",
                 "is_pointer": "true",
             }
         }
@@ -73,37 +88,52 @@ PLACEHOLDER_BACKEND_STATES_LINKED_LIST = [
         },
         'heap_data': {
             "0x1": {
+                "typeName": "struct node",
+                "value": {
+                    "data": {
+                        "typeName": "int",
+                        "value": 11,
+                    },
+                    "next": {
+                        "typeName": "struct node*",
+                        "value": "0x2",
+                    }
+                },
                 "addr": "0x1",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "27",
-                        "next": "0x2"
-                }
             },
             "0x2": {
+                "typeName": "struct node",
+                "value": {
+                    "data": {
+                        "typeName": "int",
+                        "value": 34,
+                    },
+                    "next": {
+                        "typeName": "struct node*",
+                        "value": "0x3",
+                    }
+                },
                 "addr": "0x2",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "34",
-                        "next": "0x3"
-                }
             },
             "0x3": {
+                "typeName": "struct node",
+                "value": {
+                    "data": {
+                        "typeName": "int",
+                        "value": 56,
+                    },
+                    "next": {
+                        "typeName": "struct node*",
+                        "value": "0x0",
+                    }
+                },
                 "addr": "0x3",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "56",
-                        "next": "0x0"
-                }
             }
         },
         'stack_data': {
             'curr': {
                 "addr": "0x3",
-                "type": "struct node",
+                "typeName": "struct node*",
                 "is_pointer": "true",
             }
         }
@@ -119,28 +149,38 @@ PLACEHOLDER_BACKEND_STATES_LINKED_LIST = [
         },
         'heap_data': {
             "0x1": {
+                "typeName": "struct node",
+                "value": {
+                    "data": {
+                        "typeName": "int",
+                        "value": 11,
+                    },
+                    "next": {
+                        "typeName": "struct node*",
+                        "value": "0x3",
+                    }
+                },
                 "addr": "0x1",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "27",
-                        "next": "0x3"
-                }
             },
             "0x3": {
+                "typeName": "struct node",
+                "value": {
+                    "data": {
+                        "typeName": "int",
+                        "value": 56,
+                    },
+                    "next": {
+                        "typeName": "struct node*",
+                        "value": "0x0",
+                    }
+                },
                 "addr": "0x3",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "56",
-                        "next": "0x0"
-                }
             }
         },
         'stack_data': {
             'curr': {
                 "addr": "0x3",
-                "type": "struct node",
+                "typeName": "struct node*",
                 "is_pointer": "true",
             }
         }
@@ -157,37 +197,52 @@ PLACEHOLDER_BACKEND_STATES_LINKED_LIST = [
         },
         'heap_data': {
             "0x1": {
-                "addr": "0x1",
                 "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "27",
-                        "next": "0x3"
-                }
+                "value": {
+                    "data": {
+                        "type": "int",
+                        "value": 11,
+                    },
+                    "next": {
+                        "type": "struct node*",
+                        "value": "0x3",
+                    }
+                },
+                "addr": "0x1",
             },
             "0x3": {
-                "addr": "0x3",
                 "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "56",
-                        "next": "0x0"
-                }
+                "value": {
+                    "data": {
+                        "type": "int",
+                        "value": 56,
+                    },
+                    "next": {
+                        "type": "struct node*",
+                        "value": "0x0",
+                    }
+                },
+                "addr": "0x3",
             },
             "0x4": {
-                "addr": "0x4",
                 "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "72",
-                        "next": "0x1"
-                }
+                "value": {
+                    "data": {
+                        "type": "int",
+                        "value": 72,
+                    },
+                    "next": {
+                        "type": "struct node*",
+                        "value": "0x1",
+                    }
+                },
+                "addr": "0x4",
             }
         },
         'stack_data': {
             'curr': {
                 "addr": "0x4",
-                "type": "struct node",
+                "type": "struct node*",
                 "is_pointer": "true",
             }
         }
@@ -204,200 +259,70 @@ PLACEHOLDER_BACKEND_STATES_LINKED_LIST = [
         },
         'heap_data': {
             "0x1": {
-                "addr": "0x1",
                 "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "27",
-                        "next": "0x0"
-                }
+                "value": {
+                    "data": {
+                        "type": "int",
+                        "value": 11,
+                    },
+                    "next": {
+                        "type": "struct node*",
+                        "value": "0x3",
+                    }
+                },
+                "addr": "0x1",
             },
             "0x3": {
+                "type": "struct node",
+                "value": {
+                    "data": {
+                        "type": "int",
+                        "value": 56,
+                    },
+                    "next": {
+                        "type": "struct node*",
+                        "value": "0x0",
+                    }
+                },
                 "addr": "0x3",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "56",
-                        "next": "0x4"
-                }
             },
             "0x4": {
-                "addr": "0x4",
                 "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "72",
-                        "next": "0x1"
-                }
+                "value": {
+                    "data": {
+                        "type": "int",
+                        "value": 72,
+                    },
+                    "next": {
+                        "type": "struct node*",
+                        "value": "0x5",
+                    }
+                },
+                "addr": "0x4",
             },
             "0x5": {
-                "addr": "0x5",
                 "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "21",
-                        "next": "0x3"
-                }
+                "value": {
+                    "data": {
+                        "type": "int",
+                        "value": 21,
+                    },
+                    "next": {
+                        "type": "struct node*",
+                        "value": "0x1",
+                    }
+                },
+                "addr": "0x5",
             }
         },
         'stack_data': {
             'curr': {
                 "addr": "0x5",
-                "type": "struct node",
+                "type": "struct node*",
                 "is_pointer": "true",
             }
         }
     },
-    {
-        'frame_info': {
-            'file': 'test_linked_list.c',
-            'line_num': '100',
-            'line': 'printf("Hello world!");',
-            'function': 'main',
-        },
-        'heap_data': {
-            "0x1": {
-                "addr": "0x1",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "27",
-                        "next": "0x0"
-                }
-            },
-            "0x4": {
-                "addr": "0x4",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "72",
-                        "next": "0x1"
-                }
-            },
-            "0x5": {
-                "addr": "0x5",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "21",
-                        "next": "0x4"
-                }
-            }
-        },
-        'stack_data': {
-            'curr': {
-                "addr": "0x5",
-                "type": "struct node",
-                "is_pointer": "true",
-            }
-        }
-    },
-    {
-        'frame_info': {
-            'file': 'test_linked_list.c',
-            'line_num': '100',
-            'line': 'printf("Hello world!");',
-            'function': 'main',
-        },
-        'heap_data': {
-            "0x1": {
-                "addr": "0x1",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "27",
-                        "next": "0x0"
-                }
-            },
-            "0x4": {
-                "addr": "0x4",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "72",
-                        "next": "0x1"
-                }
-            },
-            "0x5": {
-                "addr": "0x5",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "21",
-                        "next": "0x6"
-                }
-            },
-            "0x6": {
-                "addr": "0x6",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "45",
-                        "next": "0x4"
-                }
-            }
-        },
-        'stack_data': {
-            'curr': {
-                "addr": "0x6",
-                "type": "struct node",
-                "is_pointer": "true",
-            }
-        }
-    },
-    {
-        'frame_info': {
-            'file': 'test_linked_list.c',
-            'line_num': '100',
-            'line': 'printf("Hello world!");',
-            'function': 'main',
-        },
-        'heap_data': {
-            "0x1": {
-                "addr": "0x1",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "27",
-                        "next": "0x0"
-                }
-            },
-            "0x4": {
-                "addr": "0x4",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "72",
-                        "next": "0x1"
-                }
-            },
-            "0x5": {
-                "addr": "0x5",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "21",
-                        "next": "0x6"
-                }
-            },
-            "0x6": {
-                "addr": "0x6",
-                "type": "struct node",
-                "is_pointer": "false",
-                "data": {
-                        "value": "45",
-                        "next": "0x4"
-                }
-            }
-        },
-        'stack_data': {
-            'curr': {
-                "addr": "0x6",
-                "type": "struct node",
-                "is_pointer": "true",
-            }
-        }
-    }
 ]
 
 PLACEHOLDER_BACKEND_STATES_BINARY_TREE = [

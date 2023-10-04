@@ -1,15 +1,22 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useRef } from 'react';
 import { socket } from 'utils/socket';
 import styles from 'styles/DevelopmentMode.module.css';
 import globalStyles from 'styles/global.module.css';
 import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
 import { Socket } from 'socket.io-client';
-import CodeEditor from 'components/DevelopmentMode/CodeEditor';
-import StackInspector from 'components/DevelopmentMode/StackInspector';
-import * as dummyData from 'components/DevelopmentMode/dummyData.json';
-import VisualizerMain from './src/VisualizerMain';
-import { BackendState, CType } from './src/visualizer-component/types/backendType';
+import Console from 'components/DevelopmentMode/Console';
+import DevelopmentModeNavbar from '../components/Navbars/DevelopmentModeNavbar';
+import { PLACEHOLDER_PROGRAMS } from '../constants';
+import Configuration from './Component/Configuration/Configuration';
+import Controls from './Component/Control/Controls';
+import CodeEditor from './Component/CodeEditor/CodeEditor';
+import StackInspector from './Component/StackInspector/StackInspector';
+import { useGlobalStore } from './Store/globalStateStore';
+import VisualizerMain from './Component/VisualizerMain';
+import { BackendState } from './Types/backendType';
+import FileSelector from './Component/FileTree/FileSelector';
+import AboutText from './Component/FileTree/AboutText';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -23,22 +30,63 @@ const DevelopmentMode = () => {
         socket.emit('getBreakpoints', line, listName);
     }
   }, []);
-  const [backendState, setBackendState] = useState<BackendState>({
-    frame_info: {
-      file: 'test.c',
-      line_num: 12,
-      line: 'printf("Hello World!");',
-      function: 'main',
-    },
-    stack_data: {},
-    heap_data: {},
-  });
+  const [backendState, setBackendState] = useState<BackendState>();
+  const [activeSession, setActiveSession] = useState(false);
+  const [programName, setProgramName] = useState(
+    PLACEHOLDER_PROGRAMS[0]?.name ?? 'No placeholder programs'
+  );
+  const [code, setCode] = useState(localStorage.getItem('code') || PLACEHOLDER_PROGRAMS[0].text);
+  const [consoleChunks, setConsoleChunks] = useState([]);
 
-  const [count, setCountState] = useState(100);
+  // Tab values correspond to their index
+  // ('Configure' has value '0', 'Inspect' has value '1', 'Console' has value '2')
+  const [tab, setTab] = useState('0');
+
+  const globalStore = useGlobalStore();
+  const { updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation, updateNextFrame } =
+    globalStore;
+  const inputElement = useRef(null);
+
+  const scrollToBottom = () => {
+    if (inputElement.current) {
+      const container = inputElement.current.parentElement;
+      container.scrollTop = container.scrollHeight;
+    }
+  };
+
+  const handleAddConsoleChunk = (chunk) => {
+    setConsoleChunks((oldChunks) => [...oldChunks, chunk]);
+  };
+
+  const handleChangeTab = (newTabValue: string) => {
+    setTab(newTabValue);
+  };
 
   const updateState = (data: any) => {
-    console.log('Update dummy backendState:');
     setBackendState(data);
+    updateNextFrame(data);
+  };
+
+  const handleSetCode = (newCode: string) => {
+    localStorage.setItem('code', newCode);
+    setCode(newCode);
+  };
+
+  const resetDebugSession = () => {
+    setBackendState(undefined);
+    setActiveSession(false);
+    clearTypeDeclarations();
+    clearUserAnnotation();
+    setConsoleChunks([]);
+  };
+
+  const sendCode = () => {
+    resetDebugSession();
+    socket.emit('mainDebug', code);
+  };
+
+  const getNextState = () => {
+    socket.emit('executeNext');
   };
 
   const onDisconnect = useCallback(() => {
@@ -49,7 +97,6 @@ const DevelopmentMode = () => {
     console.log(`Received dummy data:\n`, data);
     if (data !== 'LINE NOT FOUND') {
       updateState(data);
-      // setCountState(count + 1);
     } else {
       console.log('!!! No more dummy data');
     }
@@ -57,6 +104,7 @@ const DevelopmentMode = () => {
 
   const onMainDebug = useCallback((data: any) => {
     console.log(`Received event onMainDebug:\n`, data);
+    setActiveSession(true);
   }, []);
 
   const onSendFunctionDeclaration = useCallback((data: any) => {
@@ -65,24 +113,42 @@ const DevelopmentMode = () => {
 
   const onSendTypeDeclaration = useCallback((data: any) => {
     console.log(`Received type declaration:\n`, data);
+    updateTypeDeclaration(data);
   }, []);
 
   const onSendBackendStateToUser = useCallback((data: any) => {
     console.log(`Received backend state:\n`, data);
-    // Can't use real debugger backend state yet, not in the right format
-    // updateState(data);
+    updateState(data);
   }, []);
 
   const onSendStdoutToUser = useCallback((data: any) => {
     console.log(`Received program stdout:\n`, data);
   }, []);
 
+  const onExecuteNext = useCallback(() => {
+    console.log('Executing next line...');
+  }, []);
+
+  const onProgramWaitingForInput = useCallback((data: any) => {
+    console.log(`Event received from debugger: program is waiting for input\n`, data);
+  }, []);
+
+  const onCompileError = (data: any) => {
+    console.log('Received compilation error:\n', data);
+    // On a compilation error, switch the tab to 'Console' so the user can see the error
+    setConsoleChunks([data]);
+    setTab('2');
+  };
+
+  const onStdout = (data: string) => {
+    setConsoleChunks((oldChunks) => [...oldChunks, data]);
+    scrollToBottom();
+  };
+
   useEffect(() => {
     const onConnect = () => {
       console.log('Connected!');
       console.log('Emitting message to server...');
-      socket.emit('mainDebug');
-      socket.emit('executeNext');
     };
 
     socket.on('connect', onConnect);
@@ -92,11 +158,12 @@ const DevelopmentMode = () => {
     socket.on('mainDebug', onMainDebug);
     socket.on('sendFunctionDeclaration', onSendFunctionDeclaration);
     socket.on('sendTypeDeclaration', onSendTypeDeclaration);
-    socket.on('executeNext', () => {
-      // console.log('Executing next line...');
-    });
+    socket.on('executeNext', onExecuteNext);
     socket.on('sendBackendStateToUser', onSendBackendStateToUser);
     socket.on('sendStdoutToUser', onSendStdoutToUser);
+    socket.on('programWaitingForInput', onProgramWaitingForInput);
+    socket.on('compileError', onCompileError);
+    socket.on('sendStdoutToUser', onStdout);
 
     return () => {
       socket.off('connect', onConnect);
@@ -104,60 +171,82 @@ const DevelopmentMode = () => {
       socket.off('sendDummyLinkedListData', onSendDummyData);
       socket.off('sendDummyBinaryTreeData', onSendDummyData);
       socket.off('mainDebug', onMainDebug);
+      socket.off('executeNext', onExecuteNext);
       socket.off('sendFunctionDeclaration', onSendFunctionDeclaration);
       socket.off('sendTypeDeclaration', onSendTypeDeclaration);
       socket.off('sendBackendStateToUser', onSendBackendStateToUser);
+      socket.off('programWaitingForInput', onProgramWaitingForInput);
+      socket.off('sendStdoutToUser', onSendStdoutToUser);
+      socket.off('compileError', onCompileError);
+      socket.off('sendStdoutToUser', onStdout);
     };
-  }, [updateState]);
+  }, []);
 
   const DEBUG_MODE = false;
   return !DEBUG_MODE ? (
     <div className={classNames(globalStyles.root, styles.light)}>
       <div className={styles.layout}>
-        <div className={classNames(styles.pane, styles.nav)}>Nav bar</div>
-        <div className={classNames(styles.pane, styles.files)}>File tree</div>
+        <div className={classNames(styles.pane, styles.nav)}>
+          <DevelopmentModeNavbar />
+        </div>
+        <div className={classNames(styles.pane, styles.files)} style={{ overflowY: 'scroll' }}>
+          <FileSelector
+            programName={programName}
+            onChangeProgramName={(newProgramName: string) => {
+              setProgramName(newProgramName);
+              handleSetCode(
+                PLACEHOLDER_PROGRAMS.find((program) => program.name === newProgramName)?.text ??
+                  '// Write you code here!'
+              );
+            }}
+          />
+          <div
+            style={{
+              fontSize: 'small',
+              marginTop: '1.6rem',
+              color: 'rgb(85, 85, 85)',
+            }}
+          >
+            <AboutText />
+          </div>
+        </div>
         <div className={classNames(styles.pane, styles.editor)}>
-          <CodeEditor />
+          <CodeEditor
+            code={code}
+            handleSetCode={handleSetCode}
+            currLine={backendState?.frame_info?.line_num}
+          />
         </div>
         <div className={classNames(styles.pane, styles.inspector)}>
-          <Tabs>
-            <Tab label="Console" >
-              <div className={styles.pane}>Console</div>
+          <Tabs value={tab} onValueChange={handleChangeTab}>
+            <Tab label="Configure">
+              <div className={classNames(styles.pane)} style={{ overflow: 'scroll' }}>
+                <Configuration />
+              </div>
             </Tab>
             <Tab label="Inspect">
-              <StackInspector debuggerData={dummyData}/>
+              <StackInspector />
             </Tab>
-            <Tab label="Configure">
-              <div className={styles.pane}>Configure</div>
+            <Tab label="Console">
+              <Console
+                chunks={consoleChunks}
+                handleAddChunk={handleAddConsoleChunk}
+                scrollToBottom={scrollToBottom}
+                isActive={activeSession}
+              />
             </Tab>
           </Tabs>
         </div>
         <div className={classNames(styles.pane, styles.visualiser)}>
-          <VisualizerMain
-            backendState={backendState}
-            getDummyNextState={() => {
-              socket.emit('sendDummyLinkedListData', count);
-              setCountState(count + 1);
-            }}
-            getNextState={() => {
-              socket.emit('executeNext');
-            }}
-          />
+          <VisualizerMain backendState={backendState} />
         </div>
-        <div className={classNames(styles.pane, styles.timeline)}>Timeline</div>
+        <div className={classNames(styles.pane, styles.timeline)}>
+          <Controls getNextState={getNextState} sendCode={sendCode} activeSession={activeSession} />
+        </div>
       </div>
     </div>
   ) : (
-    <VisualizerMain
-      backendState={backendState}
-      getDummyNextState={() => {
-        socket.emit('sendDummyLinkedListData', count);
-        setCountState(count + 1);
-      }}
-      getNextState={() => {
-        socket.emit('executeNext');
-      }}
-    />
+    <VisualizerMain backendState={backendState} />
   );
 };
 

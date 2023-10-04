@@ -3,3 +3,4 @@ build-storybook
 storybook-static
 build
 .jest-test-results.json
+.env
