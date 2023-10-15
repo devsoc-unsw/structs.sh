@@ -79,17 +79,46 @@ router.post('/auth/login', async (req: Request, res: Response) => {
   res.json({ found });
 });
 
-router.post('/api/saveFile', (req : Request, res: Response) => {
-  const { username, filename, fileData } = req.body;
 
+/********* ********* ********* ********* ********* *********
+ *
+ * UNSAFE CODE - CHECK PATHS ARE NOT BAD
+ *
+********** ********* ********* ********* ********* ********* */
+router.post('/api/saveFile', (req : Request, res: Response) => {
+
+  // todo: Add workspace to this
+  const { username, filename, fileData } = req.body;
+  let path = './user-files/' + username;
   try {
-    if (!existsSync('./user-files/' + username)) {
-      mkdirSync('./user-files/' + username);
+    if (!existsSync(path)) {
+      mkdirSync(path);
     }
 
-    let path = './user-files/' + username + '/' + filename;
+    path = path + '/' + filename;
     writeFileSync(path, fileData);
     // save to volume here
+    res.json({ path: path });
+  } catch (err) {
+    res.json({ error: err });
+  }
+});
+
+router.post('/api/saveWorkspace', (req: Request, res: Response) => {
+  const { username, workspaceName } = req.body;
+  console.log(username + ' ' + workspaceName);
+
+  let path = './user-files/' + username + '/workspaces';
+  try {
+    if (!existsSync(path)) {
+      mkdirSync(path);
+    }
+
+    path = path + '/' + workspaceName;
+    if (!existsSync(path)) {
+      mkdirSync(path);
+    }
+
     res.json({ path: path });
   } catch (err) {
     res.json({ error: err });

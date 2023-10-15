@@ -70,28 +70,24 @@ const FileSelector = ({
     setShowForm(false);
   };
 
-  const customControlStyles = base => ({
-    height: 200,
-    minHeight: 200
-});
-
   return (
     <div>
-      <div>Select Workspace</div>
+      <WorkSpaceMenu>
+        <div>Select Workspace</div>
         <WorkspaceForm/>
-        <div style={{width: '195px', minWidth: '195px', height: '20px', minHeight: '20px'}}>
-        <Select
-          styles={{control: customControlStyles}}
-          value={programName}
-          onValueChange={onChangeProgramName}
-          placeholder="Select Workspace..."
-        >
-          {files.map((program, index: number) => (
-            <SelectItem style={{ fontSize: '13px' }} value={program.name} className="" key={index}>
-              {program.name}
-            </SelectItem>
-          ))}
-        </Select>
+      </WorkSpaceMenu>
+          <div style={{paddingTop: '10px'}}>
+          <Select
+            value={programName}
+            onValueChange={onChangeProgramName}
+            placeholder="Select Workspace..."
+          >
+            {files.map((program, index: number) => (
+              <SelectItem style={{ fontSize: '13px' }} value={program.name} className="" key={index}>
+                {program.name}
+              </SelectItem>
+            ))}
+          </Select>
         </div>
     </div>
   );
