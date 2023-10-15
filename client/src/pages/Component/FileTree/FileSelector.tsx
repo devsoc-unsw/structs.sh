@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { PLACEHOLDER_PROGRAMS } from '../../../constants';
 import axios from 'axios';
 import { SERVER_URL } from 'utils/constants';
+import styled from '@emotion/styled';
+import WorkspaceForm from './WorkspaceForm';
 
 const FileSelector = ({
   programName,
@@ -49,45 +51,48 @@ const FileSelector = ({
     });
   };
 
+  const WorkSpaceMenu = styled.div`
+    display: flex;
+    justify-content: flex-start;
+    align-items: 'center';
+  `
+
+  const [showForm, setShowForm] = useState(false);
+  const [newOption, setNewOption] = useState('');
+  const [options, setOptions] = useState(['Option 1', 'Option 2']);
+
+  const handleAddOption = () => {
+    // Update your options state with the new option
+    setOptions([...options, newOption]);
+
+    // Clear the form and hide it
+    setNewOption('');
+    setShowForm(false);
+  };
+
+  const customControlStyles = base => ({
+    height: 200,
+    minHeight: 200
+});
+
   return (
     <div>
-      <div>Select a sample program</div>
-      <Select
-        value={programName}
-        onValueChange={onChangeProgramName}
-        placeholder="Select program..."
-      >
-        {files.map((program, index: number) => (
-          <SelectItem value={program.name} className="" key={index}>
-            {program.name}
-          </SelectItem>
-        ))}
-      </Select>
-      <br></br>
-      <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="Create New File:" >Create New File:</label>
-        <input
-          style={{backgroundColor: '#cfcfcf', borderRadius: 4, padding: 4}}
-          id="filename"
-          name='filename'
-          value={formData.filename}
-          onChange={handleInputChange}
-          placeholder='enter file name here'
-        />
-      </div>
-      <div>
-        <button
-          style={{
-            backgroundColor: '#cfcfcf',
-            borderRadius: 4,
-            marginTop: 10,
-            padding: 4,
-          }}
-          type="submit">Create
-        </button>
-      </div>
-    </form>
+      <div>Select Workspace</div>
+        <WorkspaceForm/>
+        <div style={{width: '195px', minWidth: '195px', height: '20px', minHeight: '20px'}}>
+        <Select
+          styles={{control: customControlStyles}}
+          value={programName}
+          onValueChange={onChangeProgramName}
+          placeholder="Select Workspace..."
+        >
+          {files.map((program, index: number) => (
+            <SelectItem style={{ fontSize: '13px' }} value={program.name} className="" key={index}>
+              {program.name}
+            </SelectItem>
+          ))}
+        </Select>
+        </div>
     </div>
   );
 };
