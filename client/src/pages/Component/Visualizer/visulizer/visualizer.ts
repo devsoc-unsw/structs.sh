@@ -9,4 +9,8 @@ export interface VisualizerState {
   };
 }
 
+/* export function setCenteredPosition(graph: GenericGraph, svg: SVGSVGElement) {
+
+} */
+
 export type VisualizerComponent = React.FC<VisualizerState>;
