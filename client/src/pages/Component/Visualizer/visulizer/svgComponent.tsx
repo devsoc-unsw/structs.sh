@@ -8,10 +8,7 @@ interface SvgComponentProps {
   children: React.ReactNode;
 }
 
-const ScaleBar = ({ viewBoxWidth }: { viewBoxWidth: number }) => {
-  const scaleWidth = 100; // fixed width in user space (e.g., a bar that always tries to represent 100 units in the user's space)
-  const displayWidth = (scaleWidth / viewBoxWidth) * 1000; // This calculates the width the bar should have in the SVG.
-
+const ScaleBar = ({ scalePercentage }: { scalePercentage: number }) => {
   return (
     <div
       style={{
@@ -23,46 +20,47 @@ const ScaleBar = ({ viewBoxWidth }: { viewBoxWidth: number }) => {
         borderRadius: '5px',
       }}
     >
-      <svg width={displayWidth} height="20">
-        <rect x="0" y="5" width={displayWidth} height="10" fill="gray" />
-      </svg>
-      <div style={{ fontSize: '10px', textAlign: 'center' }}>{`${Math.round(displayWidth)}`}</div>
+      <div style={{ fontSize: '10px', textAlign: 'center' }}>{`${Math.round(
+        scalePercentage
+      )}%`}</div>
     </div>
   );
 };
 
 const SvgComponent: React.FC<SvgComponentProps> = ({ children, dimension, centerCoord }) => {
-  const [viewBoxWidth, setViewBoxWidth] = useState(1000);
+  const [scalePercentage, setScalePercentage] = useState(100);
   const controls = useAnimation();
   const svgRef = useRef<SVGSVGElement | null>(null);
+
+  const VIEW_BOX_HEIGHT = 1000;
+  const VIEW_BOX_WIDTH = 1000;
   useEffect(() => {
+    const effectiveWidth = VIEW_BOX_WIDTH / (scalePercentage / 100);
+    const effectiveHeight = VIEW_BOX_HEIGHT / (scalePercentage / 100);
     if (svgRef.current) {
       controls.start({
-        viewBox: `${centerCoord.x - viewBoxWidth / 2} ${
-          centerCoord.y - viewBoxWidth / 2
-        } ${viewBoxWidth} ${viewBoxWidth}`,
+        viewBox: `${centerCoord.x - effectiveWidth / 2} ${
+          centerCoord.y - effectiveHeight / 2
+        } ${effectiveWidth} ${effectiveHeight}`,
         transition: {
           duration: 2, // this will set the duration to 200ms
         },
       });
     }
-    /*  */
-    // viewBox: `${centerCoord.x - viewBoxWidth / 2} ${centerCoord.y - viewBoxWidth / 2} ${viewBoxWidth} ${viewBoxWidth}`,
-    /* const viewBox: SVGRect = svgRef.current.viewBox.baseVal;
-    viewBox.x = centerCoord.x - viewBoxWidth / 2;
-    viewBox.y = centerCoord.y - viewBoxWidth / 2; */
-  }, [viewBoxWidth, controls, centerCoord]);
+  }, [scalePercentage, controls, centerCoord]);
 
   /**
    * SVG Section
    */
-
   const handleDrag = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     event.preventDefault();
     const viewBox: SVGRect = svgRef.current.viewBox.baseVal;
     viewBox.x -= info.delta.x;
     viewBox.y -= info.delta.y;
   };
+
+  const MAX_SCALE = 400;
+  const MIN_SCALE = 25;
   const handleWheel = (event: React.WheelEvent<SVGSVGElement>) => {
     event.preventDefault();
 
@@ -72,25 +70,33 @@ const SvgComponent: React.FC<SvgComponentProps> = ({ children, dimension, center
     const dx = (viewBox.width * (zoomFactor - 1)) / 2;
     const dy = (viewBox.height * (zoomFactor - 1)) / 2;
 
-    if (event.deltaY < 0) {
-      // zoom in
-      viewBox.width /= zoomFactor;
-      viewBox.height /= zoomFactor;
-      viewBox.x += dx;
-      viewBox.y += dy;
+    let newScale: number = MIN_SCALE;
+    if (event.deltaY <= 0) {
+      // Potential zoom in
+      newScale = scalePercentage * zoomFactor;
 
-      setViewBoxWidth((prevWidth) => prevWidth / zoomFactor);
+      // Check if we're not exceeding the maximum zoom.
+      if (newScale <= MAX_SCALE) {
+        viewBox.width /= zoomFactor;
+        viewBox.height /= zoomFactor;
+        viewBox.x += dx;
+        viewBox.y += dy;
+      }
+      setScalePercentage(Math.min(MAX_SCALE, newScale));
     } else {
-      // zoom out
-      viewBox.width *= zoomFactor;
-      viewBox.height *= zoomFactor;
-      viewBox.x -= dx;
-      viewBox.y -= dy;
+      // Potential zoom out
+      newScale = scalePercentage / zoomFactor;
 
-      setViewBoxWidth((prevWidth) => prevWidth * zoomFactor);
+      // Check if we're not going below the minimum zoom.
+      if (newScale >= MIN_SCALE) {
+        viewBox.width *= zoomFactor;
+        viewBox.height *= zoomFactor;
+        viewBox.x -= dx;
+        viewBox.y -= dy;
+      }
+      setScalePercentage(Math.max(MIN_SCALE, newScale));
     }
   };
-
   return (
     <div>
       <motion.svg
@@ -111,7 +117,7 @@ const SvgComponent: React.FC<SvgComponentProps> = ({ children, dimension, center
         {children}
       </motion.svg>
       <div>
-        <ScaleBar viewBoxWidth={viewBoxWidth} />
+        <ScaleBar scalePercentage={scalePercentage} />
       </div>
     </div>
   );
