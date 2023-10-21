@@ -19,8 +19,8 @@ const LinkedList: VisualizerComponent = ({ graphState, dimension }: VisualizerSt
     [key: string]: JSX.Element;
   }>({});
   const [centerCoord, setCenterCoord] = useState<Coord>({
-    x: 500,
-    y: 500,
+    x: 800,
+    y: 400,
   });
 
   // Replace by store
@@ -115,8 +115,9 @@ const LinkedList: VisualizerComponent = ({ graphState, dimension }: VisualizerSt
 
     // Find the center position from the node
     // Initial extreme values for the boundary
+    const nodeSize = Object.values(graphState.nodes).length;
     const center = Object.values(graphState.nodes).reduce(
-      (acc, node) => ({ x: acc.x + node.x, y: acc.y + node.y }),
+      (acc, node) => ({ x: acc.x + node.x / nodeSize, y: acc.y + node.y / nodeSize }),
       { x: 0, y: 0 }
     );
 

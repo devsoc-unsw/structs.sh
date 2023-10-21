@@ -14,13 +14,13 @@ const ScaleBar = ({ scalePercentage }: { scalePercentage: number }) => {
       style={{
         position: 'fixed',
         bottom: '10px',
-        right: '10px',
+        right: '15px',
         background: 'white',
         padding: '5px',
         borderRadius: '5px',
       }}
     >
-      <div style={{ fontSize: '10px', textAlign: 'center' }}>{`${Math.round(
+      <div style={{ fontSize: '12px', textAlign: 'center' }}>{`${Math.round(
         scalePercentage
       )}%`}</div>
     </div>
@@ -37,13 +37,14 @@ const SvgComponent: React.FC<SvgComponentProps> = ({ children, dimension, center
   useEffect(() => {
     const effectiveWidth = VIEW_BOX_WIDTH / (scalePercentage / 100);
     const effectiveHeight = VIEW_BOX_HEIGHT / (scalePercentage / 100);
+
     if (svgRef.current) {
       controls.start({
         viewBox: `${centerCoord.x - effectiveWidth / 2} ${
           centerCoord.y - effectiveHeight / 2
         } ${effectiveWidth} ${effectiveHeight}`,
         transition: {
-          duration: 2, // this will set the duration to 200ms
+          duration: 1.25, // this will set the duration to 200ms
         },
       });
     }
