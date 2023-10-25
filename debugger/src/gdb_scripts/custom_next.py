@@ -238,7 +238,7 @@ class CustomNextCommand(gdb.Command):
         # which should tell the client that the debugging session is over.
 
         # Go to the next line of code
-        if variable_freed is False:
+        if not variable_freed:
             gdb.execute('next')
 
         # TODO: Immediately after executing next, we need to check whether the program
