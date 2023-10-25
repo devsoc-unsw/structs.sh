@@ -88,6 +88,8 @@ class CustomNextCommand(gdb.Command):
 
         print("\n=== Running CustomNextCommand in gdb...")
 
+        variable_freed = False
+
         frame_info = get_frame_info()
 
         temp_line = gdb.execute('frame', to_string=True)
@@ -214,7 +216,7 @@ class CustomNextCommand(gdb.Command):
 
             if malloc_visitor.free:
                 print("inside malloc_visitor.free")
-
+                variable_freed = True
 
                 # Step into free
                 gdb.execute('step')
@@ -236,7 +238,7 @@ class CustomNextCommand(gdb.Command):
         # which should tell the client that the debugging session is over.
 
         # Go to the next line of code
-        if malloc_visitor.free is False:
+        if variable_freed is False:
             gdb.execute('next')
 
         # TODO: Immediately after executing next, we need to check whether the program
