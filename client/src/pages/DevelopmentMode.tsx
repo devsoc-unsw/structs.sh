@@ -15,8 +15,8 @@ import StackInspector from './Component/StackInspector/StackInspector';
 import { useGlobalStore } from './Store/globalStateStore';
 import VisualizerMain from './Component/VisualizerMain';
 import { BackendState } from './Types/backendType';
-import FileSelector from './Component/FileTree/FileSelector';
 import AboutText from './Component/FileTree/AboutText';
+import WorkspaceSelector from './Component/FileTree/WorkspaceSelector';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -190,7 +190,7 @@ const DevelopmentMode = () => {
           <DevelopmentModeNavbar />
         </div>
         <div className={classNames(styles.pane, styles.files)} style={{ overflowY: 'scroll' }}>
-          <FileSelector
+          <WorkspaceSelector
             programName={programName}
             onChangeProgramName={(newProgramName: string) => {
               setProgramName(newProgramName);

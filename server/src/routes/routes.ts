@@ -2,7 +2,7 @@ import express, { type Request, type Response } from 'express';
 import { dataStructure } from '../models/dataStructure';
 import { users } from '../models/users';
 import { authLogin, authRegister } from '../service/service';
-import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'fs';
+import { writeFileSync, readFileSync, existsSync, mkdirSync, readdirSync } from 'fs';
 
 const router = express.Router();
 
@@ -122,6 +122,27 @@ router.post('/api/saveWorkspace', (req: Request, res: Response) => {
     res.json({ path: path });
   } catch (err) {
     res.json({ error: err });
+  }
+});
+
+router.get('/api/retrieveFilesInWorkspace', (req: Request, res: Response) => {
+  const username = req.query.username;
+  const workspaceName = req.query.workspaceName;
+  let dirPath = './user-files/' + username + '/workspaces/' + workspaceName;
+
+  let files = [];
+  try {
+    const dirFiles = readdirSync(dirPath);
+    for (const file of dirFiles) {
+      let filename = file;
+      let filePath = dirPath + '/' + filename;
+      let content = readFileSync(filePath).toString();
+      files.push({name: filename, text: content});
+    }
+
+    res.send({ files: files });
+  } catch (err) {
+    res.send({ error: err });
   }
 });
 

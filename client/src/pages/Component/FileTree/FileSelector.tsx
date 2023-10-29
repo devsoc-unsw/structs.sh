@@ -1,24 +1,24 @@
 import Select, { SelectItem } from 'components/Select/Select';
 import React, { useState } from 'react';
-import { PLACEHOLDER_PROGRAMS } from '../../../constants';
 import axios from 'axios';
 import { SERVER_URL } from 'utils/constants';
-import styled from '@emotion/styled';
-import WorkspaceForm from './WorkspaceForm';
 
 const FileSelector = ({
   programName,
   onChangeProgramName,
+  files,
 }: {
   programName: string;
   onChangeProgramName: (programName: string) => void;
+  files: {
+    name: string;
+    text: string;
+  }[]
 }) => {
 
   const [formData, setFormData] = useState({
     filename: '',
   });
-
-  const [files, setFiles] = useState(PLACEHOLDER_PROGRAMS);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -29,33 +29,27 @@ const FileSelector = ({
   };
 
   const handleSubmit = (event) => {
-    event.preventDefault();
+    // event.preventDefault();
 
-    if (formData.filename == '' || (files.some(file => file.name == formData.filename))) {
-      return;
-    }
+    // if (formData.filename == '' || (files.some(file => file.name == formData.filename))) {
+    //   return;
+    // }
 
-    setFiles([
-      ...files,
-      { name: formData.filename, text: ''}
-    ]);
+    // // setFiles([
+    // //   ...files,
+    // //   { name: formData.filename, text: ''}
+    // // ]);
 
 
-    const data = {
-      username: 'benp123',
-      filename: programName,
-      fileData: ''
-    };
+    // const data = {
+    //   username: 'benp123',
+    //   filename: programName,
+    //   fileData: ''
+    // };
 
-    axios.post(SERVER_URL + '/api/saveFile', data).then((respsonse) => {
-    });
+    // axios.post(SERVER_URL + '/api/saveFile', data).then((respsonse) => {
+    // });
   };
-
-  const WorkSpaceMenu = styled.div`
-    display: flex;
-    justify-content: flex-start;
-    align-items: 'center';
-  `
 
   const [showForm, setShowForm] = useState(false);
   const [newOption, setNewOption] = useState('');
@@ -71,25 +65,19 @@ const FileSelector = ({
   };
 
   return (
-    <div>
-      <WorkSpaceMenu>
-        <div>Select Workspace</div>
-        <WorkspaceForm/>
-      </WorkSpaceMenu>
-          <div style={{paddingTop: '10px'}}>
-          <Select
-            value={programName}
-            onValueChange={onChangeProgramName}
-            placeholder="Select Workspace..."
-          >
-            {files.map((program, index: number) => (
-              <SelectItem style={{ fontSize: '13px' }} value={program.name} className="" key={index}>
-                {program.name}
-              </SelectItem>
-            ))}
-          </Select>
-        </div>
-    </div>
+      <div style={{paddingTop: '10px'}}>
+        <Select
+          value={programName}
+          onValueChange={onChangeProgramName}
+          placeholder="Select File..."
+        >
+          {files.map((file, index: number) => (
+            <SelectItem style={{ fontSize: '13px' }} value={file.name} className="" key={index}>
+              {file.name}
+            </SelectItem>
+          ))}
+        </Select>
+      </div>
   );
 };
 
