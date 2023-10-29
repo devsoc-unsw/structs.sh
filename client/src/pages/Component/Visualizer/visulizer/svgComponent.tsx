@@ -31,42 +31,78 @@ const ScaleBar = ({ scalePercentage }: { scalePercentage: number }) => {
   );
 };
 
-const SvgComponent: React.FC<SvgComponentProps> = ({ children, dimension, centerCoord }) => {
+const SvgComponent: React.FC<SvgComponentProps> = ({
+  children,
+  dimension,
+  centerCoord: centerCoordProp,
+}) => {
   const [scalePercentage, setScalePercentage] = useState(100);
   const controls = useAnimation();
   const svgRef = useRef<SVGSVGElement | null>(null);
 
   const VIEW_BOX_HEIGHT = 800;
   const VIEW_BOX_WIDTH = 400;
+  const [isLocked, setIsLocked] = useState(true);
+  const [centerCoord, setCenterCoord] = useState<Coord>({
+    x: 0,
+    y: 0,
+  });
+
   useEffect(() => {
+    if (isLocked) {
+      setCenterCoord(centerCoordProp);
+    }
+  }, [centerCoordProp]);
+
+  const handlePosSimulation = () => {
     const effectiveWidth = VIEW_BOX_WIDTH / (scalePercentage / 100);
     const effectiveHeight = VIEW_BOX_HEIGHT / (scalePercentage / 100);
 
+    console.log('Simulate', {
+      effectiveWidth,
+      effectiveHeight,
+      centerCoord,
+    });
     if (svgRef.current) {
-      controls.start({
-        viewBox: `${centerCoord.x - effectiveWidth / 2} ${
-          centerCoord.y - effectiveHeight / 2
-        } ${effectiveWidth} ${effectiveHeight}`,
-        transition: {
-          duration: 1.25, // this will set the duration to 200ms
-        },
-      });
+      if (isLocked) {
+        controls.start({
+          viewBox: `${centerCoord.x - effectiveWidth / 2} ${
+            centerCoord.y - effectiveHeight / 2
+          } ${effectiveWidth} ${effectiveHeight}`,
+          transition: {
+            duration: 1.25, // this will set the duration to 200ms
+          },
+        });
+      } else {
+        controls.set({
+          viewBox: `${centerCoord.x - effectiveWidth / 2} ${
+            centerCoord.y - effectiveHeight / 2
+          } ${effectiveWidth} ${effectiveHeight}`,
+        });
+      }
     }
-  }, [scalePercentage, controls, centerCoord]);
+  };
+  useEffect(() => {
+    handlePosSimulation();
+  }, [scalePercentage, controls, centerCoord, isLocked]);
 
   /**
    * SVG Section
    */
-  const [isLocked, setIsLocked] = useState(false);
   const toggleLock = () => {
-    setIsLocked((prevLockStatus) => !prevLockStatus);
+    setIsLocked((prevLockStatus) => {
+      setCenterCoord(centerCoordProp);
+      return !prevLockStatus;
+    });
   };
 
   const handleDrag = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     event.preventDefault();
-    const viewBox: SVGRect = svgRef.current.viewBox.baseVal;
-    viewBox.x -= info.delta.x;
-    viewBox.y -= info.delta.y;
+    if (isLocked) return;
+    setCenterCoord({
+      x: (centerCoord.x -= info.delta.x),
+      y: (centerCoord.y -= info.delta.y),
+    });
   };
 
   const MAX_SCALE = 400;
@@ -118,7 +154,7 @@ const SvgComponent: React.FC<SvgComponentProps> = ({ children, dimension, center
           initial="hidden"
           overflow="hidden"
           animate={controls}
-          drag={!isLocked}
+          drag
           dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
           dragMomentum={false}
           dragElastic={0}
