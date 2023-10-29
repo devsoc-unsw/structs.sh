@@ -1,5 +1,9 @@
 import { PanInfo, motion, useAnimation } from 'framer-motion';
 import React, { useEffect, useRef, useState } from 'react';
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
+import LockIcon from '@material-ui/icons/Lock';
+import LockOpenIcon from '@material-ui/icons/LockOpen';
 import { Coord } from '../../../Types/geometry/geometry';
 
 interface SvgComponentProps {
@@ -32,8 +36,8 @@ const SvgComponent: React.FC<SvgComponentProps> = ({ children, dimension, center
   const controls = useAnimation();
   const svgRef = useRef<SVGSVGElement | null>(null);
 
-  const VIEW_BOX_HEIGHT = 1000;
-  const VIEW_BOX_WIDTH = 1000;
+  const VIEW_BOX_HEIGHT = 800;
+  const VIEW_BOX_WIDTH = 400;
   useEffect(() => {
     const effectiveWidth = VIEW_BOX_WIDTH / (scalePercentage / 100);
     const effectiveHeight = VIEW_BOX_HEIGHT / (scalePercentage / 100);
@@ -53,6 +57,11 @@ const SvgComponent: React.FC<SvgComponentProps> = ({ children, dimension, center
   /**
    * SVG Section
    */
+  const [isLocked, setIsLocked] = useState(false);
+  const toggleLock = () => {
+    setIsLocked((prevLockStatus) => !prevLockStatus);
+  };
+
   const handleDrag = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     event.preventDefault();
     const viewBox: SVGRect = svgRef.current.viewBox.baseVal;
@@ -100,23 +109,34 @@ const SvgComponent: React.FC<SvgComponentProps> = ({ children, dimension, center
   };
   return (
     <div>
-      <motion.svg
-        ref={svgRef}
-        width={dimension.width}
-        height={dimension.height}
-        viewBox="0 0 1000 1000"
-        initial="hidden"
-        overflow="hidden"
-        animate={controls}
-        drag
-        dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
-        dragMomentum={false}
-        dragElastic={0}
-        onDrag={(event, info) => handleDrag(event, info)}
-        onWheel={(event) => handleWheel(event)}
-      >
-        {children}
-      </motion.svg>
+      <div style={{ position: 'relative', width: dimension.width, height: dimension.height }}>
+        <motion.svg
+          ref={svgRef}
+          width={dimension.width}
+          height={dimension.height}
+          viewBox="0 0 1000 1000"
+          initial="hidden"
+          overflow="hidden"
+          animate={controls}
+          drag={!isLocked}
+          dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+          dragMomentum={false}
+          dragElastic={0}
+          onDrag={(event, info) => handleDrag(event, info)}
+          onWheel={(event) => handleWheel(event)}
+        >
+          {children}
+        </motion.svg>
+
+        {/* Tooltip and lock icon placed on the top right within the SVG */}
+        <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
+          <Tooltip title={isLocked ? 'Unlock Visualizer View' : 'Lock View'}>
+            <IconButton onClick={toggleLock}>
+              {isLocked ? <LockIcon /> : <LockOpenIcon />}
+            </IconButton>
+          </Tooltip>
+        </div>
+      </div>
       <div>
         <ScaleBar scalePercentage={scalePercentage} />
       </div>
