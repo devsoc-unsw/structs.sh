@@ -149,7 +149,7 @@ export class TreeParser implements Parser {
     return treeNodes;
   }
 
-  parseInitialState(
+  parseState(
     backendStructure: BackendState,
     editorAnnotation: UserAnnotation
   ): FrontendTreeGraph {

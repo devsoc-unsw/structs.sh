@@ -202,10 +202,7 @@ export class LinkedListParser implements Parser {
   /**
    * Parser functionality
    */
-  parseInitialState(
-    backendStructure: BackendState,
-    annotation: UserAnnotation
-  ): FrontendLinkedListGraph {
+  parseState(backendStructure: BackendState, annotation: UserAnnotation): FrontendLinkedListGraph {
     const nodes: NodeEntity[] = [];
     const edges: EdgeEntity[] = [];
     const cacheEntity: { [uid: string]: EntityConcrete } = {};
