@@ -8,11 +8,13 @@ import axios from 'axios';
 
 const CodeEditor = ({
   programName,
+  workspaceName,
   code,
   handleSetCode,
   currLine = 0,
 }: {
   programName: string;
+  workspaceName: string;
   code: string;
   handleSetCode: (newCode: string) => void;
   currLine: number;
@@ -28,35 +30,48 @@ const CodeEditor = ({
     },
   ];
 
-  function loadCode() {
-    axios.get(SERVER_URL + '/api/retrieveFile', {
-      params: {
+  if (programName != '') {
+    const loadCode = () => {
+      axios.get(SERVER_URL + '/api/retrieveFile', {
+        params: {
+          username: 'benp123',
+          workspace: workspaceName,
+          filename: programName,
+        }
+      }).then((response) => {
+        if (response.data.hasOwnProperty('error')) {
+          console.log("ERROR: ", + response.data.error)
+          return "";
+        }
+
+        return response.data.content;
+      });
+
+      return "";
+    }
+
+    // TODO: add workspace
+    const changeCode = (newCode: string) => {
+      const data = {
         username: 'benp123',
+        workspace: workspaceName,
         filename: programName,
-      }
-    }).then((response) => {
-      return response.data.content;
-    });
+        fileData: code
+      };
 
-    return "";
-  }
+      axios.post(SERVER_URL + '/api/saveFile', data).then((response) => {
+        if (response.data.hasOwnProperty('error')) {
+          console.log("ERROR: ", + response.data.error)
+        }
+      });
 
-  function changeCode(newCode: string) {
-    const data = {
-      username: 'benp123',
-      filename: programName,
-      fileData: code
-    };
+      handleSetCode(newCode);
+    }
 
-    axios.post(SERVER_URL + '/api/saveFile', data).then((respsonse) => {
-      console.log(respsonse.data);
-    });
-
-    handleSetCode(newCode);
-  }
-
-  if (code != loadCode()) {
-    changeCode(code);
+    if (code != loadCode()) {
+      console.log(programName)
+      changeCode(code);
+    }
   }
 
   return (

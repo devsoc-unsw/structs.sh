@@ -1,14 +1,10 @@
 import Select, { SelectItem } from 'components/Select/Select';
-import React, { useState } from 'react';
-import axios from 'axios';
-import { SERVER_URL } from 'utils/constants';
+import { useState } from 'react';
 
 const FileSelector = ({
-  programName,
   onChangeProgramName,
   files,
 }: {
-  programName: string;
   onChangeProgramName: (programName: string) => void;
   files: {
     name: string;
@@ -16,19 +12,19 @@ const FileSelector = ({
   }[]
 }) => {
 
-  const [formData, setFormData] = useState({
-    filename: '',
-  });
+  // const [formData, setFormData] = useState({
+  //   filename: '',
+  // });
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  // const handleInputChange = (event) => {
+  //   const { name, value } = event.target;
+  //   setFormData({
+  //     ...formData,
+  //     [name]: value,
+  //   });
+  // };
 
-  const handleSubmit = (event) => {
+  // const handleSubmit = (event) => {
     // event.preventDefault();
 
     // if (formData.filename == '' || (files.some(file => file.name == formData.filename))) {
@@ -49,25 +45,24 @@ const FileSelector = ({
 
     // axios.post(SERVER_URL + '/api/saveFile', data).then((respsonse) => {
     // });
-  };
+  // };
 
-  const [showForm, setShowForm] = useState(false);
-  const [newOption, setNewOption] = useState('');
-  const [options, setOptions] = useState(['Option 1', 'Option 2']);
+  // const [showForm, setShowForm] = useState(false);
+  // const [newOption, setNewOption] = useState('');
+  // const [options, setOptions] = useState(['Option 1', 'Option 2']);
 
-  const handleAddOption = () => {
-    // Update your options state with the new option
-    setOptions([...options, newOption]);
+  // const handleAddOption = () => {
+  //   // Update your options state with the new option
+  //   setOptions([...options, newOption]);
 
-    // Clear the form and hide it
-    setNewOption('');
-    setShowForm(false);
-  };
+  //   // Clear the form and hide it
+  //   setNewOption('');
+  //   setShowForm(false);
+  // };
 
   return (
       <div style={{paddingTop: '10px'}}>
         <Select
-          value={programName}
           onValueChange={onChangeProgramName}
           placeholder="Select File..."
         >

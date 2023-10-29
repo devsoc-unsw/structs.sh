@@ -8,19 +8,23 @@ import { SERVER_URL } from 'utils/constants';
 import axios from 'axios';
 import styled from '@emotion/styled';
 import FileSelector from './FileSelector';
-import { PLACEHOLDER_PROGRAMS } from '../../../constants';
+import { PLACEHOLDER_USERNAME, PLACEHOLDER_WORKSPACE, loadWorkspaces } from './util';
+
+const DEBUG_MODE = true;
 
 const WorkspaceSelector = ({
   programName,
-  onChangeProgramName
+  onChangeWorkspaceName,
+  onChangeProgramName,
 }: {
   programName: string;
+  onChangeWorkspaceName: (workspaceName: string) => void;
   onChangeProgramName: (programName: string) => void;
 }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [workspaceInput, setWorkspaceInput] = useState('');
-  const [workspaces, setWorkspaces] = useState(['PLACE_HOLDER_WORKSPACE']);
-  const [filenames, setFilenames] = useState(PLACEHOLDER_PROGRAMS);
+  const [workspaces, setWorkspaces] = useState(DEBUG_MODE ? [PLACEHOLDER_WORKSPACE] : []);
+  const [filenames, setFilenames] = useState([]);
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -60,6 +64,8 @@ const WorkspaceSelector = ({
       const newFiles = response.data.files;
       setFilenames(newFiles);
     })
+
+    onChangeWorkspaceName(name);
   }
 
   const WorkSpaceMenu = styled.div`
@@ -99,7 +105,6 @@ const WorkspaceSelector = ({
         </Select>
       </div>
       <FileSelector
-        programName={programName}
         onChangeProgramName={onChangeProgramName}
         files={filenames}
       />

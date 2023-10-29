@@ -86,16 +86,13 @@ router.post('/auth/login', async (req: Request, res: Response) => {
  *
 ********** ********* ********* ********* ********* ********* */
 router.post('/api/saveFile', (req : Request, res: Response) => {
-
-  // todo: Add workspace to this
-  const { username, filename, fileData } = req.body;
-  let path = './user-files/' + username;
+  const { username, workspace, filename, fileData } = req.body;
+  let path = './user-files/' + username + '/workspaces/' + workspace + '/' + filename;
   try {
     if (!existsSync(path)) {
       mkdirSync(path);
     }
 
-    path = path + '/' + filename;
     writeFileSync(path, fileData);
     // save to volume here
     res.json({ path: path });
@@ -148,8 +145,9 @@ router.get('/api/retrieveFilesInWorkspace', (req: Request, res: Response) => {
 
 router.get('/api/retrieveFile', (req: Request, res: Response) => {
   const username = req.query.username;
+  const workspace = req.query.workspace;
   const filename = req.query.filename;
-  let path = './user-files/' + username + '/' + filename;
+  let path = './user-files/' + username + '/workspaces/' + workspace + '/' + filename;
 
   try {
     let file = readFileSync(path).toString();
@@ -159,5 +157,17 @@ router.get('/api/retrieveFile', (req: Request, res: Response) => {
   }
 });
 
+router.get('/api/retrieveWorkspaces', (req: Request, res: Response) => {
+  const username = req.query.username;
+  let path = './user-files/' + username + '/workspaces/';
+
+  let files = [];
+  try {
+    const workspaces = readdirSync(path);
+    res.send({ workspaces: workspaces });
+  } catch (err) {
+    res.send({ error: err });
+  }
+});
 
 export { router };
