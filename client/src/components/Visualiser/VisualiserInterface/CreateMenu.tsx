@@ -131,8 +131,13 @@ const CreateMenu = () => {
     const pieces = location.pathname.split("/");
     // console.log(pieces);
     // console.log(controller.getData());
-    const dataString = controller.getData().join('');
-    alert("http://localhost:3000/" + pieces[1] + "/" + pieces[2] + "/" + dataString);
+    const rawDataString = controller.getData();
+    let newData: String = "";
+    rawDataString.forEach((x) => {
+      newData += x.toString().padStart(2, '0');
+    });
+
+    alert("http://localhost:3000/" + pieces[1] + "/" + pieces[2] + "/" + newData);
   }
 
   return (
