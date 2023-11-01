@@ -10,6 +10,14 @@ router.get('/api/getAll', [], async (req: Request, res: Response) => {
   return res.status(200).send(dataStructureDocuments);
 });
 
+router.get('/api/getOwnedData', [], async (req: Request, res: Response) => {
+  const topicTitle = req.query['topicTitle'];
+  const user = req.query['user'];
+  const dataStructureDocuments = await dataStructure.find({ owner: user, type: topicTitle });
+  console.log(dataStructureDocuments);
+  return res.status(200).send(dataStructureDocuments);
+});
+
 router.post('/api/save', async (req: Request, res: Response) => {
   console.log(req.body);
   const { owner, type, data } = req.body;
@@ -42,7 +50,7 @@ router.delete('/api/delete', async (req: Request, res: Response) => {
 });
 
 router.delete('/api/deleteAll', async (req: Request, res: Response) => {
-  const { owner } = req.body;
+  // const { owner } = req.body;
   console.log('deleting everything');
   console.log(req.body);
   const result = await dataStructure.deleteMany({});

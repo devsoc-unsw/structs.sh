@@ -109,7 +109,9 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
               {loggedIn ? (
                 <>
                   <Button style={{ color: '#0288D1' }}>{localStorage.getItem('user')}</Button>
-                  <Button style={{ color: '#0288D1' }} onClick={handleLogout}>Log Out</Button>
+                  <Button style={{ color: '#0288D1' }} onClick={handleLogout}>
+                    Log Out
+                  </Button>
                 </>
               ) : (
                 <Login handleLogon={setLoggedIn} />
@@ -118,7 +120,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
           </Grid>
         </Toolbar>
       </AppBar>
-    </Box >
+    </Box>
   );
 };
 

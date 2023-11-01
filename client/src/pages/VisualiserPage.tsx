@@ -31,9 +31,9 @@ const containerVariants = {
 const VisualiserPage = () => {
   const topic = toTitleCase(urlToTitle(useParams().topic));
 
-  const data = useParams().data;
+  const { data } = useParams();
 
-  var integerArray = undefined;
+  let integerArray;
 
   if (data !== undefined) {
     const digitArray = data.match(/.{1,2}/g) || [];

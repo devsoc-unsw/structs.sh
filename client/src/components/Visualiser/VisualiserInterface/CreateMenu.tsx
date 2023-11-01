@@ -3,12 +3,10 @@ import { styled } from '@mui/material/styles';
 import React, { useCallback, useContext, useState } from 'react';
 import axios from 'axios';
 import { SERVER_URL } from 'utils/constants';
+import { useParams, useLocation } from 'react-router-dom';
 import VisualiserContext from './VisualiserContext';
 import LoadOptions from './LoadOptions';
 import styles from './Control.module.scss';
-import { useParams } from 'react-router-dom';
-import { useLocation } from 'react-router-dom'
-
 
 const MenuButton = styled(Button)({
   backgroundColor: '#46B693',
@@ -38,7 +36,6 @@ const CreateMenu = () => {
 
   const [loadOptions, setLoadOptions] = useState([]);
 
-
   // just using this to handle load options
   const {
     loadOptionsContext: { isLoadOptionsExpanded, handleSetLoadOptionsExpansion },
@@ -53,21 +50,21 @@ const CreateMenu = () => {
   }, [controller]);
 
   const handleSave = () => {
-    const owner = localStorage.getItem('user')
+    const owner = localStorage.getItem('user');
     if (!owner) {
-      alert("Please Log In to Save");
+      alert('Please Log In to Save');
       return;
     }
 
     const data = {
-      owner: owner,
+      owner,
       type: topicTitle,
       data: controller.getData(),
     };
     axios
       .post(`${SERVER_URL}/api/save`, data)
       .then((response) => {
-        console.log('Linked List saved:', response.data);
+        console.log('Data saved:', response.data);
         alert('Saved');
       })
       .catch((error) => {
@@ -75,28 +72,23 @@ const CreateMenu = () => {
       });
   };
 
+  // Get data structures saved under user.
   const handleLoad = () => {
     axios
-      .get(`${SERVER_URL}/api/getAll`)
+      .get(`${SERVER_URL}/api/getOwnedData`, { params: { topicTitle: topicTitle, user: localStorage.getItem('user') } })
       .then((response) => {
         // Handle the response data
-        console.log(response.data);
         const newOptions: any[] = [];
-
         response.data.forEach((item, index) => {
-          if (item.type == topicTitle && item.owner == localStorage.getItem("user")) {
-            newOptions.push({
-              key: index,
-              name: item.owner,
-              type: item.type,
-              data: item.data,
-            });
-          }
+          newOptions.push({
+            key: index,
+            name: item.owner,
+            type: item.type,
+            data: item.data,
+          });
         });
         setLoadOptions(newOptions);
-        console.log(isLoadOptionsExpanded);
         handleSetLoadOptionsExpansion(true);
-        console.log(isLoadOptionsExpanded);
       })
       .catch((error) => {
         // Handle the error
@@ -128,12 +120,16 @@ const CreateMenu = () => {
 
   const location = useLocation();
   const showLink = () => {
-    const pieces = location.pathname.split("/");
-    // console.log(pieces);
-    // console.log(controller.getData());
-    const dataString = controller.getData().join('');
-    alert("http://localhost:3000/" + pieces[1] + "/" + pieces[2] + "/" + dataString);
-  }
+    const pieces = location.pathname.split('/');
+
+    const rawDataString = controller.getData();
+    let newData: String = '';
+    rawDataString.forEach((x) => {
+      newData += x.toString().padStart(2, '0');
+    });
+
+    alert(`http://localhost:3000/${pieces[1]}/${pieces[2]}/${newData}`);
+  };
 
   return (
     <Box
@@ -184,7 +180,14 @@ const CreateMenu = () => {
           Create Link
         </Typography>
       </MenuButton>
-    </Box >
+      {isLoadOptionsExpanded ? (
+        <MenuButton onClick={showLink}>
+          <Typography color="textPrimary" whiteSpace="nowrap">
+            text
+          </Typography>
+        </MenuButton>
+      ) : null}
+    </Box>
   );
 };
 
