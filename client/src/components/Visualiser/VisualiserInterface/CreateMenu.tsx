@@ -64,7 +64,7 @@ const CreateMenu = () => {
     axios
       .post(`${SERVER_URL}/api/save`, data)
       .then((response) => {
-        console.log('Linked List saved:', response.data);
+        console.log('Data saved:', response.data);
         alert('Saved');
       })
       .catch((error) => {
@@ -72,28 +72,23 @@ const CreateMenu = () => {
       });
   };
 
+  // Get data structures saved under user.
   const handleLoad = () => {
     axios
-      .get(`${SERVER_URL}/api/getAll`)
+      .get(`${SERVER_URL}/api/getOwnedData`, { params: { topicTitle: topicTitle, user: localStorage.getItem('user') } })
       .then((response) => {
         // Handle the response data
-        console.log(response.data);
         const newOptions: any[] = [];
-
         response.data.forEach((item, index) => {
-          if (item.type == topicTitle && item.owner == localStorage.getItem('user')) {
-            newOptions.push({
-              key: index,
-              name: item.owner,
-              type: item.type,
-              data: item.data,
-            });
-          }
+          newOptions.push({
+            key: index,
+            name: item.owner,
+            type: item.type,
+            data: item.data,
+          });
         });
         setLoadOptions(newOptions);
-        console.log(isLoadOptionsExpanded);
         handleSetLoadOptionsExpansion(true);
-        console.log(isLoadOptionsExpanded);
       })
       .catch((error) => {
         // Handle the error
@@ -185,6 +180,13 @@ const CreateMenu = () => {
           Create Link
         </Typography>
       </MenuButton>
+      {isLoadOptionsExpanded ? (
+        <MenuButton onClick={showLink}>
+          <Typography color="textPrimary" whiteSpace="nowrap">
+            text
+          </Typography>
+        </MenuButton>
+      ) : null}
     </Box>
   );
 };
