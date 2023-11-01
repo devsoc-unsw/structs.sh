@@ -7,8 +7,6 @@ import { TopNavbar } from 'components/Navbars';
 import { LineLoader } from 'components/Loader';
 import Visualiser from 'components/Visualiser';
 import { Box } from '@mui/material';
-import { useContext, useEffect } from 'react';
-import VisualiserContext from 'components/Visualiser/VisualiserInterface/VisualiserContext';
 
 const containerVariants = {
   hidden: {
@@ -33,12 +31,11 @@ const VisualiserPage = () => {
 
   const { data } = useParams();
 
-  let integerArray;
+  let integerArray: number[] = [];
 
   if (data !== undefined) {
-    const digitArray = data.match(/.{1,2}/g) || [];
-    console.log(digitArray);
-    integerArray = digitArray.map((char) => parseInt(char, 10));
+    const digitArray = data.match(/.{2}/g) || [];
+    integerArray = digitArray.map((chars: string) => parseInt(chars, 10));
   }
 
   return topic ? (

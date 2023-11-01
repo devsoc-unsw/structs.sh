@@ -75,19 +75,19 @@ const CreateMenu = () => {
   // Get data structures saved under user.
   const handleLoad = () => {
     axios
-      .get(`${SERVER_URL}/api/getOwnedData`, { params: { topicTitle: topicTitle, user: localStorage.getItem('user') } })
+      .get(`${SERVER_URL}/api/getOwnedData`, {
+        params: { topicTitle: topicTitle, user: localStorage.getItem('user') },
+      })
       .then((response) => {
         // Handle the response data
-        const newOptions: any[] = [];
-        response.data.forEach((item, index) => {
-          newOptions.push({
+        setLoadOptions(
+          response.data.map((item, index: number) => ({
             key: index,
             name: item.owner,
             type: item.type,
             data: item.data,
-          });
-        });
-        setLoadOptions(newOptions);
+          }))
+        );
         handleSetLoadOptionsExpansion(true);
       })
       .catch((error) => {
@@ -121,14 +121,12 @@ const CreateMenu = () => {
   const location = useLocation();
   const showLink = () => {
     const pieces = location.pathname.split('/');
+    const dataString = controller
+      .getData()
+      .map((x: number) => x.toString().padStart(2, '0'))
+      .join('');
 
-    const rawDataString = controller.getData();
-    let newData: String = '';
-    rawDataString.forEach((x) => {
-      newData += x.toString().padStart(2, '0');
-    });
-
-    alert(`http://localhost:3000/${pieces[1]}/${pieces[2]}/${newData}`);
+    alert(`http://localhost:3000/${pieces[1]}/${pieces[2]}/${dataString}`);
   };
 
   return (
