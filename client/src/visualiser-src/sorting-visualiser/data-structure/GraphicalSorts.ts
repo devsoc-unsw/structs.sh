@@ -405,7 +405,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     );
     let j = hi;
 
-    for (; ;) {
+    for (;;) {
       // Shift i pointer
       while (this.elementList[i].data.value <= v && i < j) {
         i += 1;

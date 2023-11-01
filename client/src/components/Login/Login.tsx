@@ -122,7 +122,9 @@ const Login: FC<Props> = ({ handleLogon }) => {
   return (
     <>
       {canLogin ? (
-        <Button style={{ color: '#0288D1' }} onClick={() => setCanLogin(false)}>Login</Button>
+        <Button style={{ color: '#0288D1' }} onClick={() => setCanLogin(false)}>
+          Login
+        </Button>
       ) : (
         <Overlay>
           <LoginMenu>

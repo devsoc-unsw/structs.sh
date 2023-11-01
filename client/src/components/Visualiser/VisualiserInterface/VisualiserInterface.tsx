@@ -40,7 +40,6 @@ const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle, data })
     if (data !== undefined) {
       controllerRef.current.loadData(data);
     }
-
   }, [topicTitle]);
 
   const handleTimelineUpdate = useCallback((val) => {
