@@ -1,41 +1,54 @@
 // Stack frame formatting
 
+:root {
+    --edge-text-padding: 10px;
+}
+
 .stackInspector {
     height: 100%;
     overflow-y: auto;
 }
 
 .frame {
-    border: 1px solid #999;
-    padding: 16px;
-    margin: 16px;
-    width: 400px; // Arbitrary narrow value
+    border: 1px solid #DDD;
+    border-radius: 5px;
+    //width: 400px; // Arbitrary narrow value
 }
 
 .frameHeader {
     // TODO -- would be nice to make it look like a fieldset legend
+    padding: 4px var(--edge-text-padding);
+    border-bottom: 1px solid #DDD;
 }
 
 // CSS grid formatting to get <dl> terms and descriptions on same line
 
 dl {
-    // background-color: yellow;
-    background-color: white;
-    overflow: hidden;
-    padding: 0;
-    margin: 0;
+    //overflow: hidden;
+    //margin: 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-auto-rows: min-content;
+    margin: 0;
+    padding: 0;
 }
 
 dd {
-    justify-self: end;
-    margin: 5px;
+    // padding: 0 6px 4px;
+    // margin: 2px 4px;
+    margin: 0;
+}
+
+dd:nth-child(4n+2) {
+    background-color: azure;
 }
 
 dt {
-    align-self: center;
+    display: flex;
+    align-items: center;
+}
+
+dt:nth-child(4n+1) {
+    background-color: azure;
 }
 
 // Misc. span formatting
@@ -49,9 +62,14 @@ dt {
     font-style: italic;
 }
 
+/*
 .name, .type {
-    padding: 5px;
-    background-color: white;
+    padding: 1px;
+}
+*/
+
+dt > code {
+    padding-left: var(--edge-text-padding);
 }
 
 .name {
@@ -65,9 +83,21 @@ dt {
 
 .value {
     // TODO: Syntax highlighting?
-    padding: 5px;
     border: 1px solid lightgrey;
     border-radius: 4px;
     background: lightgrey;
     color: darkgreen;
+    display: inline-block;
+    line-height: 1.3rem;
+    float: right;
+    margin: 2px 4px 2px;
+    padding: 0 3px;
+}
+
+dd:nth-child(2) > .value {
+    margin-top: 3px;
+}
+
+dd:last-child > .value {
+    margin-bottom: 2px;
 }

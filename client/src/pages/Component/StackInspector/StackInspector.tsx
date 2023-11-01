@@ -15,12 +15,12 @@ const StackInspector = () => {
     const typeName = memoryValue.typeName;
     var localValue;
     if (isStructTypeName(typeName)) {
-      // todo: actually display these special cases
       localValue = "<struct>";
     } else if (isPointerType(typeName)) {
       localValue = "<pointer>";
-    } else if (isArrayType(typeName)) {
-      localValue = "<array>";
+    } else if (/\[\d+\]$/.test(typeName)) {
+      // localValue = "<array>";
+      localValue = memoryValue.value;
     } else {
       localValue = memoryValue.value;
     }
@@ -34,6 +34,70 @@ const StackInspector = () => {
 
   console.log(localDivs);
 
+  function defaultTemplate(localDiv) {
+    return (
+      <>
+        <dt>
+          <code>
+            <span className={styles.type}>{localDiv.type}</span>&nbsp;
+            <span className={styles.name}>{localDiv.name}</span>
+          </code>
+        </dt>
+        <dd>
+          <code className={styles.value}>{localDiv.value}</code>
+        </dd>
+      </>
+    );
+  }
+
+  function arrayTemplate(localDiv) {
+    const typeWords = localDiv.type.split(" ");
+    const arrayLengthIndicator = typeWords.pop();
+    const arrayType = typeWords.join(" ");
+    return (
+      <>
+        <dt>
+          <code>
+            <span className={styles.type}>{arrayType}</span>&nbsp;
+            <span className={styles.name}>{localDiv.name}</span>
+            <span className={styles.type}>{arrayLengthIndicator}</span>
+          </code>
+        </dt>
+        <dd>
+          <code className={styles.value}>{localDiv.value}</code>
+        </dd>
+      </>
+    );
+  }
+  
+  function pointerTemplate(localDiv) {
+    const fixedType = localDiv.type.slice(0,-1);
+    return (
+      <>
+        <dt>
+          <code>
+            <span className={styles.type}>{fixedType + " *"}</span>
+            <span className={styles.name}>{localDiv.name}</span>
+          </code>
+        </dt>
+        <dd >
+          <code className={styles.value}>{localDiv.value}</code>
+        </dd>
+      </>
+    );
+  }
+  
+  function divMapper(localDiv) {
+    if (/\[\d+\]$/.test(localDiv.type)) {
+      return arrayTemplate(localDiv);
+    } else if (isPointerType(localDiv.type)) {
+      // todo: handle arrays of pointers
+      return pointerTemplate(localDiv);
+    } else {
+      return defaultTemplate(localDiv);
+    }
+  }
+
   return (
     <div className={styles.stackInspector}>
       <div className={styles.frame}>
@@ -44,17 +108,7 @@ const StackInspector = () => {
           </span>
         </div>
         <dl>
-          {localDivs.map((localDiv) => (
-            <>
-              <dt>
-                <code className={styles.type}>{localDiv.type}</code>
-                <code className={styles.name}>{localDiv.name}</code>
-              </dt>
-              <dd>
-                <code className={styles.value}>{localDiv.value}</code>
-              </dd>
-            </>
-          ))}
+          {localDivs.map(divMapper)}
         </dl>
       </div>
     </div>
