@@ -42,7 +42,7 @@ router.delete('/api/delete', async (req: Request, res: Response) => {
 });
 
 router.delete('/api/deleteAll', async (req: Request, res: Response) => {
-  const { owner } = req.body;
+  // const { owner } = req.body;
   console.log('deleting everything');
   console.log(req.body);
   const result = await dataStructure.deleteMany({});
