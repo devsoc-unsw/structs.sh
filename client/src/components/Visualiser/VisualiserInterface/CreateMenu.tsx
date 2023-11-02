@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import React, { useCallback, useContext, useState } from 'react';
 import axios from 'axios';
 import { SERVER_URL } from 'utils/constants';
+import { useParams, useLocation } from 'react-router-dom';
 import VisualiserContext from './VisualiserContext';
 import LoadOptions from './LoadOptions';
 import styles from './Control.module.scss';
@@ -49,16 +50,21 @@ const CreateMenu = () => {
   }, [controller]);
 
   const handleSave = () => {
+    const owner = localStorage.getItem('user');
+    if (!owner) {
+      alert('Please Log In to Save');
+      return;
+    }
+
     const data = {
-      owner: 'Hanyuan Li',
+      owner,
       type: topicTitle,
       data: controller.getData(),
     };
-    console.log(controller.getData());
     axios
       .post(`${SERVER_URL}/api/save`, data)
       .then((response) => {
-        console.log('Linked List saved:', response.data);
+        console.log('Data saved:', response.data);
         alert('Saved');
       })
       .catch((error) => {
@@ -66,28 +72,23 @@ const CreateMenu = () => {
       });
   };
 
+  // Get data structures saved under user.
   const handleLoad = () => {
     axios
-      .get(`${SERVER_URL}/api/getAll`)
+      .get(`${SERVER_URL}/api/getOwnedData`, {
+        params: { topicTitle: topicTitle, user: localStorage.getItem('user') },
+      })
       .then((response) => {
         // Handle the response data
-        console.log(response.data);
-        const newOptions: any[] = [];
-
-        response.data.forEach((item, index) => {
-          if (item.type == topicTitle) {
-            newOptions.push({
-              key: index,
-              name: item.owner,
-              type: item.type,
-              data: item.data,
-            });
-          }
-        });
-        setLoadOptions(newOptions);
-        console.log(isLoadOptionsExpanded);
+        setLoadOptions(
+          response.data.map((item, index: number) => ({
+            key: index,
+            name: item.owner,
+            type: item.type,
+            data: item.data,
+          }))
+        );
         handleSetLoadOptionsExpansion(true);
-        console.log(isLoadOptionsExpanded);
       })
       .catch((error) => {
         // Handle the error
@@ -115,6 +116,17 @@ const CreateMenu = () => {
         // Handle the error
         console.error('Error deleting everything:', error);
       });
+  };
+
+  const location = useLocation();
+  const showLink = () => {
+    const pieces = location.pathname.split('/');
+    const dataString = controller
+      .getData()
+      .map((x: number) => x.toString().padStart(2, '0'))
+      .join('');
+
+    alert(`http://localhost:3000/${pieces[1]}/${pieces[2]}/${dataString}`);
   };
 
   return (
@@ -160,6 +172,18 @@ const CreateMenu = () => {
             handleSetLoadOptionsExpansion(false);
           }}
         />
+      ) : null}
+      <MenuButton onClick={showLink}>
+        <Typography color="textPrimary" whiteSpace="nowrap">
+          Create Link
+        </Typography>
+      </MenuButton>
+      {isLoadOptionsExpanded ? (
+        <MenuButton onClick={showLink}>
+          <Typography color="textPrimary" whiteSpace="nowrap">
+            text
+          </Typography>
+        </MenuButton>
       ) : null}
     </Box>
   );

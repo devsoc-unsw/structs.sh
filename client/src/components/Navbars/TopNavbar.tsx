@@ -108,8 +108,10 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
             <Grid item xs={4} display="flex" justifyContent="end">
               {loggedIn ? (
                 <>
-                  <Button style={{ color: 'white' }}>{localStorage.getItem('user')}</Button>
-                  <Button onClick={handleLogout}>Log Out</Button>
+                  <Button style={{ color: '#0288D1' }}>{localStorage.getItem('user')}</Button>
+                  <Button style={{ color: '#0288D1' }} onClick={handleLogout}>
+                    Log Out
+                  </Button>
                 </>
               ) : (
                 <Login handleLogon={setLoggedIn} />

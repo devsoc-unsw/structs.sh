@@ -5,6 +5,7 @@ import VisualiserInterface from './VisualiserInterface/VisualiserInterface';
 
 interface VisualiserProps {
   topicTitle: string;
+  data: number[];
 }
 
 /**
@@ -16,11 +17,11 @@ interface VisualiserProps {
  * Given the `topicTitle`, this component will render the corresponding
  * visualiser and load up the commands for that visualiser.
  */
-const Visualiser: FC<VisualiserProps> = ({ topicTitle }) =>
+const Visualiser: FC<VisualiserProps> = ({ topicTitle, data }) =>
   topicTitle ? (
     <>
       <VisualiserCanvas />
-      <VisualiserInterface topicTitle={topicTitle} />
+      <VisualiserInterface topicTitle={topicTitle} data={data} />
     </>
   ) : (
     <CircularLoader />
