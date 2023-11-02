@@ -13,7 +13,7 @@ app.use(json());
 app.use(router);
 
 const connectionString =
-  'mongodb+srv://jinsunwoo:b6M4MmX5x6gt3y7l@structsdb.1rge7z4.mongodb.net/?retryWrites=true&w=majority';
+    'mongodb+srv://jinsunwoo:b6M4MmX5x6gt3y7l@structsdb.1rge7z4.mongodb.net/?retryWrites=true&w=majority';
 
 mongoose.connect(connectionString).then(() => {
   console.log('Connected to MongoDB 🍃');
