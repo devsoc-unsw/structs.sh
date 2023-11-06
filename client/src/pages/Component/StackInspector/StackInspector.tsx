@@ -14,6 +14,7 @@ const StackInspector = () => {
     // slightly incorrect format at the moment)
     const typeName = memoryValue.typeName;
     var localValue;
+    // char *[3];
     if (isStructTypeName(typeName)) {
       localValue = "<struct>";
     } else if (isPointerType(typeName)) {
@@ -52,13 +53,22 @@ const StackInspector = () => {
 
   function arrayTemplate(localDiv) {
     const typeWords = localDiv.type.split(" ");
-    const arrayLengthIndicator = typeWords.pop();
-    const arrayType = typeWords.join(" ");
+    var arrayLengthIndicator = typeWords.pop();
+    var arrayType;
+    if (arrayLengthIndicator[0] == '*') {
+      // array of pointers
+      // TODO: handle double pointers
+      arrayLengthIndicator = arrayLengthIndicator.substring(1);
+      arrayType = typeWords.join(" ") + " *";
+    } else {
+      // includes the trailing space
+      arrayType = typeWords.join(" ") + " ";
+    }
     return (
       <>
         <dt>
           <code>
-            <span className={styles.type}>{arrayType}</span>&nbsp;
+            <span className={styles.type}>{arrayType}</span>
             <span className={styles.name}>{localDiv.name}</span>
             <span className={styles.type}>{arrayLengthIndicator}</span>
           </code>
@@ -71,6 +81,7 @@ const StackInspector = () => {
   }
   
   function pointerTemplate(localDiv) {
+    // NOTE: single pointers only
     const fixedType = localDiv.type.slice(0,-1);
     return (
       <>
