@@ -13,10 +13,12 @@ def useSocketIOConnection(func):
         # due to insufficient buffer size.
         # https://stackoverflow.com/a/67732984/17815949
         HTTPConnection.default_socket_options = (
-            HTTPConnection.default_socket_options + [
+            HTTPConnection.default_socket_options
+            + [
                 (socket.SOL_SOCKET, socket.SO_SNDBUF, 1000000),  # 1MB in byte
-                (socket.SOL_SOCKET, socket.SO_RCVBUF, 1000000)
-            ])
+                (socket.SOL_SOCKET, socket.SO_RCVBUF, 1000000),
+            ]
+        )
 
         # Disable verifying server-side SSL certificate
         http_session = requests.Session()
@@ -28,16 +30,10 @@ def useSocketIOConnection(func):
         NUM_RETRIES = 2
         for i in range(NUM_RETRIES):
             try:
-                sio.connect('http://localhost:8000', wait_timeout=20)
-                print(
-                    f"Parser client successfully established socket connection to server. Socket ID: {sio.sid}")
+                sio.connect("http://localhost:8000", wait_timeout=20)
                 break
             except Exception as ex:
-                print(ex)
-                print("Parser client failed to establish socket connection to server:",
-                      type(ex).__name__)
                 if i == NUM_RETRIES - 1:
-                    print("Exiting parser client...")
                     sys.exit(1)
                 else:
                     print("Retrying...")
@@ -51,8 +47,8 @@ def useSocketIOConnection(func):
 
 
 def enable_socketio_client_emit():
-    '''
-    Usage: 
+    """
+    Usage:
     ```
         sio = socketio.Client()
         sio.emit("serverEvent", "hello from client")
@@ -65,6 +61,6 @@ def enable_socketio_client_emit():
     the above sio.emit() call to work. Discovered from extensive debugging.
     If you figure out how to get the above sio.emit() call to work without
     this weird hack please let @dqna64 know.
-    '''
+    """
     with open("random_useless_file_to_open.txt", "w") as f:
         f.write("hello world")

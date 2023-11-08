@@ -29,5 +29,3 @@ if __name__ == "__main__":
 
     gdb.execute("c")
     outputs.append(pty.read())
-
-    print(outputs)

@@ -15,10 +15,12 @@ USER_MALLOC_CALL_FILE_PATH = f"{abs_file_path}/user_malloc_call.c"
 # File to write the preprocessed C code to, before parsing with pycparser
 USER_MALLOC_CALL_PREPROCESSED = f"{abs_file_path}/user_malloc_call_preprocessed"
 
+
 def remove_non_standard_characters(input_str):
     # Remove color codes and non-standard characters using a regular expression
-    clean_str = re.sub(r'\x1b\[[0-9;]*[mK]', '', input_str)
+    clean_str = re.sub(r"\x1b\[[0-9;]*[mK]", "", input_str)
     return clean_str
+
 
 class NextCommand(gdb.Command):
     def __init__(self):
@@ -26,9 +28,8 @@ class NextCommand(gdb.Command):
         self.heap_dict = {}
 
     def invoke(self, arg, from_tty):
-
-        temp_line = gdb.execute('frame', to_string=True)
-        raw_str = (temp_line.split('\n')[1]).split('\t')[1]
+        temp_line = gdb.execute("frame", to_string=True)
+        raw_str = (temp_line.split("\n")[1]).split("\t")[1]
         line_str = remove_non_standard_characters(raw_str)
 
         # Create a complete C code file with function prototypes, main, and variable line
@@ -57,25 +58,14 @@ typedef struct list {{
         with open(USER_MALLOC_CALL_FILE_PATH, "w") as f:
             f.write(complete_c_code)
 
-        subprocess.run(f"gcc -E {USER_MALLOC_CALL_FILE_PATH} > {USER_MALLOC_CALL_PREPROCESSED}",
-                       shell=True)
-
-        # Parse the preprocessed C code into an AST
-        # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
-        ast = parse_file(USER_MALLOC_CALL_PREPROCESSED, use_cpp=True,
-                         cpp_args=r'-Iutils/fake_libc_include')
-        print(ast)
-
-        # Print the outermost struct name found in the AST
-        outermost_struct_name = self.find_outermost_struct_name(ast)
-        if outermost_struct_name:
-            print(f"Outermost struct name: {outermost_struct_name}")
-        else:
-            print("No struct names found in the AST.")
+        subprocess.run(
+            f"gcc -E {USER_MALLOC_CALL_FILE_PATH} > {USER_MALLOC_CALL_PREPROCESSED}",
+            shell=True,
+        )
 
         # TODO: Need a way to detect if the program exits, then send a signal to the server
         # which should tell the client that the debugging session is over.
-        gdb.execute('next')
+        gdb.execute("next")
 
         return self.heap_dict
 
@@ -90,5 +80,6 @@ typedef struct list {{
             if result:
                 return result
         return None
+
 
 nextCommand = NextCommand()

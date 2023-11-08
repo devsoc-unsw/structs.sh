@@ -1,10 +1,10 @@
-'''
+"""
 Getting this error in gdb:
 ```
 Python Exception <class 'gdb.error'>: No symbol "variable_name" in current context.
 Error occurred in Python: No symbol "variable_name" in current context.
 ```
-'''
+"""
 
 import gdb
 import json
@@ -35,7 +35,6 @@ class NodeListCommand(gdb.Command):
 
         # Store the nodes as an array of dictionaries
         nodes_dict = {"Nodes": nodes}
-        print(json.dumps(nodes_dict))
 
 
 # Run in gdb with `python NodeListCommand("nodelist", "list2")`

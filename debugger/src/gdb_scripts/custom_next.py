@@ -22,8 +22,6 @@ class MallocVisitor(c_ast.NodeVisitor):
         self.free = False
 
     def visit_Assignment(self, node):
-        print("MallocVisitor.vist_Assignment:")
-        print(node)
         # Check if the assignment is of the form "variable = malloc(...)"
         if isinstance(node.rvalue, c_ast.FuncCall) and isinstance(node.rvalue.name, c_ast.ID) and node.rvalue.name.name == 'malloc':
             if isinstance(node.lvalue, c_ast.StructRef):
@@ -86,7 +84,6 @@ class CustomNextCommand(gdb.Command):
         #     print("\n=== CustomNextCommand not run because no debuggin session is active")
         #     return
 
-        print("\n=== Running CustomNextCommand in gdb...")
 
         variable_freed = False
 
@@ -130,7 +127,6 @@ class CustomNextCommand(gdb.Command):
             # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
             line_ast = parse_file(create_abs_file_path(USER_MALLOC_CALL_PREPROCESSED), use_cpp=True,
                                   cpp_args=r'-Iutils/fake_libc_include')
-            # print(line_ast)
 
             # Create a MallocVisitor instance
             malloc_visitor = MallocVisitor()
@@ -143,9 +139,7 @@ class CustomNextCommand(gdb.Command):
 
             # Print the variable names assigned to malloc
             if len(malloc_visitor.malloc_variables) > 0:
-                print("Variables assigned to malloc:")
                 for var_assigned_to_malloc in malloc_visitor.malloc_variables:
-                    print(f"{var_assigned_to_malloc=}")
 
                     stack_var_type_name = get_type_name_of_stack_var(
                         var_assigned_to_malloc)
@@ -158,16 +152,13 @@ class CustomNextCommand(gdb.Command):
                     bytes = temp_bytes.split(" ")[2]
                     # Remove \n from bytes
                     bytes = re.sub(r'\n', '', bytes)
-                    print(f"Bytes allocated: {bytes}")
 
                     # Get the address returned by malloc
                     gdb.execute('finish')
                     temp_address = gdb.execute('print $', to_string=True)
                     address = re.sub(r'\n', '', temp_address.split(' ')[-1])
-                    print(f"address EXTRACTED: {address}")
 
                     # === Extract linked list node data given the variable name
-                    print(f"Attempting to print \"{var_assigned_to_malloc}\"")
                     struct_fields_str = gdb.execute(
                         f'p *({stack_var_type_name}) {address}', to_string=True)
 
@@ -183,7 +174,6 @@ class CustomNextCommand(gdb.Command):
                     struct_fields_str = struct_fields_str.split("=", 1)[
                         1].strip()
                     struct_fields_str = struct_fields_str.strip("{}")
-                    print(f"{struct_fields_str=}")
                     # struct_fields_str == "data = 542543, next = 0x0"
 
                     struct_type_name = stack_var_type_name.strip('*').strip()
@@ -201,21 +191,15 @@ class CustomNextCommand(gdb.Command):
                     }
 
                     self.heap_data[address] = heap_memory_value
-                    print("Heap data:")
-                    pprint(self.heap_data)
 
             else:
                 print("Current line does not contain call to malloc")
 
             # //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            # Print the variable names being freed
-            # print(malloc_visitor.free)
-            # print("Variables being freed:")
             address_freed = None
 
             if malloc_visitor.free:
-                print("inside malloc_visitor.free")
                 variable_freed = True
 
                 # Step into free
@@ -225,11 +209,7 @@ class CustomNextCommand(gdb.Command):
 
                 address_freed = address_freed.strip()
                 address_freed = address_freed.split(' ')[-1].strip()
-                # print(address_freed)
                 del self.heap_data[address_freed]
-
-                for var_assigned_to_malloc in malloc_visitor.free_variables:
-                    print(var_assigned_to_malloc)
 
         except Exception as e:
             print("An error occurred while intercepting potential malloc or free: ", e)
@@ -245,10 +225,7 @@ class CustomNextCommand(gdb.Command):
         # is waiting for stdin. If it is, then we need to send a signal to the
         # server to tell the client to prompt the user for input.
         if (self.debug_session.io_manager.check_is_waiting_for_input()):
-            print("Program is waiting for input")
             wait_for_user_input(self.user_socket_id)
-            # print("Early exit from custom next")
-            # return
 
         # == Get stack data after executing next command
         stack_data = self.get_stack_data()
@@ -288,7 +265,6 @@ class CustomNextCommand(gdb.Command):
         send_backend_data_to_server(
             self.user_socket_id, backend_data=backend_data)
 
-        print(f"\n=== Finished running update_backend_state in gdb instance\n\n")
         return backend_data
 
     def get_stack_data(self):
@@ -313,7 +289,6 @@ class CustomNextCommand(gdb.Command):
             type_name = get_type_name_of_stack_var(name)
             stack_memory_value["typeName"] = type_name
 
-            print(f"Extracted type name of stack variable {name}: {type_name}")
 
             # === Extract address
             address_str = gdb.execute(f"p &{name}", to_string=True)
@@ -321,7 +296,6 @@ class CustomNextCommand(gdb.Command):
             address = address_str.split(" ")[-1].strip()
             # address == "0x7fffffffe1c4"
 
-            print(f"Extracted address of stack variable {name}: {address}")
             stack_memory_value["addr"] = address
 
             # === Extract value
@@ -335,7 +309,6 @@ class CustomNextCommand(gdb.Command):
             else:
                 value = value_str
 
-            print(f"Extracted value of stack variable {name}: {value}")
             stack_memory_value["value"] = value
             # ===
 
@@ -388,8 +361,6 @@ def send_backend_data_to_server(user_socket_id: str = None, backend_data: dict =
             }
     '''
     if user_socket_id is not None:
-        print(
-            f"Sending backend_data to server, for user with socket_id {user_socket_id}")
         sio.emit("updatedBackendState",
                  (user_socket_id, backend_data))
 
@@ -402,8 +373,6 @@ def send_backend_data_to_server(user_socket_id: str = None, backend_data: dict =
 @useSocketIOConnection
 def wait_for_user_input(user_socket_id: str = None, sio=None):
     if user_socket_id is not None:
-        print(
-            f"Sending backend_data to server, for user with socket_id {user_socket_id}")
         sio.emit("requestUserInput",
                  (user_socket_id, ))
 
@@ -424,10 +393,6 @@ def create_struct_value(parsed_type_decls, struct_fields_str, struct_name):
     Expects struct_fields_str in format: "data = 542543, next = 0x0"
     '''
     # Find the type declaration for the struct type being malloced
-    print("parsed type decls")
-    pprint(parsed_type_decls)
-    print(f"{struct_name=}")
-    print(f"{struct_fields_str=}")
     corresponding_type_decl = next(
         (x for x in parsed_type_decls if "typeName" in x and x['typeName'] == struct_name), None)
     if corresponding_type_decl is None:
@@ -444,7 +409,6 @@ def create_struct_value(parsed_type_decls, struct_fields_str, struct_name):
         if type_name == "char" and "'" in field_value:
             # field_value will look like "49 '1'"
             field_value = field_value.split("'")[1]
-        print(f"{field_name=}", f"{field_value=}")
         value[field_name] = {
             "typeName": type_name,
             "value": field_value}
@@ -459,7 +423,6 @@ def get_type_name_of_stack_var(var: str):
 
 
 def get_type_name(type_name_str: str):
-    print(f"{type_name_str=}")
     if (type_name_str.endswith('*')):
         type_name_str = type_name_str[:-1]
         sub_type_name = get_type_name(type_name_str.strip())

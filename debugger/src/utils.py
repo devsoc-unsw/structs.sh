@@ -38,23 +38,16 @@ def get_subprocess_output(proc: subprocess.Popen, timeout_duration: int):
 
         for fileno in events:
             if fileno == proc.stdout.fileno():
-                print(
-                    f"VVVVVVVVVV Read from gdb subprocess stdout fileno = {fileno}:")
                 proc.stdout.flush()
                 raw_output = proc.stdout.read()
-                print(raw_output, end="\n^^^^^^^^^^ End read stdout\n\n")
             elif proc.stderr and fileno == proc.stderr.fileno():
-                print(
-                    f"VVVVVVVVVV Read from gdb subprocess stderr fileno = {fileno}:")
                 proc.stderr.flush()
                 raw_output = proc.stderr.read()
-                print(raw_output, end="\n^^^^^^^^^^ End read stderr\n\n")
 
         if timeout_duration == 0:
             break
 
         elif time.time() >= timeout_time_sec:
-            print("Read from proc.stdout timed out. Exiting read loop.")
             break
 
 

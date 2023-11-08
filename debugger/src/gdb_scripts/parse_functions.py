@@ -45,7 +45,10 @@ import re
 import subprocess
 import gdb
 from pycparser import parse_file, c_ast
-from src.gdb_scripts.use_socketio_connection import enable_socketio_client_emit, useSocketIOConnection
+from src.gdb_scripts.use_socketio_connection import (
+    enable_socketio_client_emit,
+    useSocketIOConnection,
+)
 
 
 # Parent directory of this python script e.g. "/user/.../debugger/src/gdb_scripts"
@@ -88,7 +91,6 @@ functions = {
 
 
 class DeclVisitor(c_ast.NodeVisitor):
-
     def __init__(self, name, file, line_num, original_line) -> None:
         super().__init__()
         self.name = name
@@ -97,22 +99,22 @@ class DeclVisitor(c_ast.NodeVisitor):
         self.original_line = original_line
 
     def visit_FuncDecl(self, node):
-        '''
+        """
         Gives return_type and params
-        '''
+        """
         result = {}
-        result['return_type'] = self.visit(node.type)
+        result["return_type"] = self.visit(node.type)
         if node.args is not None:
-            result['params'] = self.visit(node.args)
+            result["params"] = self.visit(node.args)
         else:
-            result['params'] = []
+            result["params"] = []
 
         return result
 
     def constructInfo(self, node):
-        '''
+        """
         Expect isinstance(node, c_ast.Decl) and isinstance(node.type, c_ast.FuncDecl)
-        '''
+        """
         result = {}
         result["name"] = self.name
         result["file"] = self.file
@@ -126,18 +128,17 @@ class DeclVisitor(c_ast.NodeVisitor):
 
     def visit_Decl(self, node):
         result = {}
-        result['name'] = node.name
+        result["name"] = node.name
         if isinstance(node.type, c_ast.FuncDecl):
-            result['typeName'] = self.visit(node.type)
+            result["typeName"] = self.visit(node.type)
         elif isinstance(node.type, c_ast.TypeDecl):
-            result['typeName'] = self.visit(node.type)
+            result["typeName"] = self.visit(node.type)
         elif isinstance(node.type, c_ast.PtrDecl):
-            result['typeName'] = self.visit(node.type)
+            result["typeName"] = self.visit(node.type)
         elif isinstance(node.type, c_ast.ArrayDecl):
-            result['typeName'] = self.visit(node.type)
+            result["typeName"] = self.visit(node.type)
         else:
-            raise Exception(
-                f"Visiting Decl of unknown type: {type(node).__name__}")
+            raise Exception(f"Visiting Decl of unknown type: {type(node).__name__}")
 
         return result
 
@@ -164,7 +165,8 @@ class DeclVisitor(c_ast.NodeVisitor):
             return self.visit(node.type)
         else:
             raise Exception(
-                f"Visiting TypeDecl with unknown type: {type(node.type).__name__}")
+                f"Visiting TypeDecl with unknown type: {type(node.type).__name__}"
+            )
 
     def visit_Struct(self, node):
         return f"struct {node.name}"
@@ -181,7 +183,7 @@ class DeclVisitor(c_ast.NodeVisitor):
 
 
 class ParseFuncDeclVisitor(DeclVisitor):
-    '''
+    """
     Visitor pattern for parsing function declarations.
     Returns a dict in the following form:
     {
@@ -208,12 +210,12 @@ class ParseFuncDeclVisitor(DeclVisitor):
                 ...
             ]
         }
-    }'''
+    }"""
 
     def constructInfo(self, node):
-        '''
+        """
         Expect isinstance(node, c_ast.Decl) and isinstance(node.type, c_ast.FuncDecl)
-        '''
+        """
         result = {}
         result["name"] = self.name
         result["file"] = self.file
@@ -227,11 +229,10 @@ class ParseFuncDeclVisitor(DeclVisitor):
 
 
 class ParseTypeDeclVisitor(DeclVisitor):
-
     def constructInfo(self, node):
-        '''
+        """
         Expect isinstance(node, c_ast.Decl) or isinstance(node.type, c_ast.TypeDef)
-        '''
+        """
         result = {}
         result["typeName"] = self.name
         result["file"] = self.file
@@ -239,34 +240,33 @@ class ParseTypeDeclVisitor(DeclVisitor):
         result["original_line"] = self.original_line
 
         parseResult = self.visit(node.type)
-        result['type'] = {'typeName': parseResult}
+        result["type"] = {"typeName": parseResult}
 
         return result
 
 
 class ParseStructDefVisitor(DeclVisitor):
-
     def constructInfo(self, node):
-        '''
+        """
         Expect isinstance(node, c_ast.Struct)
-        '''
+        """
         result = {}
         result["typeName"] = f"struct {self.name}"
         result["file"] = self.file
         result["line_num"] = self.line_num
         result["original_line"] = self.original_line
-        result['fields'] = []
+        result["fields"] = []
 
         for decl in node.decls:
             parseResult = self.visit(decl)
-            result['fields'].append(parseResult)
+            result["fields"].append(parseResult)
 
         return result
 
 
 @useSocketIOConnection
 def pycparser_parse_fn_decls(user_socket_id: str = None, sio=None):
-    '''
+    """
     Using pycparser to parse type declarations by constructing AST. Including structs and typedefs.
 
     NOTE: Must run this function BEFORE starting the program in gdb, otherwise you get strange output from the 'info functions -n' command.
@@ -282,7 +282,7 @@ def pycparser_parse_fn_decls(user_socket_id: str = None, sio=None):
 
     List * appendNode(struct node *head, int data);
     ```
-    '''
+    """
 
     # typedef and struct declarations need to be declared in the files of the
     # user-defined functions for pycparser to parse them correctly.
@@ -292,146 +292,114 @@ def pycparser_parse_fn_decls(user_socket_id: str = None, sio=None):
 
     # Parse the functions string
     fns_str_lines = re.split("\n", fns_str.strip())
-    print("\n=== Raw lines as strings to potentially parse into function declarations:")
-    pprint(fns_str_lines)
 
     functions: dict[str, list[dict]] = {}
 
     current_file = None
     for line in fns_str_lines:
-
-        print("\n=== Current funs_str_lines line:")
-        print(line)
-
-        if m := re.fullmatch(r'^File.*:$', line):
-            print("^^^ Matched file name")
+        if m := re.fullmatch(r"^File.*:$", line):
             # Set new file name and reset text
             current_file = line.split(" ")[1][:-1]
-        elif m := re.fullmatch(r'^(\d+):\t(.*;)$', line):
-            print("^^^ Matched function declaration")
+        elif m := re.fullmatch(r"^(\d+):\t(.*;)$", line):
             line_num = int(m.group(1))
             fn_decl_str = m.group(2)
 
-            ast = get_fn_decl_ast(
-                type_decl_strs, fn_decl_str)
+            ast = get_fn_decl_ast(type_decl_strs, fn_decl_str)
 
             # Traverse each node in top level of AST and extract function declarations. Necessary becauser there might be types (structs) and typedefs defined above the function declaration.
             for node in ast.ext:
-                if not (isinstance(node, c_ast.Decl) and isinstance(node.type, c_ast.FuncDecl)):
+                if not (
+                    isinstance(node, c_ast.Decl)
+                    and isinstance(node.type, c_ast.FuncDecl)
+                ):
                     continue
 
                 func_name = node.name
-                print(f'Parsing function declaration {func_name}')
-                # node.show()
-                # print(node)
-                # print(node.type)
 
                 funcDeclVisitor = ParseFuncDeclVisitor(
-                    func_name, current_file, line_num, fn_decl_str)
+                    func_name, current_file, line_num, fn_decl_str
+                )
                 result = funcDeclVisitor.constructInfo(node)
-                pprint(result)
 
                 if user_socket_id is not None:
-                    print("Sending parsed function declaration to server...")
-                    sio.emit("createdFunctionDeclaration",
-                             (user_socket_id, result))
+                    sio.emit("createdFunctionDeclaration", (user_socket_id, result))
                     enable_socketio_client_emit()
 
                 functions[func_name] = result
-
-    print(f"\n=== Finished running pycparser_parse_fn_decls in gdb instance\n\n")
 
     return functions
 
 
 @useSocketIOConnection
 def pycparser_parse_type_decls(user_socket_id: str = None, sio=None):
-    '''
+    """
     Using pycparser to parse type declarations by constructing AST.
 
     NOTE: Must run this function BEFORE starting the program in gdb, otherwise you get strange output from the 'info types' command.
-    '''
-
-    print("\n=== Running pycparser_parse_type_decls in gdb instance\n\n")
+    """
 
     # typedef and struct declarations need to be declared in the files of the
     # user-defined types for pycparser to parse them correctly.
     type_decl_strs = get_type_decl_strs()
-    '''
+    """
     For example, to parse the user-defined type `struct list`, we need to include
     the type declaration `struct node` in the preprocessed file before we can parse.
-    '''
+    """
 
     types_str = gdb.execute("info types", False, True)
     types_str_lines = re.split("\n", types_str.strip())
     types = []
-    print(types_str_lines)
 
     current_file = None
     for line in types_str_lines:
-        print("\n=== Current types_str_lines line:")
-        print(line)
-
-        if m := re.fullmatch(r'^File (.*):$', line):
-            print("^^^ Matched file name")
+        if m := re.fullmatch(r"^File (.*):$", line):
             # Set new file name and reset text
             current_file = m.group(1)
-        elif m := re.fullmatch(r'^(\d+):\t(.*;)$', line):
+        elif m := re.fullmatch(r"^(\d+):\t(.*;)$", line):
             line_num = int(m.group(1))
             type_decl_str = m.group(2)
 
-            ast = get_type_decl_ast(
-                type_decl_strs,
-                type_decl_str)
-            pprint(ast)
+            ast = get_type_decl_ast(type_decl_strs, type_decl_str)
 
             if len(ast.ext) > 0:
                 # We are concerned with the last type/typedef that we put in
                 # the preprocessed file, which is the one we want to parse.
                 node = ast.ext[-1]
                 if isinstance(node, c_ast.Decl) or isinstance(node, c_ast.Typedef):
-
                     if isinstance(node.type, c_ast.Struct):
                         node = node.type
                         type_name = node.name
-                        print(f'Parsing struct definition {type_name}')
 
                         structDefVisitor = ParseStructDefVisitor(
-                            type_name, current_file, line_num, type_decl_str)
+                            type_name, current_file, line_num, type_decl_str
+                        )
                         result = structDefVisitor.constructInfo(node)
-                        pprint(result)
 
                         types.append(result)
 
                     else:
                         type_name = node.name
-                        print(f'Parsing type declaration {type_name}')
 
                         typeDeclVisitor = ParseTypeDeclVisitor(
-                            type_name, current_file, line_num, type_decl_str)
+                            type_name, current_file, line_num, type_decl_str
+                        )
                         result = typeDeclVisitor.constructInfo(node)
-                        pprint(result)
 
                         types.append(result)
 
             if user_socket_id is not None:
-                print(f"types parser: user sid is {user_socket_id}")
-                print("Sending parsed type declaration -> server -> FE client...")
-                sio.emit("createdTypeDeclaration",
-                         (user_socket_id, result))
+                sio.emit("createdTypeDeclaration", (user_socket_id, result))
                 enable_socketio_client_emit()
-
-    print(f"\n=== Finished running pycparser_parse_type_decls in gdb instance\n\n")
 
     return types
 
 
 def get_fn_decl_ast(type_decl_strs, fn_decl_str):
-    '''
+    """
     1. Write a single user-defined function declaration to the file USER_FN_DECLARATIONS_FILE_PATH
     2. preprocess the C code to remove comments (redundant)
     3. Generate AST of the function declaration
-    '''
+    """
     with open(USER_FN_DECLARATIONS_FILE_PATH, "w") as f:
         f.write("\n".join(type_decl_strs))
         f.write("\n")
@@ -449,23 +417,28 @@ def get_fn_decl_ast(type_decl_strs, fn_decl_str):
     ```
     """
 
-    subprocess.run(f"gcc -E {USER_FN_DECLARATIONS_FILE_PATH} > {FN_DECLARATIONS_PREPROCESSED}",
-                   shell=True)
+    subprocess.run(
+        f"gcc -E {USER_FN_DECLARATIONS_FILE_PATH} > {FN_DECLARATIONS_PREPROCESSED}",
+        shell=True,
+    )
 
     # Parse the preprocessed C code into an AST
     # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
-    ast = parse_file(FN_DECLARATIONS_PREPROCESSED, use_cpp=True,
-                     cpp_args=r'-Iutils/fake_libc_include')
+    ast = parse_file(
+        FN_DECLARATIONS_PREPROCESSED,
+        use_cpp=True,
+        cpp_args=r"-Iutils/fake_libc_include",
+    )
 
     return ast
 
 
 def get_type_decl_ast(type_decl_strs, type_decl_str_to_parse):
-    '''
+    """
     Similar to get_fn_decl_ast() but for types (structs, typedefs)
-    '''
+    """
 
-    '''
+    """
     Replace struct decl e.g. "struct node;" with the struct definition
     e.g. "struct node { int value; struct node *next; };"
     See the following sample gdb output:
@@ -476,22 +449,19 @@ def get_type_decl_ast(type_decl_strs, type_decl_str_to_parse):
         struct node *next;
     }
     ```
-    '''
+    """
 
     # If type (rather than typedef) is declared, expand into struct definition
-    struct_decl_pattern = r'(struct\s+[a-zA-Z_]\w*);'
+    struct_decl_pattern = r"(struct\s+[a-zA-Z_]\w*);"
     if m := re.fullmatch(struct_decl_pattern, type_decl_str_to_parse):
         struct_decl = m.group(1)
-        print(f"{struct_decl=}")
         struct_def_str = gdb.execute(f"ptype {struct_decl}", False, True)
-        struct_def_str = re.sub(r'type = ', "", struct_def_str)
-        print(f"{struct_def_str=}")
+        struct_def_str = re.sub(r"type = ", "", struct_def_str)
         type_decl_str_to_parse = struct_def_str.strip() + ";"
 
     # Remove the typedecl that we are parsing from the list of type
     # declarations to write to the file before the typedecl that we are parsing.
-    type_decl_strs = filter(
-        lambda s: s != type_decl_str_to_parse, type_decl_strs)
+    type_decl_strs = filter(lambda s: s != type_decl_str_to_parse, type_decl_strs)
     with open(USER_TYPE_DECLARATION_FILE_PATH, "w") as f:
         # Write all user-defined type and typedef declarations that might be
         # necessary to parse the struct definition
@@ -500,19 +470,24 @@ def get_type_decl_ast(type_decl_strs, type_decl_str_to_parse):
         f.write(type_decl_str_to_parse)
         f.write("\n")
 
-    subprocess.run(f"gcc -E {USER_TYPE_DECLARATION_FILE_PATH} > {TYPE_DECLARATION_PREPROCESSED}",
-                   shell=True)
+    subprocess.run(
+        f"gcc -E {USER_TYPE_DECLARATION_FILE_PATH} > {TYPE_DECLARATION_PREPROCESSED}",
+        shell=True,
+    )
 
     # Parse the preprocessed C code into an AST
     # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
-    ast = parse_file(TYPE_DECLARATION_PREPROCESSED, use_cpp=True,
-                     cpp_args=r'-Iutils/fake_libc_include')
+    ast = parse_file(
+        TYPE_DECLARATION_PREPROCESSED,
+        use_cpp=True,
+        cpp_args=r"-Iutils/fake_libc_include",
+    )
 
     return ast
 
 
 def get_type_decl_strs():
-    '''
+    """
     Output from gdb command `info types` looks something like this:
     ```
     (gdb) info types
@@ -570,89 +545,64 @@ def get_type_decl_strs():
     3. Allow the malloc interceptor to know what user-defined types exist when parsing lines
         like `List *head = malloc(sizeof(List));`
 
-    '''
+    """
     types_str = gdb.execute("info types", False, True)
     types_str_lines = re.split("\n", types_str.strip())
     types = []
     for line in types_str_lines:
-        if m := re.fullmatch(r'^(\d+):\t(.*;)$', line):
+        if m := re.fullmatch(r"^(\d+):\t(.*;)$", line):
             # Valid type
             types.append(m.group(2))
 
-    print("\nUser-defined type declaration strings:")
-    pprint(types)
     return types
 
 
 def manual_regex_parse_fn_decl():
-    '''
+    """
     DEPRECATED
     Writing a regex to parser function declarations.
     A bit hopeless. Should use a prewritten parser like pycparser.
     See below function.
-    '''
+    """
     # Regex to match function signature
-    fn_signature_pattern = r'((?:[a-zA-Z_]\w*(?:\s*\*+\s*)*)+)\s+([a-zA-Z_]\w*)\s*\(([^)]*)\)'
+    fn_signature_pattern = (
+        r"((?:[a-zA-Z_]\w*(?:\s*\*+\s*)*)+)\s+([a-zA-Z_]\w*)\s*\(([^)]*)\)"
+    )
 
     # Regex to match function parameters
-    fn_params_pattern = r'((?:[a-zA-Z_]\w*(?:\s*\*+\s*)*)+)\s+([a-zA-Z_]\w*)'
+    fn_params_pattern = r"((?:[a-zA-Z_]\w*(?:\s*\*+\s*)*)+)\s+([a-zA-Z_]\w*)"
 
     functions: dict[str, list[dict]] = {}
 
     functions_str = gdb.execute("info functions -n", False, True)
-    print("\n===Functions string:")
-    print(functions_str)
 
     # Parse the functions string
     functions_str_lines = re.split("\n", functions_str.strip())
 
     current_file = ""
     for line in functions_str_lines:
-
-        if m := re.fullmatch(r'^All defined functions$'):
+        if m := re.fullmatch(r"^All defined functions$"):
             pass
-        elif m := re.fullmatch(r'^File.*:$', line):
+        elif m := re.fullmatch(r"^File.*:$", line):
             # Get the file name
             current_file = line.split(" ")[1][:-1]
             if current_file not in functions:
                 functions[current_file] = []
-        elif m := re.fullmatch(r'^(\d+): (.*);$', line):
-            fn_signature = m.group(2)
-            # Example: "void append(List *, int)"
-            print(f"=== Matched function signature: {fn_signature.group(0)}")
-
+        elif m := re.fullmatch(r"^(\d+): (.*);$", line):
             # TODO: check this from gpt
-            matches = re.findall(fn_signature_pattern, fn_signature)
-
-            for match in matches:
-                return_type = match[0]
-                function_name = match[1]
-                parameters_text = match[2]
-
-                print("Return Type:", return_type)
-                print("Function Name:", function_name)
-
-                # Extract and print individual parameters
-                parameters = re.findall(fn_params_pattern, parameters_text)
-                print("Parameters:")
-                for param in parameters:
-                    param_type = param[0]
-                    param_name = param[1]
-                    print(f"  Type: {param_type}, Name: {param_name}")
 
             new_fn = {
                 "file": current_file,
                 "line": int(m.group(1)),
                 "param_types": [],
-                "return_type": "TODO"
+                "return_type": "TODO",
             }
             functions.append(new_fn)
 
-    pprint(functions)
     return functions
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # For testing purposes
     # _ = pycparser_parse_fn_decls()
     # _ = pycparser_parse_type_decls()

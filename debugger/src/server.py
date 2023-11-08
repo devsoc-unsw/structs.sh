@@ -45,23 +45,6 @@ io = socketio.Server(cors_allowed_origins="*")
 
 
 @io.event
-def connect(socket_id: str, *_) -> None:
-    print("Client connected: ", socket_id)
-
-
-@io.event
-def disconnect(socket_id: str) -> None:
-    print("Client disconnected: ", socket_id)
-
-
-@io.event
-def echo(socket_id: str, data: Any) -> None:
-    print("Received message from", socket_id, ":", data)
-    print("Echoing message back to client...")
-    io.emit("echo", data, room=socket_id)
-
-
-@io.event
 def sendDummyLinkedListData(socket_id: str, line_number: int) -> None:
     """
     Send hard-coded heap dictionaries to the frontend user.
@@ -156,8 +139,6 @@ def mainDebug(socket_id: str, code: str) -> None:
         socket_id,
         script_name=GDB_SCRIPT_NAME,
     )
-    print("\n=== Running gdb script...")
-    print(f"gdb_script:\n{gdb_script}")
 
     proc = subprocess.Popen(
         ["gdb"],
@@ -178,7 +159,6 @@ def mainDebug(socket_id: str, code: str) -> None:
     for line in map(lambda line: line.strip(), gdb_script.strip().split("\n")):
         proc.stdin.write(line + "\n")
         proc.stdin.flush()
-        print("\n=== Wrote one line to gdb debugging session: ", line)
 
         # Read any output from the gdb instance after writing a line to it.
         get_subprocess_output(proc, TIMEOUT_DURATION)
@@ -194,12 +174,6 @@ def executeNext(socket_id: str) -> None:
             f"executeNext: No subprocess found for user with socket_id {socket_id}"
         )
 
-    print(f"Found subprocess for FE client socket_id {socket_id}:")
-    print(proc)
-
-    print(
-        f"\n=== Sending '{CUSTOM_NEXT_COMMAND_NAME}' command to gdb instance {proc.pid}"
-    )
     proc.stdin.write(f"{CUSTOM_NEXT_COMMAND_NAME}\n")
     proc.stdin.flush()
     get_subprocess_output(proc, TIMEOUT_DURATION)
@@ -225,12 +199,6 @@ def send_stdin(socket_id: str, data: str):
         raise Exception(
             f"executeNext: No subprocess found for user with socket_id {socket_id}"
         )
-
-    print(f"Found subprocess for FE client socket_id {socket_id}:")
-    print(proc)
-
-    print(f"Sending stdin to gdb instance {proc.pid}:")
-    print(data)
     proc.stdin.write(f'python {DEBUG_SESSION_VAR_NAME}.io_manager.write("{data}\\n")\n')
     proc.stdin.flush()
 
@@ -241,11 +209,6 @@ def createdFunctionDeclaration(socket_id: str, user_socket_id, function) -> None
     Event to receive parsed function declaration from gdb instance and
     send it to the specified frontend client.
     """
-    print(
-        f"Event createdFunctionDeclaration received from gdb instance with socket_id {socket_id}:"
-    )
-    print(f"Sending function declaration to client {user_socket_id}:")
-    print(function)
     io.emit("sendFunctionDeclaration", function, room=user_socket_id)
 
 
@@ -255,18 +218,11 @@ def createdTypeDeclaration(socket_id: str, user_socket_id, type) -> None:
     Event to receive parsed type declaration (struct, typedef) from gdb instance and
     send it to the specified frontend client.
     """
-    print(f"Received type declaration from {user_socket_id}:")
-    print(type)
-    print("Sending type declaration to client...")
     io.emit("sendTypeDeclaration", type, room=user_socket_id)
 
 
 @io.on("programWaitingForInput")
 def requestUserInput(socket_id: str, user_socket_id) -> None:
-    print(
-        f"Event requestUserInput received from gdb instance with socket_id {socket_id}:"
-    )
-    print(f"Requesting user input from FE user {user_socket_id}:")
     io.emit("requestUserInput", room=user_socket_id)
 
 
@@ -277,11 +233,7 @@ def updatedBackendState(socket_id: str, user_socket_id, backend_data) -> None:
     the specified frontend client.
     Should be emitted by a gdb instance while running a `custom_next` custom command.
     """
-    print(
-        f"Event updatedBackendState received from gdb instance with socket_id {socket_id}:"
-    )
     print(f"Sending backend state to client {user_socket_id}:")
-    pprint(backend_data)
     io.emit("sendBackendStateToUser", backend_data, room=user_socket_id)
 
 
@@ -290,11 +242,6 @@ def produced_stdout_output(socket_id: str, user_socket_id: str, data: str):
     """
     Send program stdout to FE client
     """
-    print(
-        f"Event produced_stdout_output received from gdb instance with socket_id {socket_id}:"
-    )
-    print(f"Sending stdout output to client {user_socket_id}:")
-    print(data)
     io.emit("sendStdoutToUser", data, room=user_socket_id)
 
 
