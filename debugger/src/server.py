@@ -16,12 +16,12 @@ from placeholder_data import (
     PLACEHOLDER_BACKEND_STATES_BINARY_TREE,
     PLACEHOLDER_BACKEND_STATES_LINKED_LIST,
 )
-from src.constants import (
+from constants import (
     CUSTOM_NEXT_COMMAND_NAME,
     DEBUG_SESSION_VAR_NAME,
     TIMEOUT_DURATION,
 )
-from src.utils import make_non_blocking, get_gdb_script, get_subprocess_output
+from utils import make_non_blocking, get_gdb_script, get_subprocess_output
 
 # Parent directory of this python script e.g. "/user/.../debugger/src"
 # In the docker container this will be "/app/src"
@@ -207,7 +207,8 @@ def executeNext(socket_id: str) -> None:
     # Reading new output from the program relies on the fact that next was
     # executed just before. This is expected to happen in the call to the custom
     # next command above.
-    proc.stdin.write(f"python {DEBUG_SESSION_VAR_NAME}.io_manager.read_and_send()\n")
+    proc.stdin.write(
+        f"python {DEBUG_SESSION_VAR_NAME}.io_manager.read_and_send()\n")
     proc.stdin.flush()
     get_subprocess_output(proc, TIMEOUT_DURATION)
 
@@ -231,7 +232,8 @@ def send_stdin(socket_id: str, data: str):
 
     print(f"Sending stdin to gdb instance {proc.pid}:")
     print(data)
-    proc.stdin.write(f'python {DEBUG_SESSION_VAR_NAME}.io_manager.write("{data}\\n")\n')
+    proc.stdin.write(
+        f'python {DEBUG_SESSION_VAR_NAME}.io_manager.write("{data}\\n")\n')
     proc.stdin.flush()
 
 
