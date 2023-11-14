@@ -5,6 +5,7 @@ import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/theme-tomorrow';
 import { SERVER_URL } from 'utils/constants';
 import axios from 'axios';
+import { PLACEHOLDER_USERNAME } from '../FileTree/util';
 
 const CodeEditor = ({
   programName,
@@ -34,7 +35,7 @@ const CodeEditor = ({
     const loadCode = () => {
       axios.get(SERVER_URL + '/api/retrieveFile', {
         params: {
-          username: 'benp123',
+          username: PLACEHOLDER_USERNAME,
           workspace: workspaceName,
           filename: programName,
         }
@@ -50,16 +51,15 @@ const CodeEditor = ({
       return "";
     }
 
-    // TODO: add workspace
     const changeCode = (newCode: string) => {
       const data = {
-        username: 'benp123',
+        username: PLACEHOLDER_USERNAME,
         workspace: workspaceName,
         filename: programName,
         fileData: code
       };
 
-      axios.post(SERVER_URL + '/api/saveFile', data).then((response) => {
+      axios.post(SERVER_URL + '/api/updateFile', data).then((response) => {
         if (response.data.hasOwnProperty('error')) {
           console.log("ERROR: ", + response.data.error)
         }
@@ -69,7 +69,6 @@ const CodeEditor = ({
     }
 
     if (code != loadCode()) {
-      console.log(programName)
       changeCode(code);
     }
   }

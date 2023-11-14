@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Select, { SelectItem } from 'components/Select/Select';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
@@ -22,9 +22,36 @@ const WorkspaceSelector = ({
   onChangeProgramName: (programName: string) => void;
 }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [workspaceName, setWorkspaceName] = useState('')
   const [workspaceInput, setWorkspaceInput] = useState('');
-  const [workspaces, setWorkspaces] = useState(DEBUG_MODE ? [PLACEHOLDER_WORKSPACE] : []);
   const [filenames, setFilenames] = useState([]);
+  const [workspaces, setWorkspaces] = useState([]);
+
+  useEffect(() => {
+    const loadWorkspaces = async () => {
+      const data = {
+        username: PLACEHOLDER_USERNAME
+      };
+
+      let allWorkspaces = [];
+      await axios.get(SERVER_URL + '/api/retrieveWorkspaces', {params: data}).then((response) => {
+        if (response.data.hasOwnProperty('error')) {
+          console.log(response.data);
+        } else {
+          allWorkspaces = response.data.workspaces;
+        }
+      });
+
+      if (DEBUG_MODE) {
+        allWorkspaces.push(PLACEHOLDER_WORKSPACE);
+      }
+
+      console.log(allWorkspaces)
+      setWorkspaces(allWorkspaces);
+    };
+
+    loadWorkspaces();
+  }, []);
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -33,18 +60,25 @@ const WorkspaceSelector = ({
   const createWorkspace = (event) => {
     event.preventDefault();
     if (workspaceInput === '' || workspaces.includes(workspaceInput)) {
-      console.log('empty input');
+      console.log('invalid input');
       return;
     }
 
     const data = {
-      username: 'benp123',
+      username: PLACEHOLDER_USERNAME,
       workspaceName: workspaceInput
     };
 
-    axios.post(SERVER_URL + '/api/saveWorkspace', data).then((respsonse) => {
-      console.log("Saved workspace: ", respsonse.data)
+    let returnFlag = false;
+    axios.post(SERVER_URL + '/api/saveWorkspace', data).then((response) => {
+      if (response.data.hasOwnProperty('error')) {
+        returnFlag = true;
+      }
     });
+
+    if (returnFlag) {
+      return;
+    }
 
     setWorkspaces([...workspaces, workspaceInput]);
     setDropdownOpen(false);
@@ -55,17 +89,36 @@ const WorkspaceSelector = ({
   }
 
   const retrieveWorkspace = (name) => {
+    if (name == '') {
+      return;
+    }
+
     const data = {
-      username: 'benp123',
+      username: PLACEHOLDER_USERNAME,
       workspaceName: name
     };
 
+    let returnFlag = false;
     axios.get(SERVER_URL + '/api/retrieveFilesInWorkspace', { params: data }).then((response) => {
       const newFiles = response.data.files;
-      setFilenames(newFiles);
-    })
+      if (!response.data.hasOwnProperty('error')) {
+        setFilenames(newFiles);
+      } else {
+        returnFlag = true;
+        console.log(response)
+      }
+    });
+
+    if (returnFlag) {
+      return;
+    }
 
     onChangeWorkspaceName(name);
+    setWorkspaceName(name);
+  }
+
+  const getCurrentWorkspaceName = (): String => {
+    return workspaceName;
   }
 
   const WorkSpaceMenu = styled.div`
@@ -106,7 +159,8 @@ const WorkspaceSelector = ({
       </div>
       <FileSelector
         onChangeProgramName={onChangeProgramName}
-        files={filenames}
+        getCurrentWorkspaceName={getCurrentWorkspaceName}
+        retrieveWorkspace={retrieveWorkspace}
       />
     </Box>
   );

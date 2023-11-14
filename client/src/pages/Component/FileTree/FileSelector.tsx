@@ -1,70 +1,109 @@
 import Select, { SelectItem } from 'components/Select/Select';
 import { useState } from 'react';
+import styled from '@emotion/styled';
+import { motion } from 'framer-motion';
+import { buttonStyle, buttonStyleFiles, createButtonStyle, dropDownDivStyle, dropDownDivStyleFiles, dropDownTextStyle, dropdownStyle } from './WorkspaceStyles';
+import { Box, Button, Paper } from '@mui/material';
+import { PLACEHOLDER_USERNAME } from './util';
+import { SERVER_URL } from 'utils/constants';
+import axios from 'axios';
 
 const FileSelector = ({
   onChangeProgramName,
-  files,
+  getCurrentWorkspaceName,
+  retrieveWorkspace
 }: {
-  onChangeProgramName: (programName: string) => void;
-  files: {
-    name: string;
-    text: string;
-  }[]
+  onChangeProgramName: (programName: String) => void;
+  getCurrentWorkspaceName: () => String;
+  retrieveWorkspace: (name: String) => void;
 }) => {
 
-  // const [formData, setFormData] = useState({
-  //   filename: '',
-  // });
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [fileInput, setFileInput] = useState('');
+  const [files, setFiles] = useState([]);
 
-  // const handleInputChange = (event) => {
-  //   const { name, value } = event.target;
-  //   setFormData({
-  //     ...formData,
-  //     [name]: value,
-  //   });
-  // };
+  const workspaceName = getCurrentWorkspaceName();
+  if (workspaceName != ''){
+    axios.get(SERVER_URL + '/api/retrieveFilesInWorkspace', { params: {
+      username: PLACEHOLDER_USERNAME,
+      workspaceName: workspaceName
+    } }).then((response) => {
+      if (!response.data.hasOwnProperty('error')) {
+        const newFiles = response.data.files;
+        setFiles(newFiles);
+      } else {
+        console.log(response.data)
+      }
+    });
+  }
 
-  // const handleSubmit = (event) => {
-    // event.preventDefault();
+  const toggleDropdown = () => {
+    setDropdownOpen(!isDropdownOpen);
+  };
 
-    // if (formData.filename == '' || (files.some(file => file.name == formData.filename))) {
-    //   return;
-    // }
+  const handleInputChange = (event) => {
+    setFileInput(event.target.value);
+  }
 
-    // // setFiles([
-    // //   ...files,
-    // //   { name: formData.filename, text: ''}
-    // // ]);
+  const createFile = (event) => {
+    event.preventDefault();
+    if (fileInput == '' || (files.some(file => file.name == fileInput))) {
+      return;
+    }
 
+    const currentWorkspace = getCurrentWorkspaceName();
+    let data = {
+      username: PLACEHOLDER_USERNAME,
+      workspace: currentWorkspace,
+      filename: fileInput,
+      fileData: ''
+    };
 
-    // const data = {
-    //   username: 'benp123',
-    //   filename: programName,
-    //   fileData: ''
-    // };
+    axios.post(SERVER_URL + '/api/saveFile', data).then((response) => {
+      console.log(response.data)
+      if (!response.data.hasOwnProperty('error')) {
+        files.push({name: fileInput, text: ''})
+      }
+    });
 
-    // axios.post(SERVER_URL + '/api/saveFile', data).then((respsonse) => {
-    // });
-  // };
+    setDropdownOpen(false)
 
-  // const [showForm, setShowForm] = useState(false);
-  // const [newOption, setNewOption] = useState('');
-  // const [options, setOptions] = useState(['Option 1', 'Option 2']);
+    axios.get(SERVER_URL + '/api/retrieveFilesInWorkspace', { params: {
+      username: PLACEHOLDER_USERNAME,
+      workspaceName: currentWorkspace
+    } }).then((response) => {
+      const newFiles = response.data.files;
+      setFiles(newFiles);
+    });
+  }
 
-  // const handleAddOption = () => {
-  //   // Update your options state with the new option
-  //   setOptions([...options, newOption]);
-
-  //   // Clear the form and hide it
-  //   setNewOption('');
-  //   setShowForm(false);
-  // };
-
+  const FileMenu = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: 'center';
+  `
   return (
       <div style={{paddingTop: '10px'}}>
+        <FileMenu>
+          <div>Select File</div>
+          <Button onClick={toggleDropdown} style={buttonStyleFiles} variant="text" size="small" color="primary">+</Button>
+        </FileMenu>
+        <div style={{paddingTop: '10px'}}></div>
+        {isDropdownOpen ?
+    <Box style= {dropDownDivStyleFiles}  sx={{ position: 'absolute'}}>
+        <Paper style={dropdownStyle} elevation={3} sx={{ position: 'absolute'}}>
+        <form onSubmit={createFile}>
+          <input style={dropDownTextStyle} placeholder='Enter File Name' value={fileInput} onChange={handleInputChange}></input>
+        </form>
+        <Button onClick={createFile} style={createButtonStyle} variant="contained">
+            Create File
+        </Button>
+        </Paper>
+    </Box>
+  : ''}
         <Select
           onValueChange={onChangeProgramName}
-          placeholder="Select File..."
+          placeholder={"Select File..."}
         >
           {files.map((file, index: number) => (
             <SelectItem style={{ fontSize: '13px' }} value={file.name} className="" key={index}>

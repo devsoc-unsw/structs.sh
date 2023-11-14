@@ -36,7 +36,7 @@ const DevelopmentMode = () => {
   const [activeSession, setActiveSession] = useState(false);
   const [workspaceName, setWorkspaceName] = useState(PLACEHOLDER_WORKSPACE);
   const [programName, setProgramName] = useState('');
-  const [code, setCode] = useState(localStorage.getItem('code') || '');
+  const [code, setCode] = useState('');
   const [consoleChunks, setConsoleChunks] = useState([]);
 
   // Tab values correspond to their index
