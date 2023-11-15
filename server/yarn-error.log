@@ -1,0 +1,64 @@
+Arguments: 
+  /home/jinthehuman/.nvm/versions/node/v19.7.0/bin/node /home/jinthehuman/.nvm/versions/node/v19.7.0/bin/yarn init
+
+PATH: 
+  /home/jinthehuman/.vscode-server/bin/f1b07bd25dfad64b0167beb15359ae573aecd2cc/bin/remote-cli:/home/jinthehuman/.cargo/bin:/home/jinthehuman/.nvm/versions/node/v19.7.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Program Files/OpenSSL-Win64/bin:/mnt/c/Python310/Scripts/:/mnt/c/Python310/:/mnt/c/Program Files (x86)/Common Files/Intel/Shared Libraries/redist/intel64/compiler:/mnt/c/Program Files/Python39/Scripts/:/mnt/c/Program Files/Python39/:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/curl/bin:/mnt/c/Program Files/Git/cmd:/mnt/c/Users/Jin Sunwoo/AppData/Roaming/nvm:/mnt/c/Program Files/nodejs:/mnt/c/Program Files/Docker/Docker/resources/bin:/mnt/c/Program Files/dotnet/:/mnt/c/Users/Jin Sunwoo/AppData/Local/Programs/Python/Python310/Scripts/:/mnt/c/Users/Jin Sunwoo/AppData/Local/Programs/Python/Python310/:/mnt/c/Program Files (x86)/Common Files/Intel/Shared Libraries/redist/intel64_win/compiler:/mnt/c/Users/Jin Sunwoo/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Jin Sunwoo/AppData/Roaming/Python/Python39/Scripts:/mnt/c/Users/Jin Sunwoo/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/Jin Sunwoo/AppData/Roaming/npm:/mnt/c/Program Files (x86)/nodejs:/mnt/c/Program Files /nodejs:/mnt/c/Program Files/heroku/bin:/mnt/c/Users/Jin Sunwoo/AppData/Roaming/nvm:/mnt/c/Program Files/nodejs:/mnt/c/Gradle/gradle-5.4.1/bin:/snap/bin
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  19.7.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: canceled
+      at Interface.<anonymous> (/home/jinthehuman/.nvm/versions/node/v19.7.0/lib/node_modules/yarn/lib/cli.js:137150:13)
+      at Interface.emit (node:events:512:28)
+      at [_ttyWrite] [as _ttyWrite] (node:internal/readline/interface:1132:18)
+      at ReadStream.onkeypress (node:internal/readline/interface:271:20)
+      at ReadStream.emit (node:events:512:28)
+      at emitKeys (node:internal/readline/utils:357:14)
+      at emitKeys.next (<anonymous>)
+      at ReadStream.onData (node:internal/readline/emitKeypressEvents:64:36)
+      at ReadStream.emit (node:events:512:28)
+      at addChunk (node:internal/streams/readable:324:12)
+
+npm manifest: 
+  {
+    "name": "server",
+    "version": "1.0.0",
+    "main": "src/index.ts",
+    "scripts": {
+      "dev": "ts-node-dev src/index.ts",
+      "tsc": "tsc",
+      "lint": "eslint --ext .js,.ts src/",
+      "lint-fix": "eslint --fix --ext .js,.ts src/"
+    },
+    "license": "MIT",
+    "dependencies": {
+      "body-parser": "^1.20.2",
+      "cors": "^2.8.5",
+      "express": "^4.18.2",
+      "mongoose": "^7.0.1"
+    },
+    "devDependencies": {
+      "@types/cors": "^2.8.14",
+      "@types/express": "^4.17.17",
+      "@types/mongoose": "^5.11.97",
+      "@typescript-eslint/eslint-plugin": "^6.7.0",
+      "@typescript-eslint/parser": "^6.7.0",
+      "eslint": "^8.49.0",
+      "ts-node": "^10.9.1",
+      "ts-node-dev": "^2.0.0",
+      "typescript": "^5.2.2"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
