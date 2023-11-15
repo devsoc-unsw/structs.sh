@@ -5,7 +5,7 @@ import subprocess
 import time
 from typing import IO
 
-from constants import (
+from src.constants import (
     CUSTOM_NEXT_COMMAND_NAME,
     CUSTOM_NEXT_SCRIPT_NAME,
     DEBUG_SESSION_VAR_NAME,

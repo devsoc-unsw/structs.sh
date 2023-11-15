@@ -318,6 +318,8 @@ class CustomNextCommand(gdb.Command):
             # === Extract type
             type_name = get_type_name_of_stack_var(name)
             stack_memory_value["typeName"] = type_name
+            # Might come later, in the "extract value" part
+            type = {}
 
             print(f"Extracted type name of stack variable {name}: {type_name}")
 
@@ -337,7 +339,7 @@ class CustomNextCommand(gdb.Command):
 
                 value = create_struct_value(
                     self.debug_session.get_cached_parsed_type_decls(), value_str, type_name)
-                struct_type = create_struct_type(
+                type = create_struct_type(
                     self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_type_name)
 
             # TODO: handle arrays
@@ -346,7 +348,7 @@ class CustomNextCommand(gdb.Command):
 
             print(f"Extracted value of stack variable {name}: {value}")
             stack_memory_value["value"] = value
-            stack_memory_value['type'] = struct_type
+            stack_memory_value['type'] = type
             # ===
 
             variables[name] = stack_memory_value
