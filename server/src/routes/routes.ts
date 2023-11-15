@@ -20,9 +20,9 @@ router.get('/api/getOwnedData', [], async (req: Request, res: Response) => {
 
 router.post('/api/save', async (req: Request, res: Response) => {
   console.log(req.body);
-  const { owner, type, data } = req.body;
+  const { owner, type, name, data } = req.body;
 
-  const ds = dataStructure.build({ owner, type, data });
+  const ds = dataStructure.build({ owner, type, name, data });
   await ds.save();
   return res.status(201).send(ds);
 });
