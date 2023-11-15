@@ -339,16 +339,17 @@ class CustomNextCommand(gdb.Command):
                 value_str = value_str.strip().strip("{}").strip()
                 # value_str == "data = 542543, next = 0xaaa67b32f2e"
 
+                # TODO: REFACTOR
                 value = create_struct_value(
                     self.debug_session.get_cached_parsed_type_decls(), value_str, type_name)
                 type = create_struct_type(
                     self.debug_session.get_cached_parsed_type_decls(), value_str, type_name)
                 stack_memory_value['type'] = type
-            elif type_name.endswith("*"):
-                # TODO: handle pointers
-                pass
-            elif type_name.endswith("[]"):
-                # TODO: handle arrays
+            # elif type_name.endswith("*"):
+            #     # TODO: handle pointers
+            #     pass
+            # elif type_name.endswith("[]"):
+            #     # TODO: handle arrays
                 pass
             else:
                 value = value_str
