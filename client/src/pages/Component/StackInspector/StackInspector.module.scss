@@ -27,7 +27,7 @@ dl {
     //overflow: hidden;
     //margin: 0;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: auto 1fr;
     margin: 0;
     padding: 0;
 }
@@ -36,6 +36,7 @@ dd {
     // padding: 0 6px 4px;
     // margin: 2px 4px;
     margin: 0;
+    overflow: hidden;
 }
 
 dd:nth-child(4n+2) {
@@ -45,10 +46,17 @@ dd:nth-child(4n+2) {
 dt {
     display: flex;
     align-items: center;
+    padding: 0 15px;
 }
 
 dt:nth-child(4n+1) {
     background-color: azure;
+}
+
+.collapsebutton {
+    color: inherit;
+    text-decoration: none;
+    margin-left: 0;
 }
 
 // Misc. span formatting
@@ -92,6 +100,16 @@ dt > code {
     float: right;
     margin: 2px 4px 2px;
     padding: 0 3px;
+    max-width: calc(100% - 30px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.expandedvalue {
+    white-space: normal;
+    overflow: visible;
+    color: red;
 }
 
 dd:nth-child(2) > .value {
@@ -100,4 +118,8 @@ dd:nth-child(2) > .value {
 
 dd:last-child > .value {
     margin-bottom: 2px;
+}
+
+.hidden {
+    display: none;
 }

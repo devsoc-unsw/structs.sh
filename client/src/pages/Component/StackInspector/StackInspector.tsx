@@ -1,7 +1,60 @@
 import React from 'react';
 import styles from './StackInspector.module.scss';
+import classNames from 'classnames/bind';
 import {isStructTypeName, isPointerType, isArrayType} from '../../Types/backendType';
 import { useGlobalStore } from '../../Store/globalStateStore';
+
+const CollapsibleDescription = ({ collapsed, children }) => {
+  const [isCollapsed, setIsCollapsed] = React.useState(collapsed);
+  const [isOverflowing, setIsOverflowing] = React.useState(true);
+  const valueSpanRef = React.useRef(null);
+
+  const cx = classNames.bind(styles);
+  const valueClassName = cx(
+    'value',
+    { 'expandedvalue': !isCollapsed }
+  );
+  const buttonClassName = cx(
+    'collapsebutton',
+    { 'hidden': !isOverflowing && isCollapsed }
+  );
+
+  React.useEffect(() => {
+    const valueSpan = valueSpanRef.current;
+		
+		const handleResize = () => {
+			if (valueSpan) {
+				const overflowing = valueSpan.scrollWidth > valueSpan.clientWidth;
+				setIsOverflowing(overflowing);
+			}
+		};
+
+		// Initial call on mount
+		handleResize();
+
+		// Add resize event listener
+		window.addEventListener('resize', handleResize);
+
+		// Remove the event listener when the component is unmounted
+		return () => {
+			window.removeEventListener('resize', handleResize);
+		};
+	});
+  
+  return (
+    <>
+      <a href="#" className={buttonClassName} onClick={() => setIsCollapsed(!isCollapsed)}>
+        { isCollapsed ? "▸" : "▾" }
+      </a>
+      <code
+        className={valueClassName}
+        aria-expanded={isCollapsed}
+        ref={valueSpanRef}>
+        {children}
+      </code>
+    </>
+  );
+};
 
 const StackInspector = () => {
   const debuggerData = useGlobalStore().currFrame;
@@ -14,9 +67,9 @@ const StackInspector = () => {
     // slightly incorrect format at the moment)
     const typeName = memoryValue.typeName;
     var localValue;
-    // char *[3];
     if (isStructTypeName(typeName)) {
-      localValue = "<struct>";
+      //localValue = "<struct>";
+			localValue = memoryValue.value;
     } else if (isPointerType(typeName)) {
       localValue = "<pointer>";
     } else if (/\[\d+\]$/.test(typeName)) {
@@ -32,8 +85,6 @@ const StackInspector = () => {
       value: localValue
     });
   }
-
-  console.log(localDivs);
 
   function defaultTemplate(localDiv) {
     return (
@@ -57,6 +108,7 @@ const StackInspector = () => {
     var arrayType;
     if (arrayLengthIndicator[0] == '*') {
       // array of pointers
+      // looks like "char *[3]"
       // TODO: handle double pointers
       arrayLengthIndicator = arrayLengthIndicator.substring(1);
       arrayType = typeWords.join(" ") + " *";
@@ -74,7 +126,9 @@ const StackInspector = () => {
           </code>
         </dt>
         <dd>
-          <code className={styles.value}>{localDiv.value}</code>
+          <CollapsibleDescription collapsed={true}>
+            {localDiv.value}
+          </CollapsibleDescription>
         </dd>
       </>
     );
@@ -91,7 +145,7 @@ const StackInspector = () => {
             <span className={styles.name}>{localDiv.name}</span>
           </code>
         </dt>
-        <dd >
+        <dd>
           <code className={styles.value}>{localDiv.value}</code>
         </dd>
       </>
