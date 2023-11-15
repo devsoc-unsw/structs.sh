@@ -350,7 +350,7 @@ class CustomNextCommand(gdb.Command):
             #     pass
             # elif type_name.endswith("[]"):
             #     # TODO: handle arrays
-                pass
+                # pass
             else:
                 value = value_str
 
