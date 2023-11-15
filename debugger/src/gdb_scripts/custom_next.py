@@ -320,8 +320,9 @@ class CustomNextCommand(gdb.Command):
             # === Extract type
             type_name = get_type_name_of_stack_var(name)
             stack_memory_value["typeName"] = type_name
-            # Might come later, in the "extract value" part. Only for structs for now.
-            type = {}
+            # Might be changed later, in the "extract value" part. Only for structs for now.
+            type = {"typeName": type_name}
+            stack_memory_value["type"] = type
 
             print(f"Extracted type name of stack variable {name}: {type_name}")
 
@@ -350,7 +351,7 @@ class CustomNextCommand(gdb.Command):
             #     pass
             # elif type_name.endswith("[]"):
             #     # TODO: handle arrays
-                # pass
+            #     pass
             else:
                 value = value_str
 
