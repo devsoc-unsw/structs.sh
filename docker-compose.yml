@@ -18,3 +18,11 @@ services:
       - '8000:8000'
     volumes:
       - ./debugger/src:/app/src
+  server:
+    build:
+      context: server
+      dockerfile: Dockerfile
+    ports:
+      - '8001:8001'
+    volumes:
+      - ./server/src:/app/src

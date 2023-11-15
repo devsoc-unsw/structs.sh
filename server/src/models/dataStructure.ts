@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 interface IDataStructure {
   owner: string;
   type: string;
+  name: string;
   data: number[];
 }
 
@@ -13,6 +14,7 @@ interface dataStructureModelInterface extends mongoose.Model<dataStructureDoc> {
 interface dataStructureDoc extends mongoose.Document {
   owner: string;
   type: string;
+  name: string;
   data: number[];
 }
 
@@ -22,6 +24,10 @@ const dataStructureSchema = new mongoose.Schema({
     required: true,
   },
   type: {
+    type: String,
+    required: true,
+  },
+  name: {
     type: String,
     required: true,
   },

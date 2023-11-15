@@ -9,6 +9,7 @@ import CreateMenu from './CreateMenu';
 
 interface VisualiserInterfaceProps {
   topicTitle: string;
+  data: number[];
 }
 
 /**
@@ -21,7 +22,7 @@ interface VisualiserInterfaceProps {
  *     them off to the controller components (basically the play/pause buttons,
  *     sliders, etc.).
  */
-const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle }) => {
+const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle, data }) => {
   const topicTitleRef = useRef<string>();
   const controllerRef = useRef<VisualiserController>();
   const [isTimelineComplete, setIsTimelineComplete] = useState<boolean>(false);
@@ -36,6 +37,9 @@ const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle }) => {
     topicTitleRef.current = topicTitle;
     setDocumentation(controllerRef.current.documentation);
     setIsCodeSnippetExpanded(false);
+    if (data !== undefined) {
+      controllerRef.current.loadData(data);
+    }
   }, [topicTitle]);
 
   const handleTimelineUpdate = useCallback((val) => {
