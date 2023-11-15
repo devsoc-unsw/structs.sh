@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from './StackInspector.module.scss';
 import classNames from 'classnames/bind';
-import {isStructTypeName, isPointerType, isArrayType} from '../../Types/backendType';
+import styles from './StackInspector.module.scss';
+import { isStructTypeName, isPointerType, isArrayType } from '../../Types/backendType';
 import { useGlobalStore } from '../../Store/globalStateStore';
 
 const CollapsibleDescription = ({ collapsed, children }) => {
@@ -10,46 +10,37 @@ const CollapsibleDescription = ({ collapsed, children }) => {
   const valueSpanRef = React.useRef(null);
 
   const cx = classNames.bind(styles);
-  const valueClassName = cx(
-    'value',
-    { 'expandedvalue': !isCollapsed }
-  );
-  const buttonClassName = cx(
-    'collapsebutton',
-    { 'hidden': !isOverflowing && isCollapsed }
-  );
+  const valueClassName = cx('value', { expandedvalue: !isCollapsed });
+  const buttonClassName = cx('collapsebutton', { hidden: !isOverflowing && isCollapsed });
 
   React.useEffect(() => {
     const valueSpan = valueSpanRef.current;
-		
-		const handleResize = () => {
-			if (valueSpan) {
-				const overflowing = valueSpan.scrollWidth > valueSpan.clientWidth;
-				setIsOverflowing(overflowing);
-			}
-		};
 
-		// Initial call on mount
-		handleResize();
+    const handleResize = () => {
+      if (valueSpan) {
+        const overflowing = valueSpan.scrollWidth > valueSpan.clientWidth;
+        setIsOverflowing(overflowing);
+      }
+    };
 
-		// Add resize event listener
-		window.addEventListener('resize', handleResize);
+    // Initial call on mount
+    handleResize();
 
-		// Remove the event listener when the component is unmounted
-		return () => {
-			window.removeEventListener('resize', handleResize);
-		};
-	});
-  
+    // Add resize event listener
+    window.addEventListener('resize', handleResize);
+
+    // Remove the event listener when the component is unmounted
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  });
+
   return (
     <>
       <a href="#" className={buttonClassName} onClick={() => setIsCollapsed(!isCollapsed)}>
-        { isCollapsed ? "▸" : "▾" }
+        {isCollapsed ? '▸' : '▾'}
       </a>
-      <code
-        className={valueClassName}
-        aria-expanded={isCollapsed}
-        ref={valueSpanRef}>
+      <code className={valueClassName} aria-expanded={isCollapsed} ref={valueSpanRef}>
         {children}
       </code>
     </>
@@ -65,24 +56,24 @@ const StackInspector = () => {
     // NOTE: this processes the actual output of the debugger correctly, but
     // does not conform to the backend types (i.e. debugger is sending data in
     // slightly incorrect format at the moment)
-    const typeName = memoryValue.typeName;
+    const { typeName } = memoryValue;
     var localValue;
     if (isStructTypeName(typeName)) {
-      //localValue = "<struct>";
-			localValue = memoryValue.value;
+      // localValue = "<struct>";
+      localValue = memoryValue.value;
     } else if (isPointerType(typeName)) {
-      localValue = "<pointer>";
+      localValue = '<pointer>';
     } else if (/\[\d+\]$/.test(typeName)) {
       // localValue = "<array>";
       localValue = memoryValue.value;
     } else {
       localValue = memoryValue.value;
     }
-      
+
     localDivs.push({
       type: memoryValue.typeName,
-      name: name,
-      value: localValue
+      name,
+      value: localValue,
     });
   }
 
@@ -103,18 +94,18 @@ const StackInspector = () => {
   }
 
   function arrayTemplate(localDiv) {
-    const typeWords = localDiv.type.split(" ");
-    var arrayLengthIndicator = typeWords.pop();
-    var arrayType;
+    const typeWords = localDiv.type.split(' ');
+    let arrayLengthIndicator = typeWords.pop();
+    let arrayType;
     if (arrayLengthIndicator[0] == '*') {
       // array of pointers
       // looks like "char *[3]"
       // TODO: handle double pointers
       arrayLengthIndicator = arrayLengthIndicator.substring(1);
-      arrayType = typeWords.join(" ") + " *";
+      arrayType = `${typeWords.join(' ')} *`;
     } else {
       // includes the trailing space
-      arrayType = typeWords.join(" ") + " ";
+      arrayType = `${typeWords.join(' ')} `;
     }
     return (
       <>
@@ -126,22 +117,20 @@ const StackInspector = () => {
           </code>
         </dt>
         <dd>
-          <CollapsibleDescription collapsed={true}>
-            {localDiv.value}
-          </CollapsibleDescription>
+          <CollapsibleDescription collapsed>{localDiv.value}</CollapsibleDescription>
         </dd>
       </>
     );
   }
-  
+
   function pointerTemplate(localDiv) {
     // NOTE: single pointers only
-    const fixedType = localDiv.type.slice(0,-1);
+    const fixedType = localDiv.type.slice(0, -1);
     return (
       <>
         <dt>
           <code>
-            <span className={styles.type}>{fixedType + " *"}</span>
+            <span className={styles.type}>{`${fixedType} *`}</span>
             <span className={styles.name}>{localDiv.name}</span>
           </code>
         </dt>
@@ -151,16 +140,16 @@ const StackInspector = () => {
       </>
     );
   }
-  
+
   function divMapper(localDiv) {
     if (/\[\d+\]$/.test(localDiv.type)) {
       return arrayTemplate(localDiv);
-    } else if (isPointerType(localDiv.type)) {
+    }
+    if (isPointerType(localDiv.type)) {
       // todo: handle arrays of pointers
       return pointerTemplate(localDiv);
-    } else {
-      return defaultTemplate(localDiv);
     }
+    return defaultTemplate(localDiv);
   }
 
   return (
@@ -172,9 +161,7 @@ const StackInspector = () => {
             @ {debuggerData.frame_info.file}:{debuggerData.frame_info.line_num}
           </span>
         </div>
-        <dl>
-          {localDivs.map(divMapper)}
-        </dl>
+        <dl>{localDivs.map(divMapper)}</dl>
       </div>
     </div>
   );
