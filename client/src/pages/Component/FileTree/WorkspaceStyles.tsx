@@ -14,21 +14,6 @@ export let buttonStyle = {
     top: '3px',
 };
 
-export let buttonStyleFiles = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    minWidth: '20px',
-    minHeight: '20px',
-    backgroundColor: '#FFFFFF',
-    boxShadow: '0 0 5px 1px rgba(0, 0, 0, 0.15)',
-    height: '20px',
-    width: '20px',
-    left: '10px',
-    top: '3px',
-    zIndex: '0'
-};
-
 export const dropDownDivStyle = {
     top: '97px',
     minHeight: '64px',
@@ -38,7 +23,7 @@ export const dropDownDivStyle = {
     borderRadius: '5px',
     boxShadow: '0 0 5px 1px rgba(0, 0, 0, 0.2)',
     left: '10px',
-    zIndex: '2'
+    zIndex: '10'
 };
 
 export const dropDownDivStyleFiles = {
@@ -57,7 +42,7 @@ export const dropdownStyle = {
     width: '200px',
     borderRadius: '10px',
     boxShadow: '0 0 10px 2px rgba(0, 0, 0, 0.15)',
-    zIndex: '2'
+    zIndex: '10'
 };
 
 export const dropDownTextStyle = {
@@ -67,7 +52,7 @@ export const dropDownTextStyle = {
     borderRadius: '5px',
     paddingLeft: '10px',
     color: '#544B8C',
-    zIndex: '2'
+    zIndex: '10'
 };
 
 export const createButtonStyle = {

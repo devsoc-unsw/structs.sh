@@ -42,11 +42,6 @@ const WorkspaceSelector = ({
         }
       });
 
-      if (DEBUG_MODE) {
-        allWorkspaces.push(PLACEHOLDER_WORKSPACE);
-      }
-
-      console.log(allWorkspaces)
       setWorkspaces(allWorkspaces);
     };
 
@@ -60,7 +55,8 @@ const WorkspaceSelector = ({
   const createWorkspace = (event) => {
     event.preventDefault();
     if (workspaceInput === '' || workspaces.includes(workspaceInput)) {
-      console.log('invalid input');
+      console.log('error: invalid input: workspace already exists or no input given');
+      setDropdownOpen(false);
       return;
     }
 
@@ -77,6 +73,7 @@ const WorkspaceSelector = ({
     });
 
     if (returnFlag) {
+      setDropdownOpen(false);
       return;
     }
 

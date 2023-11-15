@@ -1,8 +1,6 @@
 import Select, { SelectItem } from 'components/Select/Select';
 import { useState } from 'react';
-import styled from '@emotion/styled';
-import { motion } from 'framer-motion';
-import { buttonStyle, buttonStyleFiles, createButtonStyle, dropDownDivStyle, dropDownDivStyleFiles, dropDownTextStyle, dropdownStyle } from './WorkspaceStyles';
+import { buttonStyle, createButtonStyle, dropDownDivStyleFiles, dropDownTextStyle, dropdownStyle } from './WorkspaceStyles';
 import { Box, Button, Paper } from '@mui/material';
 import { PLACEHOLDER_USERNAME } from './util';
 import { SERVER_URL } from 'utils/constants';
@@ -10,8 +8,7 @@ import axios from 'axios';
 
 const FileSelector = ({
   onChangeProgramName,
-  getCurrentWorkspaceName,
-  retrieveWorkspace
+  getCurrentWorkspaceName
 }: {
   onChangeProgramName: (programName: String) => void;
   getCurrentWorkspaceName: () => String;
@@ -77,17 +74,12 @@ const FileSelector = ({
     });
   }
 
-  const FileMenu = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: 'center';
-  `
   return (
       <div style={{paddingTop: '10px'}}>
-        <FileMenu>
-          <div>Select File</div>
-          <Button onClick={toggleDropdown} style={buttonStyleFiles} variant="text" size="small" color="primary">+</Button>
-        </FileMenu>
+        <div style={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center'}}>
+          <div style={{position: 'relative', top: '3px'}}>Select File</div>
+          <Button onClick={toggleDropdown} style={buttonStyle} variant="text" size="small" color="primary">+</Button>
+        </div>
         <div style={{paddingTop: '10px'}}></div>
         {isDropdownOpen ?
     <Box style= {dropDownDivStyleFiles}  sx={{ position: 'absolute'}}>
