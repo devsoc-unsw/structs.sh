@@ -197,6 +197,7 @@ class CustomNextCommand(gdb.Command):
 
                     heap_memory_value = {
                         # "variable": var, # Name of stack var storing the address of this piece of heap data
+                        "typeName": struct_type_name,  # TODO: remove this
                         "type": struct_type,
                         # "size": bytes, ## Size of the type in bytes
                         "value": updated_struct_value,
@@ -280,6 +281,7 @@ class CustomNextCommand(gdb.Command):
 
             self.heap_data[addr] = {
                 # "variable": var, ## Name of stack var storing the address of this piece of heap data
+                "typeName": struct_type_name,  # TODO: remove this
                 "type": struct_type,
                 # "size": bytes, ## Size of the type in bytes
                 "value": updated_struct_value,
@@ -318,7 +320,7 @@ class CustomNextCommand(gdb.Command):
             # === Extract type
             type_name = get_type_name_of_stack_var(name)
             stack_memory_value["typeName"] = type_name
-            # Might come later, in the "extract value" part
+            # Might come later, in the "extract value" part. Only for structs for now.
             type = {}
 
             print(f"Extracted type name of stack variable {name}: {type_name}")
@@ -340,15 +342,19 @@ class CustomNextCommand(gdb.Command):
                 value = create_struct_value(
                     self.debug_session.get_cached_parsed_type_decls(), value_str, type_name)
                 type = create_struct_type(
-                    self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_type_name)
-
-            # TODO: handle arrays
+                    self.debug_session.get_cached_parsed_type_decls(), value_str, type_name)
+                stack_memory_value['type'] = type
+            elif type_name.endswith("*"):
+                # TODO: handle pointers
+                pass
+            elif type_name.endswith("[]"):
+                # TODO: handle arrays
+                pass
             else:
                 value = value_str
 
             print(f"Extracted value of stack variable {name}: {value}")
             stack_memory_value["value"] = value
-            stack_memory_value['type'] = type
             # ===
 
             variables[name] = stack_memory_value
