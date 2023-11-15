@@ -56,14 +56,14 @@ const StackInspector = () => {
     // NOTE: this processes the actual output of the debugger correctly, but
     // does not conform to the backend types (i.e. debugger is sending data in
     // slightly incorrect format at the moment)
-    const { typeName } = memoryValue;
     var localValue;
-    if (isStructTypeName(typeName)) {
+    console.log(memoryValue);
+    if (isStructTypeName(memoryValue.type.typeName)) {
       // localValue = "<struct>";
       localValue = memoryValue.value;
-    } else if (isPointerType(typeName)) {
+    } else if (isPointerType(memoryValue.type)) {
       localValue = '<pointer>';
-    } else if (/\[\d+\]$/.test(typeName)) {
+    } else if (/\[\d+\]$/.test(memoryValue.type)) {
       // localValue = "<array>";
       localValue = memoryValue.value;
     } else {
@@ -71,7 +71,7 @@ const StackInspector = () => {
     }
 
     localDivs.push({
-      type: memoryValue.typeName,
+      type: memoryValue.type,
       name,
       value: localValue,
     });
