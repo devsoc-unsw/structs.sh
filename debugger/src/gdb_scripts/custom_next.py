@@ -192,9 +192,12 @@ class CustomNextCommand(gdb.Command):
                     updated_struct_value = create_struct_value(
                         self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_type_name)
 
+                    struct_type = create_struct_type(
+                        self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_type_name)
+
                     heap_memory_value = {
                         # "variable": var, # Name of stack var storing the address of this piece of heap data
-                        "typeName": struct_type_name,
+                        "type": struct_type,
                         # "size": bytes, ## Size of the type in bytes
                         "value": updated_struct_value,
                         "addr": address
@@ -272,9 +275,12 @@ class CustomNextCommand(gdb.Command):
             updated_struct_value = create_struct_value(
                 self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_type_name)
 
+            struct_type = create_struct_type(
+                self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_type_name)
+
             self.heap_data[addr] = {
                 # "variable": var, ## Name of stack var storing the address of this piece of heap data
-                "typeName": struct_type_name,
+                "type": struct_type,
                 # "size": bytes, ## Size of the type in bytes
                 "value": updated_struct_value,
                 "addr": address
@@ -331,12 +337,16 @@ class CustomNextCommand(gdb.Command):
 
                 value = create_struct_value(
                     self.debug_session.get_cached_parsed_type_decls(), value_str, type_name)
+                struct_type = create_struct_type(
+                    self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_type_name)
+
             # TODO: handle arrays
             else:
                 value = value_str
 
             print(f"Extracted value of stack variable {name}: {value}")
             stack_memory_value["value"] = value
+            stack_memory_value['type'] = struct_type
             # ===
 
             variables[name] = stack_memory_value
@@ -434,7 +444,8 @@ def create_struct_value(parsed_type_decls, struct_fields_str, struct_name):
         raise Exception(
             f"No corresponding type declaration found for {struct_name}")
 
-    value = {}
+    structValue = {
+        "type": {"typeName": struct_name, "fields": {}}, "value": {}}
     for field in struct_fields_str.split(','):
         field = field.strip()
         field_name = field.split('=')[0].strip()
@@ -445,11 +456,49 @@ def create_struct_value(parsed_type_decls, struct_fields_str, struct_name):
             # field_value will look like "49 '1'"
             field_value = field_value.split("'")[1]
         print(f"{field_name=}", f"{field_value=}")
-        value[field_name] = {
-            "typeName": type_name,
+
+        structValue["type"]["fields"][field_name] = type_name
+        structValue["value"][field_name] = {
+            "type": type_name,
             "value": field_value}
 
-    return value
+    return structValue["value"]
+
+
+def create_struct_type(parsed_type_decls, struct_fields_str, struct_name):
+    '''
+    Expects struct_fields_str in format: "data = 542543, next = 0x0"
+    '''
+    # Find the type declaration for the struct type being malloced
+    print("parsed type decls")
+    pprint(parsed_type_decls)
+    print(f"{struct_name=}")
+    print(f"{struct_fields_str=}")
+    corresponding_type_decl = next(
+        (x for x in parsed_type_decls if "typeName" in x and x['typeName'] == struct_name), None)
+    if corresponding_type_decl is None:
+        raise Exception(
+            f"No corresponding type declaration found for {struct_name}")
+
+    structValue = {
+        "type": {"typeName": struct_name, "fields": {}}, "value": {}}
+    for field in struct_fields_str.split(','):
+        field = field.strip()
+        field_name = field.split('=')[0].strip()
+        type_name = next(
+            (field['typeName'] for field in corresponding_type_decl['fields'] if field['name'] == field_name), "")
+        field_value = field.split('=')[1].strip()
+        if type_name == "char" and "'" in field_value:
+            # field_value will look like "49 '1'"
+            field_value = field_value.split("'")[1]
+        print(f"{field_name=}", f"{field_value=}")
+
+        structValue["type"]["fields"][field_name] = type_name
+        structValue["value"][field_name] = {
+            "type": type_name,
+            "value": field_value}
+
+    return structValue["type"]
 
 
 def get_type_name_of_stack_var(var: str):
