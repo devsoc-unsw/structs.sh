@@ -6,8 +6,9 @@ import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
 import { Socket } from 'socket.io-client';
 import Console from 'components/DevelopmentMode/Console';
+import axios from 'axios';
+import { SERVER_URL } from 'utils/constants';
 import DevelopmentModeNavbar from '../components/Navbars/DevelopmentModeNavbar';
-import { PLACEHOLDER_PROGRAMS } from '../constants';
 import Configuration from './Component/Configuration/Configuration';
 import Controls from './Component/Control/Controls';
 import CodeEditor from './Component/CodeEditor/CodeEditor';
@@ -15,8 +16,14 @@ import StackInspector from './Component/StackInspector/StackInspector';
 import { useGlobalStore } from './Store/globalStateStore';
 import VisualizerMain from './Component/VisualizerMain';
 import { BackendState } from './Types/backendType';
-import FileSelector from './Component/FileTree/FileSelector';
 import AboutText from './Component/FileTree/AboutText';
+import WorkspaceSelector from './Component/FileTree/WorkspaceSelector';
+import {
+  PLACEHOLDER_USERNAME,
+  PLACEHOLDER_WORKSPACE,
+  loadCode,
+  loadWorkspaces,
+} from './Component/FileTree/util';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -32,10 +39,9 @@ const DevelopmentMode = () => {
   }, []);
   const [backendState, setBackendState] = useState<BackendState>();
   const [activeSession, setActiveSession] = useState(false);
-  const [programName, setProgramName] = useState(
-    PLACEHOLDER_PROGRAMS[0]?.name ?? 'No placeholder programs'
-  );
-  const [code, setCode] = useState(localStorage.getItem('code') || PLACEHOLDER_PROGRAMS[0].text);
+  const [workspaceName, setWorkspaceName] = useState(PLACEHOLDER_WORKSPACE);
+  const [programName, setProgramName] = useState('');
+  const [code, setCode] = useState('');
   const [consoleChunks, setConsoleChunks] = useState([]);
 
   // Tab values correspond to their index
@@ -190,14 +196,15 @@ const DevelopmentMode = () => {
           <DevelopmentModeNavbar />
         </div>
         <div className={classNames(styles.pane, styles.files)} style={{ overflowY: 'scroll' }}>
-          <FileSelector
+          <WorkspaceSelector
             programName={programName}
-            onChangeProgramName={(newProgramName: string) => {
+            onChangeWorkspaceName={(newWorkspaceName: string) => {
+              setWorkspaceName(newWorkspaceName);
+            }}
+            onChangeProgramName={async (newProgramName: string) => {
               setProgramName(newProgramName);
-              handleSetCode(
-                PLACEHOLDER_PROGRAMS.find((program) => program.name === newProgramName)?.text ??
-                  '// Write you code here!'
-              );
+              const code = await loadCode(newProgramName, PLACEHOLDER_USERNAME, workspaceName);
+              handleSetCode(code);
             }}
           />
           <div
@@ -212,6 +219,8 @@ const DevelopmentMode = () => {
         </div>
         <div className={classNames(styles.pane, styles.editor)}>
           <CodeEditor
+            programName={programName}
+            workspaceName={workspaceName}
             code={code}
             handleSetCode={handleSetCode}
             currLine={backendState?.frame_info?.line_num}

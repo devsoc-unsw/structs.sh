@@ -2,6 +2,7 @@ import express, { type Request, type Response } from 'express';
 import { dataStructure } from '../models/dataStructure';
 import { users } from '../models/users';
 import { authLogin, authRegister } from '../service/service';
+import { writeFileSync, readFileSync, existsSync, mkdirSync, readdirSync } from 'fs';
 
 const router = express.Router();
 
@@ -84,6 +85,104 @@ router.post('/auth/login', async (req: Request, res: Response) => {
 
   const found = await authLogin(username, password);
   res.json({ found });
+});
+
+
+router.post('/api/saveFile', (req : Request, res: Response) => {
+  const { username, workspace, filename, fileData } = req.body;
+  const path = './user-files/' + username + '/workspaces/' + workspace + '/' + filename;
+
+  try {
+    writeFileSync(path, fileData);
+    // save to volume here
+    res.json({ path: path });
+  } catch (err) {
+    res.json({ error: err });
+  }
+});
+
+router.post('/api/updateFile', (req : Request, res: Response) => {
+  const { username, workspace, filename, fileData } = req.body;
+  const path = './user-files/' + username + '/workspaces/' + workspace + '/' + filename;
+  if (!existsSync(path)) {
+    res.json({ error: 'Invaild path' });
+    return;
+  }
+
+  try {
+    writeFileSync(path, fileData);
+    // save to volume here
+    res.json({ path: path });
+  } catch (err) {
+    res.json({ error: err });
+  }
+});
+
+router.post('/api/saveWorkspace', (req: Request, res: Response) => {
+  const { username, workspaceName } = req.body;
+
+  let path = './user-files/' + username + '/workspaces';
+  try {
+    if (!existsSync(path)) {
+      mkdirSync(path);
+    }
+
+    path = path + '/' + workspaceName;
+    if (!existsSync(path)) {
+      mkdirSync(path);
+    }
+
+    res.json({ path: path });
+  } catch (err) {
+    res.json({ error: err });
+  }
+});
+
+router.get('/api/retrieveFilesInWorkspace', (req: Request, res: Response) => {
+  const username = req.query.username;
+  const workspaceName = req.query.workspaceName;
+  const dirPath = './user-files/' + username + '/workspaces/' + workspaceName;
+
+  const files = [];
+  try {
+    const dirFiles = readdirSync(dirPath);
+    for (const file of dirFiles) {
+      const filename = file;
+      const filePath = dirPath + '/' + filename;
+      const content = readFileSync(filePath).toString();
+      files.push({name: filename, text: content});
+    }
+
+    res.send({ files: files });
+  } catch (err) {
+    res.send({ error: err });
+  }
+});
+
+router.get('/api/retrieveFile', (req: Request, res: Response) => {
+  const username = req.query.username;
+  const workspace = req.query.workspace;
+  const filename = req.query.filename;
+  const path = './user-files/' + username + '/workspaces/' + workspace + '/' + filename;
+
+  try {
+    const file = readFileSync(path).toString();
+    res.send({ content: file });
+  } catch (err) {
+    res.send({ error: err });
+  }
+});
+
+router.get('/api/retrieveWorkspaces', (req: Request, res: Response) => {
+  const username = req.query.username;
+  const path = './user-files/' + username + '/workspaces/';
+
+  try {
+    const workspaces = readdirSync(path);
+    res.send({ workspaces: workspaces });
+  } catch (err) {
+    res.send({ error: err });
+  }
 });
 
 export { router };
