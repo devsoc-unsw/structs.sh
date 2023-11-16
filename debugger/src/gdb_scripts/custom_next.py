@@ -19,7 +19,7 @@ class MallocVisitor(c_ast.NodeVisitor):
     def __init__(self):
         self.malloc_variables = []
         self.free_variables = []
-        self.free = "False"
+        self.free = False
 
     def visit_Assignment(self, node):
         print("MallocVisitor.vist_Assignment:")
@@ -36,7 +36,7 @@ class MallocVisitor(c_ast.NodeVisitor):
     def visit_FuncCall(self, node):
         # Check if the function call is to "free(variable)"
         if isinstance(node.name, c_ast.ID) and node.name.name == 'free':
-            self.free = "True"
+            self.free = True
             if len(node.args.exprs) == 1 and isinstance(node.args.exprs[0], c_ast.ID):
                 self.free_variables.append(node.args.exprs[0].name)
         self.generic_visit(node)
@@ -88,6 +88,8 @@ class CustomNextCommand(gdb.Command):
 
         print("\n=== Running CustomNextCommand in gdb...")
 
+        variable_freed = False
+
         frame_info = get_frame_info()
 
         temp_line = gdb.execute('frame', to_string=True)
@@ -103,20 +105,7 @@ class CustomNextCommand(gdb.Command):
         # Create a complete C code file with function prototypes, main, and variable line
         c_code_for_preprocessing = "\n".join(
             self.debug_session.get_cached_type_decl_strs()) + "\nint main(int argc, char **argv) {\n" + line_str + "\n}"
-#         c_code_for_preprocessing = """
-# struct node {
-#     int data;
-#     struct node *next;
-# };
 
-# typedef struct list {
-#     struct node *head;
-#     int size;
-# } List;
-# int main(int argc, char **argv) {
-# """
-#         c_code_for_preprocessing = c_code_for_preprocessing + line_str + "\n}"
-        print(f"{c_code_for_preprocessing=}")
         '''
         c_code_for_preprocessing will be a string looking like this:
         ```
@@ -136,11 +125,11 @@ class CustomNextCommand(gdb.Command):
         subprocess.run(f"gcc -E {create_abs_file_path(USER_MALLOC_CALL_FILE_NAME)} > {create_abs_file_path(USER_MALLOC_CALL_PREPROCESSED)}",
                        shell=True)
         try:
+
             # Parse the preprocessed C code into an AST
             # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
             line_ast = parse_file(create_abs_file_path(USER_MALLOC_CALL_PREPROCESSED), use_cpp=True,
                                   cpp_args=r'-Iutils/fake_libc_include')
-
             # print(line_ast)
 
             # Create a MallocVisitor instance
@@ -160,10 +149,6 @@ class CustomNextCommand(gdb.Command):
 
                     stack_var_type_name = get_type_name_of_stack_var(
                         var_assigned_to_malloc)
-                    # stack_var_type_name == "struct node*"
-
-                    # Break on malloc
-                    gdb.execute('break')
 
                     # Step into malloc
                     gdb.execute('step')
@@ -208,7 +193,7 @@ class CustomNextCommand(gdb.Command):
                         self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_type_name)
 
                     heap_memory_value = {
-                        # "variable": var, ## Name of stack var storing the address of this piece of heap data
+                        # "variable": var, # Name of stack var storing the address of this piece of heap data
                         "typeName": struct_type_name,
                         # "size": bytes, ## Size of the type in bytes
                         "value": updated_struct_value,
@@ -222,18 +207,39 @@ class CustomNextCommand(gdb.Command):
             else:
                 print("Current line does not contain call to malloc")
 
+            # //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
             # Print the variable names being freed
-            print(malloc_visitor.free)
-            print("Variables being freed:")
-            for var_assigned_to_malloc in malloc_visitor.free_variables:
-                print(var_assigned_to_malloc)
+            # print(malloc_visitor.free)
+            # print("Variables being freed:")
+            address_freed = None
+
+            if malloc_visitor.free:
+                print("inside malloc_visitor.free")
+                variable_freed = True
+
+                # Step into free
+                gdb.execute('step')
+                address_freed = gdb.execute('p mem', to_string=True)
+                gdb.execute('finish')
+
+                address_freed = address_freed.strip()
+                address_freed = address_freed.split(' ')[-1].strip()
+                # print(address_freed)
+                del self.heap_data[address_freed]
+
+                for var_assigned_to_malloc in malloc_visitor.free_variables:
+                    print(var_assigned_to_malloc)
 
         except Exception as e:
-            print("An error occurred while intercepting potential malloc: ", e)
+            print("An error occurred while intercepting potential malloc or free: ", e)
 
         # TODO: Need a way to detect if program exits, then send signal to server
         # which should tell the client that the debugging session is over.
-        gdb.execute('next')
+
+        # Go to the next line of code
+        if not variable_freed:
+            gdb.execute('next')
 
         # TODO: Immediately after executing next, we need to check whether the program
         # is waiting for stdin. If it is, then we need to send a signal to the

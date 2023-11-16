@@ -29,6 +29,15 @@ const containerVariants = {
 const VisualiserPage = () => {
   const topic = toTitleCase(urlToTitle(useParams().topic));
 
+  const { data } = useParams();
+
+  let integerArray: number[] = [];
+
+  if (data !== undefined) {
+    const digitArray = data.match(/.{2}/g) || [];
+    integerArray = digitArray.map((chars: string) => parseInt(chars, 10));
+  }
+
   return topic ? (
     <Box height="100vh" overflow="hidden">
       <TopNavbar position="sticky" />
@@ -36,7 +45,7 @@ const VisualiserPage = () => {
         <Helmet>
           <title>{topic !== undefined ? topic : 'Structs.sh'}</title>
         </Helmet>
-        <Visualiser topicTitle={topic} />
+        <Visualiser topicTitle={topic} data={integerArray} />
       </motion.div>
     </Box>
   ) : (

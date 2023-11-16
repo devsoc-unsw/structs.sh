@@ -12,15 +12,12 @@ RUN curl https://pyenv.run | bash
 ENV HOME="/root"
 ENV PYENV_ROOT="${HOME}/.pyenv"
 ENV PATH="${PYENV_ROOT}/bin:${PATH}"
-# The following env var is needed to allow gdb to run our Python packages
-# installed from requirements.txt
-ENV PYTHONPATH="/root/.pyenv/versions/3.11.3/lib/python3.11/site-packages:${PYTHONPATH}"
-
 ENV PYTHON_VERSION=3.11.3
 
 # The following env var is needed to allow gdb to run our Python packages
 # installed from requirements.txt
 ENV PYTHONPATH="${PYENV_ROOT}/versions/${PYTHON_VERSION}/lib/python3.11/site-packages:${PYTHONPATH}"
+# Will evaluate to a path like this: /root/.pyenv/versions/3.11.3/lib/python3.11/site-packages
 
 RUN pyenv install ${PYTHON_VERSION}
 RUN pyenv global ${PYTHON_VERSION}
