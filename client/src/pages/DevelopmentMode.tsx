@@ -6,6 +6,8 @@ import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
 import { Socket } from 'socket.io-client';
 import Console from 'components/DevelopmentMode/Console';
+import axios from 'axios';
+import { SERVER_URL } from 'utils/constants';
 import DevelopmentModeNavbar from '../components/Navbars/DevelopmentModeNavbar';
 import Configuration from './Component/Configuration/Configuration';
 import Controls from './Component/Control/Controls';
@@ -16,9 +18,12 @@ import VisualizerMain from './Component/VisualizerMain';
 import { BackendState } from './Types/backendType';
 import AboutText from './Component/FileTree/AboutText';
 import WorkspaceSelector from './Component/FileTree/WorkspaceSelector';
-import axios from 'axios';
-import { SERVER_URL } from 'utils/constants';
-import { PLACEHOLDER_USERNAME, PLACEHOLDER_WORKSPACE, loadCode, loadWorkspaces } from './Component/FileTree/util';
+import {
+  PLACEHOLDER_USERNAME,
+  PLACEHOLDER_WORKSPACE,
+  loadCode,
+  loadWorkspaces,
+} from './Component/FileTree/util';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -198,7 +203,7 @@ const DevelopmentMode = () => {
             }}
             onChangeProgramName={async (newProgramName: string) => {
               setProgramName(newProgramName);
-              let code = await loadCode(newProgramName, PLACEHOLDER_USERNAME, workspaceName);
+              const code = await loadCode(newProgramName, PLACEHOLDER_USERNAME, workspaceName);
               handleSetCode(code);
             }}
           />
