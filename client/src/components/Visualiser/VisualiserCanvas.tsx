@@ -1,8 +1,7 @@
-import { useRef } from 'react';
-import { stopRecording } from './VisualiserRecorder/CanvasRecorder';
-import React, { useState } from 'react';
+import React, { useRef , useState } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { stopRecording } from './VisualiserRecorder/CanvasRecorder';
 import CanvasDrawer from './VisualiserRecorder/CanvasDrawer';
 
 const ZoomableSvg = styled('svg')(({ scale }) => ({
@@ -49,7 +48,7 @@ const VisualiserCanvas: React.FC = () => {
       width={window.screen.width}
     >
       <ZoomableSvg ref={svgElement} onWheel={onScroll} id="visualiser-canvas"  scale={scale} />
-      <canvas ref={canvasElement} id="gifCanvas" width={window.screen.width} height={window.screen.height} style={{'display': 'none'}}></canvas>
+      <canvas ref={canvasElement} id="gifCanvas" width={window.screen.width} height={window.screen.height} style={{'display': 'none'}} />
     </Box>
   );
 };

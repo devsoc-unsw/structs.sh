@@ -1,11 +1,14 @@
-import { canvasElement, drawer } from './../VisualiserCanvas';
+import { canvasElement, drawer } from "../VisualiserCanvas";
 import { startRecording, stopRecording } from './CanvasRecorder';
 
 /* Using Singleton to ensure we always keep the same instance of recorder */
 class RecorderState {
     private recording : Boolean;
+
     private static instance : RecorderState;
+
     private static UPLOAD_RATE = 10;
+
     private canvasInterval;
 
     private constructor() {
@@ -21,9 +24,7 @@ class RecorderState {
         return RecorderState.instance;
     }
 
-    public isRecording = (): Boolean => {
-        return this.recording;
-    }
+    public isRecording = (): Boolean => this.recording
 
     public toggleRecord = () => {
         if (this.recording) {
