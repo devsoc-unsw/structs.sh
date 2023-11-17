@@ -12,7 +12,7 @@ import SvgComponent from './svgComponent';
 import { Coord } from '../../../Types/geometry/geometry';
 
 // TODO: Expand different component for different data structure, implementing common interface
-const LinkedList: VisualizerComponent = ({ graphState, dimension }: VisualizerState) => {
+const LinkedList: VisualizerComponent = ({ graphState }: VisualizerState) => {
   const nodeRefs = useRef<{ [uid: string]: SVGSVGElement | null }>({});
   const controls = useAnimation();
   const [drawable, setDrawable] = useState<{
@@ -131,7 +131,7 @@ const LinkedList: VisualizerComponent = ({ graphState, dimension }: VisualizerSt
   }, [graphState]);
 
   return (
-    <SvgComponent dimension={dimension} centerCoord={centerCoord}>
+    <SvgComponent centerCoord={centerCoord}>
       <AnimatePresence>{Object.values(drawable)} </AnimatePresence>
     </SvgComponent>
   );

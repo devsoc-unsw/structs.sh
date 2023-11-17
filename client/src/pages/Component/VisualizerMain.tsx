@@ -70,7 +70,11 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) =>
   const visualizerRef = useRef(null);
   const { uiState } = useGlobalStore();
   return (
-    <div className="visualizer" ref={visualizerRef} style={{ overflow: 'hidden' }}>
+    <div
+      className="visualizer"
+      ref={visualizerRef}
+      style={{ overflow: 'hidden', height: '100%', width: '100%' }}
+    >
       <VisComponent graphState={currState} dimension={uiState} />
     </div>
   );

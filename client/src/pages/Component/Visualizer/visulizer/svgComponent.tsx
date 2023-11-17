@@ -7,7 +7,6 @@ import LockOpenIcon from '@material-ui/icons/LockOpen';
 import { Coord } from '../../../Types/geometry/geometry';
 
 interface SvgComponentProps {
-  dimension: { width: number; height: number };
   centerCoord: Coord;
   children: React.ReactNode;
 }
@@ -31,22 +30,27 @@ const ScaleBar = ({ scalePercentage }: { scalePercentage: number }) => {
   );
 };
 
-const SvgComponent: React.FC<SvgComponentProps> = ({
-  children,
-  dimension,
-  centerCoord: centerCoordProp,
-}) => {
+const SvgComponent: React.FC<SvgComponentProps> = ({ children, centerCoord: centerCoordProp }) => {
   const [scalePercentage, setScalePercentage] = useState(100);
   const controls = useAnimation();
   const svgRef = useRef<SVGSVGElement | null>(null);
 
-  const VIEW_BOX_HEIGHT = 800;
-  const VIEW_BOX_WIDTH = 400;
   const [isLocked, setIsLocked] = useState(true);
   const [centerCoord, setCenterCoord] = useState<Coord>({
     x: 0,
     y: 0,
   });
+
+  // ... existing state and function definitions ...
+  const [viewBoxWidth, setViewBoxWidth] = useState(1600); // Default width
+  const [viewBoxHeight, setViewBoxHeight] = useState(800); // Default height
+  useEffect(() => {
+    if (svgRef.current) {
+      const { width, height } = svgRef.current.getBoundingClientRect();
+      setViewBoxWidth(width);
+      setViewBoxHeight(height);
+    }
+  }, []);
 
   useEffect(() => {
     if (isLocked) {
@@ -58,8 +62,8 @@ const SvgComponent: React.FC<SvgComponentProps> = ({
     if (isLocked) {
       setScalePercentage(100);
     }
-    const effectiveWidth = VIEW_BOX_WIDTH / (scalePercentage / 100);
-    const effectiveHeight = VIEW_BOX_HEIGHT / (scalePercentage / 100);
+    const effectiveWidth = viewBoxWidth / (scalePercentage / 100);
+    const effectiveHeight = viewBoxHeight / (scalePercentage / 100);
 
     if (svgRef.current) {
       if (isLocked) {
@@ -188,25 +192,37 @@ const SvgComponent: React.FC<SvgComponentProps> = ({
     }
   };
 
+  const flexContainerStyle: React.CSSProperties = {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    width: '100%',
+  };
+
   const svgContainerStyle: React.CSSProperties = {
     position: 'relative',
-    width: `${dimension.width}px`,
-    height: `${dimension.height}px`,
+    flexGrow: 1,
     border: '3px solid #ccc',
     borderRadius: '4px',
     backgroundClip: 'padding-box',
+    height: '100%',
+    width: '100%',
+    margin: '5px',
+    padding: '5px',
+    overflow: 'hidden',
   };
 
   return (
-    <div>
+    <div style={flexContainerStyle}>
       <div style={svgContainerStyle}>
         <motion.svg
           ref={svgRef}
-          width={dimension.width}
-          height={dimension.height}
-          viewBox="0 0 1000 1000"
           initial="hidden"
           overflow="hidden"
+          height="100%"
+          width="100%"
           animate={controls}
           drag
           dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
@@ -227,9 +243,8 @@ const SvgComponent: React.FC<SvgComponentProps> = ({
           </Tooltip>
         </div>
       </div>
-      <div>
-        <ScaleBar scalePercentage={scalePercentage} />
-      </div>
+
+      <ScaleBar scalePercentage={scalePercentage} />
     </div>
   );
 };
