@@ -11,25 +11,25 @@ const Configuration = () => {
   const [isTypeAnnotationOpen, setIsAnnotationOpen] = useState(true);
   const [isVariableAnnotationOpen, setIsVariableAnnotationOpen] = useState(true);
   const { typeDeclarations, userAnnotation } = useGlobalStore().visualizer;
-  const { currFrame } = useGlobalStore();
+  const { visualiserStates, currIdx, currVisualiserState, updateUserAnnotation } = useGlobalStore();
 
   /**
    * Logic to delete annotation that no longer valid in current state
    */
   useEffect(() => {
-    if (!currFrame) return;
+    if (currIdx < 0 || currIdx >= visualiserStates.length) return;
     const currStackAnnotations = cloneSimple(userAnnotation.stackAnnotation);
     Object.keys(currStackAnnotations).forEach((key) => {
-      if (!currFrame.stack_data[key]) {
+      if (!currVisualiserState().backendState.stack_data[key]) {
         delete userAnnotation.stackAnnotation[key];
       }
     });
 
-    useGlobalStore.getState().updateUserAnnotation({
+    updateUserAnnotation({
       stackAnnotation: userAnnotation.stackAnnotation,
       typeAnnotation: userAnnotation.typeAnnotation,
     });
-  }, [currFrame]);
+  }, [currIdx]);
 
   return (
     <div
@@ -101,9 +101,13 @@ const Configuration = () => {
         <MotionCollapse isOpen={isVariableAnnotationOpen}>
           {isVariableAnnotationOpen ? (
             <div className={styles.indentedAnnotationArea}>
-              {Object.entries(currFrame.stack_data).map(([name, memoryValue]) => (
-                <StackVarAnnotation key={name} name={name} memoryValue={memoryValue} />
-              ))}
+              {currIdx > 0 && currIdx < visualiserStates.length
+                ? Object.entries(currVisualiserState().backendState.stack_data).map(
+                    ([name, memoryValue]) => (
+                      <StackVarAnnotation key={name} name={name} memoryValue={memoryValue} />
+                    )
+                  )
+                : null}
             </div>
           ) : null}
         </MotionCollapse>

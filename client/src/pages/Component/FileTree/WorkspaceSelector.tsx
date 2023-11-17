@@ -14,7 +14,7 @@ import {
   createButtonStyle,
 } from './WorkspaceStyles';
 import FileSelector from './FileSelector';
-import { PLACEHOLDER_USERNAME, PLACEHOLDER_WORKSPACE, loadWorkspaces } from './util';
+import { PLACEHOLDER_USERNAME } from './util';
 
 const DEBUG_MODE = true;
 

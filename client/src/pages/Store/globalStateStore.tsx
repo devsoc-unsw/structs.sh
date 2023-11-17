@@ -7,11 +7,14 @@ import { UserAnnotation } from '../Types/annotationType';
 import { BackendState, BackendTypeDeclaration, INITIAL_BACKEND_STATE } from '../Types/backendType';
 import { VisualizerType } from '../Types/visualizerType';
 import * as InspectorDummy from './stackInpsectorDummyData.json';
+import { GenericGraph, INITIAL_GRAPH } from '../Types/frontendType';
 
 export type UiState = {
   width: number;
   height: number;
 };
+
+type VisualiserState = { backendState: BackendState; graphState: GenericGraph };
 
 export type VisualizerParam = {
   visualizerType: VisualizerType;
@@ -25,8 +28,10 @@ export type VisualizerParam = {
 export type GlobalStateStore = {
   uiState: UiState;
   visualizer: VisualizerParam;
-  // Refactor to include backend data history
-  currFrame: BackendState;
+  currIdx: number;
+  visualiserStates: VisualiserState[];
+  currVisualiserState: () => VisualiserState;
+  numStates: () => number;
 };
 
 export const DEFAULT_GLOBAL_STORE: GlobalStateStore = {
@@ -45,7 +50,10 @@ export const DEFAULT_GLOBAL_STORE: GlobalStateStore = {
     typeDeclarations: [],
     stackInspector: InspectorDummy,
   },
-  currFrame: INITIAL_BACKEND_STATE,
+  currIdx: 0,
+  visualiserStates: [],
+  currVisualiserState: () => ({ backendState: INITIAL_BACKEND_STATE, graphState: INITIAL_GRAPH }),
+  numStates: () => 0,
 };
 
 export const NODE_SIZE = 30;
@@ -57,14 +65,31 @@ type GlobalStoreActions = {
   updateDimensions: (width: number, height: number) => void;
   updateUserAnnotation: (annotation: UserAnnotation) => void;
   updateTypeDeclaration: (type: BackendTypeDeclaration) => void;
-  updateNextFrame: (backendState: BackendState) => void;
+  updateCurrState: (newCurrState: number) => void;
+  appendNewState: (backendState: BackendState) => void;
+  // updateNextState: (newState: GenericGraph) => void;
+  forwardState: () => void;
+  backwardState: () => void;
   clearTypeDeclarations: () => void;
   clearUserAnnotation: () => void;
+  clearVisualiserStates: () => void;
 };
 
 export const useGlobalStore: UseBoundStore<StoreApi<GlobalStateStore & GlobalStoreActions>> =
   create<GlobalStateStore & GlobalStoreActions>((set) => ({
     ...DEFAULT_GLOBAL_STORE,
+    currVisualiserState: () => {
+      if (
+        useGlobalStore.getState().currIdx < 0 ||
+        useGlobalStore.getState().currIdx >= useGlobalStore.getState().visualiserStates.length
+      ) {
+        return { backendState: INITIAL_BACKEND_STATE, graphState: INITIAL_GRAPH };
+      }
+      return useGlobalStore.getState().visualiserStates[useGlobalStore.getState().currIdx];
+    },
+    numStates: () => {
+      return useGlobalStore.getState().visualiserStates.length;
+    },
     setVisualizerType: (type: VisualizerType) => {
       set((state) => ({
         visualizer: {
@@ -94,8 +119,69 @@ export const useGlobalStore: UseBoundStore<StoreApi<GlobalStateStore & GlobalSto
         },
       }));
     },
-    updateNextFrame: (backendState: BackendState) => {
-      set({ currFrame: backendState });
+    updateCurrState: (newCurrIdx: number) => {
+      set((state) => {
+        let currIdx = newCurrIdx;
+        if (currIdx < 0) {
+          currIdx = 0;
+        } else if (currIdx >= state.visualiserStates.length) {
+          currIdx = state.visualiserStates.length - 1;
+        }
+        return { currIdx };
+      });
+    },
+    appendNewState: (newBackendState: BackendState) => {
+      set((state) => {
+        if (newBackendState && state.visualizer.userAnnotation) {
+          const newGraphState = state.visualizer.parser.parseState(
+            newBackendState,
+            state.visualizer.userAnnotation
+          );
+          const newVisualiserState = {
+            backendState: newBackendState,
+            graphState: newGraphState,
+          };
+          return {
+            visualiserStates: [...state.visualiserStates, newVisualiserState],
+            currIdx: state.currIdx + 1,
+          };
+        }
+
+        let issue = 'something';
+        if (!newBackendState) {
+          issue = 'backendState';
+        } else if (!state.visualizer.userAnnotation) {
+          issue = 'localsAnnotations';
+        }
+        console.error(`Unable to parse backend state: ${issue} is undefined`);
+        return {};
+      });
+    },
+    // updateNextState: (newState: GenericGraph) => {
+    //   set((state) => ({
+    //     graphStates: [...state.graphStates, newState],
+    //     currGraphStateIdx: state.currGraphStateIdx + 1,
+    //   }));
+    // },
+    forwardState: () => {
+      set((state) => {
+        if (state.currIdx >= state.visualiserStates.length) {
+          return { currIdx: state.visualiserStates.length };
+        }
+        return {
+          currIdx: state.currIdx + 1,
+        };
+      });
+    },
+    backwardState: () => {
+      set((state) => {
+        if (state.currIdx <= 0) {
+          return { currIdx: 0 };
+        }
+        return {
+          currIdx: state.currIdx - 1,
+        };
+      });
     },
     clearTypeDeclarations: () => {
       set((state) => ({
@@ -115,5 +201,8 @@ export const useGlobalStore: UseBoundStore<StoreApi<GlobalStateStore & GlobalSto
           },
         },
       }));
+    },
+    clearVisualiserStates: () => {
+      set({ visualiserStates: [] });
     },
   }));

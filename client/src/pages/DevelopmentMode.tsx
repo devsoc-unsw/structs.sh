@@ -17,7 +17,6 @@ import { useGlobalStore } from './Store/globalStateStore';
 import VisualizerMain from './Component/VisualizerMain';
 import { BackendState } from './Types/backendType';
 import AboutText from './Component/FileTree/AboutText';
-import { useFrontendStateStore } from './Store/visualizerStateStore';
 import WorkspaceSelector from './Component/FileTree/WorkspaceSelector';
 import {
   PLACEHOLDER_USERNAME,
@@ -27,6 +26,7 @@ import {
 } from './Component/FileTree/util';
 
 const FRAME_COUNT = 40;
+const EXECUTE_NEXT_INTERVAL = 300;
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -40,23 +40,26 @@ const DevelopmentMode = () => {
         socket.emit('getBreakpoints', line, listName);
     }
   }, []);
-  const backendHistory = useRef<BackendState[]>([]);
-  const [backendState, setBackendState] = useState<BackendState>();
   const [activeSession, setActiveSession] = useState(false);
   const [workspaceName, setWorkspaceName] = useState(PLACEHOLDER_WORKSPACE);
   const [programName, setProgramName] = useState('');
   const [code, setCode] = useState('');
   const [consoleChunks, setConsoleChunks] = useState([]);
 
-  const frontendStateStore = useFrontendStateStore((store) => store);
-
   // Tab values correspond to their index
   // ('Configure' has value '0', 'Inspect' has value '1', 'Console' has value '2')
   const [tab, setTab] = useState('0');
 
-  const globalStore = useGlobalStore();
-  const { updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation, updateNextFrame } =
-    globalStore;
+  const {
+    currVisualiserState,
+    numStates,
+    updateTypeDeclaration,
+    clearTypeDeclarations,
+    clearUserAnnotation,
+    clearVisualiserStates,
+    updateCurrState,
+    appendNewState,
+  } = useGlobalStore();
   const inputElement = useRef(null);
 
   const scrollToBottom = () => {
@@ -75,15 +78,11 @@ const DevelopmentMode = () => {
   };
 
   const updateState = (data: any) => {
-    backendHistory.current.push(data);
+    appendNewState(data);
   };
 
   const handleTimelineUpdate = (index: number) => {
-    if (index < backendHistory.current.length) {
-      const state = backendHistory.current[index];
-      setBackendState(state);
-      updateNextFrame(state);
-    }
+    updateCurrState(index);
   };
 
   const handleSetCode = (newCode: string) => {
@@ -92,7 +91,8 @@ const DevelopmentMode = () => {
   };
 
   const resetDebugSession = () => {
-    setBackendState(undefined);
+    updateCurrState(-1);
+    clearVisualiserStates();
     setActiveSession(false);
     clearTypeDeclarations();
     clearUserAnnotation();
@@ -100,15 +100,15 @@ const DevelopmentMode = () => {
   };
 
   const sendCode = () => {
-    backendHistory.current = [];
+    // setBackendHistory([]);
     resetDebugSession();
     socket.emit('mainDebug', code);
+  };
 
-    setTimeout(() => {
-      for (let i = 0; i < FRAME_COUNT + 5; i += 1) {
-        setTimeout(() => socket.emit('executeNext'), i * 200);
-      }
-    }, 1000);
+  const bufferStates = () => {
+    for (let i = 0; i < FRAME_COUNT + 5; i += 1) {
+      setTimeout(() => socket.emit('executeNext'), i * EXECUTE_NEXT_INTERVAL);
+    }
   };
 
   const getNextState = () => {
@@ -247,7 +247,7 @@ const DevelopmentMode = () => {
             workspaceName={workspaceName}
             code={code}
             handleSetCode={handleSetCode}
-            currLine={backendState?.frame_info?.line_num}
+            currLine={currVisualiserState().backendState.frame_info?.line_num}
           />
         </div>
         <div className={classNames(styles.pane, styles.inspector)}>
@@ -271,13 +271,15 @@ const DevelopmentMode = () => {
           </Tabs>
         </div>
         <div className={classNames(styles.pane, styles.visualiser)}>
-          <VisualizerMain backendState={backendState} />
+          <VisualizerMain />
         </div>
         <div className={classNames(styles.pane, styles.timeline)}>
           <Timeline
-            frameCount={FRAME_COUNT}
+            frameCount={numStates()}
             interval={250}
             onCompile={sendCode}
+            onGetNextState={getNextState}
+            bufferStates={bufferStates}
             onChange={handleTimelineUpdate}
             isActive={activeSession}
           />
@@ -285,7 +287,7 @@ const DevelopmentMode = () => {
       </div>
     </div>
   ) : (
-    <VisualizerMain backendState={backendState} />
+    <VisualizerMain />
   );
 };
 

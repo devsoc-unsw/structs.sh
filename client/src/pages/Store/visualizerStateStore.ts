@@ -1,12 +1,10 @@
 import { UseBoundStore, StoreApi, create } from 'zustand';
-import { VisualizerComponent } from '../Component/Visualizer/visulizer/visualizer';
 import { GenericGraph, INITIAL_GRAPH } from '../Types/frontendType';
-import { GlobalStateStore } from './globalStateStore';
 
 type State = {
-  states: GenericGraph[];
-  currStateIdx: number;
-  currState: () => GenericGraph;
+  graphStates: GenericGraph[];
+  currGraphStateIdx: number;
+  currGraphState: () => GenericGraph;
 };
 type Action = {
   updateNextState: (newState: GenericGraph) => void;
@@ -17,46 +15,48 @@ type Action = {
 export const useFrontendStateStore: UseBoundStore<StoreApi<State & Action>> = create<
   State & Action
 >((set) => ({
-  states: [],
-  currStateIdx: -1,
-  currState: () => {
-    if (useFrontendStateStore.getState().currStateIdx === -1) {
+  graphStates: [],
+  currGraphStateIdx: -1,
+  currGraphState: () => {
+    if (useFrontendStateStore.getState().currGraphStateIdx === -1) {
       return INITIAL_GRAPH;
     }
-    return useFrontendStateStore.getState().states[useFrontendStateStore.getState().currStateIdx];
+    return useFrontendStateStore.getState().graphStates[
+      useFrontendStateStore.getState().currGraphStateIdx
+    ];
   },
   updateNextState: (newState: GenericGraph) => {
     set((state) => ({
-      states: [...state.states, newState],
-      currStateIdx: state.currStateIdx + 1,
+      graphStates: [...state.graphStates, newState],
+      currGraphStateIdx: state.currGraphStateIdx + 1,
     }));
   },
   forwardState: () => {
     if (
-      useFrontendStateStore.getState().currStateIdx >=
-      useFrontendStateStore.getState().states.length - 1
+      useFrontendStateStore.getState().currGraphStateIdx >=
+      useFrontendStateStore.getState().graphStates.length - 1
     ) {
       return;
     }
     set((state) => ({
-      currStateIdx: state.currStateIdx + 1,
+      currGraphStateIdx: state.currGraphStateIdx + 1,
     }));
   },
   backwardState: () => {
-    if (useFrontendStateStore.getState().currStateIdx <= 0) {
+    if (useFrontendStateStore.getState().currGraphStateIdx <= 0) {
       return;
     }
     set((state) => ({
-      currStateIdx: state.currStateIdx - 1,
+      currGraphStateIdx: state.currGraphStateIdx - 1,
     }));
   },
 }));
 
-export interface StateManagerProp {
-  state: GenericGraph;
-  settings: GlobalStateStore;
-  setSettings: React.Dispatch<React.SetStateAction<GlobalStateStore>>;
-  nextState: () => void;
+// export interface StateManagerProp {
+//   state: GenericGraph;
+//   settings: GlobalStateStore;
+//   setSettings: React.Dispatch<React.SetStateAction<GlobalStateStore>>;
+//   nextState: () => void;
 
-  Visualizer: VisualizerComponent;
-}
+//   Visualizer: VisualizerComponent;
+// }

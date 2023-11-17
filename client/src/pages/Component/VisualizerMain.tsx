@@ -1,56 +1,48 @@
 import { useEffect, useRef, useState } from 'react';
 import { NodeEntity } from 'pages/Types/entity/nodeEntity';
 import { useGlobalStore } from '../Store/globalStateStore';
-import { useFrontendStateStore } from '../Store/visualizerStateStore';
-import { BackendState } from '../Types/backendType';
-
-export interface RoutesProps {
-  backendState: BackendState;
-}
 
 // Future support different parser
-const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) => {
-  const { userAnnotation, parser, visComponent: VisComponent } = useGlobalStore().visualizer;
-  const currState = useFrontendStateStore((store) => {
-    return store.currState();
-  });
+const VisualizerMain: React.FC = () => {
+  const { userAnnotation, visComponent: VisComponent } = useGlobalStore().visualizer;
+  const currGraphState = useGlobalStore().currVisualiserState().graphState;
 
   const [flagViewed, setFlagViewed] = useState(false);
 
   useEffect(() => {
-    if (backendState && userAnnotation) {
-      const newParsedState = parser.parseState(backendState, userAnnotation);
-      useFrontendStateStore.getState().updateNextState(newParsedState);
-    } else {
-      let issue = 'something';
-      if (!backendState) {
-        issue = 'backendState';
-      } else if (!userAnnotation) {
-        issue = 'localsAnnotations';
-      }
-      console.error(`Unable to parse backend state: ${issue} is undefined`);
-    }
+    // if (backendStateHistory[currState] && userAnnotation) {
+    //   const newParsedState = parser.parseState(backendStateHistory[currState], userAnnotation);
+    //   useFrontendStateStore.getState().updateNextState(newParsedState);
+    // } else {
+    //   let issue = 'something';
+    //   if (!backendStateHistory[currState]) {
+    //     issue = 'backendState';
+    //   } else if (!userAnnotation) {
+    //     issue = 'localsAnnotations';
+    //   }
+    //   console.error(`Unable to parse backend state: ${issue} is undefined`);
+    // }
 
     const isDev = () => {
       // TODO: DEBUG THIS
-      if (!currState) return false;
-      if (currState.nodes.length !== 3) {
+      if (!currGraphState) return false;
+      if (currGraphState.nodes.length !== 3) {
         return false;
       }
 
-      const first = currState.nodes.find((node: NodeEntity) => node.title === 'd');
+      const first = currGraphState.nodes.find((node: NodeEntity) => node.title === 'd');
       if (!first || first.edges.length === 0) {
         return false;
       }
 
-      const second = currState.nodes.find(
+      const second = currGraphState.nodes.find(
         (node: NodeEntity) => node.uid === first.edges[0].split('-')[1]
       );
       if (second.title !== 'e' || second.edges.length === 0) {
         return false;
       }
 
-      const third = currState.nodes.find(
+      const third = currGraphState.nodes.find(
         (node: NodeEntity) => node.uid === second.edges[0].split('-')[1]
       );
 
@@ -59,12 +51,13 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) =>
 
     if (isDev() && !flagViewed) {
       alert(
-        `Olli has now made it to the fair and is contemplating joining structs, here's the flag: ${import.meta.env.VITE_CTF_FLAG
+        `Olli has now made it to the fair and is contemplating joining structs, here's the flag: ${
+          import.meta.env.VITE_CTF_FLAG
         }`
       );
       setFlagViewed(true);
     }
-  }, [backendState, userAnnotation]);
+  }, [currGraphState, userAnnotation]);
 
   const visualizerRef = useRef(null);
   const { uiState } = useGlobalStore();
@@ -74,7 +67,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) =>
       ref={visualizerRef}
       style={{ overflow: 'hidden', height: '100%', width: '100%' }}
     >
-      <VisComponent graphState={currState} dimension={uiState} />
+      <VisComponent graphState={currGraphState} dimension={uiState} />
     </div>
   );
 };
