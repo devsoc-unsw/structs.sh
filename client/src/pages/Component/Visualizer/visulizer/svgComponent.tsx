@@ -55,14 +55,12 @@ const SvgComponent: React.FC<SvgComponentProps> = ({
   }, [centerCoordProp]);
 
   const handlePosSimulation = () => {
+    if (isLocked) {
+      setScalePercentage(100);
+    }
     const effectiveWidth = VIEW_BOX_WIDTH / (scalePercentage / 100);
     const effectiveHeight = VIEW_BOX_HEIGHT / (scalePercentage / 100);
 
-    console.log('Simulate', {
-      effectiveWidth,
-      effectiveHeight,
-      centerCoord,
-    });
     if (svgRef.current) {
       if (isLocked) {
         controls.start({
@@ -96,19 +94,27 @@ const SvgComponent: React.FC<SvgComponentProps> = ({
     });
   };
 
+  useEffect(() => {
+    // Update the cursor style based on the isLocked state
+    controls.start({
+      cursor: isLocked ? 'not-allowed' : 'grab',
+    });
+  }, [isLocked, controls]);
+
   const handleDrag = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     event.preventDefault();
     if (isLocked) return;
     setCenterCoord({
-      x: (centerCoord.x -= info.delta.x),
-      y: (centerCoord.y -= info.delta.y),
+      x: (centerCoord.x -= info.delta.x * (200 / scalePercentage)),
+      y: (centerCoord.y -= info.delta.y * (200 / scalePercentage)),
     });
   };
 
-  const MAX_SCALE = 400;
-  const MIN_SCALE = 25;
+  const MAX_SCALE_PER = 400;
+  const MIN_SCALE_PER = 25;
   const handleWheel = (event: React.WheelEvent<SVGSVGElement>) => {
     event.preventDefault();
+    if (isLocked) return;
 
     const viewBox: SVGRect = svgRef.current.viewBox.baseVal;
     const zoomFactor = 1.045;
@@ -116,33 +122,34 @@ const SvgComponent: React.FC<SvgComponentProps> = ({
     const dx = (viewBox.width * (zoomFactor - 1)) / 2;
     const dy = (viewBox.height * (zoomFactor - 1)) / 2;
 
-    let newScale: number = MIN_SCALE;
+    let newScale: number = MIN_SCALE_PER;
     if (event.deltaY <= 0) {
       // Potential zoom in
       newScale = scalePercentage * zoomFactor;
 
       // Check if we're not exceeding the maximum zoom.
-      if (newScale <= MAX_SCALE) {
+      if (newScale <= MAX_SCALE_PER) {
         viewBox.width /= zoomFactor;
         viewBox.height /= zoomFactor;
         viewBox.x += dx;
         viewBox.y += dy;
       }
-      setScalePercentage(Math.min(MAX_SCALE, newScale));
+      setScalePercentage(Math.min(MAX_SCALE_PER, newScale));
     } else {
       // Potential zoom out
       newScale = scalePercentage / zoomFactor;
 
       // Check if we're not going below the minimum zoom.
-      if (newScale >= MIN_SCALE) {
+      if (newScale >= MIN_SCALE_PER) {
         viewBox.width *= zoomFactor;
         viewBox.height *= zoomFactor;
         viewBox.x -= dx;
         viewBox.y -= dy;
       }
-      setScalePercentage(Math.max(MIN_SCALE, newScale));
+      setScalePercentage(Math.max(MIN_SCALE_PER, newScale));
     }
   };
+
   return (
     <div>
       <div style={{ position: 'relative', width: dimension.width, height: dimension.height }}>
@@ -166,7 +173,7 @@ const SvgComponent: React.FC<SvgComponentProps> = ({
 
         {/* Tooltip and lock icon placed on the top right within the SVG */}
         <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
-          <Tooltip title={isLocked ? 'Unlock Visualizer View' : 'Lock View'}>
+          <Tooltip title={isLocked ? 'Unlock Visualizer View' : 'Lock Visualizer View'}>
             <IconButton onClick={toggleLock}>
               {isLocked ? <LockIcon /> : <LockOpenIcon />}
             </IconButton>
