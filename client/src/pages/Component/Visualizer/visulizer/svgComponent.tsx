@@ -62,8 +62,8 @@ const SvgComponent: React.FC<SvgComponentProps> = ({ children, centerCoord: cent
     if (isLocked) {
       setScalePercentage(100);
     }
-    const effectiveWidth = (viewBoxWidth * 2) / (scalePercentage / 100);
-    const effectiveHeight = (viewBoxHeight * 2) / (scalePercentage / 100);
+    const effectiveWidth = (Math.max(viewBoxWidth, 500) * 2) / (scalePercentage / 100);
+    const effectiveHeight = (Math.max(viewBoxHeight, 500) * 2) / (scalePercentage / 100);
 
     if (svgRef.current) {
       if (isLocked) {
