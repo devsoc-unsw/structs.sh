@@ -99,16 +99,17 @@ const DevelopmentMode = () => {
     setConsoleChunks([]);
   };
 
-  const sendCode = () => {
-    // setBackendHistory([]);
-    resetDebugSession();
-    socket.emit('mainDebug', code);
-  };
-
   const bufferStates = () => {
     for (let i = 0; i < FRAME_COUNT + 5; i += 1) {
       setTimeout(() => socket.emit('executeNext'), i * EXECUTE_NEXT_INTERVAL);
     }
+  };
+  const sendCode = () => {
+    resetDebugSession();
+    socket.emit('mainDebug', code);
+    // setTimeout(() => {
+    //   bufferStates();
+    // }, 1500);
   };
 
   const getNextState = () => {

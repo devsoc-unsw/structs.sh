@@ -3,6 +3,7 @@ import MaterialIcon from 'components/MaterialIcon';
 import styles from 'styles/Timeline.module.css';
 import { Button } from 'components/Button';
 import { useEffect, useState } from 'react';
+import { useGlobalStore } from 'pages/Store/globalStateStore';
 import Slider from './Slider';
 
 const Timeline = ({
@@ -22,16 +23,19 @@ const Timeline = ({
   onChange: (number) => void;
   isActive: boolean;
 }) => {
-  const [frame, setFrame] = useState<number>(0);
+  // const [frame, setFrame] = useState<number>(0);
   const [timer, setTimer] = useState(null);
 
-  useEffect(() => {
-    onChange(frame);
-    console.log('frame changed, trigger useeffect');
-  }, [frame]);
+  const { currIdx, visualiserStates, updateCurrState, numStates } = useGlobalStore();
+
+  // useEffect(() => {
+  //   onChange(frame);
+  //   updateCurrState(frame);
+  // }, [frame]);
 
   const handleSeek = ([value]: number[]) => {
-    setFrame(value);
+    // setFrame(value);
+    updateCurrState(value);
   };
 
   const pause = () => {
@@ -42,24 +46,27 @@ const Timeline = ({
   };
 
   const offsetFrame = (offset: number) => {
-    setFrame((prevFrame) => {
-      let newFrame: number = prevFrame + offset;
+    // setFrame((prevFrame) => {
+    //   let newFrame: number = prevFrame + offset;
 
-      if (newFrame < 0) {
-        newFrame = 0;
-      }
+    //   if (newFrame < 0) {
+    //     newFrame = 0;
+    //   }
 
-      if (newFrame >= frameCount - 1) {
-        pause();
-      }
+    // if (newFrame >= frameCount - 1) {
+    //   pause();
+    // }
 
-      if (newFrame >= frameCount) {
-        newFrame = frameCount - 1;
-      }
+    //   if (newFrame >= frameCount) {
+    //     newFrame = frameCount - 1;
+    //   }
 
-      console.log('frame offet by 1', newFrame);
-      return newFrame;
-    });
+    //   return newFrame;
+    // });
+    if (currIdx + offset >= numStates()) {
+      pause();
+    }
+    updateCurrState(currIdx + offset);
   };
 
   const handleTick = () => {
@@ -86,7 +93,7 @@ const Timeline = ({
         <MaterialIcon name={timer ? 'pause' : 'play_arrow'} />
       </Button>
       <Button
-        disabled={!isActive || frame === 0}
+        disabled={!isActive || currIdx === 0}
         onClick={() => {
           offsetFrame(-1);
           pause();
@@ -96,9 +103,9 @@ const Timeline = ({
       </Button>
       <Button
         onClick={() => {
-          onGetNextState();
           offsetFrame(1);
           pause();
+          // onGetNextState();
         }}
       >
         <MaterialIcon name="redo" />
@@ -106,13 +113,13 @@ const Timeline = ({
       <Button
         disabled={!isActive}
         onClick={() => {
-          setFrame(frame === frameCount - 1 ? 0 : frameCount - 1);
+          updateCurrState(currIdx === numStates() ? 0 : numStates());
           pause();
         }}
       >
-        <MaterialIcon name={frame === frameCount - 1 ? 'replay' : 'skip_next'} />
+        <MaterialIcon name={currIdx === numStates() ? 'replay' : 'skip_next'} />
       </Button>
-      <Slider max={frameCount - 1} value={frame} onChange={handleSeek} />
+      <Slider max={numStates()} value={currIdx} onChange={handleSeek} />
       {/* <button type="button" onClick={sendCode} className={styles.Button}>
         <Refresh name="refresh" /> Reset
       </button> */}
