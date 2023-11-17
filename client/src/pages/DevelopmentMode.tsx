@@ -100,7 +100,7 @@ const DevelopmentMode = () => {
 
     setTimeout(() => {
       for (let i = 0; i < FRAME_COUNT + 5; i++) {
-        setTimeout(() => socket.emit('executeNext'), i * 200);
+        setTimeout(() => socket.emit('executeNext'), i * 300);
       }
     }, 1000);
   };
@@ -124,7 +124,9 @@ const DevelopmentMode = () => {
 
   const onMainDebug = useCallback((data: any) => {
     console.log(`Received event onMainDebug:\n`, data);
-    setActiveSession(true);
+    setTimeout(() => {
+      setActiveSession(true);
+    }, 1500 + FRAME_COUNT * 50);
   }, []);
 
   const onSendFunctionDeclaration = useCallback((data: any) => {
