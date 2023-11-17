@@ -85,7 +85,7 @@ const LinkedNode: DrawableEdgeComponent = ({ entity: nodeEntity, coord }: NodePr
       >
         {title}
       </motion.text>
-      <HoverContent isVisible={isHover} obj={nodeEntity} size={size} />
+      <HoverContent isVisible={false} obj={nodeEntity} size={size} />
     </motion.g>
   );
 };
