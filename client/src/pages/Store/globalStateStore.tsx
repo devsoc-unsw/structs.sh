@@ -1,4 +1,5 @@
 import { UseBoundStore, StoreApi, create } from 'zustand';
+import { socket } from 'utils/socket';
 import { Parser } from '../Component/Visualizer/parser/parser';
 import { parserFactory } from '../Component/Visualizer/parser/parserFactory';
 import { VisualizerComponent } from '../Component/Visualizer/visulizer/visualizer';
@@ -110,6 +111,7 @@ export const useGlobalStore: UseBoundStore<StoreApi<GlobalStateStore & GlobalSto
           userAnnotation: annotation,
         },
       }));
+      console.log('userAnnotation', annotation);
     },
     updateTypeDeclaration: (type: BackendTypeDeclaration) => {
       set((state) => ({
@@ -125,9 +127,32 @@ export const useGlobalStore: UseBoundStore<StoreApi<GlobalStateStore & GlobalSto
         if (currIdx < 0) {
           currIdx = 0;
         } else if (currIdx >= state.visualiserStates.length) {
-          currIdx = state.visualiserStates.length - 1;
+          currIdx = state.visualiserStates.length;
         }
-        return { currIdx };
+
+        const newVisualiserStates = [...state.visualiserStates];
+
+        // Update this graph state with latest user annotations
+        if (currIdx < state.numStates() && state.visualizer.userAnnotation) {
+          const newGraphState = state.visualizer.parser.parseState(
+            state.visualiserStates[currIdx].backendState,
+            state.visualizer.userAnnotation
+          );
+          const newVisualiserState = {
+            backendState: state.visualiserStates[currIdx].backendState,
+            graphState: newGraphState,
+          };
+          newVisualiserStates[currIdx] = newVisualiserState;
+        }
+
+        // If the user is at the end of the visualiserStates, buffer the next 6 states
+        if (currIdx > state.visualiserStates.length - 8) {
+          for (let i = 0; i < 16; i += 1) {
+            setTimeout(() => socket.emit('executeNext'), i * 400);
+          }
+        }
+        console.log(state.visualiserStates);
+        return { currIdx, visualiserStates: newVisualiserStates };
       });
     },
     appendNewState: (newBackendState: BackendState) => {
@@ -143,7 +168,6 @@ export const useGlobalStore: UseBoundStore<StoreApi<GlobalStateStore & GlobalSto
           };
           return {
             visualiserStates: [...state.visualiserStates, newVisualiserState],
-            currIdx: state.currIdx + 1,
           };
         }
 

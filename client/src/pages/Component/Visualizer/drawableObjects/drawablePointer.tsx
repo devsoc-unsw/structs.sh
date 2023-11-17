@@ -95,7 +95,7 @@ const PointerDrawable: DrawablePointerComponent = (
         strokeWidth={6}
         markerEnd={`url(#${markerId})`}
       />
-      <motion.text x={5} y={coords.y2 - coords.y1 + 20} fontSize={15}>
+      <motion.text x={5} y={coords.y2 - coords.y1 + 20} fontSize={30}>
         {entity.varName}
       </motion.text>
     </motion.g>
