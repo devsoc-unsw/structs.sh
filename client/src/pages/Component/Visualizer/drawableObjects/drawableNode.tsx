@@ -80,12 +80,13 @@ const LinkedNode: DrawableEdgeComponent = ({ entity: nodeEntity, coord }: NodePr
         textAnchor="middle"
         fill={colorHex}
         dy=".3em"
-        fontSize="35px"
+        fontSize="38px"
+        fontWeight="1000"
         style={{ userSelect: 'none' }}
       >
         {title}
       </motion.text>
-      <HoverContent isVisible={isHover} obj={nodeEntity} size={size} />
+      <HoverContent isVisible={false} obj={nodeEntity} size={size} />
     </motion.g>
   );
 };
