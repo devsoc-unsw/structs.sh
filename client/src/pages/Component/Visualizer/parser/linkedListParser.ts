@@ -215,7 +215,6 @@ export class LinkedListParser implements Parser {
     linkedList.forEach((node) => {
       cacheLinkedListNode.set(node.uid, node);
     });
-    console.log('Executed', backendStructure, annotation, linkedList);
 
     const unionNodes = new Set<string>();
     linkedList.forEach((node) => {
