@@ -261,7 +261,7 @@ export class LinkedListParser implements Parser {
           prevNodeMap,
           cacheLinkedListNode,
           maxDepth,
-          [600 * idx, 600 + 600 * idx]
+          [600 * idx, 900 + 600 * idx]
         );
 
         positions.forEach((pos, uid) => {
