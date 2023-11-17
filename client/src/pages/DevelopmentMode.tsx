@@ -94,6 +94,7 @@ const DevelopmentMode = () => {
   };
 
   const sendCode = () => {
+    backendHistory.current = [];
     resetDebugSession();
     socket.emit('mainDebug', code);
 
