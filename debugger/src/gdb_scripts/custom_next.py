@@ -320,7 +320,7 @@ class CustomNextCommand(gdb.Command):
             # === Extract type
             type_name = get_type_name_of_stack_var(name)
             stack_memory_value["typeName"] = type_name
-            # Might be changed later, in the "extract value" part. Only for structs for now.
+            # Might be changed later, in the "extract value" part. Only complete for structs for now.
             type = {"typeName": type_name}
             stack_memory_value["type"] = type
 
