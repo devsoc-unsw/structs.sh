@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { SERVER_URL } from 'utils/constants';
 
-export const PLACEHOLDER_WORKSPACE = 'PLACEHOLDER_WORKSPACE';
+export const PLACEHOLDER_WORKSPACE = 'LinkedListWorkspace';
 export const PLACEHOLDER_USERNAME = 'benp123';
 
 // Use this on login

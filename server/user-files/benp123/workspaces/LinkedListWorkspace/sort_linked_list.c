@@ -1,6 +1,6 @@
 /**
-  * Sort linked list
-  */
+ * Sort linked list
+ */
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -16,7 +16,7 @@ struct list {
 
 void insertion_sort(struct list *list) {
     if (!list->head || !list->head->next) {
-        return; // No need to sort if the list has 0 or 1 elements
+        return;  // No need to sort if the list has 0 or 1 elements
     }
 
     struct node *sorted = NULL;
