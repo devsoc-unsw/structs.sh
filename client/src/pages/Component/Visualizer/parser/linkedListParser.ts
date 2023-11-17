@@ -314,6 +314,14 @@ export class LinkedListParser implements Parser {
         if (!stackAnnotation[name]) return;
         if (stackAnnotation[name] === undefined || stackAnnotation[name] === null) return;
 
+        const prevPointer: PointerEntity | null = pointers.find(
+          (pointer) => pointer.attachedUid === cacheEntity[memoryValue.value as string].uid
+        );
+        if (prevPointer) {
+          prevPointer.varName += `, ${name}`;
+          return;
+        }
+
         const annotationEntity: PointerEntity = {
           uid: `${name}`,
           type: EntityType.POINTER,
