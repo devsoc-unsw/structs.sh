@@ -195,9 +195,9 @@ const LinkedList: VisualizerComponent = ({ graphState, dimension }: VisualizerSt
       >
         <AnimatePresence>{Object.values(drawable)} </AnimatePresence>
       </motion.svg>
-      <div>
+      {/* <div>
         <ScaleBar viewBoxWidth={viewBoxWidth} />
-      </div>
+      </div> */}
     </div>
   );
 };

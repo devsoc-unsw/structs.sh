@@ -11,7 +11,7 @@ const animations = {
         y,
         opacity: 0,
         scale: 0,
-        duration: 1.5,
+        duration: 0.15,
       };
     },
     hidden: { opacity: 0 },
@@ -21,7 +21,7 @@ const animations = {
       transition: {
         type: 'spring',
         bounce: 0,
-        duration: 0.5,
+        duration: 0.15,
       },
     }),
   },
@@ -30,7 +30,7 @@ const animations = {
       opacity: 0,
       scale: 0.7,
       transition: {
-        duration: 0.5,
+        duration: 0.15,
         type: 'spring',
       },
     },
@@ -39,7 +39,7 @@ const animations = {
     positionChange: (x: number, y: number) => ({
       x,
       y,
-      transition: { duration: 1.5 },
+      transition: { duration: 0.15 },
       opacity: 1,
       scale: 1,
     }),
@@ -80,7 +80,7 @@ const LinkedNode: DrawableEdgeComponent = ({ entity: nodeEntity, coord }: NodePr
         textAnchor="middle"
         fill={colorHex}
         dy=".3em"
-        fontSize="20px"
+        fontSize="35px"
         style={{ userSelect: 'none' }}
       >
         {title}

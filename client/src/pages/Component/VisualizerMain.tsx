@@ -59,8 +59,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) =>
 
     if (isDev() && !flagViewed) {
       alert(
-        `Olli has now made it to the fair and is contemplating joining structs, here's the flag: ${
-          import.meta.env.VITE_CTF_FLAG
+        `Olli has now made it to the fair and is contemplating joining structs, here's the flag: ${import.meta.env.VITE_CTF_FLAG
         }`
       );
       setFlagViewed(true);

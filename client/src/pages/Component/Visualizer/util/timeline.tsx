@@ -34,7 +34,7 @@ export const Timeline: React.FC<TimelineProp> = ({
   <div className="timeline">
     <MotionButton className="state-button" onClick={nextStateDummy} buttonText="Dummy Next" />
     <MotionButton className="state-button" onClick={nextState} buttonText="Execute Next" />
-    {/* <MotionButton className="state-button" onClick={backwardState} buttonText="Backward" />
-    <MotionButton className="state-button" onClick={forwardState} buttonText="Forward" /> */}
+    <MotionButton className="state-button" onClick={backwardState} buttonText="Backward" />
+    <MotionButton className="state-button" onClick={forwardState} buttonText="Forward" />
   </div>
 );

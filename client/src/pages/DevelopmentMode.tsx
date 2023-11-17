@@ -9,7 +9,7 @@ import Console from 'components/DevelopmentMode/Console';
 import DevelopmentModeNavbar from '../components/Navbars/DevelopmentModeNavbar';
 import { PLACEHOLDER_PROGRAMS } from '../constants';
 import Configuration from './Component/Configuration/Configuration';
-import Controls from './Component/Control/Controls';
+import Timeline from './Component/Timeline/Timeline';
 import CodeEditor from './Component/CodeEditor/CodeEditor';
 import StackInspector from './Component/StackInspector/StackInspector';
 import { useGlobalStore } from './Store/globalStateStore';
@@ -17,6 +17,9 @@ import VisualizerMain from './Component/VisualizerMain';
 import { BackendState } from './Types/backendType';
 import FileSelector from './Component/FileTree/FileSelector';
 import AboutText from './Component/FileTree/AboutText';
+import { useFrontendStateStore } from './Store/visualizerStateStore';
+
+const FRAME_COUNT = 40;
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -30,6 +33,7 @@ const DevelopmentMode = () => {
         socket.emit('getBreakpoints', line, listName);
     }
   }, []);
+  const backendHistory = useRef<BackendState[]>([]);
   const [backendState, setBackendState] = useState<BackendState>();
   const [activeSession, setActiveSession] = useState(false);
   const [programName, setProgramName] = useState(
@@ -37,6 +41,8 @@ const DevelopmentMode = () => {
   );
   const [code, setCode] = useState(localStorage.getItem('code') || PLACEHOLDER_PROGRAMS[0].text);
   const [consoleChunks, setConsoleChunks] = useState([]);
+
+  const frontendStateStore = useFrontendStateStore((store) => store);
 
   // Tab values correspond to their index
   // ('Configure' has value '0', 'Inspect' has value '1', 'Console' has value '2')
@@ -63,9 +69,16 @@ const DevelopmentMode = () => {
   };
 
   const updateState = (data: any) => {
-    setBackendState(data);
-    updateNextFrame(data);
+    backendHistory.current.push(data);
   };
+
+  const handleTimelineUpdate = (index: number) => {
+    if (index < backendHistory.current.length) {
+      const state = backendHistory.current[index];
+      setBackendState(state);
+      updateNextFrame(state);
+    }
+  }
 
   const handleSetCode = (newCode: string) => {
     localStorage.setItem('code', newCode);
@@ -83,6 +96,12 @@ const DevelopmentMode = () => {
   const sendCode = () => {
     resetDebugSession();
     socket.emit('mainDebug', code);
+
+    setTimeout(() => {
+      for (let i = 0; i < FRAME_COUNT + 5; i++) {
+        setTimeout(() => socket.emit('executeNext'), i * 250);
+      }
+    }, 1000);
   };
 
   const getNextState = () => {
@@ -189,14 +208,14 @@ const DevelopmentMode = () => {
         <div className={classNames(styles.pane, styles.nav)}>
           <DevelopmentModeNavbar />
         </div>
-        <div className={classNames(styles.pane, styles.files)} style={{ overflowY: 'scroll' }}>
+        <div className={classNames(styles.pane, styles.files)} style={{ overflowY: 'auto' }}>
           <FileSelector
             programName={programName}
             onChangeProgramName={(newProgramName: string) => {
               setProgramName(newProgramName);
               handleSetCode(
                 PLACEHOLDER_PROGRAMS.find((program) => program.name === newProgramName)?.text ??
-                  '// Write you code here!'
+                '// Write you code here!'
               );
             }}
           />
@@ -220,7 +239,7 @@ const DevelopmentMode = () => {
         <div className={classNames(styles.pane, styles.inspector)}>
           <Tabs value={tab} onValueChange={handleChangeTab}>
             <Tab label="Configure">
-              <div className={classNames(styles.pane)} style={{ overflow: 'scroll' }}>
+              <div className={classNames(styles.pane)} style={{ overflowY: 'auto' }}>
                 <Configuration />
               </div>
             </Tab>
@@ -241,7 +260,13 @@ const DevelopmentMode = () => {
           <VisualizerMain backendState={backendState} />
         </div>
         <div className={classNames(styles.pane, styles.timeline)}>
-          <Controls getNextState={getNextState} sendCode={sendCode} activeSession={activeSession} />
+          <Timeline
+            frameCount={FRAME_COUNT}
+            interval={250}
+            onCompile={sendCode}
+            onChange={handleTimelineUpdate}
+            isActive={activeSession}
+          />
         </div>
       </div>
     </div>

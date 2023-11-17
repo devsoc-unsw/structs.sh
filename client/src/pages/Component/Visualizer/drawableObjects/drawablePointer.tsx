@@ -13,17 +13,17 @@ const animations = {
         x,
         y,
         opacity: 0,
-        transition: { duration: 1.5 },
+        transition: { duration: 0.15 },
       };
     },
   },
-  exit: { opacity: 0, transition: { duration: 0.75 } },
+  exit: { opacity: 0, transition: { duration: 0.15 } },
   animate: {
     positionChange: (x: number, y: number) => ({
       x,
       y,
       opacity: 1,
-      transition: { duration: 1.5 },
+      transition: { duration: 0.15 },
     }),
   },
 };
@@ -82,7 +82,7 @@ const PointerDrawable: DrawablePointerComponent = (
       dragMomentum={false}
     >
       <defs>
-        <ArrowMarker id={markerId} color="#DE3163" />
+        <ArrowMarker id={markerId} color="#6d54cf" />
       </defs>
       <motion.line
         x1={0}
@@ -91,7 +91,7 @@ const PointerDrawable: DrawablePointerComponent = (
         y2={coords.y2 - coords.y1}
         opacity={1}
         transition={{ type: 'spring', bounce: 0.025, duration: 1 }}
-        stroke="#DE3163"
+        stroke="#6d54cf"
         strokeWidth={6}
         markerEnd={`url(#${markerId})`}
       />

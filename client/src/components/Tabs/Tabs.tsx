@@ -23,6 +23,6 @@ export const Tabs = React.forwardRef<HTMLDivElement, Internal.TabsProps>(
 
 Tabs.displayName = 'Tabs' as string;
 
-export const Tab = ({ children, label }: { label: string; children: ReactNode }) => (
+export const Tab = ({ children }: { children: ReactNode, label: string }) => (
   <div className={styles.TabsContent}>{children}</div>
 );
