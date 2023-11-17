@@ -27,7 +27,6 @@ int main() {
     struct node *next = NULL;
     while (curr != NULL) {
         next = curr->next;  // Store next
-        curr->next = prev;  // Reverse curr node's pointer
         prev = curr;        // Move pointers one position ahead
         curr = next;
     }
