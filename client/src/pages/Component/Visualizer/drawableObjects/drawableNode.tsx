@@ -81,6 +81,7 @@ const LinkedNode: DrawableEdgeComponent = ({ entity: nodeEntity, coord }: NodePr
         fill={colorHex}
         dy=".3em"
         fontSize="30px"
+        fontStyle="bold"
         style={{ userSelect: 'none' }}
       >
         {title}
