@@ -19,7 +19,7 @@ import FileSelector from './Component/FileTree/FileSelector';
 import AboutText from './Component/FileTree/AboutText';
 import { useFrontendStateStore } from './Store/visualizerStateStore';
 
-const FRAME_COUNT = 40;
+// const FRAME_COUNT = 40;
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -33,7 +33,7 @@ const DevelopmentMode = () => {
         socket.emit('getBreakpoints', line, listName);
     }
   }, []);
-  const backendHistory = useRef<BackendState[]>([]);
+  const [backendHistory, setBackendHistory] = useState<BackendState[]>([]);
   const [backendState, setBackendState] = useState<BackendState>();
   const [activeSession, setActiveSession] = useState(false);
   const [programName, setProgramName] = useState(
@@ -69,12 +69,12 @@ const DevelopmentMode = () => {
   };
 
   const updateState = (data: any) => {
-    backendHistory.current.push(data);
+    setBackendHistory((backendHistory) => [...backendHistory, data]);
   };
 
   const handleTimelineUpdate = (index: number) => {
-    if (index < backendHistory.current.length) {
-      const state = backendHistory.current[index];
+    if (index < backendHistory.length) {
+      const state = backendHistory[index];
       setBackendState(state);
       updateNextFrame(state);
     }
@@ -93,17 +93,29 @@ const DevelopmentMode = () => {
     setConsoleChunks([]);
   };
 
+  const fetchInterval = useRef(null);
+
   const sendCode = () => {
-    backendHistory.current = [];
+    setBackendHistory([]);
     resetDebugSession();
     socket.emit('mainDebug', code);
 
     setTimeout(() => {
-      for (let i = 0; i < FRAME_COUNT + 5; i++) {
-        setTimeout(() => socket.emit('executeNext'), i * 300);
-      }
+      // for (let i = 0; i < FRAME_COUNT + 5; i++) {
+      //   setTimeout(() => socket.emit('executeNext'), i * 300);
+      // }
+
+      fetchInterval.current = setInterval(() => {
+        socket.emit('executeNext')
+      }, 300);
+
+      setTimeout(onProgramEnd, 20000);
     }, 1000);
   };
+
+  const onProgramEnd = () => {
+    clearInterval(fetchInterval.current);
+  }
 
   const getNextState = () => {
     socket.emit('executeNext');
@@ -126,7 +138,7 @@ const DevelopmentMode = () => {
     console.log(`Received event onMainDebug:\n`, data);
     setTimeout(() => {
       setActiveSession(true);
-    }, 1500 + FRAME_COUNT * 100);
+    }, 3000);
   }, []);
 
   const onSendFunctionDeclaration = useCallback((data: any) => {
@@ -186,6 +198,7 @@ const DevelopmentMode = () => {
     socket.on('programWaitingForInput', onProgramWaitingForInput);
     socket.on('compileError', onCompileError);
     socket.on('sendStdoutToUser', onStdout);
+    socket.on('programEnd', onProgramEnd);
 
     return () => {
       socket.off('connect', onConnect);
@@ -201,6 +214,7 @@ const DevelopmentMode = () => {
       socket.off('sendStdoutToUser', onSendStdoutToUser);
       socket.off('compileError', onCompileError);
       socket.off('sendStdoutToUser', onStdout);
+      socket.off('programEnd', onProgramEnd);
     };
   }, []);
 
@@ -264,7 +278,7 @@ const DevelopmentMode = () => {
         </div>
         <div className={classNames(styles.pane, styles.timeline)}>
           <Timeline
-            frameCount={FRAME_COUNT}
+            frameCount={backendHistory.length}
             interval={250}
             onCompile={sendCode}
             onChange={handleTimelineUpdate}

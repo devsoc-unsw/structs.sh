@@ -21,6 +21,10 @@ const Timeline = ({
   const [frame, setFrame] = useState(0);
   const [timer, setTimer] = useState(null);
 
+  // if (frame > frameCount) {
+  //   setFrame(Math.max(frameCount - 1));
+  // }
+
   useEffect(() => {
     onChange(frame);
   }, [frame]);
@@ -77,7 +81,7 @@ const Timeline = ({
       <Button variant="primary" onClick={onCompile}>
         Compile
       </Button>
-      <Button disabled={!isActive} onClick={playToggle}>
+      <Button disabled={!isActive || frame === frameCount - 1} onClick={playToggle}>
         <MaterialIcon name={timer ? "pause" : "play_arrow"} />
       </Button>
       <Button disabled={!isActive || frame === 0} onClick={() => {
@@ -96,7 +100,7 @@ const Timeline = ({
         setFrame(frame === frameCount - 1 ? 0 : frameCount - 1);
         pause();
       }}>
-        <MaterialIcon name={frame === frameCount - 1 ? "replay" : "skip_next"} />
+        <MaterialIcon name={isActive && frame === frameCount - 1 ? "replay" : "skip_next"} />
       </Button>
       <Slider max={frameCount - 1} value={frame} onChange={handleSeek} />
       {/* <button type="button" onClick={sendCode} className={styles.Button}>
