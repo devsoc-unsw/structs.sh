@@ -1,6 +1,5 @@
 .codeBlock {
-  display: flex;
-  flex-direction: column;
+  position: relative;
 }
 
 .copy {
@@ -36,6 +35,8 @@
   cursor: pointer;
   position: absolute;
   outline: none;
+  top: 0;
+  right: 0;
 }
 
 .tooltip {

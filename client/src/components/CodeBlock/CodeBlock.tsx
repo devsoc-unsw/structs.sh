@@ -57,9 +57,11 @@ const CodeBlock = ({ children }: Props): JSX.Element => {
           </svg>
         </span>
       </button>
-			<SyntaxHighlighter language='c' style={dracula}>
-        {children}
-      </SyntaxHighlighter>
+      <div>
+        <SyntaxHighlighter language='c' style={dracula}>
+          {children}
+        </SyntaxHighlighter>
+      </div>
 		</div>
 	)
 }
