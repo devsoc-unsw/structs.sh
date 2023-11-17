@@ -99,14 +99,52 @@ const SvgComponent: React.FC<SvgComponentProps> = ({
     controls.start({
       cursor: isLocked ? 'not-allowed' : 'grab',
     });
+    controls.start({
+      backgroundColor: isLocked ? 'rgba(0, 0, 0, 0.01)' : 'transparent',
+      transition: {
+        duration: 20,
+      },
+    });
   }, [isLocked, controls]);
 
+  const isSvgInteractive = (event: MouseEvent | TouchEvent | PointerEvent) => {
+    if (isLocked) return false;
+    // Get the bounding rectangle of the SVG container
+    const svgRect = svgRef.current.getBoundingClientRect();
+
+    let clientX: number = 0;
+    let clientY: number = 0;
+    if (event instanceof MouseEvent) {
+      clientX = event.clientX;
+      clientY = event.clientY;
+    } else if (event instanceof TouchEvent && event.touches.length > 0) {
+      clientX = event.touches[0].clientX;
+      clientY = event.touches[0].clientY;
+    } else if (window.PointerEvent && event instanceof PointerEvent) {
+      clientX = event.clientX;
+      clientY = event.clientY;
+    } else {
+      return false;
+    }
+
+    if (
+      clientX < svgRect.left ||
+      clientX > svgRect.right ||
+      clientY < svgRect.top ||
+      clientY > svgRect.bottom
+    ) {
+      return false;
+    }
+
+    return true;
+  };
   const handleDrag = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     event.preventDefault();
-    if (isLocked) return;
+    if (!isSvgInteractive(event)) return;
+
     setCenterCoord({
-      x: (centerCoord.x -= info.delta.x * (200 / scalePercentage)),
-      y: (centerCoord.y -= info.delta.y * (200 / scalePercentage)),
+      x: (centerCoord.x -= info.delta.x * (175 / scalePercentage)),
+      y: (centerCoord.y -= info.delta.y * (175 / scalePercentage)),
     });
   };
 
@@ -150,9 +188,18 @@ const SvgComponent: React.FC<SvgComponentProps> = ({
     }
   };
 
+  const svgContainerStyle: React.CSSProperties = {
+    position: 'relative',
+    width: `${dimension.width}px`,
+    height: `${dimension.height}px`,
+    border: '3px solid #ccc',
+    borderRadius: '4px',
+    backgroundClip: 'padding-box',
+  };
+
   return (
     <div>
-      <div style={{ position: 'relative', width: dimension.width, height: dimension.height }}>
+      <div style={svgContainerStyle}>
         <motion.svg
           ref={svgRef}
           width={dimension.width}
