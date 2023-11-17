@@ -1,9 +1,9 @@
 import { PanInfo, motion, useAnimation } from 'framer-motion';
 import React, { useEffect, useRef, useState } from 'react';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
-import LockIcon from '@material-ui/icons/Lock';
-import LockOpenIcon from '@material-ui/icons/LockOpen';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import LockIcon from '@mui/icons-material/Lock';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { Coord } from '../../../Types/geometry/geometry';
 
 interface SvgComponentProps {
