@@ -13,17 +13,17 @@ const animations = {
         x,
         y,
         opacity: 0,
-        transition: { duration: 0.15 },
+        transition: { duration: 1.0 },
       };
     },
   },
-  exit: { opacity: 0, transition: { duration: 0.15 } },
+  exit: { opacity: 0, transition: { duration: 0.6 } },
   animate: {
     positionChange: (x: number, y: number) => ({
       x,
       y,
       opacity: 1,
-      transition: { duration: 0.15 },
+      transition: { duration: 1.0 },
     }),
   },
 };

@@ -10,17 +10,17 @@ const animations = {
         x,
         y,
         opacity: 0,
-        transition: { duration: 0.15 },
+        transition: { duration: 1.0 },
       };
     },
   },
-  exit: { opacity: 0, transition: { duration: 0.15 } },
+  exit: { opacity: 0, transition: { duration: 0.55 } },
   animate: {
     positionChange: (x: number, y: number) => ({
       x,
       y,
       opacity: 1,
-      transition: { duration: 0.15 },
+      transition: { duration: 1.0 },
     }),
   },
 };
@@ -88,7 +88,7 @@ const Edge: DrawableEdgeComponent = ({ entity: edge, from, to }: EdgeProp, ref) 
         x2={coords.x2 - coords.x1}
         y2={coords.y2 - coords.y1}
         opacity={1}
-        transition={{ type: 'spring', bounce: 0.025, duration: 0.15 }}
+        transition={{ type: 'spring', bounce: 0.025, duration: 0.65 }}
         stroke="#6d54cf"
         strokeWidth={6}
         markerEnd={`url(#${markerId})`}

@@ -11,7 +11,7 @@ const animations = {
         y,
         opacity: 0,
         scale: 0,
-        duration: 0.15,
+        duration: 1.0,
       };
     },
     hidden: { opacity: 0 },
@@ -21,7 +21,7 @@ const animations = {
       transition: {
         type: 'spring',
         bounce: 0,
-        duration: 0.15,
+        duration: 0.3,
       },
     }),
   },
@@ -30,7 +30,7 @@ const animations = {
       opacity: 0,
       scale: 0.7,
       transition: {
-        duration: 0.15,
+        duration: 0.3,
         type: 'spring',
       },
     },
@@ -39,7 +39,7 @@ const animations = {
     positionChange: (x: number, y: number) => ({
       x,
       y,
-      transition: { duration: 0.15 },
+      transition: { duration: 1.0 },
       opacity: 1,
       scale: 1,
     }),
