@@ -120,6 +120,10 @@ export const isPointerType = (typeName: string): typeName is PointerType['typeNa
   return typeName.endsWith('*');
 };
 
+export const isPointerValue = (value: MemoryValue): value is PointerValue & { addr: Addr } => {
+  return isPointerType(value.type.typeName);
+};
+
 export const isArrayType = (typeName: string): typeName is ArrayType['typeName'] => {
   return typeName.endsWith('[]');
 };
