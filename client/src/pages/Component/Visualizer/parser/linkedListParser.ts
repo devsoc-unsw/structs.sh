@@ -202,10 +202,7 @@ export class LinkedListParser implements Parser {
   /**
    * Parser functionality
    */
-  parseInitialState(
-    backendStructure: BackendState,
-    annotation: UserAnnotation
-  ): FrontendLinkedListGraph {
+  parseState(backendStructure: BackendState, annotation: UserAnnotation): FrontendLinkedListGraph {
     const nodes: NodeEntity[] = [];
     const edges: EdgeEntity[] = [];
     const cacheEntity: { [uid: string]: EntityConcrete } = {};
@@ -218,7 +215,6 @@ export class LinkedListParser implements Parser {
     linkedList.forEach((node) => {
       cacheLinkedListNode.set(node.uid, node);
     });
-    console.log('Executed', backendStructure, annotation, linkedList);
 
     const unionNodes = new Set<string>();
     linkedList.forEach((node) => {
@@ -265,7 +261,7 @@ export class LinkedListParser implements Parser {
           prevNodeMap,
           cacheLinkedListNode,
           maxDepth,
-          [600 * idx, 600 + 600 * idx]
+          [600 * idx, 900 + 600 * idx]
         );
 
         positions.forEach((pos, uid) => {

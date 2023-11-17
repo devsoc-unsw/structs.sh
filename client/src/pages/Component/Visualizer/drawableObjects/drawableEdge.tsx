@@ -93,7 +93,7 @@ const Edge: DrawableEdgeComponent = ({ entity: edge, from, to }: EdgeProp, ref) 
         strokeWidth={6}
         markerEnd={`url(#${markerId})`}
       />
-      <HoverContent isVisible={isHover} obj={{ ...edge, toPos: to, fromPos: from }} size={75} />
+      <HoverContent isVisible={false} obj={{ ...edge, toPos: to, fromPos: from }} size={75} />
     </motion.g>
   );
 };

@@ -19,7 +19,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) =>
 
   useEffect(() => {
     if (backendState && userAnnotation) {
-      const newParsedState = parser.parseInitialState(backendState, userAnnotation);
+      const newParsedState = parser.parseState(backendState, userAnnotation);
       useFrontendStateStore.getState().updateNextState(newParsedState);
     } else {
       let issue = 'something';
@@ -65,12 +65,16 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) =>
       );
       setFlagViewed(true);
     }
-  }, [backendState]);
+  }, [backendState, userAnnotation]);
 
   const visualizerRef = useRef(null);
   const { uiState } = useGlobalStore();
   return (
-    <div className="visualizer" ref={visualizerRef} style={{ overflow: 'hidden' }}>
+    <div
+      className="visualizer"
+      ref={visualizerRef}
+      style={{ overflow: 'hidden', height: '100%', width: '100%' }}
+    >
       <VisComponent graphState={currState} dimension={uiState} />
     </div>
   );

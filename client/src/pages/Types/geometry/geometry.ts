@@ -3,6 +3,13 @@ export interface Coord {
   y: number;
 }
 
+export type Boundary = {
+  topLeft: Coord;
+  topRight: Coord;
+  bottomLeft: Coord;
+  bottomRight: Coord;
+};
+
 export enum ShapeType {
   Circle = 'circle',
   Rectangle = 'rectangle',
