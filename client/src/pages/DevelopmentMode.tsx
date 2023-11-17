@@ -100,7 +100,7 @@ const DevelopmentMode = () => {
 
     setTimeout(() => {
       for (let i = 0; i < FRAME_COUNT + 5; i++) {
-        setTimeout(() => socket.emit('executeNext'), i * 250);
+        setTimeout(() => socket.emit('executeNext'), i * 200);
       }
     }, 1000);
   };
