@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { TopNavbar } from "components/Navbars";
-import style from './EduMaterialPage.module.scss'
+import style from './EduMaterialPage.module.scss';
+import gsap from 'gsap';
+import SplitText from "gsap-trial/SplitText";
 
 const EduMaterialPage = ({ sidebar, mdxContent }) => {
+
 	return (
 		<div>
       <TopNavbar position="fixed" />

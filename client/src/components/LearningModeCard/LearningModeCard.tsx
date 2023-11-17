@@ -25,12 +25,12 @@ const LearningModeCard: React.FC<LearningModeCardItemProps> = (item) => {
 				</div>
 				<div className={style.subtopics}>
 					{item.subtopics.map((subtopic, index) => (
-						<p 
+						<button
 							key={index}
 							onClick={() => handleArticleLinkClick(subtopic.url)}
 						>
 							{subtopic.topic}
-						</p>
+						</button>
 					))}
 				</div>
         {/* <div className={`${style.card} ${style.card_second}`}></div> */}

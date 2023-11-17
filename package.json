@@ -1,6 +1,8 @@
 {
   "dependencies": {
+    "gsap-trial": "^3.12.2",
     "react-icons": "^4.10.1",
-    "react-syntax-highlighter": "^15.5.0"
+    "react-syntax-highlighter": "^15.5.0",
+    "split-text": "^1.0.0"
   }
 }

@@ -3,20 +3,30 @@
   margin-bottom: 1.5rem;
   position: relative;
   top: 100px;
-	background: rgba(255,255,255,0.4);
-  border-radius: 10px;
-	border: 1px solid rgba(199, 199, 199, 0.7);
+	background: rgb(255,255,255);
+  border-radius: 1rem;
+	border: 2px solid rgb(182, 134, 255);
 	backdrop-filter: blur(5px);
 	-webkit-backdrop-filter: blur(5px);
+  letter-spacing: 1px;
 }
 
 .topic {
   padding: 0 24px;
-  border-bottom: 1px solid rgba(199, 199, 199, 0.7);
+  border-bottom: 2px solid rgb(182, 134, 255);
 }
 
-.subtopics p {
+.subtopics {
+  display: flex;
+  flex-direction: column;
+}
+
+.subtopics button {
   margin: 0;
   padding: 12px 24px;
   cursor: pointer;
+}
+
+.subtopics button:hover {
+  color: rgb(143, 70, 255);
 }

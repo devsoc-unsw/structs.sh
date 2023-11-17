@@ -1,0 +1,48 @@
+{
+    "name": "gsap-trial",
+    "version": "3.12.2",
+    "description": "Trial version of GSAP that includes all bonus plugins which are normally available exclusively to Club GreenSock members. *** DO NOT DEPLOY THESE FILES *** They only work locally or on domains like codepen.io, codesandbox.io, stackblitz.com and jsfiddle.com. If used elsewhere, it violates the license and redirects the browser. To get the unrestricted files, sign up at https://greensock.com/club",
+    "homepage": "https://greensock.com",
+	"module": "index.js",
+	"main": "dist/gsap.js",
+    "types": "types/index.d.ts",
+	"sideEffects": false,
+    "keywords": [
+		"GSAP",
+		"trial",
+		"GreenSock",
+		"animation",
+		"MotionPathPlugin",
+		"matchMedia",
+		"motion",
+		"motionPath",
+		"ScrollTrigger",
+		"ScrollSmoother",
+		"Observer",
+		"easing",
+		"JavaScript",
+		"PixiPlugin",
+		"CustomEase",
+		"Flip",
+		"SVG",
+		"3D",
+		"2D",
+		"transform",
+		"morph",
+		"morphing",
+		"drawSVG",
+		"tweening"
+   ],
+   "maintainers": [
+       {
+           "name": "Jack Doyle",
+		   "email": "jack@greensock.com",
+           "web": "https://greensock.com" 
+       } 
+   ],
+  "license": "This package should only be used by individuals/companies with an active Club GreenSock membership. See https://greensock.com/club/. Licensing: https://greensock.com/licensing/",
+   "bugs": {
+       "url": "https://greensock.com/forums/"
+   }
+
+}

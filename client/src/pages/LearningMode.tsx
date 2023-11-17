@@ -10,7 +10,7 @@ const LearningMode = () => {
   const [activeLink, setActiveLink] = useState('Array');
   const navigate = useNavigate();
 
-  const handleLinkClick = (name) => {
+  const handleLinkClick = (name: string) => {
     setActiveLink(name);
     window.location.hash = `#${name}`;
   }

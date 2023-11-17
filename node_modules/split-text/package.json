@@ -1,0 +1,29 @@
+{
+  "name": "split-text",
+  "version": "1.0.0",
+  "description": "Split a text into an array of chunks. Their length is determined by the `limit` argument. It will no cut off words unless there is no spaces in the text. Returns an array with the chunks.",
+  "license": "MIT",
+  "repository": "distilledhype/split-text",
+  "author": {
+    "name": "Kahlil Lechelt",
+    "email": "hello@kahlil.info",
+    "url": "kahlil.info"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "text",
+    "splitting"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "*"
+  }
+}

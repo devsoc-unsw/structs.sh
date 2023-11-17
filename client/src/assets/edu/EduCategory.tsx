@@ -159,19 +159,19 @@ export const EduCategory = [
         "level": 2,
         "children": []
       },
+    ]
+  },
+  {
+    "name": "Tree Algorithms",
+    "url": "/tree-algorithms",
+    "level": 1,
+    "children": [
       {
-        "name": "Tree Algorithms",
-        "url": "/tree-algorithms",
+        "name": "Tree Traversal",
+        "url": "/tree-algorithms-traversal",
         "level": 2,
-        "children": [
-          {
-            "name": "Tree Traversal",
-            "url": "/tree-algorithms-traversal",
-            "level": 3,
-            "children": []
-          }
-        ]
-      },
+        "children": []
+      }
     ]
   },
   {
@@ -185,13 +185,13 @@ export const EduCategory = [
         "level": 2,
         "children": []
       },
-      {
-        "name": "Graph Algorithms",
-        "url": "/graph-algorithms",
-        "level": 2,
-        "children": []
-      }
     ]
+  },
+  {
+    "name": "Graph Algorithms",
+    "url": "/graph-algorithms",
+    "level": 1,
+    "children": [],
   },
   {
     "name": "Union Find",
