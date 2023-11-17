@@ -126,7 +126,7 @@ const DevelopmentMode = () => {
     console.log(`Received event onMainDebug:\n`, data);
     setTimeout(() => {
       setActiveSession(true);
-    }, 1500 + FRAME_COUNT * 50);
+    }, 1500 + FRAME_COUNT * 100);
   }, []);
 
   const onSendFunctionDeclaration = useCallback((data: any) => {
