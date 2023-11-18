@@ -5,11 +5,13 @@
 }
 
 .stackInspector {
+    font-size: 14px;
     height: 100%;
     overflow-y: auto;
 }
 
 .frame {
+    margin-top: 10px;
     border: 1px solid #DDD;
     border-radius: 5px;
     //width: 400px; // Arbitrary narrow value
@@ -27,7 +29,7 @@ dl {
     //overflow: hidden;
     //margin: 0;
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 1fr 1fr;
     margin: 0;
     padding: 0;
 }
@@ -46,7 +48,7 @@ dd:nth-child(4n+2) {
 dt {
     display: flex;
     align-items: center;
-    padding: 0 15px;
+    padding: 0 15px 0 0;
 }
 
 dt:nth-child(4n+1) {
@@ -57,6 +59,7 @@ dt:nth-child(4n+1) {
     color: inherit;
     text-decoration: none;
     margin-left: 0;
+    font-size: 16px;
 }
 
 // Misc. span formatting
@@ -98,7 +101,7 @@ dt > code {
     display: inline-block;
     line-height: 1.3rem;
     float: right;
-    margin: 2px 4px 2px;
+    margin: 2px;
     padding: 0 3px;
     max-width: calc(100% - 30px);
     white-space: nowrap;
@@ -107,9 +110,8 @@ dt > code {
 }
 
 .expandedvalue {
-    white-space: normal;
+    white-space: pre-wrap;
     overflow: visible;
-    color: red;
 }
 
 dd:nth-child(2) > .value {
@@ -122,4 +124,13 @@ dd:last-child > .value {
 
 .hidden {
     display: none;
+}
+
+.deref {
+    color: #666;
+}
+
+.arrow {
+    padding-left: 1em;
+    color: #666;
 }

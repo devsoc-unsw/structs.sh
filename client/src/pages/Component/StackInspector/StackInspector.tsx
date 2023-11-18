@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames/bind';
 import styles from './StackInspector.module.scss';
-import { isStructTypeName, isPointerType, isArrayType } from '../../Types/backendType';
+import { isStructTypeName, isPointerType, isArrayType, StructType, StructValue } from '../../Types/backendType';
 import { useGlobalStore } from '../../Store/globalStateStore';
 
 const CollapsibleDescription = ({ collapsed, children }) => {
@@ -47,34 +47,77 @@ const CollapsibleDescription = ({ collapsed, children }) => {
   );
 };
 
+function makeLocalDiv(name, memoryValue) {
+  var localValue;
+  var localType;
+  var is_ptr = false;
+  console.log(memoryValue);
+  if (isPointerType(memoryValue.type.typeName)) {
+    //localValue = '<pointer>';
+    localValue = memoryValue.value;
+    is_ptr = true;
+  } else if (isStructTypeName(memoryValue.type.typeName)) {
+    localValue = "{ ";
+    const fields = Object.keys(memoryValue.value);
+    const structValue = memoryValue as StructValue;
+    console.log(structValue);
+    for (const field of fields) {
+      console.log(field);
+      const blarg = structValue.value[field];
+      localValue += blarg.type + ' ' + field + ' = ' + blarg.value + ', ';
+    }
+    localValue = localValue.slice(0,-4) + ' }';
+  } else if (/\[\d+\]$/.test(memoryValue.type.typeName)) {
+    // localValue = "<array>";
+    localValue = memoryValue.value;
+  } else {
+    localValue = memoryValue.value;
+  }
+
+  return {
+    is_deref: false,
+    indent_level: 0,
+    type: memoryValue.type.typeName,
+    name: name,
+    value: localValue,
+    is_ptr: is_ptr
+  };
+}
+
 const StackInspector = () => {
   const debuggerData = useGlobalStore().currFrame;
   // array of html divs each representing a local
   const localDivs = [];
 
   for (const [name, memoryValue] of Object.entries(debuggerData.stack_data)) {
-    // NOTE: this processes the actual output of the debugger correctly, but
-    // does not conform to the backend types (i.e. debugger is sending data in
-    // slightly incorrect format at the moment)
-    var localValue;
-    console.log(memoryValue);
-    if (isStructTypeName(memoryValue.type.typeName)) {
-      // localValue = "<struct>";
-      localValue = memoryValue.value;
-    } else if (isPointerType(memoryValue.type)) {
-      localValue = '<pointer>';
-    } else if (/\[\d+\]$/.test(memoryValue.type)) {
-      // localValue = "<array>";
-      localValue = memoryValue.value;
-    } else {
-      localValue = memoryValue.value;
-    }
+    const newDiv = makeLocalDiv(name, memoryValue);
+    localDivs.push(newDiv);
 
-    localDivs.push({
-      type: memoryValue.type,
-      name,
-      value: localValue,
-    });
+    if (newDiv.is_ptr) {
+      // find pointer reference
+      if (Object.hasOwn(debuggerData.heap_data, newDiv.value)) {
+        const pointerDerefValue = makeLocalDiv("deref", debuggerData.heap_data[newDiv.value]).value;
+        localDivs.push({
+          is_deref: true,
+          indent_level: 1,
+          name: 'points to (heap)',
+          value: pointerDerefValue
+        });
+      } else {
+        // attempt to find object on stack with the given address
+        for (const stackMemoryValue of Object.values(debuggerData.stack_data)) {
+          if (stackMemoryValue.addr === newDiv.value) {
+            const pointerDerefValue = makeLocalDiv("deref", stackMemoryValue).value;
+            localDivs.push({
+              is_deref: true,
+              indent_level: 1,
+              name: 'points to (stack)',
+              value: pointerDerefValue
+            });
+          }
+        }
+      }
+    }
   }
 
   function defaultTemplate(localDiv) {
@@ -87,7 +130,7 @@ const StackInspector = () => {
           </code>
         </dt>
         <dd>
-          <code className={styles.value}>{localDiv.value}</code>
+          <CollapsibleDescription collapsed>{localDiv.value}</CollapsibleDescription>
         </dd>
       </>
     );
@@ -140,8 +183,27 @@ const StackInspector = () => {
       </>
     );
   }
+  
+  function derefTemplate(localDiv) {
+    return (
+      <>
+        <dt>
+          <code>
+            <span className={styles.arrow}>{`⇨ `}</span>
+            <span className={styles.deref}>{localDiv.name}</span>
+          </code>
+        </dt>
+        <dd>
+          <CollapsibleDescription collapsed>{localDiv.value}</CollapsibleDescription>
+        </dd>
+      </>
+    );
+  }
 
   function divMapper(localDiv) {
+    if (localDiv.is_deref) {
+      return derefTemplate(localDiv);
+    }
     if (/\[\d+\]$/.test(localDiv.type)) {
       return arrayTemplate(localDiv);
     }
