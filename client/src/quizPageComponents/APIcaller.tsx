@@ -1,6 +1,6 @@
 
-//Add your own openAI API key here. you cannot use mine!
-const APIKey = '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'
+//Add your own openAI API key as a string here. pls don't use mine! L.
+const APIKey = 69696969
 
 type TestCase = {
   input: any;
