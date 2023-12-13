@@ -3,75 +3,72 @@
   width: 270px;
   height: calc(100vh - 65px);
   flex-shrink: 0;
-  font-size: 1.3rem;
-  font-weight: 500;
+  font-size: 1rem;
+  font-weight: 400;
   overflow: hidden;
-  background-color: rgba(203, 203, 203, 0.4);
+  background-color: #f3f2f8; /* Light purple background */
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1);
   position: fixed;
   overflow-y: auto;
-  scrollbar-width: none;
+  scrollbar-width: thin;
+  border-right: 1px solid rgba(0,0,0,0.1);
 }
 
 .sidebar::-webkit-scrollbar {
-  display: none;
+  width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: rgba(119, 104, 174, 0.2); /* Purple scrollbar thumb */
+  border-radius: 4px;
 }
 
 .sidebarItem {
-	display: block;
-	padding-left: 10px;
-  padding-top: 10px;
-	border-bottom: 1px solid rgba(180, 180, 180, 0.3);
+  display: block;
+  padding: 10px 15px;
+  color: #212427;
+  transition: background-color 0.3s, border-radius 0.3s; /* Added border-radius transition */
+  border-radius: 8px; /* Rounded edges */
 }
 
 .sidebarItemHighlighted {
-  display: block;
-	padding-left: 10px;
-  padding-top: 10px;
-	border-bottom: 1px solid rgba(180, 180, 180, 0.3);
-	background-color: azure;
+  background-color: #e6e1f5; /* Lighter purple for highlighted items */
+  color: #212427;
+  padding-left: 15px;
+  border-left: 3px solid #9670b3; /* Purple border for highlighted item */
+  border-radius: 8px; /* Rounded edges */
 }
 
 .SidebarItemFocus {
-  line-height: 32px;
-  font-size: 25px;
-	padding-left: 1rem;
-  padding-top: 10px;
-  border-left: 2px blue solid;
-  color: blue;
+  font-size: 1.1rem;
+  color: #9670b3; /* Purple color for focus */
+  border-left: 3px solid #9670b3; /* Purple border for focus */
+  background-color: #f0ebfc; /* Light purple background for focus */
+  border-radius: 8px; /* Rounded edges */
 }
 
-.sidebarTitle {
-	display: flex;
+.sidebarTitle, .sidebarTitleLeaf {
+  display: flex;
   justify-content: space-between;
   line-height: 32px;
-  font-size: 22px;
-  transition: margin-left 0.3s ease;
+  font-size: 1.1rem;
   cursor: pointer;
-  border-bottom: 1px solid rgba(180, 180, 180, 0.3);
-}
+  padding: 5px 15px;
+  transition: all 0.3s ease;
+  border-radius: 8px; /* Rounded edges */
 
-.sidebarTitleLeaf {
-	display: flex;
-  justify-content: space-between;
-  line-height: 32px;
-  font-size: 20px;
-  transition: margin-left 0.3s ease;
-	cursor: pointer;
-  border-bottom: 1px solid rgba(180, 180, 180, 0.3);
-}
-
-.sidebarTitle.leaf:hover {
-	margin-left: 0.7rem;
-  cursor: pointer;
+  &:hover {
+    margin-left: 0.7rem;
+    background-color: #d9d1f0; /* Purple hover effect */
+    border-radius: 12px; /* More pronounced rounded edges on hover */
+  }
 }
 
 .sidebarName {
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .sidebarArrow {
-	padding: 5px 0;
+  padding: 5px 0;
   padding-right: 10px;
 }
-
-

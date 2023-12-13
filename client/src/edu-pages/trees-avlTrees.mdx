@@ -1,0 +1,82 @@
+import CodeBlock from 'components/CodeBlock/CodeBlock';
+import ProgressBar from "components/ProgressBar/ProgressBar";
+import { Link } from 'react-router-dom';
+import '../quizPageComponents/quiz.css';
+
+<ProgressBar
+  color="#F1959B"
+  height={5}
+  direction="right"
+  position="top"
+  gradient={true}
+  gradientColor="#EA4C46"
+/>
+
+# AVL Trees 🌳
+
+## Introduction to AVL Trees 📖
+
+An **AVL Tree**, named after its inventors Adelson-Velsky and Landis, is a self-balancing binary search tree. In an AVL tree, the heights of the two child subtrees of any node differ by at most one. If at any time they differ by more than one, rebalancing is done to restore this property. 
+
+## Characteristics of AVL Trees 🌟
+- **Balance Factor**: For each node, the balance factor is the difference in the height of its left and right subtrees. It should be -1, 0, or 1.
+- **Rotation Operations**: AVL trees use rotations to maintain balance. The four basic types are left rotation, right rotation, left-right rotation, and right-left rotation.
+
+## Why Use AVL Trees? 🤔
+- **Search Efficiency**: Due to balancing, the search operation is efficient, with a time complexity of O(log n).
+- **Balance Factor Maintenance**: The tree automatically maintains the balance factor to ensure quick searching.
+- **Data Structure Stability**: AVL trees provide stability in data structure, making them suitable for look-up intensive applications.
+
+## Implementation of AVL Tree Insertion in C++ 🛠️
+
+<CodeBlock>
+{`#include <iostream>
+using namespace std;
+
+struct Node {
+   int key;
+   Node *left, *right;
+   int height;
+};
+
+int height(Node *N) {
+   if (N == NULL)
+       return 0;
+   return N->height;
+}
+
+Node* newNode(int key) {
+   Node* node = new Node();
+   node->key = key;
+   node->left = NULL;
+   node->right = NULL;
+   node->height = 1; // new node is initially added at leaf
+   return(node);
+}
+
+// ... Additional AVL Tree functions ...
+
+int main() {
+   Node *root = NULL;
+   // Insert nodes
+   // Perform rotations if necessary
+   return 0;
+}`}
+</CodeBlock>
+
+## Code Explanation 🧐
+- `struct Node`: This defines the structure of each node in the AVL tree, including the key value, pointers to the left and right children, and the height of the node.
+- `height()`: A utility function to get the height of the tree.
+- `newNode(int key)`: Function to create a new node with the given key.
+
+## Benefits of AVL Trees in Applications 🚀
+- **Database Systems**: AVL trees are extensively used in database systems for faster data retrieval.
+- **Memory Management**: AVL trees are efficient in memory management due to their balanced nature.
+- **Network Applications**: Ideal for network applications where balanced search times are crucial.
+
+## Challenges with AVL Trees 😕
+- **Complex Rotations**: Implementing rotations can be complex and error-prone.
+- **Overhead**: AVL trees have additional overhead due to balancing factors and rotations.
+
+## head back:
+<Link to="/learning" className="Link">Learning Mode Homepage</Link>

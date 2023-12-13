@@ -14,6 +14,7 @@ import EduMaterialPage from 'pages/EduMaterialPage';
 import Sidebar from 'components/EduSidebar/Sidebar';
 
 const eduPages = import.meta.glob('./edu-pages/*.mdx');
+const eduQuizPages = import.meta.glob('./edu-quiz-pages/*.mdx');
 
 const generateRoutes = async (pages: any) => {
   const routes = [];
@@ -29,7 +30,13 @@ const generateRoutes = async (pages: any) => {
   for (const path in pages) {
     const module = await pages[path]();
     const PageComponent = module.default;
-    const routePath = '/learning/' + path.slice(12, -4); // remove './edu_pages/' and '.mdx'
+
+    //case when route is edu quiz page
+    let routePath = '/learning/' + path.slice(17, -4); // remove './edu-quiz-pages/' and '.mdx'
+    //case when route is edu content page
+    if (path.slice(0,12) === "./edu-pages/") {
+      routePath = '/learning/' + path.slice(12, -4); // remove './edu-pages/' and '.mdx'
+    }
     routes.push(
       <Route 
         key={routePath} 
@@ -48,6 +55,7 @@ const generateRoutes = async (pages: any) => {
 }
 
 const eduRoutes = await generateRoutes(eduPages);
+const eduQuizRoutes = await generateRoutes(eduQuizPages);
 
 const App = () => (
   <Box color={structsTheme.palette.text.primary}>
@@ -69,8 +77,9 @@ const App = () => (
           {/* Learning mode */}
           <Route path="/learning" element={<LearningMode />} />
 
-          {/* Education MDX pages */}
+          {/* Education content and quiz MDX pages */}
           {eduRoutes}
+          {eduQuizRoutes}
 
           {/* 404 page */}
           <Route path="*" element={<Page404 />} />

@@ -1,0 +1,82 @@
+import Quiz from '../quizPageComponents/Quiz.tsx';
+import { Link } from 'react-router-dom';
+import QuestionGenerator from '../quizPageComponents/QuestionGenerator.tsx';
+import AIShortAnswer from '../quizPageComponents/AIShortAnswer.tsx';
+import CodeEditor from '../quizPageComponents/CodeEditor.tsx';
+import '../quizPageComponents/Quiz.css'
+
+<div className="mdx-content">
+# Tree Traversal Quiz
+
+Test your knowledge of tree traversal with this quiz!
+
+<Quiz
+  questions={[
+    {
+      type: 'mcq',
+      text: 'Which of the following is not a tree traversal method?',
+      options: [
+        'In-order',
+        'Pre-order',
+        'Post-order',
+        'Cross-order'
+      ],
+      answerIndex: 3,
+      answerExplanation: 'Cross-order is not a recognized tree traversal method. The common traversal methods are In-order, Pre-order, and Post-order.',
+    },
+    {
+      type: 'mcq',
+      text: 'In a binary tree, what does an in-order traversal first visit?',
+      options: [
+        'The root node',
+        'The leftmost child node',
+        'The rightmost child node',
+        'The parent node'
+      ],
+      answerIndex: 1,
+      answerExplanation: 'In in-order traversal, the leftmost child node is visited first, followed by its parent node, and then the right child.',
+    },
+    {
+      type: 'short-answer',
+      text: 'What is the depth of the root node in a tree?',
+      shortAnswer: '0',
+      answerExplanation: 'The depth of the root node in a tree is always 0.',
+    }
+  ]}
+/>
+
+<br/><br/><br/>
+
+## AI-generated MCQ:
+<QuestionGenerator topic="tree traversal" />
+
+<br/><br/><br/>
+
+## AI-judged SRQ:
+<b>What does a pre-order traversal prioritize visiting first in a binary tree?</b>
+<AIShortAnswer question="What does a pre-order traversal prioritize visiting first in a binary tree?" />
+<b>How does post-order traversal differ from in-order traversal in a binary tree?</b>
+<AIShortAnswer question="How does post-order traversal differ from in-order traversal in a binary tree?" />
+
+<br/><br/><br/>
+
+## Implementation question:
+Write a function called myQuizFunction that takes a binary tree and returns an array of its elements in in-order traversal.
+<CodeEditor
+    questionText="Write a function called myQuizFunction that takes a binary tree and returns an array of its elements in in-order traversal."
+    onCodeSubmit={(result) => {" /* Display results here */" }}
+    testCases={[
+        { input: {value: 1, left: {value: 2}, right: {value: 3}}, expectedOutput: [2, 1, 3] },
+        { input: {value: 4, left: {value: 5, left: {value: 7}}, right: {value: 6}}, expectedOutput: [7, 5, 4, 6] },
+        { input: {}, expectedOutput: [] },
+        // Add more test cases as needed
+    ]}
+/>
+
+<br/><br/><br/>
+
+## Review the material, or head back:
+<Link to="/learning/treeAlgorithms-treeTraversal" className="Link">Tree Traversal Content</Link>
+&nbsp;
+<Link to="/learning" className="Link">Learning Mode Homepage</Link>
+</div>

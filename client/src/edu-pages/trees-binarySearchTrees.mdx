@@ -1,0 +1,98 @@
+import CodeBlock from 'components/CodeBlock/CodeBlock';
+import ProgressBar from "components/ProgressBar/ProgressBar";
+import { Link } from 'react-router-dom';
+import '../quizPageComponents/quiz.css';
+
+<ProgressBar
+  color="#F1959B"
+  height={5}
+  direction="right"
+  position="top"
+  gradient={true}
+  gradientColor="#EA4C46"
+/>
+
+# Binary Search Trees (BST) 🌳
+
+## What is a Binary Search Tree? 🤔
+
+A **Binary Search Tree (BST)** is a node-based binary tree data structure which has the following properties:
+- The left subtree of a node contains only nodes with keys lesser than the node’s key.
+- The right subtree of a node contains only nodes with keys greater than the node’s key.
+- The left and right subtree each must also be a binary search tree.
+
+BSTs are efficient for operations like search, insertion, and deletion.
+
+## Key Components of a BST 🗝️
+- **Node**: A fundamental part of a BST, which contains data, and links to the left and right child nodes.
+- **Root**: The topmost node in a BST.
+- **Leaf**: A node with no children.
+
+## Advantages of BSTs 🚀
+- **Efficient Searching**: BSTs provide average time complexity of O(log n) for search operations.
+- **Sorted Data**: BST always keeps the elements in sorted order.
+- **Flexibility**: BSTs dynamically allocate memory, hence are more flexible in size.
+
+## Basic Operations in BST 🛠️
+- **Insertion**
+- **Deletion**
+- **Traversal**: in-order, pre-order, post-order.
+
+## Implementing a BST in C++ ✍️
+
+<CodeBlock>
+{`#include <iostream>
+using namespace std;
+
+struct Node {
+    int key;
+    Node *left, *right;
+
+    Node(int value) : key(value), left(NULL), right(NULL) {}
+};
+
+// Function to insert a new node with the given key
+Node* insert(Node* node, int key) {
+    if (node == NULL) return new Node(key);
+
+    if (key < node->key)
+        node->left = insert(node->left, key);
+    else if (key > node->key)
+        node->right = insert(node->right, key);
+
+    return node;
+}
+
+// In-order traversal of the BST
+void inorder(Node* root) {
+    if (root != NULL) {
+        inorder(root->left);
+        cout << root->key << " ";
+        inorder(root->right);
+    }
+}
+
+int main() {
+    Node* root = NULL;
+    root = insert(root, 50);
+    insert(root, 30);
+    insert(root, 20);
+    insert(root, 40);
+    insert(root, 70);
+    insert(root, 60);
+    insert(root, 80);
+
+    // Print in-order traversal of the BST
+    inorder(root);
+}`}
+</CodeBlock>
+
+## Code Explanation 🧐
+- `Node(int value)`: Constructor for creating a new node.
+- `insert(Node* node, int key)`: Function to insert a new node with the given key in the BST.
+- `inorder(Node* root)`: Function for in-order traversal of the BST.
+
+## Try the quiz, or head back:
+<Link to="/learning/trees-binarySearchTreesQuiz" className="Link">Binary Search Trees Quiz</Link>
+&nbsp;
+<Link to="/learning" className="Link">Learning Mode Homepage</Link>

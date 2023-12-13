@@ -1,0 +1,127 @@
+import CodeBlock from 'components/CodeBlock/CodeBlock';
+import ProgressBar from "components/ProgressBar/ProgressBar";
+import { Link } from 'react-router-dom';
+import '../quizPageComponents/quiz.css';
+
+<ProgressBar
+  color="#F1959B"
+  height={5}
+  direction="right"
+  position="top"
+  gradient={true}
+  gradientColor="#EA4C46"
+/>
+
+# Doubly Linked Lists🔗
+
+## What is a Doubly Linked List? 📚
+
+A **Doubly Linked List** is a complex data structure that consists of a set of sequentially linked records called nodes. Each node contains two links: one points to the previous node, and the other points to the next node. This bidirectional linking allows traversal of the list in both directions, enhancing flexibility over a singly linked list.
+
+## Key Components of a Doubly Linked List 🔧
+- **Node**: Each element in the list, containing data and two pointers.
+- **Head**: The first node in the list.
+- **Tail**: The last node in the list.
+- **Pointers**: References to the previous and next nodes.
+
+## Advantages of Doubly Linked Lists 🎉
+- **Two-Way Traversal**: Can be traversed in both forward and backward directions.
+- **Dynamic Size**: Adjusts size automatically with the insertion and deletion of nodes.
+- **Ease of Deletion**: Easier to delete a node, as we have a reference to the previous node.
+
+## Implementing a Doubly Linked List in C++ ✍️
+
+<CodeBlock>
+{`#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* next;
+    Node* prev;
+};
+
+// Function prototypes here
+
+int main() {
+    // Code to create and manipulate doubly linked list
+    return 0;
+}`}
+</CodeBlock>
+
+## Explanation of the Code 😎
+- `struct Node { ... };`: Defines the structure of each node in the doubly linked list.
+- `Node* next; Node* prev;`: Pointers to the next and previous nodes.
+- `int main() { ... }`: The main function where the doubly linked list is created and manipulated.
+
+## Traversing a Doubly Linked List 🚶‍♂️
+To traverse a doubly linked list, you can start from the head (to go forward) or the tail (to go backward), and use the `next` or `prev` pointers to move to the subsequent nodes.
+
+<CodeBlock>
+{`void printList(Node* node) {
+    Node* last;
+    cout << "Traversal in forward direction \n";
+    while (node != NULL) {
+        cout << node->data << " ";
+        last = node;
+        node = node->next;
+    }
+
+    cout << "\nTraversal in reverse direction \n";
+    while (last != NULL) {
+        cout << last->data << " ";
+        last = last->prev;
+    }
+}`}
+</CodeBlock>
+
+## Adding and Removing Elements 🛠️
+Elements can be added or removed from any position in the doubly linked list with ease due to the presence of two pointers in each node.
+
+<CodeBlock>
+{`void insertAfter(Node* prev_node, int new_data) {
+    if (prev_node == NULL) {
+        cout << "Previous node cannot be NULL";
+        return;
+    }
+
+    Node* new_node = new Node();
+    new_node->data = new_data;
+    new_node->next = prev_node->next;
+    prev_node->next = new_node;
+    new_node->prev = prev_node;
+
+    if (new_node->next != NULL)
+        new_node->next->prev = new_node;
+}
+`}
+</CodeBlock>
+
+<CodeBlock>
+{`void deleteNode(Node** head_ref, Node* del_node) {
+    if (*head_ref == NULL || del_node == NULL)
+        return;
+
+    if (*head_ref == del_node)
+        *head_ref = del_node->next;
+
+    if (del_node->next != NULL)
+        del_node->next->prev = del_node->prev;
+
+    if (del_node->prev != NULL)
+        del_node->prev->next = del_node->next;
+
+    delete del_node;
+}
+`}
+</CodeBlock>
+
+## Complexity Analysis 🧮
+- **Time Complexity**: 
+  - Insertion: O(1)
+  - Deletion: O(1)
+  - Traversal: O(n)
+- **Space Complexity**: O(n), where n is the number of nodes.
+
+## head back:
+<Link to="/learning" className="Link">Learning Mode Homepage</Link>

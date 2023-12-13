@@ -1,0 +1,68 @@
+import CodeBlock from 'components/CodeBlock/CodeBlock';
+import ProgressBar from "components/ProgressBar/ProgressBar";
+import { Link } from 'react-router-dom';
+import '../quizPageComponents/quiz.css';
+
+<ProgressBar
+  color="#F1959B"
+  height={5}
+  direction="right"
+  position="top"
+  gradient={true}
+  gradientColor="#EA4C46"
+/>
+
+# Understanding Graphs 🌟
+
+## What is a Graph? 🌐
+
+A **graph** is a data structure that consists of a set of nodes (or vertices) and a set of edges connecting these nodes. It is a powerful tool used in computer science to model relationships and networks.
+
+## Basic Terminologies of Graphs 🛠
+- **Vertex**: A node in the graph.
+- **Edge**: A connection between two vertices.
+- **Directed Graph**: A graph where the edges have a direction associated with them.
+- **Undirected Graph**: A graph where the edges do not have a direction.
+- **Weighted Graph**: Each edge in the graph has a weight or cost associated with it.
+- **Adjacency List**: A common way to represent a graph where each vertex stores a list of adjacent vertices.
+
+## Types of Graphs 📊
+- **Simple Graph**: A graph without loops and parallel edges.
+- **Multi-graph**: A graph that may have multiple edges between the same vertices.
+- **Complete Graph**: A graph in which every pair of vertices is connected by an edge.
+
+## Advantages of Using Graphs 🎉
+- **Modeling Relationships**: Graphs are excellent for modeling complex relationships.
+- **Path Finding**: Used in GPS and networking to find the shortest path between two points.
+- **Resource Allocation**: Helps in resource management and allocation problems.
+- **Network Analysis**: Used for analyzing social, biological, and communication networks.
+
+## Implementing a Basic Graph in JavaScript ✍️
+
+<CodeBlock>
+{`let graph = {};
+function addVertex(vertex) {
+  if (!graph[vertex]) graph[vertex] = [];
+}
+function addEdge(vertex1, vertex2) {
+  graph[vertex1].push(vertex2);
+  graph[vertex2].push(vertex1); // For an undirected graph
+}`}
+</CodeBlock>
+
+## Code Explanation 😎
+- The `addVertex` function adds a new vertex to the graph.
+- The `addEdge` function creates a bidirectional (undirected) edge between two vertices.
+- This basic implementation uses an object where each key represents a vertex and its value is an array of adjacent vertices.
+
+## Graph Applications in Real-World 🌍
+Graphs are used in:
+- **Social Networks**: To represent and analyze social connections.
+- **Google Maps**: For finding the shortest path between locations.
+- **Web Crawlers**: To navigate and index the web.
+- **Resource Scheduling**: In operations research and logistics.
+
+## Try the quiz, or head back:
+<Link to="/learning/graphs-graphsQuiz" className="Link">Graphs Quiz</Link>
+&nbsp;
+<Link to="/learning" className="Link">Learning Mode Homepage</Link>

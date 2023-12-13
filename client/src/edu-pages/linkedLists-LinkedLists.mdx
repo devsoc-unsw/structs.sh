@@ -1,0 +1,87 @@
+import CodeBlock from 'components/CodeBlock/CodeBlock';
+import ProgressBar from "components/ProgressBar/ProgressBar";
+import { Link } from 'react-router-dom';
+import '../quizPageComponents/quiz.css';
+
+<ProgressBar
+  color="#F1959B"
+  height={5}
+  direction="right"
+  position="top"
+  gradient={true}
+  gradientColor="#EA4C46"
+/>
+
+# Linked Lists🚀
+
+## What is a Linked List? 🌐
+
+A **linked list** is a dynamic data structure used to store a collection of elements, called **nodes**. Unlike arrays, linked list elements are not stored in contiguous memory locations. Each node contains the data and a reference (or link) to the next node in the sequence.
+
+## Basic Terminologies of Linked List 🔍
+- **Node**: The fundamental part of a linked list. Each node contains data and a pointer to the next node.
+- **Head**: The first node in a linked list.
+- **Tail**: The last node in a linked list, usually pointing to `null`.
+- **Pointer**: A reference to another node.
+
+## Types of Linked Lists: 🤔
+- **Singly Linked List**: Each node points to the next node and the last node points to `null`.
+- **Doubly Linked List**: Each node has two pointers, one to the next node and another to the previous node.
+- **Circular Linked List**: Similar to a singly linked list, but the last node points back to the head.
+
+## Advantages of Using Linked Lists 🌟
+- **Dynamic Size**: The size of a linked list can grow or shrink during runtime.
+- **Efficient Insertions/Deletions**: Adding or removing elements doesn’t require shifting the elements.
+- **Memory Efficient**: No need to define the size ahead of time.
+
+## Implementation of a Basic Linked List in C++ ✍️
+
+<CodeBlock>
+{`#include <iostream>
+using namespace std;
+
+struct Node {
+   int data;
+   Node* next;
+};
+
+void printList(Node* n) {
+   while (n != NULL) {
+      cout << n->data << " ";
+      n = n->next;
+   }
+}
+
+int main() {
+   Node* head = NULL;
+   Node* second = NULL;
+   Node* third = NULL;
+
+   head = new Node();
+   second = new Node();
+   third = new Node();
+
+   head->data = 1; 
+   head->next = second; 
+   second->data = 2; 
+   second->next = third;
+   third->data = 3; 
+   third->next = NULL;
+
+   printList(head);
+
+   return 0;
+}`}
+</CodeBlock>
+
+## Code Explanation 🧠
+- **Node Structure**: Defines a `Node` with `data` and a `next` pointer.
+- `head = new Node();`: Initializes the head of the list.
+- `head->data = 1;`: Assigns data to the head node.
+- `head->next = second;`: Links the head node to the second node.
+- The `printList` function traverses the list and prints each node's data.
+
+## Try the quiz, or head back:
+<Link to="/learning/linkedLists-LinkedListsQuiz" className="Link">Linked Lists quiz Page</Link>
+&nbsp;
+<Link to="/learning" className="Link">Learning Mode Homepage</Link>

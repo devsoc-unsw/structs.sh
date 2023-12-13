@@ -1,0 +1,67 @@
+.Link {
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 10px 0;
+  background-color: #fcfcfc; /* A nice shade of blue */
+  color: rgb(92, 89, 89);
+  text-align: center;
+  border-radius: 5px;
+  text-decoration: none; /* Removes the underline */
+  font-weight: bold;
+  transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition for hover effect */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+.Link:hover, .Link:focus {
+  background-color: rgb(182, 134, 255); /* Slightly darker shade for hover */
+  color: rgb(80, 0, 208); /* Change text color on hover, here it's gold */
+  outline: none; /* Removes outline on focus for clean design */
+}
+
+
+/*the default text colour for structs is white. this makes all mdx content black*/
+.mdx-content {
+    color: black;
+
+
+  /* General styling for quiz buttons and inputs */
+  input[type="radio"], button, input[type="text"] {
+    appearance: none;
+    padding: 10px 20px;
+    border: 2px solid #262c30;
+    border-radius: 50px;
+    background-color: #f0ebf9; /* Slightly lighter purple for inputs and buttons */
+    margin: 5px 0;
+    cursor: pointer;
+  }
+
+  /* Hover effect for buttons and radio inputs */
+  input[type="radio"]:hover, button:hover, input[type="text"]:hover {
+    background-color: #c0bbff;
+  }
+
+  /* Correct/incorrect/selected button styles */
+  .MCquestion__option--correct input[type="radio"] {
+    background-color: #37b537; /* Green for correct */
+  }
+  .MCquestion__option--incorrect input[type="radio"] {
+    background-color: #d9534f; /* Red for incorrect */
+  }
+  .MCquestion__option--selected input[type="radio"] {
+    background-color: rgb(110, 84, 212); /* Grey for selected */
+  }
+
+  /* Reset and submit button specific styles */
+  .reset-button {
+    background-color: #ff6b6b; /* Red-ish color for reset button */
+  }
+
+  /* Results section styling */
+  .results {
+    padding: 15px;
+    background-color: #504e70; /* A different shade of purple for results section */
+    border-radius: 10px;
+    margin-top: 20px;
+  }  
+}
+

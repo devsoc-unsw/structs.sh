@@ -1,0 +1,82 @@
+import Quiz from '../quizPageComponents/Quiz.tsx';
+import { Link } from 'react-router-dom';
+import QuestionGenerator from '../quizPageComponents/QuestionGenerator.tsx';
+import AIShortAnswer from '../quizPageComponents/AIShortAnswer.tsx';
+import CodeEditor from '../quizPageComponents/CodeEditor.tsx';
+import '../quizPageComponents/Quiz.css'
+
+<div className="mdx-content">
+# 2D Arrays Quiz
+
+Test your knowledge of 2D arrays with this 3-question quiz!
+
+<Quiz
+  questions={[
+    {
+      type: 'mcq',
+      text: 'What is a 2D array?',
+      options: [
+        'A collection of arrays within another array',
+        'A special type of linked list',
+        'A 3D data structure',
+        'A dynamic array that changes size',
+      ],
+      answerIndex: 0,
+      answerExplanation: 'A 2D array is a collection of arrays within another array, forming a matrix-like structure.',
+    },
+    {
+      type: 'mcq',
+      text: 'How do you access the element in row 2, column 3 of a 2D array named "my2DArray"?',
+      options: [
+        'my2DArray[2][3]',
+        'my2DArray[1][2]',
+        'my2DArray(2)(3)',
+        'my2DArray(1)(2)',
+      ],
+      answerIndex: 1,
+      answerExplanation: 'Array indices start at 0, so the element in row 2, column 3 is accessed with my2DArray[1][2].',
+    },
+    {
+      type: 'short-answer',
+      text: 'How many elements are there in a 3x4 2D array?',
+      shortAnswer: '12',
+      answerExplanation: 'A 3x4 2D array has 3 rows and 4 columns, which totals to 12 elements.',
+    }
+  ]}
+/>
+
+<br/><br/><br/>
+
+## AI-generated MCQ:
+<QuestionGenerator topic="2D arrays" />
+
+<br/><br/><br/>
+
+## AI-judged SRQ:
+<b>What is one common use case for 2D arrays?</b>
+<AIShortAnswer question="What is one common use case for 2D arrays?" />
+<b>How would you describe the memory layout of a 2D array in most programming languages?</b>
+<AIShortAnswer question="How would you describe the memory layout of a 2D array in most programming languages?" />
+
+<br/><br/><br/>
+
+## Implementation Question:
+Write a function called `myQuizFunction`, that takes two parameters `rows` and `cols`, and returns a 2D array with all elements initialized to 0.
+<CodeEditor
+    questionText="Write a function called createMatrix, that takes two parameters rows and cols, and returns a 2D array with all elements initialized to 0."
+    onCodeSubmit={(result) => {" /* Display results here */" }}
+    testCases={[
+        { input: {rows: 2, cols: 3}, expectedOutput: [[0, 0, 0], [0, 0, 0]] },
+        { input: {rows: 3, cols: 1}, expectedOutput: [[0], [0], [0]] },
+        { input: {rows: 0, cols: 0}, expectedOutput: [] },
+        // Add more test cases as needed
+    ]}
+/>
+
+<br/><br/><br/>
+
+## Review the material, or head back:
+<Link to="/learning/arrays-2dArrays" className="Link">2D Array Content</Link>
+&nbsp;
+<Link to="/learning" className="Link">Learning Mode Homepage</Link>
+</div>

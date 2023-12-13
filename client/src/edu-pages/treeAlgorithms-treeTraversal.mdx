@@ -1,0 +1,92 @@
+import CodeBlock from 'components/CodeBlock/CodeBlock';
+import ProgressBar from "components/ProgressBar/ProgressBar";
+import { Link } from 'react-router-dom';
+import '../quizPageComponents/quiz.css';
+
+<ProgressBar
+  color="#F1959B"
+  height={5}
+  direction="right"
+  position="top"
+  gradient={true}
+  gradientColor="#EA4C46"
+/>
+
+# Tree Traversal Algorithms 🌳
+
+## Understanding Tree Traversal 🤔
+
+A **tree** is a hierarchical data structure consisting of nodes connected by edges. In computer science, **tree traversal** refers to the process of visiting (checking or updating) each node in a tree data structure, exactly once, in a systematic way.
+
+## Types of Tree Traversal: 🚀
+1. **Pre-order Traversal**: Visit the root node, traverse the left subtree, then the right subtree.
+2. **In-order Traversal**: Traverse the left subtree, visit the root node, then the right subtree. This traversal gives nodes in non-decreasing order for BSTs.
+3. **Post-order Traversal**: Traverse the left subtree, then the right subtree, and finally visit the root node.
+4. **Level-order Traversal**: Visit nodes level by level starting from the root.
+
+## Implementing Tree Traversal in C++ 🛠️
+
+### Pre-order Traversal
+
+<CodeBlock>
+{`#include <iostream>
+using namespace std;
+
+struct Node {
+   int data;
+   Node *left, *right;
+   Node(int value) : data(value), left(nullptr), right(nullptr) {}
+};
+
+void preOrderTraversal(Node* node) {
+   if (node == nullptr) return;
+   cout << node->data << " ";
+   preOrderTraversal(node->left);
+   preOrderTraversal(node->right);
+}
+`}
+</CodeBlock>
+
+### In-order Traversal
+
+<CodeBlock>
+{`void inOrderTraversal(Node* node) {
+   if (node == nullptr) return;
+   inOrderTraversal(node->left);
+   cout << node->data << " ";
+   inOrderTraversal(node->right);
+}
+`}
+</CodeBlock>
+
+### Post-order Traversal
+
+<CodeBlock>
+{`void postOrderTraversal(Node* node) {
+   if (node == nullptr) return;
+   postOrderTraversal(node->left);
+   postOrderTraversal(node->right);
+   cout << node->data << " ";
+}
+`}
+</CodeBlock>
+
+## Why is Tree Traversal Important? 🌟
+- **Data Processing**: Used for processing data stored in trees, like expressions in compilers.
+- **Searching**: Essential for searching a particular key in a tree (especially BST).
+- **Manipulation**: Helps in manipulating hierarchical data, like file systems.
+- **Path Finding**: In AI, used for path finding and decision making.
+
+## Advantages of Tree Traversal 🎉
+- **Flexibility**: Different traversal methods provide different ways to access and manipulate tree data.
+- **Efficiency**: Certain traversal methods are more efficient for specific tasks.
+- **Simplicity**: Despite their power, tree traversals are relatively simple to understand and implement.
+
+## Code Explanation 🧐
+- `Node *left, *right;` declares pointers to the left and right child of the node.
+- `preOrderTraversal(node->left);` recursively calls the function for the left subtree.
+
+## Try the quiz, or head back:
+<Link to="/learning/tree-traversalQuiz" className="Link">Tree Traversal Quiz Page</Link>
+&nbsp;
+<Link to="/learning" className="Link">Learning Mode Homepage</Link>

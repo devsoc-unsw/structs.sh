@@ -1,13 +1,15 @@
-import CodeBlock from '../components/CodeBlock';
+import CodeBlock from 'components/CodeBlock/CodeBlock';
 import ProgressBar from "components/ProgressBar/ProgressBar";
+import { Link } from 'react-router-dom';
+import '../quizPageComponents/quiz.css';
 
 <ProgressBar
-  color="#92DFF3"
+  color="#F1959B"
   height={5}
   direction="right"
   position="top"
   gradient={true}
-  gradientColor="#7AD7F0"
+  gradientColor="#EA4C46"
 />
 
 # 2D Array 🥳
@@ -206,3 +208,7 @@ The result will be:
 <CodeBlock>
   {`1, 2, 3, 4, 5, 6, 7, 8`}
 </CodeBlock>
+
+<Link to="/learning/arrays-2dArraysQuiz" className="Link">2D Arrays Quiz</Link>
+&nbsp;
+<Link to="/learning" className="Link">Learning Mode Homepage</Link>

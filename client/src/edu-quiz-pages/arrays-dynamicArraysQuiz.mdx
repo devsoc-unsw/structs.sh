@@ -1,0 +1,82 @@
+import Quiz from '../quizPageComponents/Quiz.tsx';
+import { Link } from 'react-router-dom';
+import QuestionGenerator from '../quizPageComponents/QuestionGenerator.tsx';
+import AIShortAnswer from '../quizPageComponents/AIShortAnswer.tsx';
+import CodeEditor from '../quizPageComponents/CodeEditor.tsx';
+import '../quizPageComponents/Quiz.css'
+
+<div className="mdx-content">
+# Dynamic Arrays Quiz
+
+Test your knowledge of dynamic arrays with this 3-question quiz!
+
+<Quiz
+  questions={[
+    {
+      type: 'mcq',
+      text: 'What differentiates a dynamic array from a static array?',
+      options: [
+        'Dynamic arrays can store data of different types',
+        'Dynamic arrays have fixed size at compile time',
+        'Dynamic arrays can change size during runtime',
+        'Dynamic arrays are faster than static arrays'
+      ],
+      answerIndex: 2,
+      answerExplanation: 'Dynamic arrays can change their size during runtime, unlike static arrays that have a fixed size determined at compile time.',
+    },
+    {
+      type: 'mcq',
+      text: 'What happens when a dynamic array reaches its capacity and a new element is added?',
+      options: [
+        'The array is deleted',
+        'The array size remains the same',
+        'A new, larger array is created, and elements are copied to it',
+        'An error is thrown'
+      ],
+      answerIndex: 2,
+      answerExplanation: 'When a dynamic array reaches its capacity and a new element is added, a new, larger array is created and all elements are copied to this new array.',
+    },
+    {
+      type: 'short-answer',
+      text: 'In big O notation, what is the amortized time complexity of adding an element to a dynamic array?',
+      shortAnswer: 'O(1)',
+      answerExplanation: 'The amortized time complexity of adding an element to a dynamic array is O(1), meaning it is constant on average.',
+    }
+  ]}
+/>
+
+<br/><br/><br/>
+
+## AI-generated MCQ:
+<QuestionGenerator topic="dynamic arrays" />
+
+<br/><br/><br/>
+
+## AI-judged SRQ:
+<b>What is the primary benefit of a dynamic array over a static array?</b>
+<AIShortAnswer question="What is the primary benefit of a dynamic array over a static array?" />
+<b>How does resizing a dynamic array affect its elements?</b>
+<AIShortAnswer question="How does resizing a dynamic array affect its elements?" />
+
+<br/><br/><br/>
+
+## Implementation Question:
+Write a function called myQuizFunction, input= n, output= a dynamic array of length n, every element being 'dynamic'
+<CodeEditor
+    questionText="Write a function called myQuizFunction, input= n, output= a dynamic array of length n, every element being 'dynamic'"
+    onCodeSubmit={(result) => {" /* Display results here */" }}
+    testCases={[
+        { input: 2, expectedOutput: ['dynamic', 'dynamic'] },
+        { input: 4, expectedOutput: ['dynamic', 'dynamic', 'dynamic', 'dynamic'] },
+        { input: 0, expectedOutput: [] },
+        // Add more test cases as needed
+    ]}
+/>
+
+<br/><br/><br/>
+
+## Review the material, or head back:
+<Link to="/learning/arrays-dynamicArrays" className="Link">Dynamic Array Content</Link>
+&nbsp;
+<Link to="/learning" className="Link">Learning Mode Homepage</Link>
+</div>

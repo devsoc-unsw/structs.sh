@@ -28,5 +28,46 @@
 }
 
 .subtopics button:hover {
-  color: rgb(143, 70, 255);
+  color: rgb(80, 0, 208);
 }
+
+.subtopics div {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.subtopicContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+
+.quizButton, .subtopicButton {
+  flex: 1 1 48%;
+  text-align: center;
+  padding: 0.5rem 0;
+  background-color: #ffffff;
+  border: 1px solid #b686ff;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.05em;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.quizButton:hover, .subtopicButton:hover {
+  background-color: rgb(189, 156, 233);
+  color: #fff;
+}
+
+
+.noQuiz {
+  flex: 1 1 54.5%;
+  text-align: center;
+  padding: 0.5rem 0;
+  color: #666;
+}
+

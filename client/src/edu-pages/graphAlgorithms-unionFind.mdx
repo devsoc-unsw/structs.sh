@@ -1,0 +1,99 @@
+import CodeBlock from 'components/CodeBlock/CodeBlock';
+import ProgressBar from "components/ProgressBar/ProgressBar";
+import { Link } from 'react-router-dom';
+import '../quizPageComponents/quiz.css';
+
+<ProgressBar
+  color="#F1959B"
+  height={5}
+  direction="right"
+  position="top"
+  gradient={true}
+  gradientColor="#EA4C46"
+/>
+
+# Union Find Algorithm 🚀
+
+## Introduction to Union Find 🧐
+
+The **Union Find** algorithm, also known as **Disjoint Set Union (DSU)**, is a data structure that provides efficient methods for performing two operations:
+1. **Union**: Joining two disjoint sets into a single set.
+2. **Find**: Determining which set a particular element belongs to.
+
+It's especially useful in situations dealing with network connectivity, image processing, or determining cycle presence in a graph.
+
+## Key Concepts in Union Find 🗝️
+- **Parent Array**: Tracks the parent of each element. Initially, each element is its own parent.
+- **Rank Array**: Helps in optimizing the union process by attaching the smaller tree under the root of the taller tree.
+- **Path Compression**: A technique used during the 'find' operation to flatten the structure of the tree, ensuring that each member points directly to the representative of its set.
+
+## Union Find Operations 😃
+- **Union(x, y)**: Merges the sets containing elements `x` and `y`.
+- **Find(x)**: Returns the representative of the set containing `x`.
+
+## Implementation of Union Find in C++ 🛠️
+
+<CodeBlock>
+{`#include <iostream>
+using namespace std;
+
+const int N = 1e5;  // Maximum number of elements
+int parent[N];
+int rank[N];
+
+// Initializes parent and rank arrays
+void makeSet() {
+    for (int i = 0; i < N; i++) {
+        parent[i] = i;
+        rank[i] = 0;
+    }
+}
+
+// Finds the representative of the set that i is an element of
+int find(int i) {
+    if (parent[i] == i) {
+        return i;
+    }
+    return parent[i] = find(parent[i]); // Path compression
+}
+
+// Unites the set that includes x and the set that includes y
+void unionSets(int x, int y) {
+    x = find(x);
+    y = find(y);
+    if (x != y) {
+        if (rank[x] < rank[y]) {
+            swap(x, y);
+        }
+        parent[y] = x;
+        if (rank[x] == rank[y]) {
+            rank[x]++;
+        }
+    }
+}
+
+int main() {
+    makeSet(); // Initializes N elements
+    unionSets(3, 4);
+    cout << find(4); // Output: representative of the set containing element 4
+    return 0;
+}`}
+</CodeBlock>
+
+## Code Explanation 🧠
+- **`makeSet()`:** Initializes each element to be a parent of itself and sets all ranks to 0.
+- **`find(int i)`:** Implements path compression. Each element points directly to the set representative.
+- **`unionSets(int x, int y)`:** Merges two sets. Uses rank to attach a smaller tree to the root of a larger tree.
+
+## Applications of Union Find 🌐
+- **Network Connectivity**: Checks if two nodes are in the same network.
+- **Kruskal's Algorithm**: Essential for finding the Minimum Spanning Tree of a graph.
+- **Cycle Detection**: Used in graph algorithms to detect cycles.
+
+## Advantages of Union Find 🌟
+- **Efficient Operations**: Almost constant time complexity for union and find operations.
+- **Space Efficient**: Requires minimal space, proportional to the number of elements.
+- **Dynamic**: It can handle elements dynamically, adding and merging sets on the fly.
+
+## head back:
+<Link to="/learning" className="Link">Learning Mode Homepage</Link>

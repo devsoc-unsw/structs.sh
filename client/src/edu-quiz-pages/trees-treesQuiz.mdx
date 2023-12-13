@@ -1,0 +1,82 @@
+import Quiz from '../quizPageComponents/Quiz.tsx';
+import { Link } from 'react-router-dom';
+import QuestionGenerator from '../quizPageComponents/QuestionGenerator.tsx';
+import AIShortAnswer from '../quizPageComponents/AIShortAnswer.tsx';
+import CodeEditor from '../quizPageComponents/CodeEditor.tsx';
+import '../quizPageComponents/Quiz.css'
+
+<div className="mdx-content">
+# Trees Quiz
+
+Test your knowledge of tree data structures with this 3-question quiz!
+
+<Quiz
+  questions={[
+    {
+      type: 'mcq',
+      text: 'What is the topmost node in a tree called?',
+      options: [
+        'Root',
+        'Leaf',
+        'Branch',
+        'Node',
+      ],
+      answerIndex: 0,
+      answerExplanation: 'The topmost node in a tree is called the root.',
+    },
+    {
+      type: 'mcq',
+      text: 'In a binary tree, how many children can each node have?',
+      options: [
+        '1',
+        '2',
+        '3',
+        '4',
+      ],
+      answerIndex: 1,
+      answerExplanation: 'In a binary tree, each node can have up to two children.',
+    },
+    {
+      type: 'short-answer',
+      text: 'How many leaf nodes does a binary tree with 3 levels have in the best case?',
+      shortAnswer: '4',
+      answerExplanation: 'In the best case, a binary tree with 3 levels has 4 leaf nodes.',
+    }
+  ]}
+/>
+
+<br/><br/><br/>
+
+## AI-generated MCQ:
+<QuestionGenerator topic="basic trees" />
+
+<br/><br/><br/>
+
+## AI-judged SRQ:
+<b>What is the time complexity of searching for a value in a balanced binary search tree?</b>
+<AIShortAnswer question="What is the time complexity of searching for a value in a balanced binary search tree?" />
+<b>How does a tree differ from a graph data structure?</b>
+<AIShortAnswer question="How does a tree differ from a graph data structure?" />
+
+<br/><br/><br/>
+
+## Implementation Question:
+Write a function called myQuizFunction that takes an integer n and returns a binary tree with n levels, each node having a value equal to its level number.
+<CodeEditor
+    questionText="Write a function called myQuizFunction that takes an integer n and returns a binary tree with n levels, each node having a value equal to its level number."
+    onCodeSubmit={(result) => {" /* Display results here */" }}
+    testCases={[
+        { input: 2, expectedOutput: "Level 0, Level 1, Level 1" },
+        { input: 3, expectedOutput: "Level 0, Level 1, Level 1, Level 2, Level 2, Level 2, Level 2" },
+        { input: 1, expectedOutput: "Level 0" },
+        // Add more test cases as needed
+    ]}
+/>
+
+<br/><br/><br/>
+
+## Review the material, or head back:
+<Link to="/learning/trees-trees" className="Link">Tree Content</Link>
+&nbsp;
+<Link to="/learning" className="Link">Learning Mode Homepage</Link>
+</div>

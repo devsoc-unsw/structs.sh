@@ -1,0 +1,81 @@
+import Quiz from '../quizPageComponents/Quiz.tsx';
+import { Link } from 'react-router-dom';
+import QuestionGenerator from '../quizPageComponents/QuestionGenerator.tsx';
+import AIShortAnswer from '../quizPageComponents/AIShortAnswer.tsx';
+import CodeEditor from '../quizPageComponents/CodeEditor.tsx';
+import '../quizPageComponents/Quiz.css'
+
+<div className="mdx-content">
+# Red-Black Trees Quiz
+
+Test your knowledge of Red-Black Trees with this quiz!
+
+<Quiz
+  questions={[
+    {
+      type: 'mcq',
+      text: 'What property of a Red-Black Tree ensures that the tree remains balanced?',
+      options: [
+        'The number of children of each node is equal',
+        'Every path from root to leaves has the same number of black nodes',
+        'Each node has either red or black color',
+        'The root node is always black',
+      ],
+      answerIndex: 1,
+      answerExplanation: 'In a Red-Black Tree, every path from the root to the leaves has the same number of black nodes, which ensures the tree remains approximately balanced.',
+    },
+    {
+      type: 'mcq',
+      text: 'In a Red-Black Tree, what is the maximum number of rotations needed to fix the tree after an insertion?',
+      options: [
+        '1',
+        '2',
+        '3',
+        '4',
+      ],
+      answerIndex: 1,
+      answerExplanation: 'After insertion in a Red-Black Tree, at most 2 rotations are needed to fix the tree.',
+    },
+    {
+      type: 'short-answer',
+      text: 'What is the maximum height of a Red-Black Tree with n nodes?',
+      shortAnswer: '2log(n+1)',
+      answerExplanation: 'The maximum height of a Red-Black Tree with n nodes is 2log(n+1).',
+    }
+  ]}
+/>
+
+<br/><br/><br/>
+
+## AI-generated MCQ:
+<QuestionGenerator topic="red-black trees" />
+
+<br/><br/><br/>
+
+## AI-judged SRQ:
+<b>Why are Red-Black Trees important in computer science?</b>
+<AIShortAnswer question="Why are Red-Black Trees important in computer science?" />
+<b>What is the time complexity of inserting a new node in a Red-Black Tree?</b>
+<AIShortAnswer question="What is the time complexity of inserting a new node in a Red-Black Tree?" />
+
+<br/><br/><br/>
+
+## Implementation Question:
+Write a function called myQuizFunction that checks if a given binary tree is a valid Red-Black Tree.
+<CodeEditor
+    questionText="Write a function called myQuizFunction that checks if a given binary tree is a valid Red-Black Tree."
+    onCodeSubmit={(result) => {" /* Display results here */" }}
+    testCases={[
+        { input: '[some valid red-black tree structure]', expectedOutput: true },
+        { input: '[some invalid red-black tree structure]', expectedOutput: false },
+        // Add more test cases as needed
+    ]}
+/>
+
+<br/><br/><br/>
+
+## Review the material, or head back:
+<Link to="/learning/trees-redBlackTrees" className="Link">Red-Black Trees Content</Link>
+&nbsp;
+<Link to="/learning" className="Link">Learning Mode Homepage</Link>
+</div>

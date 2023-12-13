@@ -1,0 +1,82 @@
+import Quiz from '../quizPageComponents/Quiz.tsx';
+import { Link } from 'react-router-dom';
+import QuestionGenerator from '../quizPageComponents/QuestionGenerator.tsx';
+import AIShortAnswer from '../quizPageComponents/AIShortAnswer.tsx';
+import CodeEditor from '../quizPageComponents/CodeEditor.tsx';
+import '../quizPageComponents/Quiz.css'
+
+<div className="mdx-content">
+# Graphs Quiz
+
+Test your knowledge of graph data structures with this short quiz!
+
+<Quiz
+  questions={[
+    {
+      type: 'mcq',
+      text: 'What is a graph in computer science?',
+      options: [
+        'A visual representation of quantitative data',
+        'A collection of vertices connected by edges',
+        'A method for sorting data',
+        'A type of function in mathematics',
+      ],
+      answerIndex: 1,
+      answerExplanation: 'In computer science, a graph is a collection of vertices (or nodes) connected by edges.',
+    },
+    {
+      type: 'mcq',
+      text: 'Which of the following is true for a directed graph?',
+      options: [
+        'All edges are bidirectional',
+        'Edges have no direction',
+        'Edges are directed from one vertex to another',
+        'Vertices are not connected by edges',
+      ],
+      answerIndex: 2,
+      answerExplanation: 'In a directed graph, edges have a direction, going from one vertex to another.',
+    },
+    {
+      type: 'short-answer',
+      text: 'In a complete graph with N vertices, how many edges are there?',
+      shortAnswer: 'N*(N-1)/2',
+      answerExplanation: 'In a complete graph, every pair of distinct vertices is connected by a unique edge, leading to N*(N-1)/2 edges.',
+    }
+  ]}
+/>
+
+<br/><br/><br/>
+
+## AI-generated MCQ:
+<QuestionGenerator topic="graph theory" />
+
+<br/><br/><br/>
+
+## AI-judged SRQ:
+<b>What is the difference between a tree and a graph?</b>
+<AIShortAnswer question="What is the difference between a tree and a graph?" />
+<b>What is the time complexity of BFS in a graph represented using an adjacency list?</b>
+<AIShortAnswer question="What is the time complexity of BFS in a graph represented using an adjacency list?" />
+
+<br/><br/><br/>
+
+## Implementation Question:
+Write a function called myQuizFunction that takes a graph represented as an adjacency list and returns the number of vertices in the graph.
+<CodeEditor
+    questionText="Write a function called myQuizFunction that takes a graph represented as an adjacency list and returns the number of vertices in the graph."
+    onCodeSubmit={(result) => {" /* Display results here */" }}
+    testCases={[
+        { input: {0: [1, 2], 1: [2], 2: [0, 3], 3: [3]}, expectedOutput: 4 },
+        { input: {0: []}, expectedOutput: 1 },
+        { input: {0: [1], 1: [2], 2: [0]}, expectedOutput: 3 },
+        // Add more test cases as needed
+    ]}
+/>
+
+<br/><br/><br/>
+
+## Review the material, or head back:
+<Link to="/learning/graphs-graphs" className="Link">Graph Content</Link>
+&nbsp;
+<Link to="/learning" className="Link">Learning Mode Homepage</Link>
+</div>

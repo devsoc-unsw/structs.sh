@@ -1,0 +1,83 @@
+import Quiz from '../quizPageComponents/Quiz.tsx';
+import { Link } from 'react-router-dom';
+import QuestionGenerator from '../quizPageComponents/QuestionGenerator.tsx';
+import AIShortAnswer from '../quizPageComponents/AIShortAnswer.tsx';
+import CodeEditor from '../quizPageComponents/CodeEditor.tsx';
+import '../quizPageComponents/Quiz.css'
+
+<div className="mdx-content">
+# B-Trees Quiz
+
+Test your knowledge of B-Trees with this 3-question quiz!
+
+<Quiz
+  questions={[
+    {
+      type: 'mcq',
+      text: 'What is a B-Tree?',
+      options: [
+        'A binary search tree where each node has two children',
+        'A balanced tree data structure that maintains sorted data and allows searches, insertions, and deletions in logarithmic time',
+        'A graphical representation of data',
+        'A tree structure used exclusively for database indexing',
+      ],
+      answerIndex: 1,
+      answerExplanation: 'A B-Tree is a balanced tree data structure that maintains sorted data and allows searches, insertions, and deletions in logarithmic time.',
+    },
+    {
+      type: 'mcq',
+      text: 'In a B-Tree, what is the maximum number of children a node can have if its order is 4?',
+      options: [
+        '3',
+        '4',
+        '5',
+        '8',
+      ],
+      answerIndex: 2,
+      answerExplanation: 'In a B-Tree of order 4, the maximum number of children a node can have is 5.',
+    },
+    {
+      type: 'short-answer',
+      text: 'What is the minimum number of keys a non-root node can have in a B-Tree of order 3?',
+      shortAnswer: '1',
+      answerExplanation: 'In a B-Tree of order 3, the minimum number of keys in a non-root node is 1 (ceil(3/2) - 1).',
+    }
+  ]}
+/>
+
+<br/><br/><br/>
+
+## AI-generated MCQ:
+<QuestionGenerator topic="B-Trees" />
+
+<br/><br/><br/>
+
+## AI-judged SRQ:
+<b>Why are B-Trees preferred in databases for indexing compared to binary search trees?</b>
+<AIShortAnswer question="Why are B-Trees preferred in databases for indexing compared to binary search trees?" />
+<b>What is the time complexity for searching an element in a B-Tree?</b>
+<AIShortAnswer question="What is the time complexity for searching an element in a B-Tree?" />
+
+<br/><br/><br/>
+
+## Implementation Question:
+Write a function called `myQuizFunction` that takes two parameters: an array representation of a B-Tree and the order of the B-Tree. The function should return the number of nodes in the B-Tree.
+<CodeEditor
+    questionText="Write a function called myQuizFunction that takes an array representation of a B-Tree and the order of the B-Tree, and returns the number of nodes in the B-Tree."
+    onCodeSubmit={(result) => {" /* Display results here */" }}
+    testCases={[
+        { input: [[1, 2, null, 3, 4], 3], expectedOutput: 3 },
+        { input: [[5, null, 6, null, 7, 8], 2], expectedOutput: 4 },
+        { input: [[], 5], expectedOutput: 0 },
+        // Add more test cases as needed
+    ]}
+/>
+
+
+<br/><br/><br/>
+
+## Review the material, or head back:
+<Link to="/learning/trees-BTrees" className="Link">B-Trees Content</Link>
+&nbsp;
+<Link to="/learning" className="Link">Learning Mode Homepage</Link>
+</div>

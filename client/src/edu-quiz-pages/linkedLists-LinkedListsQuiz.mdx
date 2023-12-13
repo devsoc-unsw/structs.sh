@@ -1,0 +1,82 @@
+import Quiz from '../quizPageComponents/Quiz.tsx';
+import { Link } from 'react-router-dom';
+import QuestionGenerator from '../quizPageComponents/QuestionGenerator.tsx';
+import AIShortAnswer from '../quizPageComponents/AIShortAnswer.tsx';
+import CodeEditor from '../quizPageComponents/CodeEditor.tsx';
+import '../quizPageComponents/Quiz.css'
+
+<div className="mdx-content">
+# Linked Lists Quiz
+
+Test your knowledge of linked lists with this 3-question quiz!
+
+<Quiz
+  questions={[
+    {
+      type: 'mcq',
+      text: 'What is a linked list?',
+      options: [
+        'A collection of elements of the same type that are stored in contiguous memory locations',
+        'A data structure where elements are stored in nodes, each pointing to the next',
+        'A type of tree data structure',
+        'A linear data structure for storing elements in a non-contiguous manner',
+      ],
+      answerIndex: 1,
+      answerExplanation: 'A linked list is a data structure where elements are stored in nodes, with each node pointing to the next node in the sequence.',
+    },
+    {
+      type: 'mcq',
+      text: 'How do you access the third node in a singly linked list?',
+      options: [
+        'Directly by its index',
+        'Iterating from the head node two times',
+        'Using a special linked list method',
+        'By reversing the list first',
+      ],
+      answerIndex: 1,
+      answerExplanation: 'To access the third node in a singly linked list, you need to iterate from the head node two times.',
+    },
+    {
+      type: 'short-answer',
+      text: 'In a singly linked list, what does the next pointer of the last node point to?',
+      shortAnswer: 'NULL',
+      answerExplanation: 'The next pointer of the last node in a singly linked list points to NULL, indicating the end of the list.',
+    }
+  ]}
+/>
+
+<br/><br/><br/>
+
+## AI-generated MCQ:
+<QuestionGenerator topic="linked lists" />
+
+<br/><br/><br/>
+
+## AI-judged SRQ:
+<b>What is the main disadvantage of using a linked list compared to an array?</b>
+<AIShortAnswer question="What is the main disadvantage of using a linked list compared to an array?" />
+<b>What is the time complexity of adding an element at the beginning of a linked list?</b>
+<AIShortAnswer question="What is the time complexity of adding an element at the beginning of a linked list?" />
+
+<br/><br/><br/>
+
+## implementation question:
+Write a function called myQuizFunction that takes a number n and creates a linked list with n nodes, each node having the value n.
+<CodeEditor
+    questionText="Write a function called myQuizFunction that takes a number n and creates a linked list with n nodes, each node having the value n"
+    onCodeSubmit={(result) => {" /* Display results here */" }}
+    testCases={[
+        { input: 3, expectedOutput: '3 -> 3 -> 3 -> NULL' },
+        { input: 1, expectedOutput: '1 -> NULL' },
+        { input: 0, expectedOutput: 'NULL' },
+        // Add more test cases as needed
+    ]}
+/>
+
+<br/><br/><br/>
+
+## Review the material, or head back:
+<Link to="/learning/linkedLists-LinkedLists" className="Link">Linked Lists Content</Link>
+&nbsp;
+<Link to="/learning" className="Link">Learning Mode Homepage</Link>
+</div>

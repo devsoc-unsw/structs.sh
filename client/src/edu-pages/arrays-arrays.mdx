@@ -1,5 +1,7 @@
 import CodeBlock from 'components/CodeBlock/CodeBlock';
 import ProgressBar from "components/ProgressBar/ProgressBar";
+import { Link } from 'react-router-dom';
+import '../quizPageComponents/quiz.css';
 
 <ProgressBar
   color="#F1959B"
@@ -51,3 +53,9 @@ int main() {
 ## Code explaination 😎
 - `int arr[5] = {1, 2, 3, 4, 5};`: This line declares and initializes an integer array named `arr` within a length of 5. It is initialized with the values 1, 2, 3, 4, and 5.
 - `printf("%d", arr[2]);`: This line uses the `printf()` function to print the value at index 2 of the `arr` array. In C, arrays are zero-based, so the index 2 refers to the third element of the array. Therefore, it will print the value 3.
+
+
+## Try the quiz, or head back:
+<Link to="/learning/arrays-arraysQuiz" className="Link">Array Quiz</Link>
+&nbsp;
+<Link to="/learning" className="Link">Learning Mode Homepage</Link>

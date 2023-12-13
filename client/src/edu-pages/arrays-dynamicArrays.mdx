@@ -1,0 +1,84 @@
+import CodeBlock from 'components/CodeBlock/CodeBlock';
+import ProgressBar from "components/ProgressBar/ProgressBar";
+import { Link } from 'react-router-dom';
+import '../quizPageComponents/quiz.css';
+
+<ProgressBar
+  color="#F1959B"
+  height={5}
+  direction="right"
+  position="top"
+  gradient={true}
+  gradientColor="#EA4C46"
+/>
+
+# Dynamic Arrays Explained 🌟
+
+## What is a Dynamic Array? 🤔
+
+A **Dynamic Array** is a flexible data structure that can grow and shrink in size dynamically. Unlike a static array, it allows for more efficient memory management and can adapt to the data it stores.
+
+## Key Characteristics of Dynamic Arrays 🔍
+
+- **Resizable**: Dynamic arrays can automatically resize when elements are added or removed.
+- **Efficiency**: They provide efficient random access to elements and offer better space utilization compared to static arrays.
+- **Implementation**: Often implemented using static arrays as a base, with additional logic for resizing.
+
+## How Dynamic Arrays Work 🛠️
+
+<CodeBlock>
+{`int* resizeArray(int* arr, int newSize) {
+   int* newArr = new int[newSize];
+   memcpy(newArr, arr, sizeof(int) * newSize);
+   delete[] arr;
+   return newArr;
+}`}
+</CodeBlock>
+
+- `int* resizeArray(...)`: This function demonstrates how a dynamic array can be resized. It creates a new array with the desired size, copies the contents of the old array into it, and then deletes the old array.
+
+## Advantages of Dynamic Arrays 🚀
+
+- **Flexibility**: They adjust their size according to the number of elements, offering greater flexibility.
+- **Memory Management**: More efficient use of memory as it allocates only the required space.
+- **Usability**: Simplifies coding by handling memory allocation and resizing internally.
+
+## Implementing a Dynamic Array in C++ 🎓
+
+<CodeBlock>
+{`#include <iostream>
+#include <vector>
+
+int main() {
+    std::vector<int> dynamicArray;
+    dynamicArray.push_back(10);
+    dynamicArray.push_back(20);
+    std::cout << dynamicArray[1]; // Output: 20
+    return 0;
+}`}
+</CodeBlock>
+
+- `std::vector<int> dynamicArray;`: Initializes a dynamic array in C++ using the `vector` class.
+- `dynamicArray.push_back(10);`: Adds an element to the end of the dynamic array.
+- `std::cout << dynamicArray[1];`: Prints the second element of the dynamic array.
+
+## Challenges and Considerations 🚧
+
+- **Performance**: Resizing operations can be costly, especially for large arrays.
+- **Memory Overhead**: Dynamic arrays may consume more memory due to storage for capacity and size information.
+
+## Dynamic Arrays in Other Languages 💻
+
+- **JavaScript**: Uses dynamic arrays natively, referred to as Arrays.
+- **Python**: Lists in Python are dynamic arrays.
+- **Java**: `ArrayList` is a dynamic array implementation.
+
+## Summary and Next Steps 🌈
+
+Dynamic arrays are powerful tools for efficient data storage and manipulation. They are versatile and widely used across different programming languages. Understanding their inner workings and applications is key to becoming a proficient programmer.
+
+## Try the quiz, or head back:
+
+<Link to="/learning/arrays-dynamicArraysQuiz" className="Link">Dynamic Array Quiz</Link>
+&nbsp;
+<Link to="/learning" className="Link">Learning Mode Homepage</Link>

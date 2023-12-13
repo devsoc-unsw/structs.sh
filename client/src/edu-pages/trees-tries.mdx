@@ -1,0 +1,78 @@
+import CodeBlock from 'components/CodeBlock/CodeBlock';
+import ProgressBar from "components/ProgressBar/ProgressBar";
+import { Link } from 'react-router-dom';
+import '../quizPageComponents/quiz.css';
+
+<ProgressBar
+  color="#F1959B"
+  height={5}
+  direction="right"
+  position="top"
+  gradient={true}
+  gradientColor="#EA4C46"
+/>
+
+# Tries 🌳
+
+## What is a Trie? 📚
+
+A **trie**, also known as a prefix tree, is a type of search tree used to store associative data structures. Unlike binary search trees, no node in the trie stores the key associated with that node. Instead, its position in the trie defines the key. Tries are commonly used for efficient retrieval of keys in datasets of strings.
+
+## Key Concepts of Tries 🔑
+- **Nodes**: Each node represents a single character of a key.
+- **Root Node**: The top node in the trie.
+- **Children**: Nodes linked to a parent node.
+- **Path**: A sequence of nodes from the root to a specific node.
+
+## Advantages of Tries 🌟
+- **Efficient Search**: Tries provide fast retrieval, usually in O(length of key) time.
+- **Prefix Searching**: Particularly useful for prefix-based searches like auto-complete features.
+- **Space Efficient**: Tries can use less space compared to other data structures when storing large dictionaries.
+
+## Implementation of a Trie in Python 🐍
+
+<CodeBlock>
+{`class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.endOfWord = False
+
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
+
+    def insert(self, word):
+        node = self.root
+        for char in word:
+            if char not in node.children:
+                node.children[char] = TrieNode()
+            node = node.children[char]
+        node.endOfWord = True
+
+    def search(self, word):
+        node = self.root
+        for char in word:
+            if char not in node.children:
+                return False
+            node = node.children[char]
+        return node.endOfWord
+`}
+</CodeBlock>
+
+## Code Explanation 🧐
+- **TrieNode class**: Represents each node in the trie.
+  - `self.children`: A dictionary that stores child nodes.
+  - `self.endOfWord`: Boolean flag to indicate if a node is the end of a word.
+- **Trie class**: Represents the whole trie.
+  - `insert` method: For inserting words into the trie.
+  - `search` method: For searching words in the trie.
+- `node = self.root`: Starting from the root node.
+- The `insert` and `search` methods iterate through each character of the word.
+
+## Applications of Tries 🛠️
+- **Auto-Complete**: Suggesting complete words when part of the word is typed.
+- **Spell Checkers**: Finding correct spellings of words.
+- **IP Routing**: Using longest prefix matching in IP routing to find destinations.
+
+## head back:
+<Link to="/learning" className="Link">Learning Mode Homepage</Link>

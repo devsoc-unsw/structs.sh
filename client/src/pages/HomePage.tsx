@@ -4,6 +4,7 @@ import Topics from 'components/Topics';
 import Features from 'components/Features';
 import PageLayout from 'components/PageLayout';
 import Helmet from 'react-helmet';
+import { Link } from 'react-router-dom';
 
 const HeroBox = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -31,6 +32,7 @@ const HomePage = () => {
         <Typography variant="body1">
           An interactive learning platform for computer science, tailored to UNSW CSE students.
         </Typography>
+        <Link to="/learning" className="Link">Learning Mode Homepage</Link>
         <Topics />
       </HeroBox>
       <Box paddingTop={5} bgcolor={theme.palette.primary.main}>

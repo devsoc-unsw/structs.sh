@@ -1,0 +1,116 @@
+import CodeBlock from 'components/CodeBlock/CodeBlock';
+import ProgressBar from "components/ProgressBar/ProgressBar";
+import { Link } from 'react-router-dom';
+import '../quizPageComponents/quiz.css';
+
+<ProgressBar
+  color="#F1959B"
+  height={5}
+  direction="right"
+  position="top"
+  gradient={true}
+  gradientColor="#EA4C46"
+/>
+
+# Red-Black Trees 🌳
+
+## Introduction to Red-Black Trees 🚀
+
+A **Red-Black Tree** is a kind of self-balancing binary search tree. Each node in the tree has an extra bit, and that bit is often interpreted as the color (red or black) of the node. These colors are used to ensure the tree remains balanced during insertions and deletions. 
+
+## Properties of Red-Black Trees 📏
+
+- **Color Property**: Each node is either red or black.
+- **Root Property**: The root of the tree is always black.
+- **Leaf Property**: Every leaf (NIL node) is black.
+- **Red Node Property**: If a red node has children, then both its children are black.
+- **Depth Property**: All paths from a node to its leaf nodes contain the same number of black nodes.
+
+## Why Use Red-Black Trees? 🤔
+
+- **Balanced Height**: Due to the properties of the tree, operations such as insert, delete, and find can be performed in O(log n) time.
+- **Efficiency**: They are highly efficient in their operations.
+
+## Implementation of Red-Black Tree Insertion in C++ ✍️
+
+<CodeBlock>
+{`#include <iostream>
+using namespace std;
+
+struct Node {
+   int data;
+   Node *parent;
+   Node *left;
+   Node *right;
+   int color;
+};
+
+typedef Node *NodePtr;
+
+class RedBlackTree {
+   private:
+      NodePtr root;
+      NodePtr TNULL;
+
+   // Initializes the nodes with appropiate values
+   // All the operations on the red-black tree will be executed here.
+   // ...
+
+public:
+   RedBlackTree() {
+      TNULL = new Node;
+      TNULL->color = 0;
+      TNULL->left = nullptr;
+      TNULL->right = nullptr;
+      root = TNULL;
+   }
+
+   // Pre-order and in-order traversals will go here.
+   // ...
+
+   // Insertion in Red-Black Tree
+   void insert(int key) {
+      // Normal insertion code will go here.
+      // ...
+
+      // Fix the tree
+      fixInsert(newNode);
+   }
+
+   // Fix the red-black tree
+   private:
+   void fixInsert(NodePtr k){
+      NodePtr u;
+      while (k->parent->color == 1) {
+         // ... Fixing code goes here
+      }
+      root->color = 0;
+   }
+};
+
+int main() {
+   RedBlackTree bst;
+   bst.insert(55);
+   bst.insert(40);
+   bst.insert(65);
+   bst.insert(60);
+   bst.insert(75);
+   bst.insert(57);
+
+   return 0;
+}`}
+</CodeBlock>
+
+## Explanation of the Code 🧐
+- The `RedBlackTree` class contains the structure and operations for the red-black tree.
+- The `insert` method adds a new node and then calls `fixInsert` to maintain the red-black properties.
+- `fixInsert` method adjusts the colors and performs rotations to balance the tree.
+
+## Advantages of Red-Black Trees 🎈
+- **Self-Balancing**: Ensures the tree remains balanced, providing optimal performance for insertion, deletion, and search operations.
+- **Flexibility**: Can be used in various applications where balanced trees are required.
+
+## Try the quiz, or head back:
+<Link to="/learning/trees-redBlackTreesQuiz" className="Link">Red Black Trees Quiz</Link>
+&nbsp;
+<Link to="/learning" className="Link">Learning Mode Homepage</Link>

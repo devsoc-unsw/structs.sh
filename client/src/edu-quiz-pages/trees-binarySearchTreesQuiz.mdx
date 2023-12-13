@@ -1,0 +1,81 @@
+import Quiz from '../quizPageComponents/Quiz.tsx';
+import { Link } from 'react-router-dom';
+import QuestionGenerator from '../quizPageComponents/QuestionGenerator.tsx';
+import AIShortAnswer from '../quizPageComponents/AIShortAnswer.tsx';
+import CodeEditor from '../quizPageComponents/CodeEditor.tsx';
+import '../quizPageComponents/Quiz.css'
+
+<div className="mdx-content">
+# Binary Search Trees Quiz
+
+Test your knowledge of binary search trees with this 3-question quiz!
+
+<Quiz
+  questions={[
+    {
+      type: 'mcq',
+      text: 'In a binary search tree, where is a value greater than the parent node stored?',
+      options: [
+        'To the left of the parent node',
+        'To the right of the parent node',
+        'As a child of the left node',
+        'Directly under the parent node',
+      ],
+      answerIndex: 1,
+      answerExplanation: 'In a binary search tree, a value greater than the parent node is stored to the right of the parent node.',
+    },
+    {
+      type: 'mcq',
+      text: 'Which traversal method would you use to print all elements in a binary search tree in ascending order?',
+      options: [
+        'Pre-order traversal',
+        'In-order traversal',
+        'Post-order traversal',
+        'Level-order traversal',
+      ],
+      answerIndex: 1,
+      answerExplanation: 'In-order traversal of a binary search tree will print all elements in ascending order.',
+    },
+    {
+      type: 'short-answer',
+      text: 'In a balanced binary search tree, what is the maximum height for a tree with 15 nodes?',
+      shortAnswer: '3',
+      answerExplanation: 'In a balanced binary search tree, the maximum height for a tree with 15 nodes is 3.',
+    }
+  ]}
+/>
+
+<br/><br/><br/>
+
+## AI-generated MCQ:
+<QuestionGenerator topic="binary search trees" />
+
+<br/><br/><br/>
+
+## AI-judged SRQ:
+<b>What is the worst-case time complexity for searching in a binary search tree?</b>
+<AIShortAnswer question="What is the worst-case time complexity for searching in a binary search tree?" />
+<b>What is the advantage of a self-balancing binary search tree?</b>
+<AIShortAnswer question="What is the advantage of a self-balancing binary search tree?" />
+
+<br/><br/><br/>
+
+## implementation question:
+Write a function called myQuizFunction that checks if a binary search tree is balanced.
+<CodeEditor
+    questionText="Write a function called myQuizFunction that checks if a binary search tree is balanced."
+    onCodeSubmit={(result) => {" /* Display results here */" }}
+    testCases={[
+        { input: '[3, 2, 5, 1, 4]', expectedOutput: 'true' },
+        { input: '[3, 2, 5, 1]', expectedOutput: 'false' },
+        // Add more test cases as needed
+    ]}
+/>
+
+<br/><br/><br/>
+
+## Review the material, or head back:
+<Link to="/learning/trees-binarySearchTrees" className="Link">Binary Search Trees Content</Link>
+&nbsp;
+<Link to="/learning" className="Link">Learning Mode Homepage</Link>
+</div>

@@ -1,0 +1,82 @@
+import Quiz from '../quizPageComponents/Quiz.tsx';
+import { Link } from 'react-router-dom';
+import QuestionGenerator from '../quizPageComponents/QuestionGenerator.tsx';
+import AIShortAnswer from '../quizPageComponents/AIShortAnswer.tsx';
+import CodeEditor from '../quizPageComponents/CodeEditor.tsx';
+import '../quizPageComponents/Quiz.css'
+
+<div className="mdx-content">
+# Arrays Quiz
+
+Test your knowledge of arrays with this 3-question quiz!
+
+<Quiz
+  questions={[
+    {
+      type: 'mcq',
+      text: 'What is an array?',
+      options: [
+        'A data structure where elements are stored in nodes',
+        'A data structure where each element points to the next one',
+        'A type of tree data structure',
+        'A collection of elements of the same type that are stored in contiguous memory locations',
+      ],
+      answerIndex: 3,
+      answerExplanation: 'An array is a collection of elements of the same type that are stored in contiguous memory locations.',
+    },
+    {
+      type: 'mcq',
+      text: 'How do you access the third element in an array named "myArray"?',
+      options: [
+        'myArray[2]',
+        'myArray[3]',
+        'myArray(2)',
+        'myArray(3)',
+      ],
+      answerIndex: 0,
+      answerExplanation: 'Array indices start at 0, so the third element is accessed with myArray[2].',
+    },
+    {
+      type: 'short-answer',
+      text: 'What does the last node in a linked list point to?',
+      shortAnswer: 'NULL',
+      answerExplanation: 'It points to NULL - this is useful to know when iterating the LL.',
+    }
+  ]}
+/>
+
+<br/><br/><br/>
+
+## AI-generated MCQ:
+<QuestionGenerator topic="linked lists" />
+
+<br/><br/><br/>
+
+## AI-judged SRQ:
+<b>What's the primary advantage of using an array over a linked list?</b>
+<AIShortAnswer question="What's the primary advantage of using an array over a linked list?" />
+<b>What is the look-up time complexity in an array (given you know the index)?</b>
+<AIShortAnswer question="What is the look-up time complexity in an array (given you know the index)?" />
+
+<br/><br/><br/>
+
+## implementation question:
+Write a function called myQuizFunction, input= n, output= an array of length n, every element being 7
+<CodeEditor
+    questionText="Write a function called myQuizFunction, input= n, output= an array of length n, every element being 7"
+    onCodeSubmit={(result) => {" /* Display results here */" }}
+    testCases={[
+        { input: 3, expectedOutput: [7, 7, 7] },
+        { input: 5, expectedOutput: [7, 7, 7, 7, 7] },
+        { input: 0, expectedOutput: [] },
+        // Add more test cases as needed
+    ]}
+/>
+
+<br/><br/><br/>
+
+## Review the material, or head back:
+<Link to="/learning/arrays-arrays" className="Link">Arrays Content</Link>
+&nbsp;
+<Link to="/learning" className="Link">Learning Mode Homepage</Link>
+</div>

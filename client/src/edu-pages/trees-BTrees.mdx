@@ -1,0 +1,79 @@
+import CodeBlock from 'components/CodeBlock/CodeBlock';
+import ProgressBar from "components/ProgressBar/ProgressBar";
+import { Link } from 'react-router-dom';
+import '../quizPageComponents/quiz.css';
+
+<ProgressBar
+  color="#F1959B"
+  height={5}
+  direction="right"
+  position="top"
+  gradient={true}
+  gradientColor="#EA4C46"
+/>
+
+# B-Trees: The Mighty Balancers 🌳
+
+## What is a B-Tree? 🤔
+
+A **B-Tree** is a self-balancing tree data structure that maintains sorted data and allows searches, sequential access, insertions, and deletions in logarithmic time. Unlike binary search trees, B-trees are optimized for systems that read and write large blocks of data, like databases and file systems.
+
+## Key Properties of B-Trees 🗝️
+- **Balanced**: B-Trees are height-balanced, ensuring all leaf nodes are at the same level.
+- **Sorted**: Each node's keys are in ascending order, facilitating in-order traversal.
+- **Multi-way**: Nodes can have more than two children.
+
+## B-Tree Terminologies 📖
+- **Node**: A single element in the tree containing keys and links to child nodes.
+- **Order**: The maximum number of children a node can have. It's denoted as 't'.
+- **Internal Node**: Nodes that have child nodes (non-leaf and non-root).
+- **Leaf Node**: Terminal nodes with no children.
+
+## B-Tree Operations 🛠️
+- **Search**: Similar to binary search but in a multi-way tree.
+- **Insertion**: Adds a new key while maintaining the B-Tree properties.
+- **Deletion**: Removes a key and reorganizes the tree to preserve its properties.
+
+## Why Use B-Trees? 🚀
+- **Efficiency**: They are highly efficient in managing large datasets that don't fit into memory.
+- **Minimized Disk Access**: Ideal for storage systems as they reduce the number of disk accesses.
+- **Adaptable**: They dynamically grow and shrink, maintaining balance.
+
+## B-Tree Example in C++ ✍️
+
+<CodeBlock>
+{`#include <iostream>
+using namespace std;
+
+struct BTreeNode {
+   int *keys;
+   int t;
+   BTreeNode **C;
+   int n;
+   bool leaf;
+
+   BTreeNode(int _t, bool _leaf);
+   void traverse();
+};
+
+// Constructor for BTreeNode
+BTreeNode::BTreeNode(int _t, bool _leaf) {
+   // Your initialization code goes here
+}
+`}
+</CodeBlock>
+
+## Code Explanation 🕵️
+- `struct BTreeNode { ... };`: Defines the structure for a B-Tree node.
+- `BTreeNode::BTreeNode(int _t, bool _leaf) { ... };`: Constructor for a B-tree node.
+- `void traverse();`: Function to traverse the B-Tree.
+
+## B-Trees in Real-World Applications 🌐
+- **Databases**: B-Trees are extensively used in database indexing.
+- **File Systems**: Many file systems use B-Trees to store metadata.
+- **Multilevel Indexing**: Useful for implementing multi-level indexing in databases.
+
+## Try the quiz, or head back:
+<Link to="/learning/trees-BTreesQuiz" className="Link">B-Trees Quiz</Link>
+&nbsp;
+<Link to="/learning" className="Link">Learning Mode Homepage</Link>
