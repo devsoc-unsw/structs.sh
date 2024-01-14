@@ -2,14 +2,14 @@ version: '3.8'
 services:
   client:
     build:
-      context: client
+      context: visualiser
       dockerfile: Dockerfile.dev
     ports:
       - '3000:3000'
     environment:
       - FAST_REFRESH=false # Source: https://stackoverflow.com/questions/43274925/development-server-of-create-react-app-does-not-auto-refresh
     volumes:
-      - ./client/src:/app/src
+      - ./visualiser:/app/src
   debugger:
     build:
       context: debugger
