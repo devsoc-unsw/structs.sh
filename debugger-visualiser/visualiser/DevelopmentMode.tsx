@@ -8,7 +8,7 @@ import { Socket } from 'socket.io-client';
 import Console from 'components/DevelopmentMode/Console';
 import axios from 'axios';
 import { SERVER_URL } from 'utils/constants';
-import DevelopmentModeNavbar from '../../visualiser/src/components/Navbars/DevelopmentModeNavbar';
+import DevelopmentModeNavbar from '../../client/src/components/Navbars/DevelopmentModeNavbar';
 import Configuration from './Component/Configuration/Configuration';
 import Controls from './Component/Control/Controls';
 import CodeEditor from './Component/CodeEditor/CodeEditor';
