@@ -14,7 +14,7 @@ import {
   createButtonStyle,
 } from './WorkspaceStyles';
 import FileSelector from './FileSelector';
-import { PLACEHOLDER_USERNAME, PLACEHOLDER_WORKSPACE, loadWorkspaces } from './util';
+import { PLACEHOLDER_USERNAME } from './util';
 
 const DEBUG_MODE = true;
 
@@ -41,7 +41,7 @@ const WorkspaceSelector = ({
 
       let allWorkspaces = [];
       await axios.get(`${SERVER_URL}/api/retrieveWorkspaces`, { params: data }).then((response) => {
-        if (response.data.hasOwnProperty('error')) {
+        if (Object.prototype.hasOwnProperty.call(response.data, 'error')) {
           console.log(response.data);
         } else {
           allWorkspaces = response.data.workspaces;
@@ -73,7 +73,7 @@ const WorkspaceSelector = ({
 
     let returnFlag = false;
     axios.post(`${SERVER_URL}/api/saveWorkspace`, data).then((response) => {
-      if (response.data.hasOwnProperty('error')) {
+      if (Object.prototype.hasOwnProperty.call(response.data, 'error')) {
         returnFlag = true;
       }
     });
@@ -92,7 +92,7 @@ const WorkspaceSelector = ({
   };
 
   const retrieveWorkspace = (name) => {
-    if (name == '') {
+    if (name === '') {
       return;
     }
 
@@ -104,7 +104,7 @@ const WorkspaceSelector = ({
     let returnFlag = false;
     axios.get(`${SERVER_URL}/api/retrieveFilesInWorkspace`, { params: data }).then((response) => {
       const newFiles = response.data.files;
-      if (!response.data.hasOwnProperty('error')) {
+      if (!Object.prototype.hasOwnProperty.call(response.data, 'error')) {
         setFilenames(newFiles);
       } else {
         returnFlag = true;

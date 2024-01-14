@@ -7,7 +7,7 @@ import Page404 from 'pages/Page404';
 import VisualiserPage from 'pages/VisualiserPage';
 import { structsTheme } from 'structsThemes';
 import './App.scss';
-import DevelopmentMode from 'pages/DevelopmentMode';
+import DevelopmentMode from 'development-mode-src/DevelopmentMode';
 
 const App = () => (
   <Box color={structsTheme.palette.text.primary}>
