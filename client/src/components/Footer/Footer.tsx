@@ -34,7 +34,7 @@ const Footer = () => {
               Information
             </Typography>
             <Typography color="textSecondary">
-              <Link href="https://github.com/csesoc/Structs.sh" color="inherit">
+              <Link href="https://github.com/devsoc-unsw/structs.sh" color="inherit">
                 GitHub Repository
               </Link>
             </Typography>
@@ -61,25 +61,20 @@ const Footer = () => {
               Social
             </Typography>
             <Typography color="textSecondary">
-              <Link href="https://csesoc.unsw.edu.au/" color="inherit">
-                CSESoc Website
+              <Link href="https://devsoc.app/" color="inherit">
+                DevSoc Website
               </Link>
             </Typography>
             <Typography color="textSecondary">
-              <Link href="https://www.facebook.com/csesoc/" color="inherit">
+              <Link href="https://www.facebook.com/devsocUNSW" color="inherit">
                 Facebook
-              </Link>
-            </Typography>
-            <Typography color="textSecondary">
-              <Link href="https://www.youtube.com/channel/UC1JHpRrf9j5IKluzXhprUJg" color="inherit">
-                YouTube
               </Link>
             </Typography>
           </Grid>
         </Grid>
       </Container>
       <Box textAlign="center" paddingTop={5}>
-        <Typography color="textSecondary">© {new Date().getFullYear()} — CSESoc UNSW</Typography>
+        <Typography color="textSecondary">© {new Date().getFullYear()} — Software Development Society (DevSoc)</Typography>
       </Box>
     </StyledFooter>
   );
