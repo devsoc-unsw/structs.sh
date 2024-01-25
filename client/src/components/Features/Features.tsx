@@ -112,7 +112,7 @@ const Features = () => {
             </ListItemIcon>
             <Typography color="textSecondary">
               <Link
-                href="https://github.com/csesoc/Structs.sh"
+                href="https://github.com/devsoc-unsw/structs.sh"
                 color="textSecondary"
                 target="_blank"
               >
@@ -124,7 +124,7 @@ const Features = () => {
         <Box padding="20px">
           <div
             className="github-card"
-            data-github="csesoc/structs.sh"
+            data-github="devsoc-unsw/structs.sh"
             data-width="100%"
             data-theme="medium"
           />
