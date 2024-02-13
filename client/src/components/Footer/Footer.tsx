@@ -76,12 +76,12 @@ const Footer = () => {
             <Typography color="textPrimary" variant="h5" style={{ marginBottom: '1.3rem' }}>
               Our Sponsors
             </Typography>
-            {/* TikTok logo*/}
+            {/* TikTok logo */}
             <Link href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer">
               <img src={tiktokLogo} alt="TikTok Logo" height={40} style={{ marginRight: '2vw', verticalAlign: 'middle' }} />
             </Link>
 
-            {/* Jane Street*/}
+            {/* Jane Street */}
             <Link href="https://www.janestreet.com/" target="_blank" rel="noopener noreferrer">
               <img src={janeStreetLogo} alt="Jane Street Logo" height={50} style={{ verticalAlign: 'middle', marginBottom: '0px' }} />
             </Link>
