@@ -3,6 +3,9 @@ import { Theme, Box, Container, Grid, Typography, Link } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import { Link as RouterLink } from 'react-router-dom';
 import structsLogo from 'assets/img/structs.png';
+import tiktokLogo from 'assets/img/tiktokColouredWhite.svg';
+import janeStreetLogo from 'assets/img/JaneStreetWhite.png';
+
 
 const StyledFooter = styled('footer')(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -70,6 +73,16 @@ const Footer = () => {
                 Facebook
               </Link>
             </Typography>
+          </Grid>
+          {/* New Grid item for Company Sponsors */}
+          <Grid item xs={12} textAlign="center">
+            <Typography color="textPrimary" variant="h5" style={{ marginBottom: '1.3rem' }}>
+              Our Sponsors
+            </Typography>
+            {/* TikTok logo*/}
+            <img src={tiktokLogo} alt="TikTok Logo" height={40} style={{ marginRight: '2vw', verticalAlign: 'middle' }} />
+            {/* Jane Street*/}
+            <img src={janeStreetLogo} alt="Jane Street Logo" height={50} style={{ verticalAlign: 'middle', marginBottom: '0px' }} />
           </Grid>
         </Grid>
       </Container>
