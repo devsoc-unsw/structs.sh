@@ -76,7 +76,7 @@ const Footer = () => {
           </Grid>
           {/* New Grid item for Company Sponsors */}
           <Grid item xs={12} textAlign="center">
-            <Typography color="textPrimary" variant="h5" style={{ marginBottom: '1.3rem' }}>
+            <Typography color="textPrimary" variant="h5" style={{ marginBottom: '0.5rem' }}>
               Our Sponsors
             </Typography>
             {/* TikTok logo */}
