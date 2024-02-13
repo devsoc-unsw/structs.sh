@@ -21,19 +21,17 @@ const AboutText = () => {
           COMP1511 Programming Fundamentals week 7 lecture code for linked lists.
         </a>
       </p>
-      <p>
-        Some notes while in development:
-        <ul>
-          <li>
-            Stack inspector is current just a placeholder, doesn&#39;t show actual stack data from
-            the debugger yet.
-          </li>
-          <li>
-            If your program reads from stdin (e.g. using scanf, fgets, fgetc etc) you must enter
-            your input into the console before executing the line.
-          </li>
-        </ul>
-      </p>
+      <p>Some notes while in development:</p>
+      <ul>
+        <li>
+          Stack inspector is current just a placeholder, doesn&#39;t show actual stack data from the
+          debugger yet.
+        </li>
+        <li>
+          If your program reads from stdin (e.g. using scanf, fgets, fgetc etc) you must enter your
+          input into the console before executing the line.
+        </li>
+      </ul>
     </>
   );
 };

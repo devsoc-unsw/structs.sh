@@ -1,7 +1,11 @@
 @import '@radix-ui/colors/slate.css';
 @import '@radix-ui/colors/slate-dark.css';
+@import '@radix-ui/colors/violet.css';
 
 .root {
+  --primary: hsl(252, 56%, 57%);
+  --primary-hover: hsl(252, 56%, 50%);
+  --primary-active: hsl(252, 56%, 43%);
   --border: 1.5px solid var(--slate-7);
   --rounding: 8px;
 }

@@ -1,5 +1,5 @@
 import { UserAnnotation, DataStructureType, isLinkedListNode } from '../../../Types/annotationType';
-import { Addr, BackendState } from '../../../Types/backendType';
+import { Addr, BackendState, isPointerType, isPointerValue } from '../../../Types/backendType';
 import { EntityType } from '../../../Types/entity/baseEntity';
 import { EdgeEntity } from '../../../Types/entity/edgeEntity';
 import { NodeEntity, DEFAULT_NODE_SIZE } from '../../../Types/entity/nodeEntity';
@@ -314,9 +314,17 @@ export class LinkedListParser implements Parser {
         if (!stackAnnotation[name]) return;
         if (stackAnnotation[name] === undefined || stackAnnotation[name] === null) return;
 
+        // Ensure memoryValue is PointerValue type because at the moment we expect it
+        // to be a pointer to a linked list node struct e.g. "struct node*"
+        if (!isPointerValue(memoryValue)) return;
+
+        if (cacheEntity[memoryValue.value] === undefined || cacheEntity[memoryValue.value] === null)
+          return;
+
         const prevPointer: PointerEntity | null = pointers.find(
           (pointer) => pointer.attachedUid === cacheEntity[memoryValue.value as string].uid
         );
+
         if (prevPointer) {
           prevPointer.varName += `, ${name}`;
           return;
@@ -325,7 +333,7 @@ export class LinkedListParser implements Parser {
         const annotationEntity: PointerEntity = {
           uid: `${name}`,
           type: EntityType.POINTER,
-          attachedUid: cacheEntity[memoryValue.value as string].uid,
+          attachedUid: cacheEntity[memoryValue.value].uid,
           varName: name,
         };
         pointers.push(annotationEntity);

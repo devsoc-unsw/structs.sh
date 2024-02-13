@@ -14,7 +14,7 @@ import {
   createButtonStyle,
 } from './WorkspaceStyles';
 import FileSelector from './FileSelector';
-import { PLACEHOLDER_USERNAME, PLACEHOLDER_WORKSPACE, loadWorkspaces } from './util';
+import { PLACEHOLDER_USERNAME } from './util';
 
 const DEBUG_MODE = true;
 
@@ -28,9 +28,9 @@ const WorkspaceSelector = ({
   onChangeProgramName: (programName: string) => void;
 }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [workspaceName, setWorkspaceName] = useState('');
-  const [workspaceInput, setWorkspaceInput] = useState('');
-  const [filenames, setFilenames] = useState([]);
+  const [workspaceName, setWorkspaceName] = useState<string>('');
+  const [workspaceInput, setWorkspaceInput] = useState<string>('');
+  const [filenames, setFilenames] = useState<string[]>([]);
   const [workspaces, setWorkspaces] = useState([]);
 
   useEffect(() => {
@@ -91,8 +91,8 @@ const WorkspaceSelector = ({
     setWorkspaceInput(event.target.value);
   };
 
-  const retrieveWorkspace = (name) => {
-    if (name == '') {
+  const retrieveWorkspace = (name: string) => {
+    if (name === '') {
       return;
     }
 

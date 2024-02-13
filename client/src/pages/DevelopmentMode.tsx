@@ -10,7 +10,7 @@ import axios from 'axios';
 import { SERVER_URL } from 'utils/constants';
 import DevelopmentModeNavbar from '../components/Navbars/DevelopmentModeNavbar';
 import Configuration from './Component/Configuration/Configuration';
-import Controls from './Component/Control/Controls';
+import Timeline from './Component/Timeline/Timeline';
 import CodeEditor from './Component/CodeEditor/CodeEditor';
 import StackInspector from './Component/StackInspector/StackInspector';
 import { useGlobalStore } from './Store/globalStateStore';
@@ -25,6 +25,9 @@ import {
   loadWorkspaces,
 } from './Component/FileTree/util';
 
+const FRAME_COUNT = 40;
+const EXECUTE_NEXT_INTERVAL = 300;
+
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
 
@@ -37,7 +40,6 @@ const DevelopmentMode = () => {
         socket.emit('getBreakpoints', line, listName);
     }
   }, []);
-  const [backendState, setBackendState] = useState<BackendState>();
   const [activeSession, setActiveSession] = useState(false);
   const [workspaceName, setWorkspaceName] = useState(PLACEHOLDER_WORKSPACE);
   const [programName, setProgramName] = useState('');
@@ -48,9 +50,16 @@ const DevelopmentMode = () => {
   // ('Configure' has value '0', 'Inspect' has value '1', 'Console' has value '2')
   const [tab, setTab] = useState('0');
 
-  const globalStore = useGlobalStore();
-  const { updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation, updateNextFrame } =
-    globalStore;
+  const {
+    currVisualiserState,
+    numStates,
+    updateTypeDeclaration,
+    clearTypeDeclarations,
+    clearUserAnnotation,
+    clearVisualiserStates,
+    updateCurrState,
+    appendNewState,
+  } = useGlobalStore();
   const inputElement = useRef(null);
 
   const scrollToBottom = () => {
@@ -69,8 +78,11 @@ const DevelopmentMode = () => {
   };
 
   const updateState = (data: any) => {
-    setBackendState(data);
-    updateNextFrame(data);
+    appendNewState(data);
+  };
+
+  const handleTimelineUpdate = (index: number) => {
+    updateCurrState(index);
   };
 
   const handleSetCode = (newCode: string) => {
@@ -79,16 +91,25 @@ const DevelopmentMode = () => {
   };
 
   const resetDebugSession = () => {
-    setBackendState(undefined);
+    updateCurrState(-1);
+    clearVisualiserStates();
     setActiveSession(false);
     clearTypeDeclarations();
     clearUserAnnotation();
     setConsoleChunks([]);
   };
 
+  const bufferStates = () => {
+    for (let i = 0; i < FRAME_COUNT + 5; i += 1) {
+      setTimeout(() => socket.emit('executeNext'), i * EXECUTE_NEXT_INTERVAL);
+    }
+  };
   const sendCode = () => {
     resetDebugSession();
     socket.emit('mainDebug', code);
+    // setTimeout(() => {
+    //   bufferStates();
+    // }, 1500);
   };
 
   const getNextState = () => {
@@ -203,8 +224,12 @@ const DevelopmentMode = () => {
             }}
             onChangeProgramName={async (newProgramName: string) => {
               setProgramName(newProgramName);
-              const code = await loadCode(newProgramName, PLACEHOLDER_USERNAME, workspaceName);
-              handleSetCode(code);
+              const loadedCode = await loadCode(
+                newProgramName,
+                PLACEHOLDER_USERNAME,
+                workspaceName
+              );
+              handleSetCode(loadedCode);
             }}
           />
           <div
@@ -223,13 +248,13 @@ const DevelopmentMode = () => {
             workspaceName={workspaceName}
             code={code}
             handleSetCode={handleSetCode}
-            currLine={backendState?.frame_info?.line_num}
+            currLine={currVisualiserState().backendState.frame_info?.line_num}
           />
         </div>
         <div className={classNames(styles.pane, styles.inspector)}>
           <Tabs value={tab} onValueChange={handleChangeTab}>
             <Tab label="Configure">
-              <div className={classNames(styles.pane)} style={{ overflow: 'scroll' }}>
+              <div className={classNames(styles.pane)} style={{ overflowY: 'auto' }}>
                 <Configuration />
               </div>
             </Tab>
@@ -247,15 +272,23 @@ const DevelopmentMode = () => {
           </Tabs>
         </div>
         <div className={classNames(styles.pane, styles.visualiser)}>
-          <VisualizerMain backendState={backendState} />
+          <VisualizerMain />
         </div>
         <div className={classNames(styles.pane, styles.timeline)}>
-          <Controls getNextState={getNextState} sendCode={sendCode} activeSession={activeSession} />
+          <Timeline
+            frameCount={numStates()}
+            interval={250}
+            onCompile={sendCode}
+            onGetNextState={getNextState}
+            bufferStates={bufferStates}
+            onChange={handleTimelineUpdate}
+            isActive={activeSession}
+          />
         </div>
       </div>
     </div>
   ) : (
-    <VisualizerMain backendState={backendState} />
+    <VisualizerMain />
   );
 };
 

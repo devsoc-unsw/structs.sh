@@ -12,16 +12,16 @@ import socketio
 import eventlet
 from typing import Any
 import subprocess
-from placeholder_data import (
+from src.placeholder_data import (
     PLACEHOLDER_BACKEND_STATES_BINARY_TREE,
     PLACEHOLDER_BACKEND_STATES_LINKED_LIST,
 )
-from constants import (
+from src.constants import (
     CUSTOM_NEXT_COMMAND_NAME,
     DEBUG_SESSION_VAR_NAME,
     TIMEOUT_DURATION,
 )
-from utils import make_non_blocking, get_gdb_script, get_subprocess_output
+from src.utils import make_non_blocking, get_gdb_script, get_subprocess_output
 
 # Parent directory of this python script e.g. "/user/.../debugger/src"
 # In the docker container this will be "/app/src"

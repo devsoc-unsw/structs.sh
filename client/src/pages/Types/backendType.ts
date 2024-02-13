@@ -39,7 +39,7 @@ export type CharValue = {
 
 export type StructType = {
   typeName: `struct ${string}`;
-  fields: Record<Name, NativeType>;
+  fields: Record<Name, NativeTypeName>;
 };
 export type StructValue = {
   type: StructType;
@@ -48,7 +48,7 @@ export type StructValue = {
 
 export type PointerType = {
   typeName: `${string}*`;
-  innerType: NativeType;
+  innerType: NativeTypeName;
 };
 export type PointerValue = {
   type: PointerType;
@@ -57,7 +57,7 @@ export type PointerValue = {
 
 export type ArrayType = {
   typeName: `${string}[]`;
-  innerType: NativeType;
+  innerType: NativeTypeName;
 };
 export type ArrayValue = {
   type: ArrayType;
@@ -118,6 +118,10 @@ export const isStructTypeName = (typeName: string): typeName is StructType['type
 
 export const isPointerType = (typeName: string): typeName is PointerType['typeName'] => {
   return typeName.endsWith('*');
+};
+
+export const isPointerValue = (value: MemoryValue): value is PointerValue & { addr: Addr } => {
+  return isPointerType(value.type.typeName);
 };
 
 export const isArrayType = (typeName: string): typeName is ArrayType['typeName'] => {
