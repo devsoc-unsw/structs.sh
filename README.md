@@ -59,6 +59,13 @@ Ensure you have the following software:
 
 Clone the repository using the commmand: `git clone git@github.com:csesoc/structs.sh.git`
 
+### Environment Variables
+
+To configure the application, create a `.env` file in the root directory and add the following line:
+
+```plaintext
+VITE_DEBUGGER_URL=http://localhost:8000
+
 ### Running the app with Docker
 
 1. `cd` into the project root directory
