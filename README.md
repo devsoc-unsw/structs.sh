@@ -66,6 +66,8 @@ To configure the application, create a `.env` file in the `client/` directory an
 ```plaintext
 VITE_DEBUGGER_URL=http://localhost:8000
 ```
+If deploying, replace localhost:8000 with the address of the server
+
 ### Running the app with Docker
 
 1. `cd` into the project root directory
