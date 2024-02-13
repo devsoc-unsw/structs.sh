@@ -61,7 +61,7 @@ Clone the repository using the commmand: `git clone git@github.com:csesoc/struct
 
 ### Environment Variables
 
-To configure the application, create a `.env` file in the client directory and add the following line:
+To configure the application, create a `.env` file in the `client/` directory and add the following line:
 
 ```plaintext
 VITE_DEBUGGER_URL=http://localhost:8000
