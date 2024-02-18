@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Box, Button, Paper } from '@mui/material';
 import { SERVER_URL } from 'utils/constants';
 import axios from 'axios';
-import { PLACEHOLDER_USERNAME } from './util';
+import { PLACEHOLDER_USERNAME } from './Util/util';
 import {
   buttonStyle,
   createButtonStyle,
@@ -25,7 +25,7 @@ const FileSelector = ({
   const [files, setFiles] = useState([]);
 
   const workspaceName = getCurrentWorkspaceName();
-  if (workspaceName != '') {
+  if (workspaceName !== '') {
     axios
       .get(`${SERVER_URL}/api/retrieveFilesInWorkspace`, {
         params: {
@@ -34,7 +34,7 @@ const FileSelector = ({
         },
       })
       .then((response) => {
-        if (!response.data.hasOwnProperty('error')) {
+        if (!Object.prototype.hasOwnProperty.call(response.data, 'error')) {
           const newFiles = response.data.files;
           setFiles(newFiles);
         } else {
@@ -53,7 +53,7 @@ const FileSelector = ({
 
   const createFile = (event) => {
     event.preventDefault();
-    if (fileInput == '' || files.some((file) => file.name == fileInput)) {
+    if (fileInput === '' || files.some((file) => file.name === fileInput)) {
       return;
     }
 
@@ -67,7 +67,7 @@ const FileSelector = ({
 
     axios.post(`${SERVER_URL}/api/saveFile`, data).then((response) => {
       console.log(response.data);
-      if (!response.data.hasOwnProperty('error')) {
+      if (!Object.prototype.hasOwnProperty.call(response.data, 'error')) {
         files.push({ name: fileInput, text: '' });
       }
     });

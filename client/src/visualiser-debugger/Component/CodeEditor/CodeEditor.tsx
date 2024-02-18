@@ -5,7 +5,7 @@ import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/theme-tomorrow';
 import { SERVER_URL } from 'utils/constants';
 import axios from 'axios';
-import { PLACEHOLDER_USERNAME } from '../FileTree/util';
+import { PLACEHOLDER_USERNAME } from '../FileTree/Util/util';
 
 const CodeEditor = ({
   programName,

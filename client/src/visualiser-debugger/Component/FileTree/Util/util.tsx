@@ -14,7 +14,7 @@ export const loadWorkspaces = async (username) => {
       },
     })
     .then((response) => {
-      if (response.data.hasOwnProperty('error')) {
+      if (Object.prototype.hasOwnProperty.call(response.data, 'error')) {
         return workspaces;
       }
 
@@ -26,7 +26,7 @@ export const loadWorkspaces = async (username) => {
 
 export const loadCode = async (program, username, workspaceName) => {
   let code = '// Write your code here!!!!!';
-  if (program == '') {
+  if (program === '') {
     return code;
   }
 
@@ -40,7 +40,7 @@ export const loadCode = async (program, username, workspaceName) => {
     })
     .then((response) => {
       code = response.data.content;
-      if (response.data.hasOwnProperty('error')) {
+      if (Object.prototype.hasOwnProperty.call(response.data, 'error')) {
         return code;
       }
 
