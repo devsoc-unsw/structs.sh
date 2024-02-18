@@ -1,4 +1,5 @@
 # Code Debugger
+The backend part of visualize-debugger. The project that transfer user's C program into interactive visualization. 
 
 A web server for compiling C programs and starting a GDB instance to inspect the state of data structures such as linked lists, arrays, trees and graphs.
 
