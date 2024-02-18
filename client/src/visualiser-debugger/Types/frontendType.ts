@@ -4,18 +4,6 @@ import { PointerEntity } from '../Component/Visualizer/Entities/BaseEntity/point
 
 export type EntityConcrete = NodeEntity | EdgeEntity | PointerEntity;
 
-export interface MindMapGraph {
-  rootNode: NodeEntity;
-  cacheEntity: {
-    [uid: string]: EntityConcrete;
-  };
-}
-
-export const INITIAL_GRAPH = {
-  nodes: [],
-  edges: [],
-  cacheEntity: {},
-};
 export interface GenericGraph {
   nodes: NodeEntity[];
   edges: EdgeEntity[];
@@ -24,6 +12,12 @@ export interface GenericGraph {
     [uid: string]: EntityConcrete;
   };
 }
+
+export const INITIAL_GRAPH: GenericGraph = {
+  nodes: [],
+  edges: [],
+  cacheEntity: {},
+};
 
 /**
  * Doubtful about assumption, linked list won't be linked list at sometime,

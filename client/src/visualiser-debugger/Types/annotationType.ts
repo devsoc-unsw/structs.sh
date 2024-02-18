@@ -1,5 +1,8 @@
 import { StructType, Name, PointerType, MemoryValue, IntType, NativeTypeName } from './backendType';
 
+/**
+ * TODO: This file needs a deep rework, it's not generic enough
+ */
 export enum DataStructureType {
   LinkedList,
   BinaryTree,
