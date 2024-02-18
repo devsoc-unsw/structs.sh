@@ -38,23 +38,23 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) =>
         return false;
       }
 
-      const first = currState.nodes.find((node: NodeEntity) => node.title === 'd');
-      if (!first || first.edges.length === 0) {
+      const first = currState.nodes.find((node: NodeEntity) => node.label === 'd');
+      if (!first || first.edgeUids.length === 0) {
         return false;
       }
 
       const second = currState.nodes.find(
-        (node: NodeEntity) => node.uid === first.edges[0].split('-')[1]
+        (node: NodeEntity) => node.uid === first.edgeUids[0].split('-')[1]
       );
-      if (second.title !== 'e' || second.edges.length === 0) {
+      if (second.label !== 'e' || second.edgeUids.length === 0) {
         return false;
       }
 
       const third = currState.nodes.find(
-        (node: NodeEntity) => node.uid === second.edges[0].split('-')[1]
+        (node: NodeEntity) => node.uid === second.edgeUids[0].split('-')[1]
       );
 
-      return third.title === 'v';
+      return third.label === 'v';
     };
 
     if (isDev() && !flagViewed) {

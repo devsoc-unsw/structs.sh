@@ -81,8 +81,8 @@ const LinkedList: VisualizerComponent = ({ graphState }: VisualizerState) => {
               key={entity.uid}
               entity={entity}
               graph={graphState}
-              from={pos[entity.from]}
-              to={pos[entity.to]}
+              from={pos[entity.fromNodeUid]}
+              to={pos[entity.toNodeUid]}
             />
           );
           break;

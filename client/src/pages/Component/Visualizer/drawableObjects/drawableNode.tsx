@@ -51,7 +51,7 @@ const LinkedNode: DrawableEdgeComponent = ({ entity: nodeEntity, coord }: NodePr
   const [isHover, setIsHovered] = useState(false);
 
   if (nodeEntity.type !== 'node' || !coord) return null;
-  const { colorHex, title, size } = nodeEntity;
+  const { colorHex, label: title, size } = nodeEntity;
 
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);

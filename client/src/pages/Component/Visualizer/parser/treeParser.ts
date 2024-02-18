@@ -180,10 +180,10 @@ export class TreeParser implements Parser {
       const nodeEntity: NodeEntity = {
         uid: node.uid,
         type: EntityType.NODE,
-        title: node.data ? node.data.toString() : '',
+        label: node.data ? node.data.toString() : '',
         colorHex: '#FFFFFF',
         size: DEFAULT_NODE_SIZE,
-        edges: [],
+        edgeUids: [],
         x: positions.get(node.uid).x,
         y: positions.get(node.uid).y,
       };
@@ -194,28 +194,28 @@ export class TreeParser implements Parser {
         const edgeEntityLeft: EdgeEntity = {
           uid: `${node.uid}-${node.left}`,
           type: EntityType.EDGE,
-          from: node.uid,
-          to: node.left,
+          fromNodeUid: node.uid,
+          toNodeUid: node.left,
           label: '',
           colorHex: '#FFFFFF',
         };
         edges.push(edgeEntityLeft);
         cacheEntity[edgeEntityLeft.uid] = edgeEntityLeft;
-        nodeEntity.edges.push(edgeEntityLeft.uid);
+        nodeEntity.edgeUids.push(edgeEntityLeft.uid);
       }
 
       if (node.right) {
         const edgeEntityRight: EdgeEntity = {
           uid: `${node.uid}-${node.right}`,
           type: EntityType.EDGE,
-          from: node.uid,
-          to: node.right,
+          fromNodeUid: node.uid,
+          toNodeUid: node.right,
           label: '',
           colorHex: '#FFFFFF',
         };
         edges.push(edgeEntityRight);
         cacheEntity[edgeEntityRight.uid] = edgeEntityRight;
-        nodeEntity.edges.push(edgeEntityRight.uid);
+        nodeEntity.edgeUids.push(edgeEntityRight.uid);
       }
     });
 

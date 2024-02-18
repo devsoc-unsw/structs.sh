@@ -276,10 +276,10 @@ export class LinkedListParser implements Parser {
         const nodeEntity: NodeEntity = {
           uid,
           type: EntityType.NODE,
-          title: node.data ? node.data.toString() : '??',
+          label: node.data ? node.data.toString() : '??',
           colorHex: '#FFFFFF',
           size: DEFAULT_NODE_SIZE,
-          edges: [],
+          edgeUids: [],
           x: nodesPosition.get(uid).x,
           y: nodesPosition.get(uid).y,
         };
@@ -293,8 +293,8 @@ export class LinkedListParser implements Parser {
             const edgeEntity: EdgeEntity = {
               uid: `${uid}-${node.next}`,
               type: EntityType.EDGE,
-              from: uid,
-              to: node.next,
+              fromNodeUid: uid,
+              toNodeUid: node.next,
               label: '',
               colorHex: '#FFFFFF',
             };
@@ -302,7 +302,7 @@ export class LinkedListParser implements Parser {
             cacheEntity[edgeEntity.uid] = edgeEntity;
 
             // Attach this edge to the node
-            nodeEntity.edges.push(edgeEntity.uid);
+            nodeEntity.edgeUids.push(edgeEntity.uid);
           }
         }
       });
@@ -318,7 +318,7 @@ export class LinkedListParser implements Parser {
           (pointer) => pointer.attachedUid === cacheEntity[memoryValue.value as string].uid
         );
         if (prevPointer) {
-          prevPointer.varName += `, ${name}`;
+          prevPointer.label += `, ${name}`;
           return;
         }
 
@@ -326,7 +326,8 @@ export class LinkedListParser implements Parser {
           uid: `${name}`,
           type: EntityType.POINTER,
           attachedUid: cacheEntity[memoryValue.value as string].uid,
-          varName: name,
+          colorHex: '#FFFFFF',
+          label: name,
         };
         pointers.push(annotationEntity);
         cacheEntity[annotationEntity.uid] = annotationEntity;

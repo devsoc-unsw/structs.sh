@@ -7,4 +7,5 @@ export enum EntityType {
 export interface BaseEntity {
   type: EntityType;
   uid: string;
+  colorHex: string;
 }

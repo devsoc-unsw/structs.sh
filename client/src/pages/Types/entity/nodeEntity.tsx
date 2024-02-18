@@ -2,14 +2,14 @@ import { BaseEntity, EntityType } from './baseEntity';
 
 export const DEFAULT_NODE_SIZE = 50;
 export interface NodeEntity extends BaseEntity {
-  uid: string;
   type: EntityType.NODE;
 
-  title: string;
-  colorHex: string;
+  label: string;
   size: number;
 
-  edges: string[];
+  // David's comment: Serve as a shortcut for Node entity to verify it's connection with edge
+  // we can prob store this in global state. This will bring second source of truth we have to maintain
+  edgeUids: string[];
 
   x: number;
   y: number;
