@@ -6,7 +6,7 @@ import { VisualizerComponent, VisualizerState } from './visualizer';
 import { MotionCoord } from '../drawableObjects/drawable';
 import { assertUnreachable } from '../util/util';
 import Pointer from '../drawableObjects/drawablePointer';
-import { isAttachableEntity } from '../../../Types/coreEntity/concreteEntity';
+import { isAttachableEntity } from '../../../Types/coreEntity/attachableEntity';
 import { EntityType } from '../../../Types/entity/baseEntity';
 import SvgComponent from './svgComponent';
 import { Coord } from '../../../Types/geometry/geometry';

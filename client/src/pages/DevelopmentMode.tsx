@@ -6,8 +6,6 @@ import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
 import { Socket } from 'socket.io-client';
 import Console from 'components/DevelopmentMode/Console';
-import axios from 'axios';
-import { SERVER_URL } from 'utils/constants';
 import DevelopmentModeNavbar from '../components/Navbars/DevelopmentModeNavbar';
 import Configuration from './Component/Configuration/Configuration';
 import Controls from './Component/Control/Controls';
@@ -18,12 +16,7 @@ import VisualizerMain from './Component/VisualizerMain';
 import { BackendState } from './Types/backendType';
 import AboutText from './Component/FileTree/AboutText';
 import WorkspaceSelector from './Component/FileTree/WorkspaceSelector';
-import {
-  PLACEHOLDER_USERNAME,
-  PLACEHOLDER_WORKSPACE,
-  loadCode,
-  loadWorkspaces,
-} from './Component/FileTree/util';
+import { PLACEHOLDER_USERNAME, PLACEHOLDER_WORKSPACE, loadCode } from './Component/FileTree/util';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -46,6 +39,7 @@ const DevelopmentMode = () => {
 
   // Tab values correspond to their index
   // ('Configure' has value '0', 'Inspect' has value '1', 'Console' has value '2')
+  // David's comment: Why do we use a number instead of string, string seems much more intuitive to code
   const [tab, setTab] = useState('0');
 
   const globalStore = useGlobalStore();
@@ -157,6 +151,7 @@ const DevelopmentMode = () => {
       console.log('Emitting message to server...');
     };
 
+    // Question to myself: Do we actually need all those connections?
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
     socket.on('sendDummyLinkedListData', onSendDummyData);
@@ -188,6 +183,9 @@ const DevelopmentMode = () => {
     };
   }, []);
 
+  // Refactor to better support Debugger mode
+  // - There're a lot of console.log functions, we can delegate responsibility in each component
+  // - Refactor Tabs
   const DEBUG_MODE = false;
   return !DEBUG_MODE ? (
     <div className={classNames(globalStyles.root, styles.light)}>
@@ -203,8 +201,7 @@ const DevelopmentMode = () => {
             }}
             onChangeProgramName={async (newProgramName: string) => {
               setProgramName(newProgramName);
-              const code = await loadCode(newProgramName, PLACEHOLDER_USERNAME, workspaceName);
-              handleSetCode(code);
+              handleSetCode(await loadCode(newProgramName, PLACEHOLDER_USERNAME, workspaceName));
             }}
           />
           <div
