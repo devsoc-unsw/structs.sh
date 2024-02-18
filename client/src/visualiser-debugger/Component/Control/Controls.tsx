@@ -1,3 +1,6 @@
+/**
+ * TODO: I remember we have a timeline do we?
+ */
 import { PlayIcon, TrackNextIcon } from '@radix-ui/react-icons';
 import styles from 'styles/Controls.module.css';
 

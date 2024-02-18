@@ -1,3 +1,7 @@
+/**
+ * TODO: this is incomplete, horrible code
+ * Need huge refactor work
+ */
 import React from 'react';
 import styles from './StackInspector.module.scss';
 import { useGlobalStore } from '../../Store/globalStateStore';

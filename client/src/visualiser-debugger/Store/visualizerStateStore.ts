@@ -9,9 +9,9 @@ type State = {
   currState: () => GenericGraph;
 };
 type Action = {
-  updateNextState: (newState: GenericGraph) => void;
-  forwardState: () => void;
-  backwardState: () => void;
+  newState: (newState: GenericGraph) => void;
+  nextState: () => void;
+  lastState: () => void;
 };
 
 export const useFrontendStateStore: UseBoundStore<StoreApi<State & Action>> = create<
@@ -25,13 +25,13 @@ export const useFrontendStateStore: UseBoundStore<StoreApi<State & Action>> = cr
     }
     return useFrontendStateStore.getState().states[useFrontendStateStore.getState().currStateIdx];
   },
-  updateNextState: (newState: GenericGraph) => {
+  newState: (newState: GenericGraph) => {
     set((state) => ({
       states: [...state.states, newState],
       currStateIdx: state.currStateIdx + 1,
     }));
   },
-  forwardState: () => {
+  nextState: () => {
     if (
       useFrontendStateStore.getState().currStateIdx >=
       useFrontendStateStore.getState().states.length - 1
@@ -42,7 +42,7 @@ export const useFrontendStateStore: UseBoundStore<StoreApi<State & Action>> = cr
       currStateIdx: state.currStateIdx + 1,
     }));
   },
-  backwardState: () => {
+  lastState: () => {
     if (useFrontendStateStore.getState().currStateIdx <= 0) {
       return;
     }

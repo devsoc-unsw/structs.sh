@@ -16,7 +16,11 @@ import VisualizerMain from './Component/VisualizerMain';
 import { BackendState } from './Types/backendType';
 import AboutText from './Component/FileTree/AboutText';
 import WorkspaceSelector from './Component/FileTree/WorkspaceSelector';
-import { PLACEHOLDER_USERNAME, PLACEHOLDER_WORKSPACE, loadCode } from './Component/FileTree/Util/util';
+import {
+  PLACEHOLDER_USERNAME,
+  PLACEHOLDER_WORKSPACE,
+  loadCode,
+} from './Component/FileTree/Util/util';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
