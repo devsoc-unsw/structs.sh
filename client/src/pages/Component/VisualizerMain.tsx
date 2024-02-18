@@ -8,13 +8,13 @@ export interface RoutesProps {
   backendState: BackendState;
 }
 
-// Future support different parser
 const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) => {
   const { userAnnotation, parser, visComponent: VisComponent } = useGlobalStore().visualizer;
   const currState = useFrontendStateStore((store) => {
     return store.currState();
   });
 
+  // TODO:I believe CTF code is ready to removed, a good onboarding task
   const [flagViewed, setFlagViewed] = useState(false);
 
   useEffect(() => {
