@@ -1,8 +1,8 @@
-import { assertUnreachable } from '../../Component/Visualizer/util/util';
-import { EntityType } from '../entity/baseEntity';
-import { NodeEntity } from '../entity/nodeEntity';
+import { assertUnreachable } from '../../Component/Visualizer/Util/util';
+import { EntityType } from '../Entity/baseEntity';
+import { NodeEntity } from '../Entity/nodeEntity';
 import { EntityConcrete } from '../frontendType';
-import { Circle, ShapeType } from '../geometry/geometry';
+import { Circle, ShapeType } from '../Geometry/geometry';
 
 /**
  * Attachable Entity refers to the type of entity that has a shape without infers from other entity.

@@ -1,5 +1,5 @@
 import { UseBoundStore, StoreApi, create } from 'zustand';
-import { VisualizerComponent } from '../Component/Visualizer/visulizer/visualizer';
+import { VisualizerComponent } from '../Component/Visualizer/Visulizer/visualizer';
 import { GenericGraph, INITIAL_GRAPH } from '../Types/frontendType';
 import { GlobalStateStore } from './globalStateStore';
 

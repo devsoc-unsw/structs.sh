@@ -5,7 +5,7 @@ import { useGlobalStore } from '../../Store/globalStateStore';
 import { MotionCollapse } from './MotionCollapse';
 import { TypeAnnotation } from './TypeAnnotation';
 import { StackVarAnnotation } from './StackVarDeclaration';
-import { cloneSimple } from '../Visualizer/util/util';
+import { cloneSimple } from '../Visualizer/Util/util';
 
 const Configuration = () => {
   const [isTypeAnnotationOpen, setIsAnnotationOpen] = useState(true);

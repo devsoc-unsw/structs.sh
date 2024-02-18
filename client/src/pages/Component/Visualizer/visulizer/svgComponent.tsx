@@ -4,7 +4,7 @@ import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
-import { Coord } from '../../../Types/geometry/geometry';
+import { Coord } from '../../../Types/Geometry/geometry';
 
 interface SvgComponentProps {
   centerCoord: Coord;

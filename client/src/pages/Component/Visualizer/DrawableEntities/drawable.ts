@@ -1,8 +1,11 @@
-import { EdgeEntity } from '../../../Types/entity/edgeEntity';
-import { NodeEntity } from '../../../Types/entity/nodeEntity';
-import { PointerEntity } from '../../../Types/entity/pointerEntity';
+import { EdgeEntity } from '../../../Types/Entity/edgeEntity';
+import { NodeEntity } from '../../../Types/Entity/nodeEntity';
+import { PointerEntity } from '../../../Types/Entity/pointerEntity';
 import { EntityConcrete, GenericGraph } from '../../../Types/frontendType';
 
+/**
+ * I have no idea why this file exists
+ */
 interface TransitionDetails {
   type?: 'spring' | 'tween';
   delay?: number;

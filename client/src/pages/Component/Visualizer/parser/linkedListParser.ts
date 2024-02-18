@@ -1,11 +1,11 @@
 import { UserAnnotation, DataStructureType, isLinkedListNode } from '../../../Types/annotationType';
 import { Addr, BackendState } from '../../../Types/backendType';
-import { EntityType } from '../../../Types/entity/baseEntity';
-import { EdgeEntity } from '../../../Types/entity/edgeEntity';
-import { NodeEntity, DEFAULT_NODE_SIZE } from '../../../Types/entity/nodeEntity';
-import { PointerEntity } from '../../../Types/entity/pointerEntity';
+import { EntityType } from '../../../Types/Entity/baseEntity';
+import { EdgeEntity } from '../../../Types/Entity/edgeEntity';
+import { NodeEntity, DEFAULT_NODE_SIZE } from '../../../Types/Entity/nodeEntity';
+import { PointerEntity } from '../../../Types/Entity/pointerEntity';
 import { FrontendLinkedListGraph, EntityConcrete } from '../../../Types/frontendType';
-import { assertUnreachable } from '../util/util';
+import { assertUnreachable } from '../Util/util';
 import { Parser } from './parser';
 import { UnionFind } from './util/unionFind';
 

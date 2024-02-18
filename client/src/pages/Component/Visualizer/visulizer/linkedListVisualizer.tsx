@@ -1,15 +1,15 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { AnimatePresence, useAnimation } from 'framer-motion';
-import LinkedNode from '../drawableObjects/drawableNode';
-import Edge from '../drawableObjects/drawableEdge';
+import LinkedNode from '../DrawableEntities/drawableNode';
+import Edge from '../DrawableEntities/drawableEdge';
 import { VisualizerComponent, VisualizerState } from './visualizer';
-import { MotionCoord } from '../drawableObjects/drawable';
-import { assertUnreachable } from '../util/util';
-import Pointer from '../drawableObjects/drawablePointer';
-import { isAttachableEntity } from '../../../Types/coreEntity/attachableEntity';
-import { EntityType } from '../../../Types/entity/baseEntity';
+import { MotionCoord } from '../DrawableEntities/drawable';
+import { assertUnreachable } from '../Util/util';
+import Pointer from '../DrawableEntities/drawablePointer';
+import { isAttachableEntity } from '../../../Types/CoreEntity/attachableEntity';
+import { EntityType } from '../../../Types/Entity/baseEntity';
 import SvgComponent from './svgComponent';
-import { Coord } from '../../../Types/geometry/geometry';
+import { Coord } from '../../../Types/Geometry/geometry';
 
 // TODO: Expand different component for different data structure, implementing common interface
 const LinkedList: VisualizerComponent = ({ graphState }: VisualizerState) => {

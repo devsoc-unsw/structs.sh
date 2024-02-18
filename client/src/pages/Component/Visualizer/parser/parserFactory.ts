@@ -1,5 +1,5 @@
 import { VisualizerType } from '../../../Types/visualizerType';
-import { assertUnreachable } from '../util/util';
+import { assertUnreachable } from '../Util/util';
 import { LinkedListParser } from './linkedListParser';
 import { Parser } from './parser';
 

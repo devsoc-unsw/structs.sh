@@ -4,7 +4,7 @@ import { DrawableComponentBase, MotionCoord, PointerProp } from './drawable';
 import {
   AttachableEntity,
   getAttachableEntityShape,
-} from '../../../Types/coreEntity/attachableEntity';
+} from '../../../Types/CoreEntity/attachableEntity';
 
 const animations = {
   enter: {

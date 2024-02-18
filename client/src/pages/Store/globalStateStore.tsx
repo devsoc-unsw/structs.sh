@@ -1,8 +1,8 @@
 import { UseBoundStore, StoreApi, create } from 'zustand';
-import { Parser } from '../Component/Visualizer/parser/parser';
-import { parserFactory } from '../Component/Visualizer/parser/parserFactory';
-import { VisualizerComponent } from '../Component/Visualizer/visulizer/visualizer';
-import { visualizerFactory } from '../Component/Visualizer/visulizer/visualizerFactory';
+import { Parser } from '../Component/Visualizer/Parser/parser';
+import { parserFactory } from '../Component/Visualizer/Parser/parserFactory';
+import { VisualizerComponent } from '../Component/Visualizer/Visulizer/visualizer';
+import { visualizerFactory } from '../Component/Visualizer/Visulizer/visualizerFactory';
 import { UserAnnotation } from '../Types/annotationType';
 import { BackendState, BackendTypeDeclaration, INITIAL_BACKEND_STATE } from '../Types/backendType';
 import { VisualizerType } from '../Types/visualizerType';
