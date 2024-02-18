@@ -3,7 +3,7 @@ import dialogStyles from 'styles/Dialog.module.css';
 import logo from 'assets/img/logo.png';
 import { InfoCircledIcon } from '@radix-ui/react-icons';
 import Dialog, { DialogTitle, DialogDescription } from 'components/Dialog/Dialog';
-import AboutText from 'visual-debugger/Component/FileTree/AboutText';
+import AboutText from 'visualiser-debugger/Component/FileTree/AboutText';
 
 const DevelopmentModeNavbar = () => {
   return (

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { NodeEntity } from 'visual-debugger/Component/Visualizer/Entities/BaseEntity/nodeEntity';
+import { NodeEntity } from 'visualiser-debugger/Component/Visualizer/Entities/BaseEntity/nodeEntity';
 import { useGlobalStore } from '../Store/globalStateStore';
 import { useFrontendStateStore } from '../Store/visualizerStateStore';
 import { BackendState } from '../Types/backendType';
