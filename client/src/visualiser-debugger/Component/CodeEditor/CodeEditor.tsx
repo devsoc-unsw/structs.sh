@@ -31,7 +31,7 @@ const CodeEditor = ({
     },
   ];
 
-  if (programName != '') {
+  if (programName !== '') {
     const loadCode = () => {
       axios
         .get(`${SERVER_URL}/api/retrieveFile`, {
@@ -42,7 +42,7 @@ const CodeEditor = ({
           },
         })
         .then((response) => {
-          if (response.data.hasOwnProperty('error')) {
+          if (Object.prototype.hasOwnProperty.call(response.data, 'error')) {
             console.log('ERROR: ', +response.data.error);
             return '';
           }
@@ -62,7 +62,7 @@ const CodeEditor = ({
       };
 
       axios.post(`${SERVER_URL}/api/updateFile`, data).then((response) => {
-        if (response.data.hasOwnProperty('error')) {
+        if (Object.prototype.hasOwnProperty.call(response.data, 'error')) {
           console.log('ERROR: ', +response.data.error);
         }
       });
@@ -70,7 +70,7 @@ const CodeEditor = ({
       handleSetCode(newCode);
     };
 
-    if (code != loadCode()) {
+    if (code !== loadCode()) {
       changeCode(code);
     }
   }
