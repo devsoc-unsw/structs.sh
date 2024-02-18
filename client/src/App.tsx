@@ -1,13 +1,13 @@
 import { ThemeProvider, Box } from '@mui/material';
 import { AnimatePresence } from 'framer-motion';
 import { Route, Routes } from 'react-router-dom';
-import Feedback from 'pages/Feedback';
-import HomePage from 'pages/HomePage';
-import Page404 from 'pages/Page404';
-import VisualiserPage from 'pages/VisualiserPage';
+import Feedback from 'visual-debugger/Feedback';
+import HomePage from 'visual-debugger/HomePage';
+import Page404 from 'visual-debugger/Page404';
+import VisualiserPage from 'visual-debugger/VisualiserPage';
 import { structsTheme } from 'structsThemes';
 import './App.scss';
-import DevelopmentMode from 'pages/DevelopmentMode';
+import DevelopmentMode from 'visual-debugger/DevelopmentMode';
 
 const App = () => (
   <Box color={structsTheme.palette.text.primary}>

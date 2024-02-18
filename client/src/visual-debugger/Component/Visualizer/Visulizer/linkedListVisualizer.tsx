@@ -18,6 +18,8 @@ const LinkedList: VisualizerComponent = ({ graphState }: VisualizerState) => {
   const [drawable, setDrawable] = useState<{
     [key: string]: JSX.Element;
   }>({});
+
+  // TODO: Why is it this number? I know i prob tested
   const [centerCoord, setCenterCoord] = useState<Coord>({
     x: 800,
     y: 400,
@@ -52,7 +54,7 @@ const LinkedList: VisualizerComponent = ({ graphState }: VisualizerState) => {
         pos[nodeConcrete.uid].y.val = nodeConcrete.y;
       }
     });
-    const renderDrawable = {};
+    const renderDrawable: { [key: string]: JSX.Element } = {};
 
     // Create new drawable objects
     Object.values(graphState.cacheEntity).forEach((entity) => {
@@ -121,7 +123,6 @@ const LinkedList: VisualizerComponent = ({ graphState }: VisualizerState) => {
       { x: 0, y: 0 }
     );
 
-    // Set the derived boundary
     setCenterCoord(center);
   }, [graphState]);
 
