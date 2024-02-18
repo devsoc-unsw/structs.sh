@@ -1,9 +1,9 @@
 import { GlobalStateStore, useGlobalStore } from '../../../Store/globalStateStore';
 import { UserAnnotation, DataStructureType, isTreeNode } from '../../../Types/annotationType';
 import { Addr, BackendState } from '../../../Types/backendType';
-import { EntityType } from '../../../Types/Entity/baseEntity';
-import { EdgeEntity } from '../../../Types/Entity/edgeEntity';
-import { NodeEntity, DEFAULT_NODE_SIZE } from '../../../Types/Entity/nodeEntity';
+import { EntityType } from '../Entities/BaseEntity/baseEntity';
+import { EdgeEntity } from '../Entities/BaseEntity/edgeEntity';
+import { NodeEntity, DEFAULT_NODE_SIZE } from '../Entities/BaseEntity/nodeEntity';
 import { FrontendTreeGraph, EntityConcrete } from '../../../Types/frontendType';
 import { assertUnreachable } from '../Util/util';
 import { Parser } from './parser';

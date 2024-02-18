@@ -1,15 +1,15 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { AnimatePresence, useAnimation } from 'framer-motion';
-import LinkedNode from '../DrawableEntities/drawableNode';
-import Edge from '../DrawableEntities/drawableEdge';
+import LinkedNode from '../Entities/DrawableEntities/drawableNode';
+import Edge from '../Entities/DrawableEntities/drawableEdge';
 import { VisualizerComponent, VisualizerState } from './visualizer';
-import { MotionCoord } from '../DrawableEntities/drawable';
+import { MotionCoord } from '../Entities/DrawableEntities/drawable';
 import { assertUnreachable } from '../Util/util';
-import Pointer from '../DrawableEntities/drawablePointer';
-import { isAttachableEntity } from '../../../Types/CoreEntity/attachableEntity';
-import { EntityType } from '../../../Types/Entity/baseEntity';
+import Pointer from '../Entities/DrawableEntities/drawablePointer';
+import { isAttachableEntity } from '../Entities/CoreEntity/attachableEntity';
+import { EntityType } from '../Entities/BaseEntity/baseEntity';
 import SvgComponent from './svgComponent';
-import { Coord } from '../../../Types/Geometry/geometry';
+import { Coord } from '../../../Types/geometryType';
 
 // TODO: Expand different component for different data structure, implementing common interface
 const LinkedList: VisualizerComponent = ({ graphState }: VisualizerState) => {

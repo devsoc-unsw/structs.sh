@@ -1,10 +1,11 @@
-import { EdgeEntity } from '../../../Types/Entity/edgeEntity';
-import { NodeEntity } from '../../../Types/Entity/nodeEntity';
-import { PointerEntity } from '../../../Types/Entity/pointerEntity';
-import { EntityConcrete, GenericGraph } from '../../../Types/frontendType';
+import { EdgeEntity } from '../BaseEntity/edgeEntity';
+import { NodeEntity } from '../BaseEntity/nodeEntity';
+import { PointerEntity } from '../BaseEntity/pointerEntity';
+import { EntityConcrete, GenericGraph } from '../../../../Types/frontendType';
 
 /**
  * I have no idea why this file exists
+ * This file is really hacky, comeback later
  */
 interface TransitionDetails {
   type?: 'spring' | 'tween';
@@ -29,6 +30,10 @@ export interface DrawablePropBase {
   entity: EntityConcrete;
 }
 
+/**
+ * I think this is a hack I implemented early as react does not detect change if it's not object?
+ * TODO: Investigate
+ */
 export interface NumberHook {
   val: number;
 }

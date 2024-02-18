@@ -1,6 +1,6 @@
-import { EdgeEntity } from './Entity/edgeEntity';
-import { NodeEntity } from './Entity/nodeEntity';
-import { PointerEntity } from './Entity/pointerEntity';
+import { EdgeEntity } from '../Component/Visualizer/Entities/BaseEntity/edgeEntity';
+import { NodeEntity } from '../Component/Visualizer/Entities/BaseEntity/nodeEntity';
+import { PointerEntity } from '../Component/Visualizer/Entities/BaseEntity/pointerEntity';
 
 export type EntityConcrete = NodeEntity | EdgeEntity | PointerEntity;
 

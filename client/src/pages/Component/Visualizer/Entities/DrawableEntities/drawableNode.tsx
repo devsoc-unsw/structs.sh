@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { DrawableComponentBase, NodeProp } from './drawable';
-import HoverContent from '../Util/hoverDebugger';
+import HoverContent from '../../Util/hoverDebugger';
 
 const animations = {
   entry: {
