@@ -57,7 +57,7 @@ Ensure you have the following software:
 
 ### Setup
 
-Clone the repository using the commmand: `git clone git@github.com:csesoc/structs.sh.git`
+Clone the repository using the commmand: `git clone git@github.com:devsoc-unsw/structs.sh.git`
 
 ### Environment Variables
 
