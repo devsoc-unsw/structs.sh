@@ -6,7 +6,6 @@ import { visualizerFactory } from '../Component/Visualizer/Visulizer/visualizerF
 import { UserAnnotation } from '../Types/annotationType';
 import { BackendState, BackendTypeDeclaration, INITIAL_BACKEND_STATE } from '../Types/backendType';
 import { VisualizerType } from '../Types/visualizerType';
-import * as InspectorDummy from './stackInpsectorDummyData.json';
 
 export type UiState = {
   width: number;
@@ -19,7 +18,6 @@ export type VisualizerParam = {
   visComponent: VisualizerComponent;
   parser: Parser;
   typeDeclarations: BackendTypeDeclaration[];
-  stackInspector: any;
 };
 
 export type GlobalStateStore = {
@@ -43,7 +41,6 @@ export const DEFAULT_GLOBAL_STORE: GlobalStateStore = {
     visComponent: visualizerFactory(VisualizerType.LINKED_LIST),
     parser: parserFactory(VisualizerType.LINKED_LIST),
     typeDeclarations: [],
-    stackInspector: InspectorDummy,
   },
   currFrame: INITIAL_BACKEND_STATE,
 };

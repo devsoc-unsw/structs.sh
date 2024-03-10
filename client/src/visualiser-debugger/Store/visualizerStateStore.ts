@@ -1,7 +1,5 @@
 import { UseBoundStore, StoreApi, create } from 'zustand';
-import { VisualizerComponent } from '../Component/Visualizer/Visulizer/visualizer';
 import { GenericGraph, INITIAL_GRAPH } from '../Types/frontendType';
-import { GlobalStateStore } from './globalStateStore';
 
 type State = {
   states: GenericGraph[];
@@ -10,8 +8,8 @@ type State = {
 };
 type Action = {
   newState: (newState: GenericGraph) => void;
-  nextState: () => void;
-  lastState: () => void;
+  setNextState: () => void;
+  setLastState: () => void;
 };
 
 export const useFrontendStateStore: UseBoundStore<StoreApi<State & Action>> = create<
@@ -31,7 +29,7 @@ export const useFrontendStateStore: UseBoundStore<StoreApi<State & Action>> = cr
       currStateIdx: state.currStateIdx + 1,
     }));
   },
-  nextState: () => {
+  setNextState: () => {
     if (
       useFrontendStateStore.getState().currStateIdx >=
       useFrontendStateStore.getState().states.length - 1
@@ -42,7 +40,7 @@ export const useFrontendStateStore: UseBoundStore<StoreApi<State & Action>> = cr
       currStateIdx: state.currStateIdx + 1,
     }));
   },
-  lastState: () => {
+  setLastState: () => {
     if (useFrontendStateStore.getState().currStateIdx <= 0) {
       return;
     }
@@ -51,12 +49,3 @@ export const useFrontendStateStore: UseBoundStore<StoreApi<State & Action>> = cr
     }));
   },
 }));
-
-export interface StateManagerProp {
-  state: GenericGraph;
-  settings: GlobalStateStore;
-  setSettings: React.Dispatch<React.SetStateAction<GlobalStateStore>>;
-  nextState: () => void;
-
-  Visualizer: VisualizerComponent;
-}
