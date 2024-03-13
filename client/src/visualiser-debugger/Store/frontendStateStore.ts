@@ -7,7 +7,7 @@ type State = {
   currState: () => GenericGraph;
 };
 type Action = {
-  newState: (newState: GenericGraph) => void;
+  appendNewState: (newState: GenericGraph) => void;
   setNextState: () => void;
   setLastState: () => void;
 };
@@ -23,10 +23,9 @@ export const useFrontendStateStore: UseBoundStore<StoreApi<State & Action>> = cr
     }
     return useFrontendStateStore.getState().states[useFrontendStateStore.getState().currStateIdx];
   },
-  newState: (newState: GenericGraph) => {
+  appendNewState: (newState: GenericGraph) => {
     set((state) => ({
       states: [...state.states, newState],
-      currStateIdx: state.currStateIdx + 1,
     }));
   },
   setNextState: () => {
