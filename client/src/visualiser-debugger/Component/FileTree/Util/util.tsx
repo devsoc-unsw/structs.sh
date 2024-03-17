@@ -5,7 +5,7 @@ export const PLACEHOLDER_WORKSPACE = 'LinkedListWorkspace';
 export const PLACEHOLDER_USERNAME = 'benp123';
 
 // Use this on login
-export const loadWorkspaces = async (username) => {
+export const loadWorkspaces = async () => {
   let workspaces = [];
   await axios
     .get(`${SERVER_URL}/api/retrieveWorkspaces`, {
@@ -19,6 +19,7 @@ export const loadWorkspaces = async (username) => {
       }
 
       workspaces = response.data.workspaces;
+      return true;
     });
 
   return workspaces;
@@ -45,6 +46,7 @@ export const loadCode = async (program, username, workspaceName) => {
       }
 
       code = response.data.content;
+      return true;
     });
 
   return code;
