@@ -26,7 +26,7 @@ export const structsTheme = createTheme({
       paper: '#14113C',
     },
     text: {
-      primary: '#00000',
+      primary: '#FFFFFF',
       secondary: 'rgba(255, 255, 255, 0.7)',
       disabled: 'rgba(255, 255, 255, 0.5)',
     },

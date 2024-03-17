@@ -5,7 +5,7 @@ import globalStyles from 'styles/global.module.css';
 import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
 import { Socket } from 'socket.io-client';
-import Console from 'components/DevelopmentMode/Console';
+import Console from 'visualiser-debugger/Component/Console/Console';
 import DevelopmentModeNavbar from '../components/Navbars/DevelopmentModeNavbar';
 import Configuration from './Component/Configuration/Configuration';
 import Controls from './Component/Control/Controls';
@@ -21,6 +21,7 @@ import {
   PLACEHOLDER_WORKSPACE,
   loadCode,
 } from './Component/FileTree/Util/util';
+import useGlobalState from '../store/globalStore';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -190,8 +191,7 @@ const DevelopmentMode = () => {
   // Refactor to better support Debugger mode
   // - There're a lot of console.log functions, we can delegate responsibility in each component
   // - Refactor Tabs
-  const DEBUG_MODE = false;
-  return !DEBUG_MODE ? (
+  return (
     <div className={classNames(globalStyles.root, styles.light)}>
       <div className={styles.layout}>
         <div className={classNames(styles.pane, styles.nav)}>
@@ -255,8 +255,6 @@ const DevelopmentMode = () => {
         </div>
       </div>
     </div>
-  ) : (
-    <VisualizerMain backendState={backendState} />
   );
 };
 
