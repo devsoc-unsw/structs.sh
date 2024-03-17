@@ -59,7 +59,6 @@ type DrawableEdgeComponent = DrawableComponentBase<EdgeProp>;
 const Edge: DrawableEdgeComponent = ({ entity: edge, from, to }: EdgeProp, ref) => {
   const markerId = `arrow-${edge.uid}`;
   const [coords, setCoords] = useState(calculateCoordinates(from, to));
-  const [isHover, setIsHovered] = useState(false);
 
   useEffect(() => {
     const res = calculateCoordinates(from, to);
@@ -74,8 +73,6 @@ const Edge: DrawableEdgeComponent = ({ entity: edge, from, to }: EdgeProp, ref) 
       initial={animations.enter.initialPosition(coords.x1, coords.y1)}
       exit={animations.exit}
       animate={animations.animate.positionChange(coords.x1, coords.y1)}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
       drag
       dragMomentum={false}
     >

@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { DrawableComponentBase, MotionCoord, PointerProp } from './drawable';
-import {
-  AttachableEntity,
-  getAttachableEntityShape,
-} from '../CoreEntity/attachableEntity';
+import { AttachableEntity, getAttachableEntityShape } from '../CoreEntity/attachableEntity';
 
 const animations = {
   enter: {

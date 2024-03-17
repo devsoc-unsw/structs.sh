@@ -149,10 +149,7 @@ export class TreeParser implements Parser {
     return treeNodes;
   }
 
-  parseState(
-    backendStructure: BackendState,
-    editorAnnotation: UserAnnotation
-  ): FrontendTreeGraph {
+  parseState(backendStructure: BackendState, editorAnnotation: UserAnnotation): FrontendTreeGraph {
     const nodes: NodeEntity[] = [];
     const edges: EdgeEntity[] = [];
     const cacheEntity: { [uid: string]: EntityConcrete } = {};
