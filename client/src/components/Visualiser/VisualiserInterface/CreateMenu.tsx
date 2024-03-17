@@ -13,13 +13,6 @@ const MenuButton = styled(Button)({
   },
 });
 
-const LoadingButton = styled(Button)({
-  backgroundColor: '#C81437',
-  '&:hover': {
-    backgroundColor: '#F05C79',
-  },
-});
-
 /**
  * Contains the ability to reset and create new data structures
  *

@@ -12,14 +12,12 @@ import {
   Button,
   ListItemIcon,
   useTheme,
-  Input,
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CheckIcon from '@mui/icons-material/Check';
 import logo from 'assets/img/logo.png';
 import { Link, useParams } from 'react-router-dom';
 import { titleToUrl, toTitleCase, urlToTitle } from 'utils/url';
-import axios from 'axios';
 import Login from 'components/Login/Login';
 import { getTopics } from '../../visualiser-src/common/helpers';
 import useGlobalState from '../../store/globalStore';

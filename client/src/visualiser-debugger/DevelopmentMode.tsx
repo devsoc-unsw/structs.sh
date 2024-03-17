@@ -21,7 +21,6 @@ import {
   PLACEHOLDER_WORKSPACE,
   loadCode,
 } from './Component/FileTree/Util/util';
-import useGlobalState from '../store/globalStore';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
