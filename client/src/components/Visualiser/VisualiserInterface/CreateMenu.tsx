@@ -4,6 +4,7 @@ import React, { useCallback, useContext } from 'react';
 import VisualiserContext from './VisualiserContext';
 import CreateLink from './CreateLink';
 import Saving from './Saving';
+import useGlobalState from '../../../store/globalStore';
 
 const MenuButton = styled(Button)({
   backgroundColor: '#46B693',
@@ -39,6 +40,7 @@ const CreateMenu = () => {
     controller.generateDataStructure();
   }, [controller]);
 
+  const isDevMode = useGlobalState((state) => state.isDevMode);
   return (
     <Box
       display="flex"
@@ -59,8 +61,13 @@ const CreateMenu = () => {
           Reset All
         </Typography>
       </MenuButton>
-      <Saving topicTitle={topicTitle} controller={controller} />
-      <CreateLink />
+      {/* TODO: Release this feature */}
+      {isDevMode && (
+        <>
+          <Saving topicTitle={topicTitle} controller={controller} />
+          <CreateLink />
+        </>
+      )}
     </Box>
   );
 };

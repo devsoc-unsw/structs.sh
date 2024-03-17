@@ -21,6 +21,7 @@ import {
   PLACEHOLDER_WORKSPACE,
   loadCode,
 } from './Component/FileTree/Util/util';
+import useGlobalState from '../store/globalStore';
 
 type ExtendedWindow = Window &
   typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
@@ -190,8 +191,8 @@ const DevelopmentMode = () => {
   // Refactor to better support Debugger mode
   // - There're a lot of console.log functions, we can delegate responsibility in each component
   // - Refactor Tabs
-  const DEBUG_MODE = false;
-  return !DEBUG_MODE ? (
+  const isDevMode = useGlobalState((state) => state.isDevMode);
+  return !isDevMode ? (
     <div className={classNames(globalStyles.root, styles.light)}>
       <div className={styles.layout}>
         <div className={classNames(styles.pane, styles.nav)}>

@@ -22,6 +22,7 @@ import { titleToUrl, toTitleCase, urlToTitle } from 'utils/url';
 import axios from 'axios';
 import Login from 'components/Login/Login';
 import { getTopics } from '../../visualiser-src/common/helpers';
+import useGlobalState from '../../store/globalStore';
 
 const LogoText = styled(Typography)({
   textTransform: 'none',
@@ -57,6 +58,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
     setLoggedIn(false);
   };
 
+  const isDevMode = useGlobalState((state) => state.isDevMode);
   return (
     <Box>
       <AppBar
@@ -105,18 +107,22 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
                 </LogoText>
               </Button>
             </Grid>
-            <Grid item xs={4} display="flex" justifyContent="end">
-              {loggedIn ? (
-                <>
-                  <Button style={{ color: '#0288D1' }}>{localStorage.getItem('user')}</Button>
-                  <Button style={{ color: '#0288D1' }} onClick={handleLogout}>
-                    Log Out
-                  </Button>
-                </>
-              ) : (
-                <Login handleLogon={setLoggedIn} />
-              )}
-            </Grid>
+
+            {/* TODO: Release this feature */}
+            {isDevMode && (
+              <Grid item xs={4} display="flex" justifyContent="end">
+                {loggedIn ? (
+                  <>
+                    <Button style={{ color: '#0288D1' }}>{localStorage.getItem('user')}</Button>
+                    <Button style={{ color: '#0288D1' }} onClick={handleLogout}>
+                      Log Out
+                    </Button>
+                  </>
+                ) : (
+                  <Login handleLogon={setLoggedIn} />
+                )}
+              </Grid>
+            )}
           </Grid>
         </Toolbar>
       </AppBar>
