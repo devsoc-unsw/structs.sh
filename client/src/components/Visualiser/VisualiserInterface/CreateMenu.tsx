@@ -40,7 +40,7 @@ const CreateMenu = () => {
     controller.generateDataStructure();
   }, [controller]);
 
-  const isDevMode = useGlobalState((state) => state.isDevMode);
+  const inDev = useGlobalState((state) => state.inDev);
   return (
     <Box
       display="flex"
@@ -62,7 +62,7 @@ const CreateMenu = () => {
         </Typography>
       </MenuButton>
       {/* TODO: Release this feature */}
-      {isDevMode && (
+      {inDev && (
         <>
           <Saving topicTitle={topicTitle} controller={controller} />
           <CreateLink />

@@ -191,8 +191,7 @@ const DevelopmentMode = () => {
   // Refactor to better support Debugger mode
   // - There're a lot of console.log functions, we can delegate responsibility in each component
   // - Refactor Tabs
-  const isDevMode = useGlobalState((state) => state.isDevMode);
-  return !isDevMode ? (
+  return (
     <div className={classNames(globalStyles.root, styles.light)}>
       <div className={styles.layout}>
         <div className={classNames(styles.pane, styles.nav)}>
@@ -256,8 +255,6 @@ const DevelopmentMode = () => {
         </div>
       </div>
     </div>
-  ) : (
-    <VisualizerMain backendState={backendState} />
   );
 };
 

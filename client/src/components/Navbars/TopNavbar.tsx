@@ -58,7 +58,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
     setLoggedIn(false);
   };
 
-  const isDevMode = useGlobalState((state) => state.isDevMode);
+  const inDev = useGlobalState((state) => state.inDev);
   return (
     <Box>
       <AppBar
@@ -109,7 +109,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
             </Grid>
 
             {/* TODO: Release this feature */}
-            {isDevMode && (
+            {inDev && (
               <Grid item xs={4} display="flex" justifyContent="end">
                 {loggedIn ? (
                   <>

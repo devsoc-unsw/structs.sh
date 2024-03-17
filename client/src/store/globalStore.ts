@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 
 export interface GlobalState {
-  isDevMode: boolean;
+  inDev: boolean;
 }
 
 const useGlobalState = create<GlobalState>(() => ({
-  isDevMode: false,
+  inDev: true,
 }));
 
 export default useGlobalState;
