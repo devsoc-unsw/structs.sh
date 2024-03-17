@@ -1,3 +1,5 @@
+/* eslint-disable */
+// TODO: Proper rework on this file => we want to re-design this anyway. I can't fix lint now because it will potentially change functioanlity of the file
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons';
 import * as Internal from '@radix-ui/react-select';
 import classNames from 'classnames';
