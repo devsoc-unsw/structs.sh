@@ -57,7 +57,7 @@
     "react/react-in-jsx-scope": "off",
     "jsx-a11y/anchor-is-valid": "off",
     "class-methods-use-this": "off",
-    "no-unused-vars": ["off"],
+    "no-unused-vars": ["error", { "ignoreRestSiblings": true }],
     "@typescript-eslint/no-unused-vars": ["warn"],
     "no-plusplus": "off"
   }
