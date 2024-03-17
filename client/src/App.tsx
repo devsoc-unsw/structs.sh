@@ -1,10 +1,10 @@
 import { ThemeProvider, Box } from '@mui/material';
 import { AnimatePresence } from 'framer-motion';
 import { Route, Routes } from 'react-router-dom';
-import Feedback from 'visualiser-debugger/Feedback';
-import HomePage from 'visualiser-debugger/HomePage';
-import Page404 from 'visualiser-debugger/Page404';
-import VisualiserPage from 'visualiser-debugger/VisualiserPage';
+import Feedback from 'Feedback';
+import HomePage from 'HomePage';
+import Page404 from 'Page404';
+import VisualiserPage from 'VisualiserPage';
 import { structsTheme } from 'structsThemes';
 import './App.scss';
 import DevelopmentMode from 'visualiser-debugger/DevelopmentMode';
