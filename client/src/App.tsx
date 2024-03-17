@@ -15,7 +15,7 @@ const App = () => (
       <ThemeProvider theme={structsTheme}>
         <Routes>
           {/* Homepage */}
-          <Route path="/" element={<DevelopmentMode />} />
+          <Route path="/" element={<HomePage />} />
 
           {/* Visualiser routes */}
           <Route path="/visualiser/:topic/:data?" element={<VisualiserPage />} />
