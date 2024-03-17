@@ -48,8 +48,6 @@ const animations = {
 
 type DrawableEdgeComponent = DrawableComponentBase<NodeProp>;
 const LinkedNode: DrawableEdgeComponent = ({ entity: nodeEntity, coord }: NodeProp, ref) => {
-  const [isHover, setIsHovered] = useState(false);
-
   if (nodeEntity.type !== 'node' || !coord) return null;
   const { colorHex, label: title, size } = nodeEntity;
 
@@ -70,8 +68,6 @@ const LinkedNode: DrawableEdgeComponent = ({ entity: nodeEntity, coord }: NodePr
       x={x}
       y={y}
       dragMomentum={false}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
     >
       <motion.circle cx={0} cy={0} r={size} stroke={colorHex} opacity={1} />
       <motion.text

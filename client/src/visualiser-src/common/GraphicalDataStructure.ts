@@ -20,7 +20,10 @@ abstract class GraphicalDataStructure {
   }
 
   // Loads data structure from given data
-  public load(data: number[]): void {}
+  // TODO: What's the progress with graph??
+  public load(data: number[]): void {
+    console.log('Loading data structure with data: ', data);
+  }
 }
 
 export default GraphicalDataStructure;

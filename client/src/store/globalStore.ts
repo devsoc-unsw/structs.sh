@@ -5,7 +5,7 @@ export interface GlobalState {
 }
 
 const useGlobalState = create<GlobalState>(() => ({
-  inDev: true,
+  inDev: false,
 }));
 
 export default useGlobalState;

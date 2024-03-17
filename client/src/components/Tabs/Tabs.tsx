@@ -2,6 +2,13 @@ import React, { ReactNode } from 'react';
 import * as Internal from '@radix-ui/react-tabs';
 import styles from 'styles/Tabs.module.css';
 
+interface TabProps {
+  // TODO: Fix this
+  // eslint-disable-next-line react/no-unused-prop-types
+  label: string;
+  children: ReactNode;
+}
+
 export const Tabs = React.forwardRef<HTMLDivElement, Internal.TabsProps>(
   ({ children, ...props }, ref) => (
     <Internal.Root className={styles.TabsRoot} defaultValue="0" ref={ref} {...props}>
@@ -23,6 +30,6 @@ export const Tabs = React.forwardRef<HTMLDivElement, Internal.TabsProps>(
 
 Tabs.displayName = 'Tabs' as string;
 
-export const Tab = ({ children, label }: { label: string; children: ReactNode }) => (
+export const Tab: React.FC<TabProps> = ({ children }) => (
   <div className={styles.TabsContent}>{children}</div>
 );

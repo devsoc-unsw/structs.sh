@@ -53,26 +53,25 @@ export default class GraphicalTreeGenerate {
   // Construct tree from pre order
   public static constructTreeUtil(createNode, pre, low, high) {
     let preIndex: number = 0;
-    function _constructTreeUtil(createNode, pre, low, high) {
+    function constructTreeRecursive(_pre, _low, _high) {
       // Base Case
-      if (low > high) return null;
+      if (_low > _high) return null;
 
       // The first node in preorder traversal is root. So take
       // the node at preIndex from pre[] and make it root,
       // and increment preIndex
-      const root = createNode(pre[preIndex]);
+      const root = createNode(_pre[preIndex]);
       preIndex++;
 
       // If the current subarray has only one element,
       // no need to recur
-      if (low == high) return root;
-
-      let r_root = -1;
+      if (_low === _high) return root;
+      let rRoot = -1;
 
       // Search for the first element greater than root
-      for (let i = low; i <= high; i++) {
-        if (pre[i] > root._data.value) {
-          r_root = i;
+      for (let i = _low; i <= _high; i++) {
+        if (_pre[i] > root._data.value) {
+          rRoot = i;
           break;
         }
       }
@@ -80,17 +79,17 @@ export default class GraphicalTreeGenerate {
       // If no elements are greater than the current root,
       // all elements are left children
       // so assign root appropriately
-      if (r_root == -1) r_root = preIndex + (high - low);
+      if (rRoot === -1) rRoot = preIndex + (_high - _low);
 
       // Use the index of element found in preorder to divide
       // preorder array in two parts. Left subtree and right
       // subtree
-      root.left = _constructTreeUtil(createNode, pre, preIndex, r_root - 1);
+      root.left = constructTreeRecursive(_pre, preIndex, rRoot - 1);
 
-      root.right = _constructTreeUtil(createNode, pre, r_root, high);
+      root.right = constructTreeRecursive(_pre, rRoot, _high);
 
       return root;
     }
-    return _constructTreeUtil(createNode, pre, low, high);
+    return constructTreeRecursive(pre, low, high);
   }
 }

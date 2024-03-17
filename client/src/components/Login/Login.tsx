@@ -1,8 +1,7 @@
-import React, { FC, useState, useContext } from 'react';
-import { Box, Typography, useTheme, Button, Input } from '@mui/material';
+import { FC, useState } from 'react';
+import { Button, Input } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
-import { Block } from '@mui/icons-material';
 import { SERVER_URL } from 'utils/constants';
 
 interface Props {
@@ -39,14 +38,12 @@ const Overlay = styled('div')({
  */
 const Login: FC<Props> = ({ handleLogon }) => {
   // Handle login toggle
-  const [canLogin, setCanLogin] = useState(true);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [register, setRegister] = useState(false);
 
   const handleBack = () => {
     setRegister(false);
-    setCanLogin(true);
     setUsername('');
     setPassword('');
   };
@@ -58,7 +55,6 @@ const Login: FC<Props> = ({ handleLogon }) => {
       password,
     };
     axios.post(`${SERVER_URL}/auth/login`, data).then((response) => {
-      setCanLogin(false);
       if (response.data.found) {
         localStorage.setItem('user', username);
 
@@ -75,7 +71,7 @@ const Login: FC<Props> = ({ handleLogon }) => {
   };
 
   const handleRegister = () => {
-    if (username.length == 0 || password.length == 0) {
+    if (username.length === 0 || password.length === 0) {
       alert('Please enter username or password');
       return;
     }
@@ -99,7 +95,7 @@ const Login: FC<Props> = ({ handleLogon }) => {
   const handleClear = () => {
     axios
       .delete(`${SERVER_URL}/api/deleteAllUsers`)
-      .then((response) => {
+      .then(() => {
         handleBack();
         handleLogon(false);
         alert('Users cleared');
@@ -120,52 +116,47 @@ const Login: FC<Props> = ({ handleLogon }) => {
   };
 
   return (
-    <>
-      {canLogin ? (
-        <Button style={{ color: '#0288D1' }} onClick={() => setCanLogin(false)}>
-          Login
-        </Button>
-      ) : (
-        <Overlay>
-          <LoginMenu>
-            <Button onClick={() => handleBack()}>Back</Button>
-            <Input
-              placeholder="Username"
-              value={username}
-              onChange={(event) => setUsername(event.target.value)}
-              onKeyDown={handleKeyPress}
-            />
-            <Input
-              placeholder="Password"
-              value={password}
-              type="password"
-              onChange={(event) => setPassword(event.target.value)}
-              onKeyDown={handleKeyPress}
-            />
-            {register ? (
-              <Button color="inherit" onClick={handleRegister}>
-                Register
-              </Button>
-            ) : (
-              <>
-                <Button color="inherit" onClick={handleLogin}>
-                  Login
-                </Button>
-                <a
-                  style={{ textDecoration: 'underline', fontSize: '0.8em' }}
-                  onClick={() => setRegister(true)}
-                >
-                  Create Account
-                </a>
-              </>
-            )}
-            <Button color="inherit" onClick={handleClear}>
-              clear database
+    <Overlay>
+      <LoginMenu>
+        <Button onClick={() => handleBack()}>Back</Button>
+        <Input
+          placeholder="Username"
+          value={username}
+          onChange={(event) => setUsername(event.target.value)}
+          onKeyDown={handleKeyPress}
+        />
+        <Input
+          placeholder="Password"
+          value={password}
+          type="password"
+          onChange={(event) => setPassword(event.target.value)}
+          onKeyDown={handleKeyPress}
+        />
+        {register ? (
+          <Button color="inherit" onClick={handleRegister}>
+            Register
+          </Button>
+        ) : (
+          <>
+            <Button color="inherit" onClick={handleLogin}>
+              Login
             </Button>
-          </LoginMenu>
-        </Overlay>
-      )}
-    </>
+            <a
+              role="button"
+              tabIndex={0}
+              style={{ textDecoration: 'underline', fontSize: '0.8em' }}
+              onClick={() => setRegister(true)}
+              onKeyDown={() => setRegister(true)}
+            >
+              Create Account
+            </a>
+          </>
+        )}
+        <Button color="inherit" onClick={handleClear}>
+          clear database
+        </Button>
+      </LoginMenu>
+    </Overlay>
   );
 };
 

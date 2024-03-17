@@ -1,3 +1,5 @@
+/* eslint-disable */
+// TODO: Proper rework on this file => we want to re-design this anyway. I can't fix lint now because it will potentially change functioanlity of the file
 import { useEffect, useState } from 'react';
 import Select, { SelectItem } from 'components/Select/Select';
 import Button from '@mui/material/Button';

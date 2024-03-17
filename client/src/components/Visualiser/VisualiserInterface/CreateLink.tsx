@@ -1,6 +1,7 @@
 import { Typography, Button, TextField, Alert, Snackbar, Collapse } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import React, { useEffect, useContext, useState, useRef } from 'react';
+import { useEffect, useContext, useState, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import VisualiserContext from './VisualiserContext';
 
 const MenuButton = styled(Button)({
@@ -30,7 +31,7 @@ const CreateLink = () => {
   }, [showLink]);
 
   const makeLink = () => {
-    const pieces = location.pathname.split('/');
+    const pieces = useLocation().pathname.split('/');
 
     const rawDataString = controller.getData();
     let newData: string = '';

@@ -1,3 +1,5 @@
+/* eslint-disable */
+// TODO: Proper rework on this file => we want to re-design this anyway. I can't fix lint now because it will potentially change functioanlity of the file
 import { Box, Typography, Button, Alert, Snackbar, Collapse, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React, { useEffect, useRef, useState } from 'react';

@@ -17,7 +17,7 @@ const DevelopmentModeNavbar = () => {
       <div className={styles.navItem}>
         <Dialog
           trigger={
-            <button className={dialogStyles.IconButton}>
+            <button className={dialogStyles.IconButton} aria-label="Info" type="button">
               <InfoCircledIcon />
             </button>
           }
