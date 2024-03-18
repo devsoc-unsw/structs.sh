@@ -1,4 +1,3 @@
-import { Line, Marker } from '@svgdotjs/svg.js';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import { injectIds } from 'visualiser-src/common/helpers';
@@ -477,6 +476,28 @@ class GraphicalBST extends GraphicalDataStructure {
       return this.exists(root.left, value);
     }
     return true;
+  }
+
+  public get data(): number[] {
+    const data: number[] = [];
+
+    this.saveInPreOrder(this.root, data);
+
+    return data;
+  }
+
+  private saveInPreOrder(node: GraphicalBSTNode, data: number[]) {
+    if (node == null) return;
+
+    data.push(node.value);
+
+    this.saveInPreOrder(node.left, data);
+
+    this.saveInPreOrder(node.right, data);
+  }
+
+  public load(data: number[]): void {
+    this.root = GraphicalTreeGenerate.loadTree<GraphicalBSTNode>(GraphicalBSTNode.from, data);
   }
 }
 

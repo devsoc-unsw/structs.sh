@@ -1,11 +1,9 @@
-import React from 'react';
-import { Theme, Box, Container, Grid, Typography, Link } from '@mui/material';
-import { useTheme, styled } from '@mui/material/styles';
+import { Box, Container, Grid, Typography, Link } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { Link as RouterLink } from 'react-router-dom';
 import structsLogo from 'assets/img/structs.png';
 import tiktokLogo from 'assets/img/tiktokColouredWhite.svg';
 import janeStreetLogo from 'assets/img/JaneStreetWhite.png';
-
 
 const StyledFooter = styled('footer')(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -18,8 +16,6 @@ const StyledFooter = styled('footer')(({ theme }) => ({
  * The footer of the page
  */
 const Footer = () => {
-  const theme: Theme = useTheme();
-
   return (
     <StyledFooter>
       <Container maxWidth="lg">
@@ -81,19 +77,30 @@ const Footer = () => {
             </Typography>
             {/* TikTok logo */}
             <Link href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer">
-              <img src={tiktokLogo} alt="TikTok Logo" height={40} style={{ marginRight: '2vw', verticalAlign: 'middle' }} />
+              <img
+                src={tiktokLogo}
+                alt="TikTok Logo"
+                height={40}
+                style={{ marginRight: '2vw', verticalAlign: 'middle' }}
+              />
             </Link>
 
             {/* Jane Street */}
             <Link href="https://www.janestreet.com/" target="_blank" rel="noopener noreferrer">
-              <img src={janeStreetLogo} alt="Jane Street Logo" height={50} style={{ verticalAlign: 'middle', marginBottom: '0px' }} />
+              <img
+                src={janeStreetLogo}
+                alt="Jane Street Logo"
+                height={50}
+                style={{ verticalAlign: 'middle', marginBottom: '0px' }}
+              />
             </Link>
-
           </Grid>
         </Grid>
       </Container>
       <Box textAlign="center" paddingTop={5}>
-        <Typography color="textSecondary">© {new Date().getFullYear()} — Software Development Society (DevSoc)</Typography>
+        <Typography color="textSecondary">
+          © {new Date().getFullYear()} — Software Development Society (DevSoc)
+        </Typography>
       </Box>
     </StyledFooter>
   );

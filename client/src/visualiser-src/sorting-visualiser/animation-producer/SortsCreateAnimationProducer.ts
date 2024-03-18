@@ -1,4 +1,4 @@
-import { boxWidth, whitespace, textCy } from '../util/constants';
+import { textCy } from '../util/constants';
 import { getX, getY, getCx } from '../util/helpers';
 import GraphicalSortsElement from '../data-structure/GraphicalSortsElement';
 import SortsAnimationProducer from './SortsAnimationProducer';

@@ -33,10 +33,63 @@ export default class GraphicalTreeGenerate {
   }
 
   public static generate<T extends GraphicalBSTNode>(createNode: (number) => T): T {
-    const num = generateNumbers().sort((a,b) => a - b);
+    const num = generateNumbers().sort((a, b) => a - b);
     const root = GraphicalTreeGenerate.recurseArrInsert(num, 0, num.length, createNode);
     updateNodePositions(root);
     GraphicalTreeGenerate.create(root);
     return root;
+  }
+
+  // Loads Tree from Data
+  public static loadTree<T extends GraphicalBSTNode>(createNode: (number) => T, data: number[]): T {
+    const size = data.length;
+    const root = GraphicalTreeGenerate.constructTreeUtil(createNode, data, 0, size - 1);
+
+    updateNodePositions(root);
+    GraphicalTreeGenerate.create(root);
+    return root;
+  }
+
+  // Construct tree from pre order
+  public static constructTreeUtil(createNode, pre, low, high) {
+    let preIndex: number = 0;
+    function constructTreeRecursive(_pre, _low, _high) {
+      // Base Case
+      if (_low > _high) return null;
+
+      // The first node in preorder traversal is root. So take
+      // the node at preIndex from pre[] and make it root,
+      // and increment preIndex
+      const root = createNode(_pre[preIndex]);
+      preIndex++;
+
+      // If the current subarray has only one element,
+      // no need to recur
+      if (_low === _high) return root;
+      let rRoot = -1;
+
+      // Search for the first element greater than root
+      for (let i = _low; i <= _high; i++) {
+        if (_pre[i] > root._data.value) {
+          rRoot = i;
+          break;
+        }
+      }
+
+      // If no elements are greater than the current root,
+      // all elements are left children
+      // so assign root appropriately
+      if (rRoot === -1) rRoot = preIndex + (_high - _low);
+
+      // Use the index of element found in preorder to divide
+      // preorder array in two parts. Left subtree and right
+      // subtree
+      root.left = constructTreeRecursive(_pre, preIndex, rRoot - 1);
+
+      root.right = constructTreeRecursive(_pre, rRoot, _high);
+
+      return root;
+    }
+    return constructTreeRecursive(pre, low, high);
   }
 }

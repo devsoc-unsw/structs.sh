@@ -1,9 +1,10 @@
-import { Box, Typography, useTheme, Button } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React, { useCallback, useContext } from 'react';
 import VisualiserContext from './VisualiserContext';
-
-import styles from './Control.module.scss';
+import CreateLink from './CreateLink';
+import Saving from './Saving';
+import useGlobalState from '../../../store/globalStore';
 
 const MenuButton = styled(Button)({
   backgroundColor: '#46B693',
@@ -22,8 +23,7 @@ const MenuButton = styled(Button)({
  *     `onClick` handler.
  */
 const CreateMenu = () => {
-  const { controller } = useContext(VisualiserContext);
-  const theme = useTheme();
+  const { controller, topicTitle } = useContext(VisualiserContext);
 
   const handleReset = useCallback(() => {
     controller.resetDataStructure();
@@ -33,6 +33,7 @@ const CreateMenu = () => {
     controller.generateDataStructure();
   }, [controller]);
 
+  const inDev = useGlobalState((state) => state.inDev);
   return (
     <Box
       display="flex"
@@ -53,6 +54,13 @@ const CreateMenu = () => {
           Reset All
         </Typography>
       </MenuButton>
+      {/* TODO: Release this feature */}
+      {inDev && (
+        <>
+          <Saving topicTitle={topicTitle} controller={controller} />
+          <CreateLink />
+        </>
+      )}
     </Box>
   );
 };

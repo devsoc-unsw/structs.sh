@@ -1,14 +1,7 @@
 import { selectionCodeSnippet } from '../util/codeSnippets';
-import { getX, getCx } from '../util/helpers';
 import GraphicalSortsElement from '../data-structure/GraphicalSortsElement';
 import SortsAnimationProducer from './SortsAnimationProducer';
-import {
-  defaultColour,
-  sortedColour,
-  checkingColour,
-  comparingColor,
-  selectedColor,
-} from '../util/constants';
+import { defaultColour, sortedColour, comparingColor, selectedColor } from '../util/constants';
 
 export default class SortsSelectionAnimationProducer extends SortsAnimationProducer {
   public renderSelectionCode() {

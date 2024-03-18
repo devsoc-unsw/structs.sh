@@ -17,7 +17,7 @@ jobs:
         component: [client]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
         with:
@@ -31,7 +31,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GH_TOKEN }}
       - name: Build and push Docker image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: ${{ matrix.component }}
           push: ${{ github.event_name != 'pull_request' }}
@@ -50,12 +50,13 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: csesoc/deployment
           token: ${{ secrets.GH_TOKEN }}
+          ref: migration
       - name: Install yq
-        uses: mikefarah/yq@v4.27.5
+        uses: mikefarah/yq@v4.35.1
       - name: Update deployment
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -63,9 +64,9 @@ jobs:
           git config user.name "CSESoc CD"
           git config user.email "technical@csesoc.org.au"
           git checkout -b update/structs/${{ github.sha }}
-          yq -i '.items[0].spec.template.spec.containers[0].image = "ghcr.io/csesoc/structs-client:${{ github.sha }}"' apps/projects/structs/deploy-frontend.yml
+          yq -i '.items[0].spec.template.spec.containers[0].image = "ghcr.io/csesoc/structs-client:${{ github.sha }}"' projects/structs/deploy-frontend.yml
           git add . 
           git commit -m "feat(structs): update image" 
           git push -u origin update/structs/${{ github.sha }}
-          gh pr create --title "feat(structs): update image" --body "Updates the image for the structs deployment to commit csesoc/Structs.sh@${{ github.sha }}." > URL
+          gh pr create -B migration --title "feat(structs): update image" --body "Updates the image for the structs deployment to commit csesoc/structs.sh@${{ github.sha }}." > URL
           gh pr merge $(cat URL) --squash -d

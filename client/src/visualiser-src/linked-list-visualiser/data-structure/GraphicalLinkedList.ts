@@ -2,11 +2,11 @@ import AnimationProducer from 'visualiser-src/common/AnimationProducer';
 import { SVG, Path, Svg } from '@svgdotjs/svg.js';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { Documentation } from 'visualiser-src/common/typedefs';
-import { CODE_CANVAS, VISUALISER_CANVAS } from 'visualiser-src/common/constants';
-import currSvg from 'visualiser-src/linked-list-visualiser/assets/curr.svg';
-import prevSvg from 'visualiser-src/linked-list-visualiser/assets/prev.svg';
+import { VISUALISER_CANVAS } from 'visualiser-src/common/constants';
 import { injectIds } from 'visualiser-src/common/helpers';
 import { generateNumbers } from 'visualiser-src/common/RandomNumGenerator';
+import currTextPath from '../assets/currTextPath';
+import prevTextPath from '../assets/prevTextPath';
 import { CURRENT, PREV } from '../util/constants';
 import GraphicalLinkedListNode from './GraphicalLinkedListNode';
 import LinkedListAppendAnimationProducer from '../animation-producer/LinkedListAppendAnimationProducer';
@@ -44,19 +44,61 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     },
   });
 
+  public get data(): number[] {
+    const data: number[] = [];
+    let curr: GraphicalLinkedListNode = this.head;
+    while (curr != null) {
+      data.push(curr.data.value);
+      curr = curr.next;
+    }
+    return data;
+  }
+
+  public load(data: number[]): void {
+    const numbers = data;
+    this.length = numbers.length;
+    const producer = new LinkedListAnimationProducer();
+    let currNode = null;
+    producer.initialiseHead(this.headPointer);
+    for (let i = 0; i < numbers.length; i += 1) {
+      const newNode = GraphicalLinkedListNode.from(numbers[i]);
+      producer.createNodeAt(i, newNode, i + 1);
+      if (currNode === null) {
+        this.head = newNode;
+      } else {
+        currNode.next = newNode;
+        producer.linkLastToNew(currNode);
+      }
+      currNode = newNode;
+    }
+  }
+
   public headPointer: Path;
 
   public head: GraphicalLinkedListNode = null;
 
   public length: number = 0;
 
+  initCurrPrev() {
+    const currGroup = (SVG(VISUALISER_CANVAS) as Svg).group().opacity(0).id('current');
+    currGroup
+      .path('M18 27L25 1L32 27L25 23L18 27Z')
+      .fill('#5EEEC3')
+      .stroke({ color: '#46B49B', width: 2, linejoin: 'round' });
+    currGroup.path(currTextPath).fill('black');
+    const prevGroup = (SVG(VISUALISER_CANVAS) as Svg).group().opacity(0).id('prev');
+    prevGroup
+      .path('M18 27L25 1L32 27L25 23L18 27Z')
+      .fill({ color: '#EE5E78', opacity: 0.65 })
+      .stroke({ color: '#E85A84', width: 2, linejoin: 'round' });
+    prevGroup.path(prevTextPath);
+  }
+
   constructor() {
     super();
     this.headPointer = GraphicalLinkedListNode.newHeadPointer();
 
-    // add prev and curr pointers to visualiser canvas
-    (SVG(VISUALISER_CANVAS) as Svg).image(currSvg).opacity(0).id('current');
-    (SVG(VISUALISER_CANVAS) as Svg).image(prevSvg).opacity(0).id('prev');
+    this.initCurrPrev();
   }
 
   append(input: number): AnimationProducer {
@@ -74,7 +116,6 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
       this.head = newNode;
       producer.doAnimationAndHighlight(4, producer.initialiseHead, this.headPointer);
       producer.doAnimationAndHighlight(5, producer.resetPointersAndColor, this.head);
-      
 
       return producer;
     }
@@ -140,8 +181,13 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
         producer.doAnimationAndHighlight(6, producer.movePointerToNextAndHighlight, PREV, prev);
       }
       curr = curr.next;
-      if (i === (index-1)) {
-        producer.doAnimationAndHighlight(7, producer.movePointerToNextAndHighlightRight, CURRENT, curr);
+      if (i === index - 1) {
+        producer.doAnimationAndHighlight(
+          7,
+          producer.movePointerToNextAndHighlightRight,
+          CURRENT,
+          curr
+        );
       } else {
         producer.doAnimationAndHighlight(7, producer.movePointerToNext, CURRENT);
       }
@@ -237,21 +283,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
 
   public generate(): void {
     const numbers = generateNumbers();
-    this.length = numbers.length;
-    const producer = new LinkedListAnimationProducer();
-    let currNode = null;
-    producer.initialiseHead(this.headPointer);
-    for (let i = 0; i < numbers.length; i += 1) {
-      const newNode = GraphicalLinkedListNode.from(numbers[i]);
-      producer.createNodeAt(i, newNode, i + 1);
-      if (currNode === null) {
-        this.head = newNode;
-      } else {
-        currNode.next = newNode;
-        producer.linkLastToNew(currNode);
-      }
-      currNode = newNode;
-    }
+    this.load(numbers);
   }
 
   public reset(): void {
@@ -262,9 +294,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
 
     this.headPointer = GraphicalLinkedListNode.newHeadPointer();
 
-    // add prev and curr pointers to visualiser canvas
-    (SVG(VISUALISER_CANVAS) as Svg).image(currSvg).opacity(0).id('current');
-    (SVG(VISUALISER_CANVAS) as Svg).image(prevSvg).opacity(0).id('prev');
+    this.initCurrPrev();
   }
 
   public get documentation() {

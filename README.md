@@ -28,13 +28,13 @@ Structs.sh is an interactive data structure and algorithm visualiser and educati
 
 ## Features:
 
--   Algorithm visualisation
-    -   Interactive animation player for visualising fundamental operations on classic data structures such as linked lists, binary search trees, graphs, etc.
-    -   Control the visualiser through an integrated terminal
--   Hub for educational computer science content and teaching resources
-    -   Lessons, videos, reference implementations in specific programming languages, all in one place
--   Content management system
-    -   Create new topics, source code snippets, lessons and quizzes
+- Algorithm visualisation
+  - Interactive animation player for visualising fundamental operations on classic data structures such as linked lists, binary search trees, graphs, etc.
+  - Control the visualiser through an integrated terminal
+- Hub for educational computer science content and teaching resources
+  - Lessons, videos, reference implementations in specific programming languages, all in one place
+- Content management system
+  - Create new topics, source code snippets, lessons and quizzes
 
 ---
 
@@ -50,26 +50,28 @@ Structs.sh exists to help bridge the gap between a student's high-level understa
 
 Ensure you have the following software:
 
--   git
--   Node.js (v18 or later)
-    -   [nvm](https://github.com/nvm-sh/nvm) is recommended to easily manage and install versions of node
--   yarn, an alternative package manager to npm (Can be installed with `sudo npm install --global yarn`)
--   (_Optional_) Docker and Docker-compose
+- git
+- Node.js (v18 or later)
+  - [nvm](https://github.com/nvm-sh/nvm) is recommended to easily manage and install versions of node
+- (_Optional_) Docker and Docker-compose
 
 ### Setup
 
-Clone the repository using the commmand: `git clone git@github.com:csesoc/structs.sh.git`
+Clone the repository using the commmand: `git clone git@github.com:devsoc-unsw/structs.sh.git`
 
-### Running the frontend without Docker
+### Environment Variables
 
-1. `cd` into the `client` directory
-2. Run `yarn install` to install node modules
-3. Run `yarn start` to start the server. The frontend should be accessible at `localhost:3000`
+To configure the application, create a `.env` file in the `client/` directory and add the following line:
+
+```plaintext
+VITE_DEBUGGER_URL=http://localhost:8000
+```
+If deploying, replace localhost:8000 with the address of the server
 
 ### Running the app with Docker
 
 1. `cd` into the project root directory
-2. Run `docker-compose up --build`. The frontend should be accesible at `localhost:3000`
+2. Run `docker-compose up --build`. The frontend should be accesible at `localhost:3000`. The debugger server should be accessible at `localhost:8000`.
 
 ## Documentation
 

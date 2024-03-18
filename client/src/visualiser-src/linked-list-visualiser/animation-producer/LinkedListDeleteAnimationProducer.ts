@@ -40,14 +40,17 @@ export default class LinkedListDeleteAnimationProducer extends LinkedListAnimati
   }
 
   public movePointerToNextAndHighlight(pointerId: string, node: GraphicalLinkedListNode): void {
-      this.movePointerToNext(pointerId);
-      this.highlightNotRightNode(node);
+    this.movePointerToNext(pointerId);
+    this.highlightNotRightNode(node);
   }
 
-  public movePointerToNextAndHighlightRight(pointerId: string, node: GraphicalLinkedListNode): void {
+  public movePointerToNextAndHighlightRight(
+    pointerId: string,
+    node: GraphicalLinkedListNode
+  ): void {
     this.highlightRightNode(node);
     this.movePointerToNext(pointerId);
-}
+  }
 
   public initialisePointerAndHighlight(pointerId: string, node: GraphicalLinkedListNode) {
     this.initialisePointer(pointerId);

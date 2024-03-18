@@ -1,16 +1,12 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Box, Grid, Link, List, ListItem, ListItemIcon, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import BulletIcon from '@mui/icons-material/ArrowForwardIos';
 import VisualiserIcon from '@mui/icons-material/AutoFixHigh';
-import EditIcon from '@mui/icons-material/Edit';
-import EducationIcon from '@mui/icons-material/LocalLibrary';
 import GradCapIcon from '@mui/icons-material/School';
-import cmsScreen from 'assets/demos/cms.png';
 import visualiserDashboardCodeScreen from 'assets/demos/visualiser-dashboard-code.png';
-import visualiserDashboardLessonScreen from 'assets/demos/visualiser-dashboard-lesson.png';
 import structsLogo from 'assets/img/structs.png';
 import { LaptopFrame } from 'components/Frame';
 import HorizontalRule from 'components/HorizontalRule';
