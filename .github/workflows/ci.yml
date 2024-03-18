@@ -1,10 +1,7 @@
 name: Continuous Integration
 
 on:
-  pull_request:
-    branches:
-      - master
-      - production
+  workflow_dispatch:
 
 jobs:
   client:
