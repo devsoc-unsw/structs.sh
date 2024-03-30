@@ -6,6 +6,7 @@ import { SERVER_URL } from 'utils/constants';
 
 interface Props {
   handleLogon: any;
+  onBack: any;
 }
 
 const LoginMenu = styled('div')({
@@ -36,7 +37,7 @@ const Overlay = styled('div')({
 /**
  * Login Menu
  */
-const Login: FC<Props> = ({ handleLogon }) => {
+const Login: FC<Props> = ({ handleLogon, onBack }) => {
   // Handle login toggle
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -118,7 +119,7 @@ const Login: FC<Props> = ({ handleLogon }) => {
   return (
     <Overlay>
       <LoginMenu>
-        <Button onClick={() => handleBack()}>Back</Button>
+        <Button onClick={onBack}>Back</Button>
         <Input
           placeholder="Username"
           value={username}
