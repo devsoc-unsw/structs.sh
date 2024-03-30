@@ -56,6 +56,16 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
     setLoggedIn(false);
   };
 
+  const [showLogin, setShowLogin] = useState(false);
+
+  const handleLogin = () => {
+    setShowLogin(true);
+  }
+
+  const handleClose = () => {
+    setShowLogin(false);
+  }
+
   const inDev = useGlobalState((state) => state.inDev);
   return (
     <Box>
@@ -106,7 +116,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
               </Button>
             </Grid>
 
-            {/* TODO: Release this feature */}
+          
             {inDev && (
               <Grid item xs={4} display="flex" justifyContent="end">
                 {loggedIn ? (
@@ -117,8 +127,11 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
                     </Button>
                   </>
                 ) : (
-                  <Login handleLogon={setLoggedIn} />
+                  <Button style={{ color: '#0288D1' }} onClick={handleLogin}>
+                    Log In
+                  </Button>
                 )}
+                {showLogin && <Login handleLogon={(status) => { setLoggedIn(status); setShowLogin(false); }} onBack={handleClose} />}
               </Grid>
             )}
           </Grid>
