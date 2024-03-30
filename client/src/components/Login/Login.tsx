@@ -116,7 +116,6 @@ const Login: FC<Props> = ({ handleLogon, onBack }) => {
     }
   };
 
-
   return (
     <Overlay>
       <LoginMenu>
