@@ -165,40 +165,63 @@ class CustomNextCommand(gdb.Command):
                     temp_address = gdb.execute('print $', to_string=True)
                     address = re.sub(r'\n', '', temp_address.split(' ')[-1])
                     print(f"address EXTRACTED: {address}")
-
-                    # === Extract linked list node data given the variable name
-                    print(f"Attempting to print \"{var_assigned_to_malloc}\"")
                     struct_fields_str = gdb.execute(
                         f'p *({stack_var_type_name}) {address}', to_string=True)
+                    
+                    is_ll = False
+                    #TODO: Use c_ast to check if SELF is one of the struct field types, NOT gdb (malloc_variables could return a list of objects rather than variable names)
+                    for field in struct_fields_str.strip("{}").split(","):
+                        if stack_var_type_name in gdb.execute(
+                            f'p {address}->{field}', to_string=True): # "recursive" field
+                            is_ll = True
+                            break
+        
+                    if is_ll:
+                        # === Extract linked list node data given the variable name
+                        print(f"Attempting to print \"{var_assigned_to_malloc}\"")
 
-                    # Conventional struct node might look like this
-                    # $4 = {data = 542543, next = 0x0}
+                        # Conventional struct node might look like this
+                        # $4 = {data = 542543, next = 0x0}
 
-                    # User's struct node might look like this:
-                    # $4 = {cockatoo = 0, pigeon = 0x0}
+                        # User's struct node might look like this:
+                        # $4 = {cockatoo = 0, pigeon = 0x0}
 
-                    # Beware uninitialised struct nodes might look like this:
-                    # $3 = {data = -670244016, next = 0xffffa15f74cc <__libc_start_main_impl+152>}
+                        # Beware uninitialised struct nodes might look like this:
+                        # $3 = {data = -670244016, next = 0xffffa15f74cc <__libc_start_main_impl+152>}
 
-                    struct_fields_str = struct_fields_str.split("=", 1)[
-                        1].strip()
-                    struct_fields_str = struct_fields_str.strip("{}")
-                    print(f"{struct_fields_str=}")
-                    # struct_fields_str == "data = 542543, next = 0x0"
+                        struct_fields_str = struct_fields_str.split("=", 1)[
+                            1].strip()
+                        struct_fields_str = struct_fields_str.strip("{}")
+                        print(f"{struct_fields_str=}")
+                        #TODO: below is not the output of the previous two comments:
+                        # struct_fields_str == "data = 542543, next = 0x0"
 
-                    struct_type_name = stack_var_type_name.strip('*').strip()
-                    # "struct node*" => "struct node"
+                        struct_type_name = stack_var_type_name.strip('*').strip()
+                        # "struct node*" => "struct node"
 
-                    updated_struct_value = create_struct_value(
-                        self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_type_name)
+                        updated_struct_value = create_struct_value(
+                            self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_type_name)
 
-                    heap_memory_value = {
-                        # "variable": var, # Name of stack var storing the address of this piece of heap data
-                        "typeName": struct_type_name,
-                        # "size": bytes, ## Size of the type in bytes
-                        "value": updated_struct_value,
-                        "addr": address
-                    }
+                        heap_memory_value = {
+                            # "variable": var, # Name of stack var storing the address of this piece of heap data
+                            "typeName": struct_type_name,
+                            "size": bytes, ## Size of the type in bytes
+                            "value": updated_struct_value,
+                            "addr": address
+                        }
+                        
+                    else: # Some other malloc; assume array
+                        cellSize = int(gdb.execute(
+                            f'p sizeof({stack_var_type_name})', to_string=True).split("=")[1], 16)
+                        heap_memory_value = {
+                            # "variable": var, # Name of stack var storing the address of this piece of heap data
+                            "typeName": struct_type_name,
+                            "cellSize": cellSize,
+                            "size": bytes,
+                            "nCells": bytes // cellSize,
+                            "array": [], # TODO: how is array updated?
+                            "addr": address
+                        }
 
                     self.heap_data[address] = heap_memory_value
                     print("Heap data:")
