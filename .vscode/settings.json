@@ -2,5 +2,10 @@
     "eslint.workingDirectories": [
       "client",
       "debugger"
-    ]
+    ],
+    "files.associations": {
+      "random": "cpp",
+      "limits": "cpp",
+      "algorithm": "cpp"
+    }
 }
