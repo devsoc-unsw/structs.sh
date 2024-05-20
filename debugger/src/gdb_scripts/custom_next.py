@@ -43,8 +43,6 @@ class MallocVisitor(c_ast.NodeVisitor):
 
     def visit_Decl(self, node):
         # Check if the declaration initializes with malloc, e.g., "Type *var = malloc(...)"
-        if node.init and node.init.name.name == "malloc":
-            print(node.init, isinstance(node.init, c_ast.FuncCall), isinstance(node.init.name, c_ast.ID), node.init.name.name)
         if node.init and isinstance(node.init, c_ast.FuncCall) and isinstance(node.init.name, c_ast.ID) and node.init.name.name == 'malloc':
             if isinstance(node.type, c_ast.PtrDecl):
                 var_name = node.name
@@ -167,12 +165,6 @@ class CustomNextCommand(gdb.Command):
                     temp_address = gdb.execute('print $', to_string=True)
                     address = re.sub(r'\n', '', temp_address.split(' ')[-1])
                     print(f"address EXTRACTED: {address}")
-                    struct_fields_str = gdb.execute(
-                        f'p *({stack_var_type_name}) {address}', to_string=True)
-                    print(struct_fields_str)
-                    struct_fields_str = struct_fields_str.split("=", 1)[
-                        1].strip()
-                    struct_fields_str = struct_fields_str.strip("{}")
 
                     # Conventional struct node might look like this
                     # $4 = {data = 542543, next = 0x0}
@@ -182,6 +174,12 @@ class CustomNextCommand(gdb.Command):
 
                     # Beware uninitialised struct nodes might look like this:
                     # $3 = {data = -670244016, next = 0xffffa15f74cc <__libc_start_main_impl+152>}
+
+                    struct_fields_str = gdb.execute(
+                        f'p *({stack_var_type_name}) {address}', to_string=True)
+                    struct_fields_str = struct_fields_str.split("=", 1)[
+                        1].strip()
+                    struct_fields_str = struct_fields_str.strip("{}")
                     print(f"{struct_fields_str=}")
                     # struct_fields_str == "data = 542543, next = 0x0"
                     
