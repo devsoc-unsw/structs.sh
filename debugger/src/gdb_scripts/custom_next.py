@@ -484,7 +484,6 @@ def split_gdb_examine(gdb_examine_data, cellSize):
             count += 1
             if count == cellSize:
                 count = 0
-    print(result, "\nBRUHHBRUHHBRUHH")
     return result
 
 
