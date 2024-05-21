@@ -22,10 +22,17 @@ class MallocVisitor(c_ast.NodeVisitor):
         self.free = False
 
     def visit_Assignment(self, node):
-        print("MallocVisitor.vist_Assignment:")
+        print("MallocVisitor.visit_Assignment:")
         print(node)
         # Check if the assignment is of the form "variable = malloc(...)"
-        if isinstance(node.rvalue, c_ast.FuncCall) and isinstance(node.rvalue.name, c_ast.ID) and node.rvalue.name.name == 'malloc':
+        if isinstance(node.rvalue, c_ast.Cast):
+            if isinstance(node.rvalue.expr, c_ast.FuncCall) and isinstance(node.rvalue.expr.name, c_ast.ID) and node.rvalue.expr.name.name == 'malloc':
+                if isinstance(node.lvalue, c_ast.StructRef):
+                    var_name = self.get_variable_name(node.lvalue)
+                    self.malloc_variables.append(var_name)
+                elif isinstance(node.lvalue, c_ast.ID):
+                    self.malloc_variables.append(node.lvalue.name)
+        elif isinstance(node.rvalue, c_ast.FuncCall) and isinstance(node.rvalue.name, c_ast.ID) and node.rvalue.name.name == 'malloc':
             if isinstance(node.lvalue, c_ast.StructRef):
                 var_name = self.get_variable_name(node.lvalue)
                 self.malloc_variables.append(var_name)
@@ -43,10 +50,16 @@ class MallocVisitor(c_ast.NodeVisitor):
 
     def visit_Decl(self, node):
         # Check if the declaration initializes with malloc, e.g., "Type *var = malloc(...)"
-        if node.init and isinstance(node.init, c_ast.FuncCall) and isinstance(node.init.name, c_ast.ID) and node.init.name.name == 'malloc':
-            if isinstance(node.type, c_ast.PtrDecl):
-                var_name = node.name
-                self.malloc_variables.append(var_name)
+        if node.init:
+            if isinstance(node.init, c_ast.Cast):
+                if isinstance(node.init.expr, c_ast.FuncCall) and isinstance(node.init.expr.name, c_ast.ID) and node.init.expr.name.name == 'malloc':
+                    if isinstance(node.type, c_ast.PtrDecl):
+                        var_name = node.name
+                        self.malloc_variables.append(var_name)
+            elif isinstance(node.init, c_ast.FuncCall) and isinstance(node.init.name, c_ast.ID) and node.init.name.name == 'malloc':
+                if isinstance(node.type, c_ast.PtrDecl):
+                    var_name = node.name
+                    self.malloc_variables.append(var_name)
         self.generic_visit(node)
 
     def get_variable_name(self, node):
@@ -58,6 +71,7 @@ class MallocVisitor(c_ast.NodeVisitor):
         elif isinstance(node, c_ast.ID):
             return node.name
         return None
+
 
 
 class CustomNextCommand(gdb.Command):
@@ -125,6 +139,7 @@ class CustomNextCommand(gdb.Command):
         subprocess.run(f"gcc -E {create_abs_file_path(USER_MALLOC_CALL_FILE_NAME)} > {create_abs_file_path(USER_MALLOC_CALL_PREPROCESSED)}",
                        shell=True)
         try:
+            print("newLine1")
 
             # Parse the preprocessed C code into an AST
             # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
@@ -140,6 +155,8 @@ class CustomNextCommand(gdb.Command):
 
             # Visit the AST to check for malloc calls
             malloc_visitor.visit(line_ast)
+            
+            print("afterAST1")
 
             # Print the variable names assigned to malloc
             if len(malloc_visitor.malloc_variables) > 0:
@@ -166,11 +183,6 @@ class CustomNextCommand(gdb.Command):
                     address = re.sub(r'\n', '', temp_address.split(' ')[-1])
                     print(f"address EXTRACTED: {address}")
 
-                    # === Extract linked list node data given the variable name
-                    print(f"Attempting to print \"{var_assigned_to_malloc}\"")
-                    struct_fields_str = gdb.execute(
-                        f'p *({stack_var_type_name}) {address}', to_string=True)
-
                     # Conventional struct node might look like this
                     # $4 = {data = 542543, next = 0x0}
 
@@ -180,25 +192,60 @@ class CustomNextCommand(gdb.Command):
                     # Beware uninitialised struct nodes might look like this:
                     # $3 = {data = -670244016, next = 0xffffa15f74cc <__libc_start_main_impl+152>}
 
+                    struct_fields_str = gdb.execute(
+                        f'p *({stack_var_type_name}) {address}', to_string=True)
                     struct_fields_str = struct_fields_str.split("=", 1)[
                         1].strip()
                     struct_fields_str = struct_fields_str.strip("{}")
                     print(f"{struct_fields_str=}")
                     # struct_fields_str == "data = 542543, next = 0x0"
-
+                    
                     struct_type_name = stack_var_type_name.strip('*').strip()
                     # "struct node*" => "struct node"
+                    
+                    is_ll = False
+                    #TODO: Use c_ast to check if SELF is one of the struct field types, NOT gdb (malloc_variables could return a list of objects rather than variable names)
+                    if "struct" in stack_var_type_name: # assume LL's are stored as struct data
+                        print("In heap linked list case")
+                        for field_whole in struct_fields_str.split(","):
+                            print("BLAHHH", struct_fields_str)
+                            print(f"{field_whole=}")
+                            print(f'p (({stack_var_type_name}) {address})->{field_whole.split("=")[0].strip()}')
+                            field_type = gdb.execute(
+                                f'p (({stack_var_type_name}) {address})->{field_whole.split("=")[0].strip()}', to_string=True)
+                            print(f"{field_type=}")
+                            if stack_var_type_name.replace("*", "") in field_type: # "recursive" field
+                                is_ll = True
+                                break
+        
+                    if is_ll:
+                        # === Extract linked list node data given the variable name
+                        print(f"Attempting to print \"{var_assigned_to_malloc}\"")
 
-                    updated_struct_value = create_struct_value(
-                        self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_type_name)
+                        updated_struct_value = create_struct_value(
+                            self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_type_name)
 
-                    heap_memory_value = {
-                        # "variable": var, # Name of stack var storing the address of this piece of heap data
-                        "typeName": struct_type_name,
-                        # "size": bytes, ## Size of the type in bytes
-                        "value": updated_struct_value,
-                        "addr": address
-                    }
+                        heap_memory_value = {
+                            # "variable": var, # Name of stack var storing the address of this piece of heap data
+                            "typeName": struct_type_name,
+                            "size": bytes, ## Size of the type in bytes
+                            "value": updated_struct_value, #TODO: maybe make empty? maybe not? dangerous to assume there's stuff there that should be set here
+                            "addr": address
+                        }
+                        
+                    else: # Some other malloc; assume array
+                        print("In heap array case")
+                        cellSize = int(gdb.execute(
+                            f'p sizeof(*({stack_var_type_name}){address})', to_string=True).split("=")[1], 16)
+                        heap_memory_value = {
+                            # "variable": var, # Name of stack var storing the address of this piece of heap data
+                            "typeName": struct_type_name,
+                            "cellSize": str(cellSize),
+                            "size": bytes,
+                            "nCells": str(int(bytes) // cellSize),
+                            "array": [], # TODO: how is array updated?
+                            "addr": address
+                        }
 
                     self.heap_data[address] = heap_memory_value
                     print("Heap data:")
@@ -255,36 +302,57 @@ class CustomNextCommand(gdb.Command):
 
         # === Up date existing tracked heap data
         # Make sure this is done AFTER executing the next command, so that the heap is actually updated
-        for addr, heap_memory_value in self.heap_data.items():
-            struct_type_name = heap_memory_value["typeName"]
-            address = heap_memory_value["addr"]
+        #TODO: account for address of the malloc'd part set changing (e.g. head = NULL)
+        #TODO: consider making updates happen only-as-they-happen (i.e. instead of changing a whole structure/field)?
+        #   an interesting way this could be done is by having stored struct/array attributes be pointers/objects based on memory address (or maybe just store the
+        #   memory address itself), then just update the object at the memory address and don't worry about anything else
+        for addr, heap_memory_value in self.heap_data.items(): #TODO: we're only updating the value attribute lmao, example code for array present
+            if "array" in heap_memory_value: # don't really like this, maybe should keep boolean attribute
+                gdb_examine_data = gdb.execute(
+                        f'x/{heap_memory_value["size"]}b {addr}', to_string=True)
+                print(f"{gdb_examine_data=}")
 
-            # Get struct info by passing in address
-            struct_fields_str = gdb.execute(
-                f'p *({struct_type_name} *) {addr}', to_string=True)       # Can replace struct node with type stored in object
-            # TODO: Heap dictionary assumes its working with structs, should ideally be generalised to all types
-            # Extract all struct fields
-            struct_fields_str = struct_fields_str.split("=", 1)[1].strip()
-            # or those with diff names
-            struct_fields_str = struct_fields_str.strip("{}").strip()
-            # struct_fields_str == "data = 542543, next = 0x0"
+                array_numbers = split_gdb_examine(
+                    gdb_examine_data,
+                    int(heap_memory_value["cellSize"]),
+                ) #TODO: splitting into big numbers is sketchy, we should have some standardised class thingo to setup the data (based on whether it's a list, struct etc.). create_struct_value partially does this
+                
+                if heap_memory_value["typeName"] == "char":
+                    heap_memory_value["array"] = [chr(x) for x in array_numbers]
+                else:
+                    heap_memory_value["array"] = array_numbers
 
-            updated_struct_value = create_struct_value(
-                self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_type_name)
+            else:
+                struct_type_name = heap_memory_value["typeName"]
+                address = heap_memory_value["addr"]
 
-            self.heap_data[addr] = {
-                # "variable": var, ## Name of stack var storing the address of this piece of heap data
-                "typeName": struct_type_name,
-                # "size": bytes, ## Size of the type in bytes
-                "value": updated_struct_value,
-                "addr": address
-            }
+                # Get struct info by passing in address
+                struct_fields_str = gdb.execute(
+                    f'p *({struct_type_name} *) {addr}', to_string=True)
+                # TODO: Heap dictionary assumes its working with structs, should ideally be generalised to all types
+                # Extract all struct fields
+                struct_fields_str = struct_fields_str.split("=", 1)[1].strip()
+                # or those with diff names
+                struct_fields_str = struct_fields_str.strip("{}").strip()
+                # struct_fields_str == "data = 542543, next = 0x0"
 
+                updated_struct_value = create_struct_value(
+                    self.debug_session.get_cached_parsed_type_decls(), struct_fields_str, struct_type_name)
+
+                self.heap_data[addr] = {
+                    # "variable": var, ## Name of stack var storing the address of this piece of heap data
+                    "typeName": struct_type_name,
+                    # "size": bytes, ## Size of the type in bytes
+                    "value": updated_struct_value,
+                    "addr": address
+                }
+    
         backend_data = {
             "frame_info": frame_info,
             "stack_data": stack_data,
             "heap_data": self.heap_data
         }
+
         send_backend_data_to_server(
             self.user_socket_id, backend_data=backend_data)
 
@@ -417,6 +485,30 @@ def remove_non_standard_characters(input_str):
     # Remove color codes and non-standard characters using a regular expression
     clean_str = re.sub(r'\x1b\[[0-9;]*[mK]', '', input_str)
     return clean_str
+
+
+def split_gdb_examine(gdb_examine_data, cellSize):
+    '''
+    Expects gdb_examine_data to be in the format of the x/<number of bytes>b command: 
+    0x5555555592a0:	1	0	0	0	2	0	0	0
+    0x5555555592a8:	3	0   0   0
+    '''
+
+    print(f"{gdb_examine_data=}")
+    result = []
+    count = 0
+    for line in gdb_examine_data.splitlines():
+        print(f"{line=}")
+        for number in line.split(":", 1)[1].split():
+            print(f"{number=}")
+            if count == 0:
+                result.append(int(number))
+            else:
+                result[-1] += int(number) << (count * 8) # 8 is number of bits in a byte
+            count += 1
+            if count == cellSize:
+                count = 0
+    return result
 
 
 def create_struct_value(parsed_type_decls, struct_fields_str, struct_name):
