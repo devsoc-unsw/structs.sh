@@ -22,10 +22,17 @@ class MallocVisitor(c_ast.NodeVisitor):
         self.free = False
 
     def visit_Assignment(self, node):
-        print("MallocVisitor.vist_Assignment:")
+        print("MallocVisitor.visit_Assignment:")
         print(node)
         # Check if the assignment is of the form "variable = malloc(...)"
-        if isinstance(node.rvalue, c_ast.FuncCall) and isinstance(node.rvalue.name, c_ast.ID) and node.rvalue.name.name == 'malloc':
+        if isinstance(node.rvalue, c_ast.Cast):
+            if isinstance(node.rvalue.expr, c_ast.FuncCall) and isinstance(node.rvalue.expr.name, c_ast.ID) and node.rvalue.expr.name.name == 'malloc':
+                if isinstance(node.lvalue, c_ast.StructRef):
+                    var_name = self.get_variable_name(node.lvalue)
+                    self.malloc_variables.append(var_name)
+                elif isinstance(node.lvalue, c_ast.ID):
+                    self.malloc_variables.append(node.lvalue.name)
+        elif isinstance(node.rvalue, c_ast.FuncCall) and isinstance(node.rvalue.name, c_ast.ID) and node.rvalue.name.name == 'malloc':
             if isinstance(node.lvalue, c_ast.StructRef):
                 var_name = self.get_variable_name(node.lvalue)
                 self.malloc_variables.append(var_name)
@@ -43,10 +50,16 @@ class MallocVisitor(c_ast.NodeVisitor):
 
     def visit_Decl(self, node):
         # Check if the declaration initializes with malloc, e.g., "Type *var = malloc(...)"
-        if node.init and isinstance(node.init, c_ast.FuncCall) and isinstance(node.init.name, c_ast.ID) and node.init.name.name == 'malloc':
-            if isinstance(node.type, c_ast.PtrDecl):
-                var_name = node.name
-                self.malloc_variables.append(var_name)
+        if node.init:
+            if isinstance(node.init, c_ast.Cast):
+                if isinstance(node.init.expr, c_ast.FuncCall) and isinstance(node.init.expr.name, c_ast.ID) and node.init.expr.name.name == 'malloc':
+                    if isinstance(node.type, c_ast.PtrDecl):
+                        var_name = node.name
+                        self.malloc_variables.append(var_name)
+            elif isinstance(node.init, c_ast.FuncCall) and isinstance(node.init.name, c_ast.ID) and node.init.name.name == 'malloc':
+                if isinstance(node.type, c_ast.PtrDecl):
+                    var_name = node.name
+                    self.malloc_variables.append(var_name)
         self.generic_visit(node)
 
     def get_variable_name(self, node):
@@ -58,6 +71,7 @@ class MallocVisitor(c_ast.NodeVisitor):
         elif isinstance(node, c_ast.ID):
             return node.name
         return None
+
 
 
 class CustomNextCommand(gdb.Command):
@@ -125,6 +139,7 @@ class CustomNextCommand(gdb.Command):
         subprocess.run(f"gcc -E {create_abs_file_path(USER_MALLOC_CALL_FILE_NAME)} > {create_abs_file_path(USER_MALLOC_CALL_PREPROCESSED)}",
                        shell=True)
         try:
+            print("newLine1")
 
             # Parse the preprocessed C code into an AST
             # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
@@ -140,6 +155,8 @@ class CustomNextCommand(gdb.Command):
 
             # Visit the AST to check for malloc calls
             malloc_visitor.visit(line_ast)
+            
+            print("afterAST1")
 
             # Print the variable names assigned to malloc
             if len(malloc_visitor.malloc_variables) > 0:
@@ -189,6 +206,7 @@ class CustomNextCommand(gdb.Command):
                     is_ll = False
                     #TODO: Use c_ast to check if SELF is one of the struct field types, NOT gdb (malloc_variables could return a list of objects rather than variable names)
                     if "struct" in stack_var_type_name: # assume LL's are stored as struct data
+                        print("In heap linked list case")
                         for field_whole in struct_fields_str.split(","):
                             print("BLAHHH", struct_fields_str)
                             print(f"{field_whole=}")
@@ -216,6 +234,7 @@ class CustomNextCommand(gdb.Command):
                         }
                         
                     else: # Some other malloc; assume array
+                        print("In heap array case")
                         cellSize = int(gdb.execute(
                             f'p sizeof(*({stack_var_type_name}){address})', to_string=True).split("=")[1], 16)
                         heap_memory_value = {
