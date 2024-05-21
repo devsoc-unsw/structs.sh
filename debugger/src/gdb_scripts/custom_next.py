@@ -312,11 +312,16 @@ class CustomNextCommand(gdb.Command):
                         f'x/{heap_memory_value["size"]}b {addr}', to_string=True)
                 print(f"{gdb_examine_data=}")
 
-                # heap_memory_value is a soft-copy so we can update it directly... i think lmao
-                heap_memory_value["array"] = split_gdb_examine(
+                array_numbers = split_gdb_examine(
                     gdb_examine_data,
                     int(heap_memory_value["cellSize"]),
                 ) #TODO: splitting into big numbers is sketchy, we should have some standardised class thingo to setup the data (based on whether it's a list, struct etc.). create_struct_value partially does this
+                
+                if heap_memory_value["typeName"] == "char":
+                    heap_memory_value["array"] = [chr(x) for x in array_numbers]
+                else:
+                    heap_memory_value["array"] = array_numbers
+
             else:
                 struct_type_name = heap_memory_value["typeName"]
                 address = heap_memory_value["addr"]
