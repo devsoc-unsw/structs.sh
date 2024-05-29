@@ -8,43 +8,43 @@ import VisualiserPage from 'VisualiserPage';
 import { structsTheme } from 'structsThemes';
 import './App.scss';
 import DevelopmentMode from 'visualiser-debugger/DevelopmentMode';
-import { WebSocket } from 'ws';
+import { client } from 'Services/stompClient';
+import { useEffect } from 'react';
 
-// For stompJs
-Object.assign(global, { WebSocket });
+const App = () => {
+  useEffect(() => {
+    // Setup StompJS client
+    client.activate();
 
-const client = new Client({
-  brokerURL: 'ws://localhost:15674/ws',
-  onConnect: () => {
-    client.subscribe('/topic/test01', (message) => console.log(`Received: ${message.body}`));
-    client.publish({ destination: '/topic/test01', body: 'First Message' });
-  },
-});
-client.activate();
+    return () => {
+      client.deactivate();
+    };
+  }, []);
 
-const App = () => (
-  <Box color={structsTheme.palette.text.primary}>
-    <AnimatePresence>
-      <ThemeProvider theme={structsTheme}>
-        <Routes>
-          {/* Homepage */}
-          <Route path="/" element={<HomePage />} />
+  return (
+    <Box color={structsTheme.palette.text.primary}>
+      <AnimatePresence>
+        <ThemeProvider theme={structsTheme}>
+          <Routes>
+            {/* Homepage */}
+            <Route path="/" element={<HomePage />} />
 
-          {/* Visualiser routes */}
-          <Route path="/visualiser/:topic/:data?" element={<VisualiserPage />} />
+            {/* Visualiser routes */}
+            <Route path="/visualiser/:topic/:data?" element={<VisualiserPage />} />
 
-          {/* Feedback and feature request page */}
-          <Route path="/feedback" element={<Feedback />} />
+            {/* Feedback and feature request page */}
+            <Route path="/feedback" element={<Feedback />} />
 
-          {/* Development mode */}
-          <Route path="/dev" element={<DevelopmentMode />} />
+            {/* Development mode */}
+            <Route path="/dev" element={<DevelopmentMode />} />
 
-          {/* 404 page */}
-          <Route path="*" element={<Page404 />} />
-        </Routes>
-      </ThemeProvider>
-    </AnimatePresence>
-  </Box>
-);
+            {/* 404 page */}
+            <Route path="*" element={<Page404 />} />
+          </Routes>
+        </ThemeProvider>
+      </AnimatePresence>
+    </Box>
+  );
+};
 
 export default App;
