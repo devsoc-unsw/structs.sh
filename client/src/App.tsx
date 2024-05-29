@@ -8,43 +8,30 @@ import VisualiserPage from 'VisualiserPage';
 import { structsTheme } from 'structsThemes';
 import './App.scss';
 import DevelopmentMode from 'visualiser-debugger/DevelopmentMode';
-import { client } from 'Services/stompClient';
-import { useEffect } from 'react';
 
-const App = () => {
-  useEffect(() => {
-    // Setup StompJS client
-    client.activate();
+const App = () => (
+  <Box color={structsTheme.palette.text.primary}>
+    <AnimatePresence>
+      <ThemeProvider theme={structsTheme}>
+        <Routes>
+          {/* Homepage */}
+          <Route path="/" element={<HomePage />} />
 
-    return () => {
-      client.deactivate();
-    };
-  }, []);
+          {/* Visualiser routes */}
+          <Route path="/visualiser/:topic/:data?" element={<VisualiserPage />} />
 
-  return (
-    <Box color={structsTheme.palette.text.primary}>
-      <AnimatePresence>
-        <ThemeProvider theme={structsTheme}>
-          <Routes>
-            {/* Homepage */}
-            <Route path="/" element={<HomePage />} />
+          {/* Feedback and feature request page */}
+          <Route path="/feedback" element={<Feedback />} />
 
-            {/* Visualiser routes */}
-            <Route path="/visualiser/:topic/:data?" element={<VisualiserPage />} />
+          {/* Development mode */}
+          <Route path="/dev" element={<DevelopmentMode />} />
 
-            {/* Feedback and feature request page */}
-            <Route path="/feedback" element={<Feedback />} />
-
-            {/* Development mode */}
-            <Route path="/dev" element={<DevelopmentMode />} />
-
-            {/* 404 page */}
-            <Route path="*" element={<Page404 />} />
-          </Routes>
-        </ThemeProvider>
-      </AnimatePresence>
-    </Box>
-  );
-};
+          {/* 404 page */}
+          <Route path="*" element={<Page404 />} />
+        </Routes>
+      </ThemeProvider>
+    </AnimatePresence>
+  </Box>
+);
 
 export default App;
