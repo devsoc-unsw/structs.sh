@@ -1,5 +1,5 @@
 import { useEffect, useCallback, useState, useRef } from 'react';
-import { socket } from 'utils/socket';
+import { socket } from 'Services/socket';
 import styles from 'styles/DevelopmentMode.module.css';
 import globalStyles from 'styles/global.module.css';
 import classNames from 'classnames';

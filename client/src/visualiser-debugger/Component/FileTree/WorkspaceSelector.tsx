@@ -136,7 +136,7 @@ const WorkspaceSelector = ({
   return (
     <Box>
       <WorkSpaceMenu>
-        <div>Select Workspace</div>
+      <div>Select Workspace</div>
         <Button
           onClick={toggleDropdown}
           style={buttonStyle}
