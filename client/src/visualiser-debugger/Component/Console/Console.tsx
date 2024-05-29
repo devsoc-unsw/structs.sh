@@ -1,14 +1,15 @@
 /* eslint-disable */
 // TODO: Proper rework on this file => we want to re-design this anyway. I can't fix lint now because it will potentially change functioanlity of the file
 import React, { Fragment, useRef, useState } from 'react';
-import { socket } from 'Services/socket';
 
 import styles from 'styles/Console.module.css';
 import classNames from 'classnames';
+import useSocketClientStore from '../../../Services/socketClient';
 
 const Console = ({ chunks, handleAddChunk, scrollToBottom, isActive }) => {
   const [input, setInput] = useState('');
   const inputElement = useRef(null);
+  const socket = useSocketClientStore((state) => state.socket);
 
   const handleInput = () => {
     setInput(inputElement.current.innerText);

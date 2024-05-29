@@ -1,10 +1,8 @@
 import { useEffect, useCallback, useState, useRef } from 'react';
-import { socket } from 'Services/socket';
 import styles from 'styles/DevelopmentMode.module.css';
 import globalStyles from 'styles/global.module.css';
 import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
-import { Socket } from 'socket.io-client';
 import Console from 'visualiser-debugger/Component/Console/Console';
 import DevelopmentModeNavbar from '../components/Navbars/DevelopmentModeNavbar';
 import Configuration from './Component/Configuration/Configuration';
@@ -21,19 +19,17 @@ import {
   PLACEHOLDER_WORKSPACE,
   loadCode,
 } from './Component/FileTree/Util/util';
-
-type ExtendedWindow = Window &
-  typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
+import useSocketClientStore from '../Services/socketClient';
 
 const DevelopmentMode = () => {
+  const socket = useSocketClientStore((state) => state.socket);
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      console.log('Attach socket to window for debugging: ', socket);
-      (window as ExtendedWindow).socket = socket;
-      (window as ExtendedWindow).getBreakpoints = (line: string, listName: string) =>
-        socket.emit('getBreakpoints', line, listName);
-    }
-  }, []);
+    socket.connect();
+    return () => {
+      socket.disconnect();
+    };
+  }, [socket]);
+
   const [backendState, setBackendState] = useState<BackendState>();
   const [activeSession, setActiveSession] = useState(false);
   const [workspaceName, setWorkspaceName] = useState(PLACEHOLDER_WORKSPACE);
