@@ -1,4 +1,3 @@
-/* eslint-disable */
 // TODO: Proper rework on this file => we want to re-design this anyway. I can't fix lint now because it will potentially change functioanlity of the file
 import Select, { SelectItem } from 'components/Select/Select';
 import { useState } from 'react';
@@ -20,7 +19,7 @@ const FileSelector = ({
 }: {
   onChangeProgramName: (programName: String) => void;
   getCurrentWorkspaceName: () => String;
-  retrieveWorkspace: (name: String) => void;
+  // retrieveWorkspace: (name: String) => void;
 }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [fileInput, setFileInput] = useState('');

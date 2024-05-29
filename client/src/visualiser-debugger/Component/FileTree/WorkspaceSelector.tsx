@@ -178,7 +178,7 @@ const WorkspaceSelector = ({
       <FileSelector
         onChangeProgramName={onChangeProgramName}
         getCurrentWorkspaceName={getCurrentWorkspaceName}
-        retrieveWorkspace={retrieveWorkspace}
+        // retrieveWorkspace={retrieveWorkspace}
       />
     </Box>
   );
