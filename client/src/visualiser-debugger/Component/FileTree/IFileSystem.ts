@@ -6,8 +6,13 @@ export interface IFileSystem {
     setFiles: React.Dispatch<React.SetStateAction<any[]>>,
     event: React.FormEvent
   ): void;
+
   deleteFile(): void;
-  handleFileInputChange(file: IFileFileNode | IFileDirNode): Boolean;
+
+  handleFileInputChange(
+    event: React.ChangeEvent<HTMLInputElement>,
+    setFileInput: React.Dispatch<React.SetStateAction<string>>
+  ): void;
 
   // return the root node so we can access all children nodes
   // when we implement the front end file selector, we could just display this return result on the FE

@@ -54,30 +54,18 @@ export class LocalStorageFS implements IFileSystem {
       default:
         break;
     }
-
-    // const currentWorkspace = getCurrentWorkspaceName();
-    // const data = {
-    //   username: PLACEHOLDER_USERNAME,
-    //   workspace: currentWorkspace,
-    //   filename: fileInput,
-    //   fileData: '',
-    // };
-
-    // axios.post(`${SERVER_URL}/api/saveFile`, data).then((response) => {
-    //   console.log(response.data);
-    //   if (!Object.prototype.hasOwnProperty.call(response.data, 'error')) {
-    //     files.push({ name: fileInput, text: '' });
-    //   }
-    // });
   }
 
   deleteFile(): void {
     throw new Error('Method not implemented.');
   }
 
-  handleFileInputChange(file: IFileFileNode): Boolean {
-    console.log(file);
-    throw new Error('Method not implemented.');
+  handleFileInputChange(
+    event: React.ChangeEvent<HTMLInputElement>,
+    setFileInput: React.Dispatch<React.SetStateAction<string>>
+  ): void {
+    const fileInput = event.target.value;
+    setFileInput(fileInput);
   }
 
   viewAllFiles(): IFileDirNode {
