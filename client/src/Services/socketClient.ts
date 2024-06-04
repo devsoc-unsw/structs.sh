@@ -2,6 +2,7 @@
 import { Socket, io } from 'socket.io-client';
 import { DefaultEventsMap, EventNames, EventsMap } from '@socket.io/component-emitter';
 import { create } from 'zustand';
+import { assertUnreachable } from '../visualiser-debugger/Component/Visualizer/Util/util';
 
 const URL = import.meta.env.VITE_DEBUGGER_URL || 'http://localhost:8000';
 
@@ -126,8 +127,27 @@ export type SocketPackageConcrete =
   | SocketPackageCompileError
   | SocketPackageSendStdin;
 
+interface ServerEvents {
+  connect: SocketPackageConnect;
+  disconnect: SocketPackageDisconnect;
+  sendData: SocketPackageSendData;
+  receiveData: SocketPackageReceiveData;
+  error: SocketPackageError;
+  mainDebug: SocketPackageMainDebug;
+  executeNext: SocketPackageExecuteNext;
+  sendDummyLinkedListData: SocketPackageSendDummyLinkedListData;
+  sendDummyBinaryTreeData: SocketPackageSendDummyBinaryTreeData;
+  sendFunctionDeclaration: SocketPackageSendFunctionDeclaration;
+  sendTypeDeclaration: SocketPackageSendTypeDeclaration;
+  sendBackendStateToUser: SocketPackageSendBackendStateToUser;
+  sendStdoutToUser: SocketPackageSendStdoutToUser;
+  programWaitingForInput: SocketPackageProgramWaitingForInput;
+  compileError: SocketPackageCompileError;
+  send_stdin: SocketPackageSendStdin;
+}
+
 class SocketClient {
-  private socket: Socket<DefaultEventsMap>;
+  private socket: Socket<ServerEvents>;
 
   constructor() {
     this.socket = io(URL);
@@ -145,24 +165,8 @@ class SocketClient {
     });
   }
 
-  on<T extends SocketEventType>(event: T) {
-    this.socket.on(event, () => {
-      console.log('Connected socket');
-    });
-  }
-
-  off<T extends SocketEventType>(event: T) {
-    this.socket.off(event, () => {
-      callback(data);
-    });
-  }
-
-  emit<T extends SocketEventType>(event: T, data?: SocketPackageConcrete) {
-    if (data !== undefined) {
-      this.socket.emit(event, data);
-    } else {
-      this.socket.emit(event);
-    }
+  on(event: SocketEventType, callback: (data: any) => void) {
+    this.socket.on(event, callback);
   }
 }
 
