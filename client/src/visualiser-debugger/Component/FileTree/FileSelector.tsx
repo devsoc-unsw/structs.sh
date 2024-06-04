@@ -12,6 +12,9 @@ import {
   dropDownTextStyle,
   dropdownStyle,
 } from './WorkspaceStyles';
+import { LocalStorageFS } from './LocalStorageFS';
+
+const fs = new LocalStorageFS();
 
 const FileSelector = ({
   onChangeProgramName,
