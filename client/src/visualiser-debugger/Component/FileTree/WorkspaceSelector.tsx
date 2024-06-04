@@ -123,10 +123,6 @@ const WorkspaceSelector = ({
     setWorkspaceName(name);
   };
 
-  const getCurrentWorkspaceName = (): String => {
-    return workspaceName;
-  };
-
   const WorkSpaceMenu = styled.div`
     display: flex;
     justify-content: flex-start;
@@ -177,7 +173,7 @@ const WorkspaceSelector = ({
       </div>
       <FileSelector
         onChangeProgramName={onChangeProgramName}
-        getCurrentWorkspaceName={getCurrentWorkspaceName}
+        currWorkSpaceName={workspaceName}
         // retrieveWorkspace={retrieveWorkspace}
       />
     </Box>

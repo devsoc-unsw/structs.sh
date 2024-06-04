@@ -7,9 +7,11 @@ export interface IFileSystem {
     event: React.FormEvent
   ): void;
 
+  // TODO: Figure out
   deleteFile(): void;
 
-  handleFileInputChange(
+  // TODO: Refactor to be more generic
+  handleFileNameChange(
     event: React.ChangeEvent<HTMLInputElement>,
     setFileInput: React.Dispatch<React.SetStateAction<string>>
   ): void;

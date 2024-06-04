@@ -1,6 +1,6 @@
 // TODO: Proper rework on this file => we want to re-design this anyway. I can't fix lint now because it will potentially change functioanlity of the file
 import Select, { SelectItem } from 'components/Select/Select';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Button, Paper } from '@mui/material';
 import { SERVER_URL } from 'utils/constants';
 import axios from 'axios';
@@ -12,83 +12,80 @@ import {
   dropDownTextStyle,
   dropdownStyle,
 } from './WorkspaceStyles';
+
+// TODO: Put this in the state store
 import { LocalStorageFS } from './LocalStorageFS';
+import { AxiosAgent } from './AxiosClient';
 
 const fs = new LocalStorageFS();
 
+// TODO: Concretize the 'file' property definition
+interface FileStub {
+  name: string;
+  text: string;
+}
+
 const FileSelector = ({
   onChangeProgramName,
-  getCurrentWorkspaceName,
+  currWorkSpaceName,
 }: {
   onChangeProgramName: (programName: String) => void;
-  getCurrentWorkspaceName: () => String;
+  currWorkSpaceName: string;
   // retrieveWorkspace: (name: String) => void;
 }) => {
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [fileInput, setFileInput] = useState('');
-  const [files, setFiles] = useState([]);
+  const [isDropdownOpen, setDropdownOpen] = useState<boolean>(false);
+  const [currFileName, setCurrFileName] = useState<string>('');
+  const [files, setFiles] = useState<FileStub[]>([]);
 
-  const workspaceName = getCurrentWorkspaceName();
-  if (workspaceName !== '') {
-    axios
-      .get(`${SERVER_URL}/api/retrieveFilesInWorkspace`, {
-        params: {
-          username: PLACEHOLDER_USERNAME,
-          workspaceName,
-        },
-      })
-      .then((response) => {
-        if (!Object.prototype.hasOwnProperty.call(response.data, 'error')) {
-          const newFiles = response.data.files;
-          setFiles(newFiles);
-        } else {
-          console.log(response.data);
-        }
+  // Put this into state, I have defined a service directory
+  const axiosAgent = new AxiosAgent();
+
+  useEffect(() => {
+    // TODO: Refactor this later
+    // Fetch file objects ie "files" from the server according to work space
+    if (currWorkSpaceName !== '') {
+      axiosAgent.retrieveFiles(currWorkSpaceName, (filesInCallBack: FileStub[]) => {
+        setFiles(filesInCallBack);
       });
-  }
+    }
+  }, [currWorkSpaceName]);
 
   const toggleDropdown = () => {
+    console.log('Debug:', currWorkSpaceName, files);
     setDropdownOpen(!isDropdownOpen);
   };
 
-  const handleInputChange = (event) => {
-    setFileInput(event.target.value);
+  const setCurrFileNameFromInput = (event) => {
+    setCurrFileName(event.target.value);
   };
 
   const createFile = (event) => {
     event.preventDefault();
-    if (fileInput === '' || files.some((file) => file.name === fileInput)) {
+
+    // Frontend
+    if (currFileName === '' || files.some((file) => file.name === currFileName)) {
       return;
     }
 
-    const currentWorkspace = getCurrentWorkspaceName();
-    const data = {
-      username: PLACEHOLDER_USERNAME,
-      workspace: currentWorkspace,
-      filename: fileInput,
-      fileData: '',
-    };
-
-    axios.post(`${SERVER_URL}/api/saveFile`, data).then((response) => {
-      console.log(response.data);
-      if (!Object.prototype.hasOwnProperty.call(response.data, 'error')) {
-        files.push({ name: fileInput, text: '' });
-      }
-    });
-
-    setDropdownOpen(false);
-
     axios
-      .get(`${SERVER_URL}/api/retrieveFilesInWorkspace`, {
-        params: {
-          username: PLACEHOLDER_USERNAME,
-          workspaceName: currentWorkspace,
-        },
+      .post(`${SERVER_URL}/api/saveFile`, {
+        username: PLACEHOLDER_USERNAME,
+        workspace: currWorkSpaceName,
+        filename: currFileName,
+        fileData: '',
       })
       .then((response) => {
-        const newFiles = response.data.files;
-        setFiles(newFiles);
+        // DO NOT CHANGE THIS CODE
+        console.log('Getting response from saveFile', response.data);
+        if (!Object.prototype.hasOwnProperty.call(response.data, 'error')) {
+          files.push({ name: currFileName, text: '' });
+        }
       });
+
+    setDropdownOpen(false);
+    axiosAgent.retrieveFiles(currWorkSpaceName, (filesInCallBack: FileStub[]) => {
+      setFiles(filesInCallBack);
+    });
   };
 
   return (
@@ -109,12 +106,12 @@ const FileSelector = ({
       {isDropdownOpen ? (
         <Box style={dropDownDivStyleFiles} sx={{ position: 'absolute' }}>
           <Paper style={dropdownStyle} elevation={3} sx={{ position: 'absolute' }}>
-            <form onSubmit={createFile}>
+            <form>
               <input
                 style={dropDownTextStyle}
                 placeholder="Enter File Name"
-                value={fileInput}
-                onChange={handleInputChange}
+                value={currFileName}
+                onChange={setCurrFileNameFromInput}
               />
             </form>
             <Button onClick={createFile} style={createButtonStyle} variant="contained">

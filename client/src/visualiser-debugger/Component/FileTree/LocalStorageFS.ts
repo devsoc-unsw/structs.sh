@@ -60,7 +60,7 @@ export class LocalStorageFS implements IFileSystem {
     throw new Error('Method not implemented.');
   }
 
-  handleFileInputChange(
+  handleFileNameChange(
     event: React.ChangeEvent<HTMLInputElement>,
     setFileInput: React.Dispatch<React.SetStateAction<string>>
   ): void {
