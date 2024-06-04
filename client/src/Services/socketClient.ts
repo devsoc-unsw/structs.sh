@@ -1,8 +1,6 @@
 // socketClient.js
 import { Socket, io } from 'socket.io-client';
-import { DefaultEventsMap, EventNames, EventsMap } from '@socket.io/component-emitter';
 import { create } from 'zustand';
-import { assertUnreachable } from '../visualiser-debugger/Component/Visualizer/Util/util';
 
 const URL = import.meta.env.VITE_DEBUGGER_URL || 'http://localhost:8000';
 
@@ -153,6 +151,29 @@ class SocketClient {
     this.socket = io(URL);
   }
 
+  onSendDummyData = (data: any) => {
+    console.log(`Received dummy data:\n`, data);
+    if (data !== 'LINE NOT FOUND') {
+      updateState(data);
+    } else {
+      console.log('!!! No more dummy data');
+    }
+  };
+
+  attach() {
+    this.socket.on('sendDummyLinkedListData', onSendDummyData);
+    this.socket.on('sendDummyBinaryTreeData', onSendDummyData);
+    this.socket.on('mainDebug', onMainDebug);
+    this.socket.on('sendFunctionDeclaration', onSendFunctionDeclaration);
+    this.socket.on('sendTypeDeclaration', onSendTypeDeclaration);
+    this.socket.on('executeNext', onExecuteNext);
+    this.socket.on('sendBackendStateToUser', onSendBackendStateToUser);
+    this.socket.on('sendStdoutToUser', onSendStdoutToUser);
+    this.socket.on('programWaitingForInput', onProgramWaitingForInput);
+    this.socket.on('compileError', onCompileError);
+    this.socket.on('sendStdoutToUser', onStdout);
+  }
+
   connect() {
     this.socket.on('connect', () => {
       console.log('Connected!');
@@ -167,6 +188,14 @@ class SocketClient {
 
   on(event: SocketEventType, callback: (data: any) => void) {
     this.socket.on(event, callback);
+  }
+
+  off(event: SocketEventType, callback: (data: any) => void) {
+    this.socket.off(event, callback);
+  }
+
+  emitMainDebug(code: string) {
+    this.socket.emit('mainDebug', code);
   }
 }
 

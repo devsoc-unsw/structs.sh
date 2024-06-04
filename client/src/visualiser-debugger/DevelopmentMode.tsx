@@ -11,7 +11,6 @@ import CodeEditor from './Component/CodeEditor/CodeEditor';
 import StackInspector from './Component/StackInspector/StackInspector';
 import { useGlobalStore } from './Store/globalStateStore';
 import VisualizerMain from './Component/VisualizerMain';
-import { BackendState } from './Types/backendType';
 import AboutText from './Component/FileTree/AboutText';
 import WorkspaceSelector from './Component/FileTree/WorkspaceSelector';
 import {
@@ -22,7 +21,7 @@ import {
 import useSocketClientStore from '../Services/socketClient';
 
 const DevelopmentMode = () => {
-  const socket = useSocketClientStore((state) => state.socket);
+  const socket = useSocketClientStore((stateStore) => stateStore.socket);
   useEffect(() => {
     socket.connect();
     return () => {
@@ -30,7 +29,14 @@ const DevelopmentMode = () => {
     };
   }, [socket]);
 
-  const [backendState, setBackendState] = useState<BackendState>();
+  const {
+    currFrame: backendState,
+    updateTypeDeclaration,
+    clearTypeDeclarations,
+    clearUserAnnotation,
+    updateNextFrame,
+  } = useGlobalStore();
+
   const [activeSession, setActiveSession] = useState(false);
   const [workspaceName, setWorkspaceName] = useState(PLACEHOLDER_WORKSPACE);
   const [programName, setProgramName] = useState('');
@@ -42,9 +48,6 @@ const DevelopmentMode = () => {
   // David's comment: Why do we use a number instead of string, string seems much more intuitive to code
   const [tab, setTab] = useState('0');
 
-  const globalStore = useGlobalStore();
-  const { updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation, updateNextFrame } =
-    globalStore;
   const inputElement = useRef(null);
 
   const scrollToBottom = () => {
@@ -63,7 +66,7 @@ const DevelopmentMode = () => {
   };
 
   const updateState = (data: any) => {
-    setBackendState(data);
+    updateNextFrame(data);
     updateNextFrame(data);
   };
 
@@ -73,7 +76,7 @@ const DevelopmentMode = () => {
   };
 
   const resetDebugSession = () => {
-    setBackendState(undefined);
+    updateNextFrame(undefined);
     setActiveSession(false);
     clearTypeDeclarations();
     clearUserAnnotation();
