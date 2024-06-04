@@ -125,7 +125,7 @@ export type SocketPackageConcrete =
   | SocketPackageCompileError
   | SocketPackageSendStdin;
 
-interface ServerEvents {
+interface ServerToClientEvents {
   connect: SocketPackageConnect;
   disconnect: SocketPackageDisconnect;
   sendData: SocketPackageSendData;
@@ -144,8 +144,12 @@ interface ServerEvents {
   send_stdin: SocketPackageSendStdin;
 }
 
+interface ClientToServerEvents {
+  mainDebug: (code: string) => void;
+}
+
 class SocketClient {
-  private socket: Socket<ServerEvents>;
+  private socket: Socket<ServerToClientEvents, ClientToServerEvents>;
 
   constructor() {
     this.socket = io(URL);
