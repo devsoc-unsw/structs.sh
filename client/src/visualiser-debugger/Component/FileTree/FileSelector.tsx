@@ -2,9 +2,6 @@
 import Select, { SelectItem } from 'components/Select/Select';
 import { useEffect, useState } from 'react';
 import { Box, Button, Paper } from '@mui/material';
-import { SERVER_URL } from 'utils/constants';
-import axios from 'axios';
-import { PLACEHOLDER_USERNAME } from './Util/util';
 import {
   buttonStyle,
   createButtonStyle,
@@ -67,22 +64,22 @@ const FileSelector = ({
       return;
     }
 
-    axios
-      .post(`${SERVER_URL}/api/saveFile`, {
-        username: PLACEHOLDER_USERNAME,
-        workspace: currWorkSpaceName,
-        filename: currFileName,
-        fileData: '',
-      })
-      .then((response) => {
-        // DO NOT CHANGE THIS CODE
-        console.log('Getting response from saveFile', response.data);
-        if (!Object.prototype.hasOwnProperty.call(response.data, 'error')) {
-          files.push({ name: currFileName, text: '' });
-        }
-      });
-
     setDropdownOpen(false);
+    axiosAgent.saveFile(
+      currWorkSpaceName,
+      currFileName,
+      '',
+      (filesInCallBack: FileStub[]) => {
+        setFiles(filesInCallBack);
+      },
+      () => {
+        files.push({ name: currFileName, text: '' });
+        setFiles((files_) => {
+          return [...files_, { name: currFileName, text: '' }];
+        });
+      }
+    );
+
     axiosAgent.retrieveFiles(currWorkSpaceName, (filesInCallBack: FileStub[]) => {
       setFiles(filesInCallBack);
     });
