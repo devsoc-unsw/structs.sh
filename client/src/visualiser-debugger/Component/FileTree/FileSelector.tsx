@@ -11,7 +11,7 @@ import {
 } from './WorkspaceStyles';
 
 // TODO: Put this in the state store
-import { LocalStorageFS } from './LocalStorageFS';
+import { LocalStorageFS } from './AxiosStorageFS';
 import { AxiosAgent } from './AxiosClient';
 
 const fs = new LocalStorageFS();

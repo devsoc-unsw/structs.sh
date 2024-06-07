@@ -1,28 +1,23 @@
 export interface IFileSystem {
-  createFile(
-    file: IFileFileNode | IFileDirNode,
-    files: Array<any>,
-    setDropdownOpen: React.Dispatch<React.SetStateAction<Boolean>>,
-    setFiles: React.Dispatch<React.SetStateAction<any[]>>,
-    event: React.FormEvent
-  ): void;
+  createFile(file: IFileFileNode | IFileDirNode): void;
 
   // TODO: Figure out
-  deleteFile(): void;
+  deleteFile(file: IFileFileNode | IFileDirNode): void;
 
   // TODO: Refactor to be more generic
-  handleFileNameChange(
-    event: React.ChangeEvent<HTMLInputElement>,
-    setFileInput: React.Dispatch<React.SetStateAction<string>>
-  ): void;
+  saveChanges(): void;
 
   // return the root node so we can access all children nodes
   // when we implement the front end file selector, we could just display this return result on the FE
   viewAllFiles(): IFileDirNode;
+
+  // Pass back root directory
+  initialize(): IFileDirNode;
 }
 
 export interface IFileBaseNode {
   name: string;
+  // This is identify
   path: string;
   type: 'dir' | 'file';
 }
@@ -34,6 +29,7 @@ export interface IFileFileNode extends IFileBaseNode {
 }
 
 export interface IFileDirNode extends IFileBaseNode {
-  children: (IFileDirNode | IFileFileNode)[];
+  parent: IFileDirNode | undefined;
+  children: { [key: string]: IFileDirNode | IFileFileNode };
   type: 'dir';
 }
