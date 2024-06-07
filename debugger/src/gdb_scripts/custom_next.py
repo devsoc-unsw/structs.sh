@@ -6,6 +6,7 @@ from pycparser import parse_file, c_ast
 import re
 from src.constants import USER_MALLOC_CALL_FILE_NAME, USER_MALLOC_CALL_PREPROCESSED, USER_PTYPE_FILE_NAME, USER_PTYPE_PREPROCESSED
 from src.utils import create_abs_file_path
+import re
 
 from src.gdb_scripts.use_socketio_connection import useSocketIOConnection, enable_socketio_client_emit
 
@@ -14,6 +15,8 @@ from src.gdb_scripts.use_socketio_connection import useSocketIOConnection, enabl
 # You can then use this to reference files relative to this directory.
 abs_file_path = os.path.dirname(os.path.abspath(__file__))
 
+# use re.search with this, not match
+array_end = re.compile("\[\d+\]$", re.DOTALL)
 
 class MallocVisitor(c_ast.NodeVisitor):
     def __init__(self):
@@ -393,13 +396,16 @@ class CustomNextCommand(gdb.Command):
             stack_memory_value["addr"] = address
 
             # === Extract value
-            if type_name.startswith("struct") and not type_name.endswith("*") and not type_name.endswith("[]"):
+            if array_end.search(type_name):
+                arr = eval(value_str.replace("{", "[").replace("}", "]")) # eval should be safe cause only interacting with gdb :P
+                stack_memory_value["nCells"] = len(arr)
+                stack_memory_value["array"] = arr
+
+            elif type_name.startswith("struct") and not type_name.endswith("*"):
                 value_str = value_str.strip().strip("{}").strip()
                 # value_str == "data = 542543, next = 0xaaa67b32f2e"
-
                 value = create_struct_value(
                     self.debug_session.get_cached_parsed_type_decls(), value_str, type_name)
-            # TODO: handle arrays
             else:
                 value = value_str
 
