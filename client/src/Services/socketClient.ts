@@ -1,12 +1,14 @@
 // socketClient.js
 import { Socket, io } from 'socket.io-client';
 import { create } from 'zustand';
+import { assertUnreachable } from '../visualiser-debugger/Component/Visualizer/Util/util';
 
 const URL = import.meta.env.VITE_DEBUGGER_URL || 'http://localhost:8000';
 
 export type SocketEventType =
   | 'connect'
   | 'disconnect'
+  | 'connect_error'
   | 'sendData'
   | 'receiveData'
   | 'error'
@@ -107,6 +109,10 @@ export interface SocketPackageSendStdin extends SocketPackageBase {
   inputData: string;
 }
 
+export interface SocketPackageConnectError extends SocketPackageBase {
+  type: 'connect_error';
+}
+
 export type SocketPackageConcrete =
   | SocketPackageConnect
   | SocketPackageDisconnect
@@ -123,26 +129,12 @@ export type SocketPackageConcrete =
   | SocketPackageSendStdoutToUser
   | SocketPackageProgramWaitingForInput
   | SocketPackageCompileError
-  | SocketPackageSendStdin;
+  | SocketPackageSendStdin
+  | SocketPackageConnectError;
 
-interface ServerToClientEvents {
-  connect: SocketPackageConnect;
-  disconnect: SocketPackageDisconnect;
-  sendData: SocketPackageSendData;
-  receiveData: SocketPackageReceiveData;
-  error: SocketPackageError;
-  mainDebug: SocketPackageMainDebug;
-  executeNext: SocketPackageExecuteNext;
-  sendDummyLinkedListData: SocketPackageSendDummyLinkedListData;
-  sendDummyBinaryTreeData: SocketPackageSendDummyBinaryTreeData;
-  sendFunctionDeclaration: SocketPackageSendFunctionDeclaration;
-  sendTypeDeclaration: SocketPackageSendTypeDeclaration;
-  sendBackendStateToUser: SocketPackageSendBackendStateToUser;
-  sendStdoutToUser: SocketPackageSendStdoutToUser;
-  programWaitingForInput: SocketPackageProgramWaitingForInput;
-  compileError: SocketPackageCompileError;
-  send_stdin: SocketPackageSendStdin;
-}
+type ServerToClientEvents = {
+  [s in SocketEventType]: SocketPackageConcrete;
+};
 
 interface ClientToServerEvents {
   mainDebug: (code: string) => void;
@@ -190,8 +182,36 @@ class SocketClient {
     });
   }
 
-  on(event: SocketEventType, callback: (data: any) => void) {
-    this.socket.on(event, callback);
+  on<T extends SocketEventType>(event: T, callback: (data: SocketPackageConcrete) => void) {
+    switch (event) {
+      case 'connect':
+        this.connect();
+        break;
+      case 'disconnect':
+        this.disconnect();
+        break;
+      case 'connect_error':
+        break;
+      case 'sendDummyLinkedListData':
+      case 'sendDummyBinaryTreeData':
+      case 'sendData':
+      case 'receiveData':
+      case 'error':
+      case 'mainDebug':
+      case 'executeNext':
+      case 'sendFunctionDeclaration':
+      case 'sendTypeDeclaration':
+      case 'sendBackendStateToUser':
+      case 'sendStdoutToUser':
+      case 'programWaitingForInput':
+      case 'compileError':
+      case 'send_stdin':
+        // @ts-ignore
+        this.socket.on(event, callback);
+        break;
+      default:
+        assertUnreachable(event);
+    }
   }
 
   off(event: SocketEventType, callback: (data: any) => void) {
