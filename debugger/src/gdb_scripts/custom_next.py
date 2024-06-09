@@ -507,10 +507,11 @@ def split_gdb_examine(gdb_examine_data, cellSize):
         print(f"{line=}")
         for number in line.split(":", 1)[1].split():
             print(f"{number=}")
+            number = int(number) % 0x100
             if count == 0:
-                result.append(int(number))
+                result.append(number)
             else:
-                result[-1] += int(number) << (count * 8) # 8 is number of bits in a byte
+                result[-1] += number << (count * 8) # 8 is number of bits in a byte
             count += 1
             if count == cellSize:
                 count = 0
