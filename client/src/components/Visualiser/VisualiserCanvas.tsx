@@ -2,9 +2,6 @@ import React, { PointerEvent, useCallback, useEffect, useRef, useState } from 'r
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { mat3, vec2 } from 'gl-matrix';
-import { SVG, Svg } from '@svgdotjs/svg.js';
-import { VISUALISER_CANVAS } from 'visualiser-src/common/constants';
-import { shapeAttributes } from 'visualiser-src/linked-list-visualiser/util/constants';
 
 const ZoomableSvg = styled('svg')<{ transformMat: mat3 }>(({ transformMat }) => ({
   width: '100%',
@@ -12,14 +9,12 @@ const ZoomableSvg = styled('svg')<{ transformMat: mat3 }>(({ transformMat }) => 
   // transition: 'transform 0.2s linear',
   // transformOrigin: 'center',
   transform: `matrix(${transformMat[0]}, ${transformMat[1]}, ${transformMat[3]}, ${transformMat[4]}, ${transformMat[6]}, ${transformMat[7]})`,
-  // transform: `matrix3d(${transformMat[0]}, ${transformMat[1]}, ${transformMat[2]}, ${transformMat[3]}, ${transformMat[4]}, ${transformMat[5]}, ${transformMat[6]}, ${transformMat[7]}, ${transformMat[8]})`,
-  // transform: `translate(${transformObj.translate.x}px,  ${transformObj.translate.y}px)scale(${transformObj.scale})`,
-  // transform: `scale(${scale})`,
 }));
 
 const ZOOM_SPEED = 0.0002;
 const MAX_SCALE = 4;
 const MIN_SCALE = 0.5;
+const DEBUG = false;
 
 /* -------------------------------------------------------------------------- */
 /*                        Visualiser-Specific Canvases                        */
@@ -28,6 +23,10 @@ const MIN_SCALE = 0.5;
 /**
  * The React component that renders the DOM elements that the visualiser
  * attaches itself to.
+ *
+ * Uses affine transformations to implement pan and zoom functionality.
+ * See the following article for a beginner-friendly intro:
+ * https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Matrix_math_for_the_web#
  */
 const VisualiserCanvas: React.FC = () => {
   const svgRef = useRef<SVGSVGElement | null>(null);
@@ -39,6 +38,10 @@ const VisualiserCanvas: React.FC = () => {
   const onScroll = useCallback(
     (e: React.WheelEvent) => {
       setTransform((prev) => {
+        // === Zoom in/out at mouse position on scroll ===
+        // Uses some matrix transforms. See following link for explanation:
+        // https://math.stackexchange.com/questions/3245481/rotate-and-scale-a-point-around-different-origins
+
         // Calculate mouse position relative to viewport origin
         // Yields coords in viewport space (relative to viewport)
         const mouseFromWorkspaceOrigin = vec2.subtract(
@@ -105,9 +108,10 @@ const VisualiserCanvas: React.FC = () => {
       workspaceOrigin
     );
 
-    console.log(
-      `Clicked pos relative to workspace origin: ${mouseFromWorkspaceOrigin[0]}, ${mouseFromWorkspaceOrigin[1]}`
-    );
+    if (DEBUG)
+      console.log(
+        `Clicked pos relative to workspace origin: ${mouseFromWorkspaceOrigin[0]}, ${mouseFromWorkspaceOrigin[1]}`
+      );
   };
 
   const handlePointerMove = useCallback(
@@ -118,16 +122,11 @@ const VisualiserCanvas: React.FC = () => {
 
       // If the mouse is outside the workspace, don't do translation
       const workspaceBoundingRect = svgRef.current.getBoundingClientRect();
-      const mouseFromWorkspaceLeftTop = vec2.subtract(
-        vec2.create(),
-        vec2.fromValues(event.clientX, event.clientY),
-        vec2.fromValues(workspaceBoundingRect.left, workspaceBoundingRect.top)
-      );
       if (
-        mouseFromWorkspaceLeftTop[0] < 0 ||
-        mouseFromWorkspaceLeftTop[1] < 0 ||
-        mouseFromWorkspaceLeftTop[0] > workspaceBoundingRect.width ||
-        mouseFromWorkspaceLeftTop[1] > workspaceBoundingRect.height
+        event.clientX < workspaceBoundingRect.left ||
+        event.clientY < workspaceBoundingRect.top ||
+        event.clientX > workspaceBoundingRect.right ||
+        event.clientY > workspaceBoundingRect.bottom
       ) {
         return;
       }
@@ -148,9 +147,6 @@ const VisualiserCanvas: React.FC = () => {
   };
 
   useEffect(() => {
-    const canvas = SVG(VISUALISER_CANVAS) as Svg;
-    const nodeShape = canvas.circle().attr(shapeAttributes);
-
     const boundingClientRect = svgRef.current.getBoundingClientRect();
     setWorkspaceOrigin(
       vec2.fromValues(
@@ -179,6 +175,8 @@ const VisualiserCanvas: React.FC = () => {
 
 export default VisualiserCanvas;
 
+/*
 const constrain = (value: number, min: number, max: number) => {
   return Math.min(max, Math.max(min, value));
 };
+*/
