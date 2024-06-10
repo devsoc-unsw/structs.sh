@@ -2,6 +2,9 @@
 @import '@radix-ui/colors/slate-dark.css';
 @import './global.module.css';
 
+body {
+  overflow: hidden;
+}
 
 .layout {
   display: grid;
@@ -13,7 +16,7 @@
   color: var(--slate-12);
 }
 
-.layout>* {
+.layout > * {
   min-width: 0;
   min-height: 0;
 }
