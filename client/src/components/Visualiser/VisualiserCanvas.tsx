@@ -120,19 +120,25 @@ const VisualiserCanvas: React.FC = () => {
         return;
       }
 
-      // If the mouse is outside the workspace, don't do translation
-      const workspaceBoundingRect = svgRef.current.getBoundingClientRect();
+      // If the mouse is outside the window, don't do translation
+      const workspaceBoundingRect = document
+        .getElementById('visualiser-container')
+        ?.getBoundingClientRect();
       if (
-        event.clientX < workspaceBoundingRect.left ||
-        event.clientY < workspaceBoundingRect.top ||
-        event.clientX > workspaceBoundingRect.right ||
-        event.clientY > workspaceBoundingRect.bottom
+        workspaceBoundingRect &&
+        (event.clientX < workspaceBoundingRect.left ||
+          event.clientY < workspaceBoundingRect.top ||
+          event.clientX > workspaceBoundingRect.right ||
+          event.clientY > workspaceBoundingRect.bottom)
       ) {
+        console.log('Pointer left workspace');
+
+        setIsPointerDown(false);
         return;
       }
 
       // Is this needed for anything?
-      event.preventDefault();
+      // event.preventDefault();
 
       setTransform((prev) => {
         const translateVec = vec2.fromValues(event.movementX / prev[0], event.movementY / prev[4]);
@@ -147,11 +153,13 @@ const VisualiserCanvas: React.FC = () => {
   };
 
   useEffect(() => {
-    const boundingClientRect = svgRef.current.getBoundingClientRect();
+    // Note: svg is not always same size as the workspace.
+    // See this image: https://imgur.com/a/EK242BQ
+    const svgBoundingClientRect = svgRef.current.getBoundingClientRect();
     setWorkspaceOrigin(
       vec2.fromValues(
-        (boundingClientRect.left + boundingClientRect.right) / 2,
-        (boundingClientRect.top + boundingClientRect.bottom) / 2
+        (svgBoundingClientRect.left + svgBoundingClientRect.right) / 2,
+        (svgBoundingClientRect.top + svgBoundingClientRect.bottom) / 2
       )
     );
   }, []);
