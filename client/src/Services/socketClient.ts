@@ -143,32 +143,15 @@ interface ClientToServerEvents {
 class SocketClient {
   private socket: Socket<ServerToClientEvents, ClientToServerEvents>;
 
+  get socketTemp(): Socket {
+    return this.socket;
+  }
+
   constructor() {
     this.socket = io(URL);
   }
 
-  onSendDummyData = (data: any) => {
-    console.log(`Received dummy data:\n`, data);
-    if (data !== 'LINE NOT FOUND') {
-      updateState(data);
-    } else {
-      console.log('!!! No more dummy data');
-    }
-  };
-
-  attach() {
-    this.socket.on('sendDummyLinkedListData', onSendDummyData);
-    this.socket.on('sendDummyBinaryTreeData', onSendDummyData);
-    this.socket.on('mainDebug', onMainDebug);
-    this.socket.on('sendFunctionDeclaration', onSendFunctionDeclaration);
-    this.socket.on('sendTypeDeclaration', onSendTypeDeclaration);
-    this.socket.on('executeNext', onExecuteNext);
-    this.socket.on('sendBackendStateToUser', onSendBackendStateToUser);
-    this.socket.on('sendStdoutToUser', onSendStdoutToUser);
-    this.socket.on('programWaitingForInput', onProgramWaitingForInput);
-    this.socket.on('compileError', onCompileError);
-    this.socket.on('sendStdoutToUser', onStdout);
-  }
+  attach() {}
 
   connect() {
     this.socket.on('connect', () => {

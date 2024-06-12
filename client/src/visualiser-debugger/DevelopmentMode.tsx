@@ -85,11 +85,11 @@ const DevelopmentMode = () => {
 
   const sendCode = () => {
     resetDebugSession();
-    socket.emit('mainDebug', code);
+    socket.socketTemp.emit('mainDebug', code);
   };
 
   const getNextState = () => {
-    socket.emit('executeNext');
+    socket.socketTemp.emit('executeNext');
   };
 
   const onDisconnect = useCallback(() => {
@@ -167,6 +167,7 @@ const DevelopmentMode = () => {
     socket.on('sendStdoutToUser', onSendStdoutToUser);
     socket.on('programWaitingForInput', onProgramWaitingForInput);
     socket.on('compileError', onCompileError);
+    // @ts-ignore
     socket.on('sendStdoutToUser', onStdout);
 
     return () => {

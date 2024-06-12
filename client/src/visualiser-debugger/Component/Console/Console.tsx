@@ -23,7 +23,7 @@ const Console = ({ chunks, handleAddChunk, scrollToBottom, isActive }) => {
   const handleKey = (event: React.KeyboardEvent<HTMLSpanElement>) => {
     if (event.key === 'Enter') {
       if (input.length > 0) {
-        socket.emit('send_stdin', input);
+        socket.socketTemp.emit('send_stdin', input);
         handleAddChunk(`${input}\n`);
         clearInput();
         scrollToBottom();
