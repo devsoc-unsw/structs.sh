@@ -2,6 +2,7 @@ import React, { PointerEvent, useCallback, useEffect, useRef, useState } from 'r
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { mat3, vec2 } from 'gl-matrix';
+import { VISUALISER_CANVAS_ID, VISUALISER_WORKSPACE_ID } from 'visualiser-src/common/constants';
 
 const ZoomableSvg = styled('svg')<{ transformMat: mat3 }>(({ transformMat }) => ({
   width: '100%',
@@ -16,6 +17,10 @@ const MAX_SCALE = 4;
 const MIN_SCALE = 0.5;
 const DEBUG = false;
 
+const getCentre = (rect: DOMRect) => {
+  return vec2.fromValues((rect.left + rect.right) / 2, (rect.top + rect.bottom) / 2);
+};
+
 /* -------------------------------------------------------------------------- */
 /*                        Visualiser-Specific Canvases                        */
 /* -------------------------------------------------------------------------- */
@@ -29,36 +34,46 @@ const DEBUG = false;
  * https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Matrix_math_for_the_web#
  */
 const VisualiserCanvas: React.FC = () => {
+  // Element ref to the visualiser "canvas" svg (not actually a HTMLCanvas)
+  // Note: the visualiser canvas is not always same size as the visualiser workspace.
+  // See this image: https://imgur.com/a/EK242BQ
   const svgRef = useRef<SVGSVGElement | null>(null);
-  const [transform, setTransform] = useState<mat3>(mat3.create());
-  const [workspaceOrigin, setWorkspaceOrigin] = useState<vec2>(
-    vec2.fromValues(window.innerWidth / 2, window.innerHeight / 2)
+
+  // top, left, bottom, right of workspace relative to viewport top-left
+  const [workspaceRect, setWorkspaceRect] = useState<DOMRect>(
+    new DOMRect(0, 0, window.innerWidth, window.innerHeight)
   );
+
+  // transform matrix to represent accumulative panning and zooming.
+  // The visualiser canvas position will be transformed by this matrix
+  // and updated on scroll and drag events.
+  const [transform, setTransform] = useState<mat3>(mat3.create());
 
   const onScroll = useCallback(
     (e: React.WheelEvent) => {
-      setTransform((prev) => {
+      setTransform((prevTransform) => {
         // === Zoom in/out at mouse position on scroll ===
-        // Uses some matrix transforms. See following link for explanation:
+        // Uses scaling matrix transform. See following link for explanation:
         // https://math.stackexchange.com/questions/3245481/rotate-and-scale-a-point-around-different-origins
 
-        // Calculate mouse position relative to viewport origin
-        // Yields coords in viewport space (relative to viewport)
+        // Calculate mouse position relative to workspace origin,
+        // in viewport space
         const mouseFromWorkspaceOrigin = vec2.subtract(
           vec2.create(),
           vec2.fromValues(e.clientX, e.clientY),
-          workspaceOrigin
+          getCentre(workspaceRect)
         );
 
         // Transformed mouse position using the previous pan-zoom transform
-        // Yields coords in workspace space (relative to workspace origin)
+        // into transformed workspace space (taking into account accumulative
+        // pan and zoom transformations)
         const mouseFromWorkspaceOriginTransformed = vec2.transformMat3(
           vec2.create(),
           mouseFromWorkspaceOrigin,
-          mat3.invert(mat3.create(), prev)
+          mat3.invert(mat3.create(), prevTransform)
         );
 
-        const newTransform = mat3.clone(prev);
+        const newTransform = mat3.clone(prevTransform);
 
         // Translate the transform to the mouse position
         mat3.translate(newTransform, newTransform, mouseFromWorkspaceOriginTransformed);
@@ -94,25 +109,28 @@ const VisualiserCanvas: React.FC = () => {
         return newTransform;
       });
     },
-    [workspaceOrigin]
+    [workspaceRect]
   );
 
   const [isPointerDown, setIsPointerDown] = useState(false);
 
-  const handlePointerDown = (e: PointerEvent<HTMLDivElement>) => {
-    setIsPointerDown(true);
+  const handlePointerDown = useCallback(
+    (e: PointerEvent<HTMLDivElement>) => {
+      setIsPointerDown(true);
 
-    const mouseFromWorkspaceOrigin = vec2.subtract(
-      vec2.create(),
-      vec2.fromValues(e.clientX, e.clientY),
-      workspaceOrigin
-    );
-
-    if (DEBUG)
-      console.log(
-        `Clicked pos relative to workspace origin: ${mouseFromWorkspaceOrigin[0]}, ${mouseFromWorkspaceOrigin[1]}`
+      const mouseFromWorkspaceOrigin = vec2.subtract(
+        vec2.create(),
+        vec2.fromValues(e.clientX, e.clientY),
+        getCentre(workspaceRect)
       );
-  };
+
+      if (DEBUG)
+        console.log(
+          `Clicked pos relative to workspace origin: ${mouseFromWorkspaceOrigin[0]}, ${mouseFromWorkspaceOrigin[1]}`
+        );
+    },
+    [workspaceRect]
+  );
 
   const handlePointerMove = useCallback(
     (event: PointerEvent<HTMLDivElement>) => {
@@ -120,19 +138,15 @@ const VisualiserCanvas: React.FC = () => {
         return;
       }
 
-      // If the mouse is outside the window, don't do translation
-      const workspaceBoundingRect = document
-        .getElementById('visualiser-container')
-        ?.getBoundingClientRect();
+      // If the mouse is outside the workspace, don't do translation
       if (
-        workspaceBoundingRect &&
-        (event.clientX < workspaceBoundingRect.left ||
-          event.clientY < workspaceBoundingRect.top ||
-          event.clientX > workspaceBoundingRect.right ||
-          event.clientY > workspaceBoundingRect.bottom)
+        workspaceRect &&
+        (event.clientX < workspaceRect.left ||
+          event.clientY < workspaceRect.top ||
+          event.clientX > workspaceRect.right ||
+          event.clientY > workspaceRect.bottom)
       ) {
-        console.log('Pointer left workspace');
-
+        if (DEBUG) console.log('Pointer left workspace');
         setIsPointerDown(false);
         return;
       }
@@ -145,7 +159,7 @@ const VisualiserCanvas: React.FC = () => {
         return mat3.translate(mat3.create(), prev, translateVec);
       });
     },
-    [isPointerDown]
+    [isPointerDown, workspaceRect]
   );
 
   const handlePointerUp = () => {
@@ -153,38 +167,51 @@ const VisualiserCanvas: React.FC = () => {
   };
 
   useEffect(() => {
-    // Note: svg is not always same size as the workspace.
-    // See this image: https://imgur.com/a/EK242BQ
-    const svgBoundingClientRect = svgRef.current.getBoundingClientRect();
-    setWorkspaceOrigin(
-      vec2.fromValues(
-        (svgBoundingClientRect.left + svgBoundingClientRect.right) / 2,
-        (svgBoundingClientRect.top + svgBoundingClientRect.bottom) / 2
-      )
-    );
+    // Callback for a ResizeObserver constructor
+    const handleWorkspaceResize: ResizeObserverCallback = (entries) => {
+      if (entries.length > 0 && entries[0].target.id === VISUALISER_WORKSPACE_ID) {
+        const workspaceEntry = entries[0];
+        const boundingClientRect = workspaceEntry.target.getBoundingClientRect();
+        if (DEBUG)
+          console.log(
+            `Workspace resized. Setting new workspace rect left: ${boundingClientRect.left}, right: ${boundingClientRect.right}, top: ${boundingClientRect.top}, bottom: ${boundingClientRect.bottom} and updating transform...`
+          );
+        setWorkspaceRect(boundingClientRect);
+      }
+
+      if (entries.length !== 1) {
+        // Note: I don't know why there would be none or multiple entries, I just assume
+        // there is one entry passed to the resize handler when it is called by
+        // the resize observer. So if this is not the case, maybe investigate\
+        // what to do.
+        console.warn(
+          'Warning: Unexpected number of entries in ResizeObserver callback (more than 1).'
+        );
+      }
+    };
+
+    const visualiserWorkspaceEle = document.getElementById(VISUALISER_WORKSPACE_ID);
+    if (visualiserWorkspaceEle) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/Resize_Observer_API
+      new ResizeObserver(handleWorkspaceResize).observe(visualiserWorkspaceEle);
+    }
   }, []);
 
   return (
     <Box
-      onWheel={onScroll}
-      id="visualiser-container"
+      id={VISUALISER_WORKSPACE_ID}
       margin="auto"
       width="100vw"
       height="100vh"
+      onWheel={onScroll}
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerUp}
     >
-      <ZoomableSvg ref={svgRef} id="visualiser-canvas" transformMat={transform} />
+      <ZoomableSvg ref={svgRef} id={VISUALISER_CANVAS_ID} transformMat={transform} />
     </Box>
   );
 };
 
 export default VisualiserCanvas;
-
-/*
-const constrain = (value: number, min: number, max: number) => {
-  return Math.min(max, Math.max(min, value));
-};
-*/

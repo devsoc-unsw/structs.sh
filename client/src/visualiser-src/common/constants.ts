@@ -11,6 +11,7 @@ export const showLineNumbers = false;
 // Animation attributes
 export const defaultSpeed = 0.5;
 
-export const VISUALISER_CANVAS = '#visualiser-canvas';
+export const VISUALISER_CANVAS_ID = 'visualiser-canvas';
+export const VISUALISER_WORKSPACE_ID = 'visualiser-workspace';
 export const CODE_CANVAS = '#code-canvas';
 export const CODE_CONTAINER = 'code-container';

@@ -7,7 +7,12 @@ import {
   nodePathWidth,
 } from '../util/constants';
 import { getPointerPath } from '../util/util';
-import { actualNodeDiameter, markerLength, pathD, VISUALISER_CANVAS } from '../../common/constants';
+import {
+  actualNodeDiameter,
+  markerLength,
+  pathD,
+  VISUALISER_CANVAS_ID,
+} from '../../common/constants';
 
 function addMarker(add: Marker) {
   add.path(pathD);
@@ -39,7 +44,7 @@ export default class GraphicalLinkedListNode {
       .attr(textAttributes)
       .opacity(1)
       .attr({ 'font-size': 16, 'font-family': 'CodeText' })
-      .addTo(VISUALISER_CANVAS);
+      .addTo(`#${VISUALISER_CANVAS_ID}`);
     const headPointer = SVG()
       .path()
       .attr(pathAttributes)
@@ -52,14 +57,14 @@ export default class GraphicalLinkedListNode {
           topOffset
         )
       )
-      .addTo(VISUALISER_CANVAS);
+      .addTo(`#${VISUALISER_CANVAS_ID}`);
 
     headPointer.marker('end', markerLength, markerLength, addMarker);
     return headPointer;
   }
 
   public static from(input: number) {
-    const canvas = SVG(VISUALISER_CANVAS) as Svg;
+    const canvas = SVG(`#${VISUALISER_CANVAS_ID}`) as Svg;
     const newPointer = canvas.path().attr(pathAttributes);
     const nodeShape = canvas.circle().attr(shapeAttributes);
     const nodeValue = canvas.text(String(input)).attr(textAttributes);
