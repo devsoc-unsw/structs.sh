@@ -19,6 +19,7 @@ import {
   loadCode,
 } from './Component/FileTree/Util/util';
 import useSocketClientStore from '../Services/socketClient';
+import { INITIAL_BACKEND_STATE } from './Types/backendType';
 
 const DevelopmentMode = () => {
   const socket = useSocketClientStore((stateStore) => stateStore.socket);
@@ -67,7 +68,6 @@ const DevelopmentMode = () => {
 
   const updateState = (data: any) => {
     updateNextFrame(data);
-    updateNextFrame(data);
   };
 
   const handleSetCode = (newCode: string) => {
@@ -76,7 +76,7 @@ const DevelopmentMode = () => {
   };
 
   const resetDebugSession = () => {
-    updateNextFrame(undefined);
+    updateNextFrame(INITIAL_BACKEND_STATE);
     setActiveSession(false);
     clearTypeDeclarations();
     clearUserAnnotation();
