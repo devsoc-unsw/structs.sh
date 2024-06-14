@@ -507,6 +507,8 @@ def split_gdb_examine(gdb_examine_data, cellSize):
         print(f"{line=}")
         for number in line.split(":", 1)[1].split():
             print(f"{number=}")
+            # gdb returns each number byte as a signed value (i.e. in the range [-128, 127] instead of [0, 255])
+            # negative numbers break when byte values are bit shifted and added together
             number = int(number) % 0x100
             if count == 0:
                 result.append(number)
