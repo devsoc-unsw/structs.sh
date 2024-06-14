@@ -18,6 +18,7 @@ abs_file_path = os.path.dirname(os.path.abspath(__file__))
 # use re.search with this, not match
 array_end = re.compile("\[\d+\]$", re.DOTALL)
 
+
 class MallocVisitor(c_ast.NodeVisitor):
     def __init__(self):
         self.malloc_variables = []
@@ -28,14 +29,8 @@ class MallocVisitor(c_ast.NodeVisitor):
         print("MallocVisitor.visit_Assignment:")
         print(node)
         # Check if the assignment is of the form "variable = malloc(...)"
-        if isinstance(node.rvalue, c_ast.Cast):
-            if isinstance(node.rvalue.expr, c_ast.FuncCall) and isinstance(node.rvalue.expr.name, c_ast.ID) and node.rvalue.expr.name.name == 'malloc':
-                if isinstance(node.lvalue, c_ast.StructRef):
-                    var_name = self.get_variable_name(node.lvalue)
-                    self.malloc_variables.append(var_name)
-                elif isinstance(node.lvalue, c_ast.ID):
-                    self.malloc_variables.append(node.lvalue.name)
-        elif isinstance(node.rvalue, c_ast.FuncCall) and isinstance(node.rvalue.name, c_ast.ID) and node.rvalue.name.name == 'malloc':
+        if ((rvalue := (isinstance(node.rvalue, c_ast.Cast) and node.rvalue.expr) or
+             (isinstance(node.rvalue, c_ast.FuncCall) and node.rvalue)) and isinstance(rvalue.name, c_ast.ID) and rvalue.name.name == 'malloc'):
             if isinstance(node.lvalue, c_ast.StructRef):
                 var_name = self.get_variable_name(node.lvalue)
                 self.malloc_variables.append(var_name)
@@ -54,12 +49,10 @@ class MallocVisitor(c_ast.NodeVisitor):
     def visit_Decl(self, node):
         # Check if the declaration initializes with malloc, e.g., "Type *var = malloc(...)"
         if node.init:
-            if isinstance(node.init, c_ast.Cast):
-                if isinstance(node.init.expr, c_ast.FuncCall) and isinstance(node.init.expr.name, c_ast.ID) and node.init.expr.name.name == 'malloc':
-                    if isinstance(node.type, c_ast.PtrDecl):
-                        var_name = node.name
-                        self.malloc_variables.append(var_name)
-            elif isinstance(node.init, c_ast.FuncCall) and isinstance(node.init.name, c_ast.ID) and node.init.name.name == 'malloc':
+            if (init :=
+                (isinstance(node.init, c_ast.Cast) and node.init.expr)
+                or (isinstance(node.init, c_ast.FuncCall) and node.init)
+            ) and isinstance(init.name, c_ast.ID) and init.name.name == 'malloc':
                 if isinstance(node.type, c_ast.PtrDecl):
                     var_name = node.name
                     self.malloc_variables.append(var_name)
@@ -74,7 +67,6 @@ class MallocVisitor(c_ast.NodeVisitor):
         elif isinstance(node, c_ast.ID):
             return node.name
         return None
-
 
 
 class CustomNextCommand(gdb.Command):
@@ -158,7 +150,7 @@ class CustomNextCommand(gdb.Command):
 
             # Visit the AST to check for malloc calls
             malloc_visitor.visit(line_ast)
-            
+
             print("afterAST1")
 
             # Print the variable names assigned to malloc
@@ -202,10 +194,10 @@ class CustomNextCommand(gdb.Command):
                     struct_fields_str = struct_fields_str.strip("{}")
                     print(f"{struct_fields_str=}")
                     # struct_fields_str == "data = 542543, next = 0x0"
-                    
+
                     struct_type_name = stack_var_type_name.strip('*').strip()
                     # "struct node*" => "struct node"
-                    
+
                     is_ll = False
                     #TODO: Use c_ast to check if SELF is one of the struct field types, NOT gdb (malloc_variables could return a list of objects rather than variable names)
                     if "struct" in stack_var_type_name: # assume LL's are stored as struct data
@@ -498,6 +490,9 @@ def split_gdb_examine(gdb_examine_data, cellSize):
     Expects gdb_examine_data to be in the format of the x/<number of bytes>b command: 
     0x5555555592a0:	1	0	0	0	2	0	0	0
     0x5555555592a8:	3	0   0   0
+
+    See debugger/src/samples/heap_array_test.c for more info on how this works
+    Also see for format options to this x command: https://visualgdb.com/gdbreference/commands/x
     '''
 
     print(f"{gdb_examine_data=}")
