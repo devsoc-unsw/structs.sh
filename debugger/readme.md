@@ -48,7 +48,8 @@ To run the app with Docker, (both the client and server simultaneously) see the 
 # Running interactive shell in Docker image
 
 To run an interactive bash shell to inspect the Ubuntu docker image for the debugger,
-run the following command in your shell after starting the docker image:
+run the following command in your shell after starting the docker container
+(to start docker the container see [](/readme.md)):
 
 ```bash
 $ docker exec -it structssh-debugger-1 bash
