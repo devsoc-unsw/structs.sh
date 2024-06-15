@@ -112,7 +112,7 @@ signed two's complement of one-byte:
 
 We can reconstruct the original signed int as such:
 
-(2^0 * 131) + (2^8 * 204) + (2^16 * 15) + (2^24 * -127) = 2151686160
+(2^0 * 131) + (2^8 * 15) + (2^16 * 204) + (2^24 * -127) = 2151686160
 
 Note that for the most significant byte we use -127 (signed two's complement of one-byte)
 instead of 129 (unsigned one-byte) because we are trying to reconstruct a signed
