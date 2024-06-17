@@ -17,29 +17,30 @@ const App = () => {
     window.globalStore = useGlobalStore;
   }, [useGlobalStore]);
 
-  return (<Box color={structsTheme.palette.text.primary}>
-    <AnimatePresence>
-      <ThemeProvider theme={structsTheme}>
-        <Routes>
-          {/* Homepage */}
-          <Route path="/" element={<HomePage />} />
+  return (
+    <Box color={structsTheme.palette.text.primary}>
+      <AnimatePresence>
+        <ThemeProvider theme={structsTheme}>
+          <Routes>
+            {/* Homepage */}
+            <Route path="/" element={<HomePage />} />
 
-          {/* Visualiser routes */}
-          <Route path="/visualiser/:topic/:data?" element={<VisualiserPage />} />
+            {/* Visualiser routes */}
+            <Route path="/visualiser/:topic/:data?" element={<VisualiserPage />} />
 
-          {/* Feedback and feature request page */}
-          <Route path="/feedback" element={<Feedback />} />
+            {/* Feedback and feature request page */}
+            <Route path="/feedback" element={<Feedback />} />
 
-          {/* Development mode */}
-          <Route path="/dev" element={<DevelopmentMode />} />
+            {/* Development mode */}
+            <Route path="/dev" element={<DevelopmentMode />} />
 
-          {/* 404 page */}
-          <Route path="*" element={<Page404 />} />
-        </Routes>
-      </ThemeProvider>
-    </AnimatePresence>
-  </Box>
-)
+            {/* 404 page */}
+            <Route path="*" element={<Page404 />} />
+          </Routes>
+        </ThemeProvider>
+      </AnimatePresence>
+    </Box>
+  );
 };
 
 export default App;
