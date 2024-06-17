@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        component: [client]
+        component: [client, debugger]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
