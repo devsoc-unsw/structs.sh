@@ -1,0 +1,25 @@
+# ===== Stage 1: Base Image with Python Installed =====
+FROM python:3.11-slim as base
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# ===== Stage 2: Application Layer =====
+FROM base as final
+
+# Copy application code
+COPY . .
+
+# Set a non-root user and switch to it
+RUN useradd -m myuser
+USER myuser
+
+# Set the port the app runs on
+EXPOSE 8000
+
+# Command to run your app
+CMD ["python3", "-u", "src/server.py"]
