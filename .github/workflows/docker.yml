@@ -54,6 +54,8 @@ jobs:
     needs: [build]
     concurrency: production
     environment: production
+    env:
+      VITE_DEBUGGER_URL: ${{ secrets.DEBUGGER_URL }}
 
     steps:
       - name: Checkout repository
