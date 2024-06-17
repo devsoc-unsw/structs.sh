@@ -18,6 +18,8 @@ jobs:
     permissions:
       contents: read
       packages: write
+    env:
+      VITE_DEBUGGER_URL: ${{ secrets.DEBUGGER_URL }}
     strategy:
       fail-fast: false
       matrix:
