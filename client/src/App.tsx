@@ -8,9 +8,16 @@ import VisualiserPage from 'VisualiserPage';
 import { structsTheme } from 'structsThemes';
 import './App.scss';
 import DevelopmentMode from 'visualiser-debugger/DevelopmentMode';
+import { useGlobalStore } from 'visualiser-debugger/Store/globalStateStore';
+import { useEffect } from 'react';
 
-const App = () => (
-  <Box color={structsTheme.palette.text.primary}>
+const App = () => {
+  useEffect(() => {
+    // @ts-ignore
+    window.globalStore = useGlobalStore;
+  }, [useGlobalStore]);
+
+  return (<Box color={structsTheme.palette.text.primary}>
     <AnimatePresence>
       <ThemeProvider theme={structsTheme}>
         <Routes>
@@ -32,6 +39,7 @@ const App = () => (
       </ThemeProvider>
     </AnimatePresence>
   </Box>
-);
+)
+};
 
 export default App;
