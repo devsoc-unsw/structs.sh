@@ -1,4 +1,4 @@
-import { assertUnreachable } from '../Visualizer/Util/util';
+import { assertUnreachable } from '../../Visualizer/Util/util';
 import { AxiosAgent } from './AxiosClient';
 import { IFileDirNode, IFileFileNode, IFileSystem } from './IFileSystem';
 

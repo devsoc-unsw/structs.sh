@@ -17,10 +17,13 @@ import {
 } from './WorkspaceStyles';
 import FileSelector from './FileSelector';
 import { PLACEHOLDER_USERNAME, PLACEHOLDER_WORKSPACE, loadWorkspaces } from './Util/util';
+import { AxiosAgent } from './FS/AxiosClient';
 
 // TODO: Unify debug mode
 const DEBUG_MODE = true;
-
+export interface WorkspaceStub {
+  name: string;
+}
 const WorkspaceSelector = ({
   programName,
   onChangeWorkspaceName,
@@ -36,24 +39,26 @@ const WorkspaceSelector = ({
   const [filenames, setFilenames] = useState([]);
   const [workspaces, setWorkspaces] = useState([]);
 
+  const axiosAgent = new AxiosAgent();
   useEffect(() => {
-    const loadWorkspaces = async () => {
-      const data = {
-        username: PLACEHOLDER_USERNAME,
-      };
+    // const loadWorkspaces = async () => {
+    //   const data = {
+    //     username: PLACEHOLDER_USERNAME,
+    //   };
 
-      let allWorkspaces = [];
-      await axios.get(`${SERVER_URL}/api/retrieveWorkspaces`, { params: data }).then((response) => {
-        if (response.data.hasOwnProperty('error')) {
-          console.log(response.data);
-        } else {
-          allWorkspaces = response.data.workspaces;
-        }
-      });
+    //   let allWorkspaces = [];
+    //   await axios.get(`${SERVER_URL}/api/retrieveWorkspaces`, { params: data }).then((response) => {
+    //     if (response.data.hasOwnProperty('error')) {
+    //       console.log(response.data);
+    //     } else {
+    //       allWorkspaces = response.data.workspaces;
+    //     }
+    //   });
 
-      setWorkspaces(allWorkspaces);
-    };
-
+    //   setWorkspaces(allWorkspaces);
+    // };
+    const loadWorkspaces = async() => 
+      axiosAgent.retrieveWorkspaces((workspacesInCallback: WorkspaceStub[]) => {setWorkspaces([workspacesInCallback])});
     loadWorkspaces();
   }, []);
 
@@ -74,20 +79,38 @@ const WorkspaceSelector = ({
       workspaceName: workspaceInput,
     };
 
-    let returnFlag = false;
-    axios.post(`${SERVER_URL}/api/saveWorkspace`, data).then((response) => {
-      if (response.data.hasOwnProperty('error')) {
-        returnFlag = true;
-      }
-    });
+    // let returnFlag = false;
+    // axios.post(`${SERVER_URL}/api/saveWorkspace`, data).then((response) => {
+    //   if (response.data.hasOwnProperty('error')) {
+    //     returnFlag = true;
+    //   }
+    // });
 
-    if (returnFlag) {
+    // if (returnFlag) {
+    //   setDropdownOpen(false);
+    //   return;
+    // }
+
+    // setWorkspaces([...workspaces, workspaceInput]);
+    // setDropdownOpen(false);
+
+    let flag = false;
+    axiosAgent.saveWorkspace
+    (
+      workspaceInput, 
+      flag, 
+      (workspacesInCallback: WorkspaceStub[]) => {
+        setDropdownOpen(false);
+        setWorkspaces(workspacesInCallback);
+      },
+      () => {
+        flag = true;
+      }
+    )
+    if (flag) {
       setDropdownOpen(false);
       return;
     }
-
-    setWorkspaces([...workspaces, workspaceInput]);
-    setDropdownOpen(false);
   };
 
   const handleInputChange = (event) => {

@@ -1,10 +1,14 @@
 import axios from 'axios';
-import { PLACEHOLDER_USERNAME } from './Util/util';
-import { SERVER_URL } from '../../../utils/constants';
+import { PLACEHOLDER_USERNAME } from '../Util/util';
+import { SERVER_URL } from '../../../../utils/constants';
 
 export interface FileStub {
   name: string;
   text: string;
+}
+
+export interface WorkspaceStub {
+  name: string;
 }
 
 export class AxiosAgent {
@@ -55,7 +59,46 @@ export class AxiosAgent {
         }
       })
       .catch((error) => {
-        console.error('Error while retrieving files:', error);
+        console.error('Error while saving file:', error);
+        errorCallBack();
+      });
+  }
+
+  async retrieveWorkspaces(callback: (workspaces: WorkspaceStub[]) => void) {
+    await axios.get(`${SERVER_URL}/api/retrieveWorkspaces`, { params: {username: this.username} })
+    .then((response) => {
+      if (response.data.hasOwnProperty('error')) {
+        console.log(response.data);
+        callback([]);
+      } else {
+        callback(response.data.workspaces);
+      }
+    }).catch((error) => {
+      console.error('Error while retrieving workspaces:', error);
+      callback([]);
+    });
+  }
+
+  saveWorkspace(
+    workspaceName: string, 
+    returnFlag: boolean, 
+    callback: (workspaces: WorkspaceStub[]) => void,
+    errorCallBack: () => void
+  ) {
+    axios
+      .post(`${SERVER_URL}/api/saveWorkspace`, {
+        username: this.username, 
+        workspaceName: workspaceName
+      })
+      .then((response) => {
+        if (!response.data.hasOwnProperty('error')) {
+          callback(response.data.workspaces);
+        } else {
+          errorCallBack();
+        }
+      })
+      .catch((error) => {
+        console.error('Error while saving workspace:', error);
         errorCallBack();
       });
   }
