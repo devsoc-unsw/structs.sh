@@ -1,3 +1,4 @@
+import { VISUALISER_WORKSPACE_ID } from 'visualiser-src/common/constants';
 import { lineDiffY, canvasPadding } from '../../common/settings';
 import GraphicalBSTNode from '../data-structure/GraphicalBSTNode';
 
@@ -21,7 +22,7 @@ const updateNodePositionsRecursive = (
 };
 
 const updateNodePositions = (root: GraphicalBSTNode): void => {
-  const canvasWidth = document.getElementById('visualiser-container').offsetWidth;
+  const canvasWidth = document.getElementById(VISUALISER_WORKSPACE_ID).offsetWidth;
   const low: number = 0;
   const high: number = Number(canvasWidth);
   const mid: number = (low + high) / 2;

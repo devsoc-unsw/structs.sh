@@ -3,7 +3,7 @@ import {
   markerLength,
   nodeDiameter,
   pathD,
-  VISUALISER_CANVAS,
+  VISUALISER_CANVAS_ID,
 } from 'visualiser-src/common/constants';
 import { lineStyle, nodeStyle, textStyle } from './settings';
 
@@ -101,7 +101,7 @@ export default class GenericGraphicalTreeNode {
   }
 
   protected static createData(input: number) {
-    const canvas = SVG(VISUALISER_CANVAS) as Svg;
+    const canvas = SVG(`#${VISUALISER_CANVAS_ID}`) as Svg;
     const leftArrowTarget = canvas
       .marker(markerLength, markerLength, (add: Marker) => {
         add.path(pathD);

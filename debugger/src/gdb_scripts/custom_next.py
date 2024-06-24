@@ -261,7 +261,8 @@ class CustomNextCommand(gdb.Command):
 
             # Get struct info by passing in address
             struct_fields_str = gdb.execute(
-                f'p *({struct_type_name} *) {addr}', to_string=True)       # Can replace struct node with type stored in object
+                # Can replace struct node with type stored in object
+                f'p *({struct_type_name} *) {addr}', to_string=True)
             # TODO: Heap dictionary assumes its working with structs, should ideally be generalised to all types
             # Extract all struct fields
             struct_fields_str = struct_fields_str.split("=", 1)[1].strip()

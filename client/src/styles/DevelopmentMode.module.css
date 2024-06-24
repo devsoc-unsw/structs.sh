@@ -16,7 +16,7 @@ body {
   color: var(--slate-12);
 }
 
-.layout>* {
+.layout > * {
   min-width: 0;
   min-height: 0;
 }

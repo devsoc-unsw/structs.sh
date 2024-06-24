@@ -2,6 +2,7 @@ import { Line, Marker } from '@svgdotjs/svg.js';
 import { lineDiffY, canvasPadding } from '../../common/settings';
 import { getPointerStartEndCoordinates } from '../../common/helpers';
 import AnimationProducer from '../../common/AnimationProducer';
+import { VISUALISER_WORKSPACE_ID } from '../../common/constants';
 import GraphicalBSTNode from '../data-structure/GraphicalBSTNode';
 
 export default class BSTAnimationProducer extends AnimationProducer {
@@ -132,7 +133,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
   // returns the difference in x coordinates with the node
   // and it's two child nodes
   public static getLineDiffX(node: GraphicalBSTNode): number {
-    const canvasWidth = document.getElementById('visualiser-container').offsetWidth;
+    const canvasWidth = document.getElementById(VISUALISER_WORKSPACE_ID).offsetWidth;
     const depth: number = (node.y - canvasPadding) / 75;
     const baseDiff = canvasWidth / 4;
 

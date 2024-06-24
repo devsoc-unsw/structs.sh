@@ -2,7 +2,7 @@ import AnimationProducer from 'visualiser-src/common/AnimationProducer';
 import { SVG, Path, Svg } from '@svgdotjs/svg.js';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { Documentation } from 'visualiser-src/common/typedefs';
-import { VISUALISER_CANVAS } from 'visualiser-src/common/constants';
+import { VISUALISER_CANVAS_ID } from 'visualiser-src/common/constants';
 import { injectIds } from 'visualiser-src/common/helpers';
 import { generateNumbers } from 'visualiser-src/common/RandomNumGenerator';
 import currTextPath from '../assets/currTextPath';
@@ -80,13 +80,13 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
   public length: number = 0;
 
   initCurrPrev() {
-    const currGroup = (SVG(VISUALISER_CANVAS) as Svg).group().opacity(0).id('current');
+    const currGroup = (SVG(`#${VISUALISER_CANVAS_ID}`) as Svg).group().opacity(0).id('current');
     currGroup
       .path('M18 27L25 1L32 27L25 23L18 27Z')
       .fill('#5EEEC3')
       .stroke({ color: '#46B49B', width: 2, linejoin: 'round' });
     currGroup.path(currTextPath).fill('black');
-    const prevGroup = (SVG(VISUALISER_CANVAS) as Svg).group().opacity(0).id('prev');
+    const prevGroup = (SVG(`#${VISUALISER_CANVAS_ID}`) as Svg).group().opacity(0).id('prev');
     prevGroup
       .path('M18 27L25 1L32 27L25 23L18 27Z')
       .fill({ color: '#EE5E78', opacity: 0.65 })
@@ -287,7 +287,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
   }
 
   public reset(): void {
-    SVG(VISUALISER_CANVAS).clear();
+    SVG(`#${VISUALISER_CANVAS_ID}`).clear();
 
     this.head = null;
     this.length = 0;
