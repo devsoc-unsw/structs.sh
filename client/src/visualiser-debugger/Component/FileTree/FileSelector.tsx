@@ -9,10 +9,10 @@ import {
   dropDownTextStyle,
   dropdownStyle,
 } from './WorkspaceStyles';
-import Folder from './Folder'
+import Folder from './Folder';
 
 // TODO: Put this in the state store
-import { LocalStorageFS } from './FS/AxiosStorageFS';
+import { LocalStorageFS } from './FS/LocalStorageFS';
 import { AxiosAgent } from './FS/AxiosClient';
 import { IFileDirNode } from './FS/IFileSystem';
 
@@ -73,7 +73,6 @@ const FileSelector = ({
       currFileName,
       '',
       (filesInCallBack: FileStub[]) => {
-
         console.log('Execute until here before everything crashed first save', filesInCallBack);
         setFiles(filesInCallBack);
       },
@@ -137,7 +136,7 @@ const FileSelector = ({
     //   </Select>
     // </div>
 
-    <Folder folder={fs.root as IFileDirNode}></Folder>
+    <Folder folder={fs.root as IFileDirNode} />
   );
 };
 

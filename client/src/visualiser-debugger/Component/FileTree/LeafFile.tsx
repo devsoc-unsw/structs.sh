@@ -1,18 +1,14 @@
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { dropdownStyle } from './WorkspaceStyles';
 import { IFileFileNode } from './FS/IFileSystem';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const LeafFile = (file: IFileFileNode) => {
-    return (
-        <div>
-            <ExpandMoreIcon
-            style={dropdownStyle}
-            >
+  return (
+    <div>
+      <ExpandMoreIcon style={dropdownStyle} />
+      {file?.name}
+    </div>
+  );
+};
 
-            </ExpandMoreIcon>
-            {file?.name}
-        </div>
-    )
-}
-
-export default LeafFile
+export default LeafFile;

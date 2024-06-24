@@ -198,6 +198,7 @@ const DevelopmentMode = () => {
         </div>
         <div className={classNames(styles.pane, styles.files)} style={{ overflowY: 'scroll' }}>
           <WorkspaceSelector
+            // @ts-ignore
             programName={programName}
             onChangeWorkspaceName={(newWorkspaceName: string) => {
               setWorkspaceName(newWorkspaceName);

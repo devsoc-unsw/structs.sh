@@ -19,7 +19,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@mui/icons-material": "^5.10.15",
+    "@mui/icons-material": "^5.15.20",
     "@mui/material": "^5.14.10",
     "@radix-ui/colors": "^2.0.0",
     "@radix-ui/react-checkbox": "^1.0.4",

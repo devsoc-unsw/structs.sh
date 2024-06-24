@@ -1,11 +1,8 @@
 import { assertUnreachable } from '../../Visualizer/Util/util';
-import { AxiosAgent } from './AxiosClient';
 import { IFileDirNode, IFileFileNode, IFileSystem } from './IFileSystem';
 
 export class LocalStorageFS implements IFileSystem {
-  root: IFileDirNode;
-
-  axiosAgent: AxiosAgent;
+  root: IFileDirNode = undefined;
 
   initialize(): IFileDirNode {
     this.root = {
@@ -15,7 +12,7 @@ export class LocalStorageFS implements IFileSystem {
       parent: undefined,
       children: {},
     };
-    this.axiosAgent = new AxiosAgent();
+    this.loadFromLocalStorage();
     return this.root;
   }
 
@@ -25,10 +22,12 @@ export class LocalStorageFS implements IFileSystem {
     }
     file.parent.children[file.path] = file;
     file.path = file.parent.path + file.name;
+    this.saveToLocalStorage();
   }
 
   deleteFile(file: IFileFileNode | IFileDirNode): void {
-    file.parent.children[file.path] = undefined;
+    delete file.parent.children[file.path];
+    this.saveToLocalStorage();
   }
 
   viewAllFiles(): IFileDirNode {
@@ -42,17 +41,7 @@ export class LocalStorageFS implements IFileSystem {
           this.saveChangesRecursive(node as IFileDirNode);
           break;
         case 'file':
-          this.axiosAgent.saveFile(
-            node.parent.path,
-            node.name,
-            node.data,
-            (_files) => {
-              // Do nothing
-            },
-            () => {
-              console.error('Error while saving file');
-            }
-          );
+          // No need to save each file separately, save the whole structure to local storage
           break;
         default:
           assertUnreachable(node);
@@ -63,5 +52,17 @@ export class LocalStorageFS implements IFileSystem {
 
   saveChanges(): void {
     this.saveChangesRecursive(this.root);
+    this.saveToLocalStorage();
+  }
+
+  saveToLocalStorage(): void {
+    localStorage.setItem('fileSystem', JSON.stringify(this.root));
+  }
+
+  loadFromLocalStorage(): void {
+    const data = localStorage.getItem('fileSystem');
+    if (data) {
+      this.root = JSON.parse(data);
+    }
   }
 }
