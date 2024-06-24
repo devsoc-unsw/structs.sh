@@ -19,7 +19,9 @@ export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
   name,
   memoryValue,
 }: StackVariableAnnotationProp) => {
-  const [selectedRole, setSelectedRole] = useState<StackVariableRole>(StackVariableRole.Empty);
+  const [selectedRole, setSelectedRole] = useState<StackVariableRole>(
+    StackVariableRole.LinkedListPointer
+  );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { userAnnotation } = useGlobalStore().visualizer;
   const { updateUserAnnotation } = useGlobalStore();
