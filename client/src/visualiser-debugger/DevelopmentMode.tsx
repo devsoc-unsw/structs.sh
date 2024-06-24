@@ -1,10 +1,8 @@
 import { useEffect, useCallback, useState, useRef } from 'react';
-import { socket } from 'utils/socket';
 import styles from 'styles/DevelopmentMode.module.css';
 import globalStyles from 'styles/global.module.css';
 import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
-import { Socket } from 'socket.io-client';
 import Console from 'visualiser-debugger/Component/Console/Console';
 import DevelopmentModeNavbar from '../components/Navbars/DevelopmentModeNavbar';
 import Configuration from './Component/Configuration/Configuration';
@@ -13,7 +11,6 @@ import CodeEditor from './Component/CodeEditor/CodeEditor';
 import StackInspector from './Component/StackInspector/StackInspector';
 import { useGlobalStore } from './Store/globalStateStore';
 import VisualizerMain from './Component/VisualizerMain';
-import { BackendState } from './Types/backendType';
 import AboutText from './Component/FileTree/AboutText';
 import WorkspaceSelector from './Component/FileTree/WorkspaceSelector';
 import {
@@ -21,20 +18,26 @@ import {
   PLACEHOLDER_WORKSPACE,
   loadCode,
 } from './Component/FileTree/Util/util';
-
-type ExtendedWindow = Window &
-  typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
+import useSocketClientStore from '../Services/socketClient';
+import { INITIAL_BACKEND_STATE } from './Types/backendType';
 
 const DevelopmentMode = () => {
+  const socket = useSocketClientStore((stateStore) => stateStore.socket);
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      console.log('Attach socket to window for debugging: ', socket);
-      (window as ExtendedWindow).socket = socket;
-      (window as ExtendedWindow).getBreakpoints = (line: string, listName: string) =>
-        socket.emit('getBreakpoints', line, listName);
-    }
-  }, []);
-  const [backendState, setBackendState] = useState<BackendState>();
+    socket.connect();
+    return () => {
+      socket.disconnect();
+    };
+  }, [socket]);
+
+  const {
+    currFrame: backendState,
+    updateTypeDeclaration,
+    clearTypeDeclarations,
+    clearUserAnnotation,
+    updateNextFrame,
+  } = useGlobalStore();
+
   const [activeSession, setActiveSession] = useState(false);
   const [workspaceName, setWorkspaceName] = useState(PLACEHOLDER_WORKSPACE);
   const [programName, setProgramName] = useState('');
@@ -46,9 +49,6 @@ const DevelopmentMode = () => {
   // David's comment: Why do we use a number instead of string, string seems much more intuitive to code
   const [tab, setTab] = useState('0');
 
-  const globalStore = useGlobalStore();
-  const { updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation, updateNextFrame } =
-    globalStore;
   const inputElement = useRef(null);
 
   const scrollToBottom = () => {
@@ -67,7 +67,6 @@ const DevelopmentMode = () => {
   };
 
   const updateState = (data: any) => {
-    setBackendState(data);
     updateNextFrame(data);
   };
 
@@ -77,7 +76,7 @@ const DevelopmentMode = () => {
   };
 
   const resetDebugSession = () => {
-    setBackendState(undefined);
+    updateNextFrame(INITIAL_BACKEND_STATE);
     setActiveSession(false);
     clearTypeDeclarations();
     clearUserAnnotation();
@@ -86,11 +85,11 @@ const DevelopmentMode = () => {
 
   const sendCode = () => {
     resetDebugSession();
-    socket.emit('mainDebug', code);
+    socket.socketTemp.emit('mainDebug', code);
   };
 
   const getNextState = () => {
-    socket.emit('executeNext');
+    socket.socketTemp.emit('executeNext');
   };
 
   const onDisconnect = useCallback(() => {
@@ -168,6 +167,7 @@ const DevelopmentMode = () => {
     socket.on('sendStdoutToUser', onSendStdoutToUser);
     socket.on('programWaitingForInput', onProgramWaitingForInput);
     socket.on('compileError', onCompileError);
+    // @ts-ignore
     socket.on('sendStdoutToUser', onStdout);
 
     return () => {
