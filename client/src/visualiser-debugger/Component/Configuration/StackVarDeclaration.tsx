@@ -19,8 +19,11 @@ export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
   name,
   memoryValue,
 }: StackVariableAnnotationProp) => {
+  // Annotate by default if the variable contains a pointer
   const [selectedRole, setSelectedRole] = useState<StackVariableRole>(
-    StackVariableRole.LinkedListPointer
+    isPointerType(memoryValue.typeName)
+      ? StackVariableRole.LinkedListPointer
+      : StackVariableRole.Empty
   );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { userAnnotation } = useGlobalStore().visualizer;
