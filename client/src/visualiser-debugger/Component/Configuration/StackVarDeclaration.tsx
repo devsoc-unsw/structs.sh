@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from 'styles/Configuration.module.css';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -28,6 +28,21 @@ export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { userAnnotation } = useGlobalStore().visualizer;
   const { updateUserAnnotation } = useGlobalStore();
+
+  // Annotate by default if the variable contains a pointer
+  useEffect(() => {
+    if (selectedRole === StackVariableRole.LinkedListPointer) {
+      updateUserAnnotation({
+        typeAnnotation: userAnnotation.typeAnnotation,
+        stackAnnotation: {
+          ...userAnnotation.stackAnnotation,
+          [name]: {
+            typeName: memoryValue.typeName,
+          },
+        },
+      });
+    }
+  }, []);
 
   return (
     <div style={{ paddingBottom: '8px' }}>
