@@ -1,19 +1,37 @@
 import { useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import { dropdownStyle } from './WorkspaceStyles';
-import { IFileDirNode, IFileFileNode } from './FS/IFileSystem';
+import { Box, IconButton, Typography } from '@mui/material';
+import { IFileDirNode } from './FS/IFileSystem';
 import LeafFile from './LeafFile';
 
 export interface FolderParam {
   folder: IFileDirNode;
+  depth: number;
 }
 
-const Folder = ({ folder }: FolderParam) => {
+const Folder = ({ folder, depth }: FolderParam) => {
   const [isExpanded, setExpanded] = useState<boolean>(false);
 
   const expandFolder = () => {
     setExpanded(!isExpanded);
+  };
+
+  const indentStyle = {
+    margin: '0px',
+    padding: '0px',
+    marginLeft: `${depth * 2}px`,
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+    '&:hover': {
+      backgroundColor: '#f0f0f0',
+    },
+    height: '20px',
+  };
+
+  const iconStyle = {
+    transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+    transition: 'transform 0.3s',
   };
 
   const showChildren = () => {
@@ -24,10 +42,10 @@ const Folder = ({ folder }: FolderParam) => {
       if (Object.prototype.hasOwnProperty.call(folder.children, key)) {
         switch (child.type) {
           case 'file':
-            children.push(LeafFile(child as IFileFileNode));
+            children.push(<LeafFile file={child} depth={depth + 1} key={key} />);
             break;
           case 'dir':
-            children.push(<Folder folder={child as IFileDirNode} />);
+            children.push(<Folder folder={child as IFileDirNode} depth={depth + 1} key={key} />);
             break;
           default:
             break;
@@ -39,21 +57,17 @@ const Folder = ({ folder }: FolderParam) => {
   };
 
   return (
-    <div>
-      {isExpanded ? (
-        <>
-          <ExpandLessIcon onClick={expandFolder} style={dropdownStyle} />
-          {folder?.name}
-
-          <div>{showChildren()}</div>
-        </>
-      ) : (
-        <>
-          <ExpandMoreIcon onClick={expandFolder} style={dropdownStyle} />
-          {folder?.name}
-        </>
-      )}
-    </div>
+    <Box>
+      <Box sx={indentStyle} component="div" onClick={expandFolder}>
+        <IconButton size="small" style={iconStyle}>
+          <ExpandMoreIcon fontSize="inherit" style={{ fontSize: '16px' }} />
+        </IconButton>
+        <Typography variant="body2" sx={{ flexGrow: 1, userSelect: 'none', fontSize: '0.85rem' }}>
+          {folder.name}
+        </Typography>
+      </Box>
+      {isExpanded && <Box>{showChildren()}</Box>}
+    </Box>
   );
 };
 

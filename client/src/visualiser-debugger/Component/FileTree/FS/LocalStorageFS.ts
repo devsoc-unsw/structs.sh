@@ -1,68 +1,74 @@
-import { assertUnreachable } from '../../Visualizer/Util/util';
-import { IFileDirNode, IFileFileNode, IFileSystem } from './IFileSystem';
+import { IFileDirNode, IFileFileNode, IFileSystem, INITIAL_LOCAL_STORAGE_FS } from './IFileSystem';
 
 export class LocalStorageFS implements IFileSystem {
-  root: IFileDirNode = undefined;
+  root: IFileDirNode;
 
   initialize(): IFileDirNode {
-    this.root = {
-      name: 'root',
-      path: '/',
-      type: 'dir',
-      parent: undefined,
-      children: {},
-    };
-    this.loadFromLocalStorage();
-    return this.root;
-  }
-
-  createFile(file: IFileFileNode | IFileDirNode): void {
-    if (file.parent.children[file.path]) {
-      throw new Error('File already exists');
-    }
-    file.parent.children[file.path] = file;
-    file.path = file.parent.path + file.name;
-    this.saveToLocalStorage();
-  }
-
-  deleteFile(file: IFileFileNode | IFileDirNode): void {
-    delete file.parent.children[file.path];
-    this.saveToLocalStorage();
-  }
-
-  viewAllFiles(): IFileDirNode {
-    return this.root;
-  }
-
-  saveChangesRecursive(dir: IFileDirNode): void {
-    Object.entries(dir.children).forEach(([_, node]) => {
-      switch (node.type) {
-        case 'dir':
-          this.saveChangesRecursive(node as IFileDirNode);
-          break;
-        case 'file':
-          // No need to save each file separately, save the whole structure to local storage
-          break;
-        default:
-          assertUnreachable(node);
-          break;
-      }
-    });
-  }
-
-  saveChanges(): void {
-    this.saveChangesRecursive(this.root);
-    this.saveToLocalStorage();
-  }
-
-  saveToLocalStorage(): void {
-    localStorage.setItem('fileSystem', JSON.stringify(this.root));
-  }
-
-  loadFromLocalStorage(): void {
     const data = localStorage.getItem('fileSystem');
     if (data) {
       this.root = JSON.parse(data);
+    } else {
+      this.root = INITIAL_LOCAL_STORAGE_FS;
+      this.saveChanges(); // Save the initial structure to localStorage
     }
+    return this.root;
+  }
+
+  constructor() {
+    this.root = this.initialize();
+  }
+
+  addFile(file: IFileFileNode): void {
+    const dir = this.getDirFromPath(file.parentPath);
+    if (dir) {
+      dir.children[file.name] = file;
+      this.saveChanges();
+    }
+  }
+
+  addDir(dir: IFileDirNode): void {
+    const parentDir = this.getDirFromPath(dir.parentPath);
+    if (parentDir) {
+      parentDir.children[dir.name] = dir;
+      this.saveChanges();
+    }
+  }
+
+  deleteFile(file: IFileFileNode | IFileDirNode): void {
+    const parent = this.getDirFromPath(file.parentPath);
+    if (parent && parent.children[file.name]) {
+      delete parent.children[file.name];
+      this.saveChanges();
+    }
+  }
+
+  getFileFromPath(path: string): IFileFileNode | undefined {
+    return this.findNodeByPath(path) as IFileFileNode | undefined;
+  }
+
+  getDirFromPath(path: string): IFileDirNode | undefined {
+    return this.findNodeByPath(path) as IFileDirNode | undefined;
+  }
+
+  getRootDirectory(): IFileDirNode {
+    return this.root;
+  }
+
+  saveChanges(): void {
+    localStorage.setItem('fileSystem', JSON.stringify(this.root));
+  }
+
+  // TODO: Not cached, refactor later to increase performance
+  private findNodeByPath(path: string): IFileDirNode | IFileFileNode | undefined {
+    const segments = path.split('/').filter(Boolean);
+    let current: IFileDirNode | IFileFileNode | undefined = this.root;
+
+    segments.forEach((segment: string) => {
+      if (current.type === 'dir' && current.children[segment]) {
+        current = current.children[segment];
+      }
+    });
+
+    return current;
   }
 }

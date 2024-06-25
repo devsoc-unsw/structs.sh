@@ -28,14 +28,14 @@ const WorkspaceSelector = () => {
         <Box sx={{ flexGrow: 1 }}>Root</Box>
         <Box>
           <Button onClick={() => handleClickOpen('file')} className="icon-button">
-            <AddIcon />
+            <AddIcon style={{ fontSize: '20px' }} />
           </Button>
           <Button onClick={() => handleClickOpen('folder')} className="icon-button">
-            <CreateNewFolderIcon />
+            <CreateNewFolderIcon style={{ fontSize: '20px' }} />
           </Button>
         </Box>
       </Box>
-      {fs ? <Folder folder={fs.viewAllFiles()} /> : <div>Loading...</div>}
+      {fs ? <Folder folder={fs.getRootDirectory()} depth={0} /> : <div>Loading...</div>}
     </Box>
   );
 };
