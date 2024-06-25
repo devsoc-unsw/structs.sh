@@ -4,8 +4,8 @@ import { LocalStorageFS } from '../Component/FileTree/FS/LocalStorageFS';
 
 type UserFileSystemState = {
   fileSystem: IFileSystem;
-  currFocusDirPath: string | null;
-  currFocusFilePath: string | null;
+  currFocusDirPath: string;
+  currFocusFilePath: string;
 };
 
 type Action = {
@@ -15,8 +15,8 @@ type Action = {
 
 export const useUserFsStateStore = create<UserFileSystemState & Action>((set) => ({
   fileSystem: new LocalStorageFS(),
-  currFocusDirPath: null,
-  currFocusFilePath: null,
+  currFocusDirPath: '',
+  currFocusFilePath: '',
   setFocusDirPath: (path: string) => {
     set({ currFocusDirPath: path });
   },

@@ -19,7 +19,7 @@ const Folder = ({ folder, depth }: FolderParam) => {
   const indentStyle = {
     margin: '0px',
     padding: '0px',
-    marginLeft: `${depth * 2}px`,
+    marginLeft: `${depth * 12}px`,
     display: 'flex',
     alignItems: 'center',
     width: '100%',

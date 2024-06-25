@@ -16,7 +16,7 @@ const LeafFile = ({ file, depth }: LeafFileParam) => {
   useEffect(() => {}, [currFocusFilePath]);
 
   const indentStyle = {
-    marginLeft: `${depth * 15}px`,
+    marginLeft: `${10 + depth * 12}px`,
     display: 'flex',
     alignItems: 'center',
     width: '100%',
