@@ -6,7 +6,6 @@ export class LocalStorageFS implements IFileSystem {
   initialize(): IFileDirNode {
     localStorage.clear();
     const data = localStorage.getItem('fileSystem');
-    console.log('Debugggg', data);
     if (data) {
       this.root = JSON.parse(data);
     } else {

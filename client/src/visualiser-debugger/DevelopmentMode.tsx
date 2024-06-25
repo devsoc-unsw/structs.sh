@@ -84,6 +84,7 @@ const DevelopmentMode = () => {
 
     const file = fileSystem.getFileFromPath(`${currFocusFilePath}`);
     if (file) {
+      console.log('Send data sends', file.data);
       socket.emit('sendCode', file.data);
     } else {
       throw new Error('File not found in FS');
