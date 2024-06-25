@@ -1,8 +1,8 @@
 export interface IFileSystem {
   initialize(): IFileDirNode;
 
-  addFile(file: IFileFileNode): void;
-  addDir(file: IFileDirNode): void;
+  addFile(file: IFileFileNode): boolean;
+  addDir(file: IFileDirNode): boolean;
 
   // return the root node so we can access all children nodes
   // when we implement the front end file selector, we could just display this return result on the FE
@@ -15,6 +15,8 @@ export interface IFileSystem {
   // Pass back root directory
   saveChanges(): void;
 }
+
+export type IFileType = 'Folder' | 'File';
 
 export interface IFileBaseNode {
   name: string;

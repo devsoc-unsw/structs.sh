@@ -4,7 +4,6 @@ export class LocalStorageFS implements IFileSystem {
   root: IFileDirNode;
 
   initialize(): IFileDirNode {
-    localStorage.clear();
     const data = localStorage.getItem('fileSystem');
     if (data) {
       this.root = JSON.parse(data);
@@ -20,20 +19,28 @@ export class LocalStorageFS implements IFileSystem {
     this.root = this.initialize();
   }
 
-  addFile(file: IFileFileNode): void {
+  addFile(file: IFileFileNode): boolean {
     const dir = this.getDirFromPath(file.parentPath);
-    if (dir) {
-      dir.children[file.name] = file;
-      this.saveChanges();
+    if (!dir) return false;
+
+    if (dir.children[file.name] !== undefined) {
+      return false;
     }
+    dir.children[file.name] = file;
+    this.saveChanges();
+    return true;
   }
 
-  addDir(dir: IFileDirNode): void {
+  addDir(dir: IFileDirNode): boolean {
     const parentDir = this.getDirFromPath(dir.parentPath);
-    if (parentDir) {
-      parentDir.children[dir.name] = dir;
-      this.saveChanges();
+    if (!parentDir) return false;
+
+    if (parentDir.children[dir.name] !== undefined) {
+      return false;
     }
+    parentDir.children[dir.name] = dir;
+    this.saveChanges();
+    return true;
   }
 
   deleteFile(file: IFileFileNode | IFileDirNode): void {

@@ -3,6 +3,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Box, IconButton, Typography } from '@mui/material';
 import { IFileDirNode } from './FS/IFileSystem';
 import LeafFile from './LeafFile';
+import { useUserFsStateStore } from '../../Store/userFsStateStore';
+import { assertUnreachable } from '../Visualizer/Util/util';
 
 export interface FolderParam {
   folder: IFileDirNode;
@@ -10,9 +12,13 @@ export interface FolderParam {
 }
 
 const Folder = ({ folder, depth }: FolderParam) => {
+  const { setFocusDirPath } = useUserFsStateStore();
   const [isExpanded, setExpanded] = useState<boolean>(false);
 
   const expandFolder = () => {
+    if (!isExpanded) {
+      setFocusDirPath(folder.path);
+    }
     setExpanded(!isExpanded);
   };
 
@@ -48,6 +54,7 @@ const Folder = ({ folder, depth }: FolderParam) => {
             children.push(<Folder folder={child as IFileDirNode} depth={depth + 1} key={key} />);
             break;
           default:
+            assertUnreachable(child);
             break;
         }
       }

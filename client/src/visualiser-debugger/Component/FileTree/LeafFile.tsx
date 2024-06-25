@@ -10,7 +10,7 @@ export interface LeafFileParam {
 }
 
 const LeafFile = ({ file, depth }: LeafFileParam) => {
-  const { currFocusFilePath, setFocusFilePath } = useUserFsStateStore();
+  const { currFocusFilePath, setFocusFilePath, setFocusDirPath } = useUserFsStateStore();
   const isHighlighted = currFocusFilePath === file.path;
 
   useEffect(() => {}, [currFocusFilePath]);
@@ -28,6 +28,7 @@ const LeafFile = ({ file, depth }: LeafFileParam) => {
 
   const handleFileClick = () => {
     setFocusFilePath(file.path);
+    setFocusDirPath(file.parentPath);
   };
 
   return (
