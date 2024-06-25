@@ -54,6 +54,20 @@ const ArrowMarker = ({ id, color }: { id: string; color: string }) => (
     <path d="M0,0 L0,2 L3,1 z" fill={color} />
   </motion.marker>
 );
+
+// const ArrowMarker = ({ id, color }: { id: string; color: string }) => (
+//   <motion.marker
+//     id={id}
+//     markerWidth="20"
+//     markerHeight="10"
+//     refX="0"
+//     refY="5"
+//     orient="auto"
+//     markerUnits="strokeWidth"
+//   >
+//     <path d="M0,0 L0,10 L12,5 z" fill={color} />
+//   </motion.marker>
+// );
 type DrawablePointerComponent = DrawableComponentBase<PointerProp>;
 const PointerDrawable: DrawablePointerComponent = (
   { entity, attachedEntity, pos }: PointerProp,
@@ -83,16 +97,16 @@ const PointerDrawable: DrawablePointerComponent = (
       </defs>
       <motion.line
         x1={0}
-        y1={0}
+        y1={70}
         x2={0}
-        y2={coords.y2 - coords.y1}
+        y2={coords.y2 - coords.y1 + 30}
         opacity={1}
         transition={{ type: 'spring', bounce: 0.025, duration: 1 }}
         stroke="#DE3163"
-        strokeWidth={6}
+        strokeWidth={18}
         markerEnd={`url(#${markerId})`}
       />
-      <motion.text x={5} y={coords.y2 - coords.y1 + 20} fontSize={15}>
+      <motion.text x={-60} y={coords.y2 - coords.y1 + 140} fontSize={60}>
         {entity.label}
       </motion.text>
     </motion.g>
