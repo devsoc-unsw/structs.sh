@@ -14,9 +14,8 @@ import VisualizerMain from './Component/VisualizerMain';
 import AboutText from './Component/FileTree/AboutText';
 import FileManager from './Component/FileTree/FileManager';
 import { useUserFsStateStore } from './Store/userFsStateStore';
-
-type ExtendedWindow = Window &
-  typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
+import useSocketClientStore from '../Services/socketClient';
+import { INITIAL_BACKEND_STATE } from './Types/backendType';
 
 const DevelopmentMode = () => {
   const socket = useSocketClientStore((stateStore) => stateStore.socket);
@@ -27,14 +26,6 @@ const DevelopmentMode = () => {
     };
   }, [socket]);
 
-  const {
-    currFrame: backendState,
-    updateTypeDeclaration,
-    clearTypeDeclarations,
-    clearUserAnnotation,
-    updateNextFrame,
-  } = useGlobalStore();
-
   const [activeSession, setActiveSession] = useState(false);
   const [consoleChunks, setConsoleChunks] = useState([]);
 
@@ -43,13 +34,15 @@ const DevelopmentMode = () => {
   // David's comment: Why do we use a number instead of string, string seems much more intuitive to code
   const [tab, setTab] = useState('0');
 
-<<<<<<< HEAD
-=======
   const globalStore = useGlobalStore();
   const { fileSystem, currFocusFilePath } = useUserFsStateStore();
-  const { updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation, updateNextFrame } =
-    globalStore;
->>>>>>> 886d9a2c (refactor code editor to use fs)
+  const {
+    updateTypeDeclaration,
+    clearTypeDeclarations,
+    clearUserAnnotation,
+    updateNextFrame,
+    currFrame,
+  } = globalStore;
   const inputElement = useRef(null);
 
   const scrollToBottom = () => {
@@ -85,14 +78,14 @@ const DevelopmentMode = () => {
     const file = fileSystem.getFileFromPath(`${currFocusFilePath}`);
     if (file) {
       console.log('Send data sends', file.data);
-      socket.emit('sendCode', file.data);
+      socket.socketTempRemoveLater.emit('sendCode', file.data);
     } else {
       throw new Error('File not found in FS');
     }
   };
 
   const getNextState = () => {
-    socket.socketTemp.emit('executeNext');
+    socket.socketTempRemoveLater.emit('executeNext');
   };
 
   const onDisconnect = useCallback(() => {
@@ -212,7 +205,7 @@ const DevelopmentMode = () => {
           </div>
         </div>
         <div className={classNames(styles.pane, styles.editor)}>
-          <CodeEditor currLine={backendState?.frame_info?.line_num} />
+          <CodeEditor currLine={currFrame?.frame_info?.line_num} />
         </div>
         <div className={classNames(styles.pane, styles.inspector)}>
           <Tabs value={tab} onValueChange={handleChangeTab}>
@@ -235,7 +228,7 @@ const DevelopmentMode = () => {
           </Tabs>
         </div>
         <div className={classNames(styles.pane, styles.visualiser)}>
-          <VisualizerMain backendState={backendState} />
+          <VisualizerMain backendState={currFrame} />
         </div>
         <div className={classNames(styles.pane, styles.timeline)}>
           <Controls getNextState={getNextState} sendCode={sendCode} activeSession={activeSession} />
