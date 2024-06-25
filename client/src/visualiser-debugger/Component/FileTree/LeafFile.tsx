@@ -1,6 +1,8 @@
+import { useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { IFileFileNode } from './FS/IFileSystem';
+import { useUserFsStateStore } from '../../Store/userFsStateStore';
 
 export interface LeafFileParam {
   file: IFileFileNode;
@@ -8,18 +10,28 @@ export interface LeafFileParam {
 }
 
 const LeafFile = ({ file, depth }: LeafFileParam) => {
+  const { currFocusFilePath, setFocusFilePath } = useUserFsStateStore();
+  const isHighlighted = currFocusFilePath === file.path;
+
+  useEffect(() => {}, [currFocusFilePath]);
+
   const indentStyle = {
     marginLeft: `${depth * 15}px`,
     display: 'flex',
     alignItems: 'center',
     width: '100%',
+    backgroundColor: isHighlighted ? '#e0e0e0' : 'transparent',
     '&:hover': {
       backgroundColor: '#f0f0f0',
     },
   };
 
+  const handleFileClick = () => {
+    setFocusFilePath(file.path);
+  };
+
   return (
-    <Box sx={indentStyle}>
+    <Box sx={indentStyle} onClick={handleFileClick}>
       <InsertDriveFileIcon fontSize="small" style={{ fontSize: '12px' }} />
       <Typography
         variant="body2"

@@ -1,22 +1,13 @@
-import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import AddIcon from '@mui/icons-material/Add';
-import { IFileSystem } from './FS/IFileSystem';
-import { LocalStorageFS } from './FS/LocalStorageFS';
 import Folder from './Folder';
 import './css/WorkspaceSelector.css';
+import { useUserFsStateStore } from '../../Store/userFsStateStore';
 
 const WorkspaceSelector = () => {
-  const [fs, setFs] = useState<IFileSystem | null>(null);
-
-  useEffect(() => {
-    const newFs = new LocalStorageFS();
-    newFs.initialize();
-    setFs(newFs);
-    console.log('console', newFs);
-  }, []);
+  const { fileSystem } = useUserFsStateStore.getState();
 
   const handleClickOpen = (_arg: string) => {
     // TODO: Implement
@@ -35,7 +26,11 @@ const WorkspaceSelector = () => {
           </Button>
         </Box>
       </Box>
-      {fs ? <Folder folder={fs.getRootDirectory()} depth={0} /> : <div>Loading...</div>}
+      {fileSystem ? (
+        <Folder folder={fileSystem.getRootDirectory()} depth={0} />
+      ) : (
+        <div>Loading...</div>
+      )}
     </Box>
   );
 };

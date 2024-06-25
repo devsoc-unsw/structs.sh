@@ -47,6 +47,28 @@ export const INITIAL_LOCAL_STORAGE_FS: IFileDirNode = {
       type: 'file',
       parentPath: 'root',
     },
+    dir1: {
+      name: 'dir1',
+      path: 'root/dir1',
+      type: 'dir',
+      parentPath: 'root',
+      children: {
+        'file2.c': {
+          name: 'file2.c',
+          path: 'root/dir1/file2.c',
+          data: '// A empty file 2',
+          type: 'file',
+          parentPath: 'dir1',
+        },
+        'file3.c': {
+          name: 'file3.c',
+          path: 'root/dir1/file3.c',
+          data: '// A empty file 3',
+          type: 'file',
+          parentPath: 'dir1',
+        },
+      },
+    },
     'file2.c': {
       name: 'file2.c',
       path: 'root/file2.c',

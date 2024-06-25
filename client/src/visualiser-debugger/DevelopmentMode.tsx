@@ -12,7 +12,7 @@ import StackInspector from './Component/StackInspector/StackInspector';
 import { useGlobalStore } from './Store/globalStateStore';
 import VisualizerMain from './Component/VisualizerMain';
 import AboutText from './Component/FileTree/AboutText';
-import WorkspaceSelector from './Component/FileTree/WorkspaceSelector';
+import FileManager from './Component/FileTree/FileManager';
 import {
   PLACEHOLDER_USERNAME,
   PLACEHOLDER_WORKSPACE,
@@ -197,7 +197,7 @@ const DevelopmentMode = () => {
           <DevelopmentModeNavbar />
         </div>
         <div className={classNames(styles.pane, styles.files)} style={{ overflowY: 'scroll' }}>
-          <WorkspaceSelector
+          <FileManager
             // @ts-ignore
             programName={programName}
             onChangeWorkspaceName={(newWorkspaceName: string) => {
