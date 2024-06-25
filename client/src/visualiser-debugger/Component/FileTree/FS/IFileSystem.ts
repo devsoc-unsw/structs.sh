@@ -27,7 +27,6 @@ export interface IFileFileNode extends IFileBaseNode {
   type: 'file';
   parent: IFileDirNode;
 }
-
 export interface IFileDirNode extends IFileBaseNode {
   parent: IFileDirNode | undefined;
   children: { [key: string]: IFileDirNode | IFileFileNode };
