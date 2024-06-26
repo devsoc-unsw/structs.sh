@@ -95,7 +95,7 @@ const Configuration = () => {
               scale: '1.35',
             }}
           />
-          Locals
+          Stack Variable
         </button>
 
         <MotionCollapse isOpen={isVariableAnnotationOpen}>
