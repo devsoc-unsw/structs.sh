@@ -26,8 +26,9 @@ export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
       : StackVariableRole.Empty
   );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { userAnnotation } = useGlobalStore().visualizer;
-  const { updateUserAnnotation, updateStackAnnotation } = useGlobalStore();
+  const userAnnotation = useGlobalStore((state) => state.visualizer.userAnnotation);
+  const updateUserAnnotation = useGlobalStore((state) => state.updateUserAnnotation);
+  const updateStackAnnotation = useGlobalStore((state) => state.updateStackAnnotation);
 
   // Annotate by default if the variable contains a pointer
   useEffect(() => {
