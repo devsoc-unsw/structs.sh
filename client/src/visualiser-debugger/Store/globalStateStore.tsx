@@ -4,7 +4,7 @@ import { Parser } from '../Component/Visualizer/Parser/parser';
 import { parserFactory } from '../Component/Visualizer/Parser/parserFactory';
 import { VisualizerComponent } from '../Component/Visualizer/Visulizer/visualizer';
 import { visualizerFactory } from '../Component/Visualizer/Visulizer/visualizerFactory';
-import { UserAnnotation } from '../Types/annotationType';
+import { StackAnnotation, UserAnnotation } from '../Types/annotationType';
 import { BackendState, BackendTypeDeclaration, INITIAL_BACKEND_STATE } from '../Types/backendType';
 import { VisualizerType } from '../Types/visualizerType';
 
@@ -54,6 +54,7 @@ type GlobalStoreActions = {
   setVisualizerType: (type: VisualizerType) => void;
   updateDimensions: (width: number, height: number) => void;
   updateUserAnnotation: (annotation: UserAnnotation) => void;
+  updateStackAnnotation: (annotation: StackAnnotation) => void;
   updateTypeDeclaration: (type: BackendTypeDeclaration) => void;
   updateNextFrame: (backendState: BackendState) => void;
   clearTypeDeclarations: () => void;
@@ -65,55 +66,97 @@ export const useGlobalStore: UseBoundStore<StoreApi<GlobalStateStore & GlobalSto
     devtools((set) => ({
       ...DEFAULT_GLOBAL_STORE,
       setVisualizerType: (type: VisualizerType) => {
-        set((state) => ({
-          visualizer: {
-            ...state.visualizer,
-            visualizerType: type,
-            visComponent: visualizerFactory(type),
-            parser: parserFactory(type),
-          },
-        }));
+        set(
+          (state) => ({
+            visualizer: {
+              ...state.visualizer,
+              visualizerType: type,
+              visComponent: visualizerFactory(type),
+              parser: parserFactory(type),
+            },
+          }),
+          false,
+          'setVisualizerType'
+        );
       },
       updateDimensions: (width: number, height: number) => {
         set({ uiState: { width, height } });
       },
       updateUserAnnotation: (annotation: UserAnnotation) => {
-        set((state) => ({
-          visualizer: {
-            ...state.visualizer,
-            userAnnotation: annotation,
-          },
-        }));
+        set(
+          (state) => ({
+            visualizer: {
+              ...state.visualizer,
+              userAnnotation: annotation,
+            },
+          }),
+          false,
+          'updateUserAnnotation'
+        );
+      },
+      // A separate reducer for updating stack annotation.
+      // Using updateUserAnnotation and using userAnnotation state
+      // doesn't correctly update the state if used in useEffect for multiple children components
+      // because the value from the "set" callback is more recent
+      updateStackAnnotation: (stackAnnotation) => {
+        set(
+          (state) => ({
+            visualizer: {
+              ...state.visualizer,
+              userAnnotation: {
+                ...state.visualizer.userAnnotation,
+                stackAnnotation: {
+                  ...state.visualizer.userAnnotation.stackAnnotation,
+                  ...stackAnnotation,
+                },
+              },
+            },
+          }),
+          false,
+          'updateStackAnnotation'
+        );
       },
       updateTypeDeclaration: (type: BackendTypeDeclaration) => {
-        set((state) => ({
-          visualizer: {
-            ...state.visualizer,
-            typeDeclarations: [...state.visualizer.typeDeclarations, type],
-          },
-        }));
+        set(
+          (state) => ({
+            visualizer: {
+              ...state.visualizer,
+              typeDeclarations: [...state.visualizer.typeDeclarations, type],
+            },
+          }),
+          false,
+          'updateTypeDeclaration'
+        );
       },
       updateNextFrame: (backendState: BackendState) => {
-        set({ currFrame: backendState });
+        set({ currFrame: backendState }, false, 'updateNextFrame');
       },
       clearTypeDeclarations: () => {
-        set((state) => ({
-          visualizer: {
-            ...state.visualizer,
-            typeDeclarations: [],
-          },
-        }));
+        set(
+          (state) => ({
+            visualizer: {
+              ...state.visualizer,
+              typeDeclarations: [],
+            },
+          }),
+          false,
+          'clearTypeDeclarations'
+        );
       },
       clearUserAnnotation: () => {
-        set((state) => ({
-          visualizer: {
-            ...state.visualizer,
-            userAnnotation: {
-              stackAnnotation: {},
-              typeAnnotation: {},
+        set(
+          (state) => ({
+            visualizer: {
+              ...state.visualizer,
+              userAnnotation: {
+                stackAnnotation: {},
+                typeAnnotation: {},
+              },
             },
-          },
-        }));
+          }),
+          false,
+          'clearUserAnnotation'
+        );
       },
     }))
   );

@@ -27,34 +27,17 @@ export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
   );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { userAnnotation } = useGlobalStore().visualizer;
-  const { currFrame } = useGlobalStore();
-  const { updateUserAnnotation } = useGlobalStore();
+  const { updateUserAnnotation, updateStackAnnotation } = useGlobalStore();
 
   // Annotate by default if the variable contains a pointer
   useEffect(() => {
-    // Error could be caused by head somehow not being unmounted
-
     if (selectedRole === StackVariableRole.LinkedListPointer) {
-      console.log(name, memoryValue.addr);
-
-      const currUserAnnotation = {
-        ...userAnnotation.stackAnnotation,
+      const newStackAnnotation = {
         [name]: memoryValue.typeName,
       };
-      console.log(currUserAnnotation);
-      // Somehow it doesn't update userAnnotation??
-      updateUserAnnotation({
-        typeAnnotation: userAnnotation.typeAnnotation,
-        stackAnnotation: currUserAnnotation,
-      });
-      console.log(
-        userAnnotation.stackAnnotation,
-        currFrame.stack_data,
-        name,
-        currFrame.stack_data[name].value
-      );
+      updateStackAnnotation(newStackAnnotation);
     }
-  }, [currFrame.stack_data[name].value]);
+  }, []);
 
   return (
     <div style={{ paddingBottom: '8px' }}>
