@@ -304,7 +304,7 @@ class CustomNextCommand(gdb.Command):
         for addr, heap_memory_value in self.heap_data.items(): #TODO: we're only updating the value attribute lmao, example code for array present
             if "array" in heap_memory_value: # don't really like this, maybe should keep boolean attribute
                 gdb_examine_data = gdb.execute(
-                        f'x/{heap_memory_value["size"]}b {addr}', to_string=True)
+                        f'x/{heap_memory_value["size"]}ub {addr}', to_string=True)
                 print(f"{gdb_examine_data=}")
 
                 array_numbers = split_gdb_examine(
@@ -487,9 +487,11 @@ def remove_non_standard_characters(input_str):
 
 def split_gdb_examine(gdb_examine_data, cellSize):
     '''
-    Expects gdb_examine_data to be in the format of the x/<number of bytes>b command: 
+    Expects gdb_examine_data to be in the format of the x/<number of bytes>ub command: 
     0x5555555592a0:	1	0	0	0	2	0	0	0
     0x5555555592a8:	3	0   0   0
+
+    x/ub gets numbers as unsigned ([0, 255) range), x/b gets them as signed ([-128, 127) range). The former is best to simplify integer reconstruction via bit shifting
 
     See debugger/src/samples/heap_array_test.c for more info on how this works
     Also see for format options to this x command: https://visualgdb.com/gdbreference/commands/x
@@ -504,7 +506,7 @@ def split_gdb_examine(gdb_examine_data, cellSize):
             print(f"{number=}")
             # gdb returns each number byte as a signed value (i.e. in the range [-128, 127] instead of [0, 255])
             # negative numbers break when byte values are bit shifted and added together
-            number = int(number) % 0x100
+            number = int(number)
             if count == 0:
                 result.append(number)
             else:
