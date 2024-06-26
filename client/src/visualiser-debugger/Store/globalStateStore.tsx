@@ -1,4 +1,5 @@
 import { UseBoundStore, StoreApi, create } from 'zustand';
+import { devtools } from 'zustand/middleware';
 import { Parser } from '../Component/Visualizer/Parser/parser';
 import { parserFactory } from '../Component/Visualizer/Parser/parserFactory';
 import { VisualizerComponent } from '../Component/Visualizer/Visulizer/visualizer';
@@ -60,57 +61,59 @@ type GlobalStoreActions = {
 };
 
 export const useGlobalStore: UseBoundStore<StoreApi<GlobalStateStore & GlobalStoreActions>> =
-  create<GlobalStateStore & GlobalStoreActions>((set) => ({
-    ...DEFAULT_GLOBAL_STORE,
-    setVisualizerType: (type: VisualizerType) => {
-      set((state) => ({
-        visualizer: {
-          ...state.visualizer,
-          visualizerType: type,
-          visComponent: visualizerFactory(type),
-          parser: parserFactory(type),
-        },
-      }));
-    },
-    updateDimensions: (width: number, height: number) => {
-      set({ uiState: { width, height } });
-    },
-    updateUserAnnotation: (annotation: UserAnnotation) => {
-      set((state) => ({
-        visualizer: {
-          ...state.visualizer,
-          userAnnotation: annotation,
-        },
-      }));
-    },
-    updateTypeDeclaration: (type: BackendTypeDeclaration) => {
-      set((state) => ({
-        visualizer: {
-          ...state.visualizer,
-          typeDeclarations: [...state.visualizer.typeDeclarations, type],
-        },
-      }));
-    },
-    updateNextFrame: (backendState: BackendState) => {
-      set({ currFrame: backendState });
-    },
-    clearTypeDeclarations: () => {
-      set((state) => ({
-        visualizer: {
-          ...state.visualizer,
-          typeDeclarations: [],
-        },
-      }));
-    },
-    clearUserAnnotation: () => {
-      set((state) => ({
-        visualizer: {
-          ...state.visualizer,
-          userAnnotation: {
-            stackAnnotation: {},
-            typeAnnotation: {},
+  create<GlobalStateStore & GlobalStoreActions>()(
+    devtools((set) => ({
+      ...DEFAULT_GLOBAL_STORE,
+      setVisualizerType: (type: VisualizerType) => {
+        set((state) => ({
+          visualizer: {
+            ...state.visualizer,
+            visualizerType: type,
+            visComponent: visualizerFactory(type),
+            parser: parserFactory(type),
           },
-        },
-      }));
-    },
-  }));
+        }));
+      },
+      updateDimensions: (width: number, height: number) => {
+        set({ uiState: { width, height } });
+      },
+      updateUserAnnotation: (annotation: UserAnnotation) => {
+        set((state) => ({
+          visualizer: {
+            ...state.visualizer,
+            userAnnotation: annotation,
+          },
+        }));
+      },
+      updateTypeDeclaration: (type: BackendTypeDeclaration) => {
+        set((state) => ({
+          visualizer: {
+            ...state.visualizer,
+            typeDeclarations: [...state.visualizer.typeDeclarations, type],
+          },
+        }));
+      },
+      updateNextFrame: (backendState: BackendState) => {
+        set({ currFrame: backendState });
+      },
+      clearTypeDeclarations: () => {
+        set((state) => ({
+          visualizer: {
+            ...state.visualizer,
+            typeDeclarations: [],
+          },
+        }));
+      },
+      clearUserAnnotation: () => {
+        set((state) => ({
+          visualizer: {
+            ...state.visualizer,
+            userAnnotation: {
+              stackAnnotation: {},
+              typeAnnotation: {},
+            },
+          },
+        }));
+      },
+    }))
+  );
