@@ -18,6 +18,13 @@ services:
       - '8000:8000'
     volumes:
       - ./debugger/src:/app/src
+    environment:
+      - PYTHONPATH=/app
+    network_mode: "bridge"
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
   server:
     build:
       context: server

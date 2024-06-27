@@ -7,5 +7,5 @@ import checker from 'vite-plugin-checker';
 export default defineConfig({
   plugins: [react(), tsconfigPaths(), checker({ typescript: true })],
   build: { outDir: 'build' },
-  server: { port: 3000 },
+  server: { port: 3000, host: '0.0.0.0' },
 });
