@@ -82,10 +82,6 @@ const PointerDrawable: DrawablePointerComponent = (
   }, [pos.x.val, pos.y.val]);
 
   const splitLabels = (label: string) => {
-    // const splittedLabel = label.split(', ');
-
-    // console.log(splittedLabel.map((l) => `${l}\n`).join(','));
-
     return label.split(', ');
   };
 
@@ -107,11 +103,11 @@ const PointerDrawable: DrawablePointerComponent = (
         x1={0}
         y1={30}
         x2={0}
-        y2={coords.y2 - coords.y1 + 30}
+        y2={coords.y2 - coords.y1}
         opacity={1}
         transition={{ type: 'spring', bounce: 0.025, duration: 1 }}
         stroke="#DE3163"
-        strokeWidth={18}
+        strokeWidth={8}
         markerEnd={`url(#${markerId})`}
       />
 
@@ -122,7 +118,12 @@ const PointerDrawable: DrawablePointerComponent = (
         }
 
         return (
-          <motion.text key={idx} x={-45} y={coords.y2 - coords.y1 + 100 + idx * 40} fontSize={40}>
+          <motion.text
+            key={idx}
+            x={label.length - 90}
+            y={coords.y2 - coords.y1 + 85 + idx * 40}
+            fontSize={40}
+          >
             {label}
           </motion.text>
         );
