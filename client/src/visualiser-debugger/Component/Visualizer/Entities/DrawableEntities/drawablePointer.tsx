@@ -85,6 +85,18 @@ const PointerDrawable: DrawablePointerComponent = (
     return label.split(', ');
   };
 
+  // Calculate the text's width using canvas
+  // https://www.tutorialspoint.com/Calculate-text-width-with-JavaScript#:~:text=To%20calculate%20text%20width%2C%20we,method%20to%20measure%20the%20text.
+  const getTextWidth = (text: string, fontSize: number) => {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    if (context) {
+      context.font = `${fontSize}px Arial`;
+      return context.measureText(text).width;
+    }
+    return 0;
+  };
+
   return (
     <motion.g
       ref={ref}
@@ -112,6 +124,7 @@ const PointerDrawable: DrawablePointerComponent = (
       />
 
       {splitLabels(entity.label).map((l, idx) => {
+        const fontSize = 40;
         let label = l;
         if (idx < splitLabels(entity.label).length - 1) {
           label += ',';
@@ -120,9 +133,9 @@ const PointerDrawable: DrawablePointerComponent = (
         return (
           <motion.text
             key={idx}
-            x={label.length - 90}
+            x={-getTextWidth(label, fontSize) / 2}
             y={coords.y2 - coords.y1 + 85 + idx * 40}
-            fontSize={40}
+            fontSize={fontSize}
           >
             {label}
           </motion.text>
