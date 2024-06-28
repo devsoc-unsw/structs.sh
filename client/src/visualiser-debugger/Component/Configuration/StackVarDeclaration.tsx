@@ -26,21 +26,23 @@ export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
       : StackVariableRole.Empty
   );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { userAnnotation } = useGlobalStore().visualizer;
-  const { updateUserAnnotation } = useGlobalStore();
+  const stackAnnotation = useGlobalStore(
+    (state) => state.visualizer.userAnnotation.stackAnnotation
+  );
+  const updateStackAnnotation = useGlobalStore((state) => state.updateStackAnnotation);
 
   // Annotate by default if the variable contains a pointer
   useEffect(() => {
     if (selectedRole === StackVariableRole.LinkedListPointer) {
-      updateUserAnnotation({
-        typeAnnotation: userAnnotation.typeAnnotation,
-        stackAnnotation: {
-          ...userAnnotation.stackAnnotation,
-          [name]: {
-            typeName: memoryValue.typeName,
-          },
-        },
-      });
+      const newStackAnnotation = {
+        [name]: memoryValue.typeName,
+      };
+      updateStackAnnotation(newStackAnnotation);
+    }
+
+    // Persist the stack variable state
+    if (name in stackAnnotation && stackAnnotation[name] === null) {
+      setSelectedRole(StackVariableRole.Empty);
     }
   }, []);
 
@@ -83,23 +85,9 @@ export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
                     onClick={() => {
                       setSelectedRole(role[1]);
                       if (role[1] === StackVariableRole.LinkedListPointer) {
-                        updateUserAnnotation({
-                          typeAnnotation: userAnnotation.typeAnnotation,
-                          stackAnnotation: {
-                            ...userAnnotation.stackAnnotation,
-                            [name]: {
-                              typeName: memoryValue.typeName,
-                            },
-                          },
-                        });
+                        updateStackAnnotation({ [name]: memoryValue.typeName });
                       } else {
-                        updateUserAnnotation({
-                          typeAnnotation: userAnnotation.typeAnnotation,
-                          stackAnnotation: {
-                            ...userAnnotation.stackAnnotation,
-                            [name]: null,
-                          },
-                        });
+                        updateStackAnnotation({ [name]: null });
                       }
                       setIsDropdownOpen(false);
                     }}
