@@ -26,8 +26,6 @@ export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
       : StackVariableRole.Empty
   );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const userAnnotation = useGlobalStore((state) => state.visualizer.userAnnotation);
-  const updateUserAnnotation = useGlobalStore((state) => state.updateUserAnnotation);
   const updateStackAnnotation = useGlobalStore((state) => state.updateStackAnnotation);
 
   // Annotate by default if the variable contains a pointer
@@ -79,23 +77,9 @@ export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
                     onClick={() => {
                       setSelectedRole(role[1]);
                       if (role[1] === StackVariableRole.LinkedListPointer) {
-                        updateUserAnnotation({
-                          typeAnnotation: userAnnotation.typeAnnotation,
-                          stackAnnotation: {
-                            ...userAnnotation.stackAnnotation,
-                            [name]: {
-                              typeName: memoryValue.typeName,
-                            },
-                          },
-                        });
+                        updateStackAnnotation({ [name]: memoryValue.typeName });
                       } else {
-                        updateUserAnnotation({
-                          typeAnnotation: userAnnotation.typeAnnotation,
-                          stackAnnotation: {
-                            ...userAnnotation.stackAnnotation,
-                            [name]: null,
-                          },
-                        });
+                        updateStackAnnotation({ [name]: null });
                       }
                       setIsDropdownOpen(false);
                     }}
