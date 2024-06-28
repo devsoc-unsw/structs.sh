@@ -26,6 +26,9 @@ export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
       : StackVariableRole.Empty
   );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const stackAnnotation = useGlobalStore(
+    (state) => state.visualizer.userAnnotation.stackAnnotation
+  );
   const updateStackAnnotation = useGlobalStore((state) => state.updateStackAnnotation);
 
   // Annotate by default if the variable contains a pointer
@@ -35,6 +38,11 @@ export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
         [name]: memoryValue.typeName,
       };
       updateStackAnnotation(newStackAnnotation);
+    }
+
+    // Persist the stack variable state
+    if (name in stackAnnotation && stackAnnotation[name] === null) {
+      setSelectedRole(StackVariableRole.Empty);
     }
   }, []);
 
