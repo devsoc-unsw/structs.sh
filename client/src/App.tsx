@@ -8,6 +8,7 @@ import VisualiserPage from 'VisualiserPage';
 import { structsTheme } from 'structsThemes';
 import './App.scss';
 import DevelopmentMode from 'visualiser-debugger/DevelopmentMode';
+import TempTabResizablePage from 'components/TabResize/TempTabResizePage';
 
 const App = () => (
   <Box color={structsTheme.palette.text.primary}>
@@ -25,6 +26,9 @@ const App = () => (
 
           {/* Development mode */}
           <Route path="/dev" element={<DevelopmentMode />} />
+
+          {/* Risizable mode */}
+          <Route path="/resizableTest" element={<TempTabResizablePage />} />
 
           {/* 404 page */}
           <Route path="*" element={<Page404 />} />

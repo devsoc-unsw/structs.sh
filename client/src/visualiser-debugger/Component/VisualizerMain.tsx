@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useGlobalStore } from '../Store/globalStateStore';
 import { useFrontendStateStore } from '../Store/frontendStateStore';
 import { BackendState } from '../Types/backendType';
+import { TabResize } from '../../components/TabResize'; // NEW IMPORT
 
 export interface RoutesProps {
   backendState: BackendState;
@@ -29,8 +30,9 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) =>
     }
   }, [backendState, userAnnotation]);
 
-  const visualizerRef = useRef(null);
+  const visualizerRef = useRef<HTMLDivElement>(null);
   const { uiState } = useGlobalStore();
+
   return (
     <div
       className="visualizer"
@@ -38,6 +40,9 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) =>
       style={{ overflow: 'hidden', height: '100%', width: '100%' }}
     >
       <VisComponent graphState={currState} dimension={uiState} />
+      {/* <TabResize initialWidth={600} initialHeight={400}>
+        <VisComponent graphState={currState} dimension={uiState} />
+      </TabResize> */}
     </div>
   );
 };
