@@ -10,11 +10,14 @@ import './App.scss';
 import DevelopmentMode from 'visualiser-debugger/DevelopmentMode';
 import { useGlobalStore } from 'visualiser-debugger/Store/globalStateStore';
 import { useEffect } from 'react';
+import { useFrontendStateStore } from 'visualiser-debugger/Store/frontendStateStore';
 
 const App = () => {
   useEffect(() => {
     // @ts-ignore
     window.globalStore = useGlobalStore;
+    // @ts-ignore
+    window.frontendStore = useFrontendStateStore;
   }, [useGlobalStore]);
 
   return (

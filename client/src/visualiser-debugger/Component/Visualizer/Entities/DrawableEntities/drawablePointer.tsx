@@ -54,6 +54,7 @@ const ArrowMarker = ({ id, color }: { id: string; color: string }) => (
     <path d="M0,0 L0,2 L3,1 z" fill={color} />
   </motion.marker>
 );
+
 type DrawablePointerComponent = DrawableComponentBase<PointerProp>;
 const PointerDrawable: DrawablePointerComponent = (
   { entity, attachedEntity, pos }: PointerProp,
@@ -66,6 +67,22 @@ const PointerDrawable: DrawablePointerComponent = (
     const res = calculateCoordinates(pos, attachedEntity);
     setCoords(res);
   }, [pos.x.val, pos.y.val]);
+
+  const splitLabels = (label: string) => {
+    return label.split(', ');
+  };
+
+  // Calculate the text's width using canvas
+  // https://www.tutorialspoint.com/Calculate-text-width-with-JavaScript#:~:text=To%20calculate%20text%20width%2C%20we,method%20to%20measure%20the%20text.
+  const getTextWidth = (text: string, fontSize: number) => {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    if (context) {
+      context.font = `${fontSize}px Arial`;
+      return context.measureText(text).width;
+    }
+    return 0;
+  };
 
   return (
     <motion.g
@@ -83,18 +100,34 @@ const PointerDrawable: DrawablePointerComponent = (
       </defs>
       <motion.line
         x1={0}
-        y1={0}
+        y1={30}
         x2={0}
         y2={coords.y2 - coords.y1}
         opacity={1}
         transition={{ type: 'spring', bounce: 0.025, duration: 1 }}
         stroke="#DE3163"
-        strokeWidth={6}
+        strokeWidth={8}
         markerEnd={`url(#${markerId})`}
       />
-      <motion.text x={5} y={coords.y2 - coords.y1 + 20} fontSize={15}>
-        {entity.label}
-      </motion.text>
+
+      {splitLabels(entity.label).map((l, idx) => {
+        const fontSize = 40;
+        let label = l;
+        if (idx < splitLabels(entity.label).length - 1) {
+          label += ',';
+        }
+
+        return (
+          <motion.text
+            key={idx}
+            x={-getTextWidth(label, fontSize) / 2}
+            y={coords.y2 - coords.y1 + 85 + idx * 40}
+            fontSize={fontSize}
+          >
+            {label}
+          </motion.text>
+        );
+      })}
     </motion.g>
   );
 };

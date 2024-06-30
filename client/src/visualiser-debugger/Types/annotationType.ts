@@ -77,8 +77,12 @@ export type LocalAnnotationConcrete = ArrayElementPointer | LinkedListNodePointe
 /**
  * Map from variable names to user annotations of that
  */
+export interface StackAnnotation {
+  [name: Name]: LocalAnnotationConcrete | null;
+}
+
 export interface UserAnnotation {
-  stackAnnotation: { [name: Name]: LocalAnnotationConcrete | null };
+  stackAnnotation: StackAnnotation;
   typeAnnotation: { [name: Name]: DataStructureAnnotationConcrete };
 }
 

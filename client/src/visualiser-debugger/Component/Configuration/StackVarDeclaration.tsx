@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from 'styles/Configuration.module.css';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -19,10 +19,32 @@ export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
   name,
   memoryValue,
 }: StackVariableAnnotationProp) => {
-  const [selectedRole, setSelectedRole] = useState<StackVariableRole>(StackVariableRole.Empty);
+  // Annotate by default if the variable contains a pointer
+  const [selectedRole, setSelectedRole] = useState<StackVariableRole>(
+    isPointerType(memoryValue.typeName)
+      ? StackVariableRole.LinkedListPointer
+      : StackVariableRole.Empty
+  );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { userAnnotation } = useGlobalStore().visualizer;
-  const { updateUserAnnotation } = useGlobalStore();
+  const stackAnnotation = useGlobalStore(
+    (state) => state.visualizer.userAnnotation.stackAnnotation
+  );
+  const updateStackAnnotation = useGlobalStore((state) => state.updateStackAnnotation);
+
+  // Annotate by default if the variable contains a pointer
+  useEffect(() => {
+    if (selectedRole === StackVariableRole.LinkedListPointer) {
+      const newStackAnnotation = {
+        [name]: memoryValue.typeName,
+      };
+      updateStackAnnotation(newStackAnnotation);
+    }
+
+    // Persist the stack variable state
+    if (name in stackAnnotation && stackAnnotation[name] === null) {
+      setSelectedRole(StackVariableRole.Empty);
+    }
+  }, []);
 
   return (
     <div style={{ paddingBottom: '8px' }}>
@@ -63,23 +85,9 @@ export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
                     onClick={() => {
                       setSelectedRole(role[1]);
                       if (role[1] === StackVariableRole.LinkedListPointer) {
-                        updateUserAnnotation({
-                          typeAnnotation: userAnnotation.typeAnnotation,
-                          stackAnnotation: {
-                            ...userAnnotation.stackAnnotation,
-                            [name]: {
-                              typeName: memoryValue.typeName,
-                            },
-                          },
-                        });
+                        updateStackAnnotation({ [name]: memoryValue.typeName });
                       } else {
-                        updateUserAnnotation({
-                          typeAnnotation: userAnnotation.typeAnnotation,
-                          stackAnnotation: {
-                            ...userAnnotation.stackAnnotation,
-                            [name]: null,
-                          },
-                        });
+                        updateStackAnnotation({ [name]: null });
                       }
                       setIsDropdownOpen(false);
                     }}
