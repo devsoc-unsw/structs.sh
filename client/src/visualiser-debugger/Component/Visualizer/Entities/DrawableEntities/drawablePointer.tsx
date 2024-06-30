@@ -55,19 +55,6 @@ const ArrowMarker = ({ id, color }: { id: string; color: string }) => (
   </motion.marker>
 );
 
-// const ArrowMarker = ({ id, color }: { id: string; color: string }) => (
-//   <motion.marker
-//     id={id}
-//     markerWidth="20"
-//     markerHeight="10"
-//     refX="0"
-//     refY="5"
-//     orient="auto"
-//     markerUnits="strokeWidth"
-//   >
-//     <path d="M0,0 L0,10 L12,5 z" fill={color} />
-//   </motion.marker>
-// );
 type DrawablePointerComponent = DrawableComponentBase<PointerProp>;
 const PointerDrawable: DrawablePointerComponent = (
   { entity, attachedEntity, pos }: PointerProp,
