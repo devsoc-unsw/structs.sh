@@ -3,23 +3,26 @@ import 'styles/CodeEditor.css';
 import 'ace-builds/src-noconflict/mode-c_cpp';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/theme-tomorrow';
-import { SERVER_URL } from 'utils/constants';
-import axios from 'axios';
-import { PLACEHOLDER_USERNAME } from '../FileTree/Util/util';
+import { useState, useEffect } from 'react';
+import { useUserFsStateStore } from '../../Store/userFsStateStore';
+import { IFileFileNode } from '../FileTree/FS/IFileSystem';
 
-const CodeEditor = ({
-  programName,
-  workspaceName,
-  code,
-  handleSetCode,
-  currLine = 0,
-}: {
-  programName: string;
-  workspaceName: string;
-  code: string;
-  handleSetCode: (newCode: string) => void;
-  currLine: number;
-}) => {
+type CodeEditorProps = {
+  currLine?: number;
+};
+
+const CodeEditor: React.FC<CodeEditorProps> = ({ currLine = 0 }: CodeEditorProps) => {
+  const { fileSystem, currFocusFilePath } = useUserFsStateStore();
+  const [currFile, setCurrFile] = useState<IFileFileNode | undefined>(undefined);
+  const [code, setCode] = useState('');
+
+  useEffect(() => {
+    // Update currFile based on currFocusFilePath
+    const file = fileSystem.getFileFromPath(currFocusFilePath) as IFileFileNode;
+    setCurrFile(file);
+    setCode(file?.data || '');
+  }, [currFocusFilePath, fileSystem]);
+
   const markers: IMarker[] = [
     {
       startRow: currLine - 1,
@@ -31,49 +34,14 @@ const CodeEditor = ({
     },
   ];
 
-  if (programName !== '') {
-    const loadCode = () => {
-      axios
-        .get(`${SERVER_URL}/api/retrieveFile`, {
-          params: {
-            username: PLACEHOLDER_USERNAME,
-            workspace: workspaceName,
-            filename: programName,
-          },
-        })
-        .then((response) => {
-          if (Object.prototype.hasOwnProperty.call(response.data, 'error')) {
-            console.log('ERROR: ', +response.data.error);
-            return '';
-          }
-
-          return response.data.content;
-        });
-
-      return '';
-    };
-
-    const changeCode = (newCode: string) => {
-      const data = {
-        username: PLACEHOLDER_USERNAME,
-        workspace: workspaceName,
-        filename: programName,
-        fileData: code,
-      };
-
-      axios.post(`${SERVER_URL}/api/updateFile`, data).then((response) => {
-        if (Object.prototype.hasOwnProperty.call(response.data, 'error')) {
-          console.log('ERROR: ', +response.data.error);
-        }
-      });
-
-      handleSetCode(newCode);
-    };
-
-    if (code !== loadCode()) {
-      changeCode(code);
+  // Function to handle code changes from the editor
+  const handleSetCode = (newCode: string) => {
+    if (currFile && currFile.data !== newCode) {
+      currFile.data = newCode;
+      fileSystem.saveChanges();
+      setCode(newCode);
     }
-  }
+  };
 
   return (
     <AceEditor

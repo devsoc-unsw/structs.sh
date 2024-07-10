@@ -2,6 +2,14 @@ FROM ubuntu
 
 ENV DEBIAN_FRONTEND noninteractive
 
+RUN echo "Acquire::http::Pipeline-Depth 0;" > /etc/apt/apt.conf.d/99custom && \
+    echo "Acquire::http::No-Cache true;" >> /etc/apt/apt.conf.d/99custom && \
+    echo "Acquire::BrokenProxy    true;" >> /etc/apt/apt.conf.d/99custom
+
+RUN rm -rf /var/lib/apt/lists/*
+RUN apt-get clean
+RUN apt-get update -o Acquire::CompressionTypes::Order::=gz
+
 RUN apt-get update -y; apt-get install -y build-essential gdb curl git libssl-dev zlib1g-dev \
     libbz2-dev libreadline-dev libsqlite3-dev \
     libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
@@ -21,6 +29,7 @@ ENV PYTHON_VERSION=3.11.3
 # The following env var is needed to allow gdb to run our Python packages
 # installed from requirements.txt
 ENV PYTHONPATH="${PYENV_ROOT}/versions/${PYTHON_VERSION}/lib/python3.11/site-packages:${PYTHONPATH}"
+
 
 RUN pyenv install ${PYTHON_VERSION}
 RUN pyenv global ${PYTHON_VERSION}

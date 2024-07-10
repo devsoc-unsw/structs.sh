@@ -12,12 +12,8 @@ import StackInspector from './Component/StackInspector/StackInspector';
 import { useGlobalStore } from './Store/globalStateStore';
 import VisualizerMain from './Component/VisualizerMain';
 import AboutText from './Component/FileTree/AboutText';
-import WorkspaceSelector from './Component/FileTree/WorkspaceSelector';
-import {
-  PLACEHOLDER_USERNAME,
-  PLACEHOLDER_WORKSPACE,
-  loadCode,
-} from './Component/FileTree/Util/util';
+import FileManager from './Component/FileTree/FileManager';
+import { useUserFsStateStore } from './Store/userFsStateStore';
 import useSocketClientStore from '../Services/socketClient';
 import { INITIAL_BACKEND_STATE } from './Types/backendType';
 
@@ -30,18 +26,7 @@ const DevelopmentMode = () => {
     };
   }, [socket]);
 
-  const {
-    currFrame: backendState,
-    updateTypeDeclaration,
-    clearTypeDeclarations,
-    clearUserAnnotation,
-    updateNextFrame,
-  } = useGlobalStore();
-
   const [activeSession, setActiveSession] = useState(false);
-  const [workspaceName, setWorkspaceName] = useState(PLACEHOLDER_WORKSPACE);
-  const [programName, setProgramName] = useState('');
-  const [code, setCode] = useState('');
   const [consoleChunks, setConsoleChunks] = useState([]);
 
   // Tab values correspond to their index
@@ -49,6 +34,15 @@ const DevelopmentMode = () => {
   // David's comment: Why do we use a number instead of string, string seems much more intuitive to code
   const [tab, setTab] = useState('0');
 
+  const globalStore = useGlobalStore();
+  const { fileSystem, currFocusFilePath } = useUserFsStateStore();
+  const {
+    updateTypeDeclaration,
+    clearTypeDeclarations,
+    clearUserAnnotation,
+    updateNextFrame,
+    currFrame,
+  } = globalStore;
   const inputElement = useRef(null);
 
   const scrollToBottom = () => {
@@ -70,11 +64,6 @@ const DevelopmentMode = () => {
     updateNextFrame(data);
   };
 
-  const handleSetCode = (newCode: string) => {
-    localStorage.setItem('code', newCode);
-    setCode(newCode);
-  };
-
   const resetDebugSession = () => {
     updateNextFrame(INITIAL_BACKEND_STATE);
     setActiveSession(false);
@@ -85,11 +74,18 @@ const DevelopmentMode = () => {
 
   const sendCode = () => {
     resetDebugSession();
-    socket.socketTemp.emit('mainDebug', code);
+
+    const file = fileSystem.getFileFromPath(`${currFocusFilePath}`);
+    if (file) {
+      console.log('Send data sends', file.data);
+      socket.socketTempRemoveLater.emit('mainDebug', file.data);
+    } else {
+      throw new Error('File not found in FS');
+    }
   };
 
   const getNextState = () => {
-    socket.socketTemp.emit('executeNext');
+    socket.socketTempRemoveLater.emit('executeNext');
   };
 
   const onDisconnect = useCallback(() => {
@@ -197,16 +193,7 @@ const DevelopmentMode = () => {
           <DevelopmentModeNavbar />
         </div>
         <div className={classNames(styles.pane, styles.files)} style={{ overflowY: 'scroll' }}>
-          <WorkspaceSelector
-            programName={programName}
-            onChangeWorkspaceName={(newWorkspaceName: string) => {
-              setWorkspaceName(newWorkspaceName);
-            }}
-            onChangeProgramName={async (newProgramName: string) => {
-              setProgramName(newProgramName);
-              handleSetCode(await loadCode(newProgramName, PLACEHOLDER_USERNAME, workspaceName));
-            }}
-          />
+          <FileManager />
           <div
             style={{
               fontSize: 'small',
@@ -218,13 +205,7 @@ const DevelopmentMode = () => {
           </div>
         </div>
         <div className={classNames(styles.pane, styles.editor)}>
-          <CodeEditor
-            programName={programName}
-            workspaceName={workspaceName}
-            code={code}
-            handleSetCode={handleSetCode}
-            currLine={backendState?.frame_info?.line_num}
-          />
+          <CodeEditor currLine={currFrame?.frame_info?.line_num} />
         </div>
         <div className={classNames(styles.pane, styles.inspector)}>
           <Tabs value={tab} onValueChange={handleChangeTab}>
@@ -247,7 +228,7 @@ const DevelopmentMode = () => {
           </Tabs>
         </div>
         <div className={classNames(styles.pane, styles.visualiser)}>
-          <VisualizerMain backendState={backendState} />
+          <VisualizerMain backendState={currFrame} />
         </div>
         <div className={classNames(styles.pane, styles.timeline)}>
           <Controls getNextState={getNextState} sendCode={sendCode} activeSession={activeSession} />

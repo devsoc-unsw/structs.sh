@@ -143,7 +143,7 @@ interface ClientToServerEvents {
 class SocketClient {
   private socket: Socket<ServerToClientEvents, ClientToServerEvents>;
 
-  get socketTemp(): Socket {
+  get socketTempRemoveLater(): Socket {
     return this.socket;
   }
 
