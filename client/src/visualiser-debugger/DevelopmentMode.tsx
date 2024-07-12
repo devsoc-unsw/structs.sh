@@ -4,6 +4,12 @@ import globalStyles from 'styles/global.module.css';
 import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
 import Console from 'visualiser-debugger/Component/Console/Console';
+
+// Onboarding Imports
+import Joyride, { ACTIONS, CallBackProps, EVENTS, STATUS, Step } from 'react-joyride';
+import { useMount, useSetState } from 'react-use';
+import a11yChecker from 'a11y-checker';
+
 import DevelopmentModeNavbar from '../components/Navbars/DevelopmentModeNavbar';
 import Configuration from './Component/Configuration/Configuration';
 import Controls from './Component/Control/Controls';
@@ -20,6 +26,29 @@ import {
 } from './Component/FileTree/Util/util';
 import useSocketClientStore from '../Services/socketClient';
 import { INITIAL_BACKEND_STATE } from './Types/backendType';
+
+// Onboarding Types
+interface State {
+  run: boolean;
+  workspaceOpen: boolean;
+  fileOpen: boolean;
+  stepIndex: number;
+  steps: Step[];
+}
+
+interface WorkspaceState {
+  isOpen: boolean;
+}
+
+interface FileState {
+  isOpen: boolean;
+}
+
+function logGroup(type: string, data: any) {
+  console.groupCollapsed(type);
+  console.log(data);
+  console.groupEnd();
+}
 
 const DevelopmentMode = () => {
   const socket = useSocketClientStore((stateStore) => stateStore.socket);
@@ -44,7 +73,7 @@ const DevelopmentMode = () => {
   const [code, setCode] = useState('');
   const [consoleChunks, setConsoleChunks] = useState([]);
 
-  // Tab values correspond to their index
+  // Tab values correspond to their index 
   // ('Configure' has value '0', 'Inspect' has value '1', 'Console' has value '2')
   // David's comment: Why do we use a number instead of string, string seems much more intuitive to code
   const [tab, setTab] = useState('0');
@@ -187,26 +216,93 @@ const DevelopmentMode = () => {
     };
   }, []);
 
+  // Onboarding Code
+
+  const folder = useRef<HTMLDivElement>(null);
+
+  const [{ run, workspaceOpen, fileOpen, stepIndex, steps }, setState] = useSetState<State>({
+    run: false,
+    workspaceOpen: false,
+    fileOpen: false,
+    stepIndex: 0,
+    steps: [
+      {
+        content: <h2>Let's begin our journey!</h2>,
+        placement: 'center',
+        target: 'body',
+      },
+      {
+        content: 'This is our folder, you can find everything you need here',
+        target: '.folder',
+        placement: 'right',
+        spotlightPadding: 0,
+        styles: {
+          options: {
+            zIndex: 10000,
+          },
+        },
+        title: 'Sidebar',
+      },
+    ],
+  });
+
+  useMount(() => {
+    a11yChecker();
+  });
+
+  const handleClickStart = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    
+    console.log('started\n');
+    setState({
+      run: true,
+    });
+  };
+
+  const handleJoyrideCallback = (data: CallBackProps) => {
+    const { action, index, status, type } = data;
+    if (([STATUS.FINISHED, STATUS.SKIPPED] as string[]).includes(status)) {
+      setState({ run: false, stepIndex: 0 });
+    } else if (([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND] as string[]).includes(type)) {
+      const nextStepIndex = index + (action === ACTIONS.PREV ? -1 : 1);
+
+    }
+
+    logGroup(type === EVENTS.TOUR_STATUS ? `${type}:${status}` : type, data);
+  };
+
   // Refactor to better support Debugger mode
   // - There're a lot of console.log functions, we can delegate responsibility in each component
   // - Refactor Tabs
   return (
     <div className={classNames(globalStyles.root, styles.light)}>
+      <Joyride
+        callback={handleJoyrideCallback}
+        continuous
+        run={run}
+        scrollToFirstStep
+        showProgress
+        showSkipButton
+        stepIndex={stepIndex}
+        steps={steps}
+      />
       <div className={styles.layout}>
         <div className={classNames(styles.pane, styles.nav)}>
-          <DevelopmentModeNavbar />
+          <DevelopmentModeNavbar onButtonClick={handleClickStart} />
         </div>
-        <div className={classNames(styles.pane, styles.files)} style={{ overflowY: 'scroll' }}>
-          <WorkspaceSelector
-            programName={programName}
-            onChangeWorkspaceName={(newWorkspaceName: string) => {
-              setWorkspaceName(newWorkspaceName);
-            }}
-            onChangeProgramName={async (newProgramName: string) => {
-              setProgramName(newProgramName);
-              handleSetCode(await loadCode(newProgramName, PLACEHOLDER_USERNAME, workspaceName));
-            }}
-          />
+        <div className={classNames(styles.pane, styles.files)} style={{ overflowY: 'scroll' }} ref={folder}>
+          <div className='folder'>
+            <WorkspaceSelector
+              programName={programName}
+              onChangeWorkspaceName={(newWorkspaceName: string) => {
+                setWorkspaceName(newWorkspaceName);
+              }}
+              onChangeProgramName={async (newProgramName: string) => {
+                setProgramName(newProgramName);
+                handleSetCode(await loadCode(newProgramName, PLACEHOLDER_USERNAME, workspaceName));
+              }}
+            />
+          </div>
           <div
             style={{
               fontSize: 'small',

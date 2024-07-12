@@ -4,8 +4,9 @@ import logo from 'assets/img/logo.png';
 import { InfoCircledIcon } from '@radix-ui/react-icons';
 import Dialog, { DialogTitle, DialogDescription } from 'components/Dialog/Dialog';
 import AboutText from 'visualiser-debugger/Component/FileTree/AboutText';
+import BookIcon from '@mui/icons-material/Book';
 
-const DevelopmentModeNavbar = () => {
+const DevelopmentModeNavbar = (({ onButtonClick }) => {
   return (
     <div className={styles.navBar}>
       <div className={styles.navItem}>
@@ -14,6 +15,14 @@ const DevelopmentModeNavbar = () => {
           <h4>Structs.sh</h4>
         </span>
       </div>
+      <button 
+        className={dialogStyles.OnboardingButton} 
+        onClick={onButtonClick} 
+        style={{ marginLeft: '85vw' }}
+        type="button"
+      >
+        <BookIcon />
+      </button>
       <div className={styles.navItem}>
         <Dialog
           trigger={
@@ -30,6 +39,6 @@ const DevelopmentModeNavbar = () => {
       </div>
     </div>
   );
-};
+});
 
 export default DevelopmentModeNavbar;

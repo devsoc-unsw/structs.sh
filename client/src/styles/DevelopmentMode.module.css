@@ -68,3 +68,9 @@
   display: flex;
   align-items: center;
 }
+
+.folder {
+  border: 10px solid transparent;
+  box-sizing: content-box;
+  z-index: 100;
+}
