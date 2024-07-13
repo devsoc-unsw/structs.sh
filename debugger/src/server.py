@@ -140,27 +140,36 @@ def mainDebug(socket_id: str, code: str) -> None:
         os.mkdir(new_code_dir)
     with open(os.path.join(new_code_dir, "main.c"), "w", encoding="utf-8") as f:
         f.write(code)
+        
+    docker_exec = "docker exec -i sandbox-container".split()
+    docker_home = "/home/neko"
+    sandbox_dir = f"{docker_home}/code/{socket_id}"
 
-    compilation_process = subprocess.run(
-        ["gcc", "-ggdb", "main.c", "-o", "main"], capture_output=True, cwd=new_code_dir
+    subprocess.run(docker_exec + ["mkdir", "-p", sandbox_dir])
+    subprocess.run(["docker", "cp", f"{new_code_dir}/main.c", f"sandbox-container:{sandbox_dir}"])
+    
+    gcc = subprocess.run(
+        docker_exec + ["gcc", "-ggdb", f"{sandbox_dir}/main.c", "-o", f"{sandbox_dir}/main"],
+        capture_output=True,
     )
-
-    if compilation_process.stderr:
-        io.emit("compileError", compilation_process.stderr.decode())
+    
+    if gcc.stderr:
+        io.emit("compileError", gcc.stderr.decode())
         shutil.rmtree(new_code_dir)
         return
-
+    
     gdb_script = get_gdb_script(
-        os.path.join(new_code_dir, "main"),
-        abs_file_path,
+        f"{sandbox_dir}/main",
+        f"{docker_home}/src",
         socket_id,
         script_name=GDB_SCRIPT_NAME,
     )
     print("\n=== Running gdb script...")
     print(f"gdb_script:\n{gdb_script}")
 
+    print(f"{docker_home}/.venv/lib/python3.11/site-packages:{docker_home}")
     proc = subprocess.Popen(
-        ["gdb"],
+        docker_exec + ["gdb"],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,

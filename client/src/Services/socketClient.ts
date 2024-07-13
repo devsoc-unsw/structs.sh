@@ -148,7 +148,7 @@ class SocketClient {
   }
 
   constructor() {
-    this.socket = io(URL);
+    this.socket = io(URL, { path: '/socket.io/' });
   }
 
   attach() {}

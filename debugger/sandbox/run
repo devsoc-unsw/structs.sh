@@ -1,0 +1,14 @@
+#!/usr/bin/env python3
+
+from subprocess import run, DEVNULL
+from os.path import realpath, dirname
+from pathlib import Path
+
+this_directory = Path(dirname(realpath(__file__)))
+
+run(["docker", "rm", "sandbox-container"], stdout=DEVNULL, stderr=DEVNULL)
+build = run(["docker", "build", "-t", "sandbox-image", "-f", this_directory / "Dockerfile", "."], cwd=this_directory / ".." / "src")
+if build.returncode:
+    exit(0)
+
+run(["docker", "run", "-it", "--name", "sandbox-container", "--hostname", "nekos", "sandbox-image"])
