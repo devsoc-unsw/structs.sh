@@ -22,6 +22,7 @@ array_end = re.compile("\[\d+\]$", re.DOTALL)
 class MallocVisitor(c_ast.NodeVisitor):
     def __init__(self):
         self.malloc_variables = []
+        self.arr_subscript_depth = 0;
         self.free_variables = []
         self.free = False
 
@@ -34,6 +35,10 @@ class MallocVisitor(c_ast.NodeVisitor):
             if isinstance(node.lvalue, c_ast.StructRef):
                 var_name = self.get_variable_name(node.lvalue)
                 self.malloc_variables.append(var_name)
+            elif isinstance(node.lvalue, c_ast.ArrayRef):
+                # Check if subscript (index) is involved and have function check what current i value is
+                self.arr_subscript_depth = self.get_subscript_depth(node.lvalue)
+                self.malloc_variables.append(node.lvalue.name.name)
             elif isinstance(node.lvalue, c_ast.ID):
                 self.malloc_variables.append(node.lvalue.name)
         self.generic_visit(node)
@@ -67,6 +72,14 @@ class MallocVisitor(c_ast.NodeVisitor):
         elif isinstance(node, c_ast.ID):
             return node.name
         return None
+    
+    def get_subscript_depth(self, node):
+        if hasattr(node, "subscript"):
+            return 1 + self.get_subscript_depth(node.name)
+        else:
+            return 0
+            
+
 
 
 class CustomNextCommand(gdb.Command):
@@ -172,6 +185,8 @@ class CustomNextCommand(gdb.Command):
                     bytes = re.sub(r'\n', '', bytes)
                     print(f"Bytes allocated: {bytes}")
 
+                    print(333333)
+
                     # Get the address returned by malloc
                     gdb.execute('finish')
                     temp_address = gdb.execute('print $', to_string=True)
@@ -187,6 +202,9 @@ class CustomNextCommand(gdb.Command):
                     # Beware uninitialised struct nodes might look like this:
                     # $3 = {data = -670244016, next = 0xffffa15f74cc <__libc_start_main_impl+152>}
 
+                    print(222222)
+
+
                     struct_fields_str = gdb.execute(
                         f'p *({stack_var_type_name}) {address}', to_string=True)
                     struct_fields_str = struct_fields_str.split("=", 1)[
@@ -197,6 +215,8 @@ class CustomNextCommand(gdb.Command):
 
                     struct_type_name = stack_var_type_name.strip('*').strip()
                     # "struct node*" => "struct node"
+
+                    print(111111)
 
                     is_ll = False
                     #TODO: Use c_ast to check if SELF is one of the struct field types, NOT gdb (malloc_variables could return a list of objects rather than variable names)
@@ -230,11 +250,14 @@ class CustomNextCommand(gdb.Command):
                         
                     else: # Some other malloc; assume array
                         print("In heap array case")
+                        array_type = stack_var_type_name.strip()[:-(malloc_visitor.arr_subscript_depth + 1)]
                         cellSize = int(gdb.execute(
-                            f'p sizeof(*({stack_var_type_name}){address})', to_string=True).split("=")[1], 16)
+                            f'p sizeof({array_type})', to_string=True).split("=")[1], 16)
+                        print(array_type)
+                        print(cellSize)
                         heap_memory_value = {
                             # "variable": var, # Name of stack var storing the address of this piece of heap data
-                            "typeName": struct_type_name,
+                            "typeName": array_type,
                             "cellSize": str(cellSize),
                             "size": bytes,
                             "nCells": str(int(bytes) // cellSize),
@@ -314,6 +337,8 @@ class CustomNextCommand(gdb.Command):
                 
                 if heap_memory_value["typeName"] == "char":
                     heap_memory_value["array"] = [chr(x) for x in array_numbers]
+                elif heap_memory_value["typeName"][-1] == '*':
+                    heap_memory_value["array"] = [hex(x) for x in array_numbers]
                 else:
                     heap_memory_value["array"] = array_numbers
 
