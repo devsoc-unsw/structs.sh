@@ -1,15 +1,23 @@
-/* eslint-disable */
 // TODO: Proper rework on this file => we want to re-design this anyway. I can't fix lint now because it will potentially change functioanlity of the file
 import React, { Fragment, useRef, useState } from 'react';
 
 import styles from 'styles/Console.module.css';
 import classNames from 'classnames';
+import { useGlobalStore } from 'visualiser-debugger/Store/globalStateStore';
 import useSocketClientStore from '../../../Services/socketClient';
 
-const Console = ({ chunks, handleAddChunk, scrollToBottom, isActive }) => {
+type ConsoleProp = {
+  scrollToBottom: () => void;
+  isActive: boolean;
+};
+
+const Console = ({ scrollToBottom, isActive }: ConsoleProp) => {
   const [input, setInput] = useState('');
   const inputElement = useRef(null);
   const socket = useSocketClientStore((state) => state.socketClient);
+
+  const consoleChunks = useGlobalStore((state) => state.consoleChunks);
+  const updateConsoleChunk = useGlobalStore((state) => state.updateConsoleChunks);
 
   const handleInput = () => {
     setInput(inputElement.current.innerText);
@@ -50,13 +58,13 @@ const Console = ({ chunks, handleAddChunk, scrollToBottom, isActive }) => {
       role="button"
       tabIndex={0}
     >
-      {chunks.map((chunk: string, index: number) => (
+      {consoleChunks.map((chunk: string, index: number) => (
         <Fragment key={index}>
           <code>{chunk.replace(/\n$/, '')}</code>
           {chunk.endsWith('\n') && <br />}
         </Fragment>
       ))}
-      <code
+      <input
         className={styles.input}
         key="input"
         onInput={handleInput}
