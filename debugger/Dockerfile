@@ -2,6 +2,9 @@ FROM ubuntu
 
 ENV DEBIAN_FRONTEND noninteractive
 
+RUN rm -rf /var/lib/apt/lists/*
+RUN apt-get clean
+RUN apt-get update -o Acquire::CompressionTypes::Order::=gz
 RUN apt-get update -y; apt-get install -y build-essential gdb curl git libssl-dev zlib1g-dev \
     libbz2-dev libreadline-dev libsqlite3-dev \
     libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev

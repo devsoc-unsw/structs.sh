@@ -1,0 +1,15 @@
+.root-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px;
+  margin-top: 0px;
+  margin-bottom: 4px;
+  height: 16px;
+}
+
+.icon-button {
+  margin: 0px;
+  padding: 0px;
+  width: 16px;
+}

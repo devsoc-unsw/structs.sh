@@ -41,6 +41,7 @@ export type MotionCoord = {
   x: NumberHook;
   y: NumberHook;
 };
+
 export interface NodeProp extends DrawablePropBase {
   entity: NodeEntity;
   coord: MotionCoord;

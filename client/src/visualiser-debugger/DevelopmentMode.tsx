@@ -1,10 +1,8 @@
 import { useEffect, useCallback, useState, useRef } from 'react';
-import { socket } from 'utils/socket';
 import styles from 'styles/DevelopmentMode.module.css';
 import globalStyles from 'styles/global.module.css';
 import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
-import { Socket } from 'socket.io-client';
 import Console from 'visualiser-debugger/Component/Console/Console';
 import { VisualizerType } from 'visualiser-debugger/Types/visualizerType';
 import DevelopmentModeNavbar from '../components/Navbars/DevelopmentModeNavbar';
@@ -14,32 +12,22 @@ import CodeEditor from './Component/CodeEditor/CodeEditor';
 import StackInspector from './Component/StackInspector/StackInspector';
 import { useGlobalStore } from './Store/globalStateStore';
 import VisualizerMain from './Component/VisualizerMain';
-import { BackendState } from './Types/backendType';
 import AboutText from './Component/FileTree/AboutText';
-import WorkspaceSelector from './Component/FileTree/WorkspaceSelector';
-import {
-  PLACEHOLDER_USERNAME,
-  PLACEHOLDER_WORKSPACE,
-  loadCode,
-} from './Component/FileTree/Util/util';
-
-type ExtendedWindow = Window &
-  typeof globalThis & { socket: Socket; getBreakpoints: (line: string, listName: string) => void };
+import FileManager from './Component/FileTree/FileManager';
+import { useUserFsStateStore } from './Store/userFsStateStore';
+import useSocketClientStore from '../Services/socketClient';
+import { INITIAL_BACKEND_STATE } from './Types/backendType';
 
 const DevelopmentMode = () => {
+  const socket = useSocketClientStore((stateStore) => stateStore.socket);
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      console.log('Attach socket to window for debugging: ', socket);
-      (window as ExtendedWindow).socket = socket;
-      (window as ExtendedWindow).getBreakpoints = (line: string, listName: string) =>
-        socket.emit('getBreakpoints', line, listName);
-    }
-  }, []);
-  const [backendState, setBackendState] = useState<BackendState>();
+    socket.connect();
+    return () => {
+      socket.disconnect();
+    };
+  }, [socket]);
+
   const [activeSession, setActiveSession] = useState(false);
-  const [workspaceName, setWorkspaceName] = useState(PLACEHOLDER_WORKSPACE);
-  const [programName, setProgramName] = useState('');
-  const [code, setCode] = useState('');
   const [consoleChunks, setConsoleChunks] = useState([]);
 
   // Tab values correspond to their index
@@ -48,12 +36,14 @@ const DevelopmentMode = () => {
   const [tab, setTab] = useState('0');
 
   const globalStore = useGlobalStore();
+  const { fileSystem, currFocusFilePath } = useUserFsStateStore();
   const {
     setVisualizerType,
     updateTypeDeclaration,
     clearTypeDeclarations,
     clearUserAnnotation,
     updateNextFrame,
+    currFrame,
   } = globalStore;
   const inputElement = useRef(null);
 
@@ -73,17 +63,11 @@ const DevelopmentMode = () => {
   };
 
   const updateState = (data: any) => {
-    setBackendState(data);
     updateNextFrame(data);
   };
 
-  const handleSetCode = (newCode: string) => {
-    localStorage.setItem('code', newCode);
-    setCode(newCode);
-  };
-
   const resetDebugSession = () => {
-    setBackendState(undefined);
+    updateNextFrame(INITIAL_BACKEND_STATE);
     setActiveSession(false);
     clearTypeDeclarations();
     clearUserAnnotation();
@@ -92,11 +76,18 @@ const DevelopmentMode = () => {
 
   const sendCode = () => {
     resetDebugSession();
-    socket.emit('mainDebug', code);
+
+    const file = fileSystem.getFileFromPath(`${currFocusFilePath}`);
+    if (file) {
+      console.log('Send data sends', file.data);
+      socket.socketTempRemoveLater.emit('mainDebug', file.data);
+    } else {
+      throw new Error('File not found in FS');
+    }
   };
 
   const getNextState = () => {
-    socket.emit('executeNext');
+    socket.socketTempRemoveLater.emit('executeNext');
   };
 
   const onDisconnect = useCallback(() => {
@@ -174,6 +165,7 @@ const DevelopmentMode = () => {
     socket.on('sendStdoutToUser', onSendStdoutToUser);
     socket.on('programWaitingForInput', onProgramWaitingForInput);
     socket.on('compileError', onCompileError);
+    // @ts-ignore
     socket.on('sendStdoutToUser', onStdout);
 
     return () => {
@@ -208,16 +200,7 @@ const DevelopmentMode = () => {
           />
         </div>
         <div className={classNames(styles.pane, styles.files)} style={{ overflowY: 'scroll' }}>
-          <WorkspaceSelector
-            programName={programName}
-            onChangeWorkspaceName={(newWorkspaceName: string) => {
-              setWorkspaceName(newWorkspaceName);
-            }}
-            onChangeProgramName={async (newProgramName: string) => {
-              setProgramName(newProgramName);
-              handleSetCode(await loadCode(newProgramName, PLACEHOLDER_USERNAME, workspaceName));
-            }}
-          />
+          <FileManager />
           <div
             style={{
               fontSize: 'small',
@@ -229,13 +212,7 @@ const DevelopmentMode = () => {
           </div>
         </div>
         <div className={classNames(styles.pane, styles.editor)}>
-          <CodeEditor
-            programName={programName}
-            workspaceName={workspaceName}
-            code={code}
-            handleSetCode={handleSetCode}
-            currLine={backendState?.frame_info?.line_num}
-          />
+          <CodeEditor currLine={currFrame?.frame_info?.line_num} />
         </div>
         <div className={classNames(styles.pane, styles.inspector)}>
           <Tabs value={tab} onValueChange={handleChangeTab}>
@@ -258,7 +235,7 @@ const DevelopmentMode = () => {
           </Tabs>
         </div>
         <div className={classNames(styles.pane, styles.visualiser)}>
-          <VisualizerMain backendState={backendState} />
+          <VisualizerMain backendState={currFrame} />
         </div>
         <div className={classNames(styles.pane, styles.timeline)}>
           <Controls getNextState={getNextState} sendCode={sendCode} activeSession={activeSession} />
