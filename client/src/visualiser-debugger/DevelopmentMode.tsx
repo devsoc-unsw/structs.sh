@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
 import { Socket } from 'socket.io-client';
 import Console from 'visualiser-debugger/Component/Console/Console';
+import { VisualizerType } from 'visualiser-debugger/Types/visualizerType';
 import DevelopmentModeNavbar from '../components/Navbars/DevelopmentModeNavbar';
 import Configuration from './Component/Configuration/Configuration';
 import Controls from './Component/Control/Controls';
@@ -47,8 +48,13 @@ const DevelopmentMode = () => {
   const [tab, setTab] = useState('0');
 
   const globalStore = useGlobalStore();
-  const { updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation, updateNextFrame } =
-    globalStore;
+  const {
+    setVisualizerType,
+    updateTypeDeclaration,
+    clearTypeDeclarations,
+    clearUserAnnotation,
+    updateNextFrame,
+  } = globalStore;
   const inputElement = useRef(null);
 
   const scrollToBottom = () => {
@@ -194,7 +200,12 @@ const DevelopmentMode = () => {
     <div className={classNames(globalStyles.root, styles.light)}>
       <div className={styles.layout}>
         <div className={classNames(styles.pane, styles.nav)}>
-          <DevelopmentModeNavbar />
+          <DevelopmentModeNavbar
+            onChanceVisualizerType={(mode: VisualizerType) => {
+              console.log(mode);
+              setVisualizerType(mode);
+            }}
+          />
         </div>
         <div className={classNames(styles.pane, styles.files)} style={{ overflowY: 'scroll' }}>
           <WorkspaceSelector
