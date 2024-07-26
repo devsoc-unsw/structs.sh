@@ -69,6 +69,7 @@ type GlobalStoreActions = {
   clearTypeDeclarations: () => void;
   clearUserAnnotation: () => void;
   updateConsoleChunks: (chunk: string) => void;
+  resetConsoleChunks: () => void;
 };
 
 export const useGlobalStore: UseBoundStore<StoreApi<GlobalStateStore & GlobalStoreActions>> =
@@ -185,6 +186,9 @@ export const useGlobalStore: UseBoundStore<StoreApi<GlobalStateStore & GlobalSto
       },
       updateConsoleChunks: (chunk: string) => {
         set((state) => ({ consoleChunks: [...state.consoleChunks, chunk] }));
+      },
+      resetConsoleChunks: () => {
+        set(() => ({ consoleChunks: [] }));
       },
     }))
   );
