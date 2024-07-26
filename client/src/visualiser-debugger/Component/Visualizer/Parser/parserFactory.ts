@@ -1,6 +1,7 @@
 import { VisualizerType } from '../../../Types/visualizerType';
 import { assertUnreachable } from '../Util/util';
 import { LinkedListParser } from './linkedListParser';
+import { ArrayParser } from './arrayParser';
 import { Parser } from './parser';
 
 export function parserFactory(visualizerType: VisualizerType): Parser {
@@ -11,7 +12,7 @@ export function parserFactory(visualizerType: VisualizerType): Parser {
     case VisualizerType.BINARY_TREE:
     case VisualizerType.GRAPH:
     case VisualizerType.ARRAY: {
-      throw new Error('Not implemented');
+      return new ArrayParser();
     }
     default:
       assertUnreachable(visualizerType);
