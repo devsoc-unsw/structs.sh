@@ -201,7 +201,7 @@ const DevelopmentMode = () => {
       <div className={styles.layout}>
         <div className={classNames(styles.pane, styles.nav)}>
           <DevelopmentModeNavbar
-            onChanceVisualizerType={(mode: VisualizerType) => {
+            onChangeVisualizerType={(mode: VisualizerType) => {
               console.log(mode);
               setVisualizerType(mode);
             }}

@@ -8,9 +8,9 @@ import AboutText from 'visualiser-debugger/Component/FileTree/AboutText';
 import { VisualizerType } from 'visualiser-debugger/Types/visualizerType';
 
 const DevelopmentModeNavbar = ({
-  onChanceVisualizerType,
+  onChangeVisualizerType,
 }: {
-  onChanceVisualizerType: (mode: VisualizerType) => void;
+  onChangeVisualizerType: (mode: VisualizerType) => void;
 }) => {
   return (
     <div className={styles.navBar}>
@@ -23,23 +23,12 @@ const DevelopmentModeNavbar = ({
 
       {/* ============ */}
       <div className={styles.navItem}>
-        <Select onValueChange={onChanceVisualizerType} placeholder="Choose mode...">
-          <SelectItem
-            style={{ fontSize: '13px' }}
-            value={VisualizerType.ARRAY}
-            className=""
-            key="visualizerTypeArray"
-          >
-            Array
-          </SelectItem>
-          <SelectItem
-            style={{ fontSize: '13px' }}
-            value={VisualizerType.LINKED_LIST}
-            className=""
-            key="visualizerTypeLinkedList"
-          >
-            LinkedList
-          </SelectItem>
+        <Select onValueChange={onChangeVisualizerType} placeholder="Choose mode...">
+          {Object.values(VisualizerType).map((visType, index) => (
+            <SelectItem style={{ fontSize: '13px' }} value={visType} className="" key={index}>
+              {visType.toLowerCase()}
+            </SelectItem>
+          ))}
         </Select>
       </div>
 
