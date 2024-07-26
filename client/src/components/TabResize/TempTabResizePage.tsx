@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import TabResizeWrapper, { TabResize } from "./TabResize";
-import './tabResize.css';
 // http://localhost:3000/resizableTest
+import React, { useState, useEffect } from 'react';
+import TabResize from './TabResize';
 
 const TempTabResizablePage: React.FC = () => {
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
@@ -42,26 +41,24 @@ const TempTabResizablePage: React.FC = () => {
   };
 
   return (
-    <TabResizeWrapper>
+    <div style={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column' }}>
       <TabResize
-        initialWidth={420}
         initialHeight={div1Height}
-        minConstraints={[420, 100]}
-        maxConstraints={[420, windowHeight - 100]}
-        // onResize={(height: number) => handleResize(height, 'div1')}
+        minConstraints={[0, 100]}
+        maxConstraints={[0, windowHeight - 100]}
+        onResize={(height) => handleResize(height, 'div1')}
       >
-        <div className="resize-content-1"></div>
+        <div style={{ background: 'lightblue', height: '100%' }} />
       </TabResize>
       <TabResize
-        initialWidth={420}
         initialHeight={div2Height}
-        minConstraints={[420, 100]}
-        maxConstraints={[420, windowHeight - 100]}
-        // onResize={(height: number) => handleResize(height, 'div2')}
+        minConstraints={[0, 100]}
+        maxConstraints={[0, windowHeight - 100]}
+        onResize={(height) => handleResize(height, 'div2')}
       >
-        <div className="resize-content-2"></div>
+        <div style={{ background: 'lightgreen', height: '100%' }} />
       </TabResize>
-    </TabResizeWrapper>
+    </div>
   );
 };
 

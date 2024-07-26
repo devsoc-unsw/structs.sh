@@ -1,72 +1,82 @@
 // https://www.npmjs.com/package/react-resizable
 
 // visualiser-debugger/components/TabResize/TabResize.tsx
-import React, {useState, useEffect} from 'react';
-import { Resizable } from 're-resizable';
-import './tabResize.css';
+import React, { useState, useRef, useEffect } from 'react';
 
 interface TabResizeProps {
-  initialWidth: number;
-  initialHeight: number;
-  minConstraints?: [number, number];
-  maxConstraints?: [number, number];
   children: React.ReactNode;
+  initialHeight: number;
+  minConstraints: [number, number];
+  maxConstraints: [number, number];
+  onResize?: (height: number) => void;
 }
 
-const TabResize: React.FC<TabResizeProps> = ({
-  initialHeight,
-  minConstraints = [100, 100],
-  maxConstraints = [800, 800],
-  children
-}) => {
-  return (
-    <Resizable
-      defaultSize={{
-        width: 420,
-        height: initialHeight,
-      }}
-      minHeight={minConstraints[1]}
-      maxHeight={maxConstraints[1]}
-      enable={{ top: true, bottom: true, left: false, right: false, topLeft: false, topRight: false, bottomLeft: false, bottomRight: false }}
-      className="resize-container"
-    >
-      <div style={{ width: '420px' }}>
-        {children}
-      </div>
-    </Resizable>
-  );
-};
+const TabResize: React.FC<TabResizeProps> = ({ children, initialHeight, minConstraints, maxConstraints, onResize }) => {
+  const [height, setHeight] = useState(initialHeight);
+  const resizableRef = useRef<HTMLDivElement>(null);
+  // const [hovering, setHovering] = useState(false);
 
-interface TabResizeWrapperProps {
-  children: React.ReactNode[];
-}
+  const handleMouseMove = (event: MouseEvent) => {
+    if (!resizableRef.current) return;
 
-const TabResizeWrapper: React.FC<TabResizeWrapperProps> = ({ children }) => {
-  const [constraints, setConstraints] = useState<[number, number, number, number]>([100, 100, window.innerWidth, window.innerHeight]);
+    const newHeight = event.clientY - resizableRef.current.getBoundingClientRect().top;
+    if (newHeight >= minConstraints[1] && newHeight <= maxConstraints[1]) {
+      setHeight(newHeight);
+      if (onResize) onResize(newHeight);
+    }
+  };
+
+  const handleMouseUp = () => {
+    document.removeEventListener('mousemove', handleMouseMove);
+    document.removeEventListener('mouseup', handleMouseUp);
+  };
+
+  const handleMouseDown = () => {
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
 
   useEffect(() => {
-    const handleResize = () => {
-      setConstraints([100, 100, window.innerWidth, window.innerHeight]);
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+    setHeight(initialHeight);
+  }, [initialHeight]);
 
   return (
-    <div className="tab-resize-wrapper">
-      {React.Children.map(children, (child) => {
-        return React.cloneElement(child as React.ReactElement<any>, {
-          minConstraints: [constraints[0], constraints[1]],
-          maxConstraints: [constraints[2], constraints[3]],
-        });
-      })}
+    <div
+      className="resizable"
+      ref={resizableRef}
+      style={{ height: `${height}px`, position: 'relative', width: '100%' }}
+      // onMouseEnter={() => setHovering(true)}
+      // onMouseLeave={() => setHovering(false)}
+    >
+      <div
+        className="resizer top-resizer"
+        onMouseDown={handleMouseDown}
+        style={{
+          width: '100%',
+          height: '5px',
+          background: 'gray',
+          cursor: 'row-resize',
+          position: 'absolute',
+          top: 0,
+          display: 'block',
+        }}
+      />
+      {children}
+      <div
+        className="resizer bottom-resizer"
+        onMouseDown={handleMouseDown}
+        style={{
+          width: '100%',
+          height: '5px',
+          background: 'gray',
+          cursor: 'row-resize',
+          position: 'absolute',
+          bottom: 0,
+          display: 'block',
+        }}
+      />
     </div>
   );
 };
 
-export default TabResizeWrapper;
-export { TabResize };
+export default TabResize;
