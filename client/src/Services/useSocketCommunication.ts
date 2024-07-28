@@ -32,24 +32,22 @@ export const useSocketCommunication = ({
       mainDebug: (_data: any) => {
         setActiveSession(true);
       },
-      sendFunctionDeclaration: (data: any) => {
-        console.log('Function Declaration:', data);
+      sendFunctionDeclaration: (_data: any) => {
+        // TODO: Implement
       },
       sendTypeDeclaration: (type: any) => {
-        console.log('Type Declaration:', type);
         updateTypeDeclaration(type);
       },
       sendBackendStateToUser: (state: any) => {
-        console.log('Backend State:', state);
         updateNextFrame(state);
       },
       sendStdoutToUser: (output: any) => {
-        console.log('Stdout:', output);
         setConsoleChunks((prev) => [...prev, output]);
       },
-      programWaitingForInput: (data: any) => console.log('Program Waiting for Input:', data),
+      programWaitingForInput: (_data: any) => {
+        // TODO: Implement
+      },
       compileError: (errors: any) => {
-        console.log('Compile Error:', errors);
         setConsoleChunks((prev) => [...prev, ...errors]);
         setTab('2');
       },
