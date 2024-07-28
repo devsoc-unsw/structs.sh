@@ -9,8 +9,11 @@ import { BackendState, BackendTypeDeclaration, INITIAL_BACKEND_STATE } from '../
 import { VisualizerType } from '../Types/visualizerType';
 
 export type UiState = {
-  width: number;
-  height: number;
+  visualizerDimension: {
+    width: number;
+    height: number;
+  };
+  currFocusedTab: string;
 };
 
 export type VisualizerParam = {
@@ -30,8 +33,11 @@ export type GlobalStateStore = {
 
 export const DEFAULT_GLOBAL_STORE: GlobalStateStore = {
   uiState: {
-    width: 800,
-    height: 400,
+    visualizerDimension: {
+      width: 800,
+      height: 400,
+    },
+    currFocusedTab: '1',
   },
   visualizer: {
     visualizerType: VisualizerType.LINKED_LIST,
@@ -53,6 +59,7 @@ export const NODE_MIN_DISTANCE = 75;
 type GlobalStoreActions = {
   setVisualizerType: (type: VisualizerType) => void;
   updateDimensions: (width: number, height: number) => void;
+  updateCurrFocusedTab: (tab: string) => void;
   updateUserAnnotation: (annotation: UserAnnotation) => void;
   updateStackAnnotation: (annotation: StackAnnotation) => void;
   updateTypeDeclaration: (type: BackendTypeDeclaration) => void;
@@ -80,7 +87,22 @@ export const useGlobalStore: UseBoundStore<StoreApi<GlobalStateStore & GlobalSto
         );
       },
       updateDimensions: (width: number, height: number) => {
-        set({ uiState: { width, height } });
+        set((state) => ({
+          ...state,
+          uiState: {
+            visualizerDimension: { width, height },
+            currFocusedTab: state.uiState.currFocusedTab,
+          },
+        }));
+      },
+      updateCurrFocusedTab: (tab: string) => {
+        set((state) => ({
+          ...state,
+          uiState: {
+            visualizerDimension: state.uiState.visualizerDimension,
+            currFocusedTab: tab,
+          },
+        }));
       },
       updateUserAnnotation: (annotation: UserAnnotation) => {
         set(

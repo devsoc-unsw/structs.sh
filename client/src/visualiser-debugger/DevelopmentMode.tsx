@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import styles from 'styles/DevelopmentMode.module.css';
 import globalStyles from 'styles/global.module.css';
 import classNames from 'classnames';
@@ -26,20 +26,16 @@ const DevelopmentMode = () => {
   } = useGlobalStore();
 
   const { fileSystem, currFocusFilePath } = useUserFsStateStore();
-  const [tab, setTab] = useState('0');
   const inputElement = useRef(null);
+  const { uiState, updateCurrFocusedTab } = useGlobalStore();
+
   const { activeSession, consoleChunks, setConsoleChunks, sendCode, getNextState } =
     useSocketCommunication({
       updateNextFrame,
       updateTypeDeclaration,
       clearTypeDeclarations,
       clearUserAnnotation,
-      setTab,
     });
-
-  const handleChangeTab = (newTabValue) => {
-    setTab(newTabValue);
-  };
 
   const handleAddConsoleChunk = (chunk) => {
     setConsoleChunks([...consoleChunks, chunk]);
@@ -77,7 +73,7 @@ const DevelopmentMode = () => {
           <CodeEditor currLine={currFrame?.frame_info?.line_num} />
         </div>
         <div className={classNames(styles.pane, styles.inspector)}>
-          <Tabs value={tab} onValueChange={handleChangeTab}>
+          <Tabs value={uiState.currFocusedTab} onValueChange={updateCurrFocusedTab}>
             <Tab label="Configure">
               <Configuration />
             </Tab>

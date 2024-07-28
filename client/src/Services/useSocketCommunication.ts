@@ -7,13 +7,13 @@ import {
 } from '../visualiser-debugger/Types/backendType';
 import useSocketClientStore from './socketClient';
 import { EventHandlers } from './socketClientType';
+import { useGlobalStore } from '../visualiser-debugger/Store/globalStateStore';
 
 interface UseSocketCommunicationProps {
   updateNextFrame: (backendState: BackendState) => void;
   updateTypeDeclaration: (type: BackendTypeDeclaration) => void;
   clearTypeDeclarations: () => void;
   clearUserAnnotation: () => void;
-  setTab: (tab: string) => void;
 }
 
 export const useSocketCommunication = ({
@@ -21,11 +21,11 @@ export const useSocketCommunication = ({
   updateTypeDeclaration,
   clearTypeDeclarations,
   clearUserAnnotation,
-  setTab,
 }: UseSocketCommunicationProps) => {
   const { socketClient } = useSocketClientStore();
   const [activeSession, setActiveSession] = useState<boolean>(false);
   const [consoleChunks, setConsoleChunks] = useState<string[]>([]);
+  const { updateCurrFocusedTab } = useGlobalStore();
 
   useEffect(() => {
     const handlers: EventHandlers = {
@@ -49,7 +49,7 @@ export const useSocketCommunication = ({
       },
       compileError: (errors: any) => {
         setConsoleChunks((prev) => [...prev, ...errors]);
-        setTab('2');
+        updateCurrFocusedTab('2');
       },
       send_stdin: (data: any) => console.log('Stdin Sent:', data),
     };
