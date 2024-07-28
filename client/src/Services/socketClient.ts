@@ -65,6 +65,9 @@ class SocketClient {
     executeNext: () => {
       this.socket.emit('executeNext');
     },
+    sendStdin: (data: any) => {
+      this.socket.emit('send_stdin', data);
+    },
   };
 }
 
