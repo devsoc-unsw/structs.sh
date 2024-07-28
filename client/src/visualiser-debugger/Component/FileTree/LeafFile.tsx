@@ -13,7 +13,6 @@ const LeafFile = ({ file, depth }: LeafFileParam) => {
   const { currFocusFilePath, setFocusFilePath, setFocusDirPath } = useUserFsStateStore();
   const isHighlighted = currFocusFilePath === file.path;
 
-  useEffect(() => {}, [currFocusFilePath]);
 
   const indentStyle = {
     marginLeft: `${10 + depth * 12}px`,

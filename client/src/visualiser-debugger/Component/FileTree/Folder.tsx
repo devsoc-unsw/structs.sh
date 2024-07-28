@@ -14,8 +14,6 @@ export interface FolderParam {
 const Folder = ({ folder, depth }: FolderParam) => {
   const { setFocusDirPath } = useUserFsStateStore();
   const [isExpanded, setExpanded] = useState<boolean>(false);
-  const { fileSystem, currFocusDirPath, currFocusFilePath } = useUserFsStateStore.getState();
-  const currFocusDir = fileSystem.getDirFromPath(currFocusDirPath);
 
   const expandFolder = () => {
     if (!isExpanded) {
@@ -23,10 +21,6 @@ const Folder = ({ folder, depth }: FolderParam) => {
     }
     setExpanded(!isExpanded);
   };
-
-  // useEffect(() => {
-  //   setExpanded(false);
-  // }, [Object.keys(currFocusDir.children).length]);
 
   const indentStyle = {
     margin: '0px',

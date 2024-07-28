@@ -95,8 +95,6 @@ const WorkspaceSelector = () => {
     return;
   }
 
-  console.log(currFocus);
-
   return (
     <Box>
       <Box className="root-container">
