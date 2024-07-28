@@ -18,25 +18,10 @@ export interface SocketPackageBase {
 }
 
 // TODO: FURTHER ENHANCE TYPE
-export interface SocketPackageSendData extends SocketPackageBase {
-  type: 'sendData';
-  data: any;
-}
-
-// TODO: FURTHER ENHANCE TYPE
-export interface SocketPackageReceiveData extends SocketPackageBase {
-  type: 'receiveData';
-  data: any;
-}
 
 export interface SocketPackageMainDebug extends SocketPackageBase {
   type: 'mainDebug';
   debugInfo: string;
-}
-
-export interface SocketPackageExecuteNext extends SocketPackageBase {
-  type: 'executeNext';
-  command: string;
 }
 
 export interface SocketPackageSendFunctionDeclaration extends SocketPackageBase {
@@ -79,10 +64,7 @@ export interface SocketPackageConnectError extends SocketPackageBase {
 }
 
 export type SocketPackageConcrete =
-  | SocketPackageSendData
-  | SocketPackageReceiveData
   | SocketPackageMainDebug
-  | SocketPackageExecuteNext
   | SocketPackageSendFunctionDeclaration
   | SocketPackageSendTypeDeclaration
   | SocketPackageSendBackendStateToUser
@@ -93,10 +75,7 @@ export type SocketPackageConcrete =
   | SocketPackageConnectError;
 
 export type ServerToClientEvents = {
-  sendData: SocketPackageSendData;
-  receiveData: SocketPackageReceiveData;
   mainDebug: SocketPackageMainDebug;
-  executeNext: SocketPackageExecuteNext;
   sendFunctionDeclaration: SocketPackageSendFunctionDeclaration;
   sendTypeDeclaration: SocketPackageSendTypeDeclaration;
   sendBackendStateToUser: SocketPackageSendBackendStateToUser;

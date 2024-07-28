@@ -29,12 +29,9 @@ export const useSocketCommunication = ({
 
   useEffect(() => {
     const handlers: EventHandlers = {
-      sendData: (data: any) => console.log('Data sent:', data),
-      receiveData: (data: any) => console.log('Data received:', data),
       mainDebug: (_data: any) => {
         setActiveSession(true);
       },
-      executeNext: () => console.log('Execute next command issued'),
       sendFunctionDeclaration: (data: any) => {
         console.log('Function Declaration:', data);
       },
