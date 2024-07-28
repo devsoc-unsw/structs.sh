@@ -33,8 +33,6 @@ export const useSocketCommunication = ({
         setActiveSession(true);
       },
       executeNext: () => console.log('Execute next command issued'),
-      sendDummyLinkedListData: (data: any) => console.log('Dummy LinkedList Data:', data),
-      sendDummyBinaryTreeData: (data: any) => console.log('Dummy Binary Tree Data:', data),
       sendFunctionDeclaration: (data: any) => {
         console.log('Function Declaration:', data);
       },

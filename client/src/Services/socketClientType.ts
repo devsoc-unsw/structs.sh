@@ -43,16 +43,6 @@ export interface SocketPackageExecuteNext extends SocketPackageBase {
   command: string;
 }
 
-export interface SocketPackageSendDummyLinkedListData extends SocketPackageBase {
-  type: 'sendDummyLinkedListData';
-  linkedList: any[];
-}
-
-export interface SocketPackageSendDummyBinaryTreeData extends SocketPackageBase {
-  type: 'sendDummyBinaryTreeData';
-  binaryTree: any;
-}
-
 export interface SocketPackageSendFunctionDeclaration extends SocketPackageBase {
   type: 'sendFunctionDeclaration';
   functionCode: string;
@@ -97,8 +87,6 @@ export type SocketPackageConcrete =
   | SocketPackageReceiveData
   | SocketPackageMainDebug
   | SocketPackageExecuteNext
-  | SocketPackageSendDummyLinkedListData
-  | SocketPackageSendDummyBinaryTreeData
   | SocketPackageSendFunctionDeclaration
   | SocketPackageSendTypeDeclaration
   | SocketPackageSendBackendStateToUser
@@ -113,8 +101,6 @@ export type ServerToClientEvents = {
   receiveData: SocketPackageReceiveData;
   mainDebug: SocketPackageMainDebug;
   executeNext: SocketPackageExecuteNext;
-  sendDummyLinkedListData: SocketPackageSendDummyLinkedListData;
-  sendDummyBinaryTreeData: SocketPackageSendDummyBinaryTreeData;
   sendFunctionDeclaration: SocketPackageSendFunctionDeclaration;
   sendTypeDeclaration: SocketPackageSendTypeDeclaration;
   sendBackendStateToUser: SocketPackageSendBackendStateToUser;
