@@ -47,12 +47,12 @@ class SocketClient {
         this.disconnect();
         break;
       case 'connect_error':
+      case 'error':
         break;
       case 'sendDummyLinkedListData':
       case 'sendDummyBinaryTreeData':
       case 'sendData':
       case 'receiveData':
-      case 'error':
       case 'mainDebug':
       case 'executeNext':
       case 'sendFunctionDeclaration':
@@ -70,8 +70,35 @@ class SocketClient {
     }
   }
 
-  off(event: SocketEventType, callback: (data: any) => void) {
-    this.socket.off(event, callback);
+  off<T extends SocketEventType>(event: T, callback: (data: any) => void) {
+    switch (event) {
+      case 'connect':
+        this.connect();
+        break;
+      case 'disconnect':
+        this.disconnect();
+        break;
+      case 'connect_error':
+      case 'error':
+      case 'sendDummyLinkedListData':
+      case 'sendDummyBinaryTreeData':
+      case 'sendData':
+      case 'receiveData':
+      case 'mainDebug':
+      case 'executeNext':
+      case 'sendFunctionDeclaration':
+      case 'sendTypeDeclaration':
+      case 'sendBackendStateToUser':
+      case 'sendStdoutToUser':
+      case 'programWaitingForInput':
+      case 'compileError':
+      case 'send_stdin':
+        // @ts-ignore
+        this.socket.off(event, callback);
+        break;
+      default:
+        assertUnreachable(event);
+    }
   }
 
   // This still encapsulate from outside

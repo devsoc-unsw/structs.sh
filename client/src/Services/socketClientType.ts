@@ -21,14 +21,6 @@ export interface SocketPackageBase {
   type: SocketEventType;
 }
 
-export interface SocketPackageConnect extends SocketPackageBase {
-  type: 'connect';
-}
-
-export interface SocketPackageDisconnect extends SocketPackageBase {
-  type: 'disconnect';
-}
-
 // TODO: FURTHER ENHANCE TYPE
 export interface SocketPackageSendData extends SocketPackageBase {
   type: 'sendData';
@@ -39,12 +31,6 @@ export interface SocketPackageSendData extends SocketPackageBase {
 export interface SocketPackageReceiveData extends SocketPackageBase {
   type: 'receiveData';
   data: any;
-}
-
-export interface SocketPackageError extends SocketPackageBase {
-  type: 'error';
-  message: string;
-  code?: number;
 }
 
 export interface SocketPackageMainDebug extends SocketPackageBase {
@@ -107,11 +93,8 @@ export interface SocketPackageConnectError extends SocketPackageBase {
 }
 
 export type SocketPackageConcrete =
-  | SocketPackageConnect
-  | SocketPackageDisconnect
   | SocketPackageSendData
   | SocketPackageReceiveData
-  | SocketPackageError
   | SocketPackageMainDebug
   | SocketPackageExecuteNext
   | SocketPackageSendDummyLinkedListData
@@ -126,12 +109,8 @@ export type SocketPackageConcrete =
   | SocketPackageConnectError;
 
 export type ServerToClientEvents = {
-  connect: SocketPackageConnect;
-  disconnect: SocketPackageDisconnect;
-  connect_error: SocketPackageConnectError;
   sendData: SocketPackageSendData;
   receiveData: SocketPackageReceiveData;
-  error: SocketPackageError;
   mainDebug: SocketPackageMainDebug;
   executeNext: SocketPackageExecuteNext;
   sendDummyLinkedListData: SocketPackageSendDummyLinkedListData;

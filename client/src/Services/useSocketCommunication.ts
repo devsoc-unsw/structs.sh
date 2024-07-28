@@ -23,12 +23,8 @@ export const useSocketCommunication = ({
 
   useEffect(() => {
     const handlers: EventHandlers = {
-      connect: () => console.log('Socket connected'),
-      disconnect: () => console.log('Socket disconnected'),
-      connect_error: (error: any) => console.log('Connection Error:', error),
       sendData: (data: any) => console.log('Data sent:', data),
       receiveData: (data: any) => console.log('Data received:', data),
-      error: (error: any) => console.log('Error:', error.message),
       mainDebug: (data: any) => {
         console.log('Main Debug:', data);
         updateNextFrame(data);
@@ -39,7 +35,6 @@ export const useSocketCommunication = ({
       sendDummyBinaryTreeData: (data: any) => console.log('Dummy Binary Tree Data:', data),
       sendFunctionDeclaration: (data: any) => {
         console.log('Function Declaration:', data);
-        // Optional: Handle function declarations if needed
       },
       sendTypeDeclaration: (type: any) => {
         console.log('Type Declaration:', type);
