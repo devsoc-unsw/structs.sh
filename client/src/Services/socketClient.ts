@@ -1,14 +1,7 @@
 // socketClient.js
 import { Socket, io } from 'socket.io-client';
 import { create } from 'zustand';
-import { assertUnreachable } from '../visualiser-debugger/Component/Visualizer/Util/util';
-import {
-  ServerToClientEvents,
-  ClientToServerEvents,
-  SocketEventType,
-  SocketPackageConcrete,
-  EventHandlers,
-} from './socketClientType';
+import { ServerToClientEvents, ClientToServerEvents, EventHandlers } from './socketClientType';
 import SocketServerType from './socketServerType';
 
 const URL = import.meta.env.VITE_DEBUGGER_URL || 'http://localhost:8000';
@@ -34,69 +27,6 @@ class SocketClient {
     this.socket.on('disconnect', () => {
       console.log('Disconnected!');
     });
-  }
-
-  on<T extends SocketEventType>(event: T, callback: (data: SocketPackageConcrete) => void) {
-    switch (event) {
-      case 'connect':
-        this.connect();
-        break;
-      case 'disconnect':
-        this.disconnect();
-        break;
-      case 'connect_error':
-      case 'error':
-        break;
-      case 'sendDummyLinkedListData':
-      case 'sendDummyBinaryTreeData':
-      case 'sendData':
-      case 'receiveData':
-      case 'mainDebug':
-      case 'executeNext':
-      case 'sendFunctionDeclaration':
-      case 'sendTypeDeclaration':
-      case 'sendBackendStateToUser':
-      case 'sendStdoutToUser':
-      case 'programWaitingForInput':
-      case 'compileError':
-      case 'send_stdin':
-        // @ts-ignore
-        this.socket.on(event, callback);
-        break;
-      default:
-        assertUnreachable(event);
-    }
-  }
-
-  off<T extends SocketEventType>(event: T, callback: (data: any) => void) {
-    switch (event) {
-      case 'connect':
-        this.connect();
-        break;
-      case 'disconnect':
-        this.disconnect();
-        break;
-      case 'connect_error':
-      case 'error':
-      case 'sendDummyLinkedListData':
-      case 'sendDummyBinaryTreeData':
-      case 'sendData':
-      case 'receiveData':
-      case 'mainDebug':
-      case 'executeNext':
-      case 'sendFunctionDeclaration':
-      case 'sendTypeDeclaration':
-      case 'sendBackendStateToUser':
-      case 'sendStdoutToUser':
-      case 'programWaitingForInput':
-      case 'compileError':
-      case 'send_stdin':
-        // @ts-ignore
-        this.socket.off(event, callback);
-        break;
-      default:
-        assertUnreachable(event);
-    }
   }
 
   // This still encapsulate from outside
