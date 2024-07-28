@@ -26,17 +26,16 @@ const DevelopmentMode = () => {
   } = useGlobalStore();
 
   const { fileSystem, currFocusFilePath } = useUserFsStateStore();
-
+  const [tab, setTab] = useState('0');
+  const inputElement = useRef(null);
   const { activeSession, consoleChunks, setConsoleChunks, sendCode, getNextState } =
     useSocketCommunication({
       updateNextFrame,
       updateTypeDeclaration,
       clearTypeDeclarations,
       clearUserAnnotation,
+      setTab,
     });
-
-  const [tab, setTab] = useState('0');
-  const inputElement = useRef(null);
 
   const handleChangeTab = (newTabValue) => {
     setTab(newTabValue);

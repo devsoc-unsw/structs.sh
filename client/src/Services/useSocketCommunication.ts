@@ -13,6 +13,7 @@ interface UseSocketCommunicationProps {
   updateTypeDeclaration: (type: BackendTypeDeclaration) => void;
   clearTypeDeclarations: () => void;
   clearUserAnnotation: () => void;
+  setTab: (tab: string) => void;
 }
 
 export const useSocketCommunication = ({
@@ -20,6 +21,7 @@ export const useSocketCommunication = ({
   updateTypeDeclaration,
   clearTypeDeclarations,
   clearUserAnnotation,
+  setTab,
 }: UseSocketCommunicationProps) => {
   const { socket } = useSocketClientStore();
   const [activeSession, setActiveSession] = useState<boolean>(false);
@@ -52,6 +54,7 @@ export const useSocketCommunication = ({
       compileError: (errors: any) => {
         console.log('Compile Error:', errors);
         setConsoleChunks((prev) => [...prev, ...errors]);
+        setTab('2');
       },
       send_stdin: (data: any) => console.log('Stdin Sent:', data),
     };
