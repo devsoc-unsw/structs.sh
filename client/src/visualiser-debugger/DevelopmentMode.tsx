@@ -12,7 +12,7 @@ import StackInspector from './Component/StackInspector/StackInspector';
 import VisualizerMain from './Component/VisualizerMain';
 import FileManager from './Component/FileTree/FileManager';
 import { useGlobalStore } from './Store/globalStateStore';
-import { useSocketCommunication } from '../Services/useSocketCommuication';
+import { useSocketCommunication } from '../Services/useSocketCommunication';
 import AboutText from './Component/FileTree/AboutText';
 import { useUserFsStateStore } from './Store/userFsStateStore';
 
