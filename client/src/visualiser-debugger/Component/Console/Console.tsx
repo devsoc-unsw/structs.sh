@@ -9,7 +9,7 @@ import useSocketClientStore from '../../../Services/socketClient';
 const Console = ({ chunks, handleAddChunk, scrollToBottom, isActive }) => {
   const [input, setInput] = useState('');
   const inputElement = useRef(null);
-  const socket = useSocketClientStore((state) => state.socket);
+  const socket = useSocketClientStore((state) => state.socketClient);
 
   const handleInput = () => {
     setInput(inputElement.current.innerText);

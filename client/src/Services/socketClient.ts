@@ -1,8 +1,8 @@
 // socketClient.js
 import { Socket, io } from 'socket.io-client';
 import { create } from 'zustand';
-import { ServerToClientEvents, ClientToServerEvents, EventHandlers } from './socketClientType';
-import SocketServerType from './socketServerType';
+import { ServerToClientEvents, EventHandlers } from './socketClientType';
+import { ClientToServerEvents } from './socketServerType';
 
 const URL = import.meta.env.VITE_DEBUGGER_URL || 'http://localhost:8000';
 
@@ -29,11 +29,6 @@ class SocketClient {
     });
   }
 
-  // This still encapsulate from outside
-  emit<T extends keyof SocketServerType>(event: T, ...args: Parameters<SocketServerType[T]>): void {
-    this.socket.emit(event as any, ...args);
-  }
-
   setupEventHandlers(handlers: EventHandlers) {
     (Object.keys(handlers) as Array<keyof EventHandlers>).forEach((event) => {
       const handler = handlers[event];
@@ -51,14 +46,30 @@ class SocketClient {
       }
     });
   }
+
+  /**
+   * To server section
+   * we encapsulate function calls to restrict frontend actions to only permitted emit events.
+   */
+  // TODO: FIX
+  serverAction = {
+    initializeDebugSession: (data: any) => {
+      console.log('Initializing debug session with data:', data);
+      this.socket.emit('mainDebug', data);
+    },
+    executeNext: () => {
+      console.log('Executing next step in the server-side logic.');
+      this.socket.emit('executeNext');
+    },
+  };
 }
 
 interface SocketStore {
-  socket: SocketClient;
+  socketClient: SocketClient;
 }
 
 const useSocketClientStore = create<SocketStore>(() => ({
-  socket: new SocketClient(),
+  socketClient: new SocketClient(),
 }));
 
 export default useSocketClientStore;

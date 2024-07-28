@@ -23,7 +23,7 @@ export const useSocketCommunication = ({
   clearUserAnnotation,
   setTab,
 }: UseSocketCommunicationProps) => {
-  const { socket } = useSocketClientStore();
+  const { socketClient } = useSocketClientStore();
   const [activeSession, setActiveSession] = useState<boolean>(false);
   const [consoleChunks, setConsoleChunks] = useState<string[]>([]);
 
@@ -59,13 +59,13 @@ export const useSocketCommunication = ({
       send_stdin: (data: any) => console.log('Stdin Sent:', data),
     };
 
-    socket.setupEventHandlers(handlers);
+    socketClient.setupEventHandlers(handlers);
 
     return () => {
-      socket.clearEventHandlers(handlers);
-      socket.disconnect();
+      socketClient.clearEventHandlers(handlers);
+      socketClient.disconnect();
     };
-  }, [socket, updateNextFrame, updateTypeDeclaration]);
+  }, [socketClient, updateNextFrame, updateTypeDeclaration]);
 
   const resetDebugSession = useCallback(() => {
     updateNextFrame(INITIAL_BACKEND_STATE);
@@ -81,17 +81,17 @@ export const useSocketCommunication = ({
       const file = fileSystem.getFileFromPath(currFocusFilePath);
       if (file) {
         console.log('Sending data:', file.data);
-        socket.emit('mainDebug', file.data);
+        socketClient.serverAction.initializeDebugSession(file.data);
       } else {
         throw new Error('File not found in FS');
       }
     },
-    [resetDebugSession, socket]
+    [resetDebugSession, socketClient]
   );
 
   const getNextState = useCallback(() => {
-    socket.emit('executeNext');
-  }, [socket]);
+    socketClient.serverAction.executeNext();
+  }, [socketClient]);
 
   return {
     activeSession,

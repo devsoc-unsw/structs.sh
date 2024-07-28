@@ -109,7 +109,3 @@ export type ServerToClientEvents = {
 export type EventHandlers = {
   [E in keyof ServerToClientEvents]: (data: ServerToClientEvents[E]) => void;
 };
-
-export interface ClientToServerEvents {
-  mainDebug: (code: string) => void;
-}
