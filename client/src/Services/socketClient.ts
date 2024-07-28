@@ -32,14 +32,7 @@ class SocketClient {
   constructor() {
     this.socket = io(URL);
     this.setupDefaultEvents();
-  }
-
-  connect() {
     this.socket.connect();
-  }
-
-  disconnect() {
-    this.socket.disconnect();
   }
 
   setupEventHandlers(handlers: EventHandlers) {

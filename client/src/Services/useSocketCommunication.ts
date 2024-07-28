@@ -60,9 +60,8 @@ export const useSocketCommunication = ({
 
     return () => {
       socketClient.clearEventHandlers(handlers);
-      socketClient.disconnect();
     };
-  }, [socketClient, updateNextFrame, updateTypeDeclaration]);
+  }, [socketClient]);
 
   const resetDebugSession = useCallback(() => {
     updateNextFrame(INITIAL_BACKEND_STATE);
