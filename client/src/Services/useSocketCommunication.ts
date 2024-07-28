@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   BackendState,
   BackendTypeDeclaration,
+  FunctionStructure,
   INITIAL_BACKEND_STATE,
 } from '../visualiser-debugger/Types/backendType';
 import useSocketClientStore from './socketClient';
@@ -29,29 +30,31 @@ export const useSocketCommunication = ({
 
   useEffect(() => {
     const handlers: EventHandlers = {
-      mainDebug: (_data: any) => {
+      mainDebug: (data: 'Finished mainDebug event on server') => {
+        console.error(data);
         setActiveSession(true);
       },
-      sendFunctionDeclaration: (_data: any) => {
+      sendFunctionDeclaration: (data: FunctionStructure) => {
         // TODO: Implement
+        console.error('Received functional structure', data);
       },
-      sendTypeDeclaration: (type: any) => {
+      sendTypeDeclaration: (type: BackendTypeDeclaration) => {
         updateTypeDeclaration(type);
       },
-      sendBackendStateToUser: (state: any) => {
+      sendBackendStateToUser: (state: BackendState) => {
         updateNextFrame(state);
       },
-      sendStdoutToUser: (output: any) => {
+      sendStdoutToUser: (output: string) => {
         setConsoleChunks((prev) => [...prev, output]);
       },
       programWaitingForInput: (_data: any) => {
-        // TODO: Implement
+        // TODO: Implement, to Hindie, might give a popup message to user?
       },
-      compileError: (errors: any) => {
+      compileError: (errors: string[]) => {
         setConsoleChunks((prev) => [...prev, ...errors]);
         updateCurrFocusedTab('2');
       },
-      send_stdin: (data: any) => console.log('Stdin Sent:', data),
+      send_stdin: (data: string) => console.log('Stdin Sent:', data),
     };
 
     socketClient.setupEventHandlers(handlers);

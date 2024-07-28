@@ -391,3 +391,20 @@ export type BackendVariableConcrete = BackendVariablePointer | BackendVariableNo
 
 
 */
+
+// Functional definition type
+// TODO: FIGURE OUT HOW SHOULD WE DISPLAY TO USER?? OR IS IT EVEN USED.
+interface FunctionParameter {
+  type: string;
+  name: string | null; // `name` can be `null` based on your comment
+}
+
+interface FunctionDeclaration {
+  return_type: string;
+  params: FunctionParameter[];
+}
+
+export interface FunctionStructure {
+  name: string;
+  func_decl: FunctionDeclaration;
+}
