@@ -1,6 +1,10 @@
 // TODO: FIX THE ANY TYPE WITH REF TO BACKEND!!!!
 import { useCallback, useEffect, useState } from 'react';
-import { BackendState, BackendTypeDeclaration } from '../visualiser-debugger/Types/backendType';
+import {
+  BackendState,
+  BackendTypeDeclaration,
+  INITIAL_BACKEND_STATE,
+} from '../visualiser-debugger/Types/backendType';
 import useSocketClientStore from './socketClient';
 import { EventHandlers } from './socketClientType';
 
@@ -25,9 +29,7 @@ export const useSocketCommunication = ({
     const handlers: EventHandlers = {
       sendData: (data: any) => console.log('Data sent:', data),
       receiveData: (data: any) => console.log('Data received:', data),
-      mainDebug: (data: any) => {
-        console.log('Main Debug:', data);
-        updateNextFrame(data);
+      mainDebug: (_data: any) => {
         setActiveSession(true);
       },
       executeNext: () => console.log('Execute next command issued'),
@@ -65,7 +67,7 @@ export const useSocketCommunication = ({
   }, [socket, updateNextFrame, updateTypeDeclaration]);
 
   const resetDebugSession = useCallback(() => {
-    updateNextFrame({} as BackendState);
+    updateNextFrame(INITIAL_BACKEND_STATE);
     setActiveSession(false);
     clearTypeDeclarations();
     clearUserAnnotation();

@@ -24,8 +24,6 @@ class SocketClient {
     this.socket = io(URL);
   }
 
-  attach() {}
-
   connect() {
     this.socket.on('connect', () => {
       console.log('Connected!');
