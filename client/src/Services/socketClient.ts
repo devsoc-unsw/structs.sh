@@ -13,20 +13,33 @@ class SocketClient {
     return this.socket;
   }
 
-  constructor() {
-    this.socket = io(URL);
-  }
-
-  connect() {
+  private setupDefaultEvents() {
     this.socket.on('connect', () => {
       console.log('Connected!');
     });
-  }
-
-  disconnect() {
     this.socket.on('disconnect', () => {
       console.log('Disconnected!');
     });
+
+    // TODO: This section leaves for debugging purpose
+    /* 
+      this.socket.on('sendDummyLinkedListData', (data: any) => {
+        console.log('Received dummy linked list data:', data);
+      }); 
+    */
+  }
+
+  constructor() {
+    this.socket = io(URL);
+    this.setupDefaultEvents();
+  }
+
+  connect() {
+    this.socket.connect();
+  }
+
+  disconnect() {
+    this.socket.disconnect();
   }
 
   setupEventHandlers(handlers: EventHandlers) {
@@ -54,11 +67,9 @@ class SocketClient {
   // TODO: FIX
   serverAction = {
     initializeDebugSession: (data: any) => {
-      console.log('Initializing debug session with data:', data);
       this.socket.emit('mainDebug', data);
     },
     executeNext: () => {
-      console.log('Executing next step in the server-side logic.');
       this.socket.emit('executeNext');
     },
   };
