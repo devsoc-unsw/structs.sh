@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Box, IconButton, Typography } from '@mui/material';
 import { IFileDirNode } from './FS/IFileSystem';
@@ -14,7 +14,6 @@ export interface FolderParam {
 const Folder = ({ folder, depth }: FolderParam) => {
   const { setFocusDirPath } = useUserFsStateStore();
   const [isExpanded, setExpanded] = useState<boolean>(false);
-
   const expandFolder = () => {
     if (!isExpanded) {
       setFocusDirPath(folder.path);

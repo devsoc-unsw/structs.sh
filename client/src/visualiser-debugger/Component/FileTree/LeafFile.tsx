@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { IFileFileNode } from './FS/IFileSystem';
@@ -12,7 +11,6 @@ export interface LeafFileParam {
 const LeafFile = ({ file, depth }: LeafFileParam) => {
   const { currFocusFilePath, setFocusFilePath, setFocusDirPath } = useUserFsStateStore();
   const isHighlighted = currFocusFilePath === file.path;
-
 
   const indentStyle = {
     marginLeft: `${10 + depth * 12}px`,

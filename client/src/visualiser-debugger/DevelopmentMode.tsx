@@ -199,9 +199,7 @@ const DevelopmentMode = () => {
               marginTop: '1.6rem',
               color: 'rgb(85, 85, 85)',
             }}
-          >
-            
-          </div>
+          />
         </div>
         <div className={classNames(styles.pane, styles.editor)}>
           <CodeEditor currLine={currFrame?.frame_info?.line_num} />
