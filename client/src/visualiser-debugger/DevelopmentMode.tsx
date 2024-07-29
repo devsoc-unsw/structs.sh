@@ -11,7 +11,6 @@ import CodeEditor from './Component/CodeEditor/CodeEditor';
 import StackInspector from './Component/StackInspector/StackInspector';
 import { useGlobalStore } from './Store/globalStateStore';
 import VisualizerMain from './Component/VisualizerMain';
-import AboutText from './Component/FileTree/AboutText';
 import FileManager from './Component/FileTree/FileManager';
 import { useUserFsStateStore } from './Store/userFsStateStore';
 import useSocketClientStore from '../Services/socketClient';
@@ -201,7 +200,7 @@ const DevelopmentMode = () => {
               color: 'rgb(85, 85, 85)',
             }}
           >
-            <AboutText />
+            
           </div>
         </div>
         <div className={classNames(styles.pane, styles.editor)}>
