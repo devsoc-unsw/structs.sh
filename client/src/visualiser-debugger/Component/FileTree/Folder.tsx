@@ -14,7 +14,6 @@ export interface FolderParam {
 const Folder = ({ folder, depth }: FolderParam) => {
   const { setFocusDirPath } = useUserFsStateStore();
   const [isExpanded, setExpanded] = useState<boolean>(false);
-
   const expandFolder = () => {
     if (!isExpanded) {
       setFocusDirPath(folder.path);

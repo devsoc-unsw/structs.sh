@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useReducer } from 'react';
+import { Tooltip } from '@mui/material';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -9,16 +10,26 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import AddIcon from '@mui/icons-material/Add';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import Folder from './Folder';
 import './css/WorkspaceSelector.css';
 import { useUserFsStateStore } from '../../Store/userFsStateStore';
 import { IFileDirNode, IFileFileNode, IFileType } from './FS/IFileSystem';
 
 const WorkspaceSelector = () => {
-  const { fileSystem, currFocusDirPath } = useUserFsStateStore.getState();
+  const { fileSystem, currFocusDirPath, currFocusFilePath } = useUserFsStateStore.getState();
+  let currFocus = currFocusFilePath || currFocusDirPath;
   const [open, setOpen] = useState(false);
   const [newItemName, setNewItemName] = useState('');
   const [type, setType] = useState<IFileType | null>(null);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [, forceRerender] = useReducer((x) => x + 1, 0);
+  const fileButtonStyle = {
+    maxWidth: '30px',
+    maxHeight: '30px',
+    minWidth: '30px',
+    minHeight: '30px',
+  };
 
   const handleClickOpen = (buttonType: IFileType) => {
     setType(buttonType);
@@ -30,13 +41,20 @@ const WorkspaceSelector = () => {
     setNewItemName(''); // Reset the input name after closing the dialog
   };
 
+  const handleDeleteOpen = () => {
+    setDeleteOpen(true);
+  };
+
+  const handleDeleteClose = () => {
+    setDeleteOpen(false);
+  };
+
   const handleCreate = () => {
     const parentDir = fileSystem.getDirFromPath(currFocusDirPath);
     if (!parentDir) {
       alert('No directory selected or directory does not exist.');
       return;
     }
-
     const newPath = `${currFocusDirPath}/${newItemName}`;
     if (type === 'File') {
       const newFile: IFileFileNode = {
@@ -66,17 +84,56 @@ const WorkspaceSelector = () => {
     handleClose();
   };
 
+  const handleDelete = () => {
+    const dirToDelete = fileSystem.getDirFromPath(currFocus);
+    const fileToDelete = fileSystem.getFileFromPath(currFocus);
+    if (!dirToDelete && !fileToDelete) {
+      alert('No folder selected or folder does not exist');
+      return;
+    }
+    if (fileToDelete) {
+      fileSystem.deleteFile(fileToDelete);
+    } else {
+      fileSystem.deleteFile(dirToDelete);
+    }
+    fileSystem.saveChanges();
+    forceRerender();
+    currFocus = 'root';
+    handleDeleteClose();
+  };
+
   return (
     <Box>
       <Box className="root-container">
-        <Box sx={{ flexGrow: 1 }}>Root</Box>
-        <Box>
-          <Button onClick={() => handleClickOpen('File')} className="icon-button">
-            <AddIcon style={{ fontSize: '20px' }} />
-          </Button>
-          <Button onClick={() => handleClickOpen('Folder')} className="icon-button">
-            <CreateNewFolderIcon style={{ fontSize: '20px' }} />
-          </Button>
+        <Box sx={{ flexGrow: 1, flexShrink: 2 }}>Root</Box>
+        <Box style={{ display: 'flex' }}>
+          <Tooltip title="Create new file">
+            <Button
+              onClick={() => handleClickOpen('File')}
+              className="icon-button"
+              style={fileButtonStyle}
+            >
+              <AddIcon style={{ fontSize: '20px' }} />
+            </Button>
+          </Tooltip>
+          <Tooltip title="Create new folder">
+            <Button
+              onClick={() => handleClickOpen('Folder')}
+              className="icon-button"
+              style={fileButtonStyle}
+            >
+              <CreateNewFolderIcon style={{ fontSize: '20px' }} />
+            </Button>
+          </Tooltip>
+          <Tooltip title="Delete this file">
+            <Button
+              onClick={() => handleDeleteOpen()}
+              className="icon-button"
+              style={fileButtonStyle}
+            >
+              <RemoveCircleOutlineIcon style={{ fontSize: '20px' }} />
+            </Button>
+          </Tooltip>
         </Box>
       </Box>
       {fileSystem ? (
@@ -138,6 +195,31 @@ const WorkspaceSelector = () => {
           <Button onClick={handleCreate} disabled={!newItemName.trim()}>
             Create
           </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={deleteOpen}
+        onClose={handleDeleteClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        sx={{
+          '& .MuiPaper-root': {
+            backgroundColor: 'white',
+            color: 'black',
+          },
+        }}
+      >
+        <DialogTitle>Are you sure you want to delete this file?</DialogTitle>
+        <DialogContent>
+          <DialogContentText sx={{ color: 'grey' }}>
+            Deleting is a permanent action. Once deleted, files cannot be recovered. Are you sure
+            you want to proceed?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteClose}>Cancel</Button>
+          <Button onClick={handleDelete}>Delete</Button>
         </DialogActions>
       </Dialog>
     </Box>
