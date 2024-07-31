@@ -73,7 +73,7 @@ export const useSocketCommunication = () => {
         throw new Error('File not found in FS');
       }
     },
-    [resetDebugSession, socketClient]
+    [socketClient]
   );
 
   const getNextState = useCallback(() => {
