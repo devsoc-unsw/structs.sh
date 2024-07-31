@@ -9,19 +9,10 @@ import useSocketClientStore from './socketClient';
 import { EventHandlers } from './socketClientType';
 import { useGlobalStore } from '../visualiser-debugger/Store/globalStateStore';
 
-interface UseSocketCommunicationProps {
-  updateNextFrame: (backendState: BackendState) => void;
-  updateTypeDeclaration: (type: BackendTypeDeclaration) => void;
-  clearTypeDeclarations: () => void;
-  clearUserAnnotation: () => void;
-}
+export const useSocketCommunication = () => {
+  const { updateNextFrame, updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation } =
+    useGlobalStore();
 
-export const useSocketCommunication = ({
-  updateNextFrame,
-  updateTypeDeclaration,
-  clearTypeDeclarations,
-  clearUserAnnotation,
-}: UseSocketCommunicationProps) => {
   const { socketClient } = useSocketClientStore();
   const [activeSession, setActiveSession] = useState<boolean>(false);
   const [consoleChunks, setConsoleChunks] = useState<string[]>([]);

@@ -13,29 +13,16 @@ import VisualizerMain from './Component/VisualizerMain';
 import FileManager from './Component/FileTree/FileManager';
 import { useGlobalStore } from './Store/globalStateStore';
 import { useSocketCommunication } from '../Services/useSocketCommunication';
-import AboutText from './Component/FileTree/AboutText';
 import { useUserFsStateStore } from './Store/userFsStateStore';
 
 const DevelopmentMode = () => {
-  const {
-    updateNextFrame,
-    updateTypeDeclaration,
-    clearTypeDeclarations,
-    clearUserAnnotation,
-    currFrame,
-  } = useGlobalStore();
-
+  const { currFrame } = useGlobalStore();
   const { fileSystem, currFocusFilePath } = useUserFsStateStore();
   const inputElement = useRef(null);
   const { uiState, updateCurrFocusedTab } = useGlobalStore();
 
   const { activeSession, consoleChunks, setConsoleChunks, sendCode, getNextState } =
-    useSocketCommunication({
-      updateNextFrame,
-      updateTypeDeclaration,
-      clearTypeDeclarations,
-      clearUserAnnotation,
-    });
+    useSocketCommunication();
 
   const handleAddConsoleChunk = (chunk) => {
     setConsoleChunks([...consoleChunks, chunk]);
