@@ -105,7 +105,14 @@ export class TreeParser implements Parser {
     globalState: GlobalStateStore
   ): Map<Addr, { x: number; y: number }> {
     const posCache: Map<Addr, { x: number; y: number }> = new Map();
-    this.assignPositionsRecursion(rootNode, posCache, treeNodes, 0, globalState.uiState.width, 100);
+    this.assignPositionsRecursion(
+      rootNode,
+      posCache,
+      treeNodes,
+      0,
+      globalState.uiState.visualizerDimension.width,
+      100
+    );
     return posCache;
   }
 

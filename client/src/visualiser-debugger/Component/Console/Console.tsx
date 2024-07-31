@@ -9,7 +9,7 @@ import useSocketClientStore from '../../../Services/socketClient';
 const Console = ({ chunks, handleAddChunk, scrollToBottom, isActive }) => {
   const [input, setInput] = useState('');
   const inputElement = useRef(null);
-  const socket = useSocketClientStore((state) => state.socket);
+  const socket = useSocketClientStore((state) => state.socketClient);
 
   const handleInput = () => {
     setInput(inputElement.current.innerText);
@@ -23,7 +23,7 @@ const Console = ({ chunks, handleAddChunk, scrollToBottom, isActive }) => {
   const handleKey = (event: React.KeyboardEvent<HTMLSpanElement>) => {
     if (event.key === 'Enter') {
       if (input.length > 0) {
-        socket.socketTempRemoveLater.emit('send_stdin', input);
+        socket.serverAction.sendStdin(input);
         handleAddChunk(`${input}\n`);
         clearInput();
         scrollToBottom();

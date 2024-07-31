@@ -37,7 +37,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) =>
       ref={visualizerRef}
       style={{ overflow: 'hidden', height: '100%', width: '100%' }}
     >
-      <VisComponent graphState={currState} dimension={uiState} />
+      <VisComponent graphState={currState} dimension={uiState.visualizerDimension} />
     </div>
   );
 };
