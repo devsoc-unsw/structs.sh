@@ -1,4 +1,3 @@
-// TODO: FIX THE ANY TYPE WITH REF TO BACKEND!!!!
 import { useCallback, useEffect, useState } from 'react';
 import {
   BackendState,
@@ -70,7 +69,7 @@ export const useSocketCommunication = ({
     clearTypeDeclarations();
     clearUserAnnotation();
     setConsoleChunks([]);
-  }, [updateNextFrame, clearTypeDeclarations, clearUserAnnotation]);
+  }, []);
 
   const sendCode = useCallback(
     (fileSystem: any, currFocusFilePath: string) => {
