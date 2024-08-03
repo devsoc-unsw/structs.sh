@@ -46,7 +46,8 @@ const DevelopmentMode = () => {
           />
         </div>
         <div className={classNames(styles.pane, styles.editor)}>
-          <CodeEditor />
+          <CodeEditor currLine={currFrame?.frame_info?.line_num} />
+          <Console scrollToBottom={scrollToBottom} isActive={activeSession} />
         </div>
         <div className={classNames(styles.pane, styles.inspector)}>
           <Tabs value={uiState.currFocusedTab} onValueChange={updateCurrFocusedTab}>
