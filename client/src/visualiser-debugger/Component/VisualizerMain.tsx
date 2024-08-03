@@ -16,8 +16,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) =>
   useEffect(() => {
     if (backendState && !isInitialBackendState(backendState) && userAnnotation) {
       const newParsedState = parser.parseState(backendState, userAnnotation);
-      useFrontendStateStore.getState().appendFrontendNewState(newParsedState);
-      useFrontendStateStore.getState().stepForward();
+      useFrontendStateStore.getState().appendFrontendNewState(backendState, newParsedState);
     } else {
       let issue = 'something';
       if (!backendState) {

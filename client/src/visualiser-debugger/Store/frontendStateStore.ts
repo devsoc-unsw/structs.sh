@@ -1,15 +1,16 @@
 import { UseBoundStore, StoreApi, create } from 'zustand';
-import { GenericGraph, INITIAL_GRAPH } from '../Types/frontendType';
+import { FrontendState, INITIAL_GRAPH } from '../Types/frontendType';
+import { BackendState } from '../Types/backendType';
 
 type State = {
-  states: GenericGraph[];
+  states: FrontendState[];
   currentIndex: number;
   isActive: boolean;
-  currState: () => GenericGraph;
+  currState: () => FrontendState;
 };
 
 type Action = {
-  appendFrontendNewState: (newState: GenericGraph) => void;
+  appendFrontendNewState: (backendState: BackendState, newState: FrontendState) => void;
   stepForward: () => void;
   stepBackward: () => void;
   jumpToState: (index: number) => void;
@@ -28,7 +29,7 @@ export const useFrontendStateStore: UseBoundStore<StoreApi<State & Action>> = cr
     }
     return useFrontendStateStore.getState().states[useFrontendStateStore.getState().currentIndex];
   },
-  appendFrontendNewState: (newState: GenericGraph) => {
+  appendFrontendNewState: (backendState: BackendState, newState: FrontendState) => {
     set((state) => ({
       states: [...state.states, newState],
     }));

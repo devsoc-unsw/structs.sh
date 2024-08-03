@@ -1,8 +1,8 @@
 import React from 'react';
-import { GenericGraph } from '../../../Types/frontendType';
+import { FrontendState } from '../../../Types/frontendType';
 
 export interface VisualizerState {
-  graphState: GenericGraph;
+  graphState: FrontendState;
   dimension: {
     width: number;
     height: number;
