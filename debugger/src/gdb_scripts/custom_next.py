@@ -1,12 +1,11 @@
-import os
-from pprint import pprint
 import gdb
+import os
+import re
 import subprocess
+from pprint import pprint
 from pycparser import parse_file, c_ast
-import re
 from src.constants import USER_MALLOC_CALL_FILE_NAME, USER_MALLOC_CALL_PREPROCESSED, USER_PTYPE_FILE_NAME, USER_PTYPE_PREPROCESSED
-from src.utils import create_abs_file_path
-import re
+from src.utils.path_utils import create_abs_file_path
 
 from src.gdb_scripts.use_socketio_connection import useSocketIOConnection, enable_socketio_client_emit
 

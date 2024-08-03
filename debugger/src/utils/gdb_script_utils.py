@@ -119,10 +119,6 @@ def get_gdb_script(
     return GDB_SCRIPTS[script_name]
 
 
-def create_abs_file_path(file_name: str):
-    return os.path.dirname(os.path.abspath(__file__)) + "/" + file_name
-
-
 def create_ll_script(abs_file_path, line_numbers, program_name):
     gdb_script = (
         f"""
