@@ -1,18 +1,12 @@
-/**
- * TODO: I remember we have a timeline do we?
- */
 import { PlayIcon, TrackNextIcon } from '@radix-ui/react-icons';
 import styles from 'styles/Controls.module.css';
+import { useSocketCommunication } from '../../../Services/useSocketCommunication';
+import { useFrontendStateStore } from '../../Store/frontendStateStore';
 
-const Controls = ({
-  sendCode,
-  getNextState,
-  activeSession,
-}: {
-  sendCode: () => void;
-  getNextState: () => void;
-  activeSession: boolean;
-}) => {
+const Controls = () => {
+  const { sendCode, getNextState } = useSocketCommunication();
+  const { activeSession } = useFrontendStateStore();
+
   return (
     <div className={styles.timeline}>
       <button type="button" onClick={sendCode} className={styles.Button}>

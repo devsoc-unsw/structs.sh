@@ -13,16 +13,14 @@ import VisualizerMain from './Component/VisualizerMain';
 import FileManager from './Component/FileTree/FileManager';
 import { useGlobalStore } from './Store/globalStateStore';
 import { useSocketCommunication } from '../Services/useSocketCommunication';
-import { useUserFsStateStore } from './Store/userFsStateStore';
+import { useFrontendStateStore } from './Store/frontendStateStore';
 
 const DevelopmentMode = () => {
   const { currFrame } = useGlobalStore();
-  const { fileSystem, currFocusFilePath } = useUserFsStateStore();
+  const { activeSession } = useFrontendStateStore();
   const inputElement = useRef(null);
   const { uiState, updateCurrFocusedTab } = useGlobalStore();
-
-  const { activeSession, consoleChunks, setConsoleChunks, sendCode, getNextState } =
-    useSocketCommunication();
+  const { consoleChunks, setConsoleChunks } = useSocketCommunication();
 
   const handleAddConsoleChunk = (chunk) => {
     setConsoleChunks([...consoleChunks, chunk]);
@@ -33,11 +31,6 @@ const DevelopmentMode = () => {
       const container = inputElement.current.parentElement;
       container.scrollTop = container.scrollHeight;
     }
-  };
-
-  // Send code using the hook's sendCode function, passing necessary parameters
-  const handleSendCode = () => {
-    sendCode(fileSystem, currFocusFilePath);
   };
 
   return (
@@ -81,11 +74,7 @@ const DevelopmentMode = () => {
           <VisualizerMain backendState={currFrame} />
         </div>
         <div className={classNames(styles.pane, styles.timeline)}>
-          <Controls
-            getNextState={getNextState}
-            sendCode={handleSendCode}
-            activeSession={activeSession}
-          />
+          <Controls />
         </div>
       </div>
     </div>

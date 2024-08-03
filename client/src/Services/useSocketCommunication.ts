@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
   BackendState,
   BackendTypeDeclaration,
@@ -8,17 +8,20 @@ import {
 import useSocketClientStore from './socketClient';
 import { EventHandlers } from './socketClientType';
 import { useGlobalStore } from '../visualiser-debugger/Store/globalStateStore';
+import { useUserFsStateStore } from '../visualiser-debugger/Store/userFsStateStore';
+import { useFrontendStateStore } from '../visualiser-debugger/Store/frontendStateStore';
 
+let initialized = false;
 export const useSocketCommunication = () => {
   const { updateNextFrame, updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation } =
     useGlobalStore();
+  const { setActiveSession } = useFrontendStateStore();
 
   const { socketClient } = useSocketClientStore();
-  const [activeSession, setActiveSession] = useState<boolean>(false);
   const [consoleChunks, setConsoleChunks] = useState<string[]>([]);
   const { updateCurrFocusedTab } = useGlobalStore();
 
-  useEffect(() => {
+  if (!initialized) {
     const handlers: EventHandlers = {
       mainDebug: (data: 'Finished mainDebug event on server') => {
         console.error(data);
@@ -48,11 +51,8 @@ export const useSocketCommunication = () => {
     };
 
     socketClient.setupEventHandlers(handlers);
-
-    return () => {
-      socketClient.clearEventHandlers(handlers);
-    };
-  }, [socketClient]);
+    initialized = true;
+  }
 
   const resetDebugSession = useCallback(() => {
     updateNextFrame(INITIAL_BACKEND_STATE);
@@ -62,26 +62,23 @@ export const useSocketCommunication = () => {
     setConsoleChunks([]);
   }, []);
 
-  const sendCode = useCallback(
-    (fileSystem: any, currFocusFilePath: string) => {
-      resetDebugSession();
-      const file = fileSystem.getFileFromPath(currFocusFilePath);
-      if (file) {
-        console.log('Sending data:', file.data);
-        socketClient.serverAction.initializeDebugSession(file.data);
-      } else {
-        throw new Error('File not found in FS');
-      }
-    },
-    [socketClient]
-  );
+  const sendCode = useCallback(() => {
+    resetDebugSession();
+    const { fileSystem, currFocusFilePath } = useUserFsStateStore.getState();
+    const file = fileSystem.getFileFromPath(currFocusFilePath);
+    if (file) {
+      console.log('Sending data:', file.data);
+      socketClient.serverAction.initializeDebugSession(file.data);
+    } else {
+      throw new Error('File not found in FS');
+    }
+  }, [socketClient]);
 
   const getNextState = useCallback(() => {
     socketClient.serverAction.executeNext();
   }, [socketClient]);
 
   return {
-    activeSession,
     consoleChunks,
     setConsoleChunks,
     sendCode,
