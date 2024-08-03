@@ -8,10 +8,10 @@ Must run in /debugger/src directory (because the gdb commands will source a pyth
 import os
 import shutil
 from pprint import pprint
-import socket
-import threading
+from utils.gdb_output_utils import get_subprocess_output, make_non_blocking
+from utils.gdb_script_utils import get_gdb_script
 from ipc import Subscriber
-from utils.socket_utils import connect_and_retry
+from utils.socket_utils import find_new_port
 import socketio
 import eventlet
 from typing import Any
@@ -25,7 +25,6 @@ from constants import (
     DEBUG_SESSION_VAR_NAME,
     TIMEOUT_DURATION,
 )
-from utils import find_new_port, make_non_blocking, get_gdb_script, get_subprocess_output
 
 # Parent directory of this python script e.g. "/user/.../debugger/src"
 # In the docker container this will be "/app/src"
