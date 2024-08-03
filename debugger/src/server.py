@@ -8,6 +8,10 @@ Must run in /debugger/src directory (because the gdb commands will source a pyth
 import os
 import shutil
 from pprint import pprint
+import socket
+import threading
+from ipc import Subscriber
+from utils.socket_utils import connect_and_retry
 import socketio
 import eventlet
 from typing import Any
@@ -21,7 +25,7 @@ from constants import (
     DEBUG_SESSION_VAR_NAME,
     TIMEOUT_DURATION,
 )
-from utils import make_non_blocking, get_gdb_script, get_subprocess_output
+from utils import find_new_port, make_non_blocking, get_gdb_script, get_subprocess_output
 
 # Parent directory of this python script e.g. "/user/.../debugger/src"
 # In the docker container this will be "/app/src"
@@ -150,12 +154,27 @@ def mainDebug(socket_id: str, code: str) -> None:
         shutil.rmtree(new_code_dir)
         return
 
+    socket_port = find_new_port()
+    
     gdb_script = get_gdb_script(
         os.path.join(new_code_dir, "main"),
         abs_file_path,
         socket_id,
+        socket_port,
         script_name=GDB_SCRIPT_NAME,
     )
+
+    # publisher_ready_event = multiprocessing.Event()
+    # publisher_ready_event_fd = publisher_ready_event._reader.fileno()
+    # new_env = os.environ.copy()
+    # new_env['PUBLISHER_READY_EVENT_FD'] = str(publisher_ready_event_fd)
+
+    # parent_conn, child_conn = multiprocessing.Pipe()
+    # parent_conn_fd = parent_conn.fileno()
+    # print(f"parent_conn_fd in debugger: {parent_conn_fd}")
+    # new_env = os.environ.copy()
+    # new_env['PARENT_CONN_FD'] = str(parent_conn_fd)
+
     print("\n=== Running gdb script...")
     print(f"gdb_script:\n{gdb_script}")
 
@@ -182,6 +201,12 @@ def mainDebug(socket_id: str, code: str) -> None:
 
         # Read any output from the gdb instance after writing a line to it.
         get_subprocess_output(proc, TIMEOUT_DURATION)
+
+    subscriber = Subscriber.create_subscriber("127.0.0.1", socket_port)
+    # subscriber.start(publisher_ready_event)
+    # subscriber.start(child_conn)
+    subscriber.start()
+
 
     io.emit("mainDebug", f"Finished mainDebug event on server")
 

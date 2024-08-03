@@ -59,7 +59,7 @@ def get_subprocess_output(proc: subprocess.Popen, timeout_duration: int):
 
 
 def get_gdb_script(
-    program_name: str, abs_file_path: str, socket_id: str, script_name: str = "default"
+    program_name: str, abs_file_path: str, socket_id: str, ipc_port: int, script_name: str = "default"
 ):
     GDB_SCRIPTS = {
         "test_declarations_parser": f"""
@@ -138,7 +138,7 @@ def get_gdb_script(
         """,
         "default": f"""
         source {abs_file_path}/gdb_scripts/DebugSession.py
-        python {DEBUG_SESSION_VAR_NAME} = DebugSession("{socket_id}", "{program_name}")
+        python {DEBUG_SESSION_VAR_NAME} = DebugSession("{socket_id}", {ipc_port}, "{program_name}")
         """,
         "default_manual_start": f"""
         source {abs_file_path}/gdb_scripts/DebugSession.py
@@ -168,8 +168,6 @@ def get_gdb_script(
         """,
     }
 
-    if script_name not in GDB_SCRIPTS:
-        script_name = "default"
     return GDB_SCRIPTS[script_name]
 
 

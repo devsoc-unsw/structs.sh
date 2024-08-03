@@ -375,6 +375,7 @@ class CustomNextCommand(gdb.Command):
 
         send_backend_data_to_server(
             self.user_socket_id, backend_data=backend_data)
+        self.debug_session.publisher.broadcast("\n\n\n============================\nHELLO I AM THE PUBLISHER IN GDB SUBPROCESS SENDING MSG TO THE SUBSCRIBER IN DEBUGGER SERVER\n============================\n\n\n")
 
         print(f"\n=== Finished running update_backend_state in gdb instance\n\n")
         return backend_data
