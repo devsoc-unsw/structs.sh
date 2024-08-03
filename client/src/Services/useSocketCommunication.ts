@@ -25,7 +25,9 @@ export const useSocketCommunication = () => {
   const { clearFrontendState } = useFrontendStateStore();
 
   const { socketClient } = useSocketClientStore();
-  const [consoleChunks, setConsoleChunks] = useState<string[]>([]);
+  const [activeSession, setActiveSession] = useState<boolean>(false);
+  const resetConsoleChunks = useGlobalStore((state) => state.resetConsoleChunks);
+  const appendConsoleChunks = useGlobalStore((state) => state.appendConsoleChunks);
   const { updateCurrFocusedTab } = useGlobalStore();
   const { setToastMessage: setMessage } = useToastStateStore();
 
@@ -80,7 +82,7 @@ export const useSocketCommunication = () => {
     setActive(false);
     clearTypeDeclarations();
     clearUserAnnotation();
-    setConsoleChunks([]);
+    resetConsoleChunks();
   }, []);
 
   const sendCode = useCallback(() => {
@@ -161,6 +163,7 @@ export const useSocketCommunication = () => {
   return {
     consoleChunks,
     setConsoleChunks,
+    activeSession,
     sendCode,
     getNextState: executeNextWithRetry,
     bulkSendNextStates,

@@ -68,7 +68,7 @@ type GlobalStoreActions = {
   updateNextFrame: (backendState: BackendState) => void;
   clearTypeDeclarations: () => void;
   clearUserAnnotation: () => void;
-  updateConsoleChunks: (chunk: string) => void;
+  appendConsoleChunks: (chunk: string | string[]) => void;
   resetConsoleChunks: () => void;
 };
 
@@ -184,8 +184,15 @@ export const useGlobalStore: UseBoundStore<StoreApi<GlobalStateStore & GlobalSto
           'clearUserAnnotation'
         );
       },
-      updateConsoleChunks: (chunk: string) => {
-        set((state) => ({ consoleChunks: [...state.consoleChunks, chunk] }));
+      appendConsoleChunks: (chunk: string | string[]) => {
+        if (Array.isArray(chunk)) {
+          set((state) => ({ consoleChunks: [...state.consoleChunks, ...chunk] }));
+        } else {
+          set((state) => ({ consoleChunks: [...state.consoleChunks, chunk] }));
+        }
+      },
+      setConsoleChunks: (chunk: string[]) => {
+        set(() => ({ consoleChunks: chunk }));
       },
       resetConsoleChunks: () => {
         set(() => ({ consoleChunks: [] }));

@@ -17,7 +17,7 @@ const Console = ({ scrollToBottom, isActive }: ConsoleProp) => {
   const socket = useSocketClientStore((state) => state.socketClient);
 
   const consoleChunks = useGlobalStore((state) => state.consoleChunks);
-  const updateConsoleChunk = useGlobalStore((state) => state.updateConsoleChunks);
+  const updateConsoleChunk = useGlobalStore((state) => state.appendConsoleChunks);
 
   const handleInput = () => {
     setInput(inputElement.current.innerText);

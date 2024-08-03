@@ -19,11 +19,8 @@ const DevelopmentMode = () => {
   const { isActive } = useFrontendStateStore();
   const inputElement = useRef(null);
   const { uiState, updateCurrFocusedTab } = useGlobalStore();
-  const { consoleChunks, setConsoleChunks } = useSocketCommunication();
 
-  const handleAddConsoleChunk = (chunk) => {
-    setConsoleChunks([...consoleChunks, chunk]);
-  };
+  const { activeSession, sendCode, getNextState } = useSocketCommunication();
 
   const scrollToBottom = () => {
     if (inputElement.current) {
