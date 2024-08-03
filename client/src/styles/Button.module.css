@@ -1,0 +1,42 @@
+@import '@radix-ui/colors/slate.css';
+@import './global.module.css';
+
+.button {
+	all: unset;
+	display: flex;
+	align-items: center;
+	padding: 4px;
+	padding-left: 10px;
+	padding-right: 10px;
+	border-radius: var(--rounding);
+	border: var(--border);
+	cursor: default;
+	user-select: none;
+}
+
+.button:hover {
+	background: var(--slate-3);
+}
+
+.button:active {
+	background: var(--slate-6);
+}
+
+.button:disabled {
+	color: var(--slate-11);
+	background: var(--slate-5);
+}
+
+.primary {
+	background: var(--primary);
+	color: white;
+	border: none;
+}
+
+.primary:hover {
+	background: var(--primary-hover);
+}
+
+.primary:active {
+	background: var(--primary-active);
+}

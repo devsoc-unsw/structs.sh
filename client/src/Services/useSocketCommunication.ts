@@ -15,7 +15,7 @@ let initialized = false;
 export const useSocketCommunication = () => {
   const { updateNextFrame, updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation } =
     useGlobalStore();
-  const { setActiveSession } = useFrontendStateStore();
+  const { setActive } = useFrontendStateStore();
 
   const { socketClient } = useSocketClientStore();
   const [consoleChunks, setConsoleChunks] = useState<string[]>([]);
@@ -25,7 +25,7 @@ export const useSocketCommunication = () => {
     const handlers: EventHandlers = {
       mainDebug: (data: 'Finished mainDebug event on server') => {
         console.error(data);
-        setActiveSession(true);
+        setActive(true);
       },
       sendFunctionDeclaration: (data: FunctionStructure) => {
         // TODO: Implement
@@ -56,7 +56,7 @@ export const useSocketCommunication = () => {
 
   const resetDebugSession = useCallback(() => {
     updateNextFrame(INITIAL_BACKEND_STATE);
-    setActiveSession(false);
+    setActive(false);
     clearTypeDeclarations();
     clearUserAnnotation();
     setConsoleChunks([]);
@@ -78,11 +78,21 @@ export const useSocketCommunication = () => {
     socketClient.serverAction.executeNext();
   }, [socketClient]);
 
+  const bulkSendNextStates = useCallback(
+    (count: number) => {
+      for (let i = 0; i < count; i++) {
+        getNextState();
+      }
+    },
+    [getNextState]
+  );
+
   return {
     consoleChunks,
     setConsoleChunks,
     sendCode,
     getNextState,
+    bulkSendNextStates,
     resetDebugSession,
   };
 };

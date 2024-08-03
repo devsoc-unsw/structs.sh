@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useGlobalStore } from '../Store/globalStateStore';
 import { useFrontendStateStore } from '../Store/frontendStateStore';
-import { BackendState } from '../Types/backendType';
+import { BackendState, isInitialBackendState } from '../Types/backendType';
 
 export interface RoutesProps {
   backendState: BackendState;
@@ -14,10 +14,10 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) =>
   });
 
   useEffect(() => {
-    if (backendState && userAnnotation) {
+    if (backendState && !isInitialBackendState(backendState) && userAnnotation) {
       const newParsedState = parser.parseState(backendState, userAnnotation);
-      useFrontendStateStore.getState().appendNewState(newParsedState);
-      useFrontendStateStore.getState().setNextState();
+      useFrontendStateStore.getState().appendFrontendNewState(newParsedState);
+      useFrontendStateStore.getState().stepForward();
     } else {
       let issue = 'something';
       if (!backendState) {

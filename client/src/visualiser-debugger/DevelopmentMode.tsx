@@ -17,7 +17,7 @@ import { useFrontendStateStore } from './Store/frontendStateStore';
 
 const DevelopmentMode = () => {
   const { currFrame } = useGlobalStore();
-  const { activeSession } = useFrontendStateStore();
+  const { isActive } = useFrontendStateStore();
   const inputElement = useRef(null);
   const { uiState, updateCurrFocusedTab } = useGlobalStore();
   const { consoleChunks, setConsoleChunks } = useSocketCommunication();
@@ -65,7 +65,7 @@ const DevelopmentMode = () => {
                 chunks={consoleChunks}
                 handleAddChunk={handleAddConsoleChunk}
                 scrollToBottom={scrollToBottom}
-                isActive={activeSession}
+                isActive={isActive}
               />
             </Tab>
           </Tabs>

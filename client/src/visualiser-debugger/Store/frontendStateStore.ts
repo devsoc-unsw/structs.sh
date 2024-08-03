@@ -3,54 +3,62 @@ import { GenericGraph, INITIAL_GRAPH } from '../Types/frontendType';
 
 type State = {
   states: GenericGraph[];
-  currStateIdx: number;
-  activeSession: boolean;
+  currentIndex: number;
+  isActive: boolean;
   currState: () => GenericGraph;
 };
+
 type Action = {
-  appendNewState: (newState: GenericGraph) => void;
-  setNextState: () => void;
-  setLastState: () => void;
-  setActiveSession: (active: boolean) => void;
+  appendFrontendNewState: (newState: GenericGraph) => void;
+  stepForward: () => void;
+  stepBackward: () => void;
+  jumpToState: (index: number) => void;
+  setActive: (active: boolean) => void;
 };
 
 export const useFrontendStateStore: UseBoundStore<StoreApi<State & Action>> = create<
   State & Action
 >((set) => ({
   states: [],
-  currStateIdx: -1,
-  activeSession: false,
+  currentIndex: -1,
+  isActive: false,
   currState: () => {
-    if (useFrontendStateStore.getState().currStateIdx === -1) {
+    if (useFrontendStateStore.getState().currentIndex === -1) {
       return INITIAL_GRAPH;
     }
-    return useFrontendStateStore.getState().states[useFrontendStateStore.getState().currStateIdx];
+    return useFrontendStateStore.getState().states[useFrontendStateStore.getState().currentIndex];
   },
-  appendNewState: (newState: GenericGraph) => {
+  appendFrontendNewState: (newState: GenericGraph) => {
     set((state) => ({
       states: [...state.states, newState],
     }));
   },
-  setNextState: () => {
+  stepForward: () => {
     if (
-      useFrontendStateStore.getState().currStateIdx >=
+      useFrontendStateStore.getState().currentIndex >=
       useFrontendStateStore.getState().states.length - 1
     ) {
       return;
     }
     set((state) => ({
-      currStateIdx: state.currStateIdx + 1,
+      currentIndex: state.currentIndex + 1,
     }));
   },
-  setLastState: () => {
-    if (useFrontendStateStore.getState().currStateIdx <= 0) {
+  stepBackward: () => {
+    if (useFrontendStateStore.getState().currentIndex <= 0) {
       return;
     }
     set((state) => ({
-      currStateIdx: state.currStateIdx - 1,
+      currentIndex: state.currentIndex - 1,
     }));
   },
-  setActiveSession: (active: boolean) => {
-    set({ activeSession: active });
+  jumpToState: (index: number) => {
+    if (index < 0 || index >= useFrontendStateStore.getState().states.length) {
+      return;
+    }
+    set({ currentIndex: index });
+  },
+  setActive: (active: boolean) => {
+    set({ isActive: active });
   },
 }));

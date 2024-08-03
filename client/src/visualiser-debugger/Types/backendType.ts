@@ -147,6 +147,17 @@ export const INITIAL_BACKEND_STATE: BackendState = {
   heap_data: {},
 };
 
+export function isInitialBackendState(state: BackendState): boolean {
+  return (
+    state.frame_info.file === '' &&
+    state.frame_info.line === '' &&
+    state.frame_info.line_num === 0 &&
+    state.frame_info.function === '' &&
+    Object.keys(state.stack_data).length === 0 &&
+    Object.keys(state.heap_data).length === 0
+  );
+}
+
 /*
 === Examples ===
 Stack will look like Heap, except the keys are variable names instead of addresses.
