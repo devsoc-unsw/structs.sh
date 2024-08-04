@@ -64,6 +64,7 @@ const Console = ({ scrollToBottom, isActive }: ConsoleProp) => {
           {chunk.endsWith('\n') && <br />}
         </Fragment>
       ))}
+      <div>{'>'}</div>
       <input
         className={styles.input}
         key="input"

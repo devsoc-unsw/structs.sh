@@ -4,7 +4,6 @@
 }
 
 .console {
-  height: 100%;
   overflow-y: auto;
   padding-top: 6px;
   padding-bottom: 6px;
@@ -12,6 +11,7 @@
   word-break: break-all;
   white-space: pre-wrap;
   box-sizing: border-box;
+  display: flex;
 }
 
 .input {
@@ -21,4 +21,5 @@
   outline: none;
   color: rgb(47, 70, 173);
   font-weight: bolder;
+  width: 100%;
 }
