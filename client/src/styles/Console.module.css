@@ -9,6 +9,7 @@
   padding-bottom: 6px;
   cursor: text;
   word-break: break-all;
+  height: 100%;
   white-space: pre-wrap;
   box-sizing: border-box;
   display: flex;
