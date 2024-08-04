@@ -1,6 +1,6 @@
 // TODO: Proper rework on this file => we want to re-design this anyway. I can't fix lint now because it will potentially change functioanlity of the file
 import React, { Fragment, useRef, useState } from 'react';
-
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import styles from 'styles/Console.module.css';
 import classNames from 'classnames';
 import { useGlobalStore } from 'visualiser-debugger/Store/globalStateStore';
@@ -64,7 +64,7 @@ const Console = ({ scrollToBottom, isActive }: ConsoleProp) => {
           {chunk.endsWith('\n') && <br />}
         </Fragment>
       ))}
-      <div>{'>'}</div>
+      <ChevronRightIcon />
       <input
         className={styles.input}
         key="input"
