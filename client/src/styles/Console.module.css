@@ -12,6 +12,11 @@
   white-space: pre-wrap;
   box-sizing: border-box;
   display: flex;
+  flex-direction: column;
+}
+
+.consoleInput {
+  display: flex;
 }
 
 .input {

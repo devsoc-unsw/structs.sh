@@ -17,10 +17,10 @@ const Console = ({ scrollToBottom, isActive }: ConsoleProp) => {
   const socket = useSocketClientStore((state) => state.socketClient);
 
   const consoleChunks = useGlobalStore((state) => state.consoleChunks);
-  const updateConsoleChunk = useGlobalStore((state) => state.appendConsoleChunks);
+  const appendConsoleChunk = useGlobalStore((state) => state.appendConsoleChunks);
 
-  const handleInput = () => {
-    setInput(inputElement.current.innerText);
+  const handleInput = (currInput: string) => {
+    setInput(currInput);
   };
 
   const clearInput = () => {
@@ -32,7 +32,7 @@ const Console = ({ scrollToBottom, isActive }: ConsoleProp) => {
     if (event.key === 'Enter') {
       if (input.length > 0) {
         socket.serverAction.sendStdin(input);
-        handleAddChunk(`${input}\n`);
+        appendConsoleChunk(`${input}\n`);
         clearInput();
         scrollToBottom();
       }
@@ -61,20 +61,22 @@ const Console = ({ scrollToBottom, isActive }: ConsoleProp) => {
       {consoleChunks.map((chunk: string, index: number) => (
         <Fragment key={index}>
           <code>{chunk.replace(/\n$/, '')}</code>
-          {chunk.endsWith('\n') && <br />}
         </Fragment>
       ))}
-      <ChevronRightIcon />
-      <input
-        className={styles.input}
-        key="input"
-        onInput={handleInput}
-        onKeyDown={handleKey}
-        ref={inputElement}
-        contentEditable
-        suppressContentEditableWarning
-        spellCheck={false}
-      />
+      <div className={styles.consoleInput}>
+        <ChevronRightIcon />
+        <input
+          className={styles.input}
+          key="input"
+          onChange={(e) => handleInput(e.target.value)}
+          value={input}
+          onKeyDown={handleKey}
+          ref={inputElement}
+          contentEditable
+          suppressContentEditableWarning
+          spellCheck={false}
+        />
+      </div>
     </div>
   );
 };
