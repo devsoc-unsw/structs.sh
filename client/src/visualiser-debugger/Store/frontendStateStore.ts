@@ -1,12 +1,18 @@
 import { UseBoundStore, StoreApi, create } from 'zustand';
 import { FrontendState, INITIAL_GRAPH } from '../Types/frontendType';
-import { BackendState } from '../Types/backendType';
+import { BackendState, INITIAL_BACKEND_STATE } from '../Types/backendType';
+
+// Map BackendState and FrontendState one to one?? Good design??
+type MappedState = {
+  backendState: BackendState;
+  frontendState: FrontendState;
+};
 
 type State = {
-  states: FrontendState[];
+  states: MappedState[];
   currentIndex: number;
   isActive: boolean;
-  currState: () => FrontendState;
+  currState: () => MappedState;
 };
 
 type Action = {
@@ -25,13 +31,22 @@ export const useFrontendStateStore: UseBoundStore<StoreApi<State & Action>> = cr
   isActive: false,
   currState: () => {
     if (useFrontendStateStore.getState().currentIndex === -1) {
-      return INITIAL_GRAPH;
+      return {
+        backendState: INITIAL_BACKEND_STATE,
+        frontendState: INITIAL_GRAPH,
+      };
     }
     return useFrontendStateStore.getState().states[useFrontendStateStore.getState().currentIndex];
   },
   appendFrontendNewState: (backendState: BackendState, newState: FrontendState) => {
     set((state) => ({
-      states: [...state.states, newState],
+      states: [
+        ...state.states,
+        {
+          backendState,
+          frontendState: newState,
+        },
+      ],
     }));
   },
   stepForward: () => {

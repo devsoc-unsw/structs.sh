@@ -10,7 +10,7 @@ export interface RoutesProps {
 const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) => {
   const { userAnnotation, parser, visComponent: VisComponent } = useGlobalStore().visualizer;
   const currState = useFrontendStateStore((store) => {
-    return store.currState();
+    return store.currState().frontendState;
   });
 
   useEffect(() => {
