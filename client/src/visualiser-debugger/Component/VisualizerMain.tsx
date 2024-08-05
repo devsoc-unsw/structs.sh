@@ -1,32 +1,29 @@
 import { useEffect, useRef } from 'react';
 import { useGlobalStore } from '../Store/globalStateStore';
 import { useFrontendStateStore } from '../Store/frontendStateStore';
-import { BackendState, isInitialBackendState } from '../Types/backendType';
+import { isInitialBackendState } from '../Types/backendType';
 
-export interface RoutesProps {
-  backendState: BackendState;
-}
-
-const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) => {
+const VisualizerMain: React.FC = () => {
+  const { currFrame } = useGlobalStore();
   const { userAnnotation, parser, visComponent: VisComponent } = useGlobalStore().visualizer;
-  const currState = useFrontendStateStore((store) => {
+  const currFrontendState = useFrontendStateStore((store) => {
     return store.currState().frontendState;
   });
 
   useEffect(() => {
-    if (backendState && !isInitialBackendState(backendState) && userAnnotation) {
-      const newParsedState = parser.parseState(backendState, userAnnotation);
-      useFrontendStateStore.getState().appendFrontendNewState(backendState, newParsedState);
+    if (currFrame && !isInitialBackendState(currFrame) && userAnnotation) {
+      const newParsedState = parser.parseState(currFrame, userAnnotation);
+      useFrontendStateStore.getState().appendFrontendNewState(currFrame, newParsedState);
     } else {
       let issue = 'something';
-      if (!backendState) {
+      if (!currFrame) {
         issue = 'backendState';
       } else if (!userAnnotation) {
         issue = 'localsAnnotations';
       }
       console.error(`Unable to parse backend state: ${issue} is undefined`);
     }
-  }, [backendState, userAnnotation]);
+  }, [currFrame, userAnnotation]);
 
   const visualizerRef = useRef(null);
   const { uiState } = useGlobalStore();
@@ -36,7 +33,7 @@ const VisualizerMain: React.FC<RoutesProps> = ({ backendState }: RoutesProps) =>
       ref={visualizerRef}
       style={{ overflow: 'hidden', height: '100%', width: '100%' }}
     >
-      <VisComponent graphState={currState} dimension={uiState.visualizerDimension} />
+      <VisComponent graphState={currFrontendState} dimension={uiState.visualizerDimension} />
     </div>
   );
 };

@@ -6,12 +6,12 @@ import 'ace-builds/src-noconflict/theme-tomorrow';
 import { useState, useEffect } from 'react';
 import { useUserFsStateStore } from '../../Store/userFsStateStore';
 import { IFileFileNode } from '../FileTree/FS/IFileSystem';
+import { useFrontendStateStore } from '../../Store/frontendStateStore';
 
-type CodeEditorProps = {
-  currLine?: number;
-};
-
-const CodeEditor: React.FC<CodeEditorProps> = ({ currLine = 0 }: CodeEditorProps) => {
+const CodeEditor: React.FC = () => {
+  const currBackendState = useFrontendStateStore((store) => {
+    return store.currState().backendState;
+  });
   const { fileSystem, currFocusFilePath } = useUserFsStateStore();
   const [currFile, setCurrFile] = useState<IFileFileNode | undefined>(undefined);
   const [code, setCode] = useState('');
@@ -25,9 +25,9 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ currLine = 0 }: CodeEditorProps
 
   const markers: IMarker[] = [
     {
-      startRow: currLine - 1,
+      startRow: currBackendState.frame_info.line_num - 1,
       startCol: 0,
-      endRow: currLine - 1,
+      endRow: currBackendState.frame_info.line_num - 1,
       endCol: 100,
       className: 'current-line-marker',
       type: 'fullLine',

@@ -16,7 +16,6 @@ import { useSocketCommunication } from '../Services/useSocketCommunication';
 import { useFrontendStateStore } from './Store/frontendStateStore';
 
 const DevelopmentMode = () => {
-  const { currFrame } = useGlobalStore();
   const { isActive } = useFrontendStateStore();
   const inputElement = useRef(null);
   const { uiState, updateCurrFocusedTab } = useGlobalStore();
@@ -50,7 +49,7 @@ const DevelopmentMode = () => {
           />
         </div>
         <div className={classNames(styles.pane, styles.editor)}>
-          <CodeEditor currLine={currFrame?.frame_info?.line_num} />
+          <CodeEditor />
         </div>
         <div className={classNames(styles.pane, styles.inspector)}>
           <Tabs value={uiState.currFocusedTab} onValueChange={updateCurrFocusedTab}>
@@ -71,7 +70,7 @@ const DevelopmentMode = () => {
           </Tabs>
         </div>
         <div className={classNames(styles.pane, styles.visualiser)}>
-          <VisualizerMain backendState={currFrame} />
+          <VisualizerMain />
         </div>
         <div className={classNames(styles.pane, styles.timeline)}>
           <Controls />
