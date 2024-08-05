@@ -116,7 +116,7 @@ export const useSocketCommunication = () => {
         setActiveRequests((prev) => prev + 1);
         task().then(() => {
           setActiveRequests((prev) => prev - 1);
-          processQueue(); // Process the next task in the queue
+          processQueue();
         });
       }
     }
@@ -127,11 +127,28 @@ export const useSocketCommunication = () => {
   }, [taskQueue, activeRequests]);
 
   const bulkSendNextStates = useCallback(
-    (count: number) => {
-      const Requests = Array.from({ length: count }, () => executeNextWithRetry);
-      setTaskQueue((prev) => [...prev, ...Requests]);
+    async (count: number) => {
+      const requests = Array.from({ length: count }, () => executeNextWithRetry);
+      setTaskQueue((prev) => [...prev, ...requests]);
+
+      // Wait for all tasks to complete or timeout after 500ms
+      const allTasksCompleted = new Promise<void>((resolve) => {
+        const interval = setInterval(() => {
+          if (activeRequests === 0) {
+            clearInterval(interval);
+            resolve();
+          }
+        }, 100);
+
+        setTimeout(() => {
+          clearInterval(interval);
+          resolve();
+        }, 500);
+      });
+
+      await allTasksCompleted;
     },
-    [executeNextWithRetry]
+    [executeNextWithRetry, activeRequests]
   );
 
   return {

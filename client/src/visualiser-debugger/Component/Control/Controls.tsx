@@ -2,7 +2,9 @@ import styles from 'styles/Timeline.module.css';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import UndoIcon from '@mui/icons-material/Undo';
 import RedoIcon from '@mui/icons-material/Redo';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useEffect, useState } from 'react';
+import { Fade } from '@mui/material';
 import { useSocketCommunication } from '../../../Services/useSocketCommunication';
 import { useFrontendStateStore } from '../../Store/frontendStateStore';
 import { Button } from '../../../components/Button';
@@ -17,9 +19,16 @@ const Controls = () => {
   const { states, currentIndex, stepForward, stepBackward, jumpToState } = useFrontendStateStore();
   const { isActive } = useFrontendStateStore();
 
-  const playToggle = () => {
-    // TODO: Figure this out
-    bulkSendNextStates(10);
+  const [loading, setLoading] = useState<boolean>(false);
+  const playToggle = async () => {
+    setLoading(true);
+    await bulkSendNextStates(10);
+    // Wait extra 3s for loading new states
+    await new Promise((resolve) => {
+      setTimeout(resolve, 3000);
+    });
+
+    setLoading(false);
   };
 
   const [autoNext, setAutoNext] = useState<boolean>(false);
@@ -49,7 +58,15 @@ const Controls = () => {
         Compile
       </Button>
       <Button disabled={!isActive} onClick={playToggle}>
-        <PlayArrowIcon />
+        {loading ? (
+          <Fade in={loading} timeout={500}>
+            <CircularProgress size={24} />
+          </Fade>
+        ) : (
+          <Fade in={!loading} timeout={500}>
+            <PlayArrowIcon />
+          </Fade>
+        )}
       </Button>
       <Button
         disabled={!isActive || currentIndex === 0}
