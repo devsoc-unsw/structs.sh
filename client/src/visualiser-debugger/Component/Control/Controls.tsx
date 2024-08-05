@@ -3,7 +3,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import UndoIcon from '@mui/icons-material/Undo';
 import RedoIcon from '@mui/icons-material/Redo';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Fade } from '@mui/material';
 import { useSocketCommunication } from '../../../Services/useSocketCommunication';
 import { useFrontendStateStore } from '../../Store/frontendStateStore';
@@ -19,42 +19,33 @@ const Controls = () => {
   const { states, currentIndex, stepForward, stepBackward, jumpToState } = useFrontendStateStore();
   const { isActive } = useFrontendStateStore();
 
-  const [loading, setLoading] = useState<boolean>(false);
-  const [bufferMode, setBufferMode] = useState<boolean>(false);
-  const [buffering, setBuffering] = useState<boolean>(false);
-  const bufferThreshold = 30; // Buffer when less than 10 frames are left
-  const bufferSpeed = 3000;
+  const [loading, setLoading] = useState<boolean>(false); // State for loading
+  const bufferingRef = useRef<boolean>(false); // Ref for buffering lock
+  const bufferModeRef = useRef<boolean>(false); // Ref for buffer mode
+  const bufferThreshold = 30; // Buffer when less than 30 frames are left
 
-  const playToggle = async () => {
-    setBufferMode(!bufferMode);
+  const playToggle = () => {
+    bufferModeRef.current = !bufferModeRef.current;
     setLoading(true);
-    await bulkSendNextStates(10);
-    // Wait extra 3s for loading new states
-    await new Promise((resolve) => {
-      setTimeout(resolve, bufferSpeed);
-    });
-
-    setLoading(false);
   };
 
-  const startBuffering = async () => {
-    if (buffering) return;
-    setBuffering(true);
-    setLoading(true);
+  const startBuffering = useCallback(async () => {
+    if (bufferingRef.current) return;
+    bufferingRef.current = true;
+    setLoading(true); // Set loading state
+
     await bulkSendNextStates(10);
-    await new Promise((resolve) => {
-      setTimeout(resolve, bufferSpeed);
-    });
-    setLoading(false);
-    setBuffering(false);
-  };
+
+    setLoading(false); // Unset loading state
+    bufferingRef.current = false;
+  }, []);
 
   useEffect(() => {
-    if (!bufferMode) return;
-    if (states.length - currentIndex < bufferThreshold && !buffering) {
+    if (!bufferModeRef.current) return;
+    if (states.length - currentIndex < bufferThreshold && !bufferingRef.current) {
       startBuffering();
     }
-  }, [currentIndex, states.length, buffering, bufferMode]);
+  }, [currentIndex, states.length, startBuffering, loading]);
 
   const [autoNext, setAutoNext] = useState<boolean>(false);
   useEffect(() => {
@@ -79,7 +70,15 @@ const Controls = () => {
 
   return (
     <div className={styles.timeline}>
-      <Button variant="primary" onClick={sendCode}>
+      <Button
+        variant="primary"
+        onClick={() => {
+          bufferModeRef.current = false;
+          bufferingRef.current = false;
+          setLoading(false);
+          sendCode();
+        }}
+      >
         Compile
       </Button>
       <Button disabled={!isActive} onClick={playToggle}>
