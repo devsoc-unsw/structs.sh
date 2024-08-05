@@ -21,6 +21,7 @@ type Action = {
   stepBackward: () => void;
   jumpToState: (index: number) => void;
   setActive: (active: boolean) => void;
+  clearFrontendState: () => void;
 };
 
 export const useFrontendStateStore: UseBoundStore<StoreApi<State & Action>> = create<
@@ -76,5 +77,8 @@ export const useFrontendStateStore: UseBoundStore<StoreApi<State & Action>> = cr
   },
   setActive: (active: boolean) => {
     set({ isActive: active });
+  },
+  clearFrontendState: () => {
+    set({ isActive: false, states: [], currentIndex: -1 });
   },
 }));

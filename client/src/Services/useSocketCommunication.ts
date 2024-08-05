@@ -16,6 +16,7 @@ export const useSocketCommunication = () => {
   const { updateNextFrame, updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation } =
     useGlobalStore();
   const { setActive } = useFrontendStateStore();
+  const { clearFrontendState } = useFrontendStateStore();
 
   const { socketClient } = useSocketClientStore();
   const [consoleChunks, setConsoleChunks] = useState<string[]>([]);
@@ -56,6 +57,7 @@ export const useSocketCommunication = () => {
 
   const resetDebugSession = useCallback(() => {
     updateNextFrame(INITIAL_BACKEND_STATE);
+    clearFrontendState();
     setActive(false);
     clearTypeDeclarations();
     clearUserAnnotation();
