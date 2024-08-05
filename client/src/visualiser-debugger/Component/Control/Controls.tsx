@@ -10,7 +10,7 @@ import { Button } from '../../../components/Button';
 import Slider from '../../../components/Timeline/Slider';
 
 const Controls = () => {
-  const { sendCode, bulkSendNextStates } = useSocketCommunication();
+  const { sendCode, bulkSendNextStates, getNextState } = useSocketCommunication();
   const { states, currentIndex, stepForward, stepBackward, jumpToState } = useFrontendStateStore();
   const { isActive } = useFrontendStateStore();
 
@@ -36,7 +36,12 @@ const Controls = () => {
       </Button>
       <Button
         onClick={() => {
-          stepForward();
+          if (currentIndex === states.length - 1) {
+            console.info('Triggered next state');
+            getNextState();
+          } else {
+            stepForward();
+          }
         }}
       >
         <RedoIcon />
