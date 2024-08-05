@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import {
   BackendState,
   BackendTypeDeclaration,
@@ -22,6 +22,10 @@ export const useSocketCommunication = () => {
   const [consoleChunks, setConsoleChunks] = useState<string[]>([]);
   const { updateCurrFocusedTab } = useGlobalStore();
 
+  const [taskQueue, setTaskQueue] = useState<(() => Promise<void>)[]>([]);
+  const [activeTasks, setActiveTasks] = useState<number>(0);
+  const maxConcurrentTasks = 10;
+
   if (!initialized) {
     const handlers: EventHandlers = {
       mainDebug: (data: 'Finished mainDebug event on server') => {
@@ -29,7 +33,6 @@ export const useSocketCommunication = () => {
         setActive(true);
       },
       sendFunctionDeclaration: (data: FunctionStructure) => {
-        // TODO: Implement
         console.error('Received functional structure', data);
       },
       sendTypeDeclaration: (type: BackendTypeDeclaration) => {
@@ -37,12 +40,13 @@ export const useSocketCommunication = () => {
       },
       sendBackendStateToUser: (state: BackendState) => {
         updateNextFrame(state);
+        setActiveTasks((prev) => prev - 1);
       },
       sendStdoutToUser: (output: string) => {
         setConsoleChunks((prev) => [...prev, output]);
       },
       programWaitingForInput: (_data: any) => {
-        // TODO: Implement, to Hindie, might give a popup message to user?
+        // Implement as needed
       },
       compileError: (errors: string[]) => {
         setConsoleChunks((prev) => [...prev, ...errors]);
@@ -76,24 +80,65 @@ export const useSocketCommunication = () => {
     }
   }, [socketClient]);
 
-  const getNextState = useCallback(() => {
-    socketClient.serverAction.executeNext();
+  const executeNextWithRetry = useCallback(() => {
+    return new Promise<void>((resolve) => {
+      const attemptExecution = () => {
+        socketClient.serverAction.executeNext();
+
+        let attempts = 0;
+        const maxAttempts = 5;
+
+        const waitForStateUpdate = () => {
+          setTimeout(() => {
+            if (attempts < maxAttempts) {
+              attempts++;
+              waitForStateUpdate();
+            } else {
+              console.error(
+                new Error('State update failed to complete after multiple attempts. Retrying...')
+              );
+              resolve();
+            }
+          }, 500);
+        };
+
+        waitForStateUpdate();
+      };
+
+      attemptExecution();
+    });
   }, [socketClient]);
+
+  const processQueue = useCallback(() => {
+    if (taskQueue.length > 0 && activeTasks < maxConcurrentTasks) {
+      const task = taskQueue.shift();
+      if (task) {
+        setActiveTasks((prev) => prev + 1);
+        task().then(() => {
+          setActiveTasks((prev) => prev - 1);
+          processQueue(); // Process the next task in the queue
+        });
+      }
+    }
+  }, [taskQueue, activeTasks]);
+
+  useEffect(() => {
+    processQueue();
+  }, [taskQueue, activeTasks]);
 
   const bulkSendNextStates = useCallback(
     (count: number) => {
-      for (let i = 0; i < count; i++) {
-        getNextState();
-      }
+      const tasks = Array.from({ length: count }, () => executeNextWithRetry);
+      setTaskQueue((prev) => [...prev, ...tasks]);
     },
-    [getNextState]
+    [executeNextWithRetry]
   );
 
   return {
     consoleChunks,
     setConsoleChunks,
     sendCode,
-    getNextState,
+    getNextState: executeNextWithRetry,
     bulkSendNextStates,
     resetDebugSession,
   };

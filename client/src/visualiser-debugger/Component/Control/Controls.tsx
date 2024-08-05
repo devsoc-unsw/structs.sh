@@ -4,12 +4,17 @@ import UndoIcon from '@mui/icons-material/Undo';
 import RedoIcon from '@mui/icons-material/Redo';
 import ReplayIcon from '@mui/icons-material/Replay';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
+import { useEffect, useState } from 'react';
 import { useSocketCommunication } from '../../../Services/useSocketCommunication';
 import { useFrontendStateStore } from '../../Store/frontendStateStore';
 import { Button } from '../../../components/Button';
 import Slider from '../../../components/Timeline/Slider';
+import { useGlobalStore } from '../../Store/globalStateStore';
+import { isInitialBackendState } from '../../Types/backendType';
 
 const Controls = () => {
+  const { currFrame } = useGlobalStore();
+  const { userAnnotation, parser } = useGlobalStore().visualizer;
   const { sendCode, bulkSendNextStates, getNextState } = useSocketCommunication();
   const { states, currentIndex, stepForward, stepBackward, jumpToState } = useFrontendStateStore();
   const { isActive } = useFrontendStateStore();
@@ -17,6 +22,27 @@ const Controls = () => {
   const playToggle = () => {
     bulkSendNextStates(10);
   };
+
+  const [autoNext, setAutoNext] = useState<boolean>(false);
+  useEffect(() => {
+    if (currFrame && !isInitialBackendState(currFrame) && userAnnotation) {
+      const newParsedState = parser.parseState(currFrame, userAnnotation);
+      useFrontendStateStore.getState().appendFrontendNewState(currFrame, newParsedState);
+
+      if (autoNext === true) {
+        stepForward();
+        setAutoNext(false);
+      }
+    } else {
+      let issue = 'something';
+      if (!currFrame) {
+        issue = 'backendState';
+      } else if (!userAnnotation) {
+        issue = 'localsAnnotations';
+      }
+      console.error(`Unable to parse backend state: ${issue} is undefined`);
+    }
+  }, [currFrame, userAnnotation]);
 
   return (
     <div className={styles.timeline}>
@@ -35,10 +61,10 @@ const Controls = () => {
         <UndoIcon />
       </Button>
       <Button
-        onClick={() => {
+        onClick={async () => {
           if (currentIndex === states.length - 1) {
-            console.info('Triggered next state');
-            getNextState();
+            setAutoNext(true);
+            await getNextState();
           } else {
             stepForward();
           }

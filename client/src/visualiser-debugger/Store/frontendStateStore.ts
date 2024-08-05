@@ -40,15 +40,31 @@ export const useFrontendStateStore: UseBoundStore<StoreApi<State & Action>> = cr
     return useFrontendStateStore.getState().states[useFrontendStateStore.getState().currentIndex];
   },
   appendFrontendNewState: (backendState: BackendState, newState: FrontendState) => {
-    set((state) => ({
-      states: [
-        ...state.states,
-        {
+    set((state) => {
+      const lastState = state.states[state.states.length - 1];
+      if (lastState && lastState.backendState === backendState) {
+        // Trigger rerender but preserve the map between backend state and frontend state
+        const updatedStates = [...state.states];
+        updatedStates[updatedStates.length - 1] = {
           backendState,
           frontendState: newState,
-        },
-      ],
-    }));
+        };
+
+        return {
+          states: updatedStates,
+        };
+      }
+
+      return {
+        states: [
+          ...state.states,
+          {
+            backendState,
+            frontendState: newState,
+          },
+        ],
+      };
+    });
   },
   stepForward: () => {
     if (
