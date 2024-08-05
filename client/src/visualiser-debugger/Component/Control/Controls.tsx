@@ -20,16 +20,41 @@ const Controls = () => {
   const { isActive } = useFrontendStateStore();
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [bufferMode, setBufferMode] = useState<boolean>(false);
+  const [buffering, setBuffering] = useState<boolean>(false);
+  const bufferThreshold = 30; // Buffer when less than 10 frames are left
+  const bufferSpeed = 3000;
+
   const playToggle = async () => {
+    setBufferMode(!bufferMode);
     setLoading(true);
     await bulkSendNextStates(10);
     // Wait extra 3s for loading new states
     await new Promise((resolve) => {
-      setTimeout(resolve, 3000);
+      setTimeout(resolve, bufferSpeed);
     });
 
     setLoading(false);
   };
+
+  const startBuffering = async () => {
+    if (buffering) return;
+    setBuffering(true);
+    setLoading(true);
+    await bulkSendNextStates(10);
+    await new Promise((resolve) => {
+      setTimeout(resolve, bufferSpeed);
+    });
+    setLoading(false);
+    setBuffering(false);
+  };
+
+  useEffect(() => {
+    if (!bufferMode) return;
+    if (states.length - currentIndex < bufferThreshold && !buffering) {
+      startBuffering();
+    }
+  }, [currentIndex, states.length, buffering, bufferMode]);
 
   const [autoNext, setAutoNext] = useState<boolean>(false);
   useEffect(() => {
@@ -92,6 +117,7 @@ const Controls = () => {
         max={states.length - 1}
         value={currentIndex}
         onChange={(event: Event, value: number) => jumpToState(value)}
+        loading={loading}
       />
     </div>
   );
