@@ -2,8 +2,6 @@ import styles from 'styles/Timeline.module.css';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import UndoIcon from '@mui/icons-material/Undo';
 import RedoIcon from '@mui/icons-material/Redo';
-import ReplayIcon from '@mui/icons-material/Replay';
-import SkipNextIcon from '@mui/icons-material/SkipNext';
 import { useEffect, useState } from 'react';
 import { useSocketCommunication } from '../../../Services/useSocketCommunication';
 import { useFrontendStateStore } from '../../Store/frontendStateStore';
@@ -20,6 +18,7 @@ const Controls = () => {
   const { isActive } = useFrontendStateStore();
 
   const playToggle = () => {
+    // TODO: Figure this out
     bulkSendNextStates(10);
   };
 
@@ -72,18 +71,10 @@ const Controls = () => {
       >
         <RedoIcon />
       </Button>
-      <Button
-        disabled={!isActive}
-        onClick={() => {
-          jumpToState(currentIndex === states.length ? 0 : states.length);
-        }}
-      >
-        {currentIndex === states.length ? <ReplayIcon /> : <SkipNextIcon />}
-      </Button>
       <Slider
-        max={states.length}
+        max={states.length - 1}
         value={currentIndex}
-        onChange={([value]: number[]) => jumpToState(value)}
+        onChange={(event: Event, value: number) => jumpToState(value)}
       />
     </div>
   );

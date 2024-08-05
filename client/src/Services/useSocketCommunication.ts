@@ -23,8 +23,8 @@ export const useSocketCommunication = () => {
   const { updateCurrFocusedTab } = useGlobalStore();
 
   const [taskQueue, setTaskQueue] = useState<(() => Promise<void>)[]>([]);
-  const [activeTasks, setActiveTasks] = useState<number>(0);
-  const maxConcurrentTasks = 10;
+  const [activeRequests, setActiveRequests] = useState<number>(0);
+  const MAX_CONCURRENT_REQUEST = 10;
 
   if (!initialized) {
     const handlers: EventHandlers = {
@@ -40,7 +40,7 @@ export const useSocketCommunication = () => {
       },
       sendBackendStateToUser: (state: BackendState) => {
         updateNextFrame(state);
-        setActiveTasks((prev) => prev - 1);
+        setActiveRequests((prev) => prev - 1);
       },
       sendStdoutToUser: (output: string) => {
         setConsoleChunks((prev) => [...prev, output]);
@@ -110,26 +110,26 @@ export const useSocketCommunication = () => {
   }, [socketClient]);
 
   const processQueue = useCallback(() => {
-    if (taskQueue.length > 0 && activeTasks < maxConcurrentTasks) {
+    if (taskQueue.length > 0 && activeRequests < MAX_CONCURRENT_REQUEST) {
       const task = taskQueue.shift();
       if (task) {
-        setActiveTasks((prev) => prev + 1);
+        setActiveRequests((prev) => prev + 1);
         task().then(() => {
-          setActiveTasks((prev) => prev - 1);
+          setActiveRequests((prev) => prev - 1);
           processQueue(); // Process the next task in the queue
         });
       }
     }
-  }, [taskQueue, activeTasks]);
+  }, [taskQueue, activeRequests]);
 
   useEffect(() => {
     processQueue();
-  }, [taskQueue, activeTasks]);
+  }, [taskQueue, activeRequests]);
 
   const bulkSendNextStates = useCallback(
     (count: number) => {
-      const tasks = Array.from({ length: count }, () => executeNextWithRetry);
-      setTaskQueue((prev) => [...prev, ...tasks]);
+      const Requests = Array.from({ length: count }, () => executeNextWithRetry);
+      setTaskQueue((prev) => [...prev, ...Requests]);
     },
     [executeNextWithRetry]
   );
