@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState } from 'react';
 import {
   BackendState,
   BackendTypeDeclaration,
@@ -11,6 +11,11 @@ import { useGlobalStore } from '../visualiser-debugger/Store/globalStateStore';
 import { useUserFsStateStore } from '../visualiser-debugger/Store/userFsStateStore';
 import { useFrontendStateStore } from '../visualiser-debugger/Store/frontendStateStore';
 
+interface Task {
+  execute: Promise<boolean>;
+  id: number;
+}
+
 let initialized = false;
 export const useSocketCommunication = () => {
   const { updateNextFrame, updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation } =
@@ -22,25 +27,24 @@ export const useSocketCommunication = () => {
   const [consoleChunks, setConsoleChunks] = useState<string[]>([]);
   const { updateCurrFocusedTab } = useGlobalStore();
 
-  const [taskQueue, setTaskQueue] = useState<(() => Promise<void>)[]>([]);
-  const [activeRequests, setActiveRequests] = useState<number>(0);
-  const MAX_CONCURRENT_REQUEST = 10;
+  const [taskQueue, setTaskQueue] = useState<Task[]>([]);
+  const [taskId, setTaskId] = useState(0);
 
   if (!initialized) {
     const handlers: EventHandlers = {
-      mainDebug: (data: 'Finished mainDebug event on server') => {
-        console.error(data);
+      mainDebug: (_data: 'Finished mainDebug event on server') => {
         setActive(true);
       },
-      sendFunctionDeclaration: (data: FunctionStructure) => {
-        console.error('Received functional structure', data);
-      },
+      sendFunctionDeclaration: (_data: FunctionStructure) => {},
       sendTypeDeclaration: (type: BackendTypeDeclaration) => {
         updateTypeDeclaration(type);
       },
       sendBackendStateToUser: (state: BackendState) => {
         updateNextFrame(state);
-        setActiveRequests((prev) => prev - 1);
+
+        // Complete a task
+        const task = taskQueue.shift();
+        if (task) task.execute.then(() => true);
       },
       sendStdoutToUser: (output: string) => {
         setConsoleChunks((prev) => [...prev, output]);
@@ -52,7 +56,7 @@ export const useSocketCommunication = () => {
         setConsoleChunks((prev) => [...prev, ...errors]);
         updateCurrFocusedTab('2');
       },
-      send_stdin: (data: string) => console.log('Stdin Sent:', data),
+      send_stdin: (_data: string) => {},
     };
 
     socketClient.setupEventHandlers(handlers);
@@ -73,7 +77,6 @@ export const useSocketCommunication = () => {
     const { fileSystem, currFocusFilePath } = useUserFsStateStore.getState();
     const file = fileSystem.getFileFromPath(currFocusFilePath);
     if (file) {
-      console.log('Sending data:', file.data);
       socketClient.serverAction.initializeDebugSession(file.data);
     } else {
       throw new Error('File not found in FS');
@@ -81,12 +84,16 @@ export const useSocketCommunication = () => {
   }, [socketClient]);
 
   const executeNextWithRetry = useCallback(() => {
-    return new Promise<void>((resolve) => {
+    const newId = taskId;
+    setTaskId((prev) => prev + 1);
+
+    const promise = new Promise<boolean>((resolve) => {
       const attemptExecution = () => {
         socketClient.serverAction.executeNext();
 
         let attempts = 0;
         const maxAttempts = 5;
+        const intervalTime = 1000; // Check every second
 
         const waitForStateUpdate = () => {
           setTimeout(() => {
@@ -94,12 +101,9 @@ export const useSocketCommunication = () => {
               attempts++;
               waitForStateUpdate();
             } else {
-              console.error(
-                new Error('State update failed to complete after multiple attempts. Retrying...')
-              );
-              resolve();
+              resolve(false);
             }
-          }, 500);
+          }, intervalTime);
         };
 
         waitForStateUpdate();
@@ -107,48 +111,22 @@ export const useSocketCommunication = () => {
 
       attemptExecution();
     });
-  }, [socketClient]);
 
-  const processQueue = useCallback(() => {
-    if (taskQueue.length > 0 && activeRequests < MAX_CONCURRENT_REQUEST) {
-      const task = taskQueue.shift();
-      if (task) {
-        setActiveRequests((prev) => prev + 1);
-        task().then(() => {
-          setActiveRequests((prev) => prev - 1);
-          processQueue();
-        });
-      }
-    }
-  }, [taskQueue, activeRequests]);
-
-  useEffect(() => {
-    processQueue();
-  }, [taskQueue, activeRequests]);
+    setTaskQueue((prev) => [...prev, { execute: promise, id: newId }]);
+    return promise;
+  }, [socketClient, taskId]);
 
   const bulkSendNextStates = useCallback(
     async (count: number) => {
-      const requests = Array.from({ length: count }, () => executeNextWithRetry);
-      setTaskQueue((prev) => [...prev, ...requests]);
+      const newTasks = Array.from({ length: count }, () => executeNextWithRetry());
+      await Promise.all(newTasks.map((task) => task.then()));
+      const results = await Promise.all(newTasks);
+      const successfulCount = results.filter((result) => result).length;
 
-      // Wait for all tasks to complete or timeout after 500ms
-      const allTasksCompleted = new Promise<void>((resolve) => {
-        const interval = setInterval(() => {
-          if (activeRequests === 0) {
-            clearInterval(interval);
-            resolve();
-          }
-        }, 100);
-
-        setTimeout(() => {
-          clearInterval(interval);
-          resolve();
-        }, 500);
-      });
-
-      await allTasksCompleted;
+      console.log('Successful executions:', successfulCount);
+      return successfulCount;
     },
-    [executeNextWithRetry, activeRequests]
+    [executeNextWithRetry]
   );
 
   return {

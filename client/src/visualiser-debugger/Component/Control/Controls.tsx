@@ -12,6 +12,7 @@ import Slider from '../../../components/Timeline/Slider';
 import { useGlobalStore } from '../../Store/globalStateStore';
 import { isInitialBackendState } from '../../Types/backendType';
 
+const BUFFER_THRESHOLD = 30;
 const Controls = () => {
   const { currFrame } = useGlobalStore();
   const { userAnnotation, parser } = useGlobalStore().visualizer;
@@ -19,10 +20,9 @@ const Controls = () => {
   const { states, currentIndex, stepForward, stepBackward, jumpToState } = useFrontendStateStore();
   const { isActive } = useFrontendStateStore();
 
-  const [loading, setLoading] = useState<boolean>(false); // State for loading
-  const bufferingRef = useRef<boolean>(false); // Ref for buffering lock
-  const bufferModeRef = useRef<boolean>(false); // Ref for buffer mode
-  const bufferThreshold = 30; // Buffer when less than 30 frames are left
+  const [loading, setLoading] = useState<boolean>(false);
+  const bufferingRef = useRef<boolean>(false);
+  const bufferModeRef = useRef<boolean>(false);
 
   const playToggle = () => {
     bufferModeRef.current = !bufferModeRef.current;
@@ -32,17 +32,20 @@ const Controls = () => {
   const startBuffering = useCallback(async () => {
     if (bufferingRef.current) return;
     bufferingRef.current = true;
-    setLoading(true); // Set loading state
+    setLoading(true);
 
-    await bulkSendNextStates(10);
+    const result = await bulkSendNextStates(10);
+    if (result === 0) {
+      bufferModeRef.current = false;
+    }
 
-    setLoading(false); // Unset loading state
+    setLoading(false);
     bufferingRef.current = false;
   }, []);
 
   useEffect(() => {
     if (!bufferModeRef.current) return;
-    if (states.length - currentIndex < bufferThreshold && !bufferingRef.current) {
+    if (states.length - currentIndex < BUFFER_THRESHOLD && !bufferingRef.current) {
       startBuffering();
     }
   }, [currentIndex, states.length, startBuffering, loading]);
