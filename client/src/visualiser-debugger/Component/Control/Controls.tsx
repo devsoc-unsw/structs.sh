@@ -3,7 +3,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import UndoIcon from '@mui/icons-material/Undo';
 import RedoIcon from '@mui/icons-material/Redo';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Fade } from '@mui/material';
 import { useSocketCommunication } from '../../../Services/useSocketCommunication';
 import { useFrontendStateStore } from '../../Store/frontendStateStore';
@@ -21,34 +21,30 @@ const Controls = () => {
   const { isActive } = useFrontendStateStore();
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [bufferMode, setBufferMode] = useState<boolean>(true);
   const bufferingRef = useRef<boolean>(false);
-  const bufferModeRef = useRef<boolean>(false);
 
   const playToggle = () => {
-    bufferModeRef.current = !bufferModeRef.current;
-    setLoading(true);
+    setBufferMode((mode) => !mode);
   };
 
-  const startBuffering = useCallback(async () => {
+  const startBuffering = async (bufferSize: number) => {
     if (bufferingRef.current) return;
     bufferingRef.current = true;
     setLoading(true);
 
-    const result = await bulkSendNextStates(10);
-    if (result === 0) {
-      bufferModeRef.current = false;
-    }
+    await bulkSendNextStates(bufferSize);
 
     setLoading(false);
     bufferingRef.current = false;
-  }, []);
+  };
 
   useEffect(() => {
-    if (!bufferModeRef.current) return;
+    if (!bufferMode) return;
     if (states.length - currentIndex < BUFFER_THRESHOLD && !bufferingRef.current) {
-      startBuffering();
+      startBuffering(BUFFER_THRESHOLD);
     }
-  }, [currentIndex, states.length, startBuffering, loading]);
+  }, [bufferMode, isActive]);
 
   const [autoNext, setAutoNext] = useState<boolean>(false);
   useEffect(() => {
@@ -76,8 +72,8 @@ const Controls = () => {
       <Button
         variant="primary"
         onClick={() => {
-          bufferModeRef.current = false;
           bufferingRef.current = false;
+          setBufferMode(false);
           setLoading(false);
           sendCode();
         }}

@@ -13,6 +13,7 @@ import { useFrontendStateStore } from '../visualiser-debugger/Store/frontendStat
 
 interface Task {
   execute: Promise<boolean>;
+  resolve: (result: boolean) => void;
   id: number;
 }
 
@@ -27,7 +28,7 @@ export const useSocketCommunication = () => {
   const [consoleChunks, setConsoleChunks] = useState<string[]>([]);
   const { updateCurrFocusedTab } = useGlobalStore();
 
-  const [taskQueue, setTaskQueue] = useState<Task[]>([]);
+  const [, setTaskQueue] = useState<Task[]>([]);
   const [taskId, setTaskId] = useState(0);
 
   if (!initialized) {
@@ -41,10 +42,6 @@ export const useSocketCommunication = () => {
       },
       sendBackendStateToUser: (state: BackendState) => {
         updateNextFrame(state);
-
-        // Complete a task
-        const task = taskQueue.shift();
-        if (task) task.execute.then(() => true);
       },
       sendStdoutToUser: (output: string) => {
         setConsoleChunks((prev) => [...prev, output]);
@@ -85,42 +82,25 @@ export const useSocketCommunication = () => {
 
   const executeNextWithRetry = useCallback(() => {
     const newId = taskId;
-    setTaskId((prev) => prev + 1);
+    let resolveFunction: (result: boolean) => void;
 
     const promise = new Promise<boolean>((resolve) => {
-      const attemptExecution = () => {
-        socketClient.serverAction.executeNext();
-
-        let attempts = 0;
-        const maxAttempts = 5;
-        const intervalTime = 1000; // Check every second
-
-        const waitForStateUpdate = () => {
-          setTimeout(() => {
-            if (attempts < maxAttempts) {
-              attempts++;
-              waitForStateUpdate();
-            } else {
-              resolve(false);
-            }
-          }, intervalTime);
-        };
-
-        waitForStateUpdate();
-      };
-
-      attemptExecution();
+      resolveFunction = resolve;
+      socketClient.serverAction.executeNext();
+      setTimeout(() => resolveFunction(false), 3000);
     });
 
-    setTaskQueue((prev) => [...prev, { execute: promise, id: newId }]);
+    const task = { execute: promise, resolve: resolveFunction, id: newId };
+
+    setTaskQueue((prevQueue) => [...prevQueue, task]);
+    setTaskId((prev) => prev + 1);
+
     return promise;
-  }, [socketClient, taskId]);
+  }, [socketClient, taskId, setTaskQueue]);
 
   const bulkSendNextStates = useCallback(
     async (count: number) => {
-      const newTasks = Array.from({ length: count }, () => executeNextWithRetry());
-      await Promise.all(newTasks.map((task) => task.then()));
-      const results = await Promise.all(newTasks);
+      const results = await Promise.all(Array.from({ length: count }, executeNextWithRetry));
       const successfulCount = results.filter((result) => result).length;
 
       console.log('Successful executions:', successfulCount);
