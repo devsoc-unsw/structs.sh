@@ -16,7 +16,7 @@ import './css/WorkspaceSelector.css';
 import { useUserFsStateStore } from '../../Store/userFsStateStore';
 import { IFileDirNode, IFileFileNode, IFileType } from './FS/IFileSystem';
 
-const WorkspaceSelector = () => {
+const WorkspaceSelector = (({ onWorkspaceClick }) => {
   const { fileSystem, currFocusDirPath, currFocusFilePath } = useUserFsStateStore.getState();
   let currFocus = currFocusFilePath || currFocusDirPath;
   const [open, setOpen] = useState(false);
@@ -136,11 +136,15 @@ const WorkspaceSelector = () => {
           </Tooltip>
         </Box>
       </Box>
-      {fileSystem ? (
-        <Folder folder={fileSystem.getRootDirectory()} depth={0} />
-      ) : (
-        <div>Loading...</div>
-      )}
+      <div className="rootDirectory" onClick={onWorkspaceClick}>
+        {fileSystem ? (
+          <div className="rootContent">
+            <Folder folder={fileSystem.getRootDirectory()} depth={0} />
+          </div>
+        ) : (
+          <div>Loading...</div>
+        )}
+      </div>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -224,6 +228,6 @@ const WorkspaceSelector = () => {
       </Dialog>
     </Box>
   );
-};
+});
 
 export default WorkspaceSelector;

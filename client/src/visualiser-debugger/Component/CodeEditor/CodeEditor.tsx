@@ -4,6 +4,7 @@ import 'ace-builds/src-noconflict/mode-c_cpp';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/theme-tomorrow';
 import { useState, useEffect } from 'react';
+import { useFileOnboardingStateStore } from 'visualiser-debugger/Store/onboardingStateStore';
 import { useUserFsStateStore } from '../../Store/userFsStateStore';
 import { IFileFileNode } from '../FileTree/FS/IFileSystem';
 
@@ -13,12 +14,14 @@ type CodeEditorProps = {
 
 const CodeEditor: React.FC<CodeEditorProps> = ({ currLine = 0 }: CodeEditorProps) => {
   const { fileSystem, currFocusFilePath } = useUserFsStateStore();
+  const { onboardingCurrFile, setOnboardingCurrFile } = useFileOnboardingStateStore();
   const [currFile, setCurrFile] = useState<IFileFileNode | undefined>(undefined);
   const [code, setCode] = useState('');
 
   useEffect(() => {
     // Update currFile based on currFocusFilePath
     const file = fileSystem.getFileFromPath(currFocusFilePath) as IFileFileNode;
+    setOnboardingCurrFile(file.name);
     setCurrFile(file);
     setCode(file?.data || '');
   }, [currFocusFilePath, fileSystem]);
