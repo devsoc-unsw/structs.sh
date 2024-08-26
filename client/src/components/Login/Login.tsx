@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, KeyboardEvent, useState } from 'react';
 import { Button, Input } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
@@ -106,7 +106,7 @@ const Login: FC<Props> = ({ handleLogon, onBack }) => {
       });
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       if (register) {
         handleRegister();

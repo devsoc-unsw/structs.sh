@@ -37,8 +37,7 @@ const FloatingWindow: FC<Props> = ({
       maxHeight={maxHeight}
       display="flex"
       flexDirection={flexDirection}
-      left={flexDirection === 'row' && '0'}
-      right={flexDirection === 'row-reverse' && '0'}
+      {...(flexDirection === 'row' ? { left: 0 } : { right: 0 })}
     >
       <Box
         onClick={handleToggleExpansion}

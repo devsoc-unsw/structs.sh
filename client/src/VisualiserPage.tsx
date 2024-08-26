@@ -27,7 +27,8 @@ const containerVariants = {
  * Notably, we're using a split-pane layout here.
  */
 const VisualiserPage = () => {
-  const topic = toTitleCase(urlToTitle(useParams().topic));
+  const { topic } = useParams();
+  const topicTitleCase = topic ? toTitleCase(urlToTitle(topic)) : null;
 
   const { data } = useParams();
 
@@ -38,14 +39,14 @@ const VisualiserPage = () => {
     integerArray = digitArray.map((chars: string) => parseInt(chars, 10));
   }
 
-  return topic ? (
+  return topicTitleCase ? (
     <Box height="100vh" overflow="hidden">
       <TopNavbar position="sticky" />
       <motion.div variants={containerVariants} initial="hidden" animate="visible" exit="exit">
         <Helmet>
-          <title>{topic !== undefined ? topic : 'Structs.sh'}</title>
+          <title>{topicTitleCase}</title>
         </Helmet>
-        <Visualiser topicTitle={topic} data={integerArray} />
+        <Visualiser topicTitle={topicTitleCase} data={integerArray} />
       </motion.div>
     </Box>
   ) : (
