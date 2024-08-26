@@ -560,6 +560,11 @@ def create_struct_value(parsed_type_decls, struct_fields_str, struct_name):
         if type_name == "char" and "'" in field_value:
             # field_value will look like "49 '1'"
             field_value = field_value.split("'")[1]
+        elif (type_name == "char*" or type_name == "str"):
+            # field value will look like "0xaaaac9050b00 "testin""
+            splitVal = field_value.split("\"")
+            if len(splitVal) > 1:
+                field_value = splitVal[1]
         print(f"{field_name=}", f"{field_value=}")
         value[field_name] = {
             "typeName": type_name,
