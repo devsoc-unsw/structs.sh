@@ -185,8 +185,6 @@ class CustomNextCommand(gdb.Command):
                     bytes = re.sub(r'\n', '', bytes)
                     print(f"Bytes allocated: {bytes}")
 
-                    print(333333)
-
                     # Get the address returned by malloc
                     gdb.execute('finish')
                     temp_address = gdb.execute('print $', to_string=True)
@@ -202,9 +200,6 @@ class CustomNextCommand(gdb.Command):
                     # Beware uninitialised struct nodes might look like this:
                     # $3 = {data = -670244016, next = 0xffffa15f74cc <__libc_start_main_impl+152>}
 
-                    print(222222)
-
-
                     struct_fields_str = gdb.execute(
                         f'p *({stack_var_type_name}) {address}', to_string=True)
                     struct_fields_str = struct_fields_str.split("=", 1)[
@@ -215,8 +210,6 @@ class CustomNextCommand(gdb.Command):
 
                     struct_type_name = stack_var_type_name.strip('*').strip()
                     # "struct node*" => "struct node"
-
-                    print(111111)
 
                     is_ll = False
                     #TODO: Use c_ast to check if SELF is one of the struct field types, NOT gdb (malloc_variables could return a list of objects rather than variable names)
