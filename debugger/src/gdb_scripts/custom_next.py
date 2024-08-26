@@ -99,6 +99,10 @@ class CustomNextCommand(gdb.Command):
         self.debug_session = debug_session
         self.heap_data = {}
         self.break_on_all_user_defined_functions()
+        start_data = {
+            "started": True
+        }
+        send_backend_data_to_server(self.user_socket_id, backend_data=start_data)
 
     def invoke(self, arg=None, from_tty=None):
         # TODO: detect end of debug session
