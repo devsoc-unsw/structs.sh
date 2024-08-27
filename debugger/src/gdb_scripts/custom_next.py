@@ -99,6 +99,12 @@ class CustomNextCommand(gdb.Command):
         self.debug_session = debug_session
         self.heap_data = {}
         self.break_on_all_user_defined_functions()
+        
+        # Send start_data across socket
+        # start_data = {
+        #     "started": True
+        # }
+        # send_backend_data_to_server(self.user_socket_id, backend_data=start_data)
 
     def invoke(self, arg=None, from_tty=None):
         # TODO: detect end of debug session
@@ -295,10 +301,23 @@ class CustomNextCommand(gdb.Command):
         # TODO: Need a way to detect if program exits, then send signal to server
         # which should tell the client that the debugging session is over.
 
-        # Go to the next line of code
         if not variable_freed:
             gdb.execute('next')
 
+        # Immediately after executing next, check if the program has exited by evaluating $_exitcode
+        try:
+            exit_code_str = gdb.execute("print $_exitcode", to_string=True)
+            exit_code = exit_code_str.split('=')[1].strip()
+            if exit_code != 'void':
+                print("Program has exited with code:", exit_code)
+                exit_data = {
+                    "exited": True
+                }
+                send_backend_data_to_server(self.user_socket_id, backend_data=exit_data)
+                return
+        except gdb.error:
+            print("Error determining exit code, assuming program has not exited.")
+            
         # TODO: Immediately after executing next, we need to check whether the program
         # is waiting for stdin. If it is, then we need to send a signal to the
         # server to tell the client to prompt the user for input.
