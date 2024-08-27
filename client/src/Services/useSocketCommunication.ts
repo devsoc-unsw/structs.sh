@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   BackendState,
   BackendTypeDeclaration,
@@ -17,7 +17,6 @@ interface Task {
   id: number;
 }
 
-let initialized = false;
 export const useSocketCommunication = () => {
   const { updateNextFrame, updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation } =
     useGlobalStore();
@@ -31,8 +30,8 @@ export const useSocketCommunication = () => {
   const [, setTaskQueue] = useState<Task[]>([]);
   const [taskId, setTaskId] = useState(0);
 
-  if (!initialized) {
-    const handlers: EventHandlers = {
+  const handlers: EventHandlers = useMemo(() => {
+    return {
       mainDebug: (_data: 'Finished mainDebug event on server') => {
         setActive(true);
       },
@@ -55,10 +54,8 @@ export const useSocketCommunication = () => {
       },
       send_stdin: (_data: string) => {},
     };
-
-    socketClient.setupEventHandlers(handlers);
-    initialized = true;
-  }
+  }, []);
+  socketClient.setupEventHandlers(handlers);
 
   const resetDebugSession = useCallback(() => {
     updateNextFrame(INITIAL_BACKEND_STATE);
