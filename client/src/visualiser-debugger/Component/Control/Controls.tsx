@@ -21,7 +21,7 @@ const Controls = () => {
   const { isActive } = useFrontendStateStore();
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [bufferMode, setBufferMode] = useState<boolean>(true);
+  const [bufferMode, setBufferMode] = useState<boolean>(false);
   const bufferingRef = useRef<boolean>(false);
 
   const playToggle = () => {
@@ -48,7 +48,11 @@ const Controls = () => {
 
   const [autoNext, setAutoNext] = useState<boolean>(false);
   useEffect(() => {
-    if (currFrame && !isInitialBackendState(currFrame) && userAnnotation) {
+    if (isInitialBackendState(currFrame)) {
+      return;
+    }
+
+    if (currFrame && userAnnotation) {
       const newParsedState = parser.parseState(currFrame, userAnnotation);
       useFrontendStateStore.getState().appendFrontendNewState(currFrame, newParsedState);
 
@@ -63,6 +67,7 @@ const Controls = () => {
       } else if (!userAnnotation) {
         issue = 'localsAnnotations';
       }
+      debugger;
       console.error(`Unable to parse backend state: ${issue} is undefined`);
     }
   }, [currFrame, userAnnotation]);

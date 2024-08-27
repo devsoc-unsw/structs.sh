@@ -17,6 +17,7 @@ interface Task {
   id: number;
 }
 
+let initialized: boolean = false;
 export const useSocketCommunication = () => {
   const { updateNextFrame, updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation } =
     useGlobalStore();
@@ -30,32 +31,36 @@ export const useSocketCommunication = () => {
   const [, setTaskQueue] = useState<Task[]>([]);
   const [taskId, setTaskId] = useState(0);
 
-  const handlers: EventHandlers = useMemo(() => {
-    return {
-      mainDebug: (_data: 'Finished mainDebug event on server') => {
-        setActive(true);
-      },
-      sendFunctionDeclaration: (_data: FunctionStructure) => {},
-      sendTypeDeclaration: (type: BackendTypeDeclaration) => {
-        updateTypeDeclaration(type);
-      },
-      sendBackendStateToUser: (state: BackendState) => {
-        updateNextFrame(state);
-      },
-      sendStdoutToUser: (output: string) => {
-        setConsoleChunks((prev) => [...prev, output]);
-      },
-      programWaitingForInput: (_data: any) => {
-        // Implement as needed
-      },
-      compileError: (errors: string[]) => {
-        setConsoleChunks((prev) => [...prev, ...errors]);
-        updateCurrFocusedTab('2');
-      },
-      send_stdin: (_data: string) => {},
-    };
-  }, []);
-  socketClient.setupEventHandlers(handlers);
+  if (!initialized) {
+    useMemo(() => {
+      const eventHandler: EventHandlers = {
+        mainDebug: (_data: 'Finished mainDebug event on server') => {
+          setActive(true);
+        },
+        sendFunctionDeclaration: (_data: FunctionStructure) => {},
+        sendTypeDeclaration: (type: BackendTypeDeclaration) => {
+          updateTypeDeclaration(type);
+        },
+        sendBackendStateToUser: (state: BackendState) => {
+          updateNextFrame(state);
+        },
+        sendStdoutToUser: (output: string) => {
+          setConsoleChunks((prev) => [...prev, output]);
+        },
+        programWaitingForInput: (_data: any) => {
+          // Implement as needed
+        },
+        compileError: (errors: string[]) => {
+          setConsoleChunks((prev) => [...prev, ...errors]);
+          updateCurrFocusedTab('2');
+        },
+        send_stdin: (_data: string) => {},
+      };
+
+      socketClient.setupEventHandlers(eventHandler);
+    }, []);
+    initialized = true;
+  }
 
   const resetDebugSession = useCallback(() => {
     updateNextFrame(INITIAL_BACKEND_STATE);
