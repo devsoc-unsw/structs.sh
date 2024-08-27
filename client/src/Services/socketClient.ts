@@ -1,13 +1,13 @@
 // socketClient.js
 import { Socket, io } from 'socket.io-client';
 import { create } from 'zustand';
-import { ServerToClientEvents, EventHandlers } from './socketClientType';
+import { ServerToClientEvent } from './socketClientType';
 import { ClientToServerEvents } from './socketServerType';
 
 const URL = import.meta.env.VITE_DEBUGGER_URL || 'http://localhost:8000';
 
 class SocketClient {
-  private socket: Socket<ServerToClientEvents, ClientToServerEvents>;
+  socket: Socket<ServerToClientEvent, ClientToServerEvents>;
 
   get socketTempRemoveLater(): Socket {
     return this.socket;
@@ -35,17 +35,17 @@ class SocketClient {
     this.socket.connect();
   }
 
-  setupEventHandlers(handlers: EventHandlers) {
-    (Object.keys(handlers) as Array<keyof EventHandlers>).forEach((event) => {
+  setupEventHandlers(handlers: ServerToClientEvent) {
+    (Object.keys(handlers) as Array<keyof ServerToClientEvent>).forEach((event) => {
       const handler = handlers[event];
       if (handler) {
-        this.socket.on(event, handler as any);
+        this.socket.on(event, handler);
       }
     });
   }
 
-  clearEventHandlers(handlers: EventHandlers) {
-    (Object.keys(handlers) as Array<keyof EventHandlers>).forEach((event) => {
+  clearEventHandlers(handlers: ServerToClientEvent) {
+    (Object.keys(handlers) as Array<keyof ServerToClientEvent>).forEach((event) => {
       const handler = handlers[event];
       if (handler) {
         this.socket.off(event, handler as any);

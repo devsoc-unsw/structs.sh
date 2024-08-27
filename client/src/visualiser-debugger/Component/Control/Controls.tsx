@@ -67,7 +67,6 @@ const Controls = () => {
       } else if (!userAnnotation) {
         issue = 'localsAnnotations';
       }
-      debugger;
       console.error(`Unable to parse backend state: ${issue} is undefined`);
     }
   }, [currFrame, userAnnotation]);

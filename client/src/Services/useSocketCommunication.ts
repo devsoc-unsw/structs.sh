@@ -6,16 +6,10 @@ import {
   INITIAL_BACKEND_STATE,
 } from '../visualiser-debugger/Types/backendType';
 import useSocketClientStore from './socketClient';
-import { EventHandlers } from './socketClientType';
+import { ServerToClientEvent } from './socketClientType';
 import { useGlobalStore } from '../visualiser-debugger/Store/globalStateStore';
 import { useUserFsStateStore } from '../visualiser-debugger/Store/userFsStateStore';
 import { useFrontendStateStore } from '../visualiser-debugger/Store/frontendStateStore';
-
-interface Task {
-  execute: Promise<boolean>;
-  resolve: (result: boolean) => void;
-  id: number;
-}
 
 let initialized: boolean = false;
 export const useSocketCommunication = () => {
@@ -28,12 +22,9 @@ export const useSocketCommunication = () => {
   const [consoleChunks, setConsoleChunks] = useState<string[]>([]);
   const { updateCurrFocusedTab } = useGlobalStore();
 
-  const [, setTaskQueue] = useState<Task[]>([]);
-  const [taskId, setTaskId] = useState(0);
-
   if (!initialized) {
     useMemo(() => {
-      const eventHandler: EventHandlers = {
+      const eventHandler: ServerToClientEvent = {
         mainDebug: (_data: 'Finished mainDebug event on server') => {
           setActive(true);
         },
@@ -82,30 +73,60 @@ export const useSocketCommunication = () => {
     }
   }, [socketClient]);
 
+  const queue = useMemo(() => {
+    let queuePromise: Promise<boolean | void> = Promise.resolve();
+    return (fn: () => Promise<boolean>) => {
+      queuePromise = queuePromise.then(fn);
+      return queuePromise;
+    };
+  }, []);
   const executeNextWithRetry = useCallback(() => {
-    const newId = taskId;
-    let resolveFunction: (result: boolean) => void;
+    const addEventListenerWithTimeout = (
+      listener: (state: BackendState | null) => void,
+      timeout: number
+    ) => {
+      let resolved = false;
 
-    const promise = new Promise<boolean>((resolve) => {
-      resolveFunction = resolve;
-      socketClient.serverAction.executeNext();
-      setTimeout(() => resolveFunction(false), 3000);
+      const wrappedListener = (state: BackendState) => {
+        if (!resolved) {
+          resolved = true;
+          listener(state);
+          socketClient.socket.off('sendBackendStateToUser', wrappedListener);
+        }
+      };
+
+      socketClient.socket.on('sendBackendStateToUser', wrappedListener);
+
+      setTimeout(() => {
+        if (!resolved) {
+          resolved = true;
+          listener(null);
+          socketClient.socket.off('sendBackendStateToUser', wrappedListener);
+        }
+      }, timeout);
+    };
+
+    return queue(() => {
+      return new Promise<boolean>((resolve) => {
+        const handleBackendState = (state: BackendState | null) => {
+          if (state) {
+            resolve(true); // Resolve as success
+          } else {
+            resolve(false); // Resolve as failure due to timeout
+          }
+        };
+
+        // Add the event listener with a timeout
+        addEventListenerWithTimeout(handleBackendState, 5000);
+        socketClient.serverAction.executeNext();
+      });
     });
-
-    const task = { execute: promise, resolve: resolveFunction, id: newId };
-
-    setTaskQueue((prevQueue) => [...prevQueue, task]);
-    setTaskId((prev) => prev + 1);
-
-    return promise;
-  }, [socketClient, taskId, setTaskQueue]);
+  }, [socketClient]);
 
   const bulkSendNextStates = useCallback(
     async (count: number) => {
       const results = await Promise.all(Array.from({ length: count }, executeNextWithRetry));
       const successfulCount = results.filter((result) => result).length;
-
-      console.log('Successful executions:', successfulCount);
       return successfulCount;
     },
     [executeNextWithRetry]

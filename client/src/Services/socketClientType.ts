@@ -5,7 +5,7 @@ import {
 } from '../visualiser-debugger/Types/backendType';
 
 // key in below object is used for socket.on as key
-export type ServerToClientEvents = {
+type ServerToClientEventsType = {
   mainDebug: 'Finished mainDebug event on server';
   sendFunctionDeclaration: FunctionStructure;
   sendTypeDeclaration: BackendTypeDeclaration;
@@ -16,6 +16,6 @@ export type ServerToClientEvents = {
   send_stdin: string;
 };
 
-export type EventHandlers = {
-  [E in keyof ServerToClientEvents]: (data: ServerToClientEvents[E]) => void;
+export type ServerToClientEvent = {
+  [E in keyof ServerToClientEventsType]: (data: ServerToClientEventsType[E]) => void;
 };
