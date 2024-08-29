@@ -32,6 +32,10 @@ class VisualiserController {
     return this.dataStructure.data;
   }
 
+  public getTopicTitle(): string {
+    return this.topicTitle;
+  }
+
   // Set data structure to loaded data
   public loadData(data: number[]): void {
     this.resetDataStructure();
@@ -149,9 +153,9 @@ class VisualiserController {
       !args.every((value, idx) =>
         expectedArgs[idx].endsWith('s')
           ? value
-              .split(/,| /g)
-              .filter((str) => str !== '')
-              .every((el) => /^\d+$/.test(el))
+            .split(/,| /g)
+            .filter((str) => str !== '')
+            .every((el) => /^\d+$/.test(el))
           : /^\d+$/.test(value)
       )
     ) {
