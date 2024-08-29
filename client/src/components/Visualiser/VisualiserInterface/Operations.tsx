@@ -14,17 +14,21 @@ import OperationDetails from './OperationDetails';
  * All the commands that the form supports are listed separately in the
  * `commandsInputRules.ts` file, where the terminal commands also reside.
  */
-const Operations = () => {
-  const { documentation, topicTitle } = useContext(VisualiserContext);
+const Operations = ({
+  handleTimelineUpdate,
+  handleUpdateIsPlaying,
+  handleSetCodeSnippetExpansion,
+}: any) => {
+  const { controller } = useContext(VisualiserContext);
+
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const handleToggleExpansion = () => {
     setIsExpanded(!isExpanded);
   };
-
-  return !documentation ? (
+  return !controller.documentation ? (
     <Alert severity="error">
       No operations are defined for the topicTitle &apos;
-      {topicTitle}
+      {controller.getTopicTitle()}
       &apos;
     </Alert>
   ) : (
@@ -34,8 +38,14 @@ const Operations = () => {
       handleToggleExpansion={handleToggleExpansion}
     >
       <List>
-        {Object.keys(documentation).map((command) => (
-          <OperationDetails command={command} key={documentation[command].id} />
+        {Object.keys(controller.documentation).map((command) => (
+          <OperationDetails
+            command={command}
+            key={controller.documentation[command].id}
+            handleTimelineUpdate={handleTimelineUpdate}
+            handleUpdateIsPlaying={handleUpdateIsPlaying}
+            handleSetCodeSnippetExpansion={handleSetCodeSnippetExpansion}
+          />
         ))}
       </List>
     </FloatingWindow>

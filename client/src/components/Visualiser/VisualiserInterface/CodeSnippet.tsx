@@ -3,15 +3,21 @@ import { Box } from '@mui/material';
 import FloatingWindow from 'components/FloatingWindow';
 import VisualiserContext from './VisualiserContext';
 
-interface Props {}
+interface CodeSnippetProps {
+  isCodeSnippetExpanded: boolean;
+  handleSetCodeSnippetExpansion: (val: boolean) => void;
+}
 
 /**
  * The floating window where all animation related code snippets are displayed
  */
-const CodeSnippet: FC<Props> = () => {
-  const {
-    codeSnippet: { isCodeSnippetExpanded, handleSetCodeSnippetExpansion },
-  } = useContext(VisualiserContext);
+const CodeSnippet = ({
+  isCodeSnippetExpanded,
+  handleSetCodeSnippetExpansion,
+}: CodeSnippetProps) => {
+  // const {
+  //   codeSnippet: { isCodeSnippetExpanded, handleSetCodeSnippetExpansion },
+  // } = useContext(VisualiserContext);
   const handleToggleExpansion = () => {
     handleSetCodeSnippetExpansion(!isCodeSnippetExpanded);
   };

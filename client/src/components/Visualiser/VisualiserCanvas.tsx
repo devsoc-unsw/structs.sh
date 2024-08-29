@@ -120,15 +120,17 @@ const VisualiserCanvas: React.FC = () => {
         return;
       }
 
-      // If the mouse is outside the workspace, don't do translation
-      const workspaceBoundingRect = svgRef.current.getBoundingClientRect();
-      if (
-        event.clientX < workspaceBoundingRect.left ||
-        event.clientY < workspaceBoundingRect.top ||
-        event.clientX > workspaceBoundingRect.right ||
-        event.clientY > workspaceBoundingRect.bottom
-      ) {
-        return;
+      if (svgRef.current) {
+        // If the mouse is outside the workspace, don't do translation
+        const workspaceBoundingRect = svgRef.current.getBoundingClientRect();
+        if (
+          event.clientX < workspaceBoundingRect.left ||
+          event.clientY < workspaceBoundingRect.top ||
+          event.clientX > workspaceBoundingRect.right ||
+          event.clientY > workspaceBoundingRect.bottom
+        ) {
+          return;
+        }
       }
 
       // Is this needed for anything?
@@ -147,13 +149,15 @@ const VisualiserCanvas: React.FC = () => {
   };
 
   useEffect(() => {
-    const boundingClientRect = svgRef.current.getBoundingClientRect();
-    setWorkspaceOrigin(
-      vec2.fromValues(
-        (boundingClientRect.left + boundingClientRect.right) / 2,
-        (boundingClientRect.top + boundingClientRect.bottom) / 2
-      )
-    );
+    if (svgRef.current) {
+      const boundingClientRect = svgRef.current.getBoundingClientRect();
+      setWorkspaceOrigin(
+        vec2.fromValues(
+          (boundingClientRect.left + boundingClientRect.right) / 2,
+          (boundingClientRect.top + boundingClientRect.bottom) / 2
+        )
+      );
+    }
   }, []);
 
   return (

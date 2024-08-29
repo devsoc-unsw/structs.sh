@@ -55,6 +55,13 @@ const SpeedMenuButton = styled(Button)({
   marginRight: 10,
 });
 
+interface VisualiserControlsProps {
+  isTimelineComplete: boolean;
+  handleTimelineUpdate: (val: number) => void;
+  isPlaying: boolean;
+  handleUpdateIsPlaying: (val: boolean) => void;
+}
+
 /**
  * Contains all the visualiser controller UI, ie. the play/pause buttons, the
  * sliders, etc.
@@ -65,11 +72,13 @@ const SpeedMenuButton = styled(Button)({
  * Eg. it receives a `handlePlay` callback and attaches it to the Play button's
  *     `onClick` handler.
  */
-const VisualiserControls = () => {
-  const {
-    controller,
-    timeline: { isTimelineComplete, handleTimelineUpdate, isPlaying, handleUpdateIsPlaying },
-  } = useContext(VisualiserContext);
+const VisualiserControls = ({
+  isTimelineComplete,
+  handleTimelineUpdate,
+  isPlaying,
+  handleUpdateIsPlaying,
+}: VisualiserControlsProps) => {
+  const { controller } = useContext(VisualiserContext);
   const theme = useTheme();
 
   const [userIsDraggingTimeline, setUserIsDraggingTimeline] = useState<boolean>(false);
@@ -138,7 +147,7 @@ const VisualiserControls = () => {
     setSpeedMenuAnchorEl(null);
   };
 
-  const handleSelectSpeed = (event: MouseEvent<HTMLElement>, index: number) => {
+  const handleSelectSpeed = (_event: MouseEvent<HTMLElement>, index: number) => {
     setSelectedIndex(index);
     handleSetSpeed(speedOptions[index] / 2);
     setSpeedMenuAnchorEl(null);

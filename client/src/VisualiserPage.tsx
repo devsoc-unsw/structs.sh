@@ -28,13 +28,13 @@ const containerVariants = {
  */
 const VisualiserPage = () => {
   const { topic } = useParams();
-  const topicTitleCase = topic ? toTitleCase(urlToTitle(topic)) : null;
+  const topicTitleCase = topic && toTitleCase(urlToTitle(topic));
 
   const { data } = useParams();
 
   let integerArray: number[] = [];
 
-  if (data !== undefined) {
+  if (data) {
     const digitArray = data.match(/.{2}/g) || [];
     integerArray = digitArray.map((chars: string) => parseInt(chars, 10));
   }
