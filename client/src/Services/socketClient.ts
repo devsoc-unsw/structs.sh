@@ -27,6 +27,10 @@ class SocketClient {
         console.log('Received dummy linked list data:', data);
       }); 
     */
+    // Debugging: Log all events and their data
+    this.socket.onAny((eventName, ...args) => {
+      console.log(`Event received: ${eventName}`, args);
+    });
   }
 
   constructor() {
