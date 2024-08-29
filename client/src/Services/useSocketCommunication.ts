@@ -4,6 +4,8 @@ import {
   BackendTypeDeclaration,
   FunctionStructure,
   INITIAL_BACKEND_STATE,
+  isProgramEnd,
+  ProgramEnd,
 } from '../visualiser-debugger/Types/backendType';
 import useSocketClientStore from './socketClient';
 import { ServerToClientEvent } from './socketClientType';
@@ -32,7 +34,11 @@ export const useSocketCommunication = () => {
         sendTypeDeclaration: (type: BackendTypeDeclaration) => {
           updateTypeDeclaration(type);
         },
-        sendBackendStateToUser: (state: BackendState) => {
+        sendBackendStateToUser: (state: BackendState | ProgramEnd) => {
+          if (isProgramEnd(state)) {
+            setActive(false);
+            return;
+          }
           updateNextFrame(state);
         },
         sendStdoutToUser: (output: string) => {

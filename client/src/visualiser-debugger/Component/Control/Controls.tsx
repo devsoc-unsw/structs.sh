@@ -17,8 +17,8 @@ const Controls = () => {
   const { currFrame } = useGlobalStore();
   const { userAnnotation, parser } = useGlobalStore().visualizer;
   const { sendCode, bulkSendNextStates, getNextState } = useSocketCommunication();
-  const { states, currentIndex, stepForward, stepBackward, jumpToState } = useFrontendStateStore();
-  const { isActive } = useFrontendStateStore();
+  const { states, currentIndex, stepForward, stepBackward, jumpToState, isActive } =
+    useFrontendStateStore();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [bufferMode, setBufferMode] = useState<boolean>(false);
@@ -40,6 +40,11 @@ const Controls = () => {
   };
 
   useEffect(() => {
+    if (!isActive) {
+      setBufferMode(false);
+      setLoading(false);
+      return;
+    }
     if (!bufferMode) return;
     if (states.length - currentIndex < BUFFER_THRESHOLD && !bufferingRef.current) {
       startBuffering(BUFFER_THRESHOLD);
@@ -104,6 +109,7 @@ const Controls = () => {
         <UndoIcon />
       </Button>
       <Button
+        disabled={!isActive || currentIndex === states.length - 1}
         onClick={async () => {
           if (currentIndex === states.length - 1) {
             setAutoNext(true);

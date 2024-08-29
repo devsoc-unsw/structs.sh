@@ -96,6 +96,14 @@ export type BackendState = {
   heap_data: Heap;
 };
 
+export type ProgramEnd = {
+  exited: true;
+};
+
+export function isProgramEnd(state: BackendState | ProgramEnd): state is ProgramEnd {
+  return (state as ProgramEnd).exited !== undefined;
+}
+
 export type BackendTypeDeclaration = {
   file: string;
   line_num: string;
