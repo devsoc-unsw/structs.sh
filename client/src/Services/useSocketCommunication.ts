@@ -12,6 +12,7 @@ import { ServerToClientEvent } from './socketClientType';
 import { useGlobalStore } from '../visualiser-debugger/Store/globalStateStore';
 import { useUserFsStateStore } from '../visualiser-debugger/Store/userFsStateStore';
 import { useFrontendStateStore } from '../visualiser-debugger/Store/frontendStateStore';
+import { useToastStateStore } from '../visualiser-debugger/Store/toastStateStore';
 
 let initialized: boolean = false;
 export const useSocketCommunication = () => {
@@ -23,11 +24,17 @@ export const useSocketCommunication = () => {
   const { socketClient } = useSocketClientStore();
   const [consoleChunks, setConsoleChunks] = useState<string[]>([]);
   const { updateCurrFocusedTab } = useGlobalStore();
+  const { setMessage } = useToastStateStore();
 
   if (!initialized) {
     useMemo(() => {
       const eventHandler: ServerToClientEvent = {
         mainDebug: (_data: 'Finished mainDebug event on server') => {
+          setMessage({
+            content: 'Debug session started.',
+            colorTheme: 'info',
+            durationMs: 1000,
+          });
           setActive(true);
         },
         sendFunctionDeclaration: (_data: FunctionStructure) => {},
@@ -36,6 +43,11 @@ export const useSocketCommunication = () => {
         },
         sendBackendStateToUser: (state: BackendState | ProgramEnd) => {
           if (isProgramEnd(state)) {
+            setMessage({
+              content: 'Debug session ended.',
+              colorTheme: 'info',
+              durationMs: 1000,
+            });
             setActive(false);
             return;
           }
@@ -72,11 +84,16 @@ export const useSocketCommunication = () => {
     resetDebugSession();
     const { fileSystem, currFocusFilePath } = useUserFsStateStore.getState();
     const file = fileSystem.getFileFromPath(currFocusFilePath);
-    if (file) {
-      socketClient.serverAction.initializeDebugSession(file.data);
-    } else {
-      throw new Error('File not found in FS');
+
+    if (!file || file.path === 'root') {
+      setMessage({
+        content: 'No file being selected.',
+        colorTheme: 'warning',
+        durationMs: 1000,
+      });
+      return;
     }
+    socketClient.serverAction.initializeDebugSession(file.data);
   }, [socketClient]);
 
   const queue = useMemo(() => {
