@@ -97,11 +97,16 @@ const Saving = () => {
       return;
     }
 
+    const topic = controller.topic;
+    if (!topic) {
+      makeFailedAlert('No topic selected');
+    }
+
     const data = {
       owner,
-      type: controller.getTopicTitle(),
+      type: topic,
       name: saveName,
-      data: controller.getData(),
+      data: controller.data,
     };
 
     axios
@@ -122,20 +127,9 @@ const Saving = () => {
   const handleLoad = () => {
     axios
       .get(`${SERVER_URL}/api/getOwnedData`, {
-        params: { topicTitle: controller.getTopicTitle(), user: localStorage.getItem('user') },
+        params: { topicTitle: controller.topic, user: localStorage.getItem('user') },
       })
       .then((response) => {
-        // Handle the response data
-        // const newOptions: any[] = [];
-        // response.data.forEach((item, index) => {
-        //   newOptions.push({
-        //     key: index,
-        //     owner: item.owner,
-        //     type: item.type,
-        //     name: item.name,
-        //     data: item.data,
-        //   });
-        // });
         setLoadOptions(
           response.data.map((item: any, index: number) => ({
             key: index,
@@ -148,7 +142,6 @@ const Saving = () => {
         setToggleLoad(true);
       })
       .catch((error) => {
-        // Handle the error
         console.error('Error Loading data structure:', error);
         makeFailedAlert('Saving Failed. Problem on our End :(');
       });

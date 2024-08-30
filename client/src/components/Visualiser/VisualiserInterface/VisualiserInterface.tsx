@@ -32,8 +32,8 @@ const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle, data })
   const [isTimelineComplete, setIsTimelineComplete] = useState<boolean>(false);
   const [isCodeSnippetExpanded, setIsCodeSnippetExpanded] = useState<boolean>(false);
   const [isOperationsExpanded, setIsOperationsExpanded] = useState<boolean>(true);
-  // const [isLoadOptionsExpanded, setIsLoadOptionsExpanded] = useState<boolean>(false);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  // const [isLoadOptionsExpanded, setIsLoadOptionsExpanded] = useState<boolean>(false);
 
   useEffect(() => {
     controller.applyTopicTitle(topicTitle);
@@ -67,44 +67,10 @@ const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle, data })
     setIsPlaying(val);
   }, []);
 
-  // const contextValues = useMemo(
-  //   () => ({
-  //     controller: controllerRef.current,
-  //     topicTitle,
-  //     // documentation,
-  //     timeline: { isTimelineComplete, handleTimelineUpdate, isPlaying, handleUpdateIsPlaying },
-  //     codeSnippet: { isCodeSnippetExpanded, handleSetCodeSnippetExpansion },
-  //     loadOptionsContext: { isLoadOptionsExpanded, handleSetLoadOptionsExpansion },
-  //   }),
-  //   [
-  //     controllerRef.current,
-  //     topicTitle,
-  //     // documentation,
-  //     isTimelineComplete,
-  //     handleTimelineUpdate,
-  //     isPlaying,
-  //     handleUpdateIsPlaying,
-  //     isCodeSnippetExpanded,
-  //     handleSetCodeSnippetExpansion,
-  //     isLoadOptionsExpanded,
-  //     handleSetLoadOptionsExpansion,
-  //   ]
-  // );
-  // const contextValues = useMemo(() => ({ controller: controllerRef.current }), []);
-
-  // FIXME: The react components don't have to be this modular: operations and codesnippet aren't going to be re-used
-
   return (
     <VisualiserContext.Provider value={{ controller, documentation }}>
       <CreateMenu />
       {/* Operations */}
-      {/* {!controller.documentation ? ( */}
-      {/*   <Alert severity="error"> */}
-      {/*     No operations are defined for the topicTitle &apos; */}
-      {/*     {controller.getTopicTitle()} */}
-      {/*     &apos; */}
-      {/*   </Alert> */}
-      {/* ) : ( */}
       {!documentation || (
         <FloatingWindow
           flexDirection="row"
@@ -124,7 +90,6 @@ const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle, data })
           </List>
         </FloatingWindow>
       )}
-      {/* )} */}
       {/* Code Snippet */}
       <FloatingWindow
         flexDirection="row-reverse"
