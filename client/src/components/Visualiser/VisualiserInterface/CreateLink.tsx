@@ -21,7 +21,7 @@ const CreateLink = () => {
     setShowAlert(true);
   };
 
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (inputRef.current) {

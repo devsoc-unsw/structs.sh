@@ -28,42 +28,20 @@ const controller = new VisualiserController();
  *     sliders, etc.).
  */
 const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle, data }) => {
-  // const topicTitleRef = useRef<string>();
-  // const controllerRef = useRef<VisualiserController | null>(null);
-  // if (!controllerRef.current) {
-  //   controllerRef.current = new VisualiserController();
-  // }
-  // const getController = () => {
-  //   if (controllerRef.current !== null) {
-  //     return controllerRef.current;
-  //   }
-  //   const controller = new VisualiserController();
-  //   controllerRef.current = controller;
-  //   return controller;
-  // };
+  const [documentation, setDocumentation] = useState<Documentation>({});
   const [isTimelineComplete, setIsTimelineComplete] = useState<boolean>(false);
-  // const [documentation, setDocumentation] = useState<Documentation>({});
   const [isCodeSnippetExpanded, setIsCodeSnippetExpanded] = useState<boolean>(false);
   const [isOperationsExpanded, setIsOperationsExpanded] = useState<boolean>(true);
   // const [isLoadOptionsExpanded, setIsLoadOptionsExpanded] = useState<boolean>(false);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   useEffect(() => {
-    // const controller = getController();
     controller.applyTopicTitle(topicTitle);
+    setDocumentation(controller.documentation);
     setIsCodeSnippetExpanded(false);
     if (data) {
       controller.loadData(data);
     }
-    // if (controllerRef.current) {
-    //   controllerRef.current = controllerRef.current || new VisualiserController();
-    //   // setDocumentation(controllerRef.current.documentation);
-    //   controllerRef.current.applyTopicTitle(topicTitle);
-    //   setIsCodeSnippetExpanded(false);
-    //   if (data) {
-    //     controllerRef.current.loadData(data);
-    //   }
-    // }
   }, [topicTitle]);
 
   const handleTimelineUpdate = useCallback((val: number) => {
@@ -117,25 +95,26 @@ const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle, data })
   // FIXME: The react components don't have to be this modular: operations and codesnippet aren't going to be re-used
 
   return (
-    <VisualiserContext.Provider value={{ controller }}>
+    <VisualiserContext.Provider value={{ controller, documentation }}>
       <CreateMenu />
       {/* Operations */}
-      {!controller.documentation ? (
-        <Alert severity="error">
-          No operations are defined for the topicTitle &apos;
-          {controller.getTopicTitle()}
-          &apos;
-        </Alert>
-      ) : (
+      {/* {!controller.documentation ? ( */}
+      {/*   <Alert severity="error"> */}
+      {/*     No operations are defined for the topicTitle &apos; */}
+      {/*     {controller.getTopicTitle()} */}
+      {/*     &apos; */}
+      {/*   </Alert> */}
+      {/* ) : ( */}
+      {!documentation || (
         <FloatingWindow
           flexDirection="row"
           isExpanded={isOperationsExpanded}
           handleToggleExpansion={() => handleSetOperationsExpansion(!isOperationsExpanded)}
         >
           <List>
-            {Object.keys(controller.documentation).map((command) => (
+            {Object.keys(documentation).map((command) => (
               <OperationDetails
-                key={controller.documentation[command].id}
+                key={documentation[command].id}
                 command={command}
                 handleTimelineUpdate={handleTimelineUpdate}
                 handleUpdateIsPlaying={handleUpdateIsPlaying}
@@ -145,6 +124,7 @@ const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle, data })
           </List>
         </FloatingWindow>
       )}
+      {/* )} */}
       {/* Code Snippet */}
       <FloatingWindow
         flexDirection="row-reverse"
