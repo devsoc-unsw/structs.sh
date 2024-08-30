@@ -26,9 +26,9 @@ interface GenericGraphicalTreeNodeData {
 export default class GenericGraphicalTreeNode {
   private _data: GenericGraphicalTreeNodeData;
 
-  protected _left: GenericGraphicalTreeNode;
+  protected _left: GenericGraphicalTreeNode | null;
 
-  protected _right: GenericGraphicalTreeNode;
+  protected _right: GenericGraphicalTreeNode | null;
 
   protected constructor(data: GenericGraphicalTreeNodeData) {
     this._data = data;
@@ -84,19 +84,19 @@ export default class GenericGraphicalTreeNode {
     this._data.y = y;
   }
 
-  public get left() {
+  public get left(): GenericGraphicalTreeNode | null {
     return this._left;
   }
 
-  public set left(left: GenericGraphicalTreeNode) {
+  public set left(left: GenericGraphicalTreeNode | null) {
     this._left = left;
   }
 
-  public get right() {
+  public get right(): GenericGraphicalTreeNode | null {
     return this._right;
   }
 
-  public set right(right: GenericGraphicalTreeNode) {
+  public set right(right: GenericGraphicalTreeNode | null) {
     this._right = right;
   }
 
