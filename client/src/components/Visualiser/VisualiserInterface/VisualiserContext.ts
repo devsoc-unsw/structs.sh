@@ -4,6 +4,7 @@ import VisualiserController from 'visualiser-src/controller/VisualiserController
 
 interface VisualiserContextValues {
   controller: VisualiserController;
+  documentation: Documentation;
   // timeline: {
   //   isTimelineComplete: boolean;
   //   handleTimelineUpdate: (val: string | number) => void;
