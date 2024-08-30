@@ -1,13 +1,13 @@
 import { FC, useCallback, useMemo, useEffect, useRef, useState } from 'react';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import VisualiserController from 'visualiser-src/controller/VisualiserController';
+import { Alert, Box, List } from '@mui/material';
+import FloatingWindow from 'components/FloatingWindow';
 import VisualiserContext from './VisualiserContext';
 import Controls from './Controls';
 import Operations from './Operations';
 import CodeSnippet from './CodeSnippet';
 import CreateMenu from './CreateMenu';
-import { Alert, Box, List } from '@mui/material';
-import FloatingWindow from 'components/FloatingWindow';
 import OperationDetails from './OperationDetails';
 
 interface VisualiserInterfaceProps {
