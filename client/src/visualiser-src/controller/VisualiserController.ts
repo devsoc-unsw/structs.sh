@@ -161,9 +161,9 @@ class VisualiserController {
       !args.every((value, idx) =>
         expectedArgs[idx].endsWith('s')
           ? value
-            .split(/,| /g)
-            .filter((str) => str !== '')
-            .every((el) => /^\d+$/.test(el))
+              .split(/,| /g)
+              .filter((str) => str !== '')
+              .every((el) => /^\d+$/.test(el))
           : /^\d+$/.test(value)
       )
     ) {

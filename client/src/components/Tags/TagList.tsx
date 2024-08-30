@@ -19,7 +19,7 @@ export const TagList: React.FC<TagListProps> = ({ tags, handleDelete }) => {
         <Fragment key={index}>
           <Chip
             label={tag}
-            onDelete={handleDelete ? () => handleDelete(tag) : () => { }}
+            onDelete={handleDelete ? () => handleDelete(tag) : () => {}}
             color="info"
           />
         </Fragment>
