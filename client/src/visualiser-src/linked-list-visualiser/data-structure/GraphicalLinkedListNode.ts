@@ -9,7 +9,7 @@ import {
 import { getPointerPath } from '../util/util';
 import { actualNodeDiameter, markerLength, pathD, VISUALISER_CANVAS } from '../../common/constants';
 
-function addMarker(add: Marker) {
+function addMarker(this: Path, add: Marker) {
   add.path(pathD);
   this.attr('markerUnits', 'userSpaceOnUse');
 }
@@ -26,7 +26,7 @@ interface GraphicalLinkedListNodeData {
 export default class GraphicalLinkedListNode {
   private _data: GraphicalLinkedListNodeData;
 
-  private _next: GraphicalLinkedListNode;
+  private _next: GraphicalLinkedListNode | null;
 
   private constructor(data: GraphicalLinkedListNodeData) {
     this._data = data;
@@ -78,11 +78,11 @@ export default class GraphicalLinkedListNode {
     return this._data;
   }
 
-  public get next() {
+  public get next(): GraphicalLinkedListNode | null {
     return this._next;
   }
 
-  public set next(next: GraphicalLinkedListNode) {
+  public set next(next: GraphicalLinkedListNode | null) {
     this._next = next;
   }
 

@@ -23,7 +23,7 @@ export default class LinkedListDeleteAnimationProducer extends LinkedListAnimati
     this.addSequenceAnimation(
       node.pointerTarget
         .animate()
-        .plot(getPointerPath(node.x, node.y, node.next.x, node.next.y, Style.CURVED) as any)
+        .plot(getPointerPath(node.x, node.y, node.next!.x, node.next!.y, Style.CURVED) as any)
     );
   }
 
@@ -59,7 +59,7 @@ export default class LinkedListDeleteAnimationProducer extends LinkedListAnimati
 
   public resetListAndColor(headPointer: Path, head: GraphicalLinkedListNode) {
     this.resetList(headPointer, head);
-    let curr = head;
+    let curr: GraphicalLinkedListNode | null = head;
     while (curr != null) {
       this.addSequenceAnimation(curr.boxTarget.animate().attr({ stroke: '#000000' }));
       this.addSequenceAnimation(curr.numberTarget.animate().attr({ fill: '#000000' }));

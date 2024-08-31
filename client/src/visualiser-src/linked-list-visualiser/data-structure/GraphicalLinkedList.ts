@@ -46,7 +46,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
 
   public get data(): number[] {
     const data: number[] = [];
-    let curr: GraphicalLinkedListNode = this.head;
+    let curr: GraphicalLinkedListNode | null = this.head;
     while (curr != null) {
       data.push(curr.data.value);
       curr = curr.next;
@@ -75,7 +75,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
 
   public headPointer: Path;
 
-  public head: GraphicalLinkedListNode = null;
+  public head: GraphicalLinkedListNode | null = null;
 
   public length: number = 0;
 
@@ -180,7 +180,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
       } else {
         producer.doAnimationAndHighlight(6, producer.movePointerToNextAndHighlight, PREV, prev);
       }
-      curr = curr.next;
+      curr = curr!.next;
       if (i === index - 1) {
         producer.doAnimationAndHighlight(
           7,
@@ -194,14 +194,14 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     }
 
     if (prev === null) {
-      this.head = this.head.next;
+      this.head = this.head!.next;
       if (this.head === null) {
         producer.doAnimationAndHighlight(12, producer.setHeadToNull, this.headPointer);
       } else {
         producer.doAnimationAndHighlight(12, producer.pointHeadToNext, this.headPointer, this.head);
       }
     } else {
-      prev.next = curr.next;
+      prev.next = curr!.next;
       if (prev.next === null) {
         producer.doAnimationAndHighlight(14, producer.setNextToNull, prev);
       } else {
@@ -219,7 +219,7 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     if (this.head === null) {
       return producer;
     }
-    let curr = this.head;
+    let curr: GraphicalLinkedListNode | null = this.head;
     producer.doAnimationAndHighlight(2, producer.initialisePointer, CURRENT);
     while (curr !== null && curr.value !== value) {
       producer.doAnimationAndHighlight(3, producer.indicateNotFound, curr);

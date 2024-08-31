@@ -18,7 +18,7 @@ export default class LinkedListSearchAnimationProducer extends LinkedListAnimati
 
   public resetPointersAndColor(head: GraphicalLinkedListNode) {
     this.resetPointers();
-    let curr = head;
+    let curr: GraphicalLinkedListNode | null = head;
     while (curr != null) {
       this.addSequenceAnimation(curr.boxTarget.animate().attr({ stroke: '#000000' }));
       this.addSequenceAnimation(curr.numberTarget.animate().attr({ fill: '#000000' }));
