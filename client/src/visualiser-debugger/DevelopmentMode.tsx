@@ -17,16 +17,16 @@ import { useFrontendStateStore } from './Store/frontendStateStore';
 
 const DevelopmentMode = () => {
   const { isActive } = useFrontendStateStore();
-  const inputElement = useRef(null);
+  const inputElement = useRef<HTMLInputElement>(null);
   const { uiState, updateCurrFocusedTab } = useGlobalStore();
   const { consoleChunks, setConsoleChunks } = useSocketCommunication();
 
-  const handleAddConsoleChunk = (chunk) => {
+  const handleAddConsoleChunk = (chunk: string) => {
     setConsoleChunks([...consoleChunks, chunk]);
   };
 
   const scrollToBottom = () => {
-    if (inputElement.current) {
+    if (inputElement?.current?.parentElement) {
       const container = inputElement.current.parentElement;
       container.scrollTop = container.scrollHeight;
     }

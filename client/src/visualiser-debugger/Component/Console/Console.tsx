@@ -6,18 +6,27 @@ import styles from 'styles/Console.module.css';
 import classNames from 'classnames';
 import useSocketClientStore from '../../../Services/socketClient';
 
-const Console = ({ chunks, handleAddChunk, scrollToBottom, isActive }) => {
+interface ConsoleProps {
+  chunks: string[];
+  handleAddChunk: (chunk: string) => void;
+  scrollToBottom: () => void;
+  isActive: boolean;
+}
+
+const Console = ({ chunks, handleAddChunk, scrollToBottom, isActive }: ConsoleProps) => {
   const [input, setInput] = useState('');
-  const inputElement = useRef(null);
+  const inputElement = useRef<HTMLInputElement>(null);
   const socket = useSocketClientStore((state) => state.socketClient);
 
   const handleInput = () => {
-    setInput(inputElement.current.innerText);
+    setInput(inputElement.current?.innerText || '');
   };
 
   const clearInput = () => {
     setInput('');
-    inputElement.current.innerText = '';
+    if (inputElement.current) {
+      inputElement.current.innerText = '';
+    }
   };
 
   const handleKey = (event: React.KeyboardEvent<HTMLSpanElement>) => {
@@ -34,7 +43,7 @@ const Console = ({ chunks, handleAddChunk, scrollToBottom, isActive }) => {
   };
 
   const focus = () => {
-    inputElement.current.focus();
+    inputElement.current?.focus();
   };
 
   return (
