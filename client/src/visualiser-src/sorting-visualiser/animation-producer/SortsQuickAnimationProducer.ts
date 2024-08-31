@@ -27,10 +27,10 @@ export default class SortsQuickAnimationProducer extends SortsAnimationProducer 
   }
 
   public initialisePointers(
-    pointer: Svg,
+    pointer: Polygon,
     index: number,
     colour: string,
-    pointer2: Svg,
+    pointer2: Polygon,
     index2: number,
     colour2: string
   ) {
