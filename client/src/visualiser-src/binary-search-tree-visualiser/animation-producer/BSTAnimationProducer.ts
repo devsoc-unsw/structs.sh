@@ -132,7 +132,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
   // returns the difference in x coordinates with the node
   // and it's two child nodes
   public static getLineDiffX(node: GraphicalBSTNode): number {
-    const canvasWidth = document.getElementById('visualiser-container').offsetWidth;
+    const canvasWidth = document.getElementById('visualiser-container')!.offsetWidth;
     const depth: number = (node.y - canvasPadding) / 75;
     const baseDiff = canvasWidth / 4;
 

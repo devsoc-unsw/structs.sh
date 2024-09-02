@@ -1,9 +1,11 @@
-import GenericGraphicalTreeNode from 'visualiser-src/common/GenericGraphicalTreeNode';
+import GenericGraphicalTreeNode, {
+  GenericGraphicalTreeNodeData,
+} from 'visualiser-src/common/GenericGraphicalTreeNode';
 
 export default class GraphicalAVLNode extends GenericGraphicalTreeNode {
   private _height: number;
 
-  private constructor(data) {
+  private constructor(data: GenericGraphicalTreeNodeData) {
     super(data);
     this._height = 1;
   }

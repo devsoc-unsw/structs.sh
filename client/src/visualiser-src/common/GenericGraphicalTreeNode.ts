@@ -16,7 +16,7 @@ interface SVGData {
   rightArrowTarget: Marker;
 }
 
-interface GenericGraphicalTreeNodeData {
+export interface GenericGraphicalTreeNodeData {
   svgData: SVGData;
   value: number;
   x: number;
