@@ -1,12 +1,10 @@
-import { FC, useCallback, useMemo, useEffect, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import VisualiserController from 'visualiser-src/controller/VisualiserController';
-import { Alert, Box, List } from '@mui/material';
+import { Box, List } from '@mui/material';
 import FloatingWindow from 'components/FloatingWindow';
 import VisualiserContext from './VisualiserContext';
 import Controls from './Controls';
-import Operations from './Operations';
-import CodeSnippet from './CodeSnippet';
 import CreateMenu from './CreateMenu';
 import OperationDetails from './OperationDetails';
 
@@ -68,7 +66,7 @@ const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle, data })
   }, []);
 
   return (
-    <VisualiserContext.Provider value={{ controller, documentation }}>
+    <VisualiserContext.Provider value={{ controller }}>
       <CreateMenu />
       {/* Operations */}
       {!documentation || (

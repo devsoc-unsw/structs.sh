@@ -33,7 +33,7 @@ const CreateLink = () => {
   const makeLink = () => {
     const pieces = useLocation().pathname.split('/');
 
-    const rawDataString = controller.getData();
+    const rawDataString = controller.data;
     let newData: string = '';
     rawDataString.forEach((x) => {
       newData += x.toString().padStart(2, '0');

@@ -35,7 +35,6 @@ const OperationDetails: FC<OperationDetailsProps> = ({
   handleSetCodeSnippetExpansion,
 }) => {
   const {
-    documentation,
     controller,
     // timeline: { handleTimelineUpdate, handleUpdateIsPlaying },
     // codeSnippet: { handleSetCodeSnippetExpansion },
@@ -44,7 +43,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({
 
   const [shouldDisplay, setShouldDisplay] = useState<boolean>(false);
   const [currentInputs, setCurrentInputs] = useState<string[]>(
-    Array(documentation[command]?.args?.length || 0).fill('')
+    Array(controller.documentation[command]?.args?.length || 0).fill('')
   );
   const [errorMessage, setErrorMessage] = useState<string>('');
 
@@ -72,7 +71,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({
     setErrorMessage(err);
     if (err !== '') {
       setTimeout(() => setErrorMessage(''), 2000);
-    } else if (!documentation[command]?.noTimeline) {
+    } else if (!controller.documentation[command]?.noTimeline) {
       handleSetCodeSnippetExpansion(true);
       handleUpdateIsPlaying(true);
     }
@@ -93,7 +92,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({
       </Box>
       <Collapse in={shouldDisplay} timeout="auto" orientation="horizontal">
         <Box display="flex" alignItems="center">
-          {documentation[command].args.map((eachArg, idx) => (
+          {controller.documentation[command].args.map((eachArg, idx) => (
             <Box key={idx} boxSizing="border-box" padding="5px" width="110px">
               <TextField
                 size="small"
