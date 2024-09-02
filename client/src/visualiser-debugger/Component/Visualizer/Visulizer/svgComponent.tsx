@@ -68,16 +68,18 @@ const SvgComponent: React.FC<SvgComponentProps> = ({ children, centerCoord: cent
     if (svgRef.current) {
       if (isLocked) {
         controls.start({
-          viewBox: `${centerCoord.x - effectiveWidth / 2} ${centerCoord.y - effectiveHeight / 2
-            } ${effectiveWidth} ${effectiveHeight}`,
+          viewBox: `${centerCoord.x - effectiveWidth / 2} ${
+            centerCoord.y - effectiveHeight / 2
+          } ${effectiveWidth} ${effectiveHeight}`,
           transition: {
             duration: 1.25, // this will set the duration to 200ms
           },
         });
       } else {
         controls.set({
-          viewBox: `${centerCoord.x - effectiveWidth / 2} ${centerCoord.y - effectiveHeight / 2
-            } ${effectiveWidth} ${effectiveHeight}`,
+          viewBox: `${centerCoord.x - effectiveWidth / 2} ${
+            centerCoord.y - effectiveHeight / 2
+          } ${effectiveWidth} ${effectiveHeight}`,
         });
       }
     }

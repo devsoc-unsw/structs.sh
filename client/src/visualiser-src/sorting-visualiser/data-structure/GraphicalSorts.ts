@@ -1,4 +1,4 @@
-import { Polygon, Svg, SVG } from '@svgdotjs/svg.js';
+import { Polygon, SVG } from '@svgdotjs/svg.js';
 import AnimationProducer from 'visualiser-src/common/AnimationProducer';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
@@ -417,7 +417,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     );
     let j = hi;
 
-    for (; ;) {
+    for (;;) {
       // Shift i pointer
       while (this.elementList[i].data.value <= v && i < j) {
         i += 1;

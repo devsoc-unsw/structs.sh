@@ -28,10 +28,13 @@ const Page404 = () => {
     const htmlElement = document.querySelector('html');
     if (htmlElement) {
       htmlElement.style.overflow = 'hidden';
-      return () => {
-        htmlElement.style.overflow = 'auto';
-      };
     }
+
+    return () => {
+      if (htmlElement) {
+        htmlElement.style.overflow = 'auto';
+      }
+    };
   });
 
   return (

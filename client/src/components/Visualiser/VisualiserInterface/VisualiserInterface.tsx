@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import VisualiserController from 'visualiser-src/controller/VisualiserController';
 import { Box, List } from '@mui/material';
@@ -65,8 +65,10 @@ const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle, data })
     setIsPlaying(val);
   }, []);
 
+  const contextValue = useMemo(() => ({ controller }), [controller]);
+
   return (
-    <VisualiserContext.Provider value={{ controller }}>
+    <VisualiserContext.Provider value={contextValue}>
       <CreateMenu />
       {/* Operations */}
       {!documentation || (

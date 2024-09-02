@@ -116,7 +116,11 @@ export const LinkedListNodeAnnotation: AnnotationComponent = ({ backendType }: A
   };
 
   const handleUpdateNodeNext = (newNodeNext: string, newNodeNextType: string) => {
-    if (nodeAnnotation && isPointerType(newNodeNextType) && isStructTypeName(newNodeNextType.slice(0, -1))) {
+    if (
+      nodeAnnotation &&
+      isPointerType(newNodeNextType) &&
+      isStructTypeName(newNodeNextType.slice(0, -1))
+    ) {
       const newAnnotation: LinkedListAnnotation = {
         ...nodeAnnotation,
         next: {

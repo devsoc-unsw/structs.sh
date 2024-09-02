@@ -1,5 +1,5 @@
 import { VisualizerType } from '../../../Types/visualizerType';
-import { assertUnreachable } from '../Util/util';
+// import { assertUnreachable } from '../Util/util';
 import LinkedList from './linkedListVisualizer';
 import { VisualizerComponent } from './visualizer';
 
@@ -13,9 +13,10 @@ export function visualizerFactory(visualizerType: VisualizerType): VisualizerCom
     case VisualizerType.ARRAY: {
       throw new Error('Not implemented');
     }
+    default:
+      throw new Error('Visualizer type not recognized');
     // default:
     //   assertUnreachable(visualizerType);
-    // throw new Error('Invalid visualiser type');
   }
   // return undefined;
 }
