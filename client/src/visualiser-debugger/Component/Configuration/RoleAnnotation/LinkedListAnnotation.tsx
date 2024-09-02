@@ -62,7 +62,7 @@ export const LinkedListNodeAnnotation: AnnotationComponent = ({ backendType }: A
   const [possibleTypeDeclForLinkedList, setPossibleTypeDeclForLinkedList] =
     useState<PossibleLinkedListAnnotation | null>(createPossibleLinkedListTypeDecl(backendType));
   const { updateUserAnnotation, visualizer } = useGlobalStore();
-  const [nodeAnnotation, setNodeAnnotation] = useState<LinkedListAnnotation>(null);
+  const [nodeAnnotation, setNodeAnnotation] = useState<LinkedListAnnotation | null>(null);
   const handleUpdateNodeAnnotation = (newAnnotation: LinkedListAnnotation) => {
     updateUserAnnotation({
       stackAnnotation: visualizer.userAnnotation.stackAnnotation,
@@ -102,7 +102,7 @@ export const LinkedListNodeAnnotation: AnnotationComponent = ({ backendType }: A
   }, [backendType]);
 
   const handleUpdateNodeData = (newNodeData: string, newNodeDataType: string) => {
-    if (isNativeTypeName(newNodeDataType)) {
+    if (nodeAnnotation && isNativeTypeName(newNodeDataType)) {
       const newAnnotation: LinkedListAnnotation = {
         ...nodeAnnotation,
         value: {
@@ -116,7 +116,7 @@ export const LinkedListNodeAnnotation: AnnotationComponent = ({ backendType }: A
   };
 
   const handleUpdateNodeNext = (newNodeNext: string, newNodeNextType: string) => {
-    if (isPointerType(newNodeNextType) && isStructTypeName(newNodeNextType.slice(0, -1))) {
+    if (nodeAnnotation && isPointerType(newNodeNextType) && isStructTypeName(newNodeNextType.slice(0, -1))) {
       const newAnnotation: LinkedListAnnotation = {
         ...nodeAnnotation,
         next: {

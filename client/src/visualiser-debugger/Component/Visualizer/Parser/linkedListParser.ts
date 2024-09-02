@@ -20,7 +20,7 @@ export class LinkedListParser implements Parser {
   private convertToRootedTree(
     linkedList: LinkedListNode[]
   ): [LinkedListNode, Map<Addr, LinkedListNode[]>] {
-    let root: LinkedListNode | null = null;
+    let root: LinkedListNode = null!;
     const prevNodeMap: Map<Addr, LinkedListNode[]> = new Map();
     linkedList.forEach((node) => {
       if (node.next !== '0x0') {
@@ -32,15 +32,19 @@ export class LinkedListParser implements Parser {
         root = node;
       }
     });
-    linkedList.forEach((node) => {
-      if (node.next === '0x0') {
-        node.next = null;
-      }
-    });
-
-    if (root === null) {
-      return [null, prevNodeMap];
-    }
+    // linkedList.forEach((node) => {
+    //   if (node.next === '0x0') {
+    //     node.next = null;
+    //   }
+    // });
+    //
+    // if (root == '0x0') {
+    //   return [root, prevNodeMap]
+    // }
+    //
+    // if (root === null) {
+    //   return [null, prevNodeMap];
+    // }
 
     const stack: LinkedListNode[] = [root];
     while (stack.length > 0) {
@@ -179,7 +183,9 @@ export class LinkedListParser implements Parser {
             if (isLinkedListNode(heapValue, linkedListAnnotation)) {
               const linkedListNode: LinkedListNode = {
                 uid: uid as Addr,
+                // @ts-ignore
                 data: heapValue.value[linkedListAnnotation.value.name].value,
+                // @ts-ignore
                 next: heapValue.value[linkedListAnnotation.next.name].value,
               };
               linkedList.push(linkedListNode);
@@ -276,7 +282,9 @@ export class LinkedListParser implements Parser {
           colorHex: '#FFFFFF',
           size: DEFAULT_NODE_SIZE,
           edgeUids: [],
+          // @ts-ignore
           x: nodesPosition.get(uid).x,
+          // @ts-ignore
           y: nodesPosition.get(uid).y,
         };
         nodes.push(nodeEntity);
@@ -335,9 +343,10 @@ export class LinkedListParser implements Parser {
         cacheEntity,
         pointers,
       };
-    } catch (e) {
+    } catch (e: any) {
       // Not silent fail
       console.error(e.message);
+      // @ts-ignore
       return undefined;
     }
   }

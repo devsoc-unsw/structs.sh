@@ -75,8 +75,8 @@ export class TreeParser implements Parser {
     }
 
     // Now we merge range
-    leftBoundaryRet = posCache.get(currNode.uid).x - TREE_GAP / 2;
-    rightBoundaryRet = posCache.get(currNode.uid).x + TREE_GAP / 2;
+    leftBoundaryRet = posCache.get(currNode.uid)!.x - TREE_GAP / 2;
+    rightBoundaryRet = posCache.get(currNode.uid)!.x + TREE_GAP / 2;
     if (leftRange) {
       leftBoundaryRet = Math.min(leftRange.leftBoundary, leftBoundaryRet);
       rightBoundaryRet = Math.max(leftRange.rightBoundary, rightBoundaryRet);
@@ -89,6 +89,9 @@ export class TreeParser implements Parser {
     if (currNode.left && currNode.right) {
       const posLeft = posCache.get(currNode.left);
       const posRight = posCache.get(currNode.right);
+
+      // TODO: could posLeft or posRight be null?
+      // @ts-ignore
       posCache.set(currNode.uid, { x: (posLeft.x + posRight.x) / 2, y });
     }
 
@@ -128,8 +131,11 @@ export class TreeParser implements Parser {
             if (isTreeNode(memoryValue, binaryAnnotation)) {
               treeNodes.push({
                 uid: uid as Addr,
+                // @ts-ignore
                 data: memoryValue[binaryAnnotation.value.name].value,
+                // @ts-ignore
                 left: memoryValue[binaryAnnotation.left.name].value,
+                // @ts-ignore
                 right: memoryValue[binaryAnnotation.right.name].value,
               });
             }
@@ -145,14 +151,14 @@ export class TreeParser implements Parser {
       }
     });
 
-    treeNodes.forEach((node) => {
-      if (node.left === '0x0') {
-        node.left = null;
-      }
-      if (node.right === '0x0') {
-        node.right = null;
-      }
-    });
+    // treeNodes.forEach((node) => {
+    //   if (node.left === '0x0') {
+    //     node.left = null;
+    //   }
+    //   if (node.right === '0x0') {
+    //     node.right = null;
+    //   }
+    // });
     return treeNodes;
   }
 
@@ -188,7 +194,10 @@ export class TreeParser implements Parser {
         colorHex: '#FFFFFF',
         size: DEFAULT_NODE_SIZE,
         edgeUids: [],
+        // TODO: Could node be null?
+        // @ts-ignore
         x: positions.get(node.uid).x,
+        // @ts-ignore
         y: positions.get(node.uid).y,
       };
       nodes.push(nodeEntity);
