@@ -68,18 +68,16 @@ const SvgComponent: React.FC<SvgComponentProps> = ({ children, centerCoord: cent
     if (svgRef.current) {
       if (isLocked) {
         controls.start({
-          viewBox: `${centerCoord.x - effectiveWidth / 2} ${
-            centerCoord.y - effectiveHeight / 2
-          } ${effectiveWidth} ${effectiveHeight}`,
+          viewBox: `${centerCoord.x - effectiveWidth / 2} ${centerCoord.y - effectiveHeight / 2
+            } ${effectiveWidth} ${effectiveHeight}`,
           transition: {
             duration: 1.25, // this will set the duration to 200ms
           },
         });
       } else {
         controls.set({
-          viewBox: `${centerCoord.x - effectiveWidth / 2} ${
-            centerCoord.y - effectiveHeight / 2
-          } ${effectiveWidth} ${effectiveHeight}`,
+          viewBox: `${centerCoord.x - effectiveWidth / 2} ${centerCoord.y - effectiveHeight / 2
+            } ${effectiveWidth} ${effectiveHeight}`,
         });
       }
     }
@@ -112,6 +110,7 @@ const SvgComponent: React.FC<SvgComponentProps> = ({ children, centerCoord: cent
 
   const isSvgInteractive = (event: MouseEvent | TouchEvent | PointerEvent) => {
     if (isLocked) return false;
+    if (!svgRef.current) return false;
     // Get the bounding rectangle of the SVG container
     const svgRect = svgRef.current.getBoundingClientRect();
 
@@ -156,6 +155,7 @@ const SvgComponent: React.FC<SvgComponentProps> = ({ children, centerCoord: cent
   const handleWheel = (event: React.WheelEvent<SVGSVGElement>) => {
     event.preventDefault();
     if (isLocked) return;
+    if (!svgRef.current) return;
 
     const viewBox: SVGRect = svgRef.current.viewBox.baseVal;
     const zoomFactor = 1.045;

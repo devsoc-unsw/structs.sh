@@ -3,10 +3,10 @@
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons';
 import * as Internal from '@radix-ui/react-select';
 import classNames from 'classnames';
-import { ReactNode } from 'react';
+import { ComponentPropsWithoutRef, ReactNode } from 'react';
 import styles from 'styles/Select.module.css';
 
-interface SelectProps {
+interface SelectProps extends ComponentPropsWithoutRef<typeof Internal.Root> {
   children: ReactNode;
   triggerClassName: string;
   placeholder: string;

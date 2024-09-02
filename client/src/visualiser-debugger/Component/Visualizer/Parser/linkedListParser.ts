@@ -72,11 +72,9 @@ export class LinkedListParser implements Parser {
     const prevNodes = prevNodeMap.get(currNode.uid);
     // Base case: The currNode is the last node
     if (!prevNodes) {
-      posCache.set(currNode.uid, {
-        x,
-        y: (yRange[0] + 100) / 2,
-      });
-      return posCache.get(currNode.uid);
+      const currNodePosition = { x, y: (yRange[0] + 100) / 2 };
+      posCache.set(currNode.uid, currNodePosition);
+      return currNodePosition;
     }
 
     // Recursive case
@@ -102,11 +100,9 @@ export class LinkedListParser implements Parser {
 
     // Choose the middle y value
     const y = positions.reduce((a, b) => a + b.y, 0) / positions.length;
-    posCache.set(currNode.uid, {
-      x,
-      y,
-    });
-    return posCache.get(currNode.uid);
+    const currNodePosition = { x, y };
+    posCache.set(currNode.uid, currNodePosition);
+    return currNodePosition;
   }
 
   // TODO: Rewrite
@@ -314,7 +310,7 @@ export class LinkedListParser implements Parser {
         if (!stackAnnotation[name]) return;
         if (stackAnnotation[name] === undefined || stackAnnotation[name] === null) return;
 
-        const prevPointer: PointerEntity | null = pointers.find(
+        const prevPointer = pointers.find(
           (pointer) => pointer.attachedUid === cacheEntity[memoryValue.value as string].uid
         );
         if (prevPointer) {

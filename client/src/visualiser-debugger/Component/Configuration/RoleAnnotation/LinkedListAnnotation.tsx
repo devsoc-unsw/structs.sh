@@ -19,7 +19,7 @@ import ConfigurationSelect from '../ConfigurationSelect';
 export const createPossibleLinkedListTypeDecl = (
   typeDecl: BackendTypeDeclaration
 ): PossibleLinkedListAnnotation | null => {
-  if (!('fields' in typeDecl)) {
+  if (!typeDecl.fields) {
     return null;
   }
   if (!isStructTypeName(typeDecl.typeName)) {
@@ -60,7 +60,7 @@ export const createPossibleLinkedListTypeDecl = (
 
 export const LinkedListNodeAnnotation: AnnotationComponent = ({ backendType }: AnnotationProp) => {
   const [possibleTypeDeclForLinkedList, setPossibleTypeDeclForLinkedList] =
-    useState<PossibleLinkedListAnnotation>(createPossibleLinkedListTypeDecl(backendType));
+    useState<PossibleLinkedListAnnotation | null>(createPossibleLinkedListTypeDecl(backendType));
   const { updateUserAnnotation, visualizer } = useGlobalStore();
   const [nodeAnnotation, setNodeAnnotation] = useState<LinkedListAnnotation>(null);
   const handleUpdateNodeAnnotation = (newAnnotation: LinkedListAnnotation) => {
@@ -72,7 +72,9 @@ export const LinkedListNodeAnnotation: AnnotationComponent = ({ backendType }: A
       },
     });
   };
-  const handleLinkedNodeAnnotation = (possibleTypeAnnotation: PossibleLinkedListAnnotation) => {
+  const handleLinkedNodeAnnotation = (
+    possibleTypeAnnotation: PossibleLinkedListAnnotation | null
+  ) => {
     if (possibleTypeAnnotation === null) return;
     const linkedNodeAnnotation: LinkedListAnnotation = {
       typeName: backendType.typeName as `struct ${string}`,

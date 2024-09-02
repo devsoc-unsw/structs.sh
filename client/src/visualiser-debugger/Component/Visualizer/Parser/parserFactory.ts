@@ -13,8 +13,8 @@ export function parserFactory(visualizerType: VisualizerType): Parser {
     case VisualizerType.ARRAY: {
       throw new Error('Not implemented');
     }
-    default:
-      assertUnreachable(visualizerType);
+    // default:
+    //   assertUnreachable(visualizerType);
   }
-  return undefined;
+  // return undefined;
 }

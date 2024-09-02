@@ -13,8 +13,9 @@ export function visualizerFactory(visualizerType: VisualizerType): VisualizerCom
     case VisualizerType.ARRAY: {
       throw new Error('Not implemented');
     }
-    default:
-      assertUnreachable(visualizerType);
+    // default:
+    //   assertUnreachable(visualizerType);
+    // throw new Error('Invalid visualiser type');
   }
-  return undefined;
+  // return undefined;
 }
