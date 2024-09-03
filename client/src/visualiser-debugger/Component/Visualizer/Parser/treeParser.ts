@@ -151,14 +151,16 @@ export class TreeParser implements Parser {
       }
     });
 
-    // treeNodes.forEach((node) => {
-    //   if (node.left === '0x0') {
-    //     node.left = null;
-    //   }
-    //   if (node.right === '0x0') {
-    //     node.right = null;
-    //   }
-    // });
+    treeNodes.forEach((node) => {
+      if (node.left === '0x0') {
+        // @ts-ignore
+        node.left = null;
+      }
+      if (node.right === '0x0') {
+        // @ts-ignore
+        node.right = null;
+      }
+    });
     return treeNodes;
   }
 

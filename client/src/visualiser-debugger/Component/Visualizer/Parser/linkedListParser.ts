@@ -32,19 +32,13 @@ export class LinkedListParser implements Parser {
         root = node;
       }
     });
-    // linkedList.forEach((node) => {
-    //   if (node.next === '0x0') {
-    //     node.next = null;
-    //   }
-    // });
-    //
-    // if (root == '0x0') {
-    //   return [root, prevNodeMap]
-    // }
-    //
-    // if (root === null) {
-    //   return [null, prevNodeMap];
-    // }
+
+    linkedList.forEach((node) => {
+      if (node.next === '0x0') {
+        // @ts-ignore
+        node.next = null;
+      }
+    });
 
     const stack: LinkedListNode[] = [root];
     while (stack.length > 0) {
