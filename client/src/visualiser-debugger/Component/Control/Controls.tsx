@@ -43,13 +43,15 @@ const Controls = () => {
     if (!isActive) {
       setBufferMode(false);
       setLoading(false);
-      return;
     }
+  }, [isActive]);
+
+  useEffect(() => {
     if (!bufferMode) return;
     if (states.length - currentIndex < BUFFER_THRESHOLD && !bufferingRef.current) {
       startBuffering(BUFFER_THRESHOLD);
     }
-  }, [bufferMode, isActive]);
+  }, [bufferMode]);
 
   const [autoNext, setAutoNext] = useState<boolean>(false);
   useEffect(() => {
