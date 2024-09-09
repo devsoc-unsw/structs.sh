@@ -7,6 +7,8 @@ interface Message {
   durationMs: number;
 }
 
+export const DEFAULT_MESSAGE_DURATION: number = 2000;
+
 interface ToastState {
   currentMessage?: Message;
   setMessage: (message: Message) => void;

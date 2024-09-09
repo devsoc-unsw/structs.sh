@@ -11,6 +11,7 @@ import { Button } from '../../../components/Button';
 import Slider from '../../../components/Timeline/Slider';
 import { useGlobalStore } from '../../Store/globalStateStore';
 import { isInitialBackendState } from '../../Types/backendType';
+import { DEFAULT_MESSAGE_DURATION, useToastStateStore } from '../../Store/toastStateStore';
 
 const BUFFER_THRESHOLD = 30;
 const Controls = () => {
@@ -23,6 +24,7 @@ const Controls = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [bufferMode, setBufferMode] = useState<boolean>(false);
   const bufferingRef = useRef<boolean>(false);
+  const { setMessage } = useToastStateStore();
 
   const playToggle = () => {
     setBufferMode((mode) => !mode);
@@ -33,7 +35,19 @@ const Controls = () => {
     bufferingRef.current = true;
     setLoading(true);
 
+    setMessage({
+      content: 'Buffer started.',
+      colorTheme: 'warning',
+      durationMs: DEFAULT_MESSAGE_DURATION,
+    });
+
     await bulkSendNextStates(bufferSize);
+
+    setMessage({
+      content: 'Buffer completed.',
+      colorTheme: 'info',
+      durationMs: DEFAULT_MESSAGE_DURATION,
+    });
 
     setLoading(false);
     bufferingRef.current = false;
@@ -111,7 +125,7 @@ const Controls = () => {
         <UndoIcon />
       </Button>
       <Button
-        disabled={!isActive || currentIndex === states.length - 1}
+        disabled={!isActive}
         onClick={async () => {
           if (currentIndex === states.length - 1) {
             setAutoNext(true);

@@ -12,7 +12,10 @@ import { ServerToClientEvent } from './socketClientType';
 import { useGlobalStore } from '../visualiser-debugger/Store/globalStateStore';
 import { useUserFsStateStore } from '../visualiser-debugger/Store/userFsStateStore';
 import { useFrontendStateStore } from '../visualiser-debugger/Store/frontendStateStore';
-import { useToastStateStore } from '../visualiser-debugger/Store/toastStateStore';
+import {
+  DEFAULT_MESSAGE_DURATION,
+  useToastStateStore,
+} from '../visualiser-debugger/Store/toastStateStore';
 
 let initialized: boolean = false;
 export const useSocketCommunication = () => {
@@ -33,7 +36,7 @@ export const useSocketCommunication = () => {
           setMessage({
             content: 'Debug session started.',
             colorTheme: 'info',
-            durationMs: 1000,
+            durationMs: DEFAULT_MESSAGE_DURATION,
           });
           setActive(true);
         },
@@ -46,7 +49,7 @@ export const useSocketCommunication = () => {
             setMessage({
               content: 'Debug session ended.',
               colorTheme: 'info',
-              durationMs: 1000,
+              durationMs: DEFAULT_MESSAGE_DURATION,
             });
             setActive(false);
             return;
@@ -89,7 +92,7 @@ export const useSocketCommunication = () => {
       setMessage({
         content: 'No file being selected.',
         colorTheme: 'warning',
-        durationMs: 1000,
+        durationMs: DEFAULT_MESSAGE_DURATION,
       });
       return;
     }
