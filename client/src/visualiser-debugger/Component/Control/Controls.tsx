@@ -24,7 +24,7 @@ const Controls = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [bufferMode, setBufferMode] = useState<boolean>(false);
   const bufferingRef = useRef<boolean>(false);
-  const { setMessage } = useToastStateStore();
+  const { setToastMessage: setMessage } = useToastStateStore();
 
   const playToggle = () => {
     setBufferMode((mode) => !mode);

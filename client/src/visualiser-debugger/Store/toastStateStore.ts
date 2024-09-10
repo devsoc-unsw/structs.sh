@@ -10,17 +10,17 @@ interface Message {
 export const DEFAULT_MESSAGE_DURATION: number = 2000;
 
 interface ToastState {
-  currentMessage?: Message;
-  setMessage: (message: Message) => void;
-  clearMessage: () => void;
+  currentToastMessage?: Message;
+  setToastMessage: (message: Message) => void;
+  clearToastMessage: () => void;
 }
 
 export const useToastStateStore = create<ToastState>((set) => ({
-  currentMessage: undefined,
-  setMessage: (message) => {
-    set({ currentMessage: message });
+  currentToastMessage: undefined,
+  setToastMessage: (message) => {
+    set({ currentToastMessage: message });
   },
-  clearMessage: () => {
-    set({ currentMessage: undefined });
+  clearToastMessage: () => {
+    set({ currentToastMessage: undefined });
   },
 }));

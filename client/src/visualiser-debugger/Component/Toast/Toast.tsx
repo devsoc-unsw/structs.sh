@@ -4,8 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useToastStateStore } from '../../Store/toastStateStore';
 
 const Toast: React.FC = () => {
-  const currentMessage = useToastStateStore((state) => state.currentMessage);
-  const clearMessage = useToastStateStore((state) => state.clearMessage);
+  const currentMessage = useToastStateStore((state) => state.currentToastMessage);
+  const clearMessage = useToastStateStore((state) => state.clearToastMessage);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;

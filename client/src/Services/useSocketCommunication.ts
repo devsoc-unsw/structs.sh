@@ -27,7 +27,7 @@ export const useSocketCommunication = () => {
   const { socketClient } = useSocketClientStore();
   const [consoleChunks, setConsoleChunks] = useState<string[]>([]);
   const { updateCurrFocusedTab } = useGlobalStore();
-  const { setMessage } = useToastStateStore();
+  const { setToastMessage: setMessage } = useToastStateStore();
 
   if (!initialized) {
     useMemo(() => {
