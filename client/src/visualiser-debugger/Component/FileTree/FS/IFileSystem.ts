@@ -143,7 +143,7 @@ void printList(struct node *head) {
     for (struct node *curr = head; curr != NULL; curr = curr->next) {
         printf("%d -> ", curr->value);
     }
-    printf("X\n");
+    printf("X\\n");
 }`,
           type: 'file',
           parentPath: '2521_Tut02',
@@ -176,7 +176,7 @@ int main() {
     struct node *list = listIntro();
 
     int listLengthRes = listLength(list);
-    printf("Length of linked list: %d\n", listLengthRes);
+    printf("Length of linked list: %d\\n", listLengthRes);
 
     return 0;
 }
@@ -205,7 +205,7 @@ int listLength(struct node *l) {
 
 void printList(struct node *l) {
     if (l == NULL) {
-        printf("X\n");
+        printf("X\\n");
         return;
     }
     printf("%d -> ", l->value);
@@ -239,10 +239,10 @@ struct node *listIntro() {
     printf("Enter list size: ");
     int size = 0;
     if (scanf("%d", &size) == 0) {
-        fprintf(stderr, "error: failed to read list size\n");
+        fprintf(stderr, "error: failed to read list size\\n");
         exit(EXIT_FAILURE);
     } else if (size < 0) {
-        fprintf(stderr, "error: invalid list size\n");
+        fprintf(stderr, "error: invalid list size\\n");
         exit(EXIT_FAILURE);
     }
 
@@ -253,7 +253,7 @@ struct node *listIntro() {
 
     printf("List: ");
     printList(list);
-    printf("\n");
+    printf("\\n");
 
     return list;
 }
@@ -337,7 +337,7 @@ void printList(struct Node *head) {
         printf("%d -> ", current->data);
         current = current->next;
     }
-    printf("NULL\n");
+    printf("NULL\\n");
 }
 
 int main() {
@@ -348,7 +348,7 @@ int main() {
     insertAtBeginning(&head, 2);
     insertAtBeginning(&head, 1);
 
-    printf("Final linked list:\n");
+    printf("Final linked list:\\n");
     printList(head);  // Output: 1 -> 2 -> 3 -> NULL
 
     return 0;
@@ -440,7 +440,7 @@ void printList(struct list* list) {
         printf("%d ", curr->data);
         curr = curr->next;
     }
-    printf("\n");
+    printf("\\n");
 }
 
 int main() {
@@ -589,7 +589,7 @@ void print_list(struct list *list) {
         printf("%d -> ", curr->data);
         curr = curr->next;
     }
-    printf("X\n");
+    printf("X\\n");
 }
 
 int main(int argc, char *argv[]) {
@@ -682,7 +682,7 @@ void print_list(struct node *list) {
         printf("%d -> ", curr->data);
         curr = curr->next;
     }
-    printf("X\n");
+    printf("X\\n");
 }
 `,
           type: 'file',

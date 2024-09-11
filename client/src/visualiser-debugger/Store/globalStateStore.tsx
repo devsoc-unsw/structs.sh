@@ -37,7 +37,7 @@ export const DEFAULT_GLOBAL_STORE: GlobalStateStore = {
       width: 800,
       height: 400,
     },
-    currFocusedTab: '1',
+    currFocusedTab: '0',
   },
   visualizer: {
     visualizerType: VisualizerType.LINKED_LIST,

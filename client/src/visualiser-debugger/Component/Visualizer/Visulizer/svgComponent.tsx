@@ -104,7 +104,6 @@ const SvgComponent: React.FC<SvgComponentProps> = ({ children, centerCoord: cent
       cursor: isLocked ? 'not-allowed' : 'grab',
     });
     controls.start({
-      backgroundColor: isLocked ? 'rgba(0, 0, 0, 0.01)' : 'transparent',
       transition: {
         duration: 20,
       },

@@ -11,6 +11,7 @@ import DevelopmentMode from 'visualiser-debugger/DevelopmentMode';
 import { useGlobalStore } from 'visualiser-debugger/Store/globalStateStore';
 import { useEffect } from 'react';
 import { useFrontendStateStore } from 'visualiser-debugger/Store/frontendStateStore';
+import Toast from './visualiser-debugger/Component/Toast/Toast';
 
 const App = () => {
   useEffect(() => {
@@ -40,6 +41,8 @@ const App = () => {
             {/* 404 page */}
             <Route path="*" element={<Page404 />} />
           </Routes>
+          {/** For Providing warning/info/context of the app at anytime */}
+          <Toast />
         </ThemeProvider>
       </AnimatePresence>
     </Box>

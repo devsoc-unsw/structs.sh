@@ -1,50 +1,100 @@
 import { UseBoundStore, StoreApi, create } from 'zustand';
-import { GenericGraph, INITIAL_GRAPH } from '../Types/frontendType';
+import { FrontendState, INITIAL_GRAPH } from '../Types/frontendType';
+import { BackendState, INITIAL_BACKEND_STATE } from '../Types/backendType';
+
+// Map BackendState and FrontendState one to one?? Good design??
+type MappedState = {
+  backendState: BackendState;
+  frontendState: FrontendState;
+};
 
 type State = {
-  states: GenericGraph[];
-  currStateIdx: number;
-  currState: () => GenericGraph;
+  states: MappedState[];
+  currentIndex: number;
+  isActive: boolean;
+  currState: () => MappedState;
 };
+
 type Action = {
-  appendNewState: (newState: GenericGraph) => void;
-  setNextState: () => void;
-  setLastState: () => void;
+  appendFrontendNewState: (backendState: BackendState, newState: FrontendState) => void;
+  stepForward: () => void;
+  stepBackward: () => void;
+  jumpToState: (index: number) => void;
+  setActive: (active: boolean) => void;
+  clearFrontendState: () => void;
 };
 
 export const useFrontendStateStore: UseBoundStore<StoreApi<State & Action>> = create<
   State & Action
 >((set) => ({
   states: [],
-  currStateIdx: -1,
+  currentIndex: -1,
+  isActive: false,
   currState: () => {
-    if (useFrontendStateStore.getState().currStateIdx === -1) {
-      return INITIAL_GRAPH;
+    if (useFrontendStateStore.getState().currentIndex === -1) {
+      return {
+        backendState: INITIAL_BACKEND_STATE,
+        frontendState: INITIAL_GRAPH,
+      };
     }
-    return useFrontendStateStore.getState().states[useFrontendStateStore.getState().currStateIdx];
+    return useFrontendStateStore.getState().states[useFrontendStateStore.getState().currentIndex];
   },
-  appendNewState: (newState: GenericGraph) => {
-    set((state) => ({
-      states: [...state.states, newState],
-    }));
+  appendFrontendNewState: (backendState: BackendState, newState: FrontendState) => {
+    set((state) => {
+      const lastState = state.states[state.states.length - 1];
+      if (lastState && lastState.backendState === backendState) {
+        // Trigger rerender but preserve the map between backend state and frontend state
+        const updatedStates = [...state.states];
+        updatedStates[updatedStates.length - 1] = {
+          backendState,
+          frontendState: newState,
+        };
+
+        return {
+          states: updatedStates,
+        };
+      }
+
+      return {
+        states: [
+          ...state.states,
+          {
+            backendState,
+            frontendState: newState,
+          },
+        ],
+      };
+    });
   },
-  setNextState: () => {
+  stepForward: () => {
     if (
-      useFrontendStateStore.getState().currStateIdx >=
+      useFrontendStateStore.getState().currentIndex >=
       useFrontendStateStore.getState().states.length - 1
     ) {
       return;
     }
     set((state) => ({
-      currStateIdx: state.currStateIdx + 1,
+      currentIndex: state.currentIndex + 1,
     }));
   },
-  setLastState: () => {
-    if (useFrontendStateStore.getState().currStateIdx <= 0) {
+  stepBackward: () => {
+    if (useFrontendStateStore.getState().currentIndex <= 0) {
       return;
     }
     set((state) => ({
-      currStateIdx: state.currStateIdx - 1,
+      currentIndex: state.currentIndex - 1,
     }));
+  },
+  jumpToState: (index: number) => {
+    if (index < 0 || index >= useFrontendStateStore.getState().states.length) {
+      return;
+    }
+    set({ currentIndex: index });
+  },
+  setActive: (active: boolean) => {
+    set({ isActive: active });
+  },
+  clearFrontendState: () => {
+    set({ isActive: false, states: [], currentIndex: -1 });
   },
 }));

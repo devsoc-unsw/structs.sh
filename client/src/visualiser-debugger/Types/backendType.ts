@@ -96,6 +96,14 @@ export type BackendState = {
   heap_data: Heap;
 };
 
+export type ProgramEnd = {
+  exited: true;
+};
+
+export function isProgramEnd(state: BackendState | ProgramEnd): state is ProgramEnd {
+  return (state as ProgramEnd).exited !== undefined;
+}
+
 export type BackendTypeDeclaration = {
   file: string;
   line_num: string;
@@ -146,6 +154,17 @@ export const INITIAL_BACKEND_STATE: BackendState = {
   stack_data: {},
   heap_data: {},
 };
+
+export function isInitialBackendState(state: BackendState): boolean {
+  return (
+    state.frame_info.file === '' &&
+    state.frame_info.line === '' &&
+    state.frame_info.line_num === 0 &&
+    state.frame_info.function === '' &&
+    Object.keys(state.stack_data).length === 0 &&
+    Object.keys(state.heap_data).length === 0
+  );
+}
 
 /*
 === Examples ===

@@ -1,7 +1,7 @@
 import { EdgeEntity } from '../BaseEntity/edgeEntity';
 import { NodeEntity } from '../BaseEntity/nodeEntity';
 import { PointerEntity } from '../BaseEntity/pointerEntity';
-import { EntityConcrete, GenericGraph } from '../../../../Types/frontendType';
+import { EntityConcrete, FrontendState } from '../../../../Types/frontendType';
 
 /**
  * I have no idea why this file exists
@@ -48,7 +48,7 @@ export interface NodeProp extends DrawablePropBase {
 }
 export interface EdgeProp extends DrawablePropBase {
   entity: EdgeEntity;
-  graph: GenericGraph;
+  graph: FrontendState;
   from: MotionCoord;
   to: MotionCoord;
 }

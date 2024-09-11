@@ -13,16 +13,13 @@ import VisualizerMain from './Component/VisualizerMain';
 import FileManager from './Component/FileTree/FileManager';
 import { useGlobalStore } from './Store/globalStateStore';
 import { useSocketCommunication } from '../Services/useSocketCommunication';
-import { useUserFsStateStore } from './Store/userFsStateStore';
+import { useFrontendStateStore } from './Store/frontendStateStore';
 
 const DevelopmentMode = () => {
-  const { currFrame } = useGlobalStore();
-  const { fileSystem, currFocusFilePath } = useUserFsStateStore();
+  const { isActive } = useFrontendStateStore();
   const inputElement = useRef(null);
   const { uiState, updateCurrFocusedTab } = useGlobalStore();
-
-  const { activeSession, consoleChunks, setConsoleChunks, sendCode, getNextState } =
-    useSocketCommunication();
+  const { consoleChunks, setConsoleChunks } = useSocketCommunication();
 
   const handleAddConsoleChunk = (chunk) => {
     setConsoleChunks([...consoleChunks, chunk]);
@@ -33,11 +30,6 @@ const DevelopmentMode = () => {
       const container = inputElement.current.parentElement;
       container.scrollTop = container.scrollHeight;
     }
-  };
-
-  // Send code using the hook's sendCode function, passing necessary parameters
-  const handleSendCode = () => {
-    sendCode(fileSystem, currFocusFilePath);
   };
 
   return (
@@ -57,7 +49,7 @@ const DevelopmentMode = () => {
           />
         </div>
         <div className={classNames(styles.pane, styles.editor)}>
-          <CodeEditor currLine={currFrame?.frame_info?.line_num} />
+          <CodeEditor />
         </div>
         <div className={classNames(styles.pane, styles.inspector)}>
           <Tabs value={uiState.currFocusedTab} onValueChange={updateCurrFocusedTab}>
@@ -72,20 +64,16 @@ const DevelopmentMode = () => {
                 chunks={consoleChunks}
                 handleAddChunk={handleAddConsoleChunk}
                 scrollToBottom={scrollToBottom}
-                isActive={activeSession}
+                isActive={isActive}
               />
             </Tab>
           </Tabs>
         </div>
         <div className={classNames(styles.pane, styles.visualiser)}>
-          <VisualizerMain backendState={currFrame} />
+          <VisualizerMain />
         </div>
         <div className={classNames(styles.pane, styles.timeline)}>
-          <Controls
-            getNextState={getNextState}
-            sendCode={handleSendCode}
-            activeSession={activeSession}
-          />
+          <Controls />
         </div>
       </div>
     </div>

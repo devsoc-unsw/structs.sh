@@ -1,0 +1,58 @@
+@import '@radix-ui/colors/slate.css';
+@import './global.module.css';
+
+.timeline {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding-right: 80px;
+  gap: 5px;
+}
+
+.SliderRoot {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  touch-action: none;
+  height: 100%;
+  margin-left: 5px;
+}
+
+.SliderRoot>* {
+  transition: left 150ms;
+}
+
+.SliderTrack {
+  flex: 1;
+  background-color: var(--slate-7);
+  position: relative;
+  border-radius: 9999px;
+  height: 10px;
+}
+
+.SliderRange {
+  position: absolute;
+  background-color: var(--primary);
+  border-top-left-radius: 9999px;
+  border-bottom-left-radius: 9999px;
+  height: 100%;
+  transition: right 150ms;
+}
+
+.SliderThumb {
+  display: block;
+  width: 10px;
+  border-radius: 5px;
+  height: 30px;
+  background-color: var(--primary);
+}
+
+.SliderThumb:hover {
+  background-color: var(--primary-hover);
+}
+
+.SliderThumb:active {
+  background-color: var(--primary-active);
+}
