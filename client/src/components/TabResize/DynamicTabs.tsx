@@ -1,33 +1,32 @@
-// DynamicBoxes.tsx
 import React, { ReactNode, useState } from 'react';
 import { motion } from 'framer-motion';
-import DynamicBox from './DynamicBox';
+import DynamicTab from './DynamicTab';
 
-interface BoxesPropsBase {
+interface TabsPropsBase {
   children: ReactNode[];
   direction: 'horizontal' | 'vertical';
   initialSize: string | number;
 }
 
-interface VerticalBoxesProps extends BoxesPropsBase {
+interface VerticalTabsProps extends TabsPropsBase {
   direction: 'vertical';
   minHeightRatio: number[];
 }
 
-interface HorizontalBoxesProps extends BoxesPropsBase {
+interface HorizontalTabsProps extends TabsPropsBase {
   direction: 'horizontal';
   minWidthRatio: number[];
 }
 
-type DynamicBoxesProps = VerticalBoxesProps | HorizontalBoxesProps;
+type DynamicTabsProps = VerticalTabsProps | HorizontalTabsProps;
 
-const DynamicBoxes: React.FC<DynamicBoxesProps> = (props) => {
+const DynamicTabs: React.FC<DynamicTabsProps> = (props) => {
   const { children, direction, initialSize } = props;
   const isHorizontal = direction === 'horizontal';
 
   const minSizeRatios = isHorizontal
-    ? (props as HorizontalBoxesProps).minWidthRatio
-    : (props as VerticalBoxesProps).minHeightRatio;
+    ? (props as HorizontalTabsProps).minWidthRatio
+    : (props as VerticalTabsProps).minHeightRatio;
 
   const initialRatios = new Array(children.length).fill(1 / children.length);
   const totalRatio = initialRatios.reduce((acc, ratio) => acc + ratio, 0);
@@ -89,7 +88,7 @@ const DynamicBoxes: React.FC<DynamicBoxesProps> = (props) => {
     >
       {React.Children.map(children, (child, index) => (
         <React.Fragment key={index}>
-          <DynamicBox
+          <DynamicTab
             sx={{
               flexGrow: ratios[index],
               flexBasis: 0,
@@ -100,7 +99,7 @@ const DynamicBoxes: React.FC<DynamicBoxesProps> = (props) => {
             }}
           >
             {child}
-          </DynamicBox>
+          </DynamicTab>
           {index < children.length - 1 && (
             <motion.div
               style={{
@@ -125,4 +124,4 @@ const DynamicBoxes: React.FC<DynamicBoxesProps> = (props) => {
   );
 };
 
-export default DynamicBoxes;
+export default DynamicTabs;
