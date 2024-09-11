@@ -52,8 +52,8 @@ const Controls = () => {
     });
 
     setLoading(false);
-    bufferingRef.current = false;
     setBufferMode(false);
+    bufferingRef.current = false;
   };
 
   useEffect(() => {
@@ -64,9 +64,18 @@ const Controls = () => {
   }, [isActive]);
 
   useEffect(() => {
-    if (!bufferMode) return;
-    if (states.length - currentIndex < BUFFER_THRESHOLD && !bufferingRef.current) {
+    if (!bufferMode || bufferingRef.current) return;
+    if (states.length - currentIndex < BUFFER_THRESHOLD) {
       startBuffering(BUFFER_THRESHOLD);
+    } else {
+      // There's no need to buffer at this point
+      setMessage({
+        content: 'Buffer completed.',
+        colorTheme: 'info',
+        durationMs: DEFAULT_MESSAGE_DURATION,
+      });
+
+      setBufferMode(false);
     }
   }, [bufferMode]);
 
@@ -100,7 +109,6 @@ const Controls = () => {
       <Button
         variant="primary"
         onClick={() => {
-          bufferingRef.current = false;
           setBufferMode(false);
           setLoading(false);
           sendCode();
