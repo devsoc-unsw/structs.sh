@@ -23,6 +23,8 @@ const Controls = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [bufferMode, setBufferMode] = useState<boolean>(false);
+
+  // Avoid race condition
   const bufferingRef = useRef<boolean>(false);
   const { setToastMessage: setMessage } = useToastStateStore();
 
@@ -51,6 +53,7 @@ const Controls = () => {
 
     setLoading(false);
     bufferingRef.current = false;
+    setBufferMode(false);
   };
 
   useEffect(() => {
