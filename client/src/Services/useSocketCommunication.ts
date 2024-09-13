@@ -42,7 +42,11 @@ export const useSocketCommunication = () => {
         },
         sendFunctionDeclaration: (_data: FunctionStructure) => {},
         sendTypeDeclaration: (type: BackendTypeDeclaration) => {
-          updateTypeDeclaration(type);
+          console.log(type)
+          if (type.typeName as string != "size_t") {
+            updateTypeDeclaration(type);
+
+          }
         },
         sendBackendStateToUser: (state: BackendState | ProgramEnd) => {
           if (isProgramEnd(state)) {
