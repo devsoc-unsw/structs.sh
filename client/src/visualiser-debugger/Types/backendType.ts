@@ -67,7 +67,7 @@ export type SizetType = {
 export type SizetValue = {
   type: SizetType;
   value: null;
-}
+};
 export type ArrayValue = {
   type: ArrayType;
   // It is important that the value of an ArrayValue is an array of TypedValue,
