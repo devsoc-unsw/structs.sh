@@ -25,7 +25,7 @@ export const useSocketCommunication = () => {
   const { clearFrontendState } = useFrontendStateStore();
 
   const { socketClient } = useSocketClientStore();
-  const [activeSession, setActiveSession] = useState<boolean>(false);
+  const [activeSession] = useState<boolean>(false);
   const resetConsoleChunks = useGlobalStore((state) => state.resetConsoleChunks);
   const appendConsoleChunks = useGlobalStore((state) => state.appendConsoleChunks);
   const { updateCurrFocusedTab } = useGlobalStore();
@@ -59,13 +59,13 @@ export const useSocketCommunication = () => {
           updateNextFrame(state);
         },
         sendStdoutToUser: (output: string) => {
-          setConsoleChunks((prev) => [...prev, output]);
+          appendConsoleChunks([...output]);
         },
         programWaitingForInput: (_data: any) => {
           // Implement as needed
         },
         compileError: (errors: string[]) => {
-          setConsoleChunks((prev) => [...prev, ...errors]);
+          appendConsoleChunks([...errors]);
           updateCurrFocusedTab('2');
         },
         send_stdin: (_data: string) => {},
@@ -161,8 +161,8 @@ export const useSocketCommunication = () => {
   );
 
   return {
-    consoleChunks,
-    setConsoleChunks,
+    resetConsoleChunks,
+    appendConsoleChunks,
     activeSession,
     sendCode,
     getNextState: executeNextWithRetry,

@@ -20,7 +20,7 @@ const DevelopmentMode = () => {
   const inputElement = useRef(null);
   const { uiState, updateCurrFocusedTab } = useGlobalStore();
 
-  const { activeSession, sendCode, getNextState } = useSocketCommunication();
+  const { activeSession } = useSocketCommunication();
 
   const scrollToBottom = () => {
     if (inputElement.current) {
@@ -46,7 +46,7 @@ const DevelopmentMode = () => {
           />
         </div>
         <div className={classNames(styles.pane, styles.editor)}>
-          <CodeEditor currLine={currFrame?.frame_info?.line_num} />
+          <CodeEditor />
           <Console scrollToBottom={scrollToBottom} isActive={activeSession} />
         </div>
         <div className={classNames(styles.pane, styles.inspector)}>
@@ -58,12 +58,7 @@ const DevelopmentMode = () => {
               <StackInspector />
             </Tab>
             <Tab label="Console">
-              <Console
-                chunks={consoleChunks}
-                handleAddChunk={handleAddConsoleChunk}
-                scrollToBottom={scrollToBottom}
-                isActive={isActive}
-              />
+              <Console scrollToBottom={scrollToBottom} isActive={isActive} />
             </Tab>
           </Tabs>
         </div>
