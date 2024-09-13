@@ -59,6 +59,15 @@ export type ArrayType = {
   typeName: `${string}[]`;
   innerType: NativeType;
 };
+
+export type SizetType = {
+  typeName: 'size_t';
+};
+
+export type SizetValue = {
+  type: SizetType;
+  value: null;
+};
 export type ArrayValue = {
   type: ArrayType;
   // It is important that the value of an ArrayValue is an array of TypedValue,
@@ -75,6 +84,7 @@ export type TypedValue =
   | CharValue
   | StructValue
   | PointerValue
+  | SizetValue
   | ArrayValue;
 
 export type MemoryValue = TypedValue & { addr: Addr };
