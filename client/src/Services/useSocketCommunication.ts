@@ -42,7 +42,7 @@ export const useSocketCommunication = () => {
         },
         sendFunctionDeclaration: (_data: FunctionStructure) => {},
         sendTypeDeclaration: (type: BackendTypeDeclaration) => {
-          if (type.typeName == "size_t") {
+          if (type.typeName === "size_t") {
             return;
           }
           updateTypeDeclaration(type);
