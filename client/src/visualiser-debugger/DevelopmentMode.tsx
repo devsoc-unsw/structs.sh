@@ -14,10 +14,8 @@ import VisualizerMain from './Component/VisualizerMain';
 import FileManager from './Component/FileTree/FileManager';
 import { useGlobalStore } from './Store/globalStateStore';
 import { useSocketCommunication } from '../Services/useSocketCommunication';
-import { useFrontendStateStore } from './Store/frontendStateStore';
 
 const DevelopmentMode = () => {
-  const { isActive } = useFrontendStateStore();
   const inputElement = useRef(null);
   const { uiState, updateCurrFocusedTab } = useGlobalStore();
 
@@ -59,9 +57,6 @@ const DevelopmentMode = () => {
             </Tab>
             <Tab label="Inspect">
               <StackInspector />
-            </Tab>
-            <Tab label="Console">
-              <Console scrollToBottom={scrollToBottom} isActive={isActive} />
             </Tab>
           </Tabs>
         </div>
