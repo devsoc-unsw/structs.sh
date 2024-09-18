@@ -14,6 +14,7 @@ import FileManager from './Component/FileTree/FileManager';
 import { useGlobalStore } from './Store/globalStateStore';
 import { useSocketCommunication } from '../Services/useSocketCommunication';
 import { useFrontendStateStore } from './Store/frontendStateStore';
+import DynamicTabs from 'components/TabResize/DynamicTabs';
 
 const DevelopmentMode = () => {
   const { isActive } = useFrontendStateStore();
@@ -45,9 +46,11 @@ const DevelopmentMode = () => {
             }}
           />
         </div>
-        <div className={classNames(styles.pane, styles.editor)}>
-          <CodeEditor />
-          <Console scrollToBottom={scrollToBottom} isActive={activeSession} />
+        <div className={classNames(styles.editor)}>
+          <DynamicTabs direction="vertical" minHeightRatio={[0, 0]} initialSize="100%">
+            <CodeEditor />
+            <Console scrollToBottom={scrollToBottom} isActive={activeSession} />
+          </DynamicTabs>
         </div>
         <div className={classNames(styles.pane, styles.inspector)}>
           <Tabs value={uiState.currFocusedTab} onValueChange={updateCurrFocusedTab}>
