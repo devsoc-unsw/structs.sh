@@ -115,7 +115,7 @@ const DynamicTabs: React.FC<DynamicTabsProps> = (props) => {
               }}
               onMouseDown={handleMouseDown(index)}
               whileHover={{ backgroundColor: 'darkgray' }}
-              whileTap={isHorizontal ? { scaleX: 1.1 } : { scaleY: 1.5 }}
+              whileTap={{ scale: 1.1 }}
             />
           )}
         </React.Fragment>

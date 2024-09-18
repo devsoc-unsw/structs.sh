@@ -4,6 +4,9 @@
 
 
 .layout {
+  display: grid;
+  grid-template-columns: 250px 1fr 1fr;
+  grid-template-rows: 50px 1fr 1fr 50px;
   width: 100vw;
   height: 100vh;
   background: var(--slate-2);

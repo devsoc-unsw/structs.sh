@@ -4,7 +4,6 @@ import globalStyles from 'styles/global.module.css';
 import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
 import Console from 'visualiser-debugger/Component/Console/Console';
-import DynamicTabs from 'components/TabResize/DynamicTabs';
 import DevelopmentModeNavbar from '../components/Navbars/DevelopmentModeNavbar';
 import Configuration from './Component/Configuration/Configuration';
 import Controls from './Component/Control/Controls';
@@ -31,36 +30,43 @@ const DevelopmentMode = () => {
   };
 
   return (
-    <div className={classNames(globalStyles.root, styles.light, styles.layout)}>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <DevelopmentModeNavbar />
-        <div style={{ display: 'flex', flex: 1 }}>
-          <div className={classNames(styles.pane, styles.files)} style={{ overflowY: 'scroll' }}>
-            <FileManager />
-          </div>
-          <div className={classNames(styles.pane, styles.editor)}>
-            <CodeEditor />
-          </div>
+    <div className={classNames(globalStyles.root, styles.light)}>
+      <div className={styles.layout}>
+        <div className={classNames(styles.pane, styles.nav)}>
+          <DevelopmentModeNavbar />
+        </div>
+        <div className={classNames(styles.pane, styles.files)} style={{ overflowY: 'scroll' }}>
+          <FileManager />
+          <div
+            style={{
+              fontSize: 'small',
+              marginTop: '1.6rem',
+              color: 'rgb(85, 85, 85)',
+            }}
+          />
+        </div>
+        <div className={classNames(styles.pane, styles.editor)}>
+          <CodeEditor />
           <Console scrollToBottom={scrollToBottom} isActive={activeSession} />
-          <div className={classNames(styles.pane, styles.inspector)}>
-            <Tabs value={uiState.currFocusedTab} onValueChange={updateCurrFocusedTab}>
-              <Tab label="Configure">
-                <Configuration />
-              </Tab>
-              <Tab label="Inspect">
-                <StackInspector />
-              </Tab>
-              <Tab label="Console">
-                <Console scrollToBottom={scrollToBottom} isActive={isActive} />
-              </Tab>
-            </Tabs>
-          </div>
-          <div className={classNames(styles.pane, styles.visualiser)}>
-            <VisualizerMain />
-          </div>
-          <div className={classNames(styles.pane, styles.timeline)}>
-            <Controls />
-          </div>
+        </div>
+        <div className={classNames(styles.pane, styles.inspector)}>
+          <Tabs value={uiState.currFocusedTab} onValueChange={updateCurrFocusedTab}>
+            <Tab label="Configure">
+              <Configuration />
+            </Tab>
+            <Tab label="Inspect">
+              <StackInspector />
+            </Tab>
+            <Tab label="Console">
+              <Console scrollToBottom={scrollToBottom} isActive={isActive} />
+            </Tab>
+          </Tabs>
+        </div>
+        <div className={classNames(styles.pane, styles.visualiser)}>
+          <VisualizerMain />
+        </div>
+        <div className={classNames(styles.pane, styles.timeline)}>
+          <Controls />
         </div>
       </div>
     </div>
