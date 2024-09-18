@@ -1,6 +1,5 @@
 // TODO: Proper rework on this file => we want to re-design this anyway. I can't fix lint now because it will potentially change functioanlity of the file
 import React, { Fragment, useRef, useState } from 'react';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import styles from 'styles/Console.module.css';
 import classNames from 'classnames';
 import { useGlobalStore } from 'visualiser-debugger/Store/globalStateStore';
@@ -12,7 +11,8 @@ type ConsoleProp = {
 };
 
 const Console = ({ scrollToBottom, isActive }: ConsoleProp) => {
-  const [input, setInput] = useState('');
+  const PREFIX = 'structs.sh % ';
+  const [input, setInput] = useState(PREFIX);
   const inputElement = useRef(null);
   const socket = useSocketClientStore((state) => state.socketClient);
 
@@ -20,19 +20,27 @@ const Console = ({ scrollToBottom, isActive }: ConsoleProp) => {
   const appendConsoleChunk = useGlobalStore((state) => state.appendConsoleChunks);
 
   const handleInput = (currInput: string) => {
-    setInput(currInput);
+    // Ensure structs.sh prefix can't be deleted
+    if (currInput.startsWith(PREFIX)) {
+      setInput(currInput);
+    }
   };
 
   const clearInput = () => {
-    setInput('');
+    setInput(PREFIX);
     inputElement.current.innerText = '';
+  };
+
+  const removeStructsPrefix = (currInput: string) => {
+    return currInput.split(' ').slice(2).join(' ');
   };
 
   const handleKey = (event: React.KeyboardEvent<HTMLSpanElement>) => {
     if (event.key === 'Enter') {
-      if (input.length > 0) {
-        socket.serverAction.sendStdin(input);
-        appendConsoleChunk(`${input}\n`);
+      const removedPrefixInput = removeStructsPrefix(input);
+      if (removedPrefixInput.length > 0) {
+        socket.serverAction.sendStdin(removedPrefixInput);
+        appendConsoleChunk(`${removedPrefixInput}\n`);
         clearInput();
         scrollToBottom();
       }
@@ -63,20 +71,17 @@ const Console = ({ scrollToBottom, isActive }: ConsoleProp) => {
           <code>{chunk.replace(/\n$/, '')}</code>
         </Fragment>
       ))}
-      <div className={styles.consoleInput}>
-        <ChevronRightIcon />
-        <input
-          className={styles.input}
-          key="input"
-          onChange={(e) => handleInput(e.target.value)}
-          value={input}
-          onKeyDown={handleKey}
-          ref={inputElement}
-          contentEditable
-          suppressContentEditableWarning
-          spellCheck={false}
-        />
-      </div>
+      <textarea
+        className={styles.textArea}
+        key="input"
+        onChange={(e) => handleInput(e.target.value)}
+        value={input}
+        onKeyDown={handleKey}
+        ref={inputElement}
+        contentEditable
+        suppressContentEditableWarning
+        spellCheck={false}
+      />
     </div>
   );
 };
