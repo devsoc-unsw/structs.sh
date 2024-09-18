@@ -4,6 +4,7 @@ import globalStyles from 'styles/global.module.css';
 import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
 import Console from 'visualiser-debugger/Component/Console/Console';
+import DynamicTabs from 'components/TabResize/DynamicTabs';
 import DevelopmentModeNavbar from '../components/Navbars/DevelopmentModeNavbar';
 import Configuration from './Component/Configuration/Configuration';
 import Controls from './Component/Control/Controls';
@@ -14,7 +15,6 @@ import FileManager from './Component/FileTree/FileManager';
 import { useGlobalStore } from './Store/globalStateStore';
 import { useSocketCommunication } from '../Services/useSocketCommunication';
 import { useFrontendStateStore } from './Store/frontendStateStore';
-import DynamicTabs from 'components/TabResize/DynamicTabs';
 
 const DevelopmentMode = () => {
   const { isActive } = useFrontendStateStore();
