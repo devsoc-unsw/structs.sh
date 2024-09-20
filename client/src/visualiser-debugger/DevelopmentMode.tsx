@@ -58,7 +58,7 @@ const DevelopmentMode = () => {
   // Send code using the hook's sendCode function, passing necessary parameters
   const handleSendCode = () => {
     sendCode(fileSystem, currFocusFilePath);
-  };
+  };dffffff
 
   // Onboarding Code
   const { onboardingCurrFile } = useFileOnboardingStateStore();
