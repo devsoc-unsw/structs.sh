@@ -71,17 +71,20 @@ const Console = ({ scrollToBottom, isActive }: ConsoleProp) => {
           <code>{chunk.replace(/\n$/, '')}</code>
         </Fragment>
       ))}
-      <textarea
-        className={styles.textArea}
-        key="input"
-        onChange={(e) => handleInput(e.target.value)}
-        value={input}
-        onKeyDown={handleKey}
-        ref={inputElement}
-        contentEditable
-        suppressContentEditableWarning
-        spellCheck={false}
-      />
+      <div className={styles.inputContainer}>
+        <textarea
+          className={styles.textArea}
+          key="input"
+          onChange={(e) => handleInput(e.target.value)}
+          value={input}
+          onKeyDown={handleKey}
+          ref={inputElement}
+          contentEditable
+          suppressContentEditableWarning
+          spellCheck={false}
+        />
+        <div className={styles.cursor} />
+      </div>
     </div>
   );
 };

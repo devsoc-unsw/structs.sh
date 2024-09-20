@@ -45,7 +45,7 @@ const DevelopmentMode = () => {
           />
         </div>
         <div className={classNames(styles.editor)}>
-          <DynamicTabs direction="vertical" minHeightRatio={[0, 0]} initialSize="100%">
+          <DynamicTabs direction="vertical" minHeightRatio={[0.1, 0.2]} initialSize="100%">
             <CodeEditor />
             <Console scrollToBottom={scrollToBottom} isActive={activeSession} />
           </DynamicTabs>

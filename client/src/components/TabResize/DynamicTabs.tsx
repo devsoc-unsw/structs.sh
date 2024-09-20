@@ -93,7 +93,7 @@ const DynamicTabs: React.FC<DynamicTabsProps> = (props) => {
               flexGrow: ratios[index],
               flexBasis: 0,
               display: 'flex',
-              alignItems: 'center',
+              // alignItems: 'center',
               // justifyContent: 'center',
               overflow: 'hidden',
             }}

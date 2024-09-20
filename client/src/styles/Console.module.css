@@ -23,7 +23,23 @@
   outline: none;
   color: black;
   font-weight: bolder;
-  height: 100%;
+  height: 95%;
+  width: 95%;
   border: none;
   background-color: #F9F9FB;
+}
+
+.cursor {
+  width: 10px;
+  height: 1.2rem;
+  position: absolute;
+  top: 0;
+  left: 10;
+  background-color: black;
+}
+
+.inputContainer {
+  width: 100%;
+  height: 100%;
+  position: relative;
 }
