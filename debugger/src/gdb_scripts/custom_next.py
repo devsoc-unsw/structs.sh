@@ -426,7 +426,7 @@ class CustomNextCommand(gdb.Command):
 
             # === Extract value
             if array_end.search(type_name):
-                arr = eval(value_str.replace("{", "[").replace("}", "]")) # eval should be safe cause only interacting with gdb :P
+                arr = [ eval(el.split()[0]) for el in value_str.strip("{}").split(",") ] # eval should be safe cause only interacting with gdb :P
                 stack_memory_value["nCells"] = len(arr)
                 stack_memory_value["array"] = arr
 
