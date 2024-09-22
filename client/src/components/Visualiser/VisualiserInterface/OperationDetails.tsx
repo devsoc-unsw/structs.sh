@@ -9,6 +9,9 @@ import VisualiserContext from './VisualiserContext';
 
 interface OperationDetailsProps {
   command: string;
+  handleTimelineUpdate: (val: number) => void;
+  handleUpdateIsPlaying: (val: boolean) => void;
+  handleSetCodeSnippetExpansion: (val: boolean) => void;
 }
 
 const OperationExpandButton = styled(Button)({
@@ -25,18 +28,22 @@ const StyledListItem = styled(ListItem)({
 /**
  * Contains the input for an operation, the button to execute them and error messages
  */
-const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
+const OperationDetails: FC<OperationDetailsProps> = ({
+  command,
+  handleTimelineUpdate,
+  handleUpdateIsPlaying,
+  handleSetCodeSnippetExpansion,
+}) => {
   const {
-    documentation,
     controller,
-    timeline: { handleTimelineUpdate, handleUpdateIsPlaying },
-    codeSnippet: { handleSetCodeSnippetExpansion },
+    // timeline: { handleTimelineUpdate, handleUpdateIsPlaying },
+    // codeSnippet: { handleSetCodeSnippetExpansion },
   } = useContext(VisualiserContext);
   const theme: Theme = useTheme();
 
   const [shouldDisplay, setShouldDisplay] = useState<boolean>(false);
   const [currentInputs, setCurrentInputs] = useState<string[]>(
-    Array(documentation[command]?.args?.length || 0).fill('')
+    Array(controller.documentation[command]?.args?.length || 0).fill('')
   );
   const [errorMessage, setErrorMessage] = useState<string>('');
 
@@ -64,7 +71,7 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
     setErrorMessage(err);
     if (err !== '') {
       setTimeout(() => setErrorMessage(''), 2000);
-    } else if (!documentation[command]?.noTimeline) {
+    } else if (!controller.documentation[command]?.noTimeline) {
       handleSetCodeSnippetExpansion(true);
       handleUpdateIsPlaying(true);
     }
@@ -85,12 +92,12 @@ const OperationDetails: FC<OperationDetailsProps> = ({ command }) => {
       </Box>
       <Collapse in={shouldDisplay} timeout="auto" orientation="horizontal">
         <Box display="flex" alignItems="center">
-          {documentation[command].args.map((eachArg, idx) => (
+          {controller.documentation[command].args.map((eachArg, idx) => (
             <Box key={idx} boxSizing="border-box" padding="5px" width="110px">
               <TextField
                 size="small"
                 value={currentInputs[idx]}
-                onKeyPress={(e) => {
+                onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     executeCommand(currentInputs);
                   }

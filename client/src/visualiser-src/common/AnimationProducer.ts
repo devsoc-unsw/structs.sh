@@ -154,6 +154,9 @@ export default abstract class AnimationProducer {
   // Modifies the height of the code snippet container to be
   // responsive to the number of lines of code required for the operation
   private setContainerHeight(): void {
-    document.getElementById(CODE_CONTAINER).style.height = `${18 * this.codeTargets.length}px`;
+    const codeContainer = document.getElementById(CODE_CONTAINER);
+    if (codeContainer) {
+      codeContainer.style.height = `${18 * this.codeTargets.length}px`;
+    }
   }
 }

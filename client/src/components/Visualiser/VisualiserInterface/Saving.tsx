@@ -2,10 +2,19 @@
 // TODO: Proper rework on this file => we want to re-design this anyway. I can't fix lint now because it will potentially change functioanlity of the file
 import { Box, Typography, Button, Alert, Snackbar, Collapse, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  KeyboardEvent,
+  MouseEvent,
+  FocusEvent,
+} from 'react';
 import axios from 'axios';
 import { SERVER_URL } from 'utils/constants';
 import LoadOptions from './LoadOptions';
+import VisualiserContext from './VisualiserContext';
 
 const MenuButton = styled(Button)({
   backgroundColor: '#C81437',
@@ -27,7 +36,8 @@ const SaveBox = styled(Box)({
   boxSizing: 'border-box',
 });
 
-const Saving = ({ topicTitle, controller }) => {
+const Saving = () => {
+  const { controller } = useContext(VisualiserContext);
   const [loadOptions, setLoadOptions] = useState([]);
   const [saveName, setSaveName] = useState('');
 
@@ -38,11 +48,11 @@ const Saving = ({ topicTitle, controller }) => {
   const [showSavedAlert, setShowSavedAlert] = useState(false);
   const [showFailedAlert, setShowFailedAlert] = useState(false);
 
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setToggleLoad(false);
-  }, [topicTitle]);
+  }, [controller]);
 
   useEffect(() => {
     if (inputRef.current && toggleSave) {
@@ -51,7 +61,7 @@ const Saving = ({ topicTitle, controller }) => {
     }
   }, [toggleSave]);
 
-  const handleUnfocus = (event) => {
+  const handleUnfocus = (event: FocusEvent<HTMLDivElement>) => {
     if (!event.relatedTarget) {
       setToggleSave(false);
       setSaveName('');
@@ -64,12 +74,12 @@ const Saving = ({ topicTitle, controller }) => {
     }
   };
 
-  const makeFailedAlert = (msg) => {
+  const makeFailedAlert = (msg: string) => {
     setErrMsg(msg);
     setShowFailedAlert(true);
   };
 
-  const handleKeyPress = (event) => {
+  const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       handleSave();
     }
@@ -87,11 +97,16 @@ const Saving = ({ topicTitle, controller }) => {
       return;
     }
 
+    const topic = controller.topic;
+    if (!topic) {
+      makeFailedAlert('No topic selected');
+    }
+
     const data = {
       owner,
-      type: topicTitle,
+      type: topic,
       name: saveName,
-      data: controller.getData(),
+      data: controller.data,
     };
 
     axios
@@ -112,31 +127,27 @@ const Saving = ({ topicTitle, controller }) => {
   const handleLoad = () => {
     axios
       .get(`${SERVER_URL}/api/getOwnedData`, {
-        params: { topicTitle, user: localStorage.getItem('user') },
+        params: { topicTitle: controller.topic, user: localStorage.getItem('user') },
       })
       .then((response) => {
-        // Handle the response data
-        const newOptions: any[] = [];
-        response.data.forEach((item, index) => {
-          newOptions.push({
+        setLoadOptions(
+          response.data.map((item: any, index: number) => ({
             key: index,
             owner: item.owner,
             type: item.type,
             name: item.name,
             data: item.data,
-          });
-        });
-        setLoadOptions(newOptions);
+          }))
+        );
         setToggleLoad(true);
       })
       .catch((error) => {
-        // Handle the error
         console.error('Error Loading data structure:', error);
         makeFailedAlert('Saving Failed. Problem on our End :(');
       });
   };
 
-  const load = (e, data: number[]) => {
+  const load = (e: MouseEvent<HTMLButtonElement>, data: number[]) => {
     e.stopPropagation();
     controller.loadData(data);
     setToggleLoad(false);

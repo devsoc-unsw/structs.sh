@@ -93,7 +93,7 @@ const WorkspaceSelector = () => {
     }
     if (fileToDelete) {
       fileSystem.deleteFile(fileToDelete);
-    } else {
+    } else if (dirToDelete) {
       fileSystem.deleteFile(dirToDelete);
     }
     fileSystem.saveChanges();

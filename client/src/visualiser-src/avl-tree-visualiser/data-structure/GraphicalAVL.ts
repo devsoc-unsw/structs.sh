@@ -30,7 +30,7 @@ class GraphicalAVL extends GraphicalDataStructure {
     },
   });
 
-  public root: GraphicalAVLNode = null;
+  public root: GraphicalAVLNode | null = null;
 
   public insert(input: number): AVLAnimationProducer {
     const animationProducer: AVLAnimationProducer = new AVLAnimationProducer();
@@ -65,7 +65,7 @@ class GraphicalAVL extends GraphicalDataStructure {
   }
 
   private doInsert(
-    parent: GraphicalAVLNode,
+    parent: GraphicalAVLNode | null,
     root: GraphicalAVLNode,
     isInsertLeft: boolean,
     input: number,
@@ -157,8 +157,8 @@ class GraphicalAVL extends GraphicalDataStructure {
   }
 
   private rotateLeft(
-    parent: GraphicalAVLNode,
-    node: GraphicalAVLNode,
+    parent: GraphicalAVLNode | null,
+    node: GraphicalAVLNode | null,
     isInsertLeft: boolean,
     animationProducer: AVLAnimationProducer
   ) {
@@ -206,8 +206,8 @@ class GraphicalAVL extends GraphicalDataStructure {
   }
 
   private rotateRight(
-    parent: GraphicalAVLNode,
-    node: GraphicalAVLNode,
+    parent: GraphicalAVLNode | null,
+    node: GraphicalAVLNode | null,
     isInsertLeft: boolean,
     animationProducer: AVLAnimationProducer
   ) {
@@ -259,7 +259,7 @@ class GraphicalAVL extends GraphicalDataStructure {
     GraphicalAVL.updateHeight(this.root);
   }
 
-  private static updateHeight(root: GraphicalAVLNode) {
+  private static updateHeight(root: GraphicalAVLNode | null) {
     if (root == null) {
       return;
     }
@@ -276,7 +276,7 @@ class GraphicalAVL extends GraphicalDataStructure {
     return data;
   }
 
-  private saveInPreOrder(node: GraphicalAVLNode, data: number[]) {
+  private saveInPreOrder(node: GraphicalAVLNode | null, data: number[]) {
     if (node == null) return;
 
     data.push(node.value);

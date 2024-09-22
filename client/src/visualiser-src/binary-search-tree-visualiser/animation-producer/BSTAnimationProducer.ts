@@ -87,7 +87,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
     this.updateLinesRecursive(root);
   }
 
-  public updateNodesRecursive(node: GraphicalBSTNode): void {
+  public updateNodesRecursive(node: GraphicalBSTNode | null): void {
     if (node === null) {
       return;
     }
@@ -103,7 +103,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
     this.addSequenceAnimation(node.textTarget.animate(400).cx(newX).cy(newY));
   }
 
-  public updateLinesRecursive(node: GraphicalBSTNode): void {
+  public updateLinesRecursive(node: GraphicalBSTNode | null): void {
     if (node === null) {
       return;
     }
@@ -132,7 +132,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
   // returns the difference in x coordinates with the node
   // and it's two child nodes
   public static getLineDiffX(node: GraphicalBSTNode): number {
-    const canvasWidth = document.getElementById('visualiser-container').offsetWidth;
+    const canvasWidth = document.getElementById('visualiser-container')!.offsetWidth;
     const depth: number = (node.y - canvasPadding) / 75;
     const baseDiff = canvasWidth / 4;
 
@@ -144,7 +144,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
     this.unhighlightNodesRecursive(root);
   }
 
-  public unhighlightLinesRecursive(node: GraphicalBSTNode): void {
+  public unhighlightLinesRecursive(node: GraphicalBSTNode | null): void {
     if (node === null) {
       return;
     }
@@ -171,7 +171,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
     }
   }
 
-  public unhighlightNodesRecursive(node: GraphicalBSTNode): void {
+  public unhighlightNodesRecursive(node: GraphicalBSTNode | null): void {
     if (node === null) {
       return;
     }
@@ -210,7 +210,9 @@ export default class BSTAnimationProducer extends AnimationProducer {
     this.addSequenceAnimation(
       oldRoot.leftLineTarget
         .animate(400)
-        .plot(getPointerStartEndCoordinates(oldRoot.x, oldRoot.y, newRoot.right.x, newRoot.right.y))
+        .plot(
+          getPointerStartEndCoordinates(oldRoot.x, oldRoot.y, newRoot.right!.x, newRoot.right!.y)
+        )
     );
   }
 
@@ -218,7 +220,7 @@ export default class BSTAnimationProducer extends AnimationProducer {
     this.addSequenceAnimation(
       oldRoot.rightLineTarget
         .animate(400)
-        .plot(getPointerStartEndCoordinates(oldRoot.x, oldRoot.y, newRoot.left.x, newRoot.left.y))
+        .plot(getPointerStartEndCoordinates(oldRoot.x, oldRoot.y, newRoot.left!.x, newRoot.left!.y))
     );
   }
 

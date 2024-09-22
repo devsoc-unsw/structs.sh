@@ -15,6 +15,10 @@ const ConfigurationSelect = ({
 
   const handleValueChange = (newValue: string) => {
     const foundField = fields.find((field) => field.name === newValue);
+    if (!foundField) {
+      console.error('Field not found');
+      return;
+    }
     setValue(newValue);
     handleUpdateAnnotation(foundField.name, foundField.typeName);
   };
