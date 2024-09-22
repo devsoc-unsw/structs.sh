@@ -40,9 +40,6 @@ export const generateSortingNumbers = () => {
       dupedIndices.push(randomNumber);
     }
   }
-  console.log(totalNodes);
-  console.log(dupeIndex);
-  console.log(dupedIndices);
   for (let i = 0; i < totalNodes; i += 1) {
     // 10% chance to randomly choose a number to be duplicated
     const rng = Math.random();
