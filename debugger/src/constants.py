@@ -15,4 +15,10 @@ USER_PTYPE_FILE_NAME = "ptype_output.c"
 USER_PTYPE_PREPROCESSED = "ptype_output_preprocessed"
 
 # Amount of time to allow select.select() to wait for program stdout before timing out
-TIMEOUT_DURATION = 0.05
+TIMEOUT_DURATION = 0.6
+
+# Range of ports to give to debug sessions for communicating between debugger
+# server and gdb subprocess.
+# Ports used will be in range [MIN_SOCKET_PORT, MIN_SOCKET_PORT + PORT_RANGE)
+MIN_SOCKET_PORT = 11000
+PORT_RANGE = 100
