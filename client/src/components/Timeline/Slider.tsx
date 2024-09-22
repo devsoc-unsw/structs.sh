@@ -59,7 +59,7 @@ const SliderComponent = ({
 }: {
   max: number;
   value: number;
-  onChange: (event: Event, value: number) => void;
+  onChange: (event: Event, value: number | number[], activeThumb: number) => void;
   loading: boolean;
 }) => {
   const marks = useMemo(() => {

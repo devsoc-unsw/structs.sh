@@ -151,7 +151,11 @@ const Controls = () => {
       <Slider
         max={states.length - 1}
         value={currentIndex}
-        onChange={(event: Event, value: number) => jumpToState(value)}
+        onChange={(event: Event, value: number | number[], _activeThumb: number) => {
+          if (typeof value !== 'number') return;
+
+          jumpToState(value as number);
+        }}
         loading={loading}
       />
     </div>
