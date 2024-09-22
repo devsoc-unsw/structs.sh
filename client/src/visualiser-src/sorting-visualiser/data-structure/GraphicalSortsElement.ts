@@ -10,6 +10,7 @@ interface SVGData {
 
 interface GraphicalSortsElementData {
   value: number;
+  displayValue: string;
   svgData: SVGData;
 }
 
@@ -32,16 +33,17 @@ export default class GraphicalSortsElement {
     return pointer;
   }
 
-  public static from(input: number) {
+  public static from(input: number, displayInput: string) {
     const canvas = SVG(`#${VISUALISER_CANVAS_ID}`) as Svg;
     const blockShape = canvas
       .rect()
       .attr(shapeAttributes)
       .width(boxWidth)
       .height(Math.sqrt(input * 90));
-    const elementValue = canvas.text(String(input)).attr(textAttributes);
+    const elementValue = canvas.text(String(displayInput)).attr(textAttributes);
     return new GraphicalSortsElement({
       value: input,
+      displayValue: displayInput,
       svgData: {
         numberTarget: elementValue,
         boxTarget: blockShape,
