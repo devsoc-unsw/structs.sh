@@ -4,7 +4,7 @@ import { Documentation } from 'visualiser-src/common/typedefs';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
 import { injectIds } from 'visualiser-src/common/helpers';
 import { CANVAS } from 'visualiser-src/linked-list-visualiser/util/constants';
-import { generateNumbers } from 'visualiser-src/common/RandomNumGenerator';
+import { generateSortingNumbers } from 'visualiser-src/common/RandomNumGenerator';
 import GraphicalSortsElement from './GraphicalSortsElement';
 import SortsBubbleAnimationProducer from '../animation-producer/SortsBubbleAnimationProducer';
 import SortsMergeAnimationProducer from '../animation-producer/SortsMergeAnimationProducer';
@@ -19,6 +19,7 @@ import {
   selectedColor,
   redColour,
 } from '../util/constants';
+import { countOccurences, letterMap } from '../util/helpers';
 
 export default class GraphicalSortList extends GraphicalDataStructure {
   public elementList: GraphicalSortsElement[] = [];
@@ -67,8 +68,17 @@ export default class GraphicalSortList extends GraphicalDataStructure {
   public append(values: number[]): AnimationProducer {
     const producer = new SortsCreateAnimationProducer();
     values.forEach((value) => {
-      const element = GraphicalSortsElement.from(value);
-      producer.addBlock(value, this.elementList.length, element);
+      const numbers = this.data;
+      const occurrences = countOccurences(numbers);
+      const numberCount = occurrences[value];
+      let element;
+      if (numberCount === undefined) {
+        element = GraphicalSortsElement.from(value, `${value}`);
+        producer.addBlock(value, this.elementList.length, element);
+      } else {
+        element = GraphicalSortsElement.from(value, `${value}${letterMap[numberCount - 1]}`);
+        producer.addBlock(value, this.elementList.length, element);
+      }
       this.elementList.push(element);
     });
     return producer;
@@ -76,13 +86,19 @@ export default class GraphicalSortList extends GraphicalDataStructure {
 
   public delete(values: number[]): AnimationProducer {
     const producer = new SortsCreateAnimationProducer();
-    const listValues = this.elementList
-      .map((element) => element.data.value)
-      .filter((x) => !values.includes(x));
+
+    const remainingElements = [...this.elementList];
+    values.forEach((value) => {
+      const index = remainingElements.findIndex((element) => element.data.value === value);
+      if (index !== -1) {
+        remainingElements.splice(index, 1);
+      }
+    });
 
     // Clear the canvas, and re-insert the existing values in the list into the canvas
     SVG(CANVAS).clear();
     this.elementList = [];
+    const listValues = remainingElements.map((element) => element.data.value);
     this.append(listValues);
 
     return producer;
@@ -541,7 +557,7 @@ export default class GraphicalSortList extends GraphicalDataStructure {
   }
 
   public generate(): void {
-    const numbers = generateNumbers();
+    const numbers = generateSortingNumbers();
     this.append(numbers);
   }
 
