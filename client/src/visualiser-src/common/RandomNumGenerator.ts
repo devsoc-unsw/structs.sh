@@ -28,27 +28,30 @@ export const generateSortingNumbers = () => {
   // Storing all the indices that will have duplicated values in result array
   const dupedIndices = [];
   for (let i = 0; i < dupeCount; i++) {
-    const randomNumber = Math.floor(Math.random() * (totalNodes - dupeIndex + 1) + dupeIndex);
-    // If the random index was already generated or is equivalent to the ranges, regenerate
-    if (
-      dupedIndices.includes(randomNumber) ||
-      randomNumber === totalNodes ||
-      randomNumber === dupeIndex
-    ) {
+    // Produce random number in range [dupeIndex + 1, totalNodes - 1] inclusive
+    const randomNumber = dupeIndex + 1 + Math.floor(Math.random() * (totalNodes - dupeIndex - 1));
+    // If the random index was already generated, regenerate
+    if (dupedIndices.includes(randomNumber)) {
       i--;
     } else {
       dupedIndices.push(randomNumber);
     }
   }
   for (let i = 0; i < totalNodes; i += 1) {
-    // 10% chance to randomly choose a number to be duplicated
-    const rng = Math.random();
+    // 90% of the time we generate a new value.
+    // 10% chance to randomly choose some existing value in the array to be
+    // duplicated, that is not the value that is already chosen to be
+    // duplicated 3-4 times.
+    const willGenerateNewVal = Math.random() < 0.9;
+
     if (dupedIndices.includes(result.length)) {
       result.push(result[dupeIndex]);
-    } else if (rng < 0.9 || result.length === 0) {
+    } else if (result.length === 0 || willGenerateNewVal) {
       const num = Math.ceil(Math.random() * 99);
       result.push(num);
     } else {
+      // Duplicate a random value from the array, that is not the value
+      // that is already chosen to be duplicated 3-4 times.
       let randomIndex = dupeIndex;
       while (result[randomIndex] === result[dupeIndex]) {
         randomIndex = Math.floor(Math.random() * result.length);
