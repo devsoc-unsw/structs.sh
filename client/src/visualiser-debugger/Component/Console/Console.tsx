@@ -1,5 +1,5 @@
 // TODO: Proper rework on this file => we want to re-design this anyway. I can't fix lint now because it will potentially change functioanlity of the file
-import React, { Fragment, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styles from 'styles/Console.module.css';
 import classNames from 'classnames';
 import { useGlobalStore } from 'visualiser-debugger/Store/globalStateStore';
@@ -53,6 +53,11 @@ const Console = ({ scrollToBottom, isActive }: ConsoleProp) => {
     inputElement.current.focus();
   };
 
+  const splitChunks = (chunk: string[]) => {
+    const joinedChunks = chunk.join('');
+    return joinedChunks.split('\n');
+  };
+
   return (
     <div
       className={classNames(styles.console, { [styles.errorText]: !isActive })}
@@ -66,11 +71,11 @@ const Console = ({ scrollToBottom, isActive }: ConsoleProp) => {
       role="button"
       tabIndex={0}
     >
-      {consoleChunks.map((chunk: string, index: number) => (
-        <Fragment key={index}>
-          <code>{chunk.replace(/\n$/, '')}</code>
-        </Fragment>
-      ))}
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        {splitChunks(consoleChunks).map((chunk: string, index: number) => (
+          <div key={index}>{chunk}</div>
+        ))}
+      </div>
       <div className={styles.inputContainer}>
         <textarea
           className={styles.textArea}
