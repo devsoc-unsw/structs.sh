@@ -16,7 +16,7 @@ import './css/WorkspaceSelector.css';
 import { useUserFsStateStore } from '../../Store/userFsStateStore';
 import { IFileDirNode, IFileFileNode, IFileType } from './FS/IFileSystem';
 
-const WorkspaceSelector = () => {
+const WorkspaceSelector = ({ onWorkspaceClick }: { onWorkspaceClick: () => void }) => {
   const { fileSystem, currFocusDirPath, currFocusFilePath } = useUserFsStateStore.getState();
   let currFocus = currFocusFilePath || currFocusDirPath;
   const [open, setOpen] = useState(false);
@@ -110,7 +110,7 @@ const WorkspaceSelector = () => {
           <Tooltip title="Create new file">
             <Button
               onClick={() => handleClickOpen('File')}
-              className="icon-button"
+              className="fileButton"
               style={fileButtonStyle}
             >
               <AddIcon style={{ fontSize: '20px' }} />
@@ -119,7 +119,7 @@ const WorkspaceSelector = () => {
           <Tooltip title="Create new folder">
             <Button
               onClick={() => handleClickOpen('Folder')}
-              className="icon-button"
+              className="folderButton"
               style={fileButtonStyle}
             >
               <CreateNewFolderIcon style={{ fontSize: '20px' }} />
@@ -136,11 +136,25 @@ const WorkspaceSelector = () => {
           </Tooltip>
         </Box>
       </Box>
-      {fileSystem ? (
-        <Folder folder={fileSystem.getRootDirectory()} depth={0} />
-      ) : (
-        <div>Loading...</div>
-      )}
+      <div
+        className="rootDirectory"
+        onClick={onWorkspaceClick}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            onWorkspaceClick();
+          }
+        }}
+      >
+        {fileSystem ? (
+          <div className="rootContent">
+            <Folder folder={fileSystem.getRootDirectory()} depth={0} />
+          </div>
+        ) : (
+          <div>Loading...</div>
+        )}
+      </div>
       <Dialog
         open={open}
         onClose={handleClose}

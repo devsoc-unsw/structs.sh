@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import styles from 'styles/DevelopmentMode.module.css';
 import globalStyles from 'styles/global.module.css';
 import classNames from 'classnames';
@@ -14,6 +14,26 @@ import FileManager from './Component/FileTree/FileManager';
 import { useGlobalStore } from './Store/globalStateStore';
 import { useSocketCommunication } from '../Services/useSocketCommunication';
 import { useFrontendStateStore } from './Store/frontendStateStore';
+
+// Onboarding Imports
+import Joyride, { ACTIONS, CallBackProps, EVENTS, STATUS, Step } from 'react-joyride';
+import { useMount, useSetState } from 'react-use';
+import a11yChecker from 'a11y-checker';
+import { useFileOnboardingStateStore } from './Store/onboardingStateStore';
+
+// Onboarding Types
+interface State {
+  run: boolean;
+  workspaceOpen: boolean;
+  stepIndex: number;
+  steps: Step[];
+}
+
+function logGroup(type: string, data: any) {
+  console.groupCollapsed(type);
+  console.log(data);
+  console.groupEnd();
+}
 
 const DevelopmentMode = () => {
   const { isActive } = useFrontendStateStore();
@@ -32,14 +52,369 @@ const DevelopmentMode = () => {
     }
   };
 
+  // Onboarding Code
+  const { onboardingCurrFile } = useFileOnboardingStateStore();
+  const [{ run, workspaceOpen, stepIndex, steps }, setState] = useSetState<State>({
+    run: false,
+    workspaceOpen: false,
+    stepIndex: 0,
+    steps: [
+      {
+        content:
+          'This is Structs.sh, a student-developed project that aims to push the limits of algorithm visualisation!',
+        placement: 'center',
+        target: 'body',
+        title: 'Welcome to Structs.sh',
+        disableScrolling: true,
+        disableScrollParentFix: true,
+      },
+      {
+        content:
+          'You can access this onboarding at any time if you ever get stuck. Additionally, you can also use the dropdown menu for any specific feature.',
+        placement: 'auto',
+        target: '.onboardingButton',
+        title: 'The Onboarding Menu',
+        spotlightPadding: 0,
+        styles: {
+          options: {
+            zIndex: 10000,
+          },
+        },
+        disableScrolling: true,
+        disableScrollParentFix: true,
+      },
+      {
+        content:
+          'This is the workspace feature, where you can store your code in different C files.',
+        target: '.workspace',
+        placement: 'right',
+        spotlightPadding: 0,
+        styles: {
+          options: {
+            zIndex: 10000,
+          },
+        },
+        title: 'Sidebar',
+        disableScrolling: true,
+        disableScrollParentFix: true,
+      },
+      {
+        content: 'You can click this + button to create a new file.',
+        placement: 'right',
+        target: '.fileButton',
+        title: 'File Creation',
+        spotlightPadding: 0,
+        styles: {
+          options: {
+            zIndex: 10000,
+          },
+        },
+        disableScrolling: true,
+        disableScrollParentFix: true,
+      },
+      {
+        content: 'You can click this folder button to create a new folder.',
+        placement: 'right',
+        target: '.folderButton',
+        title: 'Folder Creation',
+        spotlightPadding: 0,
+        styles: {
+          options: {
+            zIndex: 10000,
+          },
+        },
+        disableScrolling: true,
+        disableScrollParentFix: true,
+      },
+      {
+        content: 'You can see any files or folders you have created by opening the root directory.',
+        placement: 'right',
+        target: '.rootContent',
+        title: 'The Root Directory',
+        spotlightPadding: 0,
+        styles: {
+          options: {
+            zIndex: 10000,
+          },
+        },
+        disableScrolling: true,
+        disableScrollParentFix: true,
+      },
+      {
+        content:
+          'Lets open a file for demonstration purposes. Please start by opening the root directory.',
+        placement: 'right',
+        target: '.rootContent',
+        title: 'Opening the Root Directory',
+        spotlightPadding: 0,
+        styles: {
+          options: {
+            zIndex: 10000,
+          },
+        },
+        disableOverlayClose: true,
+        hideCloseButton: true,
+        hideFooter: true,
+        spotlightClicks: true,
+        disableScrolling: true,
+        disableScrollParentFix: true,
+      },
+      {
+        content:
+          'Any files created will be placed in the most recently opened folder, defaulting to the root directory.',
+        placement: 'right',
+        target: '.rootContent',
+        title: 'Root Directory Content',
+        spotlightPadding: 0,
+        styles: {
+          options: {
+            zIndex: 10000,
+          },
+        },
+        disableScrolling: true,
+        disableScrollParentFix: true,
+      },
+      {
+        content: 'Please click on the 2521_Tut02 directory and open the linked_list_delete.c file.',
+        placement: 'right',
+        target: '.sidebar',
+        title: 'Opening a file',
+        spotlightPadding: 0,
+        styles: {
+          options: {
+            zIndex: 10000,
+          },
+        },
+        disableOverlayClose: true,
+        hideCloseButton: true,
+        hideFooter: true,
+        spotlightClicks: true,
+        disableScrolling: true,
+        disableScrollParentFix: true,
+      },
+      {
+        content:
+          'This is where we visualise our code. You can write and edit like any code editor you would be familiar with.',
+        placement: 'right',
+        target: '.codeEditor',
+        title: 'The Code Editor',
+        spotlightPadding: 0,
+        styles: {
+          options: {
+            zIndex: 10000,
+          },
+        },
+        disableScrolling: true,
+        disableScrollParentFix: true,
+      },
+      {
+        content:
+          'After you are finished writing your code, you can compile by pressing this button. Why not give it a press?',
+        placement: 'top',
+        target: '.compileButton',
+        title: 'Compiling the Code',
+        spotlightPadding: 0,
+        styles: {
+          options: {
+            zIndex: 10000,
+          },
+        },
+        disableOverlayClose: true,
+        hideCloseButton: true,
+        hideFooter: true,
+        spotlightClicks: true,
+        disableScrolling: true,
+        disableScrollParentFix: true,
+      },
+      {
+        content: 'This is the annotations, where you see the result of your compilation.',
+        placement: 'left',
+        target: '.inspectionMenu',
+        title: 'Compilation Results',
+        spotlightPadding: 0,
+        styles: {
+          options: {
+            zIndex: 10000,
+          },
+        },
+        disableScrolling: true,
+        disableScrollParentFix: true,
+      },
+      {
+        content:
+          'The configure menu will show a list of any types and stack variables created by your code execution.',
+        placement: 'right',
+        target: '.configureMenu',
+        title: 'Configure Menu',
+        spotlightPadding: 0,
+        styles: {
+          options: {
+            zIndex: 10000,
+          },
+        },
+        disableScrolling: true,
+        disableScrollParentFix: true,
+      },
+      {
+        content: 'Finally, we can visualise the contents of our code in this box here.',
+        placement: 'left',
+        target: '.visualiserBox',
+        title: 'Visualising the Code',
+        spotlightPadding: 0,
+        styles: {
+          options: {
+            zIndex: 10000,
+          },
+        },
+        disableScrolling: true,
+        disableScrollParentFix: true,
+      },
+      {
+        content: 'To visualise the code, use this button repeatedly to run your code step by step.',
+        placement: 'right',
+        target: '.nextButton',
+        title: 'How to Visualise the Code',
+        spotlightPadding: 0,
+        styles: {
+          options: {
+            zIndex: 10000,
+          },
+        },
+        disableScrolling: true,
+        disableScrollParentFix: true,
+      },
+      {
+        content:
+          'As you run the code to visualise, the configure menu will also update with any types or variables added.',
+        placement: 'right',
+        target: '.configureMenu',
+        title: 'Configure Menu Updates',
+        spotlightPadding: 0,
+        styles: {
+          options: {
+            zIndex: 10000,
+          },
+        },
+        disableScrolling: true,
+        disableScrollParentFix: true,
+      },
+      {
+        content:
+          'And now we are the end of the onboarding. Thank you and we hope that you will enjoy what Structs.sh has to offer. If you have any feedback, please send forward to any members of the Structs subcommittee.',
+        placement: 'center',
+        target: 'body',
+        title: 'Enjoy Structs.sh!',
+        disableScrolling: true,
+        disableScrollParentFix: true,
+      },
+    ],
+  });
+
+  useMount(() => {
+    a11yChecker();
+  });
+
+  const handleClickStart = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    console.log('started\n');
+    setState({
+      run: true,
+    });
+  };
+
+  const handleJoyrideCallback = (data: CallBackProps) => {
+    const { action, index, status, type } = data;
+    if (([STATUS.FINISHED, STATUS.SKIPPED] as string[]).includes(status)) {
+      setState({ run: false, stepIndex: 0 });
+    } else if (([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND] as string[]).includes(type)) {
+      const nextStepIndex = index + (action === ACTIONS.PREV ? -1 : 1);
+      if (workspaceOpen && index === 6) {
+        setState({
+          run: false,
+          workspaceOpen: false,
+          stepIndex: nextStepIndex,
+        });
+
+        setTimeout(() => {
+          setState({ run: true });
+        }, 400);
+      } else if (index === 8) {
+        setState({
+          run: false,
+          workspaceOpen: false,
+          stepIndex: nextStepIndex,
+        });
+
+        setTimeout(() => {
+          setState({ run: true });
+        }, 400);
+      } else if (index === 10) {
+        setState({
+          run: false,
+          workspaceOpen: false,
+          stepIndex: nextStepIndex,
+        });
+
+        setTimeout(() => {
+          setState({ run: true });
+        }, 400);
+      } else {
+        setState({
+          workspaceOpen: false,
+          stepIndex: nextStepIndex,
+        });
+      }
+    }
+    logGroup(type === EVENTS.TOUR_STATUS ? `${type}:${status}` : type, data);
+  };
+
+  const handleWorkspaceOpen = () => {
+    setState({
+      run: stepIndex === 6 ? false : run,
+      workspaceOpen: !workspaceOpen,
+      stepIndex: stepIndex === 6 ? 7 : stepIndex,
+    });
+  };
+
+  useEffect(() => {
+    if (onboardingCurrFile === 'linked_list_delete.c') {
+      setState({
+        run: stepIndex === 8 ? false : run,
+        stepIndex: stepIndex === 8 ? 9 : stepIndex,
+      });
+    }
+  }, [onboardingCurrFile]);
+
+  const handleCompileClicked = () => {
+    setState({
+      run: stepIndex === 10 ? false : run,
+      stepIndex: stepIndex === 10 ? 11 : stepIndex,
+    });
+  };
+
   return (
     <div className={classNames(globalStyles.root, styles.light)}>
+      <Joyride
+        callback={handleJoyrideCallback}
+        continuous
+        run={run}
+        scrollToFirstStep
+        showProgress
+        showSkipButton
+        stepIndex={stepIndex}
+        steps={steps}
+      />
       <div className={styles.layout}>
         <div className={classNames(styles.pane, styles.nav)}>
-          <DevelopmentModeNavbar />
+          <DevelopmentModeNavbar onButtonClick={handleClickStart} />
         </div>
-        <div className={classNames(styles.pane, styles.files)} style={{ overflowY: 'scroll' }}>
-          <FileManager />
+        <div
+          className={classNames('sidebar', styles.pane, styles.files)}
+          style={{ overflowY: 'scroll' }}
+        >
+          <div className="workspace">
+            <FileManager onWorkspaceClick={handleWorkspaceOpen} />
+          </div>
           <div
             style={{
               fontSize: 'small',
@@ -48,13 +423,18 @@ const DevelopmentMode = () => {
             }}
           />
         </div>
-        <div className={classNames(styles.pane, styles.editor)}>
+        <div className={classNames('codeEditor', styles.pane, styles.editor)}>
           <CodeEditor />
         </div>
-        <div className={classNames(styles.pane, styles.inspector)}>
+        <div className={classNames('inspectionMenu', styles.pane, styles.inspector)}>
           <Tabs value={uiState.currFocusedTab} onValueChange={updateCurrFocusedTab}>
             <Tab label="Configure">
-              <Configuration />
+              <div
+                className={classNames('configureMenu', styles.pane)}
+                style={{ overflow: 'scroll' }}
+              >
+                <Configuration />
+              </div>
             </Tab>
             <Tab label="Inspect">
               <StackInspector />
@@ -69,11 +449,11 @@ const DevelopmentMode = () => {
             </Tab>
           </Tabs>
         </div>
-        <div className={classNames(styles.pane, styles.visualiser)}>
+        <div className={classNames('visualiserBox', styles.pane, styles.visualiser)}>
           <VisualizerMain />
         </div>
         <div className={classNames(styles.pane, styles.timeline)}>
-          <Controls />
+          <Controls onboardingCompile={handleCompileClicked} />
         </div>
       </div>
     </div>
