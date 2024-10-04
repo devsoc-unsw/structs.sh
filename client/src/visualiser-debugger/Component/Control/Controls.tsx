@@ -118,7 +118,7 @@ const Controls = ({ onboardingCompile }: { onboardingCompile: () => void }) => {
       >
         Compile
       </Button>
-      <Button disabled={!isActive} onClick={playToggle}>
+      <Button disabled={!isActive} onClick={playToggle} className="playButton">
         {loading ? (
           <Fade in={loading} timeout={500}>
             <CircularProgress size={24} />

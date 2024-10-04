@@ -12,6 +12,7 @@
   background: var(--slate-2);
   color: var(--slate-12);
   overflow-x: hidden;
+  position: fixed;
 }
 
 .layout>* {

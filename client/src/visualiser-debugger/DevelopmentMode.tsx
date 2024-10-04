@@ -32,6 +32,7 @@ const DevelopmentMode = () => {
   const inputElement = useRef<HTMLInputElement>(null);
   const { uiState, updateCurrFocusedTab } = useGlobalStore();
   const { consoleChunks, setConsoleChunks } = useSocketCommunication();
+  const { run, stepIndex, steps } = onboardingStore();
 
   const handleAddConsoleChunk = (chunk: string) => {
     setConsoleChunks([...consoleChunks, chunk]);
@@ -65,12 +66,12 @@ const DevelopmentMode = () => {
       <Joyride
         callback={handleJoyrideCallback}
         continuous
-        run={onboardingStore.getState().run}
+        run={run}
         scrollToFirstStep
         showProgress
         showSkipButton
-        stepIndex={onboardingStore.getState().stepIndex}
-        steps={onboardingStore.getState().steps}
+        stepIndex={stepIndex}
+        steps={steps}
       />
       <div className={styles.layout}>
         <div className={classNames(styles.pane, styles.nav)}>

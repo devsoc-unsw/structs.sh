@@ -2,13 +2,6 @@
 import { ACTIONS, CallBackProps, EVENTS, STATUS, Step } from 'react-joyride';
 import create from 'zustand';
 
-interface State {
-  run: boolean;
-  workspaceOpen: boolean;
-  stepIndex: number;
-  steps: Step[];
-}
-
 function logGroup(type: string, data: any) {
   console.groupCollapsed(type);
   console.log(data);
@@ -16,6 +9,7 @@ function logGroup(type: string, data: any) {
 }
 
 const onboardingSteps: Step[] = [
+  // step 1
   {
     content:
       'This is Structs.sh, a student-developed project that aims to push the limits of algorithm visualisation!',
@@ -25,9 +19,10 @@ const onboardingSteps: Step[] = [
     disableScrolling: true,
     disableScrollParentFix: true,
   },
+  // step 2
   {
     content:
-      'You can access this onboarding at any time if you ever get stuck. Additionally, you can also use the dropdown menu for any specific feature.',
+      'You can access this onboarding at any time if you ever get stuck. Additionally, you can also use the dropdown menu for any specific feature. Please press skip if you wish to end the onboarding process early',
     placement: 'auto',
     target: '.onboardingButton',
     title: 'The Onboarding Menu',
@@ -40,6 +35,7 @@ const onboardingSteps: Step[] = [
     disableScrolling: true,
     disableScrollParentFix: true,
   },
+  // step 3
   {
     content: 'This is the workspace feature, where you can store your code in different C files.',
     target: '.workspace',
@@ -54,6 +50,7 @@ const onboardingSteps: Step[] = [
     disableScrolling: true,
     disableScrollParentFix: true,
   },
+  // step 4
   {
     content: 'You can click this + button to create a new file.',
     placement: 'right',
@@ -68,6 +65,7 @@ const onboardingSteps: Step[] = [
     disableScrolling: true,
     disableScrollParentFix: true,
   },
+  // step 5
   {
     content: 'You can click this folder button to create a new folder.',
     placement: 'right',
@@ -82,6 +80,7 @@ const onboardingSteps: Step[] = [
     disableScrolling: true,
     disableScrollParentFix: true,
   },
+  // step 6
   {
     content: 'You can see any files or folders you have created by opening the root directory.',
     placement: 'right',
@@ -96,6 +95,7 @@ const onboardingSteps: Step[] = [
     disableScrolling: true,
     disableScrollParentFix: true,
   },
+  // step 7
   {
     content:
       'Lets open a file for demonstration purposes. Please start by opening the root directory.',
@@ -115,6 +115,7 @@ const onboardingSteps: Step[] = [
     disableScrolling: true,
     disableScrollParentFix: true,
   },
+  // step 8
   {
     content:
       'Any files created will be placed in the most recently opened folder, defaulting to the root directory.',
@@ -130,6 +131,7 @@ const onboardingSteps: Step[] = [
     disableScrolling: true,
     disableScrollParentFix: true,
   },
+  // step 9
   {
     content: 'Please click on the 2521_Tut02 directory and open the linked_list_delete.c file.',
     placement: 'right',
@@ -148,6 +150,7 @@ const onboardingSteps: Step[] = [
     disableScrolling: true,
     disableScrollParentFix: true,
   },
+  // step 10
   {
     content:
       'This is where we visualise our code. You can write and edit like any code editor you would be familiar with.',
@@ -163,6 +166,7 @@ const onboardingSteps: Step[] = [
     disableScrolling: true,
     disableScrollParentFix: true,
   },
+  // step 11
   {
     content:
       'After you are finished writing your code, you can compile by pressing this button. Why not give it a press?',
@@ -182,6 +186,7 @@ const onboardingSteps: Step[] = [
     disableScrolling: true,
     disableScrollParentFix: true,
   },
+  // step 12
   {
     content: 'This is the annotations, where you see the result of your compilation.',
     placement: 'left',
@@ -196,6 +201,7 @@ const onboardingSteps: Step[] = [
     disableScrolling: true,
     disableScrollParentFix: true,
   },
+  // step 13
   {
     content:
       'The configure menu will show a list of any types and stack variables created by your code execution.',
@@ -211,6 +217,7 @@ const onboardingSteps: Step[] = [
     disableScrolling: true,
     disableScrollParentFix: true,
   },
+  // step 14
   {
     content: 'Finally, we can visualise the contents of our code in this box here.',
     placement: 'left',
@@ -225,10 +232,11 @@ const onboardingSteps: Step[] = [
     disableScrolling: true,
     disableScrollParentFix: true,
   },
+  // step 15
   {
-    content: 'To visualise the code, use this button repeatedly to run your code step by step.',
+    content: 'To visualise the code, press this button to buffer the visualisation states.',
     placement: 'right',
-    target: '.nextButton',
+    target: '.playButton',
     title: 'How to Visualise the Code',
     spotlightPadding: 0,
     styles: {
@@ -239,6 +247,22 @@ const onboardingSteps: Step[] = [
     disableScrolling: true,
     disableScrollParentFix: true,
   },
+  // step 16
+  {
+    content: 'Use the buttons and sliders to then proceed between each visualisation state.',
+    placement: 'right',
+    target: '.visualControl',
+    title: 'How to Visualise the Code',
+    spotlightPadding: 0,
+    styles: {
+      options: {
+        zIndex: 10000,
+      },
+    },
+    disableScrolling: true,
+    disableScrollParentFix: true,
+  },
+  // step 17
   {
     content:
       'As you run the code to visualise, the configure menu will also update with any types or variables added.',
@@ -254,6 +278,7 @@ const onboardingSteps: Step[] = [
     disableScrolling: true,
     disableScrollParentFix: true,
   },
+  // step 18
   {
     content:
       'And now we are the end of the onboarding. Thank you and we hope that you will enjoy what Structs.sh has to offer. If you have any feedback, please send forward to any members of the Structs subcommittee.',
@@ -277,7 +302,6 @@ interface State {
   setSteps: (steps: Step[]) => void;
 }
 
-// Define the Zustand store
 export const onboardingStore = create<State>((set) => ({
   run: false,
   workspaceOpen: false,
@@ -293,9 +317,7 @@ export const onboardingStore = create<State>((set) => ({
 
 export const handleClickStart = (event: React.MouseEvent<HTMLElement>) => {
   event.preventDefault();
-  console.log('started\n');
   onboardingStore.getState().setRun(true);
-  debugger;
 };
 
 export const handleJoyrideCallback = (data: CallBackProps) => {
