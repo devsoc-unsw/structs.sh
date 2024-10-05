@@ -72,6 +72,11 @@ const DevelopmentMode = () => {
         showSkipButton
         stepIndex={stepIndex}
         steps={steps}
+        styles={{
+          options: {
+            primaryColor: '#6955c8',
+          },
+        }}
       />
       <div className={styles.layout}>
         <div className={classNames(styles.pane, styles.nav)}>

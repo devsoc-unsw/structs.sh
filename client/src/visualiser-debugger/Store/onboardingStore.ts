@@ -234,7 +234,8 @@ const onboardingSteps: Step[] = [
   },
   // step 15
   {
-    content: 'To visualise the code, press this button to buffer the visualisation states.',
+    content:
+      'To visualise the code, press this button to buffer the visualisation states. Use the buttons and sliders to then proceed between each visualisation state.',
     placement: 'right',
     target: '.playButton',
     title: 'How to Visualise the Code',
@@ -248,21 +249,6 @@ const onboardingSteps: Step[] = [
     disableScrollParentFix: true,
   },
   // step 16
-  {
-    content: 'Use the buttons and sliders to then proceed between each visualisation state.',
-    placement: 'right',
-    target: '.visualControl',
-    title: 'How to Visualise the Code',
-    spotlightPadding: 0,
-    styles: {
-      options: {
-        zIndex: 10000,
-      },
-    },
-    disableScrolling: true,
-    disableScrollParentFix: true,
-  },
-  // step 17
   {
     content:
       'As you run the code to visualise, the configure menu will also update with any types or variables added.',
@@ -278,7 +264,7 @@ const onboardingSteps: Step[] = [
     disableScrolling: true,
     disableScrollParentFix: true,
   },
-  // step 18
+  // step 17
   {
     content:
       'And now we are the end of the onboarding. Thank you and we hope that you will enjoy what Structs.sh has to offer. If you have any feedback, please send forward to any members of the Structs subcommittee.',
