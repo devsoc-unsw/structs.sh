@@ -1,6 +1,6 @@
 .errorText {
-  color: red;
-  font-size: x-small;
+  /* color: red;
+  font-size: x-small; */
 }
 
 .console {
@@ -17,7 +17,7 @@
   width: 100%;
 }
 
-.textArea {
+/* .textArea {
   min-width: 1em;
   min-height: 1em;
   outline: none;
@@ -27,19 +27,51 @@
   width: 95%;
   border: none;
   background-color: #F9F9FB;
+} */
+
+.textArea {
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
 }
 
-.cursor {
+/* .cursor {
   width: 10px;
   height: 1.2rem;
   position: absolute;
   top: 0;
   left: 10;
   background-color: black;
-}
+} */
 
 .inputContainer {
   width: 100%;
   height: 100%;
   position: relative;
+}
+
+.inputMirror {
+  display: block;
+  min-height: 1rem;
+  width: 10rem;
+  word-break: break-all;
+  white-space: pre-wrap;
+  position: relative;
+  border: 2px dashed black;
+  padding: 1rem;
+}
+
+.inputCursor {
+  position: absolute;
+  color: lightgray; /* Color.back */
+  background: black; /* Color.front */
+  height: 1.5rem;
+  width: 9.6px; /* fontWidth in pixels */
+  display: inline-block;
 }

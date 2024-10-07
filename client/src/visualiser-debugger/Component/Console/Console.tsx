@@ -19,6 +19,9 @@ const Console = ({ scrollToBottom, isActive }: ConsoleProp) => {
   const consoleChunks = useGlobalStore((state) => state.consoleChunks);
   const appendConsoleChunk = useGlobalStore((state) => state.appendConsoleChunks);
 
+  const cursorChar = 'tesrt';
+  const cursorPaused = false;
+
   const handleInput = (currInput: string) => {
     // Ensure structs.sh prefix can't be deleted
     if (currInput.startsWith(PREFIX)) {
@@ -87,7 +90,12 @@ const Console = ({ scrollToBottom, isActive }: ConsoleProp) => {
           contentEditable
           suppressContentEditableWarning
           spellCheck={false}
+          style={{ display: 'hidden' }}
         />
+        <div className={styles.inputMirror}>
+          <div className={styles.inputCursor} />
+          <div>Testt</div>
+        </div>
         <div className={styles.cursor} />
       </div>
     </div>
