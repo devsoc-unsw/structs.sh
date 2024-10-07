@@ -18,14 +18,14 @@ struct list {
 typedef struct noded noded_t;
 struct noded {
   double data;
-  noded_t *prev;
-  noded_t *next;
+  struct noded *prev;
+  struct noded *next;
 };
 
 typedef struct listd listd_t;
 struct listd {
-  noded_t *head;
-  noded_t *tail;
+  struct noded *head;
+  struct noded *tail;
   int size;
 };
 
