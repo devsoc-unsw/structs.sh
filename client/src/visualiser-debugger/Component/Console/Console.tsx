@@ -4,6 +4,7 @@ import styles from 'styles/Console.module.css';
 import classNames from 'classnames';
 import { useGlobalStore } from 'visualiser-debugger/Store/globalStateStore';
 import useSocketClientStore from '../../../Services/socketClient';
+import CustomCaret from './CustomCaret';
 
 type ConsoleProp = {
   scrollToBottom: () => void;
@@ -80,7 +81,7 @@ const Console = ({ scrollToBottom, isActive }: ConsoleProp) => {
         ))}
       </div>
       <div className={styles.inputContainer}>
-        <textarea
+        {/* <textarea
           className={styles.textArea}
           key="input"
           onChange={(e) => handleInput(e.target.value)}
@@ -91,12 +92,13 @@ const Console = ({ scrollToBottom, isActive }: ConsoleProp) => {
           suppressContentEditableWarning
           spellCheck={false}
           style={{ display: 'hidden' }}
-        />
-        <div className={styles.inputMirror}>
+        /> */}
+        {/* <div className={styles.inputMirror}>
           <div className={styles.inputCursor} />
           <div>Testt</div>
-        </div>
-        <div className={styles.cursor} />
+        </div> */}
+        <CustomCaret />
+        {/* <div className={styles.cursor} /> */}
       </div>
     </div>
   );

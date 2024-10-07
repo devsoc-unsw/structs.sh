@@ -1,0 +1,57 @@
+/* App.module.css */
+
+/* Input is visually hidden but still active */
+.inputHidden {
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+/* Dashed border for the input mirror */
+.inputMirror {
+  display: block;
+  min-height: 1rem;
+  width: 95%;
+  word-break: break-all;
+  white-space: pre-wrap;
+  position: relative;
+  border: 2px dashed black;
+  padding: 0.5rem;
+}
+
+/* Pseudo-element for the cursor */
+.inputMirror span:before {
+  content: "";
+  position: absolute;
+  color: lightgray;
+  background: black;
+  height: 1.4rem;
+  width: 9px;
+  display: inline-block;
+
+   /* Vertical centering */
+    /* Pulls it up by half its height */
+}
+
+/* Blinking animation for the cursor */
+@keyframes blink {
+  0% { opacity: 1; }
+  49% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* .blink {
+  animation: blink 1s ease infinite;
+} */
+
+/* Control when the cursor is paused (no animation) */
+.paused span:before {
+  animation: none;
+}
