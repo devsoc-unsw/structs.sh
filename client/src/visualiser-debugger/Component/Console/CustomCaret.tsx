@@ -19,22 +19,18 @@ const CustomCaret = () => {
   }
 
   function handleFakeInputClick() {
+    // Focus the hidden input when clicking on the fake one
     if (refInput.current) {
-      refInput.current.focus(); // Programmatically focus the hidden input
+      refInput.current.focus();
     }
   }
 
   function handleKeyDownForFakeInput(event: React.KeyboardEvent<HTMLDivElement>) {
     if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault(); // Prevent scrolling if Space key is pressed
-      handleFakeInputClick(); // Focus the hidden input
+      event.preventDefault();
+      handleFakeInputClick();
     }
   }
-
-  // function handleOnFocusLabel(event) {
-  //   refInput.current.focus();
-  //   handleOnFocusCursor(event);
-  // }
 
   const cursorPosition = content.length - shifts;
 
@@ -55,7 +51,7 @@ const CustomCaret = () => {
         aria-label="Custom text input"
       >
         {beforeCursor}
-        <span>{inCursor}</span>
+        <span data-cursorChar={inCursor}>{inCursor}</span>
         {afterCursor}
       </div>
       <input

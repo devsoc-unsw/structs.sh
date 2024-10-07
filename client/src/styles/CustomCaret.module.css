@@ -13,7 +13,6 @@
   width: 1px;
 }
 
-/* Dashed border for the input mirror */
 .inputMirror {
   display: block;
   min-height: 1rem;
@@ -21,22 +20,19 @@
   word-break: break-all;
   white-space: pre-wrap;
   position: relative;
-  border: 2px dashed black;
   padding: 0.5rem;
 }
 
 /* Pseudo-element for the cursor */
 .inputMirror span:before {
-  content: "";
+  /* content: ""; */
+  content: attr(data-cursorChar);
   position: absolute;
   color: lightgray;
-  background: black;
+  background: rgba(0, 0, 0, 1);
   height: 1.4rem;
   width: 9px;
   display: inline-block;
-
-   /* Vertical centering */
-    /* Pulls it up by half its height */
 }
 
 /* Blinking animation for the cursor */
@@ -47,9 +43,9 @@
   100% { opacity: 0; }
 }
 
-/* .blink {
+.blink span::before {
   animation: blink 1s ease infinite;
-} */
+}
 
 /* Control when the cursor is paused (no animation) */
 .paused span:before {
