@@ -35,23 +35,19 @@ class DebugSession:
             self.user_socket_id)
         self.parsed_fn_decls = pycparser_parse_fn_decls(self.user_socket_id)
 
-        self.custom_next_command = CustomNextCommand(
-            CUSTOM_NEXT_COMMAND_NAME, self.user_socket_id, self
-        )
-
         self.io_manager = IOManager(user_socket_id=self.user_socket_id)
+
+        self.custom_next_command = CustomNextCommand(
+            CUSTOM_NEXT_COMMAND_NAME,
+            self.user_socket_id,
+            self.io_manager,
+            self.type_decl_strs,
+            self.parsed_type_decls,
+            self.parsed_fn_decls,
+        )
 
         # Start the debug session
         gdb.execute("start")
 
         # Make stdout stream unbuffered
         gdb.execute("call setbuf(stdout, (void *) 0)")
-
-    def get_cached_type_decl_strs(self):
-        return self.type_decl_strs
-
-    def get_cached_parsed_type_decls(self):
-        return self.parsed_type_decls
-
-    def get_cached_parsed_fn_decls(self):
-        return self.parsed_fn_decls
