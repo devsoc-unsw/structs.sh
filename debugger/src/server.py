@@ -28,7 +28,8 @@ from utils import make_non_blocking, get_gdb_script, get_subprocess_output
 # You can then use this to reference files relative to this directory.
 abs_file_path = os.path.dirname(os.path.abspath(__file__))
 
-GDB_SCRIPT_NAME = "default"  # Can just use "default"
+# Currently we use the "default" script. See src/utils.py
+GDB_SCRIPT_NAME = "default"
 TEST_PROGRAM_NAME = f"{abs_file_path}/samples/linkedlist/main3"
 
 """
