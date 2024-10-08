@@ -20,17 +20,16 @@
   word-break: break-all;
   white-space: pre-wrap;
   position: relative;
-  padding: 0.5rem;
+  /* padding: 0.5rem; */
 }
 
 /* Pseudo-element for the cursor */
 .inputMirror span:before {
-  /* content: ""; */
   content: attr(data-cursorChar);
   position: absolute;
   color: lightgray;
   background: rgba(0, 0, 0, 1);
-  height: 1.4rem;
+  height: 1.3rem;
   width: 9px;
   display: inline-block;
 }
