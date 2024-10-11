@@ -14,7 +14,7 @@ const CodeEditor: React.FC = () => {
     return store.currState().backendState;
   });
   const { fileSystem, currFocusFilePath } = useUserFsStateStore();
-  const { onboardingCurrFile, setOnboardingCurrFile } = useFileOnboardingStateStore();
+  const { setOnboardingCurrFile } = useFileOnboardingStateStore();
   const [currFile, setCurrFile] = useState<IFileFileNode | undefined>(undefined);
   const [code, setCode] = useState('');
 
