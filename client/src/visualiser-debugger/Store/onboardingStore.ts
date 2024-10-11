@@ -288,8 +288,19 @@ interface State {
   setSteps: (steps: Step[]) => void;
 }
 
+const initialiseOnboarding = () => {
+  const data = localStorage.getItem('Onboarding');
+  if (data) {
+    console.log('howdy');
+    return false;
+  }
+  localStorage.setItem('Onboarding', 'already done lmao');
+  console.log('howdy2');
+  return true;
+};
+
 export const onboardingStore = create<State>((set) => ({
-  run: false,
+  run: initialiseOnboarding(),
   workspaceOpen: false,
   stepIndex: 0,
   steps: onboardingSteps,

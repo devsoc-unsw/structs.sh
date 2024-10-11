@@ -5,6 +5,8 @@ import { InfoCircledIcon } from '@radix-ui/react-icons';
 import Dialog, { DialogTitle, DialogDescription } from 'components/Dialog/Dialog';
 import AboutText from 'visualiser-debugger/Component/FileTree/AboutText';
 import BookIcon from '@mui/icons-material/Book';
+import classNames from 'classnames';
+import { Tooltip } from '@mui/material';
 
 const DevelopmentModeNavbar = ({
   onButtonClick,
@@ -20,16 +22,16 @@ const DevelopmentModeNavbar = ({
         </span>
       </div>
       <div style={{ marginLeft: '82vw' }} />
-      <div className="onboardingButton" style={{ marginRight: '0.3vw' }}>
+      <Tooltip title="Start Onboarding">
         <button
-          className={dialogStyles.OnboardingButton}
+          className={classNames(dialogStyles.OnboardingButton, 'onboardingButton')}
           onClick={onButtonClick}
           type="button"
           aria-label="Start Onboardings"
         >
           <BookIcon />
         </button>
-      </div>
+      </Tooltip>
       <div className={styles.navItem}>
         <Dialog
           trigger={
