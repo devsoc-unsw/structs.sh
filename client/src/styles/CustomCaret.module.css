@@ -1,6 +1,3 @@
-/* App.module.css */
-
-/* Input is visually hidden but still active */
 .inputHidden {
   border: 0;
   clip: rect(1px, 1px, 1px, 1px);
@@ -20,16 +17,15 @@
   word-break: break-all;
   white-space: pre-wrap;
   position: relative;
-  /* padding: 0.5rem; */
 }
 
-/* Pseudo-element for the cursor */
+/* The custom caret */
 .inputMirror span:before {
   content: attr(data-cursorChar);
   position: absolute;
   color: lightgray;
   background: rgba(0, 0, 0, 1);
-  height: 1.3rem;
+  height: 1rem;
   width: 9px;
   display: inline-block;
 }
@@ -46,7 +42,6 @@
   animation: blink 1s ease infinite;
 }
 
-/* Control when the cursor is paused (no animation) */
 .paused span:before {
   animation: none;
 }

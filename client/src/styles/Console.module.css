@@ -1,8 +1,3 @@
-.errorText {
-  /* color: red;
-  font-size: x-small; */
-}
-
 .console {
   overflow-y: auto;
   padding-top: 6px;
@@ -15,19 +10,8 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  font-family: monospace;
 }
-
-/* .textArea {
-  min-width: 1em;
-  min-height: 1em;
-  outline: none;
-  color: black;
-  font-weight: bolder;
-  height: 95%;
-  width: 95%;
-  border: none;
-  background-color: #F9F9FB;
-} */
 
 .textArea {
   border: 0;
@@ -40,15 +24,6 @@
   position: absolute;
   width: 1px;
 }
-
-/* .cursor {
-  width: 10px;
-  height: 1.2rem;
-  position: absolute;
-  top: 0;
-  left: 10;
-  background-color: black;
-} */
 
 .inputContainer {
   width: 100%;

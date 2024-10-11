@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import styles from 'styles/Console.module.css';
 import classNames from 'classnames';
 import { useGlobalStore } from 'visualiser-debugger/Store/globalStateStore';
-import useSocketClientStore from '../../../Services/socketClient';
+import { useFrontendStateStore } from 'visualiser-debugger/Store/frontendStateStore';
 import CustomCaret from './CustomCaret';
 
 type ConsoleProp = {
@@ -17,6 +17,7 @@ const Console = ({ scrollToBottom, isActive }: ConsoleProp) => {
   const inputElement = useRef(null);
 
   const consoleChunks = useGlobalStore((state) => state.consoleChunks);
+  const isConsoleActive = useFrontendStateStore((state) => state.isActive);
 
   const handleInput = (currInput: string) => {
     // Ensure structs.sh prefix can't be deleted
