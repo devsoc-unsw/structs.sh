@@ -6,10 +6,12 @@ import { MotionCollapse } from './MotionCollapse';
 import './typeAnnotation.css';
 import { BackendTypeRole } from '../../Types/annotationType';
 import {
-  LinkedListNodeAnnotation,
   createPossibleLinkedListTypeDecl,
 } from './RoleAnnotation/LinkedListAnnotation';
 import { BackendTypeDeclaration } from '../../Types/backendType';
+import { AnnotationFactory } from './RoleAnnotation/AnnotationFactory';
+import { createPossibleTreeTypeDecl } from './RoleAnnotation/BinaryTreeAnnotation';
+
 
 export type TypeAnnotationProp = {
   typeDeclaration: BackendTypeDeclaration;
@@ -26,8 +28,11 @@ export const TypeAnnotation: React.FC<TypeAnnotationProp> = ({
     if (createPossibleLinkedListTypeDecl(typeDeclaration) !== null) {
       setSelectedRole(BackendTypeRole.LinkedList);
     }
+    if (createPossibleTreeTypeDecl(typeDeclaration) !== null) {
+      setSelectedRole(BackendTypeRole.BinaryTree);
+    }
   }, []);
-
+  const annotation = AnnotationFactory(selectedRole, {typeDeclaration});
   return (
     <div style={{ paddingBottom: '8px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -97,7 +102,9 @@ export const TypeAnnotation: React.FC<TypeAnnotationProp> = ({
       </div>
 
       <MotionCollapse isOpen={selectedRole === BackendTypeRole.LinkedList}>
-        <LinkedListNodeAnnotation backendType={typeDeclaration} />
+        {/** Create a Factory pattern to generate Annotation classs */}
+        {annotation}
+        {/* <AnnotationFactory backendRole={selectedRole} typeDeclaration={typeDeclaration} /> */}
       </MotionCollapse>
     </div>
   );
