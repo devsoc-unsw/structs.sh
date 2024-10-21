@@ -5,9 +5,6 @@ import classNames from 'classnames';
 import { Tabs, Tab } from 'components/Tabs';
 import Console from 'visualiser-debugger/Component/Console/Console';
 import Joyride from 'react-joyride';
-import { useMount } from 'react-use';
-// @ts-ignore
-import a11yChecker from 'a11y-checker';
 import DevelopmentModeNavbar from '../components/Navbars/DevelopmentModeNavbar';
 import Configuration from './Component/Configuration/Configuration';
 import Controls from './Component/Control/Controls';
@@ -18,13 +15,13 @@ import FileManager from './Component/FileTree/FileManager';
 import { useGlobalStore } from './Store/globalStateStore';
 import { useSocketCommunication } from '../Services/useSocketCommunication';
 import { useFrontendStateStore } from './Store/frontendStateStore';
-import { useFileOnboardingStateStore } from './Store/onboardingStateStore';
+import { useUserFsStateStore } from './Store/userFsStateStore';
 import {
   onboardingStore,
-  handleClickStart,
   handleJoyrideCallback,
   handleWorkspaceOpen,
   handleCompileClicked,
+  OPEN_FILE_STEP,
 } from './Store/onboardingStore';
 
 const DevelopmentMode = () => {
@@ -32,8 +29,8 @@ const DevelopmentMode = () => {
   const inputElement = useRef<HTMLInputElement>(null);
   const { uiState, updateCurrFocusedTab } = useGlobalStore();
   const { consoleChunks, setConsoleChunks } = useSocketCommunication();
-  const { run, stepIndex, steps } = onboardingStore();
-
+  const { run, stepIndex, steps, onboardingCurrFile } = onboardingStore();
+  const { resetRootPaths } = useUserFsStateStore();
   const handleAddConsoleChunk = (chunk: string) => {
     setConsoleChunks([...consoleChunks, chunk]);
   };
@@ -46,20 +43,20 @@ const DevelopmentMode = () => {
   };
 
   // Onboarding Code
-  const { onboardingCurrFile } = useFileOnboardingStateStore();
-
-  useMount(() => {
-    a11yChecker();
-  });
-
   useEffect(() => {
-    if (onboardingCurrFile === 'linked_list_delete.c') {
-      if (onboardingStore.getState().stepIndex === 8) {
+    if (onboardingCurrFile) {
+      if (onboardingStore.getState().stepIndex === OPEN_FILE_STEP) {
         onboardingStore.getState().setRun(false);
-        onboardingStore.getState().setStepIndex(9);
+        onboardingStore.getState().setStepIndex(10);
       }
     }
   }, [onboardingCurrFile]);
+
+  const handleClickStart = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    resetRootPaths();
+    onboardingStore.getState().setRun(true);
+  };
 
   return (
     <div className={classNames(globalStyles.root, styles.light)}>
@@ -83,10 +80,10 @@ const DevelopmentMode = () => {
           <DevelopmentModeNavbar onButtonClick={handleClickStart} />
         </div>
         <div
-          className={classNames('sidebar', styles.pane, styles.files)}
+          className={classNames('Onboarding-sidebar', styles.pane, styles.files)}
           style={{ overflowY: 'scroll' }}
         >
-          <div className="workspace">
+          <div className="Onboarding-workspace">
             <FileManager onWorkspaceClick={handleWorkspaceOpen} />
           </div>
           <div
@@ -97,14 +94,14 @@ const DevelopmentMode = () => {
             }}
           />
         </div>
-        <div className={classNames('codeEditor', styles.pane, styles.editor)}>
+        <div className={classNames('Onboarding-codeEditor', styles.pane, styles.editor)}>
           <CodeEditor />
         </div>
-        <div className={classNames('inspectionMenu', styles.pane, styles.inspector)}>
+        <div className={classNames('Onboarding-inspectionMenu', styles.pane, styles.inspector)}>
           <Tabs value={uiState.currFocusedTab} onValueChange={updateCurrFocusedTab}>
             <Tab label="Configure">
               <div
-                className={classNames('configureMenu', styles.pane)}
+                className={classNames('Onboarding-configureMenu', styles.pane)}
                 style={{ overflow: 'scroll' }}
               >
                 <Configuration />
@@ -123,7 +120,7 @@ const DevelopmentMode = () => {
             </Tab>
           </Tabs>
         </div>
-        <div className={classNames('visualiserBox', styles.pane, styles.visualiser)}>
+        <div className={classNames('Onboarding-visualiserBox', styles.pane, styles.visualiser)}>
           <VisualizerMain />
         </div>
         <div className={classNames(styles.pane, styles.timeline)}>

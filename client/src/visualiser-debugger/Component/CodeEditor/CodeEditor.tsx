@@ -4,7 +4,7 @@ import 'ace-builds/src-noconflict/mode-c_cpp';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/theme-tomorrow';
 import { useState, useEffect } from 'react';
-import { useFileOnboardingStateStore } from 'visualiser-debugger/Store/onboardingStateStore';
+import { onboardingStore } from 'visualiser-debugger/Store/onboardingStore';
 import { useUserFsStateStore } from '../../Store/userFsStateStore';
 import { IFileFileNode } from '../FileTree/FS/IFileSystem';
 import { useFrontendStateStore } from '../../Store/frontendStateStore';
@@ -14,7 +14,7 @@ const CodeEditor: React.FC = () => {
     return store.currState().backendState;
   });
   const { fileSystem, currFocusFilePath } = useUserFsStateStore();
-  const { setOnboardingCurrFile } = useFileOnboardingStateStore();
+  const { setOnboardingCurrFile } = onboardingStore();
   const [currFile, setCurrFile] = useState<IFileFileNode | undefined>(undefined);
   const [code, setCode] = useState('');
 

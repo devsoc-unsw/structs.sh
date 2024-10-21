@@ -114,11 +114,11 @@ const Controls = ({ onboardingCompile }: { onboardingCompile: () => void }) => {
           sendCode();
           onboardingCompile();
         }}
-        className="compileButton"
+        className="Onboarding-compileButton"
       >
         Compile
       </Button>
-      <Button disabled={!isActive} onClick={playToggle} className="playButton">
+      <Button disabled={!isActive} onClick={playToggle} className="Onboarding-playButton">
         {loading ? (
           <Fade in={loading} timeout={500}>
             <CircularProgress size={24} />

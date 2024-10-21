@@ -8,6 +8,12 @@ function logGroup(type: string, data: any) {
   console.groupEnd();
 }
 
+const OPEN_ROOT_DIR_STEP = 7;
+
+export const OPEN_FILE_STEP = 9;
+
+const PRESS_COMPILE_STEP = 11;
+
 const onboardingSteps: Step[] = [
   // step 1
   {
@@ -38,7 +44,7 @@ const onboardingSteps: Step[] = [
   // step 3
   {
     content: 'This is the workspace feature, where you can store your code in different C files.',
-    target: '.workspace',
+    target: '.Onboarding-workspace',
     placement: 'right',
     spotlightPadding: 0,
     styles: {
@@ -54,7 +60,7 @@ const onboardingSteps: Step[] = [
   {
     content: 'You can click this + button to create a new file.',
     placement: 'right',
-    target: '.fileButton',
+    target: '.Onboarding-fileButton',
     title: 'File Creation',
     spotlightPadding: 0,
     styles: {
@@ -69,7 +75,7 @@ const onboardingSteps: Step[] = [
   {
     content: 'You can click this folder button to create a new folder.',
     placement: 'right',
-    target: '.folderButton',
+    target: '.Onboarding-folderButton',
     title: 'Folder Creation',
     spotlightPadding: 0,
     styles: {
@@ -82,10 +88,11 @@ const onboardingSteps: Step[] = [
   },
   // step 6
   {
-    content: 'You can see any files or folders you have created by opening the root directory.',
+    content:
+      'You can click this - button to delete the last file or folder that you interacted with',
     placement: 'right',
-    target: '.rootContent',
-    title: 'The Root Directory',
+    target: '.Onboarding-deleteButton',
+    title: 'Deleting Files and Folders',
     spotlightPadding: 0,
     styles: {
       options: {
@@ -97,10 +104,25 @@ const onboardingSteps: Step[] = [
   },
   // step 7
   {
+    content: 'You can see any files or folders you have created by opening the root directory.',
+    placement: 'right',
+    target: '.Onboarding-rootContent',
+    title: 'The Root Directory',
+    spotlightPadding: 0,
+    styles: {
+      options: {
+        zIndex: 10000,
+      },
+    },
+    disableScrolling: true,
+    disableScrollParentFix: true,
+  },
+  // step 8
+  {
     content:
       'Lets open a file for demonstration purposes. Please start by opening the root directory.',
     placement: 'right',
-    target: '.rootContent',
+    target: '.Onboarding-rootContent',
     title: 'Opening the Root Directory',
     spotlightPadding: 0,
     styles: {
@@ -115,12 +137,12 @@ const onboardingSteps: Step[] = [
     disableScrolling: true,
     disableScrollParentFix: true,
   },
-  // step 8
+  // step 9
   {
     content:
       'Any files created will be placed in the most recently opened folder, defaulting to the root directory.',
     placement: 'right',
-    target: '.rootContent',
+    target: '.Onboarding-rootContent',
     title: 'Root Directory Content',
     spotlightPadding: 0,
     styles: {
@@ -131,11 +153,11 @@ const onboardingSteps: Step[] = [
     disableScrolling: true,
     disableScrollParentFix: true,
   },
-  // step 9
+  // step 10
   {
-    content: 'Please click on the 2521_Tut02 directory and open the linked_list_delete.c file.',
+    content: 'Please open any file.',
     placement: 'right',
-    target: '.sidebar',
+    target: '.Onboarding-sidebar',
     title: 'Opening a file',
     spotlightPadding: 0,
     styles: {
@@ -150,12 +172,12 @@ const onboardingSteps: Step[] = [
     disableScrolling: true,
     disableScrollParentFix: true,
   },
-  // step 10
+  // step 11
   {
     content:
       'This is where we visualise our code. You can write and edit like any code editor you would be familiar with.',
     placement: 'right',
-    target: '.codeEditor',
+    target: '.Onboarding-codeEditor',
     title: 'The Code Editor',
     spotlightPadding: 0,
     styles: {
@@ -166,12 +188,12 @@ const onboardingSteps: Step[] = [
     disableScrolling: true,
     disableScrollParentFix: true,
   },
-  // step 11
+  // step 12
   {
     content:
       'After you are finished writing your code, you can compile by pressing this button. Why not give it a press?',
     placement: 'top',
-    target: '.compileButton',
+    target: '.Onboarding-compileButton',
     title: 'Compiling the Code',
     spotlightPadding: 0,
     styles: {
@@ -186,28 +208,12 @@ const onboardingSteps: Step[] = [
     disableScrolling: true,
     disableScrollParentFix: true,
   },
-  // step 12
+  // step 13
   {
     content: 'This is the annotations, where you see the result of your compilation.',
     placement: 'left',
-    target: '.inspectionMenu',
+    target: '.Onboarding-inspectionMenu',
     title: 'Compilation Results',
-    spotlightPadding: 0,
-    styles: {
-      options: {
-        zIndex: 10000,
-      },
-    },
-    disableScrolling: true,
-    disableScrollParentFix: true,
-  },
-  // step 13
-  {
-    content:
-      'The configure menu will show a list of any types and stack variables created by your code execution.',
-    placement: 'right',
-    target: '.configureMenu',
-    title: 'Configure Menu',
     spotlightPadding: 0,
     styles: {
       options: {
@@ -219,10 +225,11 @@ const onboardingSteps: Step[] = [
   },
   // step 14
   {
-    content: 'Finally, we can visualise the contents of our code in this box here.',
-    placement: 'left',
-    target: '.visualiserBox',
-    title: 'Visualising the Code',
+    content:
+      'The configure menu will show a list of any types and stack variables created by your code execution.',
+    placement: 'right',
+    target: '.Onboarding-configureMenu',
+    title: 'Configure Menu',
     spotlightPadding: 0,
     styles: {
       options: {
@@ -234,11 +241,10 @@ const onboardingSteps: Step[] = [
   },
   // step 15
   {
-    content:
-      'To visualise the code, press this button to buffer the visualisation states. Use the buttons and sliders to then proceed between each visualisation state.',
-    placement: 'right',
-    target: '.playButton',
-    title: 'How to Visualise the Code',
+    content: 'Finally, we can visualise the contents of our code in this box here.',
+    placement: 'left',
+    target: '.Onboarding-visualiserBox',
+    title: 'Visualising the Code',
     spotlightPadding: 0,
     styles: {
       options: {
@@ -251,10 +257,10 @@ const onboardingSteps: Step[] = [
   // step 16
   {
     content:
-      'As you run the code to visualise, the configure menu will also update with any types or variables added.',
+      'To visualise the code, press this button to buffer the visualisation states. Use the buttons and sliders to then proceed between each visualisation state.',
     placement: 'right',
-    target: '.configureMenu',
-    title: 'Configure Menu Updates',
+    target: '.Onboarding-playButton',
+    title: 'How to Visualise the Code',
     spotlightPadding: 0,
     styles: {
       options: {
@@ -265,6 +271,22 @@ const onboardingSteps: Step[] = [
     disableScrollParentFix: true,
   },
   // step 17
+  {
+    content:
+      'As you run the code to visualise, the configure menu will also update with any types or variables added.',
+    placement: 'right',
+    target: '.Onboarding-configureMenu',
+    title: 'Configure Menu Updates',
+    spotlightPadding: 0,
+    styles: {
+      options: {
+        zIndex: 10000,
+      },
+    },
+    disableScrolling: true,
+    disableScrollParentFix: true,
+  },
+  // step 18
   {
     content:
       'And now we are the end of the onboarding. Thank you and we hope that you will enjoy what Structs.sh has to offer. If you have any feedback, please send forward to any members of the Structs subcommittee.',
@@ -281,21 +303,21 @@ interface State {
   workspaceOpen: boolean;
   stepIndex: number;
   steps: Step[];
+  onboardingCurrFile: string;
 
   setRun: (value: boolean) => void;
   setWorkspaceOpen: (value: boolean) => void;
   setStepIndex: (index: number) => void;
   setSteps: (steps: Step[]) => void;
+  setOnboardingCurrFile: (file: string) => void;
 }
 
 const initialiseOnboarding = () => {
   const data = localStorage.getItem('Onboarding');
   if (data) {
-    console.log('howdy');
     return false;
   }
   localStorage.setItem('Onboarding', 'already done lmao');
-  console.log('howdy2');
   return true;
 };
 
@@ -304,12 +326,14 @@ export const onboardingStore = create<State>((set) => ({
   workspaceOpen: false,
   stepIndex: 0,
   steps: onboardingSteps,
+  onboardingCurrFile: '',
 
   // Define actions to update the state
   setRun: (value) => set({ run: value }),
   setWorkspaceOpen: (value) => set({ workspaceOpen: value }),
   setStepIndex: (index) => set({ stepIndex: index }),
   setSteps: (steps) => set({ steps }),
+  setOnboardingCurrFile: (file: string) => set({ onboardingCurrFile: file }),
 }));
 
 export const handleClickStart = (event: React.MouseEvent<HTMLElement>) => {
@@ -324,7 +348,7 @@ export const handleJoyrideCallback = (data: CallBackProps) => {
     onboardingStore.getState().setStepIndex(0);
   } else if (([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND] as string[]).includes(type)) {
     const nextStepIndex = index + (action === ACTIONS.PREV ? -1 : 1);
-    if (onboardingStore.getState().workspaceOpen && index === 6) {
+    if (onboardingStore.getState().workspaceOpen && index === OPEN_ROOT_DIR_STEP) {
       onboardingStore.getState().setRun(false);
       onboardingStore.getState().setWorkspaceOpen(false);
       onboardingStore.getState().setStepIndex(nextStepIndex);
@@ -332,7 +356,7 @@ export const handleJoyrideCallback = (data: CallBackProps) => {
       setTimeout(() => {
         onboardingStore.getState().setRun(true);
       }, 400);
-    } else if (index === 8) {
+    } else if (index === OPEN_FILE_STEP) {
       onboardingStore.getState().setRun(false);
       onboardingStore.getState().setWorkspaceOpen(false);
       onboardingStore.getState().setStepIndex(nextStepIndex);
@@ -340,7 +364,7 @@ export const handleJoyrideCallback = (data: CallBackProps) => {
       setTimeout(() => {
         onboardingStore.getState().setRun(true);
       }, 400);
-    } else if (index === 10) {
+    } else if (index === PRESS_COMPILE_STEP) {
       onboardingStore.getState().setRun(false);
       onboardingStore.getState().setWorkspaceOpen(false);
       onboardingStore.getState().setStepIndex(nextStepIndex);
@@ -357,20 +381,20 @@ export const handleJoyrideCallback = (data: CallBackProps) => {
 };
 
 export const handleWorkspaceOpen = () => {
-  if (onboardingStore.getState().stepIndex === 6) {
+  if (onboardingStore.getState().stepIndex === OPEN_ROOT_DIR_STEP) {
     onboardingStore.getState().setRun(false);
   }
   onboardingStore.getState().setWorkspaceOpen(!onboardingStore.getState().workspaceOpen);
-  if (onboardingStore.getState().stepIndex === 6) {
-    onboardingStore.getState().setStepIndex(7);
+  if (onboardingStore.getState().stepIndex === OPEN_ROOT_DIR_STEP) {
+    onboardingStore.getState().setStepIndex(8);
   }
 };
 
 export const handleCompileClicked = () => {
-  if (onboardingStore.getState().stepIndex === 10) {
+  if (onboardingStore.getState().stepIndex === PRESS_COMPILE_STEP) {
     onboardingStore.getState().setRun(false);
   }
-  if (onboardingStore.getState().stepIndex === 10) {
-    onboardingStore.getState().setStepIndex(11);
+  if (onboardingStore.getState().stepIndex === PRESS_COMPILE_STEP) {
+    onboardingStore.getState().setStepIndex(12);
   }
 };

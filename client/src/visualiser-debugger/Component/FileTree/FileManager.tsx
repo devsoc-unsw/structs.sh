@@ -110,7 +110,7 @@ const WorkspaceSelector = ({ onWorkspaceClick }: { onWorkspaceClick: () => void 
           <Tooltip title="Create new file">
             <Button
               onClick={() => handleClickOpen('File')}
-              className="fileButton"
+              className="Onboarding-fileButton"
               style={fileButtonStyle}
             >
               <AddIcon style={{ fontSize: '20px' }} />
@@ -119,7 +119,7 @@ const WorkspaceSelector = ({ onWorkspaceClick }: { onWorkspaceClick: () => void 
           <Tooltip title="Create new folder">
             <Button
               onClick={() => handleClickOpen('Folder')}
-              className="folderButton"
+              className="Onboarding-folderButton"
               style={fileButtonStyle}
             >
               <CreateNewFolderIcon style={{ fontSize: '20px' }} />
@@ -128,7 +128,7 @@ const WorkspaceSelector = ({ onWorkspaceClick }: { onWorkspaceClick: () => void 
           <Tooltip title="Delete this file">
             <Button
               onClick={() => handleDeleteOpen()}
-              className="icon-button"
+              className="Onboarding-deleteButton"
               style={fileButtonStyle}
             >
               <RemoveCircleOutlineIcon style={{ fontSize: '20px' }} />
@@ -148,7 +148,7 @@ const WorkspaceSelector = ({ onWorkspaceClick }: { onWorkspaceClick: () => void 
         }}
       >
         {fileSystem ? (
-          <div className="rootContent">
+          <div className="Onboarding-rootContent">
             <Folder folder={fileSystem.getRootDirectory()} depth={0} />
           </div>
         ) : (
