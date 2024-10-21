@@ -14,7 +14,7 @@ import { isInitialBackendState } from '../../Types/backendType';
 import { DEFAULT_MESSAGE_DURATION, useToastStateStore } from '../../Store/toastStateStore';
 
 const BUFFER_THRESHOLD = 30;
-const Controls = () => {
+const Controls = ({ onboardingCompile }: { onboardingCompile: () => void }) => {
   const { currFrame } = useGlobalStore();
   const { userAnnotation, parser } = useGlobalStore().visualizer;
   const { sendCode, bulkSendNextStates, getNextState } = useSocketCommunication();
@@ -112,11 +112,13 @@ const Controls = () => {
           setBufferMode(false);
           setLoading(false);
           sendCode();
+          onboardingCompile();
         }}
+        className="Onboarding-compileButton"
       >
         Compile
       </Button>
-      <Button disabled={!isActive} onClick={playToggle}>
+      <Button disabled={!isActive} onClick={playToggle} className="Onboarding-playButton">
         {loading ? (
           <Fade in={loading} timeout={500}>
             <CircularProgress size={24} />

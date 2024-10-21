@@ -4,8 +4,15 @@ import logo from 'assets/img/logo.png';
 import { InfoCircledIcon } from '@radix-ui/react-icons';
 import Dialog, { DialogTitle, DialogDescription } from 'components/Dialog/Dialog';
 import AboutText from 'visualiser-debugger/Component/FileTree/AboutText';
+import BookIcon from '@mui/icons-material/Book';
+import classNames from 'classnames';
+import { Tooltip } from '@mui/material';
 
-const DevelopmentModeNavbar = () => {
+const DevelopmentModeNavbar = ({
+  onButtonClick,
+}: {
+  onButtonClick: (event: React.MouseEvent<HTMLElement>) => void;
+}) => {
   return (
     <div className={styles.navBar}>
       <div className={styles.navItem}>
@@ -14,6 +21,17 @@ const DevelopmentModeNavbar = () => {
           <h4>Structs.sh</h4>
         </span>
       </div>
+      <div style={{ marginLeft: '82vw' }} />
+      <Tooltip title="Start Onboarding">
+        <button
+          className={classNames(dialogStyles.OnboardingButton, 'onboardingButton')}
+          onClick={onButtonClick}
+          type="button"
+          aria-label="Start Onboardings"
+        >
+          <BookIcon />
+        </button>
+      </Tooltip>
       <div className={styles.navItem}>
         <Dialog
           trigger={

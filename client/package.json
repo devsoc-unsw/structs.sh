@@ -35,6 +35,7 @@
     "@types/react-codemirror": "^1.0.8",
     "@types/react-helmet": "^6.1.5",
     "@uiw/react-codemirror": "^4.21.18",
+    "a11y-checker": "^2.2.1",
     "ace-builds": "^1.28.0",
     "axios": "^1.4.0",
     "classnames": "^2.3.2",
@@ -50,15 +51,17 @@
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
     "react-intersection-observer": "^9.4.1",
+    "react-joyride": "^2.9.2",
     "react-json-view": "^1.21.3",
     "react-router-dom": "^6.14.2",
     "react-syntax-highlighter": "^15.5.0",
+    "react-use": "^17.5.1",
     "resize-observer-polyfill": "^1.5.1",
     "sass": "^1.56.1",
     "socket.io-client": "^4.6.1",
     "uuid": "^10.0.0",
     "ws": "^8.17.0",
-    "zustand": "^4.4.1"
+    "zustand": "^4.5.5"
   },
   "devDependencies": {
     "@types/d3": "^7.4.0",
