@@ -11,12 +11,13 @@ import DialogTitle from '@mui/material/DialogTitle';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import { handleWorkspaceOpen } from 'visualiser-debugger/Store/onboardingStore';
 import Folder from './Folder';
 import './css/WorkspaceSelector.css';
 import { useUserFsStateStore } from '../../Store/userFsStateStore';
 import { IFileDirNode, IFileFileNode, IFileType } from './FS/IFileSystem';
 
-const WorkspaceSelector = ({ onWorkspaceClick }: { onWorkspaceClick: () => void }) => {
+const WorkspaceSelector = () => {
   const { fileSystem, currFocusDirPath, currFocusFilePath } = useUserFsStateStore.getState();
   let currFocus = currFocusFilePath || currFocusDirPath;
   const [open, setOpen] = useState(false);
@@ -138,12 +139,12 @@ const WorkspaceSelector = ({ onWorkspaceClick }: { onWorkspaceClick: () => void 
       </Box>
       <div
         className="rootDirectory"
-        onClick={onWorkspaceClick}
+        onClick={handleWorkspaceOpen}
         role="button"
         tabIndex={0}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
-            onWorkspaceClick();
+            handleWorkspaceOpen();
           }
         }}
       >

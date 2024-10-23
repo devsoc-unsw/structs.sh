@@ -16,13 +16,7 @@ import { useGlobalStore } from './Store/globalStateStore';
 import { useSocketCommunication } from '../Services/useSocketCommunication';
 import { useFrontendStateStore } from './Store/frontendStateStore';
 import { useUserFsStateStore } from './Store/userFsStateStore';
-import {
-  onboardingStore,
-  handleJoyrideCallback,
-  handleWorkspaceOpen,
-  handleCompileClicked,
-  OPEN_FILE_STEP,
-} from './Store/onboardingStore';
+import { onboardingStore, handleJoyrideCallback, OPEN_FILE_STEP } from './Store/onboardingStore';
 
 const DevelopmentMode = () => {
   const { isActive } = useFrontendStateStore();
@@ -84,7 +78,7 @@ const DevelopmentMode = () => {
           style={{ overflowY: 'scroll' }}
         >
           <div className="Onboarding-workspace">
-            <FileManager onWorkspaceClick={handleWorkspaceOpen} />
+            <FileManager />
           </div>
           <div
             style={{
@@ -124,7 +118,7 @@ const DevelopmentMode = () => {
           <VisualizerMain />
         </div>
         <div className={classNames(styles.pane, styles.timeline)}>
-          <Controls onboardingCompile={handleCompileClicked} />
+          <Controls />
         </div>
       </div>
     </div>

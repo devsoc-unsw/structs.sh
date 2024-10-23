@@ -5,6 +5,7 @@ import RedoIcon from '@mui/icons-material/Redo';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useEffect, useRef, useState } from 'react';
 import { Fade } from '@mui/material';
+import { handleCompileClicked } from 'visualiser-debugger/Store/onboardingStore';
 import { useSocketCommunication } from '../../../Services/useSocketCommunication';
 import { useFrontendStateStore } from '../../Store/frontendStateStore';
 import { Button } from '../../../components/Button';
@@ -14,7 +15,7 @@ import { isInitialBackendState } from '../../Types/backendType';
 import { DEFAULT_MESSAGE_DURATION, useToastStateStore } from '../../Store/toastStateStore';
 
 const BUFFER_THRESHOLD = 30;
-const Controls = ({ onboardingCompile }: { onboardingCompile: () => void }) => {
+const Controls = () => {
   const { currFrame } = useGlobalStore();
   const { userAnnotation, parser } = useGlobalStore().visualizer;
   const { sendCode, bulkSendNextStates, getNextState } = useSocketCommunication();
@@ -112,7 +113,7 @@ const Controls = ({ onboardingCompile }: { onboardingCompile: () => void }) => {
           setBufferMode(false);
           setLoading(false);
           sendCode();
-          onboardingCompile();
+          handleCompileClicked();
         }}
         className="Onboarding-compileButton"
       >
