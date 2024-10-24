@@ -5,6 +5,7 @@ import RedoIcon from '@mui/icons-material/Redo';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useEffect, useRef, useState } from 'react';
 import { Fade } from '@mui/material';
+import { handleCompileClicked } from 'visualiser-debugger/Store/onboardingStore';
 import { useSocketCommunication } from '../../../Services/useSocketCommunication';
 import { useFrontendStateStore } from '../../Store/frontendStateStore';
 import { Button } from '../../../components/Button';
@@ -112,11 +113,13 @@ const Controls = () => {
           setBufferMode(false);
           setLoading(false);
           sendCode();
+          handleCompileClicked();
         }}
+        className="Onboarding-compileButton"
       >
         Compile
       </Button>
-      <Button disabled={!isActive} onClick={playToggle}>
+      <Button disabled={!isActive} onClick={playToggle} className="Onboarding-playButton">
         {loading ? (
           <Fade in={loading} timeout={500}>
             <CircularProgress size={24} />
