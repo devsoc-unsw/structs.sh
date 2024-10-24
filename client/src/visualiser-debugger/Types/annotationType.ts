@@ -136,6 +136,7 @@ export type PossibleStructAnnotation = {
 
 export enum BackendTypeRole {
   LinkedList = 'Linked List Node',
+  BinaryTree = 'Binary Tree Node',
   Empty = 'Not Visualized',
 }
 
@@ -151,6 +152,22 @@ export type PossibleLinkedListAnnotation = {
     typeName: NativeTypeName;
   }[];
   possibleNexts: {
+    name: Name;
+    typeName: PointerType['typeName'];
+  }[];
+};
+
+export type PossibleBinaryTreeAnnotation = {
+  typeName: StructType['typeName'];
+  possibleValues: {
+    name: Name;
+    typeName: NativeTypeName;
+  }[];
+  possibleLefts: {
+    name: Name;
+    typeName: PointerType['typeName'];
+  }[];
+  possibleRights: {
     name: Name;
     typeName: PointerType['typeName'];
   }[];
