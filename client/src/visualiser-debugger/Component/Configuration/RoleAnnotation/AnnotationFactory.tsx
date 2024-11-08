@@ -8,9 +8,9 @@ export function AnnotationFactory (backendRole: BackendTypeRole, {
   }: TypeAnnotationProp) : JSX.Element | null {
     switch(backendRole){
         case BackendTypeRole.LinkedList:
-            <LinkedListNodeAnnotation backendType={typeDeclaration} />
-        case BackendTypeRole.BinaryTree:
-            <TreeNodeAnnotation backendType={typeDeclaration} />
+            return <LinkedListNodeAnnotation backendType={typeDeclaration} />
+        case BackendTypeRole.BinaryTree:    
+            return <TreeNodeAnnotation backendType={typeDeclaration} />
         case BackendTypeRole.Empty:
             return null;
         default:

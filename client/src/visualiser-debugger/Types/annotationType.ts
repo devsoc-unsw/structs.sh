@@ -143,6 +143,7 @@ export enum BackendTypeRole {
 export enum StackVariableRole {
   LinkedListPointer = 'Linked List Node',
   Empty = 'Not Visualized',
+  BinaryTreePointer = 'Binary Tree Node',
 }
 
 export type PossibleLinkedListAnnotation = {

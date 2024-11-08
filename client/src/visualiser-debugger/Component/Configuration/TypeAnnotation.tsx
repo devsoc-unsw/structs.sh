@@ -100,11 +100,9 @@ export const TypeAnnotation: React.FC<TypeAnnotationProp> = ({
           </MotionCollapse>
         </div>
       </div>
-
-      <MotionCollapse isOpen={selectedRole === BackendTypeRole.LinkedList}>
-        {/** Create a Factory pattern to generate Annotation classs */}
+      {/* should this be true??? */}
+      <MotionCollapse isOpen={true}>
         {annotation}
-        {/* <AnnotationFactory backendRole={selectedRole} typeDeclaration={typeDeclaration} /> */}
       </MotionCollapse>
     </div>
   );
