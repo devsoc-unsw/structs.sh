@@ -14,6 +14,8 @@ type ServerToClientEventsType = {
   programWaitingForInput: any;
   compileError: string[];
   send_stdin: string;
+  acknowledgedEOF: string;
+  acknowledgedSIGINT: string;
 };
 
 export type ServerToClientEvent = {

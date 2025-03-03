@@ -29,6 +29,7 @@ export type GlobalStateStore = {
   visualizer: VisualizerParam;
   // Refactor to include backend data history
   currFrame: BackendState;
+  consoleChunks: string[];
 };
 
 export const DEFAULT_GLOBAL_STORE: GlobalStateStore = {
@@ -50,6 +51,7 @@ export const DEFAULT_GLOBAL_STORE: GlobalStateStore = {
     typeDeclarations: [],
   },
   currFrame: INITIAL_BACKEND_STATE,
+  consoleChunks: [],
 };
 
 export const NODE_SIZE = 30;
@@ -66,6 +68,8 @@ type GlobalStoreActions = {
   updateNextFrame: (backendState: BackendState) => void;
   clearTypeDeclarations: () => void;
   clearUserAnnotation: () => void;
+  appendConsoleChunks: (chunk: string | string[]) => void;
+  resetConsoleChunks: () => void;
 };
 
 export const useGlobalStore: UseBoundStore<StoreApi<GlobalStateStore & GlobalStoreActions>> =
@@ -179,6 +183,19 @@ export const useGlobalStore: UseBoundStore<StoreApi<GlobalStateStore & GlobalSto
           false,
           'clearUserAnnotation'
         );
+      },
+      appendConsoleChunks: (chunk: string | string[]) => {
+        if (Array.isArray(chunk)) {
+          set((state) => ({ consoleChunks: [...state.consoleChunks, ...chunk] }));
+        } else {
+          set((state) => ({ consoleChunks: [...state.consoleChunks, chunk] }));
+        }
+      },
+      setConsoleChunks: (chunk: string[]) => {
+        set(() => ({ consoleChunks: chunk }));
+      },
+      resetConsoleChunks: () => {
+        set(() => ({ consoleChunks: [] }));
       },
     }))
   );

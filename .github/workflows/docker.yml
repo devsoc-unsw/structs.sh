@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        component: [client]
+        component: [client, debugger2]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -40,6 +40,7 @@ jobs:
             ghcr.io/csesoc/structs-${{ matrix.component }}:${{ github.sha }}
             ghcr.io/csesoc/structs-${{ matrix.component }}:latest
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: "VITE_DEBUGGER_URL=https://structs.sh"
   deploy:
     name: Deploy (CD)
     runs-on: ubuntu-latest
@@ -64,8 +65,9 @@ jobs:
           git config user.email "technical@csesoc.org.au"
           git checkout -b update/structs/${{ github.sha }}
           yq -i '.items[0].spec.template.spec.containers[0].image = "ghcr.io/csesoc/structs-client:${{ github.sha }}"' projects/structs/deploy-frontend.yml
-          git add . 
-          git commit -m "feat(structs): update image" 
+          yq -i '.items[0].spec.template.spec.containers[0].image = "ghcr.io/csesoc/structs-debugger2:${{ github.sha }}"' projects/structs/deploy-debugger.yml
+          git add .
+          git commit -m "feat(structs): update image"
           git push -u origin update/structs/${{ github.sha }}
           gh pr create -B migration --title "feat(structs): update image" --body "Updates the image for the structs deployment to commit csesoc/structs.sh@${{ github.sha }}." > URL
           gh pr merge $(cat URL) --squash -d

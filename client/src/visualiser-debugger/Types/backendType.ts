@@ -2,6 +2,7 @@
  * Backend data structure definition
  */
 
+// TODO: should an explicit 'null' be includded in addresses? Or should it map to 0x00
 export type Addr = `0x${string}`;
 export type Name = string;
 

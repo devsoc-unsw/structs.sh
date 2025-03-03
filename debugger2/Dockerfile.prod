@@ -1,0 +1,13 @@
+from python:3.13.1-bookworm
+
+workdir /app
+
+run apt-get update -y
+run apt-get install -y gdb
+
+copy requirements.txt .
+run pip3 install -r requirements.txt --root-user-action=ignore
+
+copy . .
+expose 8000
+cmd ["python3", "src/serve.py"]

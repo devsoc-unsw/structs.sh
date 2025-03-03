@@ -43,7 +43,7 @@ class GraphicalBST extends GraphicalDataStructure {
     },
   });
 
-  public root: GraphicalBSTNode = null;
+  public root: GraphicalBSTNode | null = null;
 
   public insert(input: number): BSTInsertAnimationProducer {
     const animationProducer: BSTInsertAnimationProducer = new BSTInsertAnimationProducer();
@@ -79,16 +79,16 @@ class GraphicalBST extends GraphicalDataStructure {
   }
 
   private deleteRecursive(
-    root: GraphicalBSTNode,
-    parent: GraphicalBSTNode,
+    root: GraphicalBSTNode | null,
+    parent: GraphicalBSTNode | null,
     input: number,
     animationProducer: BSTDeleteAnimationProducer
-  ): GraphicalBSTNode {
+  ): GraphicalBSTNode | null {
     if (root == null) {
       animationProducer.doAnimationAndHighlight(3, animationProducer.unhighlightBST, this.root);
       return null;
     }
-    let newRoot: GraphicalBSTNode = root;
+    let newRoot: GraphicalBSTNode | null = root;
     if (input < root.value) {
       animationProducer.doAnimationAndHighlight(6, animationProducer.halfHighlightNode, root);
       if (root.left !== null) {
@@ -220,7 +220,7 @@ class GraphicalBST extends GraphicalDataStructure {
   }
 
   // returns a node corresponding to the input
-  public getNode(input: number): GraphicalBSTNode {
+  public getNode(input: number): GraphicalBSTNode | null {
     // handle edgecase where no nodes are present
     if (this.root === null) return null;
 
@@ -228,7 +228,7 @@ class GraphicalBST extends GraphicalDataStructure {
   }
 
   // TODO: remove this
-  public getNodeRecursive(input: number, node: GraphicalBSTNode): GraphicalBSTNode {
+  public getNodeRecursive(input: number, node: GraphicalBSTNode | null): GraphicalBSTNode | null {
     if (node === null) return null;
     if (input === node.value) return node;
 
@@ -238,18 +238,21 @@ class GraphicalBST extends GraphicalDataStructure {
     return this.getNodeRecursive(input, node.right);
   }
 
+  // NOTE: There are a lot of non-null assertion operators in the code for rotations.
+  // This is because the pre-condition that the value and the sub-tree for the rotation both exist.
+
   public rotateLeft(input: number): BSTRotateAnimationProducer {
     const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer();
     animationProducer.renderRotateLeftCode();
-    const oldRoot: GraphicalBSTNode = this.getNode(input);
+    const oldRoot: GraphicalBSTNode | null = this.getNode(input);
 
     if (oldRoot === null) return animationProducer;
 
-    const newRoot: GraphicalBSTNode = oldRoot.right;
+    const newRoot: GraphicalBSTNode | null = oldRoot.right;
 
     if (newRoot === null) return animationProducer;
 
-    this.root = this.doRotateLeft(this.root, input, animationProducer);
+    this.root = this.doRotateLeft(this.root!, input, animationProducer);
     updateNodePositions(this.root);
     animationProducer.doAnimationAndHighlight(
       6,
@@ -267,7 +270,7 @@ class GraphicalBST extends GraphicalDataStructure {
   ): GraphicalBSTNode {
     if (input === node.value) {
       animationProducer.doAnimationAndHighlight(2, animationProducer.highlightNode, node);
-      const newRoot: GraphicalBSTNode = node.right;
+      const newRoot: GraphicalBSTNode = node.right!;
       animationProducer.doAnimationAndHighlight(3, animationProducer.highlightNode, newRoot);
 
       if (newRoot.left != null) {
@@ -310,7 +313,7 @@ class GraphicalBST extends GraphicalDataStructure {
         node.leftLineTarget,
         node.leftArrowTarget
       );
-      node.left = this.doRotateLeft(node.left, input, animationProducer);
+      node.left = this.doRotateLeft(node.left!, input, animationProducer);
     } else {
       animationProducer.doAnimationAndHighlight(9, animationProducer.halfHighlightNode, node);
       animationProducer.doAnimationAndHighlight(
@@ -319,7 +322,7 @@ class GraphicalBST extends GraphicalDataStructure {
         node.rightLineTarget,
         node.rightArrowTarget
       );
-      node.right = this.doRotateLeft(node.right, input, animationProducer);
+      node.right = this.doRotateLeft(node.right!, input, animationProducer);
     }
 
     return node;
@@ -328,15 +331,15 @@ class GraphicalBST extends GraphicalDataStructure {
   public rotateRight(input: number): BSTRotateAnimationProducer {
     const animationProducer: BSTRotateAnimationProducer = new BSTRotateAnimationProducer();
     animationProducer.renderRotateRightCode();
-    const oldRoot: GraphicalBSTNode = this.getNode(input);
+    const oldRoot: GraphicalBSTNode | null = this.getNode(input);
 
     if (oldRoot === null) return animationProducer;
 
-    const newRoot: GraphicalBSTNode = oldRoot.left;
+    const newRoot: GraphicalBSTNode | null = oldRoot.left;
 
     if (newRoot === null) return animationProducer;
 
-    this.root = this.doRotateRight(this.root, input, animationProducer);
+    this.root = this.doRotateRight(this.root!, input, animationProducer);
     updateNodePositions(this.root);
     animationProducer.doAnimationAndHighlight(
       6,
@@ -354,7 +357,7 @@ class GraphicalBST extends GraphicalDataStructure {
   ): GraphicalBSTNode {
     if (input === node.value) {
       animationProducer.doAnimationAndHighlight(2, animationProducer.highlightNode, node);
-      const newRoot: GraphicalBSTNode = node.left;
+      const newRoot: GraphicalBSTNode = node.left!;
       animationProducer.doAnimationAndHighlight(3, animationProducer.highlightNode, newRoot);
 
       if (newRoot.right != null) {
@@ -397,7 +400,7 @@ class GraphicalBST extends GraphicalDataStructure {
         node.leftLineTarget,
         node.leftArrowTarget
       );
-      node.left = this.doRotateRight(node.left, input, animationProducer);
+      node.left = this.doRotateRight(node.left!, input, animationProducer);
     } else {
       animationProducer.doAnimationAndHighlight(9, animationProducer.halfHighlightNode, node);
       animationProducer.doAnimationAndHighlight(
@@ -406,7 +409,7 @@ class GraphicalBST extends GraphicalDataStructure {
         node.rightLineTarget,
         node.rightArrowTarget
       );
-      node.right = this.doRotateRight(node.right, input, animationProducer);
+      node.right = this.doRotateRight(node.right!, input, animationProducer);
     }
 
     return node;
@@ -465,7 +468,7 @@ class GraphicalBST extends GraphicalDataStructure {
     }
   }
 
-  private static exists(root: GraphicalBSTNode, value: number): boolean {
+  private static exists(root: GraphicalBSTNode | null, value: number): boolean {
     if (root == null) {
       return false;
     }
@@ -486,7 +489,7 @@ class GraphicalBST extends GraphicalDataStructure {
     return data;
   }
 
-  private saveInPreOrder(node: GraphicalBSTNode, data: number[]) {
+  private saveInPreOrder(node: GraphicalBSTNode | null, data: number[]) {
     if (node == null) return;
 
     data.push(node.value);

@@ -7,11 +7,11 @@ export default class GraphicalTreeGenerate {
   // given a sorted array arr, inserts elements to num such that its linear insertion order
   // will lead to a reasonably balanced BST
   private static recurseArrInsert<T extends GraphicalBSTNode>(
-    arr,
-    start,
-    end,
-    createNode: (number) => T
-  ): T {
+    arr: number[],
+    start: number,
+    end: number,
+    createNode: (arg0: number) => T
+  ): T | null {
     // the base case is array length <=1
     if (end - start === 0) {
       return null;
@@ -27,12 +27,12 @@ export default class GraphicalTreeGenerate {
     return newNode;
   }
 
-  private static create<T extends GraphicalBSTNode>(root: T): void {
+  private static create<T extends GraphicalBSTNode>(root: T | null): void {
     const producer = new BSTCreateAnimationProducer();
     producer.createTree(root);
   }
 
-  public static generate<T extends GraphicalBSTNode>(createNode: (number) => T): T {
+  public static generate<T extends GraphicalBSTNode>(createNode: (arg0: number) => T): T | null {
     const num = generateNumbers().sort((a, b) => a - b);
     const root = GraphicalTreeGenerate.recurseArrInsert(num, 0, num.length, createNode);
     updateNodePositions(root);
@@ -41,7 +41,10 @@ export default class GraphicalTreeGenerate {
   }
 
   // Loads Tree from Data
-  public static loadTree<T extends GraphicalBSTNode>(createNode: (number) => T, data: number[]): T {
+  public static loadTree<T extends GraphicalBSTNode>(
+    createNode: (arg0: number) => T,
+    data: number[]
+  ): T | null {
     const size = data.length;
     const root = GraphicalTreeGenerate.constructTreeUtil(createNode, data, 0, size - 1);
 
@@ -51,9 +54,14 @@ export default class GraphicalTreeGenerate {
   }
 
   // Construct tree from pre order
-  public static constructTreeUtil(createNode, pre, low, high) {
+  public static constructTreeUtil<T extends GraphicalBSTNode>(
+    createNode: (arg0: number) => T,
+    pre: number[],
+    low: number,
+    high: number
+  ) {
     let preIndex: number = 0;
-    function constructTreeRecursive(_pre, _low, _high) {
+    function constructTreeRecursive(_pre: number[], _low: number, _high: number) {
       // Base Case
       if (_low > _high) return null;
 
@@ -70,7 +78,7 @@ export default class GraphicalTreeGenerate {
 
       // Search for the first element greater than root
       for (let i = _low; i <= _high; i++) {
-        if (_pre[i] > root._data.value) {
+        if (_pre[i] > root.value) {
           rRoot = i;
           break;
         }

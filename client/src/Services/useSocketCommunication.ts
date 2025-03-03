@@ -17,7 +17,6 @@ import {
   useToastStateStore,
 } from '../visualiser-debugger/Store/toastStateStore';
 
-let initialized: boolean = false;
 export const useSocketCommunication = () => {
   const { updateNextFrame, updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation } =
     useGlobalStore();
@@ -25,57 +24,62 @@ export const useSocketCommunication = () => {
   const { clearFrontendState } = useFrontendStateStore();
 
   const { socketClient } = useSocketClientStore();
-  const [consoleChunks, setConsoleChunks] = useState<string[]>([]);
+  const [activeSession] = useState<boolean>(false);
+  const resetConsoleChunks = useGlobalStore((state) => state.resetConsoleChunks);
+  const appendConsoleChunks = useGlobalStore((state) => state.appendConsoleChunks);
   const { updateCurrFocusedTab } = useGlobalStore();
   const { setToastMessage: setMessage } = useToastStateStore();
 
-  if (!initialized) {
-    useMemo(() => {
-      const eventHandler: ServerToClientEvent = {
-        mainDebug: (_data: 'Finished mainDebug event on server') => {
+  useMemo(() => {
+    const eventHandler: ServerToClientEvent = {
+      mainDebug: (_data: 'Finished mainDebug event on server') => {
+        setMessage({
+          content: 'Debug session started.',
+          colorTheme: 'info',
+          durationMs: DEFAULT_MESSAGE_DURATION,
+        });
+        setActive(true);
+      },
+      sendFunctionDeclaration: (_data: FunctionStructure) => {},
+      sendTypeDeclaration: (type: BackendTypeDeclaration) => {
+        if (type.typeName === 'size_t') {
+          return;
+        }
+        updateTypeDeclaration(type);
+      },
+      sendBackendStateToUser: (state: BackendState | ProgramEnd) => {
+        if (isProgramEnd(state)) {
           setMessage({
-            content: 'Debug session started.',
+            content: 'Debug session ended.',
             colorTheme: 'info',
             durationMs: DEFAULT_MESSAGE_DURATION,
           });
-          setActive(true);
-        },
-        sendFunctionDeclaration: (_data: FunctionStructure) => {},
-        sendTypeDeclaration: (type: BackendTypeDeclaration) => {
-          if (type.typeName === 'size_t') {
-            return;
-          }
-          updateTypeDeclaration(type);
-        },
-        sendBackendStateToUser: (state: BackendState | ProgramEnd) => {
-          if (isProgramEnd(state)) {
-            setMessage({
-              content: 'Debug session ended.',
-              colorTheme: 'info',
-              durationMs: DEFAULT_MESSAGE_DURATION,
-            });
-            setActive(false);
-            return;
-          }
-          updateNextFrame(state);
-        },
-        sendStdoutToUser: (output: string) => {
-          setConsoleChunks((prev) => [...prev, output]);
-        },
-        programWaitingForInput: (_data: any) => {
-          // Implement as needed
-        },
-        compileError: (errors: string[]) => {
-          setConsoleChunks((prev) => [...prev, ...errors]);
-          updateCurrFocusedTab('2');
-        },
-        send_stdin: (_data: string) => {},
-      };
+          setActive(false);
+          return;
+        }
+        updateNextFrame(state);
+      },
+      sendStdoutToUser: (output: string) => {
+        appendConsoleChunks([...output]);
+      },
+      programWaitingForInput: (_data: any) => {
+        // Implement as needed
+      },
+      acknowledgedEOF: () => {
+        console.log('Debugger sent acknowledged EOF signal');
+      },
+      acknowledgedSIGINT: () => {
+        console.log('Debugger sent acknowledged SIGINT signal');
+      },
+      compileError: (errors: string[]) => {
+        appendConsoleChunks([...errors]);
+        updateCurrFocusedTab('2');
+      },
+      send_stdin: (_data: string) => {},
+    };
 
-      socketClient.setupEventHandlers(eventHandler);
-    }, []);
-    initialized = true;
-  }
+    socketClient.setupEventHandlers(eventHandler);
+  }, []);
 
   const resetDebugSession = useCallback(() => {
     updateNextFrame(INITIAL_BACKEND_STATE);
@@ -83,7 +87,7 @@ export const useSocketCommunication = () => {
     setActive(false);
     clearTypeDeclarations();
     clearUserAnnotation();
-    setConsoleChunks([]);
+    resetConsoleChunks();
   }, []);
 
   const sendCode = useCallback(() => {
@@ -162,8 +166,9 @@ export const useSocketCommunication = () => {
   );
 
   return {
-    consoleChunks,
-    setConsoleChunks,
+    resetConsoleChunks,
+    appendConsoleChunks,
+    activeSession,
     sendCode,
     getNextState: executeNextWithRetry,
     bulkSendNextStates,

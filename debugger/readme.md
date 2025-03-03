@@ -60,6 +60,19 @@ The `structssh-debugger-1` above refers to the image name, which you can see by 
 $ docker images
 ```
 
+## Running the debugger manually
+
+Steps for manual debugging (this is very useful for figuring out how the debugger works and manually testing gdb_scripts)
+    1. `docker exec -it <debugger-container-name> bash` 
+Now you should be inside the docker bash instance 
+    2. `cd /app`
+    3. `gcc -g src/samples/stdin.c -o main` or use a sample C program of your choice
+    4. `gdb`, now you should be inside gdb context
+    5. `source /app/src/gdb_scripts/DebugSession.py`
+    6. `python debug_session = DebugSession("fake_socket_id", "main")`
+    7. You can now run `custom_next` or other gdb commands to your hearts content.
+
+
 ## Notes
 
 - The debugger/src/gdb_scripts directory only contains python files that should be run within a gdb instance, for example like this:

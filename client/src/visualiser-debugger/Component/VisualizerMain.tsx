@@ -10,6 +10,7 @@ const VisualizerMain: React.FC = () => {
 
   const visualizerRef = useRef(null);
   const { uiState } = useGlobalStore();
+
   return (
     <div
       className="visualizer"

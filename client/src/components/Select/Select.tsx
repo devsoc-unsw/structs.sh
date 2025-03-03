@@ -3,9 +3,16 @@
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons';
 import * as Internal from '@radix-ui/react-select';
 import classNames from 'classnames';
+import { ComponentPropsWithoutRef, ReactNode } from 'react';
 import styles from 'styles/Select.module.css';
 
-const Select = ({ children, triggerClassName = '', placeholder, ...props }) => {
+interface SelectProps extends ComponentPropsWithoutRef<typeof Internal.Root> {
+  children: ReactNode;
+  triggerClassName: string;
+  placeholder: string;
+}
+
+const Select = ({ children, triggerClassName = '', placeholder, ...props }: SelectProps) => {
   return (
     <Internal.Root {...props}>
       <Internal.Trigger className={classNames(styles.SelectTrigger, triggerClassName)}>
@@ -29,7 +36,13 @@ const Select = ({ children, triggerClassName = '', placeholder, ...props }) => {
   );
 };
 
-const SelectItem = ({ value, className, children, ...props }) => {
+interface SelectItemProps {
+  value: string;
+  className: string;
+  children: ReactNode;
+}
+
+const SelectItem = ({ value, className, children, ...props }: SelectItemProps) => {
   return (
     <Internal.Item value={value} className={classNames(styles.SelectItem, className)} {...props}>
       <Internal.ItemText>{children}</Internal.ItemText>

@@ -5,6 +5,7 @@ import RedoIcon from '@mui/icons-material/Redo';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useEffect, useRef, useState } from 'react';
 import { Fade } from '@mui/material';
+import { handleCompileClicked } from 'visualiser-debugger/Store/onboardingStore';
 import { useSocketCommunication } from '../../../Services/useSocketCommunication';
 import { useFrontendStateStore } from '../../Store/frontendStateStore';
 import { Button } from '../../../components/Button';
@@ -18,7 +19,7 @@ const Controls = () => {
   const { currFrame } = useGlobalStore();
   const { userAnnotation, parser } = useGlobalStore().visualizer;
   const { sendCode, bulkSendNextStates, getNextState } = useSocketCommunication();
-  const { states, currentIndex, stepForward, stepBackward, jumpToState, isActive } =
+  const { states, currentIndex, stepForward, stepBackward, jumpToState, isActive, setActive } =
     useFrontendStateStore();
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -112,11 +113,13 @@ const Controls = () => {
           setBufferMode(false);
           setLoading(false);
           sendCode();
+          handleCompileClicked();
         }}
+        className="Onboarding-compileButton"
       >
         Compile
       </Button>
-      <Button disabled={!isActive} onClick={playToggle}>
+      <Button disabled={!isActive} onClick={playToggle} className="Onboarding-playButton">
         {loading ? (
           <Fade in={loading} timeout={500}>
             <CircularProgress size={24} />
@@ -139,8 +142,10 @@ const Controls = () => {
         disabled={!isActive}
         onClick={async () => {
           if (currentIndex === states.length - 1) {
+            setActive(false);
             setAutoNext(true);
             await getNextState();
+            setActive(true);
           } else {
             stepForward();
           }
@@ -151,7 +156,11 @@ const Controls = () => {
       <Slider
         max={states.length - 1}
         value={currentIndex}
-        onChange={(event: Event, value: number) => jumpToState(value)}
+        onChange={(event: Event, value: number | number[], _activeThumb: number) => {
+          if (typeof value !== 'number') return;
+
+          jumpToState(value as number);
+        }}
         loading={loading}
       />
     </div>

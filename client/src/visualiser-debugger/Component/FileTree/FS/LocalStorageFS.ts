@@ -32,6 +32,7 @@ export class LocalStorageFS implements IFileSystem {
   }
 
   addDir(dir: IFileDirNode): boolean {
+    if (!dir.parentPath) return false;
     const parentDir = this.getDirFromPath(dir.parentPath);
     if (!parentDir) return false;
 
@@ -44,6 +45,7 @@ export class LocalStorageFS implements IFileSystem {
   }
 
   deleteFile(file: IFileFileNode | IFileDirNode): void {
+    if (!file.parentPath) return;
     const parent = this.getDirFromPath(file.parentPath);
     if (parent && parent.children[file.name]) {
       delete parent.children[file.name];
@@ -73,7 +75,9 @@ export class LocalStorageFS implements IFileSystem {
     let current: IFileDirNode | IFileFileNode | undefined = this.root;
 
     segments.forEach((segment: string) => {
+      // @ts-ignore
       if (current.type === 'dir' && current.children[segment]) {
+        // @ts-ignore
         current = current.children[segment];
       }
     });

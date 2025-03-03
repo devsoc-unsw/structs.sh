@@ -1,16 +1,19 @@
-import { FC, useCallback, useMemo, useEffect, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import VisualiserController from 'visualiser-src/controller/VisualiserController';
+import { Box, List } from '@mui/material';
+import FloatingWindow from 'components/FloatingWindow';
 import VisualiserContext from './VisualiserContext';
 import Controls from './Controls';
-import Operations from './Operations';
-import CodeSnippet from './CodeSnippet';
 import CreateMenu from './CreateMenu';
+import OperationDetails from './OperationDetails';
 
 interface VisualiserInterfaceProps {
   topicTitle: string;
   data: number[];
 }
+
+const controller = new VisualiserController();
 
 /**
  * The component responsible for connecting the visualiser source code with the
@@ -23,74 +26,87 @@ interface VisualiserInterfaceProps {
  *     sliders, etc.).
  */
 const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle, data }) => {
-  const topicTitleRef = useRef<string>();
-  const controllerRef = useRef<VisualiserController>();
-  const [isTimelineComplete, setIsTimelineComplete] = useState<boolean>(false);
   const [documentation, setDocumentation] = useState<Documentation>({});
+  const [isTimelineComplete, setIsTimelineComplete] = useState<boolean>(false);
   const [isCodeSnippetExpanded, setIsCodeSnippetExpanded] = useState<boolean>(false);
-  const [isLoadOptionsExpanded, setIsLoadOptionsExpanded] = useState<boolean>(false);
+  const [isOperationsExpanded, setIsOperationsExpanded] = useState<boolean>(true);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  // const [isLoadOptionsExpanded, setIsLoadOptionsExpanded] = useState<boolean>(false);
 
   useEffect(() => {
-    controllerRef.current = controllerRef.current || new VisualiserController();
-    controllerRef.current.applyTopicTitle(topicTitle);
-    topicTitleRef.current = topicTitle;
-    setDocumentation(controllerRef.current.documentation);
+    controller.applyTopicTitle(topicTitle);
+    setDocumentation(controller.documentation);
     setIsCodeSnippetExpanded(false);
-    if (data !== undefined) {
-      controllerRef.current.loadData(data);
+    if (data) {
+      controller.loadData(data);
     }
   }, [topicTitle]);
 
-  const handleTimelineUpdate = useCallback((val) => {
+  const handleTimelineUpdate = useCallback((val: number) => {
     const timelineSlider = document.querySelector('#timelineSlider') as HTMLInputElement;
     timelineSlider.value = String(val);
     timelineSlider.style.background = `linear-gradient(to right, #39AF8E ${val}%, #aeabba ${val}%)`;
     setIsTimelineComplete(val >= 100);
   }, []);
 
-  const handleSetCodeSnippetExpansion = useCallback((val) => {
+  const handleSetCodeSnippetExpansion = useCallback((val: boolean) => {
     setIsCodeSnippetExpanded(val);
   }, []);
 
-  const handleSetLoadOptionsExpansion = useCallback((val) => {
-    setIsLoadOptionsExpanded(val);
+  const handleSetOperationsExpansion = useCallback((val: boolean) => {
+    setIsOperationsExpanded(val);
   }, []);
 
-  const handleUpdateIsPlaying = useCallback((val) => {
+  // const handleSetLoadOptionsExpansion = useCallback((val: boolean) => {
+  //   setIsLoadOptionsExpanded(val);
+  // }, []);
+
+  const handleUpdateIsPlaying = useCallback((val: boolean) => {
     setIsPlaying(val);
   }, []);
 
-  const contextValues = useMemo(
-    () => ({
-      controller: controllerRef.current,
-      topicTitle: topicTitleRef.current,
-      documentation,
-      timeline: { isTimelineComplete, handleTimelineUpdate, isPlaying, handleUpdateIsPlaying },
-      codeSnippet: { isCodeSnippetExpanded, handleSetCodeSnippetExpansion },
-      loadOptionsContext: { isLoadOptionsExpanded, handleSetLoadOptionsExpansion },
-    }),
-    [
-      controllerRef.current,
-      topicTitleRef.current,
-      documentation,
-      isTimelineComplete,
-      handleTimelineUpdate,
-      isPlaying,
-      handleUpdateIsPlaying,
-      isCodeSnippetExpanded,
-      handleSetCodeSnippetExpansion,
-      isLoadOptionsExpanded,
-      handleSetLoadOptionsExpansion,
-    ]
-  );
+  const contextValue = useMemo(() => ({ controller }), [controller]);
 
   return (
-    <VisualiserContext.Provider value={contextValues}>
+    <VisualiserContext.Provider value={contextValue}>
       <CreateMenu />
-      <Operations />
-      <CodeSnippet />
-      <Controls />
+      {/* Operations */}
+      {!documentation || (
+        <FloatingWindow
+          flexDirection="row"
+          isExpanded={isOperationsExpanded}
+          handleToggleExpansion={() => handleSetOperationsExpansion(!isOperationsExpanded)}
+        >
+          <List>
+            {Object.keys(documentation).map((command) => (
+              <OperationDetails
+                key={documentation[command].id}
+                command={command}
+                handleTimelineUpdate={handleTimelineUpdate}
+                handleUpdateIsPlaying={handleUpdateIsPlaying}
+                handleSetCodeSnippetExpansion={handleSetCodeSnippetExpansion}
+              />
+            ))}
+          </List>
+        </FloatingWindow>
+      )}
+      {/* Code Snippet */}
+      <FloatingWindow
+        flexDirection="row-reverse"
+        minHeight="30vh"
+        isExpanded={isCodeSnippetExpanded}
+        handleToggleExpansion={() => handleSetCodeSnippetExpansion(!isCodeSnippetExpanded)}
+      >
+        <Box id="code-container">
+          <svg id="code-canvas" />
+        </Box>
+      </FloatingWindow>
+      <Controls
+        isTimelineComplete={isTimelineComplete}
+        handleTimelineUpdate={handleTimelineUpdate}
+        isPlaying={isPlaying}
+        handleUpdateIsPlaying={handleUpdateIsPlaying}
+      />
     </VisualiserContext.Provider>
   );
 };

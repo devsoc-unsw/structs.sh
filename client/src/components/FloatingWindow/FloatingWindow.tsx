@@ -1,15 +1,15 @@
-import { FC, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { Box, Collapse, useTheme } from '@mui/material';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 
-interface Props {
+interface FloatingWindowProps {
   children: ReactNode;
+  isExpanded: boolean;
+  handleToggleExpansion: () => void;
   minHeight?: string;
   maxHeight?: string;
   flexDirection?: 'row' | 'row-reverse';
-  isExpanded: boolean;
-  handleToggleExpansion: () => void;
 }
 
 /**
@@ -17,14 +17,14 @@ interface Props {
  *
  * Used for the GUI for performing operations and the code snippets
  */
-const FloatingWindow: FC<Props> = ({
+const FloatingWindow = ({
   children,
+  isExpanded,
+  handleToggleExpansion,
   minHeight = undefined,
   maxHeight = '80vh',
   flexDirection = 'row',
-  isExpanded,
-  handleToggleExpansion,
-}) => {
+}: FloatingWindowProps) => {
   const theme = useTheme();
 
   return (
@@ -37,8 +37,7 @@ const FloatingWindow: FC<Props> = ({
       maxHeight={maxHeight}
       display="flex"
       flexDirection={flexDirection}
-      left={flexDirection === 'row' && '0'}
-      right={flexDirection === 'row-reverse' && '0'}
+      {...(flexDirection === 'row' ? { left: 0 } : { right: 0 })}
     >
       <Box
         onClick={handleToggleExpansion}

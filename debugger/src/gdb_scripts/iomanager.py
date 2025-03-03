@@ -13,18 +13,36 @@ class IOManager:
 
     def __init__(self, user_socket_id: str = None):
         print("\nInitializing IOManager instance...")
-        (master, slave) = pty.openpty()
-        self.stdin = master
-        self.stdout = master
-        self.name = os.ttyname(slave)
+        
         self.user_socket_id = user_socket_id
-        gdb.execute(f"tty {self.name}")
+
+        # Create a new pseudo-terminal (pty) pair, returning two file descriptors,
+        # one for each end of the pty.
+        (master_fd, slave_fd) = pty.openpty()
+
+        # Unlike the slave side, the master side does not have a virtual
+        # terminal associated with it.
+        # The master side can be thought of as a communication interface or a
+        # handle to control the slave terminal, not as a terminal itself.
+        # The master side of a PTY acts as the controlling side. Programs that
+        # communicate with the terminal, such as debuggers or terminal emulators,
+        # write to and read from the master side.
+        self.master_fd = master_fd
+
+        # The slave side has a name that represents a virtual terminal
+        # (e.g., /dev/pts/3), which is used by the operating system to refer to
+        # it. The master side typically does not have a name that can be
+        # retrieved using os.ttyname()
+        # This line redirects the input and output of the program being debugged
+        # to the slave side of the pseudo-terminal created previously
+        # (e.g. /dev/pts/X)
+        gdb.execute(f"tty {os.ttyname(slave_fd)}")
 
     def read(self) -> Optional[str]:
         (data_to_read, _, _) = select.select(
-            [self.stdout], [], [], TIMEOUT_DURATION)
+            [self.master_fd], [], [], TIMEOUT_DURATION)
         if data_to_read:
-            return os.read(self.stdout, self.max_read_bytes).decode()
+            return os.read(self.master_fd, self.max_read_bytes).decode()
         else:
             return None
 
@@ -34,14 +52,14 @@ class IOManager:
         Note: This attempt does not work. It always returns True even when the program is not waiting for input, because the program is always waiting for input to be buffered.
         '''
         (_, data_to_write, _) = select.select(
-            [], [self.stdin], [], TIMEOUT_DURATION)
+            [], [self.master_fd], [], TIMEOUT_DURATION)
         print(
             "=======================================\n=================================\n")
         print(f"{data_to_write=}")
         return bool(data_to_write)
 
     def write(self, data: str):
-        os.write(self.stdin, data.encode())
+        os.write(self.master_fd, data.encode())
 
     def read_and_send(self):
         output = self.read()

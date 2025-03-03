@@ -131,7 +131,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
                 )}
                 {showLogin && (
                   <Login
-                    handleLogon={(status) => {
+                    handleLogon={(status: boolean) => {
                       setLoggedIn(status);
                       setShowLogin(false);
                     }}

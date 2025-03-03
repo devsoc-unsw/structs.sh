@@ -25,9 +25,15 @@ const Page404 = () => {
   const path: string = String(location.pathname);
 
   useEffect(() => {
-    document.querySelector('html').style.overflow = 'hidden';
+    const htmlElement = document.querySelector('html');
+    if (htmlElement) {
+      htmlElement.style.overflow = 'hidden';
+    }
+
     return () => {
-      document.querySelector('html').style.overflow = 'auto';
+      if (htmlElement) {
+        htmlElement.style.overflow = 'auto';
+      }
     };
   });
 

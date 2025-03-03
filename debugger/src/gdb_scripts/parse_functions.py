@@ -44,7 +44,10 @@ from pprint import pprint
 import re
 import subprocess
 import gdb
+from src.gdb_scripts.ast_visitors import ParseFuncDeclVisitor, ParseStructDefVisitor, ParseTypeDeclVisitor
 from pycparser import parse_file, c_ast
+from src.constants import USER_PTYPE_FILE_NAME, USER_PTYPE_PREPROCESSED
+from src.utils import create_abs_file_path
 from src.gdb_scripts.use_socketio_connection import enable_socketio_client_emit, useSocketIOConnection
 
 
@@ -87,181 +90,6 @@ functions = {
 """
 
 
-class DeclVisitor(c_ast.NodeVisitor):
-
-    def __init__(self, name, file, line_num, original_line) -> None:
-        super().__init__()
-        self.name = name
-        self.file = file
-        self.line_num = line_num
-        self.original_line = original_line
-
-    def visit_FuncDecl(self, node):
-        '''
-        Gives return_type and params
-        '''
-        result = {}
-        result['return_type'] = self.visit(node.type)
-        if node.args is not None:
-            result['params'] = self.visit(node.args)
-        else:
-            result['params'] = []
-
-        return result
-
-    def constructInfo(self, node):
-        '''
-        Expect isinstance(node, c_ast.Decl) and isinstance(node.type, c_ast.FuncDecl)
-        '''
-        result = {}
-        result["name"] = self.name
-        result["file"] = self.file
-        result["line_num"] = self.line_num
-        result["original_line"] = self.original_line
-
-        parseResult = self.visit(node.type)
-        result.update(parseResult)
-
-        return result
-
-    def visit_Decl(self, node):
-        result = {}
-        result['name'] = node.name
-        if isinstance(node.type, c_ast.FuncDecl):
-            result['typeName'] = self.visit(node.type)
-        elif isinstance(node.type, c_ast.TypeDecl):
-            result['typeName'] = self.visit(node.type)
-        elif isinstance(node.type, c_ast.PtrDecl):
-            result['typeName'] = self.visit(node.type)
-        elif isinstance(node.type, c_ast.ArrayDecl):
-            result['typeName'] = self.visit(node.type)
-        else:
-            raise Exception(
-                f"Visiting Decl of unknown type: {type(node).__name__}")
-
-        return result
-
-    def visit_ParamList(self, node):
-        result = []
-
-        for param in node.params:
-            result.append(self.visit(param))
-
-        return result
-
-    def visit_Typename(self, node):
-        result = {}
-        result["name"] = node.name
-        result["typeName"] = self.visit(node.type)
-        return result
-
-    def visit_TypeDecl(self, node):
-        if isinstance(node.type, c_ast.Decl):
-            return self.visit(node.type)
-        elif isinstance(node.type, c_ast.Struct):
-            return self.visit(node.type)
-        elif isinstance(node.type, c_ast.IdentifierType):
-            return self.visit(node.type)
-        else:
-            raise Exception(
-                f"Visiting TypeDecl with unknown type: {type(node.type).__name__}")
-
-    def visit_Struct(self, node):
-        return f"struct {node.name}"
-
-    def visit_PtrDecl(self, node):
-        return f"{self.visit(node.type)}*"
-
-    def visit_ArrayDecl(self, node):
-        # return f"{self.visit(node.type)}[{node.dim.value if node.dim else ''}]"
-        return f"{self.visit(node.type)}[]"
-
-    def visit_IdentifierType(self, node):
-        return " ".join(node.names)
-
-
-class ParseFuncDeclVisitor(DeclVisitor):
-    '''
-    Visitor pattern for parsing function declarations.
-    Returns a dict in the following form:
-    {
-        "name": "myFunc",
-        "func_decl": {
-            "return_type": "int",
-            "params": [
-                {
-                    "type": "int",
-                    "name": "a" ## Might be None
-                },
-                {
-                    "type": "char * *",
-                    "name": "b"
-                },
-                {
-                    "type": "struct node *",
-                    "name": "b"
-                },
-                {
-                    "type": "List *",
-                    "name": "b"
-                },
-                ...
-            ]
-        }
-    }'''
-
-    def constructInfo(self, node):
-        '''
-        Expect isinstance(node, c_ast.Decl) and isinstance(node.type, c_ast.FuncDecl)
-        '''
-        result = {}
-        result["name"] = self.name
-        result["file"] = self.file
-        result["line_num"] = self.line_num
-        result["original_line"] = self.original_line
-
-        parseResult = self.visit(node.type)
-        result.update(parseResult)
-
-        return result
-
-
-class ParseTypeDeclVisitor(DeclVisitor):
-
-    def constructInfo(self, node):
-        '''
-        Expect isinstance(node, c_ast.Decl) or isinstance(node.type, c_ast.TypeDef)
-        '''
-        result = {}
-        result["typeName"] = self.name
-        result["file"] = self.file
-        result["line_num"] = self.line_num
-        result["original_line"] = self.original_line
-
-        parseResult = self.visit(node.type)
-        result['type'] = {'typeName': parseResult}
-
-        return result
-
-
-class ParseStructDefVisitor(DeclVisitor):
-
-    def constructInfo(self, node):
-        '''
-        Expect isinstance(node, c_ast.Struct)
-        '''
-        result = {}
-        result["typeName"] = f"struct {self.name}"
-        result["file"] = self.file
-        result["line_num"] = self.line_num
-        result["original_line"] = self.original_line
-        result['fields'] = []
-
-        for decl in node.decls:
-            parseResult = self.visit(decl)
-            result['fields'].append(parseResult)
-
-        return result
 
 
 @useSocketIOConnection
@@ -650,6 +478,56 @@ def manual_regex_parse_fn_decl():
 
     pprint(functions)
     return functions
+
+
+def get_type_name_of_stack_var(var: str):
+    ptype_output_str = gdb.execute(f"ptype {var}", to_string=True)
+    type_name_str = ptype_output_str.strip("type = ")
+    return get_type_name(type_name_str.strip())
+
+
+def get_type_name(type_name_str: str):
+    print(f"{type_name_str=}")
+    if (type_name_str.endswith('*')):
+        type_name_str = type_name_str[:-1]
+        sub_type_name = get_type_name(type_name_str.strip())
+        return f"{sub_type_name}*"
+    elif (type_name_str.startswith('struct ')):
+        # == No longer need this after accounting for pointers recursively
+        # STRUCT_PTR_STR = '} *'
+        # if (type_name_str.endswith(STRUCT_PTR_STR)):
+        #     type_name_str = type_name_str.replace(STRUCT_PTR_STR, '};')
+
+        if (type_name_str.endswith('}')):
+            type_name_str = type_name_str + ';'
+        # Write the ptype to a file
+        with open(create_abs_file_path(USER_PTYPE_FILE_NAME), "w") as f:
+            f.write(type_name_str)
+
+        subprocess.run(f"gcc -E {create_abs_file_path(USER_PTYPE_FILE_NAME)} > {USER_PTYPE_PREPROCESSED}",
+                       shell=True)
+
+        # Parse the preprocessed C code into an AST
+        # `cpp_args=r'-Iutils/fake_libc_include'` enables `#include` for parsing
+        ptype_ast = parse_file(USER_PTYPE_PREPROCESSED, use_cpp=True,
+                               cpp_args=r'-Iutils/fake_libc_include')
+
+        # Print the outermost struct name found in the AST
+        type_name = "struct " + find_outermost_struct_name(ptype_ast)
+    else:
+        type_name = type_name_str.strip()
+
+    return type_name
+
+
+def find_outermost_struct_name(node):
+    if isinstance(node, c_ast.Struct):
+        return node.name
+    for _, child in node.children():
+        result = find_outermost_struct_name(child)
+        if result:
+            return result
+    return None
 
 
 if __name__ == '__main__':

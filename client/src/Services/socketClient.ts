@@ -34,7 +34,7 @@ class SocketClient {
   }
 
   constructor() {
-    this.socket = io(URL);
+    this.socket = io(URL, { path: "/debugger" });
     this.setupDefaultEvents();
     this.socket.connect();
   }
@@ -71,6 +71,12 @@ class SocketClient {
     },
     sendStdin: (data: any) => {
       this.socket.emit('send_stdin', data);
+    },
+    sendEOF: () => {
+      this.socket.emit('EOF');
+    },
+    sendSIGINT: () => {
+      this.socket.emit('SIGINT');
     },
   };
 }

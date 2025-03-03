@@ -1,5 +1,6 @@
 # ===== Stage 1: Producing Build Files =====
 FROM node:20-alpine AS build
+ARG VITE_DEBUGGER_URL
 
 WORKDIR /app
 
@@ -24,4 +25,3 @@ EXPOSE 80
 
 # We need to put in our own nginx config.
 COPY nginx.conf /etc/nginx/nginx.conf
-

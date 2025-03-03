@@ -23,7 +23,7 @@ const MenuButton = styled(Button)({
  *     `onClick` handler.
  */
 const CreateMenu = () => {
-  const { controller, topicTitle } = useContext(VisualiserContext);
+  const { controller } = useContext(VisualiserContext);
 
   const handleReset = useCallback(() => {
     controller.resetDataStructure();
@@ -57,7 +57,7 @@ const CreateMenu = () => {
       {/* TODO: Release this feature */}
       {inDev && (
         <>
-          <Saving topicTitle={topicTitle} controller={controller} />
+          <Saving />
           <CreateLink />
         </>
       )}

@@ -12,6 +12,9 @@ jobs:
       - name: Install Dependency
         working-directory: ./client
         run: npm install
+      - name: TypeScript
+        working-directory: ./client
+        run: npm run tsc
       - name: Lint
         working-directory: ./client
         run: npm run lint

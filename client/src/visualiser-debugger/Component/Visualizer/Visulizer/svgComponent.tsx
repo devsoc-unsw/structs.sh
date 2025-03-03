@@ -112,6 +112,7 @@ const SvgComponent: React.FC<SvgComponentProps> = ({ children, centerCoord: cent
 
   const isSvgInteractive = (event: MouseEvent | TouchEvent | PointerEvent) => {
     if (isLocked) return false;
+    if (!svgRef.current) return false;
     // Get the bounding rectangle of the SVG container
     const svgRect = svgRef.current.getBoundingClientRect();
 
@@ -156,6 +157,7 @@ const SvgComponent: React.FC<SvgComponentProps> = ({ children, centerCoord: cent
   const handleWheel = (event: React.WheelEvent<SVGSVGElement>) => {
     event.preventDefault();
     if (isLocked) return;
+    if (!svgRef.current) return;
 
     const viewBox: SVGRect = svgRef.current.viewBox.baseVal;
     const zoomFactor = 1.045;

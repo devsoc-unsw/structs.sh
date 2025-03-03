@@ -1,4 +1,4 @@
-import { SVG } from '@svgdotjs/svg.js';
+import { Polygon, SVG } from '@svgdotjs/svg.js';
 import AnimationProducer from 'visualiser-src/common/AnimationProducer';
 import { Documentation } from 'visualiser-src/common/typedefs';
 import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
@@ -324,7 +324,13 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     return producer;
   }
 
-  public quicksort(lo, hi, producer, ipointer, jpointer) {
+  public quicksort(
+    lo: number,
+    hi: number,
+    producer: SortsQuickAnimationProducer,
+    ipointer: Polygon,
+    jpointer: Polygon
+  ) {
     // Base Case
     if (hi <= lo) {
       producer.doAnimationAndHighlightTimestamp(
@@ -382,7 +388,13 @@ export default class GraphicalSortList extends GraphicalDataStructure {
     this.quicksort(i + 1, hi, producer, ipointer, jpointer);
   }
 
-  public partition(lo, hi, producer, ipointer, jpointer) {
+  public partition(
+    lo: number,
+    hi: number,
+    producer: SortsQuickAnimationProducer,
+    ipointer: Polygon,
+    jpointer: Polygon
+  ) {
     const v = this.elementList[lo].data.value; // pivot
     // Highligh pivot
     producer.doAnimationAndHighlightTimestamp(

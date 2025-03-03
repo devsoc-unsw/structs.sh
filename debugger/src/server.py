@@ -28,7 +28,8 @@ from utils import make_non_blocking, get_gdb_script, get_subprocess_output
 # You can then use this to reference files relative to this directory.
 abs_file_path = os.path.dirname(os.path.abspath(__file__))
 
-GDB_SCRIPT_NAME = "default"  # Can just use "default"
+# Currently we use the "default" script. See src/utils.py
+GDB_SCRIPT_NAME = "default"
 TEST_PROGRAM_NAME = f"{abs_file_path}/samples/linkedlist/main3"
 
 """
@@ -70,9 +71,7 @@ def sendDummyLinkedListData(socket_id: str, line_number: int) -> None:
     This function will send
     the heap dictionary at that point during the program's runtime.
     """
-    print(
-        "Received message from", socket_id, ":", line_number, "at event sendDummyData"
-    )
+    print("Received message from", socket_id, ":", line_number, "at event sendDummyData")
     backend_dict = {}
     # Our initial linked list node has been alloced with data value 27
     if line_number == 100:
@@ -108,9 +107,7 @@ def sendDummyBinaryTreeData(socket_id: str, line_number: int) -> None:
     This function will send
     the heap dictionary at that point during the program's runtime.
     """
-    print(
-        "Received message from", socket_id, ":", line_number, "at event sendDummyData"
-    )
+    print("Received message from", socket_id, ":", line_number, "at event sendDummyData")
     backend_dict = {}
     # Our initial linked list node has been alloced with data value 27
     if line_number == 100:
@@ -190,16 +187,12 @@ def mainDebug(socket_id: str, code: str) -> None:
 def executeNext(socket_id: str) -> None:
     proc: subprocess.Popen = procs[socket_id]
     if proc is None:
-        raise Exception(
-            f"executeNext: No subprocess found for user with socket_id {socket_id}"
-        )
+        raise Exception(f"executeNext: No subprocess found for user with socket_id {socket_id}")
 
     print(f"Found subprocess for FE client socket_id {socket_id}:")
     print(proc)
 
-    print(
-        f"\n=== Sending '{CUSTOM_NEXT_COMMAND_NAME}' command to gdb instance {proc.pid}"
-    )
+    print(f"\n=== Sending '{CUSTOM_NEXT_COMMAND_NAME}' command to gdb instance {proc.pid}")
     proc.stdin.write(f"{CUSTOM_NEXT_COMMAND_NAME}\n")
     proc.stdin.flush()
     get_subprocess_output(proc, TIMEOUT_DURATION)
@@ -207,12 +200,55 @@ def executeNext(socket_id: str) -> None:
     # Reading new output from the program relies on the fact that next was
     # executed just before. This is expected to happen in the call to the custom
     # next command above.
-    proc.stdin.write(
-        f"python {DEBUG_SESSION_VAR_NAME}.io_manager.read_and_send()\n")
+    proc.stdin.write(f"python {DEBUG_SESSION_VAR_NAME}.io_manager.read_and_send()\n")
     proc.stdin.flush()
     get_subprocess_output(proc, TIMEOUT_DURATION)
 
     io.emit("executeNext", f"Finished executeNext event on server-side")
+
+
+@io.event
+def EOF(socket_id: str) -> None:
+    proc: subprocess.Popen = procs[socket_id]
+    if proc is None:
+        raise Exception(f"executeNext: No subprocess found for user with socket_id {socket_id}")
+
+    print(f"Found subprocess for FE client socket_id {socket_id}:")
+    print(proc)
+
+    print(f"\n=== Sending '{CUSTOM_NEXT_COMMAND_NAME}' command to gdb instance {proc.pid}")
+    proc.stdin.write(f"{CUSTOM_NEXT_COMMAND_NAME}\n")
+    proc.stdin.flush()
+    get_subprocess_output(proc, TIMEOUT_DURATION)
+
+    # Reading new output from the program relies on the fact that next was
+    # executed just before. This is expected to happen in the call to the custom
+    # next command above.
+    get_subprocess_output(proc, TIMEOUT_DURATION)
+
+    io.emit("acknowledgedEOF")
+
+
+@io.event
+def SIGINT(socket_id: str) -> None:
+    proc: subprocess.Popen = procs[socket_id]
+    if proc is None:
+        raise Exception(f"executeNext: No subprocess found for user with socket_id {socket_id}")
+
+    print(f"Found subprocess for FE client socket_id {socket_id}:")
+    print(proc)
+
+    print(f"\n=== Sending '{CUSTOM_NEXT_COMMAND_NAME}' command to gdb instance {proc.pid}")
+    proc.stdin.write(f"{CUSTOM_NEXT_COMMAND_NAME}\n")
+    proc.stdin.flush()
+    get_subprocess_output(proc, TIMEOUT_DURATION)
+
+    # Reading new output from the program relies on the fact that next was
+    # executed just before. This is expected to happen in the call to the custom
+    # next command above.
+    get_subprocess_output(proc, TIMEOUT_DURATION)
+
+    io.emit("acknowledgedSIGINT")
 
 
 @io.event
@@ -223,17 +259,14 @@ def send_stdin(socket_id: str, data: str):
 
     proc: subprocess.Popen = procs[socket_id]
     if proc is None:
-        raise Exception(
-            f"executeNext: No subprocess found for user with socket_id {socket_id}"
-        )
+        raise Exception(f"executeNext: No subprocess found for user with socket_id {socket_id}")
 
     print(f"Found subprocess for FE client socket_id {socket_id}:")
     print(proc)
 
     print(f"Sending stdin to gdb instance {proc.pid}:")
     print(data)
-    proc.stdin.write(
-        f'python {DEBUG_SESSION_VAR_NAME}.io_manager.write("{data}\\n")\n')
+    proc.stdin.write(f'python {DEBUG_SESSION_VAR_NAME}.io_manager.write("{data}\\n")\n')
     proc.stdin.flush()
 
 
@@ -265,9 +298,7 @@ def createdTypeDeclaration(socket_id: str, user_socket_id, type) -> None:
 
 @io.on("programWaitingForInput")
 def requestUserInput(socket_id: str, user_socket_id) -> None:
-    print(
-        f"Event requestUserInput received from gdb instance with socket_id {socket_id}:"
-    )
+    print(f"Event requestUserInput received from gdb instance with socket_id {socket_id}:")
     print(f"Requesting user input from FE user {user_socket_id}:")
     io.emit("requestUserInput", room=user_socket_id)
 
@@ -279,9 +310,7 @@ def updatedBackendState(socket_id: str, user_socket_id, backend_data) -> None:
     the specified frontend client.
     Should be emitted by a gdb instance while running a `custom_next` custom command.
     """
-    print(
-        f"Event updatedBackendState received from gdb instance with socket_id {socket_id}:"
-    )
+    print(f"Event updatedBackendState received from gdb instance with socket_id {socket_id}:")
     print(f"Sending backend state to client {user_socket_id}:")
     pprint(backend_data)
     io.emit("sendBackendStateToUser", backend_data, room=user_socket_id)
@@ -292,9 +321,7 @@ def produced_stdout_output(socket_id: str, user_socket_id: str, data: str):
     """
     Send program stdout to FE client
     """
-    print(
-        f"Event produced_stdout_output received from gdb instance with socket_id {socket_id}:"
-    )
+    print(f"Event produced_stdout_output received from gdb instance with socket_id {socket_id}:")
     print(f"Sending stdout output to client {user_socket_id}:")
     print(data)
     io.emit("sendStdoutToUser", data, room=user_socket_id)

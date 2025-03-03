@@ -11,6 +11,7 @@ type UserFileSystemState = {
 type Action = {
   setFocusDirPath: (path: string) => void;
   setFocusFilePath: (path: string) => void;
+  resetRootPaths: () => void;
 };
 
 export const useUserFsStateStore = create<UserFileSystemState & Action>((set) => ({
@@ -22,5 +23,9 @@ export const useUserFsStateStore = create<UserFileSystemState & Action>((set) =>
   },
   setFocusFilePath: (path: string) => {
     set({ currFocusFilePath: path });
+  },
+  resetRootPaths: () => {
+    set({ currFocusFilePath: '' });
+    set({ currFocusDirPath: '' });
   },
 }));

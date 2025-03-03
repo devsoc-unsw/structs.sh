@@ -11,6 +11,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import { handleWorkspaceOpen } from 'visualiser-debugger/Store/onboardingStore';
 import Folder from './Folder';
 import './css/WorkspaceSelector.css';
 import { useUserFsStateStore } from '../../Store/userFsStateStore';
@@ -93,7 +94,7 @@ const WorkspaceSelector = () => {
     }
     if (fileToDelete) {
       fileSystem.deleteFile(fileToDelete);
-    } else {
+    } else if (dirToDelete) {
       fileSystem.deleteFile(dirToDelete);
     }
     fileSystem.saveChanges();
@@ -110,7 +111,7 @@ const WorkspaceSelector = () => {
           <Tooltip title="Create new file">
             <Button
               onClick={() => handleClickOpen('File')}
-              className="icon-button"
+              className="Onboarding-fileButton"
               style={fileButtonStyle}
             >
               <AddIcon style={{ fontSize: '20px' }} />
@@ -119,7 +120,7 @@ const WorkspaceSelector = () => {
           <Tooltip title="Create new folder">
             <Button
               onClick={() => handleClickOpen('Folder')}
-              className="icon-button"
+              className="Onboarding-folderButton"
               style={fileButtonStyle}
             >
               <CreateNewFolderIcon style={{ fontSize: '20px' }} />
@@ -128,7 +129,7 @@ const WorkspaceSelector = () => {
           <Tooltip title="Delete this file">
             <Button
               onClick={() => handleDeleteOpen()}
-              className="icon-button"
+              className="Onboarding-deleteButton"
               style={fileButtonStyle}
             >
               <RemoveCircleOutlineIcon style={{ fontSize: '20px' }} />
@@ -136,11 +137,25 @@ const WorkspaceSelector = () => {
           </Tooltip>
         </Box>
       </Box>
-      {fileSystem ? (
-        <Folder folder={fileSystem.getRootDirectory()} depth={0} />
-      ) : (
-        <div>Loading...</div>
-      )}
+      <div
+        className="rootDirectory"
+        onClick={handleWorkspaceOpen}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            handleWorkspaceOpen();
+          }
+        }}
+      >
+        {fileSystem ? (
+          <div className="Onboarding-rootContent">
+            <Folder folder={fileSystem.getRootDirectory()} depth={0} />
+          </div>
+        ) : (
+          <div>Loading...</div>
+        )}
+      </div>
       <Dialog
         open={open}
         onClose={handleClose}

@@ -2,7 +2,7 @@ import GraphicalBSTNode from '../data-structure/GraphicalBSTNode';
 import BSTInsertAnimationProducer from './BSTInsertAnimationProducer';
 
 export default class BSTCreateAnimationProducer extends BSTInsertAnimationProducer {
-  public createTree(root: GraphicalBSTNode): void {
+  public createTree(root: GraphicalBSTNode | null): void {
     // base case
     if (root === null) {
       return;

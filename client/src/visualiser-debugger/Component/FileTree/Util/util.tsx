@@ -6,7 +6,7 @@ export const PLACEHOLDER_USERNAME = 'benp123';
 
 // Use this on login
 export const loadWorkspaces = async () => {
-  let workspaces = [];
+  let workspaces: string[] = [];
   await axios
     .get(`${SERVER_URL}/api/retrieveWorkspaces`, {
       params: {
@@ -25,7 +25,7 @@ export const loadWorkspaces = async () => {
   return workspaces;
 };
 
-export const loadCode = async (program, username, workspaceName) => {
+export const loadCode = async (program: string, username: string, workspaceName: string) => {
   let code = '// Write your code here!!!!!';
   if (program === '') {
     return code;

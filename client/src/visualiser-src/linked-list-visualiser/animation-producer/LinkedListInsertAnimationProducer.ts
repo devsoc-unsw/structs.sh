@@ -29,7 +29,7 @@ export default class LinkedListInsertAnimationProducer extends LinkedListAnimati
     this.addSequenceAnimation(
       node.pointerTarget
         .animate()
-        .plot(getPointerPath(node.x, node.y, node.next.x, node.next.y) as any)
+        .plot(getPointerPath(node.x, node.y, node.next!.x, node.next!.y) as any)
     );
   }
 }

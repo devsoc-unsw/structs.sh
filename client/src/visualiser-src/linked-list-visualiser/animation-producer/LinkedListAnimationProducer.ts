@@ -61,7 +61,7 @@ export default class LinkedListAnimationProducer extends AnimationProducer {
   }
 
   public resetPositioning(headPointer: Path, head: GraphicalLinkedListNode) {
-    let curr: GraphicalLinkedListNode = head;
+    let curr: GraphicalLinkedListNode | null = head;
     let index: number = 0;
     this.addSequenceAnimation(
       headPointer
@@ -109,9 +109,10 @@ export default class LinkedListAnimationProducer extends AnimationProducer {
     this.resetColorNode(node);
   }
 
+  // Precondition: newHead's next pointer will never be null
   public newHeadPointToOldHead(newHead: GraphicalLinkedListNode) {
     newHead.pointerTarget.plot(
-      getPointerPath(newHead.x, newHead.y, newHead.next.x, newHead.next.y) as any
+      getPointerPath(newHead.x, newHead.y, newHead.next!.x, newHead.next!.y) as any
     );
     this.addSequenceAnimation(newHead.pointerTarget.animate().attr({ opacity: 1 }));
   }
@@ -126,8 +127,9 @@ export default class LinkedListAnimationProducer extends AnimationProducer {
     this.addSequenceAnimation(headPointer.animate().attr({ opacity: 1 }));
   }
 
+  // Precondition: last's next pointer will never be null
   public linkLastToNew(last: GraphicalLinkedListNode) {
-    last.pointerTarget.plot(getPointerPath(last.x, last.y, last.next.x, last.next.y) as any);
+    last.pointerTarget.plot(getPointerPath(last.x, last.y, last.next!.x, last.next!.y) as any);
     this.addSequenceAnimation(last.pointerTarget.animate().attr({ opacity: 1 }));
   }
 }

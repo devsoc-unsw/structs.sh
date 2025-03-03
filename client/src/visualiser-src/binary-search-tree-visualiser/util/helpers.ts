@@ -3,7 +3,7 @@ import GraphicalBSTNode from '../data-structure/GraphicalBSTNode';
 
 // Updates node positions of a tree
 const updateNodePositionsRecursive = (
-  node: GraphicalBSTNode,
+  node: GraphicalBSTNode | null,
   low: number,
   high: number,
   mid: number,
@@ -20,8 +20,8 @@ const updateNodePositionsRecursive = (
   updateNodePositionsRecursive(node.right, mid, high, (mid + high) / 2, y + lineDiffY);
 };
 
-const updateNodePositions = (root: GraphicalBSTNode): void => {
-  const canvasWidth = document.getElementById('visualiser-container').offsetWidth;
+const updateNodePositions = (root: GraphicalBSTNode | null): void => {
+  const canvasWidth = document.getElementById('visualiser-container')?.offsetWidth;
   const low: number = 0;
   const high: number = Number(canvasWidth);
   const mid: number = (low + high) / 2;

@@ -12,6 +12,7 @@
   background: var(--slate-2);
   color: var(--slate-12);
   overflow-x: hidden;
+  position: fixed;
 }
 
 .layout>* {
@@ -42,11 +43,7 @@
 }
 
 .editor {
-  padding: 0;
-  grid-column: 2;
-  grid-row: 2 / 4;
-  border-right: var(--border);
-  align-items: end;
+  grid-row: span 2;
 }
 
 .inspector {

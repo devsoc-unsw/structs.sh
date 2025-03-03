@@ -1,0 +1,47 @@
+.inputHidden {
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+.inputMirror {
+  display: block;
+  min-height: 1rem;
+  width: 95%;
+  word-break: break-all;
+  white-space: pre-wrap;
+  position: relative;
+}
+
+/* The custom caret */
+.inputMirror span:before {
+  content: attr(data-cursorChar);
+  position: absolute;
+  color: lightgray;
+  background: rgba(0, 0, 0, 1);
+  height: 1rem;
+  width: 9px;
+  display: inline-block;
+}
+
+/* Blinking animation for the cursor */
+@keyframes blink {
+  0% { opacity: 1; }
+  49% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+.blink span::before {
+  animation: blink 1s ease infinite;
+}
+
+.paused span:before {
+  animation: none;
+}

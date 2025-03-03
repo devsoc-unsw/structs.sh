@@ -5,8 +5,14 @@ import { Documentation } from 'visualiser-src/common/typedefs';
 import { defaultSpeed } from '../common/constants';
 import AnimationProducer from '../common/AnimationProducer';
 
+interface TimeEvent extends Event {
+  detail?: number;
+}
+
 class VisualiserController {
-  private dataStructure: GraphicalDataStructure;
+  private dataStructure?: GraphicalDataStructure;
+
+  private topicTitle?: string;
 
   private currentTimeline: Timeline = new Timeline().persist(true);
 
@@ -18,8 +24,6 @@ class VisualiserController {
 
   private isStepMode: boolean = false;
 
-  private topicTitle: string;
-
   public constructor(topicTitle?: string) {
     this.setSpeed(defaultSpeed);
     if (topicTitle !== undefined) {
@@ -28,14 +32,19 @@ class VisualiserController {
   }
 
   // Return data in form of integer array
-  public getData(): number[] {
-    return this.dataStructure.data;
+  public get data(): number[] {
+    return this.dataStructure?.data || [];
+  }
+
+  // Return the current topic/data structure
+  public get topic(): string | null {
+    return this.topicTitle || null;
   }
 
   // Set data structure to loaded data
   public loadData(data: number[]): void {
     this.resetDataStructure();
-    this.dataStructure.load(data);
+    this.dataStructure?.load(data);
   }
 
   public getCurrentTimeline(): Timeline {
@@ -75,10 +84,10 @@ class VisualiserController {
 
   public resetTimeline(updateSlider: (val: number) => void) {
     this.currentTimeline = new Timeline().persist(true);
-    this.currentTimeline.on('time', (e: CustomEvent) => {
+    this.currentTimeline.on('time', (evt: TimeEvent) => {
       // avoid division by 0
-      if (this.timelineDuration !== 0) {
-        updateSlider((Math.min(e.detail, this.timelineDuration) / this.timelineDuration) * 100);
+      if (this.timelineDuration !== 0 && evt.detail) {
+        updateSlider((Math.min(evt.detail, this.timelineDuration) / this.timelineDuration) * 100);
       }
     });
     this.isStepMode = false;
@@ -138,6 +147,9 @@ class VisualiserController {
   }
 
   private getErrorMessageIfInvalidInput(command: string, args: string[]): string {
+    if (!this.dataStructure) {
+      return 'Invalid data structure';
+    }
     const expectedArgs = this.dataStructure.documentation[command].args;
     if (args.length !== expectedArgs.length) {
       return `Invalid arguments. Please provide ${args.join(', ')}`;
@@ -185,7 +197,7 @@ class VisualiserController {
     // @ts-ignore
     const animationProducer: AnimationProducer = this.dataStructure[command](
       ...args.map((arg, idx) => {
-        if (this.documentation[command].args[idx].endsWith('s')) {
+        if (this.dataStructure?.documentation[command].args[idx].endsWith('s')) {
           return arg
             .split(/,| /g)
             .filter((str) => str !== '')
@@ -199,11 +211,13 @@ class VisualiserController {
   }
 
   public get documentation(): Documentation {
-    return this.dataStructure?.documentation;
+    return this.dataStructure?.documentation || {};
   }
 
   public resetDataStructure(): void {
-    this.dataStructure = GraphicalDataStructureFactory.create(this.topicTitle);
+    if (this.topicTitle) {
+      this.dataStructure = GraphicalDataStructureFactory.create(this.topicTitle);
+    }
     this.currentTimeline.finish();
     this.currentTimeline.time(0);
     this.currentTimeline = new Timeline().persist(true);
@@ -211,7 +225,7 @@ class VisualiserController {
 
   public generateDataStructure(): void {
     this.resetDataStructure();
-    this.dataStructure.generate();
+    this.dataStructure?.generate();
   }
 
   private computePrevTimestamp(): number {

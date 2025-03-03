@@ -9,7 +9,7 @@ export const bypassFrontmatter = (markdownBody: string): string =>
 export const determineTimeToRead = (rawMarkdown: string) => {
   const WORDS_PER_MINUTE = 200;
   const regex = /\w+/g;
-  const wordCount = (rawMarkdown || '').match(regex).length;
+  const wordCount = (rawMarkdown || '').match(regex)?.length || 0;
 
   return Math.ceil(wordCount / WORDS_PER_MINUTE);
 };

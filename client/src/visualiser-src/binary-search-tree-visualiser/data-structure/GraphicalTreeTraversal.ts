@@ -2,7 +2,7 @@ import BSTTraverseAnimationProducer from '../animation-producer/BSTTraverseAnima
 import GraphicalBSTNode from './GraphicalBSTNode';
 
 export default class GraphicalTreeTraversal {
-  public static inorderTraversal(root: GraphicalBSTNode): BSTTraverseAnimationProducer {
+  public static inorderTraversal(root: GraphicalBSTNode | null): BSTTraverseAnimationProducer {
     const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer();
 
     animationProducer.renderInorderTraversalCode();
@@ -13,7 +13,7 @@ export default class GraphicalTreeTraversal {
   }
 
   private static doInorderTraversal(
-    node: GraphicalBSTNode,
+    node: GraphicalBSTNode | null,
     animationProducer: BSTTraverseAnimationProducer
   ) {
     if (node === null) {
@@ -38,7 +38,7 @@ export default class GraphicalTreeTraversal {
     GraphicalTreeTraversal.doInorderTraversal(node.right, animationProducer);
   }
 
-  public static preorderTraversal(root: GraphicalBSTNode): BSTTraverseAnimationProducer {
+  public static preorderTraversal(root: GraphicalBSTNode | null): BSTTraverseAnimationProducer {
     const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer();
 
     animationProducer.renderPreorderTraversalCode();
@@ -49,7 +49,7 @@ export default class GraphicalTreeTraversal {
   }
 
   private static doPreorderTraversal(
-    node: GraphicalBSTNode,
+    node: GraphicalBSTNode | null,
     animationProducer: BSTTraverseAnimationProducer
   ) {
     if (node === null) {
@@ -74,7 +74,7 @@ export default class GraphicalTreeTraversal {
     GraphicalTreeTraversal.doPreorderTraversal(node.right, animationProducer);
   }
 
-  public static postorderTraversal(root: GraphicalBSTNode): BSTTraverseAnimationProducer {
+  public static postorderTraversal(root: GraphicalBSTNode | null): BSTTraverseAnimationProducer {
     const animationProducer: BSTTraverseAnimationProducer = new BSTTraverseAnimationProducer();
 
     animationProducer.renderPostorderTraversalCode();
@@ -85,7 +85,7 @@ export default class GraphicalTreeTraversal {
   }
 
   private static doPostorderTraversal(
-    node: GraphicalBSTNode,
+    node: GraphicalBSTNode | null,
     animationProducer: BSTTraverseAnimationProducer
   ) {
     if (node === null) {
