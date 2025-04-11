@@ -18,9 +18,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import logo from 'assets/img/logo.png';
 import { Link, useParams } from 'react-router-dom';
 import { titleToUrl, toTitleCase, urlToTitle } from 'utils/url';
-import Login from 'components/Login/Login';
 import { getTopics } from '../../visualiser-src/common/helpers';
-import useGlobalState from '../../store/globalStore';
 
 const LogoText = styled(Typography)({
   textTransform: 'none',
@@ -49,24 +47,6 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
     setMenuAnchorEl(null);
   };
 
-  const [loggedIn, setLoggedIn] = useState(localStorage.getItem('user') != null);
-
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    setLoggedIn(false);
-  };
-
-  const [showLogin, setShowLogin] = useState(false);
-
-  const handleLogin = () => {
-    setShowLogin(true);
-  };
-
-  const handleClose = () => {
-    setShowLogin(false);
-  };
-
-  const inDev = useGlobalState((state) => state.inDev);
   return (
     <Box>
       <AppBar
@@ -122,31 +102,6 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
                 </Typography>
               </Button>
             </Grid>
-            {inDev && (
-              <Grid item xs={4} display="flex" justifyContent="end">
-                {loggedIn ? (
-                  <>
-                    <Button style={{ color: '#0288D1' }}>{localStorage.getItem('user')}</Button>
-                    <Button style={{ color: '#0288D1' }} onClick={handleLogout}>
-                      Log Out
-                    </Button>
-                  </>
-                ) : (
-                  <Button style={{ color: '#0288D1' }} onClick={handleLogin}>
-                    Log In
-                  </Button>
-                )}
-                {showLogin && (
-                  <Login
-                    handleLogon={(status: boolean) => {
-                      setLoggedIn(status);
-                      setShowLogin(false);
-                    }}
-                    onBack={handleClose}
-                  />
-                )}
-              </Grid>
-            )}
           </Grid>
         </Toolbar>
       </AppBar>
