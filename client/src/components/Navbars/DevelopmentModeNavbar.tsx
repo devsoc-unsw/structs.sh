@@ -16,14 +16,14 @@ const DevelopmentModeNavbar = ({
   onButtonClick: (event: React.MouseEvent<HTMLElement>) => void;
 }) => {
 
-  const [ navigateHomePage, setNavigateHomePage] = useState(false);
+  const [navigateHomePage, setNavigateHomePage] = useState(false);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     if (navigateHomePage) {
       navigate('/');
     }
-  }, [ navigateHomePage ]);
+  }, [navigateHomePage]);
 
   return (
     <div className={styles.navBar}>
