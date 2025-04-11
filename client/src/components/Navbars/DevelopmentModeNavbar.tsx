@@ -29,7 +29,7 @@ const DevelopmentModeNavbar = ({
       <div
         className={styles.navItem}
         onClick={() => setNavigateHomePage(!navigateHomePage)}
-        aria-hidden='true'>
+        aria-hidden="true">
         <img src={logo} alt="logo" height="30px" />
         <span>
           <h4>Structs.sh</h4>
