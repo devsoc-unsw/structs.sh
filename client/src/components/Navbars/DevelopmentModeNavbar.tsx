@@ -18,10 +18,6 @@ const DevelopmentModeNavbar = ({
   const [navigateHomePage, setNavigateHomePage] = useState(false);
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    setNavigateHomePage(!navigateHomePage)
-  }
-
   useEffect(() => {
     if (navigateHomePage) {
       navigate('/');
@@ -30,7 +26,7 @@ const DevelopmentModeNavbar = ({
 
   return (
     <div className={styles.navBar}>
-      <div className={styles.navItem} onClick={handleClick}>
+      <div className={styles.navItem} onClick={() => setNavigateHomePage(!navigateHomePage)} aria-hidden='true'>
         <img src={logo} alt="logo" height="30px" />
         <span>
           <h4>Structs.sh</h4>
