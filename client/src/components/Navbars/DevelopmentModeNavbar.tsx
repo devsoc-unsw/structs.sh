@@ -7,15 +7,27 @@ import AboutText from 'visualiser-debugger/Component/FileTree/AboutText';
 import BookIcon from '@mui/icons-material/Book';
 import classNames from 'classnames';
 import { Tooltip } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const DevelopmentModeNavbar = ({
   onButtonClick,
 }: {
   onButtonClick: (event: React.MouseEvent<HTMLElement>) => void;
 }) => {
+
+  const [ navigateHomePage, setNavigateHomePage] = useState(false);
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    if (navigateHomePage) {
+      navigate('/');
+    }
+  }, [ navigateHomePage ]);
+
   return (
     <div className={styles.navBar}>
-      <div className={styles.navItem}>
+      <div className={styles.navItem} onClick={() => setNavigateHomePage(!navigateHomePage)}>
         <img src={logo} alt="logo" height="30px" />
         <span>
           <h4>Structs.sh</h4>

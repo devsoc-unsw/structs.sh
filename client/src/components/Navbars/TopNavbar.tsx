@@ -81,7 +81,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
             <Grid item xs={4} display="flex">
               <Button color="info" onClick={handleOpenMenu} endIcon={<KeyboardArrowDownIcon />}>
                 <Typography>
-                  <strong>{currTopic ? 'Topic: ' : 'Topics'}</strong> {currTopic}
+                  <strong>{currTopic ? 'Topic: ' : 'Topics'}</strong>
                 </Typography>
               </Button>
               <Menu anchorEl={menuAnchorEl} open={menuOpen} onClose={handleCloseMenu}>
@@ -113,6 +113,13 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
                 <LogoText variant="h4" fontFamily="CodeText">
                   Structs.sh
                 </LogoText>
+              </Button>
+            </Grid>
+            <Grid item xs={4} display="flex" justifyContent="end">
+              <Button style={{ color: '#0288D1' }} component={Link} to="/dev">
+                <Typography>
+                  <strong>Debugger</strong>
+                </Typography>
               </Button>
             </Grid>
             {inDev && (
