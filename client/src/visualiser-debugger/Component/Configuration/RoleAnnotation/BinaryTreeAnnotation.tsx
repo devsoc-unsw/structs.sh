@@ -24,7 +24,9 @@ export const createPossibleTreeTypeDecl = (
         possibleLefts: [],
         possibleRights: [],
     };
-
+    if (typeDecl.fields === undefined) {
+        return null;
+    }
     typeDecl.fields.forEach((field) => {
         if (isNativeTypeName(field.typeName)) {
             possibleTypeDecl.possibleValues.push({
@@ -66,9 +68,9 @@ export const createPossibleTreeTypeDecl = (
 
 export const TreeNodeAnnotation: AnnotationComponent = ({ backendType }: AnnotationProp) => {
     const [possibleTypeDeclForTree, setPossibleTypeDeclForTree] = 
-        useState<PossibleBinaryTreeAnnotation>(createPossibleTreeTypeDecl(backendType));
+        useState<PossibleBinaryTreeAnnotation | null>(createPossibleTreeTypeDecl(backendType));
     const { updateUserAnnotation, visualizer } = useGlobalStore();
-    const [nodeAnnotation, setNodeAnnotation] = useState<BinaryTreeAnnotation>(null);
+    const [nodeAnnotation, setNodeAnnotation] = useState<BinaryTreeAnnotation | null>(null);
     const handleUpdateNodeAnnotation = (newAnnotation: BinaryTreeAnnotation) => {
         updateUserAnnotation({
             stackAnnotation: visualizer.userAnnotation.stackAnnotation,
@@ -78,7 +80,7 @@ export const TreeNodeAnnotation: AnnotationComponent = ({ backendType }: Annotat
             },
         });
     }
-    const handleTreeNodeAnnotation = (possibleTypeAnnotation: PossibleBinaryTreeAnnotation) => {
+    const handleTreeNodeAnnotation = (possibleTypeAnnotation: PossibleBinaryTreeAnnotation | null) => {
         if (possibleTypeAnnotation === null) return;
         setPossibleTypeDeclForTree(possibleTypeAnnotation);
         const newAnnotation: BinaryTreeAnnotation = {
