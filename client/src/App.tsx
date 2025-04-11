@@ -36,7 +36,7 @@ const App = () => {
             <Route path="/feedback" element={<Feedback />} />
 
             {/* Development mode */}
-            <Route path="/dev" element={<DevelopmentMode />} />
+            <Route path="/debugger" element={<DevelopmentMode />} />
 
             {/* 404 page */}
             <Route path="*" element={<Page404 />} />

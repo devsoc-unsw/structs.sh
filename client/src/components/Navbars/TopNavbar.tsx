@@ -96,7 +96,7 @@ const TopNavbar: FC<Props> = ({ position = 'fixed' }) => {
               </Button>
             </Grid>
             <Grid item xs={4} display="flex" justifyContent="end">
-              <Button style={{ color: '#0288D1' }} component={Link} to="/dev">
+              <Button style={{ color: '#0288D1' }} component={Link} to="/debugger">
                 <Typography>
                   <strong>Debugger</strong>
                 </Typography>
