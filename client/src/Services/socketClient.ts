@@ -34,7 +34,7 @@ class SocketClient {
   }
 
   constructor() {
-    this.socket = io(URL, { path: "/debugger" });
+    this.socket = io(URL, { path: '/debugger' });
     this.setupDefaultEvents();
     this.socket.connect();
   }

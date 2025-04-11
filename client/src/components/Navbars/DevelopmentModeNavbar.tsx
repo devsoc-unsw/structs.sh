@@ -15,9 +15,12 @@ const DevelopmentModeNavbar = ({
 }: {
   onButtonClick: (event: React.MouseEvent<HTMLElement>) => void;
 }) => {
-
   const [navigateHomePage, setNavigateHomePage] = useState(false);
   const navigate = useNavigate();
+
+  const handleClick = () => {
+    setNavigateHomePage(!navigateHomePage)
+  }
 
   useEffect(() => {
     if (navigateHomePage) {
@@ -27,7 +30,7 @@ const DevelopmentModeNavbar = ({
 
   return (
     <div className={styles.navBar}>
-      <div className={styles.navItem} onClick={() => setNavigateHomePage(!navigateHomePage)}>
+      <div className={styles.navItem} onClick={handleClick}>
         <img src={logo} alt="logo" height="30px" />
         <span>
           <h4>Structs.sh</h4>
