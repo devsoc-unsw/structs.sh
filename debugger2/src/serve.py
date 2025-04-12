@@ -139,7 +139,7 @@ async def send_stdin(sid: str) -> None:
     error("event 'send_stdin' not implemented")
 
 
-app = ASGIApp(server, socketio_path="/debugger")
+app = ASGIApp(server, socketio_path="/dapi")
 
 if __name__ == "__main__":
     host = "0.0.0.0"
