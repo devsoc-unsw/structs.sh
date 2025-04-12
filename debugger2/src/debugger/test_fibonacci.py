@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from debugger import Debugger, compile, Frame
+from debugger import Debugger, c_compile, Frame
 
 here = Path(__file__).parent
 
@@ -9,7 +9,7 @@ async def test_fibonacci():
     source = here / "test_fibonacci.c"
     exe = here / "exe"
     assert source.exists()
-    await compile(source, exe)
+    await c_compile(source, exe)
 
     debug = Debugger()
 

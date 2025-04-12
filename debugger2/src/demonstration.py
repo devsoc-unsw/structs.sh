@@ -2,7 +2,7 @@ from asyncio import CancelledError, run
 from pathlib import Path
 from pprint import pp
 
-from debugger import Debugger, compile
+from debugger import Debugger, c_compile
 
 here = Path(__file__).parent
 
@@ -10,7 +10,7 @@ here = Path(__file__).parent
 async def main():
     source = here / "demonstration_fib.c"
     exe = here / "fib"
-    await compile(source, exe)
+    await c_compile(source, exe)
 
     try:
         debug = Debugger()

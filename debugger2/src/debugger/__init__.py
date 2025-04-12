@@ -1,2 +1,2 @@
 from .debugger import Debugger, Frame
-from .compile import compile
+from .c_compile import c_compile, CompileError

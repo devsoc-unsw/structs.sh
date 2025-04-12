@@ -1,11 +1,12 @@
 from asyncio import create_subprocess_exec
+from asyncio import gather
 from asyncio import create_task
 from asyncio import Queue
 from asyncio import to_thread
 from asyncio import Event
 from asyncio import iscoroutinefunction
 from asyncio.subprocess import PIPE
-from collections import deque
+from collections import defaultdict, deque
 from contextlib import suppress
 from pathlib import Path
 import os
@@ -38,7 +39,8 @@ class BaseDebugger:
             stdout=PIPE,
         )
 
-        self.result_queue = Queue[tuple[str, dict]]()
+        self.cmd_ident = 0
+        self.pending_cmds = dict[str, Queue[tuple[str, dict]]]()
         self.stream_queue = deque[str](maxlen=0)
         create_task(self._stdout_dispatch())
         create_task(self._inferior_dispatch())
@@ -53,19 +55,27 @@ class BaseDebugger:
         await self.process.stdin.drain()
         await self.process.wait()
 
-        self.result_queue.shutdown()
-        await self.result_queue.join()
+        for queue in self.pending_cmds.values():
+            queue.shutdown()
+        await gather(*[queue.join() for queue in self.pending_cmds.values()])
 
         os.close(self.fd_master)
         os.close(self.fd_slave)
         await self._inferior_dispatch_done.wait()
 
     async def run_command(self, command: str):
-        self.process.stdin.write(f"{command}\n".encode())
+        ident = str(self.cmd_ident).rjust(3, "0")
+        self.cmd_ident = (1 + self.cmd_ident) % 256
+        assert ident not in self.pending_cmds
+        self.pending_cmds[ident] = Queue(1)
+
+        self.process.stdin.write(f"{ident}{command}\n".encode())
         await self.process.stdin.drain()
 
-        subkind, result = await self.result_queue.get()
-        self.result_queue.task_done()
+        subkind, result = await self.pending_cmds[ident].get()
+        self.pending_cmds[ident].task_done()
+        del self.pending_cmds[ident]
+
         if subkind == mion.RESULT_ERROR:
             raise ValueError(result["msg"])
         assert subkind in mion.RESULT_CLASS
@@ -111,9 +121,14 @@ class BaseDebugger:
 
             kind, message = line[:1], line[1:]
             match kind:
-                case mion.RESULT:
+                case c if c.isdigit():
+                    ident, kind, message = line[:3], line[3:4], line[4:]
+                    assert kind == mion.RESULT
+
                     subkind, message = _split_subkind(message)
-                    await self.result_queue.put((subkind, mion.loads(message)))
+                    await self.pending_cmds[ident].put(
+                        (subkind, mion.loads(message))
+                    )
                 case _ if kind in mion.ASYNC:
                     subkind, message = _split_subkind(message)
                     if iscoroutinefunction(self.oob_handler):

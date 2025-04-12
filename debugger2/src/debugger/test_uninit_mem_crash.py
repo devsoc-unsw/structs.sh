@@ -1,7 +1,7 @@
 from pathlib import Path
 from pprint import pp
 
-from debugger import Debugger, compile
+from debugger import Debugger, c_compile
 
 here = Path(__file__).parent
 
@@ -9,7 +9,7 @@ here = Path(__file__).parent
 async def test_uninit_mem_crash():
     source = here / "test_uninitialized.c"
     exe = here / "test_uninitialized"
-    await compile(source, exe)
+    await c_compile(source, exe)
 
     try:
         debug = Debugger()

@@ -10,7 +10,7 @@ from uvicorn import run
 from socketio import AsyncServer
 from socketio import ASGIApp
 
-from debugger import Debugger, compile
+from debugger import Debugger, c_compile
 
 logging.basicConfig(level=logging.INFO)
 debug = logging.debug
@@ -37,7 +37,7 @@ class State:
         self.debugger = Debugger()
 
         self.source.write_text(code)
-        await compile(self.source, self.exe)
+        await c_compile(self.source, self.exe)
         await self.debugger.init(self.exe)
 
         self.seen = set()
@@ -108,20 +108,16 @@ async def executeNext(sid: str) -> None:
     )
 
     legacy_types, legacy_mem = await debugger.legacy_trace()
-    for type in legacy_types:
-        if type["typeName"] in state[sid].seen:
+    for kind in legacy_types:
+        if kind["typeName"] in state[sid].seen:
             continue
-        state[sid].seen.add(type["typeName"])
+        state[sid].seen.add(kind["typeName"])
         await server.emit(
             "sendTypeDeclaration",
-            json.loads(json.dumps(type, default=asdict)),
+            kind,
             to=sid,
         )
-    await server.emit(
-        "sendBackendStateToUser",
-        json.loads(json.dumps(legacy_mem, default=asdict)),
-        to=sid,
-    )
+    await server.emit("sendBackendStateToUser", legacy_mem, to=sid)
 
 
 @server.event
