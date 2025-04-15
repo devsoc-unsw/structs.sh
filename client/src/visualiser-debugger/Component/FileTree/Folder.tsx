@@ -29,7 +29,7 @@ const Folder = ({ folder, depth }: FolderParam) => {
     alignItems: 'center',
     width: '100%',
     '&:hover': {
-      backgroundColor: '#f0f0f0',
+      backgroundColor: '#AAAAAA33',
     },
     height: '20px',
   };

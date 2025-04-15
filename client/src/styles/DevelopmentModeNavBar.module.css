@@ -13,6 +13,13 @@
   cursor: pointer;
 }
 
+.navItemsContainer{
+  display: flex;
+  align-items: center; /* Center items vertically */
+  gap: 15px; /* Space between items */
+  padding-right: 15px; /* Add some padding from the right edge */
+}
+
 .test {
   background-color: red;
 }

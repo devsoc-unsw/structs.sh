@@ -4,11 +4,13 @@ import 'ace-builds/src-noconflict/mode-c_cpp';
 import 'ace-builds/src-noconflict/snippets/c_cpp';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/theme-tomorrow';
+import 'ace-builds/src-noconflict/theme-tomorrow_night';
 import { useState, useEffect } from 'react';
 import { onboardingStore } from 'visualiser-debugger/Store/onboardingStore';
 import { useUserFsStateStore } from '../../Store/userFsStateStore';
 import { IFileFileNode } from '../FileTree/FS/IFileSystem';
 import { useFrontendStateStore } from '../../Store/frontendStateStore';
+import { useTheme } from '../../Contexts/ThemeContexts';
 
 const CodeEditor: React.FC = () => {
   const currBackendState = useFrontendStateStore((store) => {
@@ -18,6 +20,7 @@ const CodeEditor: React.FC = () => {
   const { setOnboardingCurrFile } = onboardingStore();
   const [currFile, setCurrFile] = useState<IFileFileNode | undefined>(undefined);
   const [code, setCode] = useState('');
+  const { darkMode } = useTheme();
 
   useEffect(() => {
     // Update currFile based on currFocusFilePath
@@ -52,7 +55,7 @@ const CodeEditor: React.FC = () => {
       value={code}
       onChange={handleSetCode}
       mode="c_cpp"
-      theme="tomorrow"
+      theme={darkMode ? "tomorrow_night" : "tomorrow"}
       height="100%"
       width="100%"
       markers={markers}
