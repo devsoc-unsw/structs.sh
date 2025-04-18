@@ -16,6 +16,11 @@ class GraphicalAVL extends GraphicalDataStructure {
       description:
         'Executes standard AVL insertion to add a new node with the given value into the tree.',
     },
+    delete: {
+      args: ['value'],
+      description:
+        'Executes standard AVL deletion to remove the node with the given value from the tree.',
+    },
     inorderTraversal: {
       args: [],
       description: 'Executes an inorder traversal on the tree.',
@@ -44,6 +49,18 @@ class GraphicalAVL extends GraphicalDataStructure {
     } else {
       // Recursively inserting
       this.doInsert(null, this.root, false, input, animationProducer);
+    }
+    return animationProducer;
+  }
+
+  // TODO: To be implemented
+  public delete(): AVLAnimationProducer {
+    const animationProducer: AVLAnimationProducer = new AVLAnimationProducer();
+    animationProducer.renderDeleteCode();
+    if (this.root === null) {
+      // Early return if deleting from an empty tree
+    } else {
+      this.doDelete();
     }
     return animationProducer;
   }
@@ -154,6 +171,12 @@ class GraphicalAVL extends GraphicalDataStructure {
     }
 
     return true;
+  }
+
+  // TODO: To be implemented
+  private doDelete(): boolean {
+    // Placeholder function to prevent errors
+    return false;
   }
 
   private rotateLeft(
