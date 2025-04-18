@@ -66,7 +66,7 @@ const Folder = ({ folder, depth }: FolderParam) => {
     <Box>
       <Box sx={indentStyle} component="div" onClick={expandFolder}>
         <IconButton size="small" style={iconStyle}>
-          <ExpandMoreIcon fontSize="inherit" style={{ fontSize: '16px' }} />
+          <ExpandMoreIcon fontSize="inherit" style={{ fontSize: '16px', color: 'var(--text-primary)' }} />
         </IconButton>
         <Typography variant="body2" sx={{ flexGrow: 1, userSelect: 'none', fontSize: '0.85rem' }}>
           {folder.name}
