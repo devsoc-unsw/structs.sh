@@ -1,5 +1,6 @@
 @import '@radix-ui/colors/slate.css';
 @import '@radix-ui/colors/slate-dark.css';
+@import '@radix-ui/colors/violet.css';
 @import './global.module.css';
 
 /* Light theme scrollbar (default) */
@@ -38,7 +39,7 @@
   --bg-primary: #f7f7f7;
   --bg-secondary: #e0e0e0;
   --border-color: #e0e0e0;
-  --icon-primary: black;
+  --icon-primary: var(--violet-11);
 }
 
 .dark {
