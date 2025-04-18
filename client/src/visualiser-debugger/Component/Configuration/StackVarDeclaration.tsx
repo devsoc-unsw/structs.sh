@@ -33,7 +33,7 @@ export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
 
   // Annotate by default if the variable contains a pointer
   useEffect(() => {
-    if (selectedRole === StackVariableRole.LinkedListPointer) {
+    if (selectedRole === StackVariableRole.LinkedListPointer || selectedRole === StackVariableRole.BinaryTreePointer) {
       const newStackAnnotation = {
         [name]: memoryValue.typeName,
       };
@@ -84,7 +84,7 @@ export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
                     type="button"
                     onClick={() => {
                       setSelectedRole(role[1]);
-                      if (role[1] === StackVariableRole.LinkedListPointer) {
+                      if (role[1] === StackVariableRole.LinkedListPointer || role[1] === StackVariableRole.BinaryTreePointer) {
                         updateStackAnnotation({ [name]: memoryValue.typeName });
                       } else {
                         updateStackAnnotation({ [name]: null });
