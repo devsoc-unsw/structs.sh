@@ -121,7 +121,7 @@ export const TreeNodeAnnotation: AnnotationComponent = ({ backendType }: Annotat
                     name: newNodeData,
                     typeName: newNodeDataType,
                 },
-            };
+            } as BinaryTreeAnnotation; 
             setNodeAnnotation(newAnnotation);
             handleUpdateNodeAnnotation(newAnnotation);
         }
@@ -135,7 +135,7 @@ export const TreeNodeAnnotation: AnnotationComponent = ({ backendType }: Annotat
                     name: newLeftData,
                     typeName: newLeftDataType,
                 },
-            };
+            } as BinaryTreeAnnotation; 
             setNodeAnnotation(newAnnotation);
             handleUpdateNodeAnnotation(newAnnotation);
         }
@@ -149,7 +149,7 @@ export const TreeNodeAnnotation: AnnotationComponent = ({ backendType }: Annotat
                     name: newRightData,
                     typeName: newRightDataType,
                 },
-            };
+            } as BinaryTreeAnnotation;
             setNodeAnnotation(newAnnotation);
             handleUpdateNodeAnnotation(newAnnotation);
         }
