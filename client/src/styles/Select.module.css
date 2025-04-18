@@ -20,7 +20,7 @@ button {
   height: 20px;
   gap: 5px;
   background-color: var(--slate-2);
-  color: var(--violet-11);
+  color: var(--violet-9);
   box-shadow: 0 2px 10px var(--slate-5);
 }
 .SelectTrigger:hover {
@@ -34,7 +34,7 @@ button {
 }
 
 .SelectIcon {
-  color: Var(--violet-11);
+  color: var(--violet-11);
 }
 
 .SelectContent {
