@@ -31,7 +31,7 @@ const WorkspaceSelector = () => {
     minWidth: '30px',
     minHeight: '30px',
   };
- 
+
   const handleClickOpen = (buttonType: IFileType) => {
     setType(buttonType);
     setOpen(true);

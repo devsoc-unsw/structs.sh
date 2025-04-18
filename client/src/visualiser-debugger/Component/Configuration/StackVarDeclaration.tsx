@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import styles from 'styles/Configuration.module.css';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import { github, docco, dark } from 'react-syntax-highlighter/dist/esm/styles/hljs'
+import { github, dark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { MotionCollapse } from './MotionCollapse';
 import './typeAnnotation.css';
 import { StackVariableRole } from '../../Types/annotationType';
@@ -53,7 +53,11 @@ export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
           <span>
-            <SyntaxHighlighter language="c" style={darkMode ? dark : github} className="syntax-highlighter-custom">
+            <SyntaxHighlighter
+              language="c"
+              style={darkMode ? dark : github}
+              className="syntax-highlighter-custom"
+            >
               {`${memoryValue.typeName} ${name}`}
             </SyntaxHighlighter>
           </span>
@@ -62,7 +66,12 @@ export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
         <div style={{ fontSize: '0.8rem' }}>
           <button
             type="button"
-            style={{ color: selectedRole === StackVariableRole.Empty ? 'var(--text-secondary)' : 'var(--text-primary)' }}
+            style={{
+              color:
+                selectedRole === StackVariableRole.Empty
+                  ? 'var(--text-secondary)'
+                  : 'var(--text-primary)',
+            }}
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             {selectedRole}

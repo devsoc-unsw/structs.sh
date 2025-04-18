@@ -26,12 +26,12 @@ const DevelopmentModeNavbar = ({
       navigate('/');
     }
   }, [navigateHomePage]);
-  
+
   const { darkMode, toggleDarkMode } = useTheme();
   const handleDarkModeToggle = (e: React.MouseEvent<HTMLElement>) => {
     e.stopPropagation();
     toggleDarkMode();
-  }
+  };
 
   return (
     <div className={styles.navBar}>
@@ -47,12 +47,12 @@ const DevelopmentModeNavbar = ({
       </div>
       <div className={styles.navItemsContainer}>
         <div className={styles.navItem}>
-          <Tooltip title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}>
+          <Tooltip title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}>
             <button
               className={classNames(dialogStyles.IconButton, 'darkmodeButton')}
               onClick={handleDarkModeToggle}
               type="button"
-              aria-label={darkMode ? "Turn off Dark Mode" : "Turn On Dark Mode"}
+              aria-label={darkMode ? 'Turn off Dark Mode' : 'Turn On Dark Mode'}
             >
               {darkMode ? <LightModeIcon /> : <DarkModeIcon />}
             </button>

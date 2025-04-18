@@ -55,7 +55,7 @@ const CodeEditor: React.FC = () => {
       value={code}
       onChange={handleSetCode}
       mode="c_cpp"
-      theme={darkMode ? "tomorrow_night" : "tomorrow"}
+      theme={darkMode ? 'tomorrow_night' : 'tomorrow'}
       height="100%"
       width="100%"
       markers={markers}

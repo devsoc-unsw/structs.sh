@@ -35,7 +35,11 @@ export const TypeAnnotation: React.FC<TypeAnnotationProp> = ({
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
           <span>
-            <SyntaxHighlighter language="c" style={darkMode ? dark : github} className="syntax-highlighter-custom">
+            <SyntaxHighlighter
+              language="c"
+              style={darkMode ? dark : github}
+              className="syntax-highlighter-custom"
+            >
               {typeName}
             </SyntaxHighlighter>
           </span>
@@ -44,7 +48,12 @@ export const TypeAnnotation: React.FC<TypeAnnotationProp> = ({
         <div style={{ fontSize: '0.8rem' }}>
           <button
             type="button"
-            style={{ color: selectedRole === BackendTypeRole.Empty ? 'var(--text-secondary)' : 'var(--text-primary)' }}
+            style={{
+              color:
+                selectedRole === BackendTypeRole.Empty
+                  ? 'var(--text-secondary)'
+                  : 'var(--text-primary)',
+            }}
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             {selectedRole}

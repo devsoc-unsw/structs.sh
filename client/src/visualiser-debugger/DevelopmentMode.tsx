@@ -19,14 +19,6 @@ import { useUserFsStateStore } from './Store/userFsStateStore';
 import { onboardingStore, handleJoyrideCallback, OPEN_FILE_STEP } from './Store/onboardingStore';
 import { ThemeProvider, useTheme } from './Contexts/ThemeContexts';
 
-const DevelopmentMode = () => {
-  return (
-    <ThemeProvider>
-      <DevelopmentModeContent />
-    </ThemeProvider>
-  );
-}
-
 const DevelopmentModeContent = () => {
   const inputElement = useRef<HTMLInputElement>(null);
   const { uiState, updateCurrFocusedTab } = useGlobalStore();
@@ -123,6 +115,14 @@ const DevelopmentModeContent = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const DevelopmentMode = () => {
+  return (
+    <ThemeProvider>
+      <DevelopmentModeContent />
+    </ThemeProvider>
   );
 };
 

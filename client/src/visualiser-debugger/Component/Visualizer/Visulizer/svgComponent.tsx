@@ -240,7 +240,7 @@ const SvgComponent: React.FC<SvgComponentProps> = ({ children, centerCoord: cent
         {/* Tooltip and lock icon placed on the top right within the SVG */}
         <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
           <Tooltip title={isLocked ? 'Unlock Visualizer View' : 'Lock Visualizer View'}>
-            <IconButton style={{color: darkMode ? 'white' : 'black'}} onClick={toggleLock}>
+            <IconButton style={{ color: darkMode ? 'white' : 'black' }} onClick={toggleLock}>
               {isLocked ? <LockIcon /> : <LockOpenIcon />}
             </IconButton>
           </Tooltip>
