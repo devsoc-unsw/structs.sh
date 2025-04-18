@@ -10,6 +10,7 @@ import { Tooltip } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
 import { useTheme } from '../../visualiser-debugger/Contexts/ThemeContexts';
 
 const DevelopmentModeNavbar = ({
@@ -46,14 +47,14 @@ const DevelopmentModeNavbar = ({
       </div>
       <div className={styles.navItemsContainer}>
         <div className={styles.navItem}>
-          <Tooltip title={darkMode ? "Switch to Dark Mode" : "Switch to Light Mode"}>
+          <Tooltip title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}>
             <button
               className={classNames(dialogStyles.IconButton, 'darkmodeButton')}
               onClick={handleDarkModeToggle}
               type="button"
               aria-label={darkMode ? "Turn off Dark Mode" : "Turn On Dark Mode"}
             >
-              <DarkModeIcon />
+              {darkMode ? <LightModeIcon /> : <DarkModeIcon />}
             </button>
           </Tooltip>
         </div>
