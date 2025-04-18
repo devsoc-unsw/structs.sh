@@ -32,6 +32,24 @@
   background-color: #666;
 }
 
+.light {
+  --text-primary: black;
+  --text-secondary: grey;
+  --bg-primary: #f7f7f7;
+  --bg-secondary: #e0e0e0;
+  --border-color: #e0e0e0;
+  --icon-primary: black;
+}
+
+.dark {
+  --text-primary: white;
+  --text-secondary: #aaaaaa;
+  --bg-primary: #333333;
+  --bg-secondary: #444444;
+  --border-color: #555555;
+  --icon-primary: white;
+}
+
 .layout {
   display: grid;
   grid-template-columns: 250px 1fr 1fr;

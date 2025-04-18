@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { DrawableComponentBase, MotionCoord, PointerProp } from './drawable';
 import { AttachableEntity, getAttachableEntityShape } from '../CoreEntity/attachableEntity';
+import { text } from 'd3';
 
 const animations = {
   enter: {
@@ -112,6 +113,7 @@ const PointerDrawable: DrawablePointerComponent = (
 
       {splitLabels(entity.label).map((l, idx) => {
         const fontSize = 40;
+        const textColor = 'var(--text-primary)'
         let label = l;
         if (idx < splitLabels(entity.label).length - 1) {
           label += ',';
@@ -123,6 +125,7 @@ const PointerDrawable: DrawablePointerComponent = (
             x={-getTextWidth(label, fontSize) / 2}
             y={coords.y2 - coords.y1 + 85 + idx * 40}
             fontSize={fontSize}
+            fill={textColor}
           >
             {label}
           </motion.text>

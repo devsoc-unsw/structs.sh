@@ -16,7 +16,6 @@ import Folder from './Folder';
 import './css/WorkspaceSelector.css';
 import { useUserFsStateStore } from '../../Store/userFsStateStore';
 import { IFileDirNode, IFileFileNode, IFileType } from './FS/IFileSystem';
-import { useTheme } from '../../Contexts/ThemeContexts';
 
 const WorkspaceSelector = () => {
   const { fileSystem, currFocusDirPath, currFocusFilePath } = useUserFsStateStore.getState();
@@ -32,8 +31,6 @@ const WorkspaceSelector = () => {
     minWidth: '30px',
     minHeight: '30px',
   };
-
-  const { darkMode } = useTheme();
  
   const handleClickOpen = (buttonType: IFileType) => {
     setType(buttonType);
@@ -117,7 +114,7 @@ const WorkspaceSelector = () => {
               className="Onboarding-fileButton"
               style={fileButtonStyle}
             >
-              <AddIcon style={{ fontSize: '20px', fill: darkMode ? 'white' : '' }} />
+              <AddIcon style={{ fontSize: '20px', fill: 'var(--icon-primary)' }} />
             </Button>
           </Tooltip>
           <Tooltip title="Create new folder">
@@ -126,7 +123,7 @@ const WorkspaceSelector = () => {
               className="Onboarding-folderButton"
               style={fileButtonStyle}
             >
-              <CreateNewFolderIcon style={{ fontSize: '20px', fill: darkMode ? 'white' : '' }} />
+              <CreateNewFolderIcon style={{ fontSize: '20px', fill: 'var(--icon-primary)' }} />
             </Button>
           </Tooltip>
           <Tooltip title="Delete this file">
@@ -135,7 +132,7 @@ const WorkspaceSelector = () => {
               className="Onboarding-deleteButton"
               style={fileButtonStyle}
             >
-              <RemoveCircleOutlineIcon style={{ fontSize: '20px', fill: darkMode ? 'white' : '' }} />
+              <RemoveCircleOutlineIcon style={{ fontSize: '20px', fill: 'var(--icon-primary)' }} />
             </Button>
           </Tooltip>
         </Box>

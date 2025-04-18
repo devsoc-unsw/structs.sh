@@ -19,7 +19,7 @@ const ScaleBar = ({ scalePercentage }: { scalePercentage: number }) => {
         position: 'fixed',
         bottom: '10px',
         right: '15px',
-        background: 'white',
+        background: 'var(--bg-primary)',
         padding: '5px',
         borderRadius: '5px',
       }}
