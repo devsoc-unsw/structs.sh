@@ -5,6 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { Coord } from '../../../Types/geometryType';
+import { useTheme } from '../../../Contexts/ThemeContexts';
 
 interface SvgComponentProps {
   centerCoord: Coord;
@@ -40,6 +41,7 @@ const SvgComponent: React.FC<SvgComponentProps> = ({ children, centerCoord: cent
     x: 0,
     y: 0,
   });
+  const { darkMode } = useTheme();
 
   // ... existing state and function definitions ...
   const [viewBoxWidth, setViewBoxWidth] = useState(1600); // Default width
@@ -238,7 +240,7 @@ const SvgComponent: React.FC<SvgComponentProps> = ({ children, centerCoord: cent
         {/* Tooltip and lock icon placed on the top right within the SVG */}
         <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
           <Tooltip title={isLocked ? 'Unlock Visualizer View' : 'Lock Visualizer View'}>
-            <IconButton onClick={toggleLock}>
+            <IconButton style={{color: darkMode ? 'white' : 'black'}} onClick={toggleLock}>
               {isLocked ? <LockIcon /> : <LockOpenIcon />}
             </IconButton>
           </Tooltip>

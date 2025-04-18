@@ -83,3 +83,19 @@
 .indentedAnnotationArea {
   margin-left: 1.4rem;
 }
+
+.light {
+  --text-primary: black;
+  --text-secondary: grey;
+  --bg-primary: #f7f7f7;
+  --bg-secondary: #e0e0e0;
+  --border-color: #e0e0e0;
+}
+
+.dark {
+  --text-primary: white;
+  --text-secondary: #aaaaaa;
+  --bg-primary: #333333;
+  --bg-secondary: #444444;
+  --border-color: #555555;
+}

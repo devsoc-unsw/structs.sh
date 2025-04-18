@@ -6,12 +6,15 @@ import { MotionCollapse } from './MotionCollapse';
 import { TypeAnnotation } from './TypeAnnotation';
 import { StackVarAnnotation } from './StackVarDeclaration';
 import { cloneSimple } from '../Visualizer/Util/util';
+import { useTheme } from '../../Contexts/ThemeContexts';
 
 const Configuration = () => {
   const [isTypeAnnotationOpen, setIsAnnotationOpen] = useState(true);
   const [isVariableAnnotationOpen, setIsVariableAnnotationOpen] = useState(true);
   const { typeDeclarations, userAnnotation } = useGlobalStore().visualizer;
   const { currFrame } = useGlobalStore();
+  const { darkMode } = useTheme();
+  const themeClass = darkMode ? styles.dark : styles.light;
 
   /**
    * Logic to delete annotation that no longer valid in current state
@@ -33,6 +36,7 @@ const Configuration = () => {
 
   return (
     <div
+      className={`${themeClass}`}
       style={{
         display: 'flex',
         flexDirection: 'column',

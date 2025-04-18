@@ -3,12 +3,13 @@ import React, { useEffect, useState } from 'react';
 import styles from 'styles/Configuration.module.css';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import { github } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { github, docco, dark } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 import { MotionCollapse } from './MotionCollapse';
 import './typeAnnotation.css';
 import { StackVariableRole } from '../../Types/annotationType';
 import { MemoryValue, isPointerType } from '../../Types/backendType';
 import { useGlobalStore } from '../../Store/globalStateStore';
+import { useTheme } from '../../Contexts/ThemeContexts';
 
 export type StackVariableAnnotationProp = {
   name: string;
@@ -30,6 +31,7 @@ export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
     (state) => state.visualizer.userAnnotation.stackAnnotation
   );
   const updateStackAnnotation = useGlobalStore((state) => state.updateStackAnnotation);
+  const { darkMode } = useTheme();
 
   // Annotate by default if the variable contains a pointer
   useEffect(() => {
@@ -51,7 +53,7 @@ export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
           <span>
-            <SyntaxHighlighter language="c" style={github} className="syntax-highlighter-custom">
+            <SyntaxHighlighter language="c" style={darkMode ? dark : github} className="syntax-highlighter-custom">
               {`${memoryValue.typeName} ${name}`}
             </SyntaxHighlighter>
           </span>
@@ -60,7 +62,7 @@ export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
         <div style={{ fontSize: '0.8rem' }}>
           <button
             type="button"
-            style={{ color: selectedRole === StackVariableRole.Empty ? 'grey' : 'black' }}
+            style={{ color: selectedRole === StackVariableRole.Empty ? 'var(--text-secondary)' : 'var(--text-primary)' }}
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             {selectedRole}
@@ -92,8 +94,8 @@ export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
                       setIsDropdownOpen(false);
                     }}
                     style={{
-                      background: '#f7f7f7',
-                      border: '1px solid #e0e0e0',
+                      background: 'var(--bg-primary)',
+                      border: '1px solid var(--border-color)',
                       paddingTop: '3px',
                       paddingBottom: '3px',
                       paddingRight: '5px',
@@ -104,10 +106,10 @@ export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
                       transition: 'background 0.2s',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = '#e0e0e0';
+                      e.currentTarget.style.background = 'var(--bg-secondary)';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.background = '#f7f7f7';
+                      e.currentTarget.style.background = 'var(--bg-primary)';
                     }}
                   >
                     {role[1]}
