@@ -32,7 +32,7 @@ const WorkspaceSelector = () => {
     minWidth: '30px',
     minHeight: '30px',
   };
- 
+
   const handleClickOpen = (buttonType: IFileType) => {
     setType(buttonType);
     setOpen(true);
@@ -212,15 +212,17 @@ const WorkspaceSelector = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} sx={{ color: muiButton }}>Cancel</Button>
-          <Button 
-            onClick={handleCreate} 
+          <Button onClick={handleClose} sx={{ color: muiButton }}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleCreate}
             disabled={!newItemName.trim()}
-            sx={{ 
+            sx={{
               color: newItemName.trim() ? muiButton : 'rgba(0, 0, 0, 0.38)',
               '&.Mui-disabled': {
                 color: 'grey',
-              }
+              },
             }}
           >
             Create
@@ -248,8 +250,12 @@ const WorkspaceSelector = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDeleteClose} sx={{ color: muiButton }} >Cancel</Button>
-          <Button onClick={handleDelete} sx={{ color: muiButton }} >Delete</Button>
+          <Button onClick={handleDeleteClose} sx={{ color: muiButton }}>
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} sx={{ color: muiButton }}>
+            Delete
+          </Button>
         </DialogActions>
       </Dialog>
     </Box>
