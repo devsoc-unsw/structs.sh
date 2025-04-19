@@ -4,91 +4,91 @@ from pprint import pp
 from tempfile import mkstemp
 from pathlib import Path
 import logging
+from logging import debug, info, warning, error, exception, critical
 import os
 
 from uvicorn import run
 from socketio import AsyncServer
 from socketio import ASGIApp
 
-from debugger import Debugger, c_compile
+from debugger import Debugger, c_compile, CompileError
 
 logging.basicConfig(level=logging.INFO)
-debug = logging.debug
-info = logging.info
-warning = logging.warning
-error = logging.error
-exception = logging.exception
-critical = logging.critical
 
 
 server = AsyncServer(async_mode="asgi", cors_allowed_origins="*")
 
 
-class State:
-    async def init(self, code: str):
+class User:
+    async def init(self, src_code: str):
         fd, path = mkstemp(suffix=".c")
         os.close(fd)
-        self.source = Path(path)
+        self.src = Path(path)
 
         fd, path = mkstemp()
         os.close(fd)
         self.exe = Path(path)
 
-        self.debugger = Debugger()
+        self.src.write_text(src_code)
+        try:
+            await c_compile(self.src, self.exe)
+        except CompileError:
+            self.src.unlink()
+            self.exe.unlink()
+            raise
 
-        self.source.write_text(code)
-        await c_compile(self.source, self.exe)
-        await self.debugger.init(self.exe)
+        self.dbg = Debugger()
+        await self.dbg.init(self.exe)
 
-        self.seen = set()
-        return self
+        self.seen = set()  # legacy
 
     async def deinit(self):
-        await self.debugger.deinit()
+        await self.dbg.deinit()
         self.exe.unlink()
-        self.source.unlink()
+        self.src.unlink()
 
 
-state = dict[str, State]()
+user = dict[str, User]()
 
 
 @server.event
 async def connect(sid: str, environ: dict) -> None:
-    info(f"[{sid}] connected")
+    info(f"[{sid}] connect")
 
 
 @server.event
 async def disconnect(sid: str) -> None:
-    if sid in state:
-        await state[sid].deinit()
-        del state[sid]
+    if sid in user:
+        await user[sid].deinit()
+        del user[sid]
 
-    info(f"[{sid}] disconnected")
+    info(f"[{sid}] disconnect")
 
 
 @server.event
 async def echo(sid: str, data: any) -> None:
-    info(f"[{sid}] received message '{data}', echoing back to client")
+    info(f"[{sid}] echo '{data}'")
     await server.emit("echo", data=data, to=sid)
 
 
 @server.event
 async def mainDebug(sid: str, code: str) -> None:
-    if sid in state:
-        await state[sid].deinit()
-        del state[sid]
+    if sid in user:
+        await user[sid].deinit()
+        del user[sid]
 
+    user[sid] = User()
     try:
-        state[sid] = State()
-        await state[sid].init(code)
-    except AssertionError as e:
-        info(f"[{sid}] failed to compile code")
-        await server.emit("compileError", e.args[0][1].decode(), to=sid)
+        await user[sid].init(code)
+    except CompileError as e:
+        del user[sid]
+        info(f"[{sid}] compile error")
+        await server.emit("compileError", e.stderr, to=sid)
         return
 
-    for func in await state[sid].debugger.functions():
-        await state[sid].debugger.breakpoint(func)
-    await state[sid].debugger.run()
+    for func in await user[sid].dbg.functions():
+        await user[sid].dbg.breakpoint(func)
+    await user[sid].dbg.run()
 
     info(f"[{sid}] compiled code")
     await server.emit(
@@ -98,20 +98,20 @@ async def mainDebug(sid: str, code: str) -> None:
 
 @server.event
 async def executeNext(sid: str) -> None:
-    assert sid in state
-    debugger = state[sid].debugger
+    assert sid in user
+    dbg = user[sid].dbg
 
-    await debugger.next()
+    await dbg.next()
     info(f"[{sid}] run 'executeNext'")
     await server.emit(
         "executeNext", "Finished executeNext event on server-side", to=sid
     )
 
-    legacy_types, legacy_mem = await debugger.legacy_trace()
+    legacy_types, legacy_mem = await dbg.legacy_trace()
     for kind in legacy_types:
-        if kind["typeName"] in state[sid].seen:
+        if kind["typeName"] in user[sid].seen:
             continue
-        state[sid].seen.add(kind["typeName"])
+        user[sid].seen.add(kind["typeName"])
         await server.emit(
             "sendTypeDeclaration",
             kind,
