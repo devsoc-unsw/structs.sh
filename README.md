@@ -4,7 +4,7 @@
     <a href=""><img src="./images/StructsBanner.png"  /></a>
 </p>
 <p align="center">
-    <img src="https://img.shields.io/badge/Devsoc-dark?color=3c424b" />
+    <img src="https://img.shields.io/badge/DevSoc-blue" />
     <img src="https://img.shields.io/github/issues/csesoc/structs.sh" />
     <img src="https://img.shields.io/github/license/csesoc/structs.sh" />
     <img src="https://img.shields.io/github/last-commit/csesoc/structs.sh" />
