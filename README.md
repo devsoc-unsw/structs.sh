@@ -30,13 +30,17 @@ Structs.sh is an interactive data structure and algorithm visualiser and educati
 
 - **Algorithm Visualiser**
   - Interactive animated visualisations of classic data structures and algorithms \- including but not limited to linked lists, binary search trees, AVL trees and more!
-<img src="images/landing-page.png" alt="Landing page" width="450px">
-<img src="images/tree-visualiser.png" alt="Tree Visualiser" width="450px">
+<p align="center">
+  <img src="images/landing-page.png" alt="Landing page" width="600px">
+  <img src="images/tree-visualiser.png" alt="Tree Visualiser" width="600px">
+</p>
 
 - **Visual Debugger**
   - Interactive debugger that allows users to debug and visualise data structures in their own C code.
   - Currently supports linked lists.
-<img src="images/debugger-linked-list.png" alt="Landing page" width="450px">
+<p align="center">
+  <img src="images/debugger-linked-list.png" alt="Landing page" width="600px">
+</p>
 
 ---
 
