@@ -16,6 +16,7 @@ import Folder from './Folder';
 import './css/WorkspaceSelector.css';
 import { useUserFsStateStore } from '../../Store/userFsStateStore';
 import { IFileDirNode, IFileFileNode, IFileType } from './FS/IFileSystem';
+import { useTheme } from '../../Contexts/ThemeContexts';
 
 const WorkspaceSelector = () => {
   const { fileSystem, currFocusDirPath, currFocusFilePath } = useUserFsStateStore.getState();
@@ -103,6 +104,11 @@ const WorkspaceSelector = () => {
     handleDeleteClose();
   };
 
+  const { darkMode } = useTheme();
+  const muiBackground = darkMode ? '#1C2024' : 'white';
+  const muiColor = darkMode ? 'white' : '#1C2024';
+  const muiButton = darkMode ? '#6E56CF' : '#2F265F';
+
   return (
     <Box>
       <Box className="root-container">
@@ -114,7 +120,7 @@ const WorkspaceSelector = () => {
               className="Onboarding-fileButton"
               style={fileButtonStyle}
             >
-              <AddIcon style={{ fontSize: '20px' }} />
+              <AddIcon style={{ fontSize: '20px', fill: 'var(--icon-primary)' }} />
             </Button>
           </Tooltip>
           <Tooltip title="Create new folder">
@@ -123,7 +129,7 @@ const WorkspaceSelector = () => {
               className="Onboarding-folderButton"
               style={fileButtonStyle}
             >
-              <CreateNewFolderIcon style={{ fontSize: '20px' }} />
+              <CreateNewFolderIcon style={{ fontSize: '20px', fill: 'var(--icon-primary)' }} />
             </Button>
           </Tooltip>
           <Tooltip title="Delete this file">
@@ -132,7 +138,7 @@ const WorkspaceSelector = () => {
               className="Onboarding-deleteButton"
               style={fileButtonStyle}
             >
-              <RemoveCircleOutlineIcon style={{ fontSize: '20px' }} />
+              <RemoveCircleOutlineIcon style={{ fontSize: '20px', fill: 'var(--icon-primary)' }} />
             </Button>
           </Tooltip>
         </Box>
@@ -163,8 +169,8 @@ const WorkspaceSelector = () => {
         aria-describedby="alert-dialog-description"
         sx={{
           '& .MuiPaper-root': {
-            backgroundColor: 'white',
-            color: 'black',
+            backgroundColor: muiBackground,
+            color: muiColor,
           },
         }}
       >
@@ -184,30 +190,41 @@ const WorkspaceSelector = () => {
             sx={{
               '& input': {
                 // Targeting the input element inside the TextField
-                color: 'black', // Ensuring the text is black
+                color: muiColor,
               },
               '& label': {
                 // Targeting the label element inside the TextField
-                color: 'black', // Ensuring the label text is black
+                color: muiColor,
               },
               '& .MuiOutlinedInput-root': {
                 // Targeting the root of the input element for focus color
                 '& fieldset': {
-                  borderColor: 'black', // Ensuring the border color is black
+                  borderColor: muiColor,
                 },
                 '&:hover fieldset': {
-                  borderColor: 'black', // Ensuring the hover border color is black
+                  borderColor: muiColor,
                 },
                 '&.Mui-focused fieldset': {
-                  borderColor: 'black', // Ensuring the focused border color is black
+                  borderColor: muiColor,
                 },
               },
             }}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleCreate} disabled={!newItemName.trim()}>
+          <Button onClick={handleClose} sx={{ color: muiButton }}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleCreate}
+            disabled={!newItemName.trim()}
+            sx={{
+              color: newItemName.trim() ? muiButton : 'rgba(0, 0, 0, 0.38)',
+              '&.Mui-disabled': {
+                color: 'grey',
+              },
+            }}
+          >
             Create
           </Button>
         </DialogActions>
@@ -220,8 +237,8 @@ const WorkspaceSelector = () => {
         aria-describedby="alert-dialog-description"
         sx={{
           '& .MuiPaper-root': {
-            backgroundColor: 'white',
-            color: 'black',
+            backgroundColor: muiBackground,
+            color: muiColor,
           },
         }}
       >
@@ -233,8 +250,12 @@ const WorkspaceSelector = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDeleteClose}>Cancel</Button>
-          <Button onClick={handleDelete}>Delete</Button>
+          <Button onClick={handleDeleteClose} sx={{ color: muiButton }}>
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} sx={{ color: muiButton }}>
+            Delete
+          </Button>
         </DialogActions>
       </Dialog>
     </Box>

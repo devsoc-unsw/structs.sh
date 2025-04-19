@@ -17,13 +17,15 @@ import { useGlobalStore } from './Store/globalStateStore';
 import { useSocketCommunication } from '../Services/useSocketCommunication';
 import { useUserFsStateStore } from './Store/userFsStateStore';
 import { onboardingStore, handleJoyrideCallback, OPEN_FILE_STEP } from './Store/onboardingStore';
+import { ThemeProvider, useTheme } from './Contexts/ThemeContexts';
 
-const DevelopmentMode = () => {
+const DevelopmentModeContent = () => {
   const inputElement = useRef<HTMLInputElement>(null);
   const { uiState, updateCurrFocusedTab } = useGlobalStore();
   const { run, stepIndex, steps, onboardingCurrFile } = onboardingStore();
   const { resetRootPaths } = useUserFsStateStore();
   const { activeSession } = useSocketCommunication();
+  const { darkMode } = useTheme();
 
   const scrollToBottom = () => {
     if (inputElement?.current?.parentElement) {
@@ -49,7 +51,7 @@ const DevelopmentMode = () => {
   };
 
   return (
-    <div className={classNames(globalStyles.root, styles.light)}>
+    <div className={classNames(globalStyles.root, darkMode ? styles.dark : styles.light)}>
       <Joyride
         callback={handleJoyrideCallback}
         continuous
@@ -73,7 +75,7 @@ const DevelopmentMode = () => {
           className={classNames('Onboarding-sidebar', styles.pane, styles.files)}
           style={{ overflowY: 'scroll' }}
         >
-          <div className="Onboarding-workspace">
+          <div className={styles.icon}>
             <FileManager />
           </div>
           <div
@@ -113,6 +115,14 @@ const DevelopmentMode = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const DevelopmentMode = () => {
+  return (
+    <ThemeProvider>
+      <DevelopmentModeContent />
+    </ThemeProvider>
   );
 };
 
