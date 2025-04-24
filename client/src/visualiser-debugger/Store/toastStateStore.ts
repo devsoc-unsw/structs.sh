@@ -1,5 +1,5 @@
 // src/store/toastStateStore.ts
-import create from 'zustand';
+import {create} from 'zustand';
 
 interface Message {
   colorTheme: 'info' | 'warning' | 'error' | string;
