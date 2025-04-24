@@ -1,8 +1,6 @@
-from re import sub
-from re import fullmatch
-from re import Match
-from itertools import pairwise
 import json
+from itertools import pairwise
+from re import Match, fullmatch, sub
 
 """(GDB) MI object notation"""
 

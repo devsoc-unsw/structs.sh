@@ -1,15 +1,17 @@
-from asyncio import create_subprocess_exec
-from asyncio import gather
-from asyncio import create_task
-from asyncio import Queue
-from asyncio import to_thread
-from asyncio import Event
-from asyncio import iscoroutinefunction
+import os
+from asyncio import (
+    Event,
+    Queue,
+    create_subprocess_exec,
+    create_task,
+    gather,
+    iscoroutinefunction,
+    to_thread,
+)
 from asyncio.subprocess import PIPE
-from collections import defaultdict, deque
+from collections import deque
 from contextlib import suppress
 from pathlib import Path
-import os
 
 from . import mion
 

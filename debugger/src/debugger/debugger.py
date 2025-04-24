@@ -1,12 +1,13 @@
 from __future__ import annotations
+
 from collections import defaultdict, deque
 from contextlib import suppress
 from json import JSONDecodeError
-from pprint import pp
 
 from pydantic import BaseModel
 
 from debugger import mion
+
 from .base_debugger import BaseDebugger
 
 

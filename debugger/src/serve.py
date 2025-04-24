@@ -1,17 +1,13 @@
-from dataclasses import asdict
-import json
-from pprint import pp
-from tempfile import mkstemp
-from pathlib import Path
 import logging
-from logging import debug, info, warning, error, exception, critical
 import os
+from logging import error, info
+from pathlib import Path
+from tempfile import mkstemp
 
+from socketio import ASGIApp, AsyncServer
 from uvicorn import run
-from socketio import AsyncServer
-from socketio import ASGIApp
 
-from debugger import Debugger, c_compile, CompileError
+from debugger import CompileError, Debugger, c_compile
 
 logging.basicConfig(level=logging.INFO)
 

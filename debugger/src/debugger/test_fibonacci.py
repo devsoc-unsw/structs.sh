@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from debugger import Debugger, c_compile, Frame
+from debugger import Debugger, Frame, c_compile
 
 here = Path(__file__).parent
 
