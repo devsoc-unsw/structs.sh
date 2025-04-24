@@ -10,7 +10,6 @@ async def test_circular():
         await db.next()
         await db.next()
 
-        trace = await db.trace()
-        pp(trace.frames)
-        pp(trace.mem)
-        pass
+        # trace = await db.trace()
+        # pp(trace.frames)
+        # pp(trace.mem)

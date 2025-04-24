@@ -134,7 +134,7 @@ class Debugger(BaseDebugger):
             for subname, subkind in childs:
                 if subkind == "char":
                     # It is a string
-                    # Do not every char
+                    # Do not inspect every char
                     continue
                 if subname.startswith("*"):
                     # It is a pointer
