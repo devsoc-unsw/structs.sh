@@ -72,7 +72,6 @@ async def test_fibonacci():
         assert trace.mem[main.vars["n"].addr]["int"].value == 10
 
         await debug.finish()
-
     finally:
         await debug.deinit()
         exe.unlink()

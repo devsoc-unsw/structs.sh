@@ -82,6 +82,7 @@ class Debugger(BaseDebugger):
         await self.run_command("-exec-continue")
 
     async def finish(self) -> None:
+        """Run the inferior process to completion"""
         await self.run_command("-exec-finish")
 
     async def variables(self, frame: int = 0) -> dict[str, str]:
@@ -124,8 +125,8 @@ class Debugger(BaseDebugger):
 
             return (kind, value, address, childs)
         finally:
-            self.var_idents.remove(ident)
             await self.run_command(f"-stack-select-frame 0")
+            self.var_idents.remove(ident)
 
     async def trace(self):
         def follow(var: str, kind: str, childs: list[tuple[str, str]]):
