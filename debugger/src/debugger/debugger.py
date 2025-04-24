@@ -34,9 +34,12 @@ class FrameInfo(BaseModel):
     vars: dict[str, MemObj]
 
 
+Value = str | int | float | dict
+
+
 class MemObj(BaseModel):
     kind: str
-    value: str | int | float | dict
+    value: Value
     addr: str | None
 
 
@@ -89,7 +92,7 @@ class Debugger(BaseDebugger):
 
     async def var_details(
         self, var: str, frame: int = 0
-    ) -> tuple[str, str | dict, str, list[tuple[str, str]]]:
+    ) -> tuple[str, Value, str, list[tuple[str, str]]]:
         ident = self.var_ident
         self.var_ident = (1 + self.var_ident) % 256
         assert ident not in self.var_idents, (ident, self.var_idents)
@@ -119,49 +122,50 @@ class Debugger(BaseDebugger):
             res = await self.run_command(f"-data-evaluate-expression &{var}")
             address = res["value"].split(" ", 1)[0]
 
-            await self.run_command(f"-stack-select-frame 0")
             return (kind, value, address, childs)
         finally:
             self.var_idents.remove(ident)
+            await self.run_command(f"-stack-select-frame 0")
 
     async def trace(self):
-        def follow(var: str, kind: str, children: list[tuple[str, str]]):
-            queue = list[str]()
-            for subname, subtype in children:
-                if subtype == "char":
-                    # Avoid insepcting each char in each string
+        def follow(var: str, kind: str, childs: list[tuple[str, str]]):
+            fmt_childs = list[str]()
+            for subname, subkind in childs:
+                if subkind == "char":
+                    # It is a string
+                    # Do not every char
                     continue
                 if subname.startswith("*"):
                     # It is a pointer
-                    queue.append(subname)
+                    fmt_childs.append(subname)
                 elif subname.isdigit():
                     # It is an array index
-                    queue.append(f"{var}[{subname}]")
+                    fmt_childs.append(f"{var}[{subname}]")
                 elif kind.endswith("*"):
                     # It is a struct pointer
-                    queue.append(f"(*{var})")
+                    fmt_childs.append(f"(*{var})")
                 else:
                     # It is a struct field
-                    queue.append(f"({var}.{subname})")
-            return queue
+                    fmt_childs.append(f"({var}.{subname})")
+            return fmt_childs
 
         frames = list[FrameInfo]()
         mem = defaultdict[str, dict[str, MemObj]](dict)
-        structs: dict[str, list[tuple[str, str]]] = {}  # legacy
+        legacy_fmt: dict[str, list[tuple[str, str]]] = {}  # legacy
 
         for i, frame in enumerate(await self.frames()):
             queue = deque()
 
-            vars = dict[str, MemObj]()
+            variabs = dict[str, MemObj]()
             for var in await self.variables(i):
                 kind, value, addr, childs = await self.var_details(var, i)
-                vars[var] = MemObj(kind=kind, value=value, addr=addr)
+                variabs[var] = MemObj(kind=kind, value=value, addr=addr)
                 mem[addr][kind] = MemObj(kind=kind, value=value, addr=addr)
                 if childs and not kind.endswith("*"):
-                    structs[kind] = childs
+                    legacy_fmt[kind] = childs
                 if value != "0x0" and kind != "void *":
                     queue.extend(follow(var, kind, childs))
-            frames.append(FrameInfo(frame=frame, vars=vars))
+            frames.append(FrameInfo(frame=frame, vars=variabs))
 
             while queue:
                 var = queue.popleft()
@@ -178,7 +182,7 @@ class Debugger(BaseDebugger):
                     and not kind.endswith("[]")
                 ):
                     try:
-                        structs[kind] = childs
+                        legacy_fmt[kind] = childs
                         mem[addr][kind] = MemObj(
                             kind=kind,
                             value={
@@ -197,7 +201,7 @@ class Debugger(BaseDebugger):
                 if value != "0x0" and kind != "void *":
                     queue.extend(follow(var, kind, childs))
 
-        return Trace(frames=frames, mem=mem, structs=structs)
+        return Trace(frames=frames, mem=mem, structs=legacy_fmt)
 
     async def legacy_trace(self):
         frame = (await self.frames())[0]

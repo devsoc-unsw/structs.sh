@@ -8,7 +8,7 @@ here = Path(__file__).parent
 
 
 async def main():
-    source = here / "demonstration_fib.c"
+    source = here / "demo_fib.c"
     exe = here / "fib"
     await c_compile(source, exe)
 

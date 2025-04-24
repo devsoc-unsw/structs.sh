@@ -10,8 +10,6 @@ from uvicorn import run
 from debugger import CompileError, Debugger, c_compile
 
 logging.basicConfig(level=logging.INFO)
-
-
 server = AsyncServer(async_mode="asgi", cors_allowed_origins="*")
 
 
@@ -137,9 +135,9 @@ if __name__ == "__main__":
     host = "0.0.0.0"
     port = 8000
 
-    info(" /\\_/\\ ")
-    info("( ^.^ )")
-    info(" > ^ < ")
-    info(f"Server is available at [http://localhost:{port}/]")
+    info(r" /\_/\ ")
+    info(r"( ^.^ )")
+    info(r" > ^ < ")
+    info(rf"Server is available at [http://localhost:{port}/]")
 
     run("__main__:app", port=port, host=host, log_level="error")
