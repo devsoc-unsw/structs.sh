@@ -21,7 +21,7 @@ async def main():
             pp(msg)
             print("\x1b[0m", end="")
 
-        @debug.on_inferior
+        @debug.on_inf
         def print_blue(msg: str) -> None:
             print("\x1b[38;5;17m", end="")
             pp(msg)

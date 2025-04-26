@@ -18,7 +18,7 @@ async def compile_run(file_dunder: str):
     db = Debugger()
     oob, inferior = list[str](), list[str]()
 
-    @db.on_inferior
+    @db.on_inf
     def _(message: any):
         inferior.append(message)
 

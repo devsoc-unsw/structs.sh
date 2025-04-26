@@ -15,7 +15,7 @@ async def test_fibonacci():
 
     inferior_output = list[str]()
 
-    @debug.on_inferior
+    @debug.on_inf
     def _(message: any) -> None:
         inferior_output.append(message)
 

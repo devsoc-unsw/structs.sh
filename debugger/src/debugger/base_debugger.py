@@ -12,6 +12,7 @@ from asyncio.subprocess import PIPE
 from collections import deque
 from contextlib import suppress
 from pathlib import Path
+from typing import Callable
 
 from . import mion
 
@@ -19,8 +20,8 @@ from . import mion
 class BaseDebugger:
     def __init__(self) -> None:
         do_nothing = lambda *args, **kwargs: None
-        self.oob_handler = do_nothing
-        self.inferior_handler = do_nothing
+        self.oob_handler: Callable[[tuple[str, any]], any] = do_nothing
+        self.inferior_handler: Callable[[str], any] = do_nothing
         self._inferior_dispatch_done = Event()
         self._inferior_dispatch_done.set()
         self._did_init = False
@@ -105,13 +106,13 @@ class BaseDebugger:
         self.stream_queue = deque[str](maxlen=0)
         return res
 
-    def on_oob[F](self, func: F) -> F:
+    def on_oob(self, func: Callable[[tuple[str, any]], any]):
         """oob = out of band"""
         self.oob_handler = func
         return func
 
-    def on_inferior[F](self, func: F) -> F:
-        """inferior = inferior output"""
+    def on_inf(self, func: Callable[[str], any]):
+        """inf = inferior output"""
         self.inferior_handler = func
         return func
 
