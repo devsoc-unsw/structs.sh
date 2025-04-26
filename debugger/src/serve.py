@@ -138,18 +138,17 @@ async def executeNext(sid: str) -> None:
 
 
 @server.event
-async def EOF(sid: str) -> None:
-    error("event 'EOF' not implemented")
-
-
-@server.event
-async def SIGINT(sid: str) -> None:
-    error("event 'SIGINT' not implemented")
-
-
-@server.event
-async def send_stdin(sid: str) -> None:
+async def send_inf(sid: str) -> None:
     error("event 'send_stdin' not implemented")
+
+
+@server.event
+async def send_inf_eof(sid: str) -> None:
+    assert sid in user
+    dbg = user[sid].dbg
+
+    await dbg.inf_send("\x04")
+    info(f"[{sid}] inf send EOF")
 
 
 app = ASGIApp(server, socketio_path="/dapi")
