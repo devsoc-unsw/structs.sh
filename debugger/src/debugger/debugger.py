@@ -68,6 +68,10 @@ class Debugger(BaseDebugger):
 
     async def frames(self) -> list[Frame]:
         res = await self.run_command("-stack-list-frames")
+        if "_start" == res["stack"][-1]["func"]:
+            # `main`` has returned to `_start`/libc
+            return []
+
         return [
             Frame(
                 func=frame["func"], src=frame["file"], line=int(frame["line"])

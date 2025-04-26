@@ -1,3 +1,4 @@
+from asyncio import gather
 import logging
 import os
 from logging import error, info
@@ -80,11 +81,29 @@ async def mainDebug(sid: str, code: str) -> None:
         await server.emit("compileError", e.stderr, to=sid)
         return
 
-    for func in await user[sid].dbg.functions():
-        await user[sid].dbg.breakpoint(func)
-    await user[sid].dbg.run()
+    dbg = user[sid].dbg
 
-    info(f"[{sid}] compiled code")
+    @dbg.on_oob
+    async def _(tup: tuple[str, any]):
+        subkind, msg = tup
+        if subkind != "stopped":
+            return
+
+        match msg["reason"]:
+            case "exited-normally":
+                status = 0
+            case "exited":
+                status = msg["exit-code"]
+            case _:
+                return
+
+        info(f"[{sid}] inferior exit({status})")
+        await server.emit("__iexit__", f"{status}", to=sid)
+
+    await gather(*[dbg.breakpoint(f) for f in await dbg.functions()])
+    await dbg.run()
+
+    info(f"[{sid}] compile code")
     await server.emit(
         "mainDebug", "Finished mainDebug event on server", to=sid
     )
@@ -100,6 +119,10 @@ async def executeNext(sid: str) -> None:
     await server.emit(
         "executeNext", "Finished executeNext event on server-side", to=sid
     )
+
+    if not await dbg.frames():
+        await dbg.finish()
+        return
 
     legacy_types, legacy_mem = await dbg.legacy_trace()
     for kind in legacy_types:
@@ -141,3 +164,5 @@ if __name__ == "__main__":
     info(rf"Server is available at [http://localhost:{port}/]")
 
     run("__main__:app", port=port, host=host, log_level="error")
+
+    info(r"See you again! (˵ •̀ ᴗ - ˵ ) ✧")

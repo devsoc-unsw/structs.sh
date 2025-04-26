@@ -38,7 +38,7 @@ def loads(result: str) -> any:
     'abcd'
     """
 
-    result = _remove_octals(result)
+    result = _remove_octal(result)
     result = _remove_array_keys(result)
     result = sub(r"([a-zA-Z\-_]+)=", r'"\1":', result)  # replace kv pairs
     try:
@@ -53,14 +53,16 @@ def valueloads(result: str) -> any:
     {'v': '0x0', 'data': 2}
     """
 
-    result = _remove_octals(result)
+    result = _remove_octal(result)
     result = _remove_array_keys(result)
-    result = _remove_hexnums(result)
-    result = sub(r"= (\d+) '[^']+'", r"= \1", result)  # remove char aliases
-    result = sub(
-        r"= (\"0x[0-9a-zA-Z]+\") <[^>]+>", r"= \1", result
-    )  # remove function aliases
-    result = sub(r"([a-zA-Z\-_]+) =", r'"\1":', result)  # replace kv pairs
+    result = _stringify_hex(result)
+
+    # remove char alias, eg (`x = 65 'A'` => `x = 65`)
+    result = sub(r"= (\d+) '[^']+'", r"= \1", result)
+    # remove function alias, eg (`x = 0x15151515 <printf>` => `x = 0x15151515``)
+    result = sub(r"= (\"0x[0-9a-zA-Z]+\") <[^>]+>", r"= \1", result)
+    # edit k-v equal sign, eg (`x = 15` => `x: 15`)
+    result = sub(r"([a-zA-Z\-_]+) =", r'"\1":', result)
     return json.loads(result)
 
 
@@ -103,25 +105,31 @@ def _remove_array_keys(text: str) -> str:
     return "".join(chars)
 
 
-def _remove_octals(text: str) -> str:
+def _remove_octal(text: str) -> str:
     """
-    >>> input = '\\\\000\\\\265zv'
-    >>> _remove_octals(input)
-    '\\\\u0000\\\\u00b5zv'
+    >>> input = '\\\\000\\\\265zv\\\\015'
+    >>> _remove_octal(input)
+    '\\\\u0000\\\\u00b5zv\\\\u000d'
+
+    >>> _remove_octal('"012"')
+    '10'
     """
 
-    def octal_to_unicode(match: Match):
-        octal = int(match.group(1), 8)
-        return f"\\u{octal:04x}"
+    # octal ints, eg (`"012"` => `10`)
+    text = sub(r'"(0[0-7]+)"', lambda m: f"{int(m.group(1), 8)}", text)
+    # octal bytes, eg (`\256` => `0xb5`)
+    text = sub(
+        r"\\([0-7]{1,3})", lambda m: f"\\u{(int(m.group(1), 8)):04x}", text
+    )
 
-    return sub(r"\\([0-7]{1,3})", octal_to_unicode, text)
+    return text
 
 
-def _remove_hexnums(text: str) -> str:
+def _stringify_hex(text: str) -> str:
     """
-    >>> _remove_hexnums('0x0')
+    >>> _stringify_hex('0x0')
     '"0x0"'
-    >>> _remove_hexnums('0xdeadbeef')
+    >>> _stringify_hex('0xdeadbeef')
     '"0xdeadbeef"'
     """
 

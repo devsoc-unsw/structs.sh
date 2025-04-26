@@ -16,15 +16,15 @@ async def main():
         debug = Debugger()
 
         @debug.on_oob
-        def print_gray(message: any) -> None:
+        def print_gray(msg: tuple[str, any]) -> None:
             print("\x1b[38;5;236m", end="")
-            pp(message)
+            pp(msg)
             print("\x1b[0m", end="")
 
         @debug.on_inferior
-        def print_blue(message: any) -> None:
+        def print_blue(msg: str) -> None:
             print("\x1b[38;5;17m", end="")
-            pp(message)
+            pp(msg)
             print("\x1b[0m", end="")
 
         await debug.init(exe)
@@ -42,9 +42,9 @@ async def main():
             for sym in file["symbols"]
             if "line" in sym
         ]
-        for type in custom_types:
+        for kind in custom_types:
             try:
-                pp(await debug.console(f"ptype struct {type}"))
+                pp(await debug.console(f"ptype struct {kind}"))
             except ValueError:
                 continue
         # ---
