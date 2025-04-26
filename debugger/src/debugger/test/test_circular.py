@@ -1,5 +1,4 @@
-from pprint import pp
-from debugger.test.tools import compile_run
+from tools import compile_run
 
 
 async def test_circular():
@@ -10,6 +9,4 @@ async def test_circular():
         await db.next()
         await db.next()
 
-        trace = await db.trace()
-        # pp(trace.frames)
-        # pp(trace.mem)
+        await db.trace()

@@ -12,6 +12,7 @@ from asyncio.subprocess import PIPE
 from collections import deque
 from contextlib import suppress
 from pathlib import Path
+from termios import ECHO, TCSADRAIN, tcgetattr, tcsetattr
 from typing import Callable
 
 from . import mion
@@ -28,6 +29,7 @@ class BaseDebugger:
 
     async def init(self, executable_path: str | Path) -> None:
         self.fd_master, self.fd_slave = os.openpty()
+        _disable_echo(self.fd_slave)
         self.process = await create_subprocess_exec(
             "gdb",
             "--interpreter=mi4",
@@ -46,7 +48,7 @@ class BaseDebugger:
         self.pending_cmds = dict[str, Queue[tuple[str, dict]]]()
         self.stream_queue = deque[str](maxlen=0)
         create_task(self._stdout_dispatch())
-        create_task(self._inferior_dispatch())
+        create_task(self._inf_dispatch())
         self._did_init = True
         return self
 
@@ -83,6 +85,9 @@ class BaseDebugger:
             raise ValueError(result["msg"])
         assert subkind in mion.RESULT_CLASS
         return result
+
+    async def inf_send(self, msg: str):
+        await to_thread(os.write, self.fd_master, msg.encode())
 
     async def console(self, command: str):
         """Experimental"""
@@ -145,7 +150,7 @@ class BaseDebugger:
                         f"Received unknown message kind from GDB: {kind}"
                     )
 
-    async def _inferior_dispatch(self) -> None:
+    async def _inf_dispatch(self) -> None:
         self._inferior_dispatch_done.clear()
         with suppress(OSError):
             while output := await to_thread(os.read, self.fd_master, 512):
@@ -169,3 +174,17 @@ def _split_subkind(message: str) -> tuple[str, str]:
     if "," in message:
         return tuple(message.split(",", 1))
     return message, ""
+
+
+def _disable_echo(fd: int):
+    """
+    Prevent reading what we ourselves wrote to the fd
+    """
+
+    old = tcgetattr(fd)
+    new = tcgetattr(fd)
+
+    new[3] &= ~ECHO
+    tcsetattr(fd, TCSADRAIN, new)
+
+    return old
