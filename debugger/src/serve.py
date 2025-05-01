@@ -84,8 +84,7 @@ async def mainDebug(sid: str, code: str) -> None:
     dbg = user[sid].dbg
 
     @dbg.on_oob
-    async def _(tup: tuple[str, any]):
-        subkind, msg = tup
+    async def _(kind: str, subkind: str, msg: any):
         if subkind != "stopped":
             return
 

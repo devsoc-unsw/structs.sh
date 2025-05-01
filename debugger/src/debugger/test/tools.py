@@ -23,8 +23,8 @@ async def compile_run(file_dunder: str):
         inf.append(message)
 
     @db.on_oob
-    def _(message: any):
-        oob.append(message)
+    def _(kind: str, subkind: str, message: any):
+        oob.append((kind, subkind, message))
 
     try:
         await db.init(exe)

@@ -21,7 +21,7 @@ from . import mion
 class BaseDebugger:
     def __init__(self) -> None:
         do_nothing = lambda *args, **kwargs: None
-        self.oob_handler: Callable[[tuple[str, any]], any] = do_nothing
+        self.oob_handler: Callable[[str, str, any], any] = do_nothing
         self.inferior_handler: Callable[[str], any] = do_nothing
         self._inferior_dispatch_done = Event()
         self._inferior_dispatch_done.set()
@@ -93,25 +93,17 @@ class BaseDebugger:
         """Experimental"""
 
         self.stream_queue = deque[str](maxlen=None)
-        self.process.stdin.write(
-            f'-interpreter-exec console "{command}"\n'.encode()
-        )
+        res = await self.run_command(f'-interpreter-exec console "{command}"')
+        assert not res
 
-        subkind, result = await self.result_queue.get()
-        self.result_queue.task_done()
-        if subkind == mion.RESULT_ERROR:
-            raise ValueError(result["msg"])
-        assert subkind in mion.RESULT_CLASS
-        assert result == {}
-
-        res = "".join(
+        stream_res = "".join(
             line[1:-1].encode().decode("unicode_escape")
             for line in self.stream_queue
         )
         self.stream_queue = deque[str](maxlen=0)
-        return res
+        return stream_res
 
-    def on_oob(self, func: Callable[[tuple[str, any]], any]):
+    def on_oob(self, func: Callable[[str, str, any], any]):
         """oob = out of band"""
         self.oob_handler = func
         return func
@@ -140,9 +132,11 @@ class BaseDebugger:
                 case _ if kind in mion.ASYNC:
                     subkind, message = _split_subkind(message)
                     if iscoroutinefunction(self.oob_handler):
-                        await self.oob_handler((subkind, mion.loads(message)))
+                        await self.oob_handler(
+                            kind, subkind, mion.loads(message)
+                        )
                     else:
-                        self.oob_handler((subkind, mion.loads(message)))
+                        self.oob_handler(kind, subkind, mion.loads(message))
                 case _ if kind in mion.STREAM:
                     self.stream_queue.append(message)
                 case _:
@@ -178,7 +172,12 @@ def _split_subkind(message: str) -> tuple[str, str]:
 
 def _disable_echo(fd: int):
     """
-    Prevent reading what we ourselves wrote to the fd
+    Prevent reading what we ourselves wrote to the fd, i.e.,
+
+    ```
+    os.write(fd_master, "hello")
+    msg = os.read(fd_master)  # should NOT be `"hello"`
+    ```
     """
 
     old = tcgetattr(fd)
