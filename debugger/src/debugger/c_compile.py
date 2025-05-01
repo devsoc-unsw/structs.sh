@@ -1,6 +1,5 @@
 from asyncio import create_subprocess_exec
 from asyncio.subprocess import PIPE
-from pathlib import Path
 
 
 class CompileError(RuntimeError):
@@ -9,7 +8,7 @@ class CompileError(RuntimeError):
         self.stderr = stderr
 
 
-async def c_compile(source_path: str | Path, output_path: str | Path) -> None:
+async def c_compile(source_path: str, output_path: str) -> None:
     clang = await create_subprocess_exec(
         "gcc",
         str(source_path),
