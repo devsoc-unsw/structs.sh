@@ -11,9 +11,9 @@ class CompileError(RuntimeError):
 async def c_compile(source_path: str, output_path: str) -> None:
     clang = await create_subprocess_exec(
         "gcc",
-        str(source_path),
+        source_path,
         "-o",
-        str(output_path),
+        output_path,
         "-ggdb",
         "-O0",
         stdin=PIPE,

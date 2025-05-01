@@ -1,10 +1,9 @@
-from asyncio import gather
 import logging
+from asyncio import gather
 from logging import error, info
 
 from aiofiles.os import unlink
 from aiofiles.tempfile import NamedTemporaryFile as tempFile
-
 from socketio import ASGIApp, AsyncServer
 from uvicorn import run
 
@@ -16,21 +15,19 @@ server = AsyncServer(async_mode="asgi", cors_allowed_origins="*")
 
 class User:
     async def init(self, src_code: str):
-
         f = await tempFile(suffix=".c", delete=False)
         await f.write(src_code.encode())
         await f.close()
         self.src = f.name
 
         e = await tempFile(delete=False)
-        await e.close();
+        await e.close()
         self.exe = e.name
 
         try:
             await c_compile(self.src, self.exe)
         except CompileError:
-            await unlink(self.src)
-            await unlink(self.exe)
+            await gather(unlink(self.src), unlink(self.exe))
             raise
 
         self.dbg = Debugger()
@@ -39,9 +36,8 @@ class User:
         self.seen = set()  # legacy
 
     async def deinit(self):
-        await self.dbg.deinit()
-        await unlink(self.src)
-        await unlink(self.exe)
+        await gather(self.dbg.deinit(), unlink(self.src), unlink(self.exe))
+
 
 user = dict[str, User]()
 
