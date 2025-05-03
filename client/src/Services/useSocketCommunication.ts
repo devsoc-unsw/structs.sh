@@ -16,7 +16,7 @@ import {
   DEFAULT_MESSAGE_DURATION,
   useToastStateStore,
 } from '../visualiser-debugger/Store/toastStateStore';
-
+//TODO: stop useMemo abuse - remove all useMemos with empty dependenciy arrays
 export const useSocketCommunication = () => {
   const { updateNextFrame, updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation } =
     useGlobalStore();
