@@ -11,7 +11,6 @@ from asyncio import (
 from asyncio.subprocess import PIPE
 from collections import deque
 from contextlib import suppress
-from pathlib import Path
 from termios import ECHO, TCSADRAIN, tcgetattr, tcsetattr
 from typing import Callable
 
@@ -27,7 +26,7 @@ class BaseDebugger:
         self._inferior_dispatch_done.set()
         self._did_init = False
 
-    async def init(self, executable_path: str | Path) -> None:
+    async def init(self, executable_path: str) -> None:
         self.fd_master, self.fd_slave = os.openpty()
         _disable_echo(self.fd_slave)
         self.process = await create_subprocess_exec(
@@ -103,12 +102,12 @@ class BaseDebugger:
         self.stream_queue = deque[str](maxlen=0)
         return stream_res
 
-    def on_oob(self, func: Callable[[str, str, any], any]):
+    def on_oob(self, func: Callable[[str, str, any], None]):
         """oob = out of band"""
         self.oob_handler = func
         return func
 
-    def on_inf(self, func: Callable[[str], any]):
+    def on_inf(self, func: Callable[[str], None]):
         """inf = inferior output"""
         self.inferior_handler = func
         return func
