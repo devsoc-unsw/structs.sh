@@ -6,7 +6,7 @@ from json import JSONDecodeError
 
 from pydantic import BaseModel
 
-from debugger import mion
+from . import mion
 
 from .base_debugger import BaseDebugger
 
