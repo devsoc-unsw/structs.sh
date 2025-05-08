@@ -3,7 +3,7 @@ annotated-types==0.7.0
 bidict==0.23.1
 click==8.1.8
 Cython==3.0.12
-h11==0.14.0
+h11==0.16.0
 iniconfig==2.0.0
 isort==6.0.1
 lark==1.2.2
