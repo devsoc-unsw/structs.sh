@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 from pprint import pp
 
-from debugger import Debugger, c_compile, mion
+from debugger import Debugger, c_compile, mi, mion
 
 here = Path(__file__).parent
 
@@ -16,22 +16,21 @@ async def main():
     try:
         debug = Debugger()
 
-        @debug.on_oob
-        def print_gray(kind: str, subkind: str, msg: any) -> None:
-            if kind != mion.EXEC_ASYNC:
-                return
-            if subkind != "stopped":
-                return
+        @debug.on_exec_async
+        def print_gray(ea: mi.ExecAsync) -> None:
+            if (
+                ea.kind == "stopped"
+                and ea.output["reason"] == "breakpoint-hit"
+            ):
+                print("\x1b[38;5;236m", end="")
+                pp(ea.output)
+                print("\x1b[0m", end="")
 
-            print("\x1b[38;5;236m", end="")
+        @debug.on_inf
+        def print_blue(msg: str) -> None:
+            print("\x1b[38;5;17m", end="")
             pp(msg)
             print("\x1b[0m", end="")
-
-        # @debug.on_inf
-        # def print_blue(msg: str) -> None:
-        #     print("\x1b[38;5;17m", end="")
-        #     # pp(msg)
-        #     print("\x1b[0m", end="")
 
         await debug.init(exe)
 
@@ -40,8 +39,18 @@ async def main():
             await debug.breakpoint(function)
 
         await debug.run()
-        await debug.cont()
-        await debug.cont()
+        await debug.next()
+        await debug.next()
+        await debug.next()
+
+        re = await debug.trace()
+        pp(re)
+
+        print("console: " + repr(await debug.console("ptype 2")))
+        print("console: " + repr(await debug.console("echo hiiii")))
+
+        # await debug.cont()
+        await debug.finish()
 
     except CancelledError:
         pass

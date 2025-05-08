@@ -2,7 +2,7 @@ from asyncio import gather
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from debugger import c_compile
+from debugger import c_compile, mi
 from debugger.debugger import Debugger
 
 
@@ -16,15 +16,18 @@ async def compile_run(file_dunder: str):
     await c_compile(src, exe)
 
     db = Debugger()
-    oob, inf = list[str](), list[str]()
+    oob = list[mi.ExecAsync | mi.NotifyAsync | mi.StatusAsync]()
+    inf = list[str]()
 
     @db.on_inf
     def _(message: any):
         inf.append(message)
 
-    @db.on_oob
-    def _(kind: str, subkind: str, message: any):
-        oob.append((kind, subkind, message))
+    @db.on_exec_async
+    @db.on_notify_async
+    @db.on_status_async
+    def _(item: mi.ExecAsync | mi.NotifyAsync | mi.StatusAsync):
+        oob.append(item)
 
     try:
         await db.init(exe)

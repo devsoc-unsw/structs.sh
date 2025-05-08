@@ -7,7 +7,7 @@ from aiofiles.tempfile import NamedTemporaryFile as tempFile
 from socketio import ASGIApp, AsyncServer
 from uvicorn import run
 
-from debugger import CompileError, Debugger, c_compile
+from debugger import CompileError, Debugger, c_compile, mi
 
 logging.basicConfig(level=logging.INFO)
 server = AsyncServer(async_mode="asgi", cors_allowed_origins="*")
@@ -79,16 +79,16 @@ async def mainDebug(sid: str, code: str) -> None:
 
     dbg = user[sid].dbg
 
-    @dbg.on_oob
-    async def _(kind: str, subkind: str, msg: any):
-        if subkind != "stopped":
+    @dbg.on_exec_async
+    async def _(ea: mi.ExecAsync):
+        if ea.kind != "stopped":
             return
 
-        match msg["reason"]:
+        match ea.output["reason"]:
             case "exited-normally":
                 status = 0
             case "exited":
-                status = msg["exit-code"]
+                status = ea.output["exit-code"]
             case _:
                 return
 
