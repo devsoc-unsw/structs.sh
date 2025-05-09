@@ -13,6 +13,7 @@ mypy_extensions==1.1.0
 packaging==24.2
 pcre2==0.5.2
 pluggy==1.5.0
+pybind11==2.13.6
 pydantic==2.11.3
 pydantic_core==2.33.1
 pyinstrument==5.0.1

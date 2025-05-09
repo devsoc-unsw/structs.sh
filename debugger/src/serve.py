@@ -7,7 +7,7 @@ from aiofiles.tempfile import NamedTemporaryFile as tempFile
 from socketio import ASGIApp, AsyncServer
 from uvicorn import run
 
-from debugger import CompileError, Debugger, c_compile, mi
+from debugger import CompileError, Debugger, c_compile, mion
 
 logging.basicConfig(level=logging.INFO)
 server = AsyncServer(async_mode="asgi", cors_allowed_origins="*")
@@ -80,7 +80,7 @@ async def mainDebug(sid: str, code: str) -> None:
     dbg = user[sid].dbg
 
     @dbg.on_exec_async
-    async def _(ea: mi.ExecAsync):
+    async def _(ea: mion.ExecAsync):
         if ea.kind != "stopped":
             return
 

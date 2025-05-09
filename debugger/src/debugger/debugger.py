@@ -120,7 +120,13 @@ class Debugger(BaseDebugger):
             await self.run_command(f"-var-delete {sid}")
 
             res = await self.run_command(f"-data-evaluate-expression {var}")
-            value = res["value"]
+            try:
+                value = res["value"]
+            except:
+                from pprint import pp
+
+                pp(res)
+                raise SystemExit()
             with suppress(JSONDecodeError):
                 value = mion.valueloads(res["value"])
 

@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 from pprint import pp
 
-from debugger import Debugger, c_compile, mi, mion
+from debugger import Debugger, c_compile, mion
 
 here = Path(__file__).parent
 
@@ -17,7 +17,7 @@ async def main():
         debug = Debugger()
 
         @debug.on_exec_async
-        def print_gray(ea: mi.ExecAsync) -> None:
+        def print_gray(ea: mion.ExecAsync) -> None:
             if (
                 ea.kind == "stopped"
                 and ea.output["reason"] == "breakpoint-hit"

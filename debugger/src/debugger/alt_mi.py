@@ -158,7 +158,7 @@ class Transform(Transformer):
 parser = Lark(
     grammar=grammar,
     parser="lalr",
-    lexer="standard",
+    lexer="basic",
     propagate_positions=False,
     maybe_placeholders=False,
     keep_all_tokens=False,
