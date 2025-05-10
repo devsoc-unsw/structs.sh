@@ -1,5 +1,4 @@
 from asyncio import CancelledError, run
-import json
 from pathlib import Path
 from pprint import pp
 
@@ -42,9 +41,12 @@ async def main():
         await debug.next()
         await debug.next()
         await debug.next()
+        await debug.next()
+        await debug.next()
+        await debug.next()
 
         re = await debug.trace()
-        pp(re)
+        pp(re.model_dump())
 
         print("console: " + repr(await debug.console("ptype 2")))
         print("console: " + repr(await debug.console("echo hiiii")))

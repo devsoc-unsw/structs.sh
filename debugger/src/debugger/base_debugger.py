@@ -12,8 +12,8 @@ from contextlib import suppress
 from termios import ECHO, TCSADRAIN, tcgetattr, tcsetattr
 from typing import Callable, Coroutine, assert_never
 
-from .tributary import Tributary
 from . import mion
+from .tributary import Tributary
 
 
 class BaseDebugger:

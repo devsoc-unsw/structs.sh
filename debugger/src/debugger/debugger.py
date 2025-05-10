@@ -1,13 +1,10 @@
 from __future__ import annotations
 
 from collections import defaultdict, deque
-from contextlib import suppress
-from json import JSONDecodeError
 
 from pydantic import BaseModel
 
 from . import mion
-
 from .base_debugger import BaseDebugger
 
 
@@ -20,7 +17,7 @@ class Trace(BaseModel):
     mem: dict[str, dict[str, MemObj]]
 
     # legacy
-    structs: dict[str, list[tuple[str, str]]]
+    structs: dict[str, list[tuple[str | int, str]]]
 
 
 class Frame(BaseModel):
@@ -34,7 +31,7 @@ class FrameInfo(BaseModel):
     vars: dict[str, MemObj]
 
 
-Value = str | int | float | dict
+Value = str | int | float | dict | list
 
 
 class MemObj(BaseModel):
@@ -113,22 +110,20 @@ class Debugger(BaseDebugger):
 
             res = await self.run_command(f"-var-list-children {sid}")
             childs = (
-                [(ch["exp"], ch["type"]) for ch in res["children"]]
+                [
+                    (
+                        int(ex) if (ex := ch["exp"]).isdigit() else ex,
+                        ch["type"],
+                    )
+                    for ch in res["children"]
+                ]
                 if res["numchild"] != "0"
                 else []
             )
             await self.run_command(f"-var-delete {sid}")
 
             res = await self.run_command(f"-data-evaluate-expression {var}")
-            try:
-                value = res["value"]
-            except:
-                from pprint import pp
-
-                pp(res)
-                raise SystemExit()
-            with suppress(JSONDecodeError):
-                value = mion.valueloads(res["value"])
+            value = mion.parse_c_value(res["value"])
 
             res = await self.run_command(f"-data-evaluate-expression &{var}")
             address = res["value"].split(" ", 1)[0]
@@ -139,19 +134,19 @@ class Debugger(BaseDebugger):
             self.var_idents.remove(ident)
 
     async def trace(self):
-        def follow(var: str, kind: str, childs: list[tuple[str, str]]):
+        def follow(var: str, kind: str, childs: list[tuple[str | int, str]]):
             fmt_childs = list[str]()
             for subname, subkind in childs:
                 if subkind == "char":
                     # It is a string
                     # Do not inspect every char
                     continue
-                if subname.startswith("*"):
-                    # It is a pointer
-                    fmt_childs.append(subname)
-                elif subname.isdigit():
+                if type(subname) is int:
                     # It is an array index
                     fmt_childs.append(f"{var}[{subname}]")
+                elif subname.startswith("*"):
+                    # It is a pointer
+                    fmt_childs.append(subname)
                 elif kind.endswith("*"):
                     # It is a struct pointer
                     fmt_childs.append(f"(*{var})")
@@ -162,7 +157,7 @@ class Debugger(BaseDebugger):
 
         frames = list[FrameInfo]()
         mem = defaultdict[str, dict[str, MemObj]](dict)
-        legacy_fmt: dict[str, list[tuple[str, str]]] = {}  # legacy
+        legacy_fmt: dict[str, list[tuple[str | int, str]]] = {}  # legacy
 
         for i, frame in enumerate(await self.frames()):
             queue = deque()
@@ -217,7 +212,6 @@ class Debugger(BaseDebugger):
     async def legacy_trace(self):
         frame = (await self.frames())[0]
         trace = await self.trace()
-        # frames, memory, types = await self.trace()
 
         legacy_types = [
             {
