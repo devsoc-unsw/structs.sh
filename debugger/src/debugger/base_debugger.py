@@ -12,7 +12,7 @@ from contextlib import suppress
 from termios import ECHO, TCSADRAIN, tcgetattr, tcsetattr
 from typing import Callable, Coroutine, assert_never
 
-from . import mion
+from . import mi
 from .tributary import Tributary
 
 
@@ -21,15 +21,15 @@ class BaseDebugger:
         async def noop(*args, **kwargs):
             pass
 
-        self._handle_ea: Callable[[mion.ExecAsync], Coroutine] = noop
-        self._hanlde_sa: Callable[[mion.StatusAsync], Coroutine] = noop
-        self._handle_na: Callable[[mion.NotifyAsync], Coroutine] = noop
+        self._handle_ea: Callable[[mi.ExecAsync], Coroutine] = noop
+        self._hanlde_sa: Callable[[mi.StatusAsync], Coroutine] = noop
+        self._handle_na: Callable[[mi.NotifyAsync], Coroutine] = noop
 
         self._inferior_handler: Callable[[str], Coroutine] = noop
         self._inferior_dispatch_done = Event()
         self._inferior_dispatch_done.set()
 
-        self._inflight_cmds = Tributary[mion.Result]()
+        self._inflight_cmds = Tributary[mi.Result]()
 
         self._console_buf = list[str]()
         self._console_sem = Semaphore(1)
@@ -98,15 +98,15 @@ class BaseDebugger:
             await self.run_command(f'-interpreter-exec console "{command}"')
             return "".join(self._console_buf)
 
-    def on_exec_async(self, func: Callable[[mion.ExecAsync], Coroutine]):
+    def on_exec_async(self, func: Callable[[mi.ExecAsync], Coroutine]):
         self._handle_ea = _asyncify(func)
         return func
 
-    def on_status_async(self, func: Callable[[mion.StatusAsync], Coroutine]):
+    def on_status_async(self, func: Callable[[mi.StatusAsync], Coroutine]):
         self._hanlde_sa = _asyncify(func)
         return func
 
-    def on_notify_async(self, func: Callable[[mion.NotifyAsync], Coroutine]):
+    def on_notify_async(self, func: Callable[[mi.NotifyAsync], Coroutine]):
         self._handle_na = _asyncify(func)
         return func
 
@@ -116,22 +116,22 @@ class BaseDebugger:
 
     async def _stdout_dispatch(self) -> None:
         while line := await self.process.stdout.readline():
-            for resp in mion.parse(line):
+            for resp in mi.parse(line):
                 match resp:
-                    case mion.Result(token=t, kind=k, results=r):
+                    case mi.Result(token=t, kind=k, results=r):
                         await self._inflight_cmds.put(t, resp)
-                    case mion.ExecAsync(token=t, kind=k, output=o):
+                    case mi.ExecAsync(token=t, kind=k, output=o):
                         await self._handle_ea(resp)
-                    case mion.StatusAsync(token=t, kind=k, output=o):
+                    case mi.StatusAsync(token=t, kind=k, output=o):
                         await self._hanlde_sa(resp)
-                    case mion.NotifyAsync(token=t, kind=k, output=o):
+                    case mi.NotifyAsync(token=t, kind=k, output=o):
                         await self._handle_na(resp)
-                    case mion.ConsoleStream(msg=m):
+                    case mi.ConsoleStream(msg=m):
                         if self._console_sem.locked():
                             self._console_buf.append(m)
-                    case mion.TargetStream(msg=m):
+                    case mi.TargetStream(msg=m):
                         pass
-                    case mion.LogStream(msg=m):
+                    case mi.LogStream(msg=m):
                         pass
                     case _:
                         assert_never(resp)

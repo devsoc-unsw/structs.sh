@@ -4,7 +4,7 @@ from collections import defaultdict, deque
 
 from pydantic import BaseModel
 
-from . import mion
+from . import mi
 from .base_debugger import BaseDebugger
 
 
@@ -123,7 +123,7 @@ class Debugger(BaseDebugger):
             await self.run_command(f"-var-delete {sid}")
 
             res = await self.run_command(f"-data-evaluate-expression {var}")
-            value = mion.parse_c_value(res["value"])
+            value = mi.parse_c_value(res["value"])
 
             res = await self.run_command(f"-data-evaluate-expression &{var}")
             address = res["value"].split(" ", 1)[0]
