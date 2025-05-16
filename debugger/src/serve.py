@@ -1,96 +1,104 @@
-from dataclasses import asdict
-import json
-from pprint import pp
-from tempfile import mkstemp
-from pathlib import Path
 import logging
-import os
+from asyncio import gather
+from logging import error, info
 
+from aiofiles.os import unlink
+from aiofiles.tempfile import NamedTemporaryFile as tempFile
+from socketio import ASGIApp, AsyncServer
 from uvicorn import run
-from socketio import AsyncServer
-from socketio import ASGIApp
 
-from debugger import Debugger, c_compile
+from debugger import CompileError, Debugger, c_compile, mi
 
 logging.basicConfig(level=logging.INFO)
-debug = logging.debug
-info = logging.info
-warning = logging.warning
-error = logging.error
-exception = logging.exception
-critical = logging.critical
-
-
 server = AsyncServer(async_mode="asgi", cors_allowed_origins="*")
 
 
-class State:
-    async def init(self, code: str):
-        fd, path = mkstemp(suffix=".c")
-        os.close(fd)
-        self.source = Path(path)
+class User:
+    async def init(self, src_code: str):
+        f = await tempFile(suffix=".c", delete=False)
+        await f.write(src_code.encode())
+        await f.close()
+        self.src = f.name
 
-        fd, path = mkstemp()
-        os.close(fd)
-        self.exe = Path(path)
+        e = await tempFile(delete=False)
+        await e.close()
+        self.exe = e.name
 
-        self.debugger = Debugger()
+        try:
+            await c_compile(self.src, self.exe)
+        except CompileError:
+            await gather(unlink(self.src), unlink(self.exe))
+            raise
 
-        self.source.write_text(code)
-        await c_compile(self.source, self.exe)
-        await self.debugger.init(self.exe)
+        self.dbg = Debugger()
+        await self.dbg.init(self.exe)
 
-        self.seen = set()
-        return self
+        self.seen = set()  # legacy
 
     async def deinit(self):
-        await self.debugger.deinit()
-        self.exe.unlink()
-        self.source.unlink()
+        await gather(self.dbg.deinit(), unlink(self.src), unlink(self.exe))
 
 
-state = dict[str, State]()
+user = dict[str, User]()
 
 
 @server.event
 async def connect(sid: str, environ: dict) -> None:
-    info(f"[{sid}] connected")
+    info(f"[{sid}] connect")
 
 
 @server.event
 async def disconnect(sid: str) -> None:
-    if sid in state:
-        await state[sid].deinit()
-        del state[sid]
+    if sid in user:
+        await user[sid].deinit()
+        del user[sid]
 
-    info(f"[{sid}] disconnected")
+    info(f"[{sid}] disconnect")
 
 
 @server.event
 async def echo(sid: str, data: any) -> None:
-    info(f"[{sid}] received message '{data}', echoing back to client")
+    info(f"[{sid}] echo '{data}'")
     await server.emit("echo", data=data, to=sid)
 
 
 @server.event
 async def mainDebug(sid: str, code: str) -> None:
-    if sid in state:
-        await state[sid].deinit()
-        del state[sid]
+    if sid in user:
+        await user[sid].deinit()
+        del user[sid]
 
+    user[sid] = User()
     try:
-        state[sid] = State()
-        await state[sid].init(code)
-    except AssertionError as e:
-        info(f"[{sid}] failed to compile code")
-        await server.emit("compileError", e.args[0][1].decode(), to=sid)
+        await user[sid].init(code)
+    except CompileError as e:
+        del user[sid]
+        info(f"[{sid}] compile error")
+        await server.emit("compileError", e.stderr, to=sid)
         return
 
-    for func in await state[sid].debugger.functions():
-        await state[sid].debugger.breakpoint(func)
-    await state[sid].debugger.run()
+    dbg = user[sid].dbg
 
-    info(f"[{sid}] compiled code")
+    @dbg.on_exec_async
+    async def _(ea: mi.ExecAsync):
+        if ea.kind != "stopped":
+            return
+
+        match ea.output["reason"]:
+            case "exited-normally":
+                status = 0
+            case "exited":
+                status = ea.output["exit-code"]
+            case _:
+                return
+
+        info(f"[{sid}] inferior exit({status})")
+        await server.emit("__iexit__", f"{status}", to=sid)
+
+    await gather(*[dbg.breakpoint(f) for f in await dbg.functions()])
+    await dbg.run()
+
+    info(f"[{sid}] compile code")
     await server.emit(
         "mainDebug", "Finished mainDebug event on server", to=sid
     )
@@ -98,20 +106,24 @@ async def mainDebug(sid: str, code: str) -> None:
 
 @server.event
 async def executeNext(sid: str) -> None:
-    assert sid in state
-    debugger = state[sid].debugger
+    assert sid in user
+    dbg = user[sid].dbg
 
-    await debugger.next()
+    await dbg.next()
     info(f"[{sid}] run 'executeNext'")
     await server.emit(
         "executeNext", "Finished executeNext event on server-side", to=sid
     )
 
-    legacy_types, legacy_mem = await debugger.legacy_trace()
+    if not await dbg.frames():
+        await dbg.finish()
+        return
+
+    legacy_types, legacy_mem = await dbg.legacy_trace()
     for kind in legacy_types:
-        if kind["typeName"] in state[sid].seen:
+        if kind["typeName"] in user[sid].seen:
             continue
-        state[sid].seen.add(kind["typeName"])
+        user[sid].seen.add(kind["typeName"])
         await server.emit(
             "sendTypeDeclaration",
             kind,
@@ -121,18 +133,17 @@ async def executeNext(sid: str) -> None:
 
 
 @server.event
-async def EOF(sid: str) -> None:
-    error("event 'EOF' not implemented")
-
-
-@server.event
-async def SIGINT(sid: str) -> None:
-    error("event 'SIGINT' not implemented")
-
-
-@server.event
-async def send_stdin(sid: str) -> None:
+async def send_inf(sid: str) -> None:
     error("event 'send_stdin' not implemented")
+
+
+@server.event
+async def send_inf_eof(sid: str) -> None:
+    assert sid in user
+    dbg = user[sid].dbg
+
+    await dbg.inf_send("\x04")
+    info(f"[{sid}] inf send EOF")
 
 
 app = ASGIApp(server, socketio_path="/dapi")
@@ -141,9 +152,11 @@ if __name__ == "__main__":
     host = "0.0.0.0"
     port = 8000
 
-    info(" /\\_/\\ ")
-    info("( ^.^ )")
-    info(" > ^ < ")
-    info(f"Server is available at [http://localhost:{port}/]")
+    info(r" /\_/\ ")
+    info(r"( ^.^ )")
+    info(r" > ^ < ")
+    info(rf"Server is available at [http://localhost:{port}/]")
 
     run("__main__:app", port=port, host=host, log_level="error")
+
+    info(r"See you again! (˵ •̀ ᴗ - ˵ ) ✧")

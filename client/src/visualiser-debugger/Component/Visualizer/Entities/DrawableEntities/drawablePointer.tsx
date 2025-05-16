@@ -112,6 +112,7 @@ const PointerDrawable: DrawablePointerComponent = (
 
       {splitLabels(entity.label).map((l, idx) => {
         const fontSize = 40;
+        const textColor = 'var(--text-primary)';
         let label = l;
         if (idx < splitLabels(entity.label).length - 1) {
           label += ',';
@@ -123,6 +124,7 @@ const PointerDrawable: DrawablePointerComponent = (
             x={-getTextWidth(label, fontSize) / 2}
             y={coords.y2 - coords.y1 + 85 + idx * 40}
             fontSize={fontSize}
+            fill={textColor}
           >
             {label}
           </motion.text>

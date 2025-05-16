@@ -17,9 +17,9 @@ const LeafFile = ({ file, depth }: LeafFileParam) => {
     display: 'flex',
     alignItems: 'center',
     width: '100%',
-    backgroundColor: isHighlighted ? '#e0e0e0' : 'transparent',
+    backgroundColor: isHighlighted ? '#AAAAAA80' : 'transparent',
     '&:hover': {
-      backgroundColor: '#f0f0f0',
+      backgroundColor: '#AAAAAA80',
     },
   };
 
