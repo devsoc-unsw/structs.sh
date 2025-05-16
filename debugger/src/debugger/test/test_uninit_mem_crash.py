@@ -1,5 +1,4 @@
 from pathlib import Path
-from pprint import pp
 
 from debugger import Debugger, c_compile
 

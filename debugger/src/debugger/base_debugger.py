@@ -1,30 +1,44 @@
-from asyncio import create_subprocess_exec
-from asyncio import gather
-from asyncio import create_task
-from asyncio import Queue
-from asyncio import to_thread
-from asyncio import Event
-from asyncio import iscoroutinefunction
-from asyncio.subprocess import PIPE
-from collections import defaultdict, deque
-from contextlib import suppress
-from pathlib import Path
 import os
+from asyncio import (
+    Event,
+    Semaphore,
+    create_subprocess_exec,
+    create_task,
+    iscoroutinefunction,
+    to_thread,
+)
+from asyncio.subprocess import PIPE
+from contextlib import suppress
+from termios import ECHO, TCSADRAIN, tcgetattr, tcsetattr
+from typing import Callable, Coroutine, assert_never
 
-from . import mion
+from . import mi
+from .tributary import Tributary
 
 
 class BaseDebugger:
     def __init__(self) -> None:
-        do_nothing = lambda *args, **kwargs: None
-        self.oob_handler = do_nothing
-        self.inferior_handler = do_nothing
+        async def noop(*args, **kwargs):
+            pass
+
+        self._handle_ea: Callable[[mi.ExecAsync], Coroutine] = noop
+        self._hanlde_sa: Callable[[mi.StatusAsync], Coroutine] = noop
+        self._handle_na: Callable[[mi.NotifyAsync], Coroutine] = noop
+
+        self._inferior_handler: Callable[[str], Coroutine] = noop
         self._inferior_dispatch_done = Event()
         self._inferior_dispatch_done.set()
+
+        self._inflight_cmds = Tributary[mi.Result]()
+
+        self._console_buf = list[str]()
+        self._console_sem = Semaphore(1)
+
         self._did_init = False
 
-    async def init(self, executable_path: str | Path) -> None:
+    async def init(self, executable_path: str) -> None:
         self.fd_master, self.fd_slave = os.openpty()
+        _disable_echo(self.fd_slave)
         self.process = await create_subprocess_exec(
             "gdb",
             "--interpreter=mi4",
@@ -39,11 +53,8 @@ class BaseDebugger:
             stdout=PIPE,
         )
 
-        self.cmd_ident = 0
-        self.pending_cmds = dict[str, Queue[tuple[str, dict]]]()
-        self.stream_queue = deque[str](maxlen=0)
         create_task(self._stdout_dispatch())
-        create_task(self._inferior_dispatch())
+        create_task(self._inf_dispatch())
         self._did_init = True
         return self
 
@@ -55,114 +66,108 @@ class BaseDebugger:
         await self.process.stdin.drain()
         await self.process.wait()
 
-        for queue in self.pending_cmds.values():
-            queue.shutdown()
-        await gather(*[queue.join() for queue in self.pending_cmds.values()])
-
         os.close(self.fd_master)
         os.close(self.fd_slave)
         await self._inferior_dispatch_done.wait()
 
-    async def run_command(self, command: str):
-        ident = str(self.cmd_ident).rjust(3, "0")
-        self.cmd_ident = (1 + self.cmd_ident) % 256
-        assert ident not in self.pending_cmds
-        self.pending_cmds[ident] = Queue(1)
+        await self._inflight_cmds.join()
 
-        self.process.stdin.write(f"{ident}{command}\n".encode())
+    async def run_command(self, command: str):
+        chan = self._inflight_cmds.make_chan()
+
+        self.process.stdin.write(f"{chan}{command}\n".encode())
         await self.process.stdin.drain()
 
-        subkind, result = await self.pending_cmds[ident].get()
-        self.pending_cmds[ident].task_done()
-        del self.pending_cmds[ident]
+        result = await self._inflight_cmds.get(chan)
+        self._inflight_cmds.close_chan(chan)
 
-        if subkind == mion.RESULT_ERROR:
-            raise ValueError(result["msg"])
-        assert subkind in mion.RESULT_CLASS
-        return result
+        if result.kind == "error":
+            raise ValueError(result.results["msg"])
+        return result.results
+
+    async def inf_send(self, msg: str):
+        await to_thread(os.write, self.fd_master, msg.encode())
 
     async def console(self, command: str):
-        """Experimental"""
+        """
+        Run normal gdb (non-mi) commands.
+        """
 
-        self.stream_queue = deque[str](maxlen=None)
-        self.process.stdin.write(
-            f'-interpreter-exec console "{command}"\n'.encode()
-        )
+        async with self._console_sem:
+            self._console_buf.clear()
+            await self.run_command(f'-interpreter-exec console "{command}"')
+            return "".join(self._console_buf)
 
-        subkind, result = await self.result_queue.get()
-        self.result_queue.task_done()
-        if subkind == mion.RESULT_ERROR:
-            raise ValueError(result["msg"])
-        assert subkind in mion.RESULT_CLASS
-        assert result == {}
-
-        res = "".join(
-            line[1:-1].encode().decode("unicode_escape")
-            for line in self.stream_queue
-        )
-        self.stream_queue = deque[str](maxlen=0)
-        return res
-
-    def on_oob[F](self, func: F) -> F:
-        """oob = out of band"""
-        self.oob_handler = func
+    def on_exec_async(self, func: Callable[[mi.ExecAsync], Coroutine]):
+        self._handle_ea = _asyncify(func)
         return func
 
-    def on_inferior[F](self, func: F) -> F:
-        """inferior = inferior output"""
-        self.inferior_handler = func
+    def on_status_async(self, func: Callable[[mi.StatusAsync], Coroutine]):
+        self._hanlde_sa = _asyncify(func)
         return func
+
+    def on_notify_async(self, func: Callable[[mi.NotifyAsync], Coroutine]):
+        self._handle_na = _asyncify(func)
+        return func
+
+    def on_inf(self, func: Callable[[str], None]):
+        """inf = inferior output"""
+        self._inferior_handler = _asyncify(func)
 
     async def _stdout_dispatch(self) -> None:
         while line := await self.process.stdout.readline():
-            line = line.strip().decode()
-            if line == "(gdb)":
-                continue
+            for resp in mi.parse(line):
+                match resp:
+                    case mi.Result(token=t, kind=k, results=r):
+                        await self._inflight_cmds.put(t, resp)
+                    case mi.ExecAsync(token=t, kind=k, output=o):
+                        await self._handle_ea(resp)
+                    case mi.StatusAsync(token=t, kind=k, output=o):
+                        await self._hanlde_sa(resp)
+                    case mi.NotifyAsync(token=t, kind=k, output=o):
+                        await self._handle_na(resp)
+                    case mi.ConsoleStream(msg=m):
+                        if self._console_sem.locked():
+                            self._console_buf.append(m)
+                    case mi.TargetStream(msg=m):
+                        pass
+                    case mi.LogStream(msg=m):
+                        pass
+                    case _:
+                        assert_never(resp)
 
-            kind, message = line[:1], line[1:]
-            match kind:
-                case c if c.isdigit():
-                    ident, kind, message = line[:3], line[3:4], line[4:]
-                    assert kind == mion.RESULT
-
-                    subkind, message = _split_subkind(message)
-                    await self.pending_cmds[ident].put(
-                        (subkind, mion.loads(message))
-                    )
-                case _ if kind in mion.ASYNC:
-                    subkind, message = _split_subkind(message)
-                    if iscoroutinefunction(self.oob_handler):
-                        await self.oob_handler((subkind, mion.loads(message)))
-                    else:
-                        self.oob_handler((subkind, mion.loads(message)))
-                case _ if kind in mion.STREAM:
-                    self.stream_queue.append(message)
-                case _:
-                    raise ValueError(
-                        f"Received unknown message kind from GDB: {kind}"
-                    )
-
-    async def _inferior_dispatch(self) -> None:
+    async def _inf_dispatch(self) -> None:
         self._inferior_dispatch_done.clear()
         with suppress(OSError):
             while output := await to_thread(os.read, self.fd_master, 512):
-                if iscoroutinefunction(self.inferior_handler):
-                    await self.inferior_handler(output.decode())
-                else:
-                    self.inferior_handler(output.decode())
+                await self._inferior_handler(output.decode())
         self._inferior_dispatch_done.set()
 
 
-def _split_subkind(message: str) -> tuple[str, str]:
+def _disable_echo(fd: int):
     """
-    >>> _split_subkind('abc')
-    ('abc', '')
-    >>> _split_subkind('abc,def')
-    ('abc', 'def')
-    >>> _split_subkind('abc,def,ghi')
-    ('abc', 'def,ghi')
+    Prevent reading what we ourselves wrote to the fd, i.e.,
+
+    ```
+    os.write(fd_master, "hello")
+    msg = os.read(fd_master)  # should NOT be `"hello"`
+    ```
     """
 
-    if "," in message:
-        return tuple(message.split(",", 1))
-    return message, ""
+    old = tcgetattr(fd)
+    new = tcgetattr(fd)
+
+    new[3] &= ~ECHO
+    tcsetattr(fd, TCSADRAIN, new)
+
+    return old
+
+
+def _asyncify(func: Callable):
+    if iscoroutinefunction(func):
+        return func
+
+    async def wrap(*args, **kwargs):
+        func(*args, **kwargs)
+
+    return wrap

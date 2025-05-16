@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from debugger import Debugger, c_compile, Frame
+from debugger import Debugger, Frame, c_compile
 
 here = Path(__file__).parent
 
@@ -15,7 +15,7 @@ async def test_fibonacci():
 
     inferior_output = list[str]()
 
-    @debug.on_inferior
+    @debug.on_inf
     def _(message: any) -> None:
         inferior_output.append(message)
 
@@ -26,7 +26,9 @@ async def test_fibonacci():
         await debug.breakpoint("main")
         await debug.breakpoint("fibonacci")
         await debug.run()
-        assert await debug.frames() == [Frame("main", str(source), 16)]
+        assert await debug.frames() == [
+            Frame(func="main", src=str(source), line=16)
+        ]
         assert (await debug.variables()).keys() == {"n"}
 
         await debug.cont()
@@ -41,36 +43,35 @@ async def test_fibonacci():
         await debug.next()
         assert (await debug.variables()).keys() == {"n", "a", "b", "next", "i"}
 
-        frames, memory, _ = await debug.trace()
-        assert len(frames) == 2
-        assert len(memory) == 6
+        trace = await debug.trace()
+        assert len(trace.frames) == 2
+        assert len(trace.mem) == 6
 
-        fibonacci = frames[0]
+        fibonacci = trace.frames[0]
         assert len(fibonacci.vars) == 5
-        assert fibonacci.vars["i"].type == "int"
+        assert fibonacci.vars["i"].kind == "int"
         assert fibonacci.vars["i"].value == 1
-        assert fibonacci.vars["n"].type == "int"
+        assert fibonacci.vars["n"].kind == "int"
         assert fibonacci.vars["n"].value == 10
-        assert fibonacci.vars["a"].type == "int"
+        assert fibonacci.vars["a"].kind == "int"
         assert fibonacci.vars["a"].value == 0
-        assert fibonacci.vars["b"].type == "int"
+        assert fibonacci.vars["b"].kind == "int"
         assert fibonacci.vars["b"].value == 1
-        assert fibonacci.vars["next"].type == "int"
+        assert fibonacci.vars["next"].kind == "int"
         assert fibonacci.vars["next"].value == 0xBEEF
 
-        main = frames[1]
+        main = trace.frames[1]
         assert len(main.vars) == 1
-        assert main.vars["n"].type == "int"
+        assert main.vars["n"].kind == "int"
 
-        assert memory[fibonacci.vars["i"].addr, "int"].value == 1
-        assert memory[fibonacci.vars["n"].addr, "int"].value == 10
-        assert memory[fibonacci.vars["a"].addr, "int"].value == 0
-        assert memory[fibonacci.vars["b"].addr, "int"].value == 1
-        assert memory[fibonacci.vars["next"].addr, "int"].value == 0xBEEF
-        assert memory[main.vars["n"].addr, "int"].value == 10
+        assert trace.mem[fibonacci.vars["i"].addr]["int"].value == 1
+        assert trace.mem[fibonacci.vars["n"].addr]["int"].value == 10
+        assert trace.mem[fibonacci.vars["a"].addr]["int"].value == 0
+        assert trace.mem[fibonacci.vars["b"].addr]["int"].value == 1
+        assert trace.mem[fibonacci.vars["next"].addr]["int"].value == 0xBEEF
+        assert trace.mem[main.vars["n"].addr]["int"].value == 10
 
         await debug.finish()
-
     finally:
         await debug.deinit()
         exe.unlink()

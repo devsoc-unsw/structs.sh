@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import { github } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { github, dark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { MotionCollapse } from './MotionCollapse';
 import './typeAnnotation.css';
 import { BackendTypeRole } from '../../Types/annotationType';
@@ -10,6 +10,7 @@ import {
   createPossibleLinkedListTypeDecl,
 } from './RoleAnnotation/LinkedListAnnotation';
 import { BackendTypeDeclaration } from '../../Types/backendType';
+import { useTheme } from '../../Contexts/ThemeContexts';
 
 export type TypeAnnotationProp = {
   typeDeclaration: BackendTypeDeclaration;
@@ -21,6 +22,7 @@ export const TypeAnnotation: React.FC<TypeAnnotationProp> = ({
   const { typeName } = typeDeclaration;
   const [selectedRole, setSelectedRole] = useState<BackendTypeRole>(BackendTypeRole.Empty);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { darkMode } = useTheme();
 
   useEffect(() => {
     if (createPossibleLinkedListTypeDecl(typeDeclaration) !== null) {
@@ -33,7 +35,11 @@ export const TypeAnnotation: React.FC<TypeAnnotationProp> = ({
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
           <span>
-            <SyntaxHighlighter language="c" style={github} className="syntax-highlighter-custom">
+            <SyntaxHighlighter
+              language="c"
+              style={darkMode ? dark : github}
+              className="syntax-highlighter-custom"
+            >
               {typeName}
             </SyntaxHighlighter>
           </span>
@@ -42,7 +48,12 @@ export const TypeAnnotation: React.FC<TypeAnnotationProp> = ({
         <div style={{ fontSize: '0.8rem' }}>
           <button
             type="button"
-            style={{ color: selectedRole === BackendTypeRole.Empty ? 'grey' : 'black' }}
+            style={{
+              color:
+                selectedRole === BackendTypeRole.Empty
+                  ? 'var(--text-secondary)'
+                  : 'var(--text-primary)',
+            }}
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             {selectedRole}
@@ -69,8 +80,8 @@ export const TypeAnnotation: React.FC<TypeAnnotationProp> = ({
                       setIsDropdownOpen(false);
                     }}
                     style={{
-                      background: '#f7f7f7',
-                      border: '1px solid #e0e0e0',
+                      background: 'var(--bg-primary)',
+                      border: '1px solid var(--border-color)',
                       paddingTop: '3px',
                       paddingBottom: '3px',
                       paddingRight: '5px',
@@ -81,10 +92,10 @@ export const TypeAnnotation: React.FC<TypeAnnotationProp> = ({
                       transition: 'background 0.2s',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = '#e0e0e0';
+                      e.currentTarget.style.background = 'var(--bg-secondary)';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.background = '#f7f7f7';
+                      e.currentTarget.style.background = 'var(--bg-primary)';
                     }}
                   >
                     {role[1]}
