@@ -10,6 +10,6 @@ run pip3 install -r requirements.txt --root-user-action=ignore
 
 copy . .
 expose 8000
-cmd ["./nsjail", "--chroot", "/", "--env", "HOME=/root", "--env", "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin", "--disable_clone_newnet", "--bindmount", "/tmp:/tmp", "--", "/usr/local/bin/python3", "app/src/serve.py"]
+# cmd ["./nsjail", "--chroot", "/", "--env", "HOME=/root", "--env", "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin", "--disable_clone_newnet", "--bindmount", "/tmp:/tmp", "--", "/usr/local/bin/python3", "app/src/serve.py"]
 # cmd ["python3", "src/serve.py"]
-# cmd ["src/nsjail", "--config", "src/debugger.cfg", "--", "/usr/local/bin/python3", "app/src/serve.py"]
+cmd ["./nsjail", "--config", "debugger.cfg", "--", "/usr/local/bin/python3", "app/src/serve.py"]
