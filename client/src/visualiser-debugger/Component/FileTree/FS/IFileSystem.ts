@@ -688,6 +688,80 @@ void print_list(struct node *list) {
           type: 'file',
           parentPath: 'root/LinkedListWorkspace',
         },
+        'ctf_linked_list.c': {
+          name: 'ctf_linked_list.c',
+          path: 'root/LinkedListWorkspace/ctf_linked_list.c',
+          data: `/**
+* Welcome to Rookie Code Rumble!
+* In this challenge, you will extract the flag with our linked list visualiser.
+*/
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdlib.h>
+
+struct node
+{
+    int data;
+    struct node *next;
+};
+
+struct list
+{
+    struct node *head;
+    int size;
+};
+
+struct node *create_new_node(int data)
+{
+    struct node *new = malloc(sizeof(struct node));
+    new->data = data;
+    new->next = NULL;
+    return new;
+}
+
+void append(int value, struct list *list)
+{
+    struct node *new_tail = create_new_node(value);
+    if (list->head == NULL)
+    {
+        list->head = new_tail;
+        return;
+    }
+
+    struct node *curr = list->head;
+    while (curr->next != NULL)
+    {
+        curr = curr->next;
+    }
+
+    curr->next = new_tail;
+};
+
+int main(int argc, char *argv[])
+{
+    struct list *list = malloc(sizeof(struct list));
+    list->head = NULL;
+
+    int fd = open("flag", O_RDONLY);
+    char ch;
+    /**
+     * Write your code BELOW
+     * ---------------------
+     */
+
+    /**
+    * ---------------------
+    * Write your code ABOVE
+    */
+    while (!0)
+        ;
+    close(fd);
+}
+        `,
+          type: 'file',
+          parentPath: 'root/LinkedListWorkspace',
+        },
       },
     },
   },
