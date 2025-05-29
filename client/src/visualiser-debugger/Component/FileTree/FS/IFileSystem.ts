@@ -693,6 +693,7 @@ void print_list(struct node *list) {
           path: 'root/LinkedListWorkspace/ctf_linked_list.c',
           data: `/**
 * Welcome to Rookie Code Rumble!
+* In this challenge, you will extract the flag with our linked list visualiser.
 */
 #include <stdio.h>
 #include <fcntl.h>
