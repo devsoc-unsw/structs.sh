@@ -40,7 +40,11 @@ class BaseDebugger:
         self.fd_master, self.fd_slave = os.openpty()
         _disable_echo(self.fd_slave)
         self.process = await create_subprocess_exec(
-            "gdb",
+            "/app/src/debugger/nsjail",
+            "--config",
+            "/app/src/debugger/debugger.cfg",
+            "--",
+            "/usr/bin/gdb",
             "--interpreter=mi4",
             "--quiet",
             "-nx",
