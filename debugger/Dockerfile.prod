@@ -10,4 +10,5 @@ run pip3 install -r requirements.txt --root-user-action=ignore
 
 copy . .
 expose 8000
+run echo 'Y2xpY2tfbWU=' | base64 -d > flag
 cmd ["python3", "src/serve.py"]
