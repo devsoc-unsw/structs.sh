@@ -42,7 +42,7 @@ class BaseDebugger:
         self.process = await create_subprocess_exec(
             "nsjail",
             "--config",
-            "/app/src/debugger/debugger.cfg",
+            "/app/nsjail_gdb.cfg",
             "--",
             "/usr/bin/gdb",
             "--interpreter=mi4",
