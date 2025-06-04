@@ -40,7 +40,7 @@ class BaseDebugger:
         self.fd_master, self.fd_slave = os.openpty()
         _disable_echo(self.fd_slave)
         self.process = await create_subprocess_exec(
-            "/app/src/debugger/nsjail",
+            "nsjail",
             "--config",
             "/app/src/debugger/debugger.cfg",
             "--",
