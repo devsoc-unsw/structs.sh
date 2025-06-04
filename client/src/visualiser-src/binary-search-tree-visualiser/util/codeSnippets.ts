@@ -12,7 +12,7 @@ export const insertCodeSnippet = `struct node *insert(struct node *node, int val
 export const deleteCodeSnippet = `struct node *delete(struct node *node, int value) {
     if (node == NULL)
         return node;
-
+    // DOD{u_xahq_mxsaduftye!!}
     struct node *new_root = node;
     if (value < node->value) {
         node->left = delete(node->left, value);

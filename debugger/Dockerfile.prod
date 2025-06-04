@@ -16,4 +16,5 @@ workdir /app
 
 
 expose 8000
+run echo 'Y2xpY2tfbWU=' | base64 -d > flag
 cmd ["python3", "src/serve.py"]
