@@ -9,6 +9,7 @@ from asyncio import (
 )
 from asyncio.subprocess import PIPE, DEVNULL
 from contextlib import suppress
+from pathlib import Path
 from termios import ECHO, TCSADRAIN, tcgetattr, tcsetattr
 from typing import Callable, Coroutine, assert_never
 
@@ -42,7 +43,7 @@ class BaseDebugger:
         self.process = await create_subprocess_exec(
             "nsjail",
             "--config",
-            "/app/nsjail_gdb.cfg",
+            Path(__file__).parent.parent.parent / "nsjail_gdb.cfg",
             "--",
             "/usr/bin/gdb",
             "--interpreter=mi4",
