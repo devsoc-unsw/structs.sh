@@ -7,7 +7,7 @@ from asyncio import (
     iscoroutinefunction,
     to_thread,
 )
-from asyncio.subprocess import PIPE
+from asyncio.subprocess import PIPE, DEVNULL
 from contextlib import suppress
 from termios import ECHO, TCSADRAIN, tcgetattr, tcsetattr
 from typing import Callable, Coroutine, assert_never
@@ -55,6 +55,7 @@ class BaseDebugger:
             str(executable_path),
             stdin=PIPE,
             stdout=PIPE,
+            stderr=DEVNULL,
         )
 
         create_task(self._stdout_dispatch())
