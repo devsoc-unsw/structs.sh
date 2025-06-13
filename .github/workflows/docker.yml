@@ -2,6 +2,14 @@ name: Deploy
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+      - staging
+
+env:
+  ENVIRONMENT: ${{ github.ref_name == 'main' && 'prod' || 'staging' }}
+  IMAGE_NAME: ${{ format('devsoc-unsw/structs{0}', github.ref_name == 'main' && '' || '-staging') }}
 
 jobs:
   build:
@@ -33,14 +41,15 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ${{ matrix.component }}
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           platforms: linux/amd64
           file: ${{ matrix.component }}/Dockerfile.prod
           tags: |
-            ghcr.io/devsoc-unsw/structs-${{ matrix.component }}:${{ github.sha }}
-            ghcr.io/devsoc-unsw/structs-${{ matrix.component }}:latest
+            ghcr.io/${{ env.IMAGE_NAME }}-${{ matrix.component }}:${{ github.sha }}
+            ghcr.io/${{ env.IMAGE_NAME }}-${{ matrix.component }}:latest
           labels: ${{ steps.meta.outputs.labels }}
           build-args: "VITE_DEBUGGER_URL=https://structs.sh"
+
   deploy:
     name: Deploy (CD)
     runs-on: ubuntu-latest
@@ -64,8 +73,8 @@ jobs:
           git config user.name "CSESoc CD"
           git config user.email "technical@csesoc.org.au"
           git checkout -b update/structs/${{ github.sha }}
-          yq -i '.items[0].spec.template.spec.containers[0].image = "ghcr.io/devsoc-unsw/structs-client:${{ github.sha }}"' projects/structs/prod/deploy-frontend.yml
-          yq -i '.items[0].spec.template.spec.containers[0].image = "ghcr.io/devsoc-unsw/structs-debugger:${{ github.sha }}"' projects/structs/prod/deploy-debugger.yml
+          yq -i '.items[0].spec.template.spec.containers[0].image = "ghcr.io/${{ env.IMAGE_NAME }}-client:${{ github.sha }}"' projects/structs/${{ env.ENVIRONMENT }}/deploy-frontend.yml
+          yq -i '.items[0].spec.template.spec.containers[0].image = "ghcr.io/${{ env.IMAGE_NAME }}-debugger:${{ github.sha }}"' projects/structs/${{ env.ENVIRONMENT }}/deploy-debugger.yml
           git add .
           git commit -m "feat(structs): update image"
           git push -u origin update/structs/${{ github.sha }}
