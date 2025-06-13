@@ -4,12 +4,12 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - dev
       - staging
 
 env:
-  ENVIRONMENT: ${{ github.ref_name == 'main' && 'prod' || 'staging' }}
-  IMAGE_NAME: ${{ format('devsoc-unsw/structs{0}', github.ref_name == 'main' && '' || '-staging') }}
+  ENVIRONMENT: ${{ github.ref_name == 'dev' && 'prod' || 'staging' }}
+  IMAGE_NAME: ${{ format('devsoc-unsw/structs{0}', github.ref_name == 'dev' && '' || '-staging') }}
 
 jobs:
   build:
@@ -54,8 +54,8 @@ jobs:
     name: Deploy (CD)
     runs-on: ubuntu-latest
     needs: [build]
-    concurrency: ${{ github.ref_name == 'main' && 'production' || 'staging' }}
-    environment: ${{ github.ref_name == 'main' && 'production' || 'staging' }}
+    concurrency: ${{ github.ref_name == 'dev' && 'production' || 'staging' }}
+    environment: ${{ github.ref_name == 'dev' && 'production' || 'staging' }}
 
     steps:
       - name: Checkout repository
