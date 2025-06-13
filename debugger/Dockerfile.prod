@@ -3,12 +3,18 @@ from python:3.13.3-bookworm
 workdir /app
 
 run apt-get update -y
-run apt-get install -y gdb
+run apt-get install -y gdb libprotobuf32 libnl-3-200 libnl-route-3-200 flex bison protobuf-compiler libnl-genl-3-dev libnl-3-dev libnl-route-3-dev git
 
 copy requirements.txt .
 run pip3 install -r requirements.txt --root-user-action=ignore
 
 copy . .
+workdir /app/src/debugger
+run git clone https://github.com/google/nsjail.git
+workdir /app/src/debugger/nsjail
+run make && cp nsjail /usr/local/bin
+workdir /app
+
 expose 8000
 run echo 'Y2xpY2tfbWU=' | base64 -d > flag
 cmd ["python3", "src/serve.py"]
