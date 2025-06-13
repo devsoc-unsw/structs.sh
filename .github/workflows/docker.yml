@@ -9,7 +9,7 @@ on:
 
 env:
   ENVIRONMENT: ${{ github.ref_name == 'dev' && 'prod' || 'staging' }}
-  IMAGE_NAME: ${{ format('devsoc-unsw/structs{0}', github.ref_name == 'dev' && '' || '-staging') }}
+  IMAGE_NAME: ${{ format('structs{0}', github.ref_name == 'dev' && '' || '-staging') }}
 
 jobs:
   build:
@@ -45,8 +45,8 @@ jobs:
           platforms: linux/amd64
           file: ${{ matrix.component }}/Dockerfile.prod
           tags: |
-            ghcr.io/${{ env.IMAGE_NAME }}-${{ matrix.component }}:${{ github.sha }}
-            ghcr.io/${{ env.IMAGE_NAME }}-${{ matrix.component }}:latest
+            ghcr.io/devsoc-unsw/${{ env.IMAGE_NAME }}-${{ matrix.component }}:${{ github.sha }}
+            ghcr.io/devsoc-unsw/${{ env.IMAGE_NAME }}-${{ matrix.component }}:latest
           labels: ${{ steps.meta.outputs.labels }}
           build-args: "VITE_DEBUGGER_URL=https://structs.sh"
 
@@ -72,11 +72,11 @@ jobs:
         run: |
           git config user.name "CSESoc CD"
           git config user.email "technical@csesoc.org.au"
-          git checkout -b update/structs/${{ github.sha }}
-          yq -i '.items[0].spec.template.spec.containers[0].image = "ghcr.io/${{ env.IMAGE_NAME }}-client:${{ github.sha }}"' projects/structs/${{ env.ENVIRONMENT }}/deploy-frontend.yml
-          yq -i '.items[0].spec.template.spec.containers[0].image = "ghcr.io/${{ env.IMAGE_NAME }}-debugger:${{ github.sha }}"' projects/structs/${{ env.ENVIRONMENT }}/deploy-debugger.yml
+          git checkout -b update/${{ env.IMAGE_NAME }}/${{ github.sha }}
+          yq -i '.items[0].spec.template.spec.containers[0].image = "ghcr.io/devsoc-unsw/${{ env.IMAGE_NAME }}-client:${{ github.sha }}"' projects/structs/${{ env.ENVIRONMENT }}/deploy-frontend.yml
+          yq -i '.items[0].spec.template.spec.containers[0].image = "ghcr.io/devsoc-unsw/${{ env.IMAGE_NAME }}-debugger:${{ github.sha }}"' projects/structs/${{ env.ENVIRONMENT }}/deploy-debugger.yml
           git add .
-          git commit -m "feat(structs): update image"
-          git push -u origin update/structs/${{ github.sha }}
-          gh pr create -B dev --title "feat(structs): update image" --body "Updates the image for the structs deployment to commit devsoc-unsw/structs.sh@${{ github.sha }}." > URL
+          git commit -m "feat(${{ env.IMAGE_NAME }}): update image"
+          git push -u origin update/${{ env.IMAGE_NAME }}/${{ github.sha }}
+          gh pr create -B dev --title "feat(${{ env.IMAGE_NAME }}): update image" --body "Updates the image for the ${{ env.IMAGE_NAME }} deployment to commit devsoc-unsw/structs.sh@${{ github.sha }}." > URL
           gh pr merge $(cat URL) --squash -d
