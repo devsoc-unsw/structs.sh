@@ -37,8 +37,8 @@ jobs:
           platforms: linux/amd64
           file: ${{ matrix.component }}/Dockerfile.prod
           tags: |
-            ghcr.io/csesoc/structs-${{ matrix.component }}:${{ github.sha }}
-            ghcr.io/csesoc/structs-${{ matrix.component }}:latest
+            ghcr.io/devsoc-unsw/structs-${{ matrix.component }}:${{ github.sha }}
+            ghcr.io/devsoc-unsw/structs-${{ matrix.component }}:latest
           labels: ${{ steps.meta.outputs.labels }}
           build-args: "VITE_DEBUGGER_URL=https://structs.sh"
   deploy:
@@ -52,9 +52,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          repository: csesoc/deployment
+          repository: devsoc-unsw/deployment
           token: ${{ secrets.GH_TOKEN }}
-          ref: migration
+          ref: dev
       - name: Install yq
         uses: mikefarah/yq@v4.35.1
       - name: Update deployment
@@ -64,10 +64,10 @@ jobs:
           git config user.name "CSESoc CD"
           git config user.email "technical@csesoc.org.au"
           git checkout -b update/structs/${{ github.sha }}
-          yq -i '.items[0].spec.template.spec.containers[0].image = "ghcr.io/csesoc/structs-client:${{ github.sha }}"' projects/structs/deploy-frontend.yml
-          yq -i '.items[0].spec.template.spec.containers[0].image = "ghcr.io/csesoc/structs-debugger:${{ github.sha }}"' projects/structs/deploy-debugger.yml
+          yq -i '.items[0].spec.template.spec.containers[0].image = "ghcr.io/devsoc-unsw/structs-client:${{ github.sha }}"' projects/structs/prod/deploy-frontend.yml
+          yq -i '.items[0].spec.template.spec.containers[0].image = "ghcr.io/devsoc-unsw/structs-debugger:${{ github.sha }}"' projects/structs/prod/deploy-debugger.yml
           git add .
           git commit -m "feat(structs): update image"
           git push -u origin update/structs/${{ github.sha }}
-          gh pr create -B migration --title "feat(structs): update image" --body "Updates the image for the structs deployment to commit csesoc/structs.sh@${{ github.sha }}." > URL
+          gh pr create -B migration --title "feat(structs): update image" --body "Updates the image for the structs deployment to commit devsoc-unsw/structs.sh@${{ github.sha }}." > URL
           gh pr merge $(cat URL) --squash -d
