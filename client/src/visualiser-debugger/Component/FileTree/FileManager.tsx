@@ -18,6 +18,23 @@ import { useUserFsStateStore } from '../../Store/userFsStateStore';
 import { IFileDirNode, IFileFileNode, IFileType } from './FS/IFileSystem';
 import { useTheme } from '../../Contexts/ThemeContexts';
 
+const MUI_THEME_COLORS = {
+  light: {
+    background: '#ffffff',
+    text: '#1C2024',
+    button: '#2F265F',
+    border: '#1C2024',
+    secondary: '#757575'
+  },
+  dark: {
+    background: '#1C2024',
+    text: '#ffffff',
+    button: '#6E56CF',
+    border: '#ffffff',
+    secondary: '#9e9e9e'
+  }
+};
+
 const WorkspaceSelector = () => {
   const { fileSystem, currFocusDirPath, currFocusFilePath } = useUserFsStateStore.getState();
   let currFocus = currFocusFilePath || currFocusDirPath;
@@ -32,6 +49,9 @@ const WorkspaceSelector = () => {
     minWidth: '30px',
     minHeight: '30px',
   };
+
+  const { darkMode } = useTheme();
+  const colors = MUI_THEME_COLORS[darkMode ? 'dark' : 'light'];
 
   const handleClickOpen = (buttonType: IFileType) => {
     setType(buttonType);
@@ -104,11 +124,6 @@ const WorkspaceSelector = () => {
     handleDeleteClose();
   };
 
-  const { darkMode } = useTheme();
-  const muiBackground = darkMode ? '#1C2024' : 'white';
-  const muiColor = darkMode ? 'white' : '#1C2024';
-  const muiButton = darkMode ? '#6E56CF' : '#2F265F';
-
   return (
     <Box>
       <Box className="root-container">
@@ -169,14 +184,16 @@ const WorkspaceSelector = () => {
         aria-describedby="alert-dialog-description"
         sx={{
           '& .MuiPaper-root': {
-            backgroundColor: muiBackground,
-            color: muiColor,
+            backgroundColor: colors.background,
+            color: colors.text,
           },
         }}
       >
         <DialogTitle>Create New {type}</DialogTitle>
         <DialogContent>
-          <DialogContentText>Please enter the name for the new {type}:</DialogContentText>
+          <DialogContentText sx={{ color: colors.secondary }}>
+            Please enter the name for the new {type}:
+          </DialogContentText>
           <TextField
             autoFocus
             margin="dense"
@@ -190,38 +207,38 @@ const WorkspaceSelector = () => {
             sx={{
               '& input': {
                 // Targeting the input element inside the TextField
-                color: muiColor,
+                color: colors.text,
               },
               '& label': {
                 // Targeting the label element inside the TextField
-                color: muiColor,
+                color: colors.text,
               },
               '& .MuiOutlinedInput-root': {
                 // Targeting the root of the input element for focus color
                 '& fieldset': {
-                  borderColor: muiColor,
+                  borderColor: colors.border,
                 },
                 '&:hover fieldset': {
-                  borderColor: muiColor,
+                  borderColor: colors.border,
                 },
                 '&.Mui-focused fieldset': {
-                  borderColor: muiColor,
+                  borderColor: colors.border,
                 },
               },
             }}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} sx={{ color: muiButton }}>
+          <Button onClick={handleClose} sx={{ color: colors.button }}>
             Cancel
           </Button>
           <Button
             onClick={handleCreate}
             disabled={!newItemName.trim()}
             sx={{
-              color: newItemName.trim() ? muiButton : 'rgba(0, 0, 0, 0.38)',
+              color: newItemName.trim() ? colors.button : colors.secondary,
               '&.Mui-disabled': {
-                color: 'grey',
+                color: colors.secondary,
               },
             }}
           >
@@ -237,23 +254,23 @@ const WorkspaceSelector = () => {
         aria-describedby="alert-dialog-description"
         sx={{
           '& .MuiPaper-root': {
-            backgroundColor: muiBackground,
-            color: muiColor,
+            backgroundColor: colors.background,
+            color: colors.text,
           },
         }}
       >
         <DialogTitle>Are you sure you want to delete this file?</DialogTitle>
         <DialogContent>
-          <DialogContentText sx={{ color: 'grey' }}>
+          <DialogContentText sx={{ color: colors.secondary }}>
             Deleting is a permanent action. Once deleted, files cannot be recovered. Are you sure
             you want to proceed?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDeleteClose} sx={{ color: muiButton }}>
+          <Button onClick={handleDeleteClose} sx={{ color: colors.button }}>
             Cancel
           </Button>
-          <Button onClick={handleDelete} sx={{ color: muiButton }}>
+          <Button onClick={handleDelete} sx={{ color: colors.button }}>
             Delete
           </Button>
         </DialogActions>
