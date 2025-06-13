@@ -1,6 +1,6 @@
 import logging
 from asyncio import gather
-from logging import error, info
+from logging import error, info, warning
 
 from aiofiles.os import unlink
 from aiofiles.tempfile import NamedTemporaryFile as tempFile
@@ -133,8 +133,17 @@ async def executeNext(sid: str) -> None:
 
 
 @server.event
-async def send_inf(sid: str) -> None:
-    error("event 'send_stdin' not implemented")
+async def send_stdin(sid: str, data: str) -> None:
+    if sid not in user:
+        error(f"session {sid} has not started a debug session")
+
+    dbg = user[sid].dbg
+    cmd = data.split()[-1]
+    info(f"cmd={cmd}")
+    await dbg.inf_send(cmd)
+
+    info(f"[{sid}] send stdin")
+    # error("event 'send_stdin' not implemented")
 
 
 @server.event

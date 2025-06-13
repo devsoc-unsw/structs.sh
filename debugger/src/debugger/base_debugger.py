@@ -68,8 +68,10 @@ class BaseDebugger:
         if not self._did_init:
             return
 
-        self.process.stdin.write_eof()
-        await self.process.stdin.drain()
+        # self.process.stdin.write_eof()
+        self.process.kill()
+        self.process.terminate()
+        # await self.process.stdin.drain()
         await self.process.wait()
 
         os.close(self.fd_master)
