@@ -1,14 +1,6 @@
-import { useCallback, useMemo, useState } from 'react';
-import {
-  BackendState,
-  BackendTypeDeclaration,
-  FunctionStructure,
-  INITIAL_BACKEND_STATE,
-  isProgramEnd,
-  ProgramEnd,
-} from '../visualiser-debugger/Types/backendType';
+import { useCallback, useEffect, useState } from 'react';
+import { BackendState, INITIAL_BACKEND_STATE } from '../visualiser-debugger/Types/backendType';
 import useSocketClientStore from './socketClient';
-import { ServerToClientEvent } from './socketClientType';
 import { useGlobalStore } from '../visualiser-debugger/Store/globalStateStore';
 import { useUserFsStateStore } from '../visualiser-debugger/Store/userFsStateStore';
 import { useFrontendStateStore } from '../visualiser-debugger/Store/frontendStateStore';
@@ -16,67 +8,34 @@ import {
   DEFAULT_MESSAGE_DURATION,
   useToastStateStore,
 } from '../visualiser-debugger/Store/toastStateStore';
+import { useQueue } from './useQueue';
+import { buildSocketEventHandler } from './buildSocketEventHandler';
 
 export const useSocketCommunication = () => {
-  const { updateNextFrame, updateTypeDeclaration, clearTypeDeclarations, clearUserAnnotation } =
-    useGlobalStore();
-  const { setActive } = useFrontendStateStore();
-  const { clearFrontendState } = useFrontendStateStore();
-
+  const {
+    updateCurrFocusedTab,
+    updateNextFrame,
+    updateTypeDeclaration,
+    clearTypeDeclarations,
+    clearUserAnnotation,
+    resetConsoleChunks,
+    appendConsoleChunks,
+  } = useGlobalStore();
+  const { setActive, clearFrontendState } = useFrontendStateStore();
   const { socketClient } = useSocketClientStore();
   const [activeSession] = useState<boolean>(false);
-  const resetConsoleChunks = useGlobalStore((state) => state.resetConsoleChunks);
-  const appendConsoleChunks = useGlobalStore((state) => state.appendConsoleChunks);
-  const { updateCurrFocusedTab } = useGlobalStore();
   const { setToastMessage: setMessage } = useToastStateStore();
+  const queue = useQueue();
 
-  useMemo(() => {
-    const eventHandler: ServerToClientEvent = {
-      mainDebug: (_data: 'Finished mainDebug event on server') => {
-        setMessage({
-          content: 'Debug session started.',
-          colorTheme: 'info',
-          durationMs: DEFAULT_MESSAGE_DURATION,
-        });
-        setActive(true);
-      },
-      sendFunctionDeclaration: (_data: FunctionStructure) => {},
-      sendTypeDeclaration: (type: BackendTypeDeclaration) => {
-        if (type.typeName === 'size_t') {
-          return;
-        }
-        updateTypeDeclaration(type);
-      },
-      sendBackendStateToUser: (state: BackendState | ProgramEnd) => {
-        if (isProgramEnd(state)) {
-          setMessage({
-            content: 'Debug session ended.',
-            colorTheme: 'info',
-            durationMs: DEFAULT_MESSAGE_DURATION,
-          });
-          setActive(false);
-          return;
-        }
-        updateNextFrame(state);
-      },
-      sendStdoutToUser: (output: string) => {
-        appendConsoleChunks([...output]);
-      },
-      programWaitingForInput: (_data: any) => {
-        // Implement as needed
-      },
-      acknowledgedEOF: () => {
-        console.log('Debugger sent acknowledged EOF signal');
-      },
-      acknowledgedSIGINT: () => {
-        console.log('Debugger sent acknowledged SIGINT signal');
-      },
-      compileError: (errors: string[]) => {
-        appendConsoleChunks([...errors]);
-        updateCurrFocusedTab('2');
-      },
-      send_stdin: (_data: string) => {},
-    };
+  useEffect(() => {
+    const eventHandler = buildSocketEventHandler({
+      setActive,
+      updateNextFrame,
+      updateTypeDeclaration,
+      appendConsoleChunks,
+      updateCurrFocusedTab,
+      setMessage,
+    });
 
     socketClient.setupEventHandlers(eventHandler);
   }, []);
@@ -106,13 +65,6 @@ export const useSocketCommunication = () => {
     socketClient.serverAction.initializeDebugSession(file.data);
   }, [socketClient]);
 
-  const queue = useMemo(() => {
-    let queuePromise: Promise<boolean | void> = Promise.resolve();
-    return (fn: () => Promise<boolean>) => {
-      queuePromise = queuePromise.then(fn);
-      return queuePromise;
-    };
-  }, []);
   const executeNextWithRetry = useCallback(() => {
     const addEventListenerWithTimeout = (
       listener: (state: BackendState | null) => void,
@@ -168,6 +120,7 @@ export const useSocketCommunication = () => {
   return {
     resetConsoleChunks,
     appendConsoleChunks,
+    // what is activeSession used for?
     activeSession,
     sendCode,
     getNextState: executeNextWithRetry,
