@@ -38,13 +38,18 @@ class BaseDebugger:
         self._did_init = False
 
     async def init(self, executable_path: str) -> None:
+        import os, pwd, logging
+
+        assert not os.geteuid()
+        logging.info(f"??> {os.geteuid()}, {pwd.getpwuid(os.geteuid()).pw_name}")
+
         self.fd_master, self.fd_slave = os.openpty()
         _disable_echo(self.fd_slave)
         self.process = await create_subprocess_exec(
-            "nsjail",
-            "--config",
-            Path(__file__).parent.parent.parent / "nsjail_gdb.cfg",
-            "--",
+            # "nsjail",
+            # "--config",
+            # Path(__file__).parent.parent.parent / "nsjail_gdb.cfg",
+            # "--",
             "/usr/bin/gdb",
             "--interpreter=mi4",
             "--quiet",
@@ -56,7 +61,6 @@ class BaseDebugger:
             str(executable_path),
             stdin=PIPE,
             stdout=PIPE,
-            stderr=DEVNULL,
         )
 
         create_task(self._stdout_dispatch())
