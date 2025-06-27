@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { BackendState, INITIAL_BACKEND_STATE } from '../visualiser-debugger/Types/backendType';
 import useSocketClientStore from './socketClient';
 import { useGlobalStore } from '../visualiser-debugger/Store/globalStateStore';
@@ -23,7 +23,6 @@ export const useSocketCommunication = () => {
   } = useGlobalStore();
   const { setActive, clearFrontendState } = useFrontendStateStore();
   const { socketClient } = useSocketClientStore();
-  const [activeSession] = useState<boolean>(false);
   const { setToastMessage: setMessage } = useToastStateStore();
   const queue = useQueue();
 
@@ -120,8 +119,6 @@ export const useSocketCommunication = () => {
   return {
     resetConsoleChunks,
     appendConsoleChunks,
-    // what is activeSession used for?
-    activeSession,
     sendCode,
     getNextState: executeNextWithRetry,
     bulkSendNextStates,
