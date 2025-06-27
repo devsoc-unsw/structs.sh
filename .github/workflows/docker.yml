@@ -65,7 +65,7 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
           ref: dev
       - name: Install yq
-        uses: mikefarah/yq@v4.35.1
+        uses: mikefarah/yq@v4.45.4
       - name: Update deployment
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
