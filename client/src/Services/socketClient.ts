@@ -15,10 +15,10 @@ class SocketClient {
 
   private setupDefaultEvents() {
     this.socket.on('connect', () => {
-      console.log('Connected!');
+      console.log('Socket handler Built / Connected!');
     });
     this.socket.on('disconnect', () => {
-      console.log('Disconnected!');
+      console.log('Socket handler Removed / Disconnected!');
     });
 
     // TODO: This section leaves for debugging purpose

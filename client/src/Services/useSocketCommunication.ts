@@ -119,7 +119,7 @@ export const useSocketCommunication = () => {
   return {
     resetConsoleChunks,
     appendConsoleChunks,
-    sendCode,
+     sendCode,
     getNextState: executeNextWithRetry,
     bulkSendNextStates,
     resetDebugSession,
