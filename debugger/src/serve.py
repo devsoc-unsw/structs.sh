@@ -53,7 +53,7 @@ async def disconnect(sid: str) -> None:
         await user[sid].deinit()
         del user[sid]
 
-    info(f"[{sid}] disconnect from serve.py")
+    info(f"[{sid}] disconnected from serve.py")
 
 
 @server.event
