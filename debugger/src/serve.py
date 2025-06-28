@@ -44,7 +44,7 @@ user = dict[str, User]()
 
 @server.event
 async def connect(sid: str, environ: dict) -> None:
-    info(f"[{sid}] connect")
+    info(f"[{sid}] connected from serve.py")
 
 
 @server.event
@@ -53,7 +53,7 @@ async def disconnect(sid: str) -> None:
         await user[sid].deinit()
         del user[sid]
 
-    info(f"[{sid}] disconnect")
+    info(f"[{sid}] disconnect from serve.py")
 
 
 @server.event
