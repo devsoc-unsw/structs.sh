@@ -8,8 +8,6 @@ import {
 import { DEFAULT_MESSAGE_DURATION } from 'visualiser-debugger/Store/toastStateStore';
 import { ServerToClientEvent } from './socketClientType';
 
-// do i still need to do this if socketClientType.ts exist? is there some way i could just use ServerToClientEvent?
-// why do i need to do this again?
 type BuildSocketHandlerParams = {
   setMessage: (msg: { content: string; colorTheme: string; durationMs: number }) => void;
   setActive: (active: boolean) => void;
@@ -37,7 +35,6 @@ export const buildSocketEventHandler = ({
       setActive(true);
     },
 
-    // does nothing, need to research what sendFunctionDeclaration does to implement
     sendFunctionDeclaration: (_data: FunctionStructure) => {},
 
     sendTypeDeclaration: (type: BackendTypeDeclaration) => {
@@ -64,8 +61,6 @@ export const buildSocketEventHandler = ({
       appendConsoleChunks([...output]);
     },
 
-    // why _data?
-    // also does nothing
     programWaitingForInput: (_data: any) => {},
 
     acknowledgedEOF: () => {
@@ -76,13 +71,11 @@ export const buildSocketEventHandler = ({
       console.log('Debugger sent acknowledged SIGINT signal');
     },
 
-    // what does this do??
     compileError: (errors: string[]) => {
       appendConsoleChunks([...errors]);
       updateCurrFocusedTab('2');
     },
 
-    // does nothing as well
     send_stdin: (_data: string) => {},
   };
 };
