@@ -1,5 +1,5 @@
 {
-  "extends": ["config:base"],
+  "extends": [],
   "lockFileMaintenance": { "enabled": true, "automerge": true },
   "prHourlyLimit": 4,
   "prMonthlyLimit": 6,
@@ -7,13 +7,13 @@
   "reviewersFromCodeOwners": true,
   "packageRules": [
     {
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": false,
-      "automergeType": "branch"
+      "matchPackagePatterns": [".*"],
+      "enabled": false
     },
     {
       "groupName": "ci-actions",
       "managers": ["github-actions", "dockerfile"],
+      "enabled": true,
       "automerge": false,
       "automergeType": "branch",
       "addLabels": ["deps: ci-actions"],
@@ -22,12 +22,14 @@
     {
       "matchPackageNames": ["actions/checkout", "actions/setup-node"],
       "managers": ["github-actions"],
+      "enabled": true,
       "automerge": true,
       "automergeType": "branch",
       "addLabels": ["deps: ci-actions", "automerge: safe"]
     },
     {
       "matchPackageNames": ["node"],
+      "enabled": true,
       "allowedVersions": "<19.0.0"
     },
     {
@@ -38,6 +40,7 @@
         "vite-plugin-checker",
         "vite-tsconfig-paths"
       ],
+      "enabled": true,
       "addLabels": ["deps: vite"]
     },
     {
