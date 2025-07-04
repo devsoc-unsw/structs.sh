@@ -16,4 +16,24 @@ export default class AVLAnimationProducer extends BSTInsertAnimationProducer {
     this.unhighlightLine(node.rightLineTarget, node.rightArrowTarget);
     this.unhighlightNode(node);
   }
+
+  public freeNode(
+    node: GraphicalAVLNode,
+    parent: GraphicalAVLNode,
+    shouldHideParentPointer: boolean
+  ) {
+    if (parent !== null && shouldHideParentPointer) {
+      if (node === parent.left) {
+        this.addSequenceAnimation(parent.leftLineTarget.animate().attr({ opacity: 0 }));
+      } else {
+        this.addSequenceAnimation(parent.rightLineTarget.animate().attr({ opacity: 0 }));
+      }
+    }
+    this.addSequenceAnimation(node.nodeTarget.animate().attr({ opacity: 0 }));
+    this.addSequenceAnimation(node.textTarget.animate().attr({ opacity: 0 }));
+    this.addSequenceAnimation(node.leftLineTarget.animate().attr({ opacity: 0 }));
+    this.addSequenceAnimation(node.leftArrowTarget.animate().attr({ opacity: 0 }));
+    this.addSequenceAnimation(node.rightLineTarget.animate().attr({ opacity: 0 }));
+    this.addSequenceAnimation(node.rightArrowTarget.animate().attr({ opacity: 0 }));
+  }
 }
