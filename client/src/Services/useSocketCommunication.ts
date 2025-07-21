@@ -21,23 +21,31 @@ export const useSocketCommunication = () => {
     resetConsoleChunks,
     appendConsoleChunks,
   } = useGlobalStore();
+
   const { setActive, clearFrontendState } = useFrontendStateStore();
-  const { socketClient } = useSocketClientStore();
-  const { setToastMessage: setMessage } = useToastStateStore();
+  const { socketClient, initialise } = useSocketClientStore();
+  const { setToastMessage } = useToastStateStore();
   const queue = useQueue();
 
+  // Setup socket event handlers on mount
   useEffect(() => {
-    const eventHandler = buildSocketEventHandler({
+    console.log('usesocketcom is mounted');
+    if (!socketClient) {
+      initialise();
+      return;
+    }
+
+    const handlers = buildSocketEventHandler({
       setActive,
       updateNextFrame,
       updateTypeDeclaration,
       appendConsoleChunks,
       updateCurrFocusedTab,
-      setMessage,
+      setMessage: setToastMessage,
     });
 
-    socketClient.setupEventHandlers(eventHandler);
-  }, []);
+    socketClient.setupEventHandlers(handlers);
+  }, [socketClient, initialise]); // ask what this means i think before was only socketClient dependency
 
   const resetDebugSession = useCallback(() => {
     updateNextFrame(INITIAL_BACKEND_STATE);
@@ -46,82 +54,109 @@ export const useSocketCommunication = () => {
     clearTypeDeclarations();
     clearUserAnnotation();
     resetConsoleChunks();
-  }, []);
+  }, [
+    updateNextFrame,
+    clearFrontendState,
+    setActive,
+    clearTypeDeclarations,
+    clearUserAnnotation,
+    resetConsoleChunks,
+  ]); // ask why you do this? before was empty dependency
 
+  // error hadnler for sending code
+  const handleSendCodeError = () => {
+    setToastMessage({
+      content: 'No file being selected',
+      colorTheme: 'warning',
+      durationMs: DEFAULT_MESSAGE_DURATION,
+    });
+  };
+
+  // send code to backend to start debugging session
   const sendCode = useCallback(() => {
+    if (!socketClient) return;
+
     resetDebugSession();
+
     const { fileSystem, currFocusFilePath } = useUserFsStateStore.getState();
     const file = fileSystem.getFileFromPath(currFocusFilePath);
 
     if (!file || file.path === 'root') {
-      setMessage({
-        content: 'No file being selected.',
-        colorTheme: 'warning',
-        durationMs: DEFAULT_MESSAGE_DURATION,
-      });
+      handleSendCodeError();
       return;
     }
+
     socketClient.serverAction.initializeDebugSession(file.data);
-  }, [socketClient]);
+  }, [socketClient, resetDebugSession]); // ask why you put resetDebugSession in here as dependency
 
-  const executeNextWithRetry = useCallback(() => {
-    const addEventListenerWithTimeout = (
-      listener: (state: BackendState | null) => void,
-      timeout: number
-    ) => {
-      let resolved = false;
+  // add event listener with timeout
+  const addEventListenerWithTimeout = (
+    listener: (state: BackendState | null) => void,
+    timeout: number
+  ) => {
+    if (!socketClient) return;
 
-      const wrappedListener = (state: BackendState) => {
-        if (!resolved) {
-          resolved = true;
-          listener(state);
-          socketClient.socket.off('sendBackendStateToUser', wrappedListener);
-        }
-      };
+    let resolved = false;
 
-      socketClient.socket.on('sendBackendStateToUser', wrappedListener);
-
-      setTimeout(() => {
-        if (!resolved) {
-          resolved = true;
-          listener(null);
-          socketClient.socket.off('sendBackendStateToUser', wrappedListener);
-        }
-      }, timeout);
+    const wrappedListener = (state: BackendState) => {
+      if (!resolved) {
+        resolved = true;
+        listener(state);
+        socketClient.socket.off('sendBackendStateToUser', wrappedListener);
+      }
     };
+
+    socketClient.socket.on('sendBackendStateToUser', wrappedListener);
+
+    setTimeout(() => {
+      if (!resolved) {
+        resolved = true;
+        listener(null);
+        socketClient.socket.off('sendBackendStateToUser', wrappedListener);
+      }
+    }, timeout);
+  };
+
+  // step debugger and wait for backend to respond
+  const executeNextWithRetry = useCallback(() => {
+    if (!socketClient) return Promise.resolve(false);
 
     return queue(() => {
       return new Promise<boolean>((resolve) => {
         const handleBackendState = (state: BackendState | null) => {
-          if (state) {
-            resolve(true); // Resolve as success
-          } else {
-            resolve(false); // Resolve as failure due to timeout
-          }
+          // if (state) {
+          //   resolve(true); // Resolve as success
+          // } else {
+          //   resolve(false); // Resolve as failure due to timeout
+          // } before was this
+          resolve(!!state); // what this means?
         };
 
-        // Add the event listener with a timeout
         addEventListenerWithTimeout(handleBackendState, 5000);
         socketClient.serverAction.executeNext();
       });
     });
-  }, [socketClient]);
+  }, [socketClient, queue]); // why do i add queue here?
 
+  // to call multiple next states in bulk
   const bulkSendNextStates = useCallback(
     async (count: number) => {
-      const results = await Promise.all(Array.from({ length: count }, executeNextWithRetry));
-      const successfulCount = results.filter((result) => result).length;
-      return successfulCount;
+      const results = await Promise.all(
+        Array.from({ length: count }, () => executeNextWithRetry())
+      );
+      // return results.filter((result) => result).length;
+      // return successfulCount;
+      return results.filter(Boolean).length; // whats happening?
     },
     [executeNextWithRetry]
   );
 
   return {
-    resetConsoleChunks,
-    appendConsoleChunks,
-    sendCode,
-    getNextState: executeNextWithRetry,
-    bulkSendNextStates,
-    resetDebugSession,
+    resetConsoleChunks, // Clear console logs
+    appendConsoleChunks, // Append logs
+    sendCode, // Start session with file
+    getNextState: executeNextWithRetry, // Step once
+    bulkSendNextStates, // Step multiple times
+    resetDebugSession, // Full reset
   };
 };
