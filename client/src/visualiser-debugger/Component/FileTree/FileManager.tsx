@@ -165,9 +165,7 @@ const WorkspaceSelector = () => {
       >
         <DialogTitle>Create New {type}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            Please enter the name for the new {type}:
-          </DialogContentText>
+          <DialogContentText>Please enter the name for the new {type}:</DialogContentText>
           <TextField
             autoFocus
             margin="dense"
