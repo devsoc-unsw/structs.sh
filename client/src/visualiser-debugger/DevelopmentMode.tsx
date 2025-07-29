@@ -14,7 +14,6 @@ import StackInspector from './Component/StackInspector/StackInspector';
 import VisualizerMain from './Component/VisualizerMain';
 import FileManager from './Component/FileTree/FileManager';
 import { useGlobalStore } from './Store/globalStateStore';
-import { useSocketCommunication } from '../Services/useSocketCommunication';
 import { useUserFsStateStore } from './Store/userFsStateStore';
 import { onboardingStore, handleJoyrideCallback, OPEN_FILE_STEP } from './Store/onboardingStore';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material';
@@ -26,7 +25,6 @@ const DevelopmentModeContent = () => {
   const { uiState, updateCurrFocusedTab } = useGlobalStore();
   const { run, stepIndex, steps, onboardingCurrFile } = onboardingStore();
   const { resetRootPaths } = useUserFsStateStore();
-  const { activeSession } = useSocketCommunication();
   const { darkMode, toggleDarkMode } = useTheme();
   const debuggerTheme = createDebuggerTheme(darkMode);
 
@@ -93,7 +91,7 @@ const DevelopmentModeContent = () => {
         <div className={classNames('Onboarding-codeEditor', styles.editor)}>
           <DynamicTabs direction="vertical" minHeightRatio={[0.1, 0.2]} initialSize="100%">
             <CodeEditor />
-            <Console scrollToBottom={scrollToBottom} isActive={activeSession} />
+            <Console scrollToBottom={scrollToBottom} />
           </DynamicTabs>
         </div>
         <div className={classNames('Onboarding-inspectionMenu', styles.pane, styles.inspector)}>

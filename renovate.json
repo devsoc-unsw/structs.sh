@@ -1,48 +1,61 @@
 {
-  "extends": ["config:base"],
+  "extends": [],
   "lockFileMaintenance": { "enabled": true, "automerge": true },
-  "prHourlyLimit": 5,
+  "prHourlyLimit": 4,
+  "prMonthlyLimit": 6,
   "labels": ["dependencies"],
   "reviewersFromCodeOwners": true,
   "packageRules": [
     {
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": false,
-      "automergeType": "branch"
+      "matchPackagePatterns": [".*"],
+      "enabled": false
     },
     {
       "groupName": "ci-actions",
       "managers": ["github-actions", "dockerfile"],
+      "enabled": true,
       "automerge": false,
       "automergeType": "branch",
-      "addLabels": ["deps: ci-actions"]
+      "addLabels": ["deps: ci-actions"],
+      "schedule": ["before 5am on the first monday of every 4th month"]
+    },
+    {
+      "matchPackageNames": ["actions/checkout", "actions/setup-node"],
+      "managers": ["github-actions"],
+      "enabled": true,
+      "automerge": true,
+      "automergeType": "branch",
+      "addLabels": ["deps: ci-actions", "automerge: safe"]
     },
     {
       "matchPackageNames": ["node"],
+      "enabled": true,
       "allowedVersions": "<19.0.0"
     },
     {
-      "matchUpdateTypes": ["major"],
-      "automerge": false,
-      "matchPackageNames": ["vite", "@vitejs/plugin-react"],
-      "groupName": "vite & plugins",
+      "description": "Base rule for all Vite-related packages",
+      "matchPackageNames": [
+        "vite",
+        "@vitejs/plugin-react",
+        "vite-plugin-checker",
+        "vite-tsconfig-paths"
+      ],
+      "enabled": true,
       "addLabels": ["deps: vite"]
     },
     {
-      "matchUpdateTypes": ["patch"],
-      "groupName": "weekly patch updates",
-      "schedule": ["before 5am every monday"],
-      "addLabels": ["deps: patches"]
-    },
-    {
-      "matchUpdateTypes": ["minor"],
-      "groupName": "weekly minor updates",
-      "schedule": ["before 5am every monday"],
-      "addLabels": ["deps: minor"]
-    },
-    {
+      "extends": [":description=Base rule for all Vite-related packages"],
       "matchUpdateTypes": ["major"],
-      "addLabels": ["deps: major"]
+      "groupName": "vite & plugins (major)",
+      "automerge": false,
+      "schedule": ["before 5am on the first monday of every 5th month"]
+    },
+    {
+      "extends": [":description=Base rule for all Vite-related packages"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "vite & plugins (minor/patch)",
+      "automerge": false,
+      "schedule": ["before 5am on the first monday of every 3rd month"]
     }
   ]
 }
