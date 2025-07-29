@@ -30,14 +30,13 @@ const setStoredTheme = (darkMode: boolean): void => {
 };
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Initialize state from localStorage
+  // Initialise state from localStorage
   const [darkMode, setDarkMode] = useState<boolean>(() => getStoredTheme());
 
   const toggleDarkMode = () => {
     setDarkMode((prevMode) => !prevMode);
   };
 
-  // Save to localStorage whenever darkMode changes
   useEffect(() => {
     setStoredTheme(darkMode);
   }, [darkMode]);

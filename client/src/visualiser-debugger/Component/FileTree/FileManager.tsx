@@ -16,24 +16,6 @@ import Folder from './Folder';
 import './css/WorkspaceSelector.css';
 import { useUserFsStateStore } from '../../Store/userFsStateStore';
 import { IFileDirNode, IFileFileNode, IFileType } from './FS/IFileSystem';
-import { useTheme } from '../../Contexts/ThemeContexts';
-
-const MUI_THEME_COLORS = {
-  light: {
-    background: '#ffffff',
-    text: '#1C2024',
-    button: '#2F265F',
-    border: '#1C2024',
-    secondary: '#757575'
-  },
-  dark: {
-    background: '#1C2024',
-    text: '#ffffff',
-    button: '#6E56CF',
-    border: '#ffffff',
-    secondary: '#9e9e9e'
-  }
-};
 
 const WorkspaceSelector = () => {
   const { fileSystem, currFocusDirPath, currFocusFilePath } = useUserFsStateStore.getState();
@@ -50,9 +32,6 @@ const WorkspaceSelector = () => {
     minHeight: '30px',
   };
 
-  const { darkMode } = useTheme();
-  const colors = MUI_THEME_COLORS[darkMode ? 'dark' : 'light'];
-
   const handleClickOpen = (buttonType: IFileType) => {
     setType(buttonType);
     setOpen(true);
@@ -60,7 +39,7 @@ const WorkspaceSelector = () => {
 
   const handleClose = () => {
     setOpen(false);
-    setNewItemName(''); // Reset the input name after closing the dialog
+    setNewItemName('');
   };
 
   const handleDeleteOpen = () => {
@@ -177,21 +156,16 @@ const WorkspaceSelector = () => {
           <div>Loading...</div>
         )}
       </div>
+
       <Dialog
         open={open}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        sx={{
-          '& .MuiPaper-root': {
-            backgroundColor: colors.background,
-            color: colors.text,
-          },
-        }}
       >
         <DialogTitle>Create New {type}</DialogTitle>
         <DialogContent>
-          <DialogContentText sx={{ color: colors.secondary }}>
+          <DialogContentText>
             Please enter the name for the new {type}:
           </DialogContentText>
           <TextField
@@ -204,43 +178,17 @@ const WorkspaceSelector = () => {
             variant="outlined"
             value={newItemName}
             onChange={(e) => setNewItemName(e.target.value)}
-            sx={{
-              '& input': {
-                // Targeting the input element inside the TextField
-                color: colors.text,
-              },
-              '& label': {
-                // Targeting the label element inside the TextField
-                color: colors.text,
-              },
-              '& .MuiOutlinedInput-root': {
-                // Targeting the root of the input element for focus color
-                '& fieldset': {
-                  borderColor: colors.border,
-                },
-                '&:hover fieldset': {
-                  borderColor: colors.border,
-                },
-                '&.Mui-focused fieldset': {
-                  borderColor: colors.border,
-                },
-              },
-            }}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} sx={{ color: colors.button }}>
+          <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
           <Button
             onClick={handleCreate}
             disabled={!newItemName.trim()}
-            sx={{
-              color: newItemName.trim() ? colors.button : colors.secondary,
-              '&.Mui-disabled': {
-                color: colors.secondary,
-              },
-            }}
+            color="primary"
+            variant="contained"
           >
             Create
           </Button>
@@ -252,25 +200,19 @@ const WorkspaceSelector = () => {
         onClose={handleDeleteClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        sx={{
-          '& .MuiPaper-root': {
-            backgroundColor: colors.background,
-            color: colors.text,
-          },
-        }}
       >
         <DialogTitle>Are you sure you want to delete this file?</DialogTitle>
         <DialogContent>
-          <DialogContentText sx={{ color: colors.secondary }}>
+          <DialogContentText>
             Deleting is a permanent action. Once deleted, files cannot be recovered. Are you sure
             you want to proceed?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDeleteClose} sx={{ color: colors.button }}>
+          <Button onClick={handleDeleteClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleDelete} sx={{ color: colors.button }}>
+          <Button onClick={handleDelete} color="primary" variant="contained">
             Delete
           </Button>
         </DialogActions>

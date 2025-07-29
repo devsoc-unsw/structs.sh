@@ -17,7 +17,9 @@ import { useGlobalStore } from './Store/globalStateStore';
 import { useSocketCommunication } from '../Services/useSocketCommunication';
 import { useUserFsStateStore } from './Store/userFsStateStore';
 import { onboardingStore, handleJoyrideCallback, OPEN_FILE_STEP } from './Store/onboardingStore';
-import { ThemeProvider, useTheme } from './Contexts/ThemeContexts';
+import { ThemeProvider as MuiThemeProvider } from '@mui/material';
+import { ThemeProvider as CustomThemeProvider, useTheme } from './Contexts/ThemeContexts';
+import { createDebuggerTheme } from '../structsThemes';
 
 const DevelopmentModeContent = () => {
   const inputElement = useRef<HTMLInputElement>(null);
@@ -25,7 +27,8 @@ const DevelopmentModeContent = () => {
   const { run, stepIndex, steps, onboardingCurrFile } = onboardingStore();
   const { resetRootPaths } = useUserFsStateStore();
   const { activeSession } = useSocketCommunication();
-  const { darkMode } = useTheme();
+  const { darkMode, toggleDarkMode } = useTheme();
+  const debuggerTheme = createDebuggerTheme(darkMode);
 
   const scrollToBottom = () => {
     if (inputElement?.current?.parentElement) {
@@ -52,6 +55,7 @@ const DevelopmentModeContent = () => {
 
   return (
     <div className={classNames(globalStyles.root, darkMode ? styles.dark : styles.light)}>
+      <MuiThemeProvider theme={debuggerTheme}>
       <Joyride
         callback={handleJoyrideCallback}
         continuous
@@ -114,15 +118,16 @@ const DevelopmentModeContent = () => {
           <Controls />
         </div>
       </div>
+      </MuiThemeProvider>
     </div>
   );
 };
 
 const DevelopmentMode = () => {
   return (
-    <ThemeProvider>
+    <CustomThemeProvider>
       <DevelopmentModeContent />
-    </ThemeProvider>
+    </CustomThemeProvider>
   );
 };
 
