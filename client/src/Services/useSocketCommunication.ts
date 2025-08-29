@@ -23,15 +23,17 @@ export const useSocketCommunication = () => {
   } = useGlobalStore();
 
   const { setActive, clearFrontendState } = useFrontendStateStore();
-  const { socketClient, initialise } = useSocketClientStore();
+  const { socketClient } = useSocketClientStore();
   const { setToastMessage } = useToastStateStore();
   const queue = useQueue();
 
   // Setup socket event handlers on mount
   useEffect(() => {
     console.log('usesocketcom is mounted');
+
+    // can remove the intialise() from below or leave it
     if (!socketClient) {
-      initialise();
+      // initialise();
       return;
     }
 
@@ -45,8 +47,9 @@ export const useSocketCommunication = () => {
     });
 
     socketClient.setupEventHandlers(handlers);
-  }, [socketClient, initialise]); // ask what this means i think before was only socketClient dependency
+  }, [socketClient]); // ask what this means i think before was only socketClient dependency
 
+  // reset entire debuggin session
   const resetDebugSession = useCallback(() => {
     updateNextFrame(INITIAL_BACKEND_STATE);
     clearFrontendState();

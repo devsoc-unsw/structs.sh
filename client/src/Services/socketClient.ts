@@ -18,9 +18,9 @@ class SocketClient {
       console.log('Socket Connected!');
     });
 
-    this.socket.off('disconnect', () => {
-      console.log('Socket Disconnected!');
-    });
+    // this.socket.off('disconnect', () => {
+    //   console.log('Socket Disconnected!');
+    // });
 
     // TODO: This section leaves for debugging purpose
     /* 
@@ -86,6 +86,7 @@ class SocketClient {
 interface SocketStore {
   socketClient: SocketClient | null;
   initialise: () => void;
+  disconnect: () => void;
 }
 
 const useSocketClientStore = create<SocketStore>((set, get) => ({
@@ -94,6 +95,14 @@ const useSocketClientStore = create<SocketStore>((set, get) => ({
     if (!get().socketClient) {
       console.log('intialising socket client');
       set({ socketClient: new SocketClient() });
+    }
+  },
+  disconnect: () => {
+    const client = get().socketClient;
+    if (client) {
+      client.socket.close();
+      console.log('closing socket client ');
+      set({ socketClient: null });
     }
   },
 }));
