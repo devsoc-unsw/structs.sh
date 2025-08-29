@@ -11,10 +11,9 @@ function useCursor(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isCompiled: boolean
 ) {
-  const socket = useSocketClientStore((state) => state.socketClient);
+  const socketClient = useSocketClientStore((state) => state.socketClient); // i dont understand whats happening and need to clarify
   const appendConsoleChunk = useGlobalStore((state) => state.appendConsoleChunks);
   const setActive = useFrontendStateStore((state) => state.setActive);
-  const { socketClient } = useSocketClientStore();
 
   const [shifts, setShifts] = useState(0);
   const [paused, setPaused] = useState(true);
@@ -65,7 +64,8 @@ function useCursor(
         // TODO: Ensure that it's okay to send the PREFIX to the backend
         // because if we remove the PREFIX, we can't tell which command
         // is input while the program is running and while the program is not running
-        socket.serverAction.sendStdin(content);
+        if (!socketClient) return;
+        socketClient.serverAction.sendStdin(content);
         appendConsoleChunk(`${content}\n`);
         clearInput();
         scrollToBottom();
@@ -82,6 +82,7 @@ function useCursor(
       default:
         break;
     }
+    if (!socketClient) return;
 
     if (isCtrlPressed && key === 'd') {
       socketClient.serverAction.sendEOF();

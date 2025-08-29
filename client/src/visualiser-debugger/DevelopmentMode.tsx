@@ -6,6 +6,7 @@ import { Tabs, Tab } from 'components/Tabs';
 import Console from 'visualiser-debugger/Component/Console/Console';
 import Joyride from 'react-joyride';
 import DynamicTabs from 'components/TabResize/DynamicTabs';
+import useSocketClientStore from 'Services/socketClient';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material';
 import DevelopmentModeNavbar from '../components/Navbars/DevelopmentModeNavbar';
 import Configuration from './Component/Configuration/Configuration';
@@ -35,6 +36,9 @@ const DevelopmentModeContent = () => {
     }
   };
 
+  const initialise = useSocketClientStore((state) => state.initialise);
+  const disconnect = useSocketClientStore((state) => state.disconnect);
+
   // Onboarding Code
   useEffect(() => {
     if (onboardingCurrFile) {
@@ -44,6 +48,19 @@ const DevelopmentModeContent = () => {
       }
     }
   }, [onboardingCurrFile]);
+
+  // initialising socket cycle
+  useEffect(() => {
+    // intialise socket Connection
+    console.log('DevelopmentMode is mounted');
+    initialise();
+
+    // disconnect socket connection
+    return () => {
+      console.log('DevelopmentMode is unmounted');
+      disconnect();
+    };
+  }, [initialise, disconnect]);
 
   const handleClickStart = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();

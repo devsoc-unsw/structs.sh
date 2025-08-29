@@ -15,10 +15,11 @@ class SocketClient {
 
   private setupDefaultEvents() {
     this.socket.on('connect', () => {
-      console.log('Socket handler Built / Connected!');
+      console.log('Socket Connected!');
     });
-    this.socket.on('disconnect', () => {
-      console.log('Socket handler Removed / Disconnected!');
+
+    this.socket.off('disconnect', () => {
+      console.log('Socket Disconnected!');
     });
 
     // TODO: This section leaves for debugging purpose
@@ -37,6 +38,7 @@ class SocketClient {
     this.socket = io(URL, { path: '/dapi' });
     this.setupDefaultEvents();
     this.socket.connect();
+    console.log('created a new socket client!');
   }
 
   setupEventHandlers(handlers: ServerToClientEvent) {
@@ -82,11 +84,27 @@ class SocketClient {
 }
 
 interface SocketStore {
-  socketClient: SocketClient;
+  socketClient: SocketClient | null;
+  initialise: () => void;
+  disconnect: () => void;
 }
 
-const useSocketClientStore = create<SocketStore>(() => ({
-  socketClient: new SocketClient(),
+const useSocketClientStore = create<SocketStore>((set, get) => ({
+  socketClient: null,
+  initialise: () => {
+    if (!get().socketClient) {
+      console.log('intialising socket client');
+      set({ socketClient: new SocketClient() });
+    }
+  },
+  disconnect: () => {
+    const client = get().socketClient;
+    if (client) {
+      client.socket.close();
+      console.log('closing socket client ');
+      set({ socketClient: null });
+    }
+  },
 }));
 
 export default useSocketClientStore;
