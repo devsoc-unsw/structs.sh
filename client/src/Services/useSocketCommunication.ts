@@ -31,9 +31,7 @@ export const useSocketCommunication = () => {
   useEffect(() => {
     console.log('usesocketcom is mounted');
 
-    // can remove the intialise() from below or leave it
     if (!socketClient) {
-      // initialise();
       return;
     }
 
@@ -47,7 +45,7 @@ export const useSocketCommunication = () => {
     });
 
     socketClient.setupEventHandlers(handlers);
-  }, [socketClient]); // ask what this means i think before was only socketClient dependency
+  }, [socketClient]);
 
   // reset entire debuggin session
   const resetDebugSession = useCallback(() => {
@@ -64,9 +62,9 @@ export const useSocketCommunication = () => {
     clearTypeDeclarations,
     clearUserAnnotation,
     resetConsoleChunks,
-  ]); // ask why you do this? before was empty dependency
+  ]);
 
-  // error hadnler for sending code
+  // error handler for sending code
   const handleSendCodeError = () => {
     setToastMessage({
       content: 'No file being selected',
@@ -90,7 +88,7 @@ export const useSocketCommunication = () => {
     }
 
     socketClient.serverAction.initializeDebugSession(file.data);
-  }, [socketClient, resetDebugSession]); // ask why you put resetDebugSession in here as dependency
+  }, [socketClient, resetDebugSession]);
 
   // add event listener with timeout
   const addEventListenerWithTimeout = (
@@ -127,19 +125,14 @@ export const useSocketCommunication = () => {
     return queue(() => {
       return new Promise<boolean>((resolve) => {
         const handleBackendState = (state: BackendState | null) => {
-          // if (state) {
-          //   resolve(true); // Resolve as success
-          // } else {
-          //   resolve(false); // Resolve as failure due to timeout
-          // } before was this
-          resolve(!!state); // what this means?
+          resolve(!!state);
         };
 
         addEventListenerWithTimeout(handleBackendState, 5000);
         socketClient.serverAction.executeNext();
       });
     });
-  }, [socketClient, queue]); // why do i add queue here?
+  }, [socketClient, queue]);
 
   // to call multiple next states in bulk
   const bulkSendNextStates = useCallback(
@@ -147,9 +140,7 @@ export const useSocketCommunication = () => {
       const results = await Promise.all(
         Array.from({ length: count }, () => executeNextWithRetry())
       );
-      // return results.filter((result) => result).length;
-      // return successfulCount;
-      return results.filter(Boolean).length; // whats happening?
+      return results.filter(Boolean).length;
     },
     [executeNextWithRetry]
   );

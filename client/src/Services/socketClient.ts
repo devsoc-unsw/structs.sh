@@ -18,9 +18,9 @@ class SocketClient {
       console.log('Socket Connected!');
     });
 
-    // this.socket.off('disconnect', () => {
-    //   console.log('Socket Disconnected!');
-    // });
+    this.socket.off('disconnect', () => {
+      console.log('Socket Disconnected!');
+    });
 
     // TODO: This section leaves for debugging purpose
     /* 

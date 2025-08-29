@@ -19,10 +19,6 @@ const App = () => {
     window.globalStore = useGlobalStore;
     // @ts-ignore
     window.frontendStore = useFrontendStateStore;
-    // console.log('app is mounted');
-    // return () => {
-    //   console.log('app is unmounted');
-    // };
   }, [useGlobalStore]);
 
   return (
