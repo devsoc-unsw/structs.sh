@@ -7,8 +7,9 @@ from asyncio import (
     iscoroutinefunction,
     to_thread,
 )
-from asyncio.subprocess import PIPE
+from asyncio.subprocess import PIPE, DEVNULL
 from contextlib import suppress
+from pathlib import Path
 from termios import ECHO, TCSADRAIN, tcgetattr, tcsetattr
 from typing import Callable, Coroutine, assert_never
 
@@ -40,7 +41,11 @@ class BaseDebugger:
         self.fd_master, self.fd_slave = os.openpty()
         _disable_echo(self.fd_slave)
         self.process = await create_subprocess_exec(
-            "gdb",
+            # "nsjail",
+            # "--config",
+            # Path(__file__).parent.parent.parent / "nsjail_gdb.cfg",
+            # "--",
+            "/usr/bin/gdb",
             "--interpreter=mi4",
             "--quiet",
             "-nx",

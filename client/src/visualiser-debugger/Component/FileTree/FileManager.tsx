@@ -16,7 +16,6 @@ import Folder from './Folder';
 import './css/WorkspaceSelector.css';
 import { useUserFsStateStore } from '../../Store/userFsStateStore';
 import { IFileDirNode, IFileFileNode, IFileType } from './FS/IFileSystem';
-import { useTheme } from '../../Contexts/ThemeContexts';
 
 const WorkspaceSelector = () => {
   const { fileSystem, currFocusDirPath, currFocusFilePath } = useUserFsStateStore.getState();
@@ -40,7 +39,7 @@ const WorkspaceSelector = () => {
 
   const handleClose = () => {
     setOpen(false);
-    setNewItemName(''); // Reset the input name after closing the dialog
+    setNewItemName('');
   };
 
   const handleDeleteOpen = () => {
@@ -104,11 +103,6 @@ const WorkspaceSelector = () => {
     handleDeleteClose();
   };
 
-  const { darkMode } = useTheme();
-  const muiBackground = darkMode ? '#1C2024' : 'white';
-  const muiColor = darkMode ? 'white' : '#1C2024';
-  const muiButton = darkMode ? '#6E56CF' : '#2F265F';
-
   return (
     <Box>
       <Box className="root-container">
@@ -162,17 +156,12 @@ const WorkspaceSelector = () => {
           <div>Loading...</div>
         )}
       </div>
+
       <Dialog
         open={open}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        sx={{
-          '& .MuiPaper-root': {
-            backgroundColor: muiBackground,
-            color: muiColor,
-          },
-        }}
       >
         <DialogTitle>Create New {type}</DialogTitle>
         <DialogContent>
@@ -187,43 +176,17 @@ const WorkspaceSelector = () => {
             variant="outlined"
             value={newItemName}
             onChange={(e) => setNewItemName(e.target.value)}
-            sx={{
-              '& input': {
-                // Targeting the input element inside the TextField
-                color: muiColor,
-              },
-              '& label': {
-                // Targeting the label element inside the TextField
-                color: muiColor,
-              },
-              '& .MuiOutlinedInput-root': {
-                // Targeting the root of the input element for focus color
-                '& fieldset': {
-                  borderColor: muiColor,
-                },
-                '&:hover fieldset': {
-                  borderColor: muiColor,
-                },
-                '&.Mui-focused fieldset': {
-                  borderColor: muiColor,
-                },
-              },
-            }}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} sx={{ color: muiButton }}>
+          <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
           <Button
             onClick={handleCreate}
             disabled={!newItemName.trim()}
-            sx={{
-              color: newItemName.trim() ? muiButton : 'rgba(0, 0, 0, 0.38)',
-              '&.Mui-disabled': {
-                color: 'grey',
-              },
-            }}
+            color="primary"
+            variant="contained"
           >
             Create
           </Button>
@@ -235,25 +198,19 @@ const WorkspaceSelector = () => {
         onClose={handleDeleteClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        sx={{
-          '& .MuiPaper-root': {
-            backgroundColor: muiBackground,
-            color: muiColor,
-          },
-        }}
       >
         <DialogTitle>Are you sure you want to delete this file?</DialogTitle>
         <DialogContent>
-          <DialogContentText sx={{ color: 'grey' }}>
+          <DialogContentText>
             Deleting is a permanent action. Once deleted, files cannot be recovered. Are you sure
             you want to proceed?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDeleteClose} sx={{ color: muiButton }}>
+          <Button onClick={handleDeleteClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleDelete} sx={{ color: muiButton }}>
+          <Button onClick={handleDelete} color="primary" variant="contained">
             Delete
           </Button>
         </DialogActions>

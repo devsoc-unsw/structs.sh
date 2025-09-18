@@ -11,10 +11,9 @@ import useConsolePathStore from 'visualiser-debugger/Store/consolePathStore';
 
 type ConsoleProp = {
   scrollToBottom: () => void;
-  isActive: boolean;
 };
 
-const Console = ({ scrollToBottom, isActive }: ConsoleProp) => {
+const Console = ({ scrollToBottom }: ConsoleProp) => {
   const { currWorkingDir, setCurrWorkingDir } = useConsolePathStore();
   const [PREFIX, setPrefix] = useState(`structs.sh/${currWorkingDir} % `);
   const [input, setInput] = useState(PREFIX);
@@ -187,7 +186,7 @@ const Console = ({ scrollToBottom, isActive }: ConsoleProp) => {
 
   return (
     <div
-      className={classNames(styles.console, { [styles.errorText]: !isActive })}
+      className={classNames(styles.console)}
       onClick={focus}
       onKeyUp={(e) => {
         if (e.key === 'Space') {
