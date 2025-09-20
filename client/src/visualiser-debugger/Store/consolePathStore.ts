@@ -152,9 +152,15 @@ const useConsolePathStore = create<ConsolePathState>((set, get) => ({
     // Check if file exists
     const fileToBeDeleted = fileSystem.getFileFromPath(filePath);
     if (!fileToBeDeleted) {
-      appendConsoleChunks(`rm: ${fileToBeDeleted}: No such file exists`);
+      appendConsoleChunks(`rm: ${fileToBeDeleted}: No such file exists\n`);
       return;
     }
+
+    if (fileToBeDeleted && fileToBeDeleted.type != 'file') {
+      appendConsoleChunks(`rm: ${fileName}: is not a file\n`);
+      return;
+    }
+  
     fileSystem.deleteFile(fileToBeDeleted);
   }
 }));
