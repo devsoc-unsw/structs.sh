@@ -60,10 +60,10 @@ const useConsolePathStore = create<ConsolePathState>((set, get) => ({
       type: 'dir',
       children: {},
       parentPath: currWorkingDir,
-    }
+    };
 
     if (!fileSystem.addDir(newFolder)) {
-      alert('failed to create a new directory'); // This can be changed to a modal later on instead of alert
+      appendConsoleChunks('failed to create a new directory, directory exists');
       return;
     }
 
@@ -94,7 +94,7 @@ const useConsolePathStore = create<ConsolePathState>((set, get) => ({
 
     const newPath = `${currWorkingDir}/${dirPath}`;
     const getDir = fileSystem.getDirFromPath(newPath);
-    if (getDir && (getDir.type != 'dir' || getDir.name == '/root')) {
+    if (getDir && (getDir.type !== 'dir' || getDir.name === '/root')) {
       appendConsoleChunks(`cd: ${dirPath}: Not a directory\n`);
       return;
     }
@@ -114,10 +114,13 @@ const useConsolePathStore = create<ConsolePathState>((set, get) => ({
 
     const filesInCurrDir = fileSystem.getDirFromPath(currWorkingDir)?.children;
     let filelist = '';
-    for (const index in filesInCurrDir) {
-      const nodeName = filesInCurrDir[index].name.trim();
-      if (nodeName.length === 0) continue;
-      filelist = `${filelist} ${nodeName.trim()}`
+    if (filesInCurrDir !== undefined) {
+      Object.values(filesInCurrDir).forEach((currFile) => {
+        const fileName = currFile.name.trim();
+        if (fileName.length > 0) {
+          filelist = `${filelist} ${fileName.trim()}`;
+        }
+      });
     }
     filelist = filelist.trim();
     appendConsoleChunks(`${filelist}\n`);
@@ -129,21 +132,21 @@ const useConsolePathStore = create<ConsolePathState>((set, get) => ({
 
     // Error handling
     if (newFileName.includes('/')) {
-      appendConsoleChunks(`Unable to create file: '\' cannot exists in a file name.\n`);
+      appendConsoleChunks(`Unable to create file: '/' cannot exists in a file name.\n`);
       return;
     }
     // Handle creating multiple files at the same time
     const files = newFileName.split(/\s+/);
-    for (const file of files) {
+    files.forEach((file) => {
       const newFile: IFileFileNode = {
         name: file,
         path: `${currWorkingDir}/${file}`,
         type: 'file',
         data: '',
         parentPath: currWorkingDir,
-      }
+      };
       fileSystem.addFile(newFile);
-    }
+    });
   },
   removeFile: (fileName: string) => {
     const { currWorkingDir } = get();
@@ -158,13 +161,13 @@ const useConsolePathStore = create<ConsolePathState>((set, get) => ({
       return;
     }
 
-    if (fileToBeDeleted && fileToBeDeleted.type != 'file') {
+    if (fileToBeDeleted && fileToBeDeleted.type !== 'file') {
       appendConsoleChunks(`rm: ${fileName}: is not a file\n`);
       return;
     }
 
     fileSystem.deleteFile(fileToBeDeleted);
-  }
+  },
 }));
 
 export default useConsolePathStore;

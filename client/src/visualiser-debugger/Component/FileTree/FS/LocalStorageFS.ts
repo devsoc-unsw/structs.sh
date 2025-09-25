@@ -90,7 +90,7 @@ export class LocalStorageFS implements IFileSystem {
       return false;
     }
 
-    const segments = dirPath.split('/').filter(seg => seg !== '');
+    const segments = dirPath.split('/').filter((seg) => seg !== '');
     let currDir: IFileDirNode = this.root;
 
     if (dirPath === this.root.name) {
@@ -101,7 +101,7 @@ export class LocalStorageFS implements IFileSystem {
       segments.shift();
     }
 
-    for (const seg of segments) {
+    const isDirValid = segments.every((seg) => {
       if (currDir.type !== 'dir' || !currDir.children || !currDir.children[seg]) {
         return false;
       }
@@ -113,9 +113,9 @@ export class LocalStorageFS implements IFileSystem {
       }
 
       currDir = child;
-    }
+      return true;
+    });
 
-    return true;
+    return isDirValid;
   }
-
 }

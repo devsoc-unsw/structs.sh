@@ -14,8 +14,16 @@ type ConsoleProp = {
 };
 
 const Console = ({ scrollToBottom }: ConsoleProp) => {
-  const { prefix, clearConsole, printWorkingDir,
-    createNewDir, changeDir, listFiles, createNewFile, removeFile } = useConsolePathStore();
+  const {
+    prefix,
+    clearConsole,
+    printWorkingDir,
+    createNewDir,
+    changeDir,
+    listFiles,
+    createNewFile,
+    removeFile,
+  } = useConsolePathStore();
   const [input, setInput] = useState(prefix);
   const inputElement = useRef<HTMLInputElement>(null);
 
@@ -48,19 +56,17 @@ const Console = ({ scrollToBottom }: ConsoleProp) => {
     else if (command.startsWith('mkdir')) {
       const dirName = command.replace('mkdir ', '');
       createNewDir(dirName);
-    }
-    else if (command.startsWith('cd')) {
+    } else if (command.startsWith('cd')) {
       const dirPath = command.replace('cd ', '');
       changeDir(dirPath);
-    }
-    else if (command.startsWith('touch')) {
+    } else if (command.startsWith('touch')) {
       const fileName = command.replace('touch ', '');
       createNewFile(fileName);
     } else if (command.startsWith('rm')) {
       const fileName = command.replace('rm ', '');
       removeFile(fileName);
     }
-  }, [consoleChunks])
+  }, [consoleChunks]);
 
   const handleInput = async (currInput: string) => {
     if (isCompiled) {
@@ -70,7 +76,7 @@ const Console = ({ scrollToBottom }: ConsoleProp) => {
 
     // Ensure structs.sh prefix can't be deleted
     if (currInput.startsWith(prefix)) {
-      setInput(currInput)
+      setInput(currInput);
     }
   };
 
