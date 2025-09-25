@@ -1,4 +1,3 @@
-import { index } from 'd3';
 import { IFileDirNode, IFileFileNode, IFileSystem, INITIAL_LOCAL_STORAGE_FS } from './IFileSystem';
 
 export class LocalStorageFS implements IFileSystem {

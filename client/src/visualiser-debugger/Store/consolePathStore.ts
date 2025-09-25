@@ -5,14 +5,14 @@ import { useGlobalStore } from './globalStateStore';
 import { IFileFileNode, IFileDirNode } from '../Component/FileTree/FS/IFileSystem';
 
 interface ConsolePathState {
-  prefix: string,
-  currWorkingDir: string,
+  prefix: string;
+  currWorkingDir: string;
   setPrefix: (updatedPrefix: string) => void;
   setCurrWorkingDir: (newWorkingDir: string) => void;
   updatePrefixPath: (newPath: string) => void;
   clearConsole: () => void;
   printWorkingDir: () => void;
-  createNewDir : (newDirName: string) => void;
+  createNewDir: (newDirName: string) => void;
   changeDir: (dirPath: string) => void;
   listFiles: () => void;
   createNewFile: (newFileName: string) => void;
@@ -47,8 +47,10 @@ const useConsolePathStore = create<ConsolePathState>((set, get) => ({
     if (newDirName.length === 0) {
       appendConsoleChunks('mkdir: missing operand\n');
       return;
-    } else if (newDirName.includes('/')) {
-      appendConsoleChunks(`mkdir: cannot create directory ${newDirName}`)
+    }
+
+    if (newDirName.includes('/')) {
+      appendConsoleChunks(`mkdir: cannot create directory ${newDirName}`);
     }
 
     // First thing -> findNodeByPath
@@ -57,7 +59,7 @@ const useConsolePathStore = create<ConsolePathState>((set, get) => ({
       path: `${currWorkingDir}/${newDirName}`,
       type: 'dir',
       children: {},
-      parentPath: currWorkingDir
+      parentPath: currWorkingDir,
     }
 
     if (!fileSystem.addDir(newFolder)) {
@@ -75,7 +77,7 @@ const useConsolePathStore = create<ConsolePathState>((set, get) => ({
     // Cannot go further than the root directory
     if (dirPath === '..') {
       if (currWorkingDir === 'root') return;
-      
+
       // Destructure the current working directory
       const dirPathArray = currWorkingDir.split('/');
       dirPathArray.pop();
@@ -128,7 +130,7 @@ const useConsolePathStore = create<ConsolePathState>((set, get) => ({
     // Error handling
     if (newFileName.includes('/')) {
       appendConsoleChunks(`Unable to create file: '\' cannot exists in a file name.\n`);
-      return ;
+      return;
     }
     // Handle creating multiple files at the same time
     const files = newFileName.split(/\s+/);
@@ -160,7 +162,7 @@ const useConsolePathStore = create<ConsolePathState>((set, get) => ({
       appendConsoleChunks(`rm: ${fileName}: is not a file\n`);
       return;
     }
-  
+
     fileSystem.deleteFile(fileToBeDeleted);
   }
 }));

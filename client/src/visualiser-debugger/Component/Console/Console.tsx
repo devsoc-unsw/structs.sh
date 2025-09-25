@@ -14,7 +14,7 @@ type ConsoleProp = {
 };
 
 const Console = ({ scrollToBottom }: ConsoleProp) => {
-  const { prefix, setPrefix, setCurrWorkingDir, clearConsole, printWorkingDir, 
+  const { prefix, setPrefix, setCurrWorkingDir, clearConsole, printWorkingDir,
     createNewDir, changeDir, listFiles, createNewFile, removeFile } = useConsolePathStore();
   // /const [PREFIX, setPrefix] = useState(`structs.sh/${currWorkingDir} % `);
   const [input, setInput] = useState(prefix);
@@ -25,7 +25,7 @@ const Console = ({ scrollToBottom }: ConsoleProp) => {
   const appendConsoleChunks = useGlobalStore((state) => state.appendConsoleChunks);
   const { fileSystem, currFocusFilePath } = useUserFsStateStore();
 
-  const updatePrefixPath = (newPath : string) => { // Ini pindahin ke consolePathStore
+  const updatePrefixPath = (newPath: string) => { // Ini pindahin ke consolePathStore
     setCurrWorkingDir(newPath);
     setPrefix(`structs.sh/${newPath} % `);
   }
@@ -56,9 +56,9 @@ const Console = ({ scrollToBottom }: ConsoleProp) => {
       createNewDir(dirName);
     }
     else if (command.startsWith('cd')) {
-      const dirPath = command.replace ('cd ', '');
+      const dirPath = command.replace('cd ', '');
       changeDir(dirPath);
-    } 
+    }
     else if (command.startsWith('touch')) {
       const fileName = command.replace('touch ', '');
       createNewFile(fileName);
