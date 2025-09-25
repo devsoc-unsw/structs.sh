@@ -25,6 +25,9 @@ const CodeEditor: React.FC = () => {
   useEffect(() => {
     // Update currFile based on currFocusFilePath
     const file = fileSystem.getFileFromPath(currFocusFilePath) as IFileFileNode;
+    if (file === undefined) {
+      return;
+    }
     setOnboardingCurrFile(file.name);
     setCurrFile(file);
     setCode(file?.data || '');

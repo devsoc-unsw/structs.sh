@@ -84,4 +84,38 @@ export class LocalStorageFS implements IFileSystem {
 
     return current;
   }
+
+  doesDirExists(dirPath: string): boolean {
+    if (!dirPath) {
+      return false;
+    }
+
+    const segments = dirPath.split('/').filter((seg) => seg !== '');
+    let currDir: IFileDirNode = this.root;
+
+    if (dirPath === this.root.name) {
+      return true;
+    }
+
+    if (segments[0] === this.root.name) {
+      segments.shift();
+    }
+
+    const isDirValid = segments.every((seg) => {
+      if (currDir.type !== 'dir' || !currDir.children || !currDir.children[seg]) {
+        return false;
+      }
+
+      const child = currDir.children[seg];
+      // Check if the child is a directory
+      if (child.type !== 'dir') {
+        return false;
+      }
+
+      currDir = child;
+      return true;
+    });
+
+    return isDirValid;
+  }
 }

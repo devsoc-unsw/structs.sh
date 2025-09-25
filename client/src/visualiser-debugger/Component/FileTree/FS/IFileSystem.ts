@@ -11,6 +11,7 @@ export interface IFileSystem {
   getDirFromPath(path: string): IFileDirNode | undefined;
 
   deleteFile(file: IFileFileNode | IFileDirNode): void;
+  doesDirExists(dirPath: string): boolean;
 
   // Pass back root directory
   saveChanges(): void;

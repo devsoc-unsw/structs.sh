@@ -1,10 +1,11 @@
 // TODO: Proper rework on this file => we want to re-design this anyway. I can't fix lint now because it will potentially change functioanlity of the file
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from 'styles/Console.module.css';
 import classNames from 'classnames';
 import { useGlobalStore } from 'visualiser-debugger/Store/globalStateStore';
 import { useFrontendStateStore } from 'visualiser-debugger/Store/frontendStateStore';
 import { useUserFsStateStore } from 'visualiser-debugger/Store/userFsStateStore';
+import useConsolePathStore from 'visualiser-debugger/Store/consolePathStore';
 import CustomCaret from './CustomCaret';
 import { IFileFileNode } from '../FileTree/FS/IFileSystem';
 
@@ -13,8 +14,17 @@ type ConsoleProp = {
 };
 
 const Console = ({ scrollToBottom }: ConsoleProp) => {
-  const PREFIX = 'structs.sh % ';
-  const [input, setInput] = useState(PREFIX);
+  const {
+    prefix,
+    clearConsole,
+    printWorkingDir,
+    createNewDir,
+    changeDir,
+    listFiles,
+    createNewFile,
+    removeFile,
+  } = useConsolePathStore();
+  const [input, setInput] = useState(prefix);
   const inputElement = useRef<HTMLInputElement>(null);
 
   const consoleChunks = useGlobalStore((state) => state.consoleChunks);
@@ -25,21 +35,47 @@ const Console = ({ scrollToBottom }: ConsoleProp) => {
   useEffect(() => {
     if (isCompiled) {
       const file = fileSystem.getFileFromPath(currFocusFilePath) as IFileFileNode;
-      appendConsoleChunks(`${PREFIX}gcc -g ${file.name} -o a\n`);
+      appendConsoleChunks(`${prefix}gcc -g ${file.name} -o a\n`);
       setInput('');
     } else {
-      setInput(PREFIX);
+      setInput(prefix);
     }
-  }, [isCompiled]);
+  }, [isCompiled, prefix]);
 
-  const handleInput = (currInput: string) => {
+  // Every time when user add input to console, check the corresponding command
+  useEffect(() => {
+    if (consoleChunks.length <= 0) return;
+    const consoleIndex = consoleChunks.length - 1;
+    if (!consoleChunks[consoleIndex].startsWith(prefix)) return;
+
+    // Running user command
+    const command = consoleChunks[consoleIndex].trim().replace(`${prefix}`, '');
+    if (command === 'clear') clearConsole();
+    else if (command === 'pwd') printWorkingDir();
+    else if (command.startsWith('ls')) listFiles();
+    else if (command.startsWith('mkdir')) {
+      const dirName = command.replace('mkdir ', '');
+      createNewDir(dirName);
+    } else if (command.startsWith('cd')) {
+      const dirPath = command.replace('cd ', '');
+      changeDir(dirPath);
+    } else if (command.startsWith('touch')) {
+      const fileName = command.replace('touch ', '');
+      createNewFile(fileName);
+    } else if (command.startsWith('rm')) {
+      const fileName = command.replace('rm ', '');
+      removeFile(fileName);
+    }
+  }, [consoleChunks]);
+
+  const handleInput = async (currInput: string) => {
     if (isCompiled) {
       setInput(currInput);
       return;
     }
 
     // Ensure structs.sh prefix can't be deleted
-    if (currInput.startsWith(PREFIX)) {
+    if (currInput.startsWith(prefix)) {
       setInput(currInput);
     }
   };
@@ -50,7 +86,7 @@ const Console = ({ scrollToBottom }: ConsoleProp) => {
       return;
     }
 
-    setInput(PREFIX);
+    setInput(prefix);
   };
 
   const focus = () => {
