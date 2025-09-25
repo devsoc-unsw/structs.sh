@@ -5,18 +5,17 @@ import classNames from 'classnames';
 import { useGlobalStore } from 'visualiser-debugger/Store/globalStateStore';
 import { useFrontendStateStore } from 'visualiser-debugger/Store/frontendStateStore';
 import { useUserFsStateStore } from 'visualiser-debugger/Store/userFsStateStore';
+import useConsolePathStore from 'visualiser-debugger/Store/consolePathStore';
 import CustomCaret from './CustomCaret';
 import { IFileFileNode } from '../FileTree/FS/IFileSystem';
-import useConsolePathStore from 'visualiser-debugger/Store/consolePathStore';
 
 type ConsoleProp = {
   scrollToBottom: () => void;
 };
 
 const Console = ({ scrollToBottom }: ConsoleProp) => {
-  const { prefix, setPrefix, setCurrWorkingDir, clearConsole, printWorkingDir,
+  const { prefix, clearConsole, printWorkingDir,
     createNewDir, changeDir, listFiles, createNewFile, removeFile } = useConsolePathStore();
-  // /const [PREFIX, setPrefix] = useState(`structs.sh/${currWorkingDir} % `);
   const [input, setInput] = useState(prefix);
   const inputElement = useRef<HTMLInputElement>(null);
 
@@ -24,11 +23,6 @@ const Console = ({ scrollToBottom }: ConsoleProp) => {
   const isCompiled = useFrontendStateStore((state) => state.isActive);
   const appendConsoleChunks = useGlobalStore((state) => state.appendConsoleChunks);
   const { fileSystem, currFocusFilePath } = useUserFsStateStore();
-
-  const updatePrefixPath = (newPath: string) => { // Ini pindahin ke consolePathStore
-    setCurrWorkingDir(newPath);
-    setPrefix(`structs.sh/${newPath} % `);
-  }
 
   useEffect(() => {
     if (isCompiled) {

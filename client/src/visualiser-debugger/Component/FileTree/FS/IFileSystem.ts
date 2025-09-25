@@ -1,58 +1,58 @@
 export interface IFileSystem {
-    initialize(): IFileDirNode;
+  initialize(): IFileDirNode;
 
-    addFile(file: IFileFileNode): boolean;
-    addDir(file: IFileDirNode): boolean;
+  addFile(file: IFileFileNode): boolean;
+  addDir(file: IFileDirNode): boolean;
 
-    // return the root node so we can access all children nodes
-    // when we implement the front end file selector, we could just display this return result on the FE
-    getRootDirectory(): IFileDirNode;
-    getFileFromPath(path: string): IFileFileNode | undefined;
-    getDirFromPath(path: string): IFileDirNode | undefined;
+  // return the root node so we can access all children nodes
+  // when we implement the front end file selector, we could just display this return result on the FE
+  getRootDirectory(): IFileDirNode;
+  getFileFromPath(path: string): IFileFileNode | undefined;
+  getDirFromPath(path: string): IFileDirNode | undefined;
 
-    deleteFile(file: IFileFileNode | IFileDirNode): void;
-    doesDirExists(dirPath: string): boolean;
+  deleteFile(file: IFileFileNode | IFileDirNode): void;
+  doesDirExists(dirPath: string): boolean;
 
-    // Pass back root directory
-    saveChanges(): void;
+  // Pass back root directory
+  saveChanges(): void;
 }
 
 export type IFileType = 'Folder' | 'File';
 
 export interface IFileBaseNode {
-    name: string;
-    path: string;
-    type: 'dir' | 'file';
+  name: string;
+  path: string;
+  type: 'dir' | 'file';
 }
 
 export interface IFileFileNode extends IFileBaseNode {
-    data: string;
-    type: 'file';
-    parentPath: string;
+  data: string;
+  type: 'file';
+  parentPath: string;
 }
 
 export interface IFileDirNode extends IFileBaseNode {
-    children: { [key: string]: IFileDirNode | IFileFileNode };
-    type: 'dir';
-    parentPath: string | undefined;
+  children: { [key: string]: IFileDirNode | IFileFileNode };
+  type: 'dir';
+  parentPath: string | undefined;
 }
 
 export const INITIAL_LOCAL_STORAGE_FS: IFileDirNode = {
-    name: 'root',
-    path: 'root',
-    type: 'dir',
-    parentPath: undefined,
-    children: {
-        '2521_Tut02': {
-            name: '2521_Tut02',
-            path: 'root/2521_Tut02',
-            type: 'dir',
-            parentPath: 'root',
-            children: {
-                'linked_list_delete.c': {
-                    name: 'linked_list_delete.c',
-                    path: 'root/2521_Tut02/linked_list_delete.c',
-                    data: `#include <stdio.h>
+  name: 'root',
+  path: 'root',
+  type: 'dir',
+  parentPath: undefined,
+  children: {
+    '2521_Tut02': {
+      name: '2521_Tut02',
+      path: 'root/2521_Tut02',
+      type: 'dir',
+      parentPath: 'root',
+      children: {
+        'linked_list_delete.c': {
+          name: 'linked_list_delete.c',
+          path: 'root/2521_Tut02/linked_list_delete.c',
+          data: `#include <stdio.h>
 #include <stdlib.h>
 
 struct node {
@@ -146,13 +146,13 @@ void printList(struct node *head) {
     }
     printf("X\\n");
 }`,
-                    type: 'file',
-                    parentPath: '2521_Tut02',
-                },
-                'list_length_recursive.c': {
-                    name: 'list_length_recursive.c',
-                    path: 'root/2521_Tut02/list_length_recursive.c',
-                    data: `/**
+          type: 'file',
+          parentPath: '2521_Tut02',
+        },
+        'list_length_recursive.c': {
+          name: 'list_length_recursive.c',
+          path: 'root/2521_Tut02/list_length_recursive.c',
+          data: `/**
  * Run:
  * $ clang 1_list_length.c linked_list.c -o 1_list_length
  * $ ./1_list_length
@@ -285,21 +285,21 @@ struct node *appendVal(struct node *head, int val) {
     return head;
 }
 `,
-                    type: 'file',
-                    parentPath: 'root/2521_Tut02',
-                },
-            },
+          type: 'file',
+          parentPath: 'root/2521_Tut02',
         },
-        LinkedListWorkspace: {
-            name: 'LinkedListWorkspace',
-            path: 'root/LinkedListWorkspace',
-            type: 'dir',
-            parentPath: 'root',
-            children: {
-                'linked_list_helper_fns.c': {
-                    name: 'linked_list_helper_fns.c',
-                    path: 'root/LinkedListWorkspace/linked_list_helper_fns.c',
-                    data: `/**
+      },
+    },
+    LinkedListWorkspace: {
+      name: 'LinkedListWorkspace',
+      path: 'root/LinkedListWorkspace',
+      type: 'dir',
+      parentPath: 'root',
+      children: {
+        'linked_list_helper_fns.c': {
+          name: 'linked_list_helper_fns.c',
+          path: 'root/LinkedListWorkspace/linked_list_helper_fns.c',
+          data: `/**
  * Simple linked list program using helper functions.
  */
 
@@ -355,13 +355,13 @@ int main() {
     return 0;
 }
 `,
-                    type: 'file',
-                    parentPath: 'root/LinkedListWorkspace',
-                },
-                'reverse_linked_list_fns.c': {
-                    name: 'reverse_linked_list_fns.c',
-                    path: 'root/LinkedListWorkspace/reverse_linked_list_fns.c',
-                    data: `#include <stdio.h>
+          type: 'file',
+          parentPath: 'root/LinkedListWorkspace',
+        },
+        'reverse_linked_list_fns.c': {
+          name: 'reverse_linked_list_fns.c',
+          path: 'root/LinkedListWorkspace/reverse_linked_list_fns.c',
+          data: `#include <stdio.h>
 #include <stdlib.h>
 
 struct node {
@@ -461,13 +461,13 @@ int main() {
     return 0;
 }
 `,
-                    type: 'file',
-                    parentPath: 'root/LinkedListWorkspace',
-                },
-                'reverse_linked_list_imperative.c': {
-                    name: 'reverse_linked_list_imperative.c',
-                    path: 'root/LinkedListWorkspace/reverse_linked_list_imperative.c',
-                    data: `#include <stdio.h>
+          type: 'file',
+          parentPath: 'root/LinkedListWorkspace',
+        },
+        'reverse_linked_list_imperative.c': {
+          name: 'reverse_linked_list_imperative.c',
+          path: 'root/LinkedListWorkspace/reverse_linked_list_imperative.c',
+          data: `#include <stdio.h>
 #include <stdlib.h>
 
 struct node {
@@ -512,13 +512,13 @@ int main() {
     return 0;
 }
 `,
-                    type: 'file',
-                    parentPath: 'root/LinkedListWorkspace',
-                },
-                'sort_linked_list.c': {
-                    name: 'sort_linked_list.c',
-                    path: 'root/LinkedListWorkspace/sort_linked_list.c',
-                    data: `/**
+          type: 'file',
+          parentPath: 'root/LinkedListWorkspace',
+        },
+        'sort_linked_list.c': {
+          name: 'sort_linked_list.c',
+          path: 'root/LinkedListWorkspace/sort_linked_list.c',
+          data: `/**
  * Sort linked list
  */
 #include <stdio.h>
@@ -606,13 +606,13 @@ int main(int argc, char *argv[]) {
     insertion_sort(list);
 }
 `,
-                    type: 'file',
-                    parentPath: 'root/LinkedListWorkspace',
-                },
-                'treelike_linked_list.c': {
-                    name: 'treelike_linked_list.c',
-                    path: 'root/LinkedListWorkspace/treelike_linked_list.c',
-                    data: `/**
+          type: 'file',
+          parentPath: 'root/LinkedListWorkspace',
+        },
+        'treelike_linked_list.c': {
+          name: 'treelike_linked_list.c',
+          path: 'root/LinkedListWorkspace/treelike_linked_list.c',
+          data: `/**
  * Treelike linked list
  * Diagram: https://imgur.com/JKtOvb8
  */
@@ -686,13 +686,13 @@ void print_list(struct node *list) {
     printf("X\\n");
 }
 `,
-                    type: 'file',
-                    parentPath: 'root/LinkedListWorkspace',
-                },
-                'ctf_linked_list.c': {
-                    name: 'ctf_linked_list.c',
-                    path: 'root/LinkedListWorkspace/ctf_linked_list.c',
-                    data: `/**
+          type: 'file',
+          parentPath: 'root/LinkedListWorkspace',
+        },
+        'ctf_linked_list.c': {
+          name: 'ctf_linked_list.c',
+          path: 'root/LinkedListWorkspace/ctf_linked_list.c',
+          data: `/**
 * Welcome to Rookie Code Rumble!
 * In this challenge, you will extract the flag with our linked list visualiser.
 */
@@ -760,10 +760,10 @@ int main(int argc, char *argv[])
     close(fd);
 }
         `,
-                    type: 'file',
-                    parentPath: 'root/LinkedListWorkspace',
-                },
-            },
+          type: 'file',
+          parentPath: 'root/LinkedListWorkspace',
         },
+      },
     },
+  },
 };
