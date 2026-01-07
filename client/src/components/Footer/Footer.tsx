@@ -7,7 +7,6 @@ import aristaLogo from '../../assets/img/sponsors/arista.png';
 import theTradeDeskLogo from '../../assets/img/sponsors/thetradedesk.png';
 import lyraLogo from '../../assets/img/sponsors/lyra.svg';
 import airwallexLogo from '../../assets/img/sponsors/airwallex.avif';
-import scLogo from '../../assets/img/sponsors/sc.png';
 
 const StyledFooter = styled('footer')(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -86,8 +85,12 @@ const Footer = () => {
             </Typography>
             <Box display="flex" justifyContent="center" gap={6} flexWrap="wrap" alignItems="center">
               {/* Jane Street Logo */}
-              <Link href="https://www.janestreet.com/" target="_blank" rel="noopener noreferrer"
-                sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}>
+              <Link
+                href="https://www.janestreet.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
+              >
                 <img
                   src={janeStreetLogo}
                   alt="Jane Street Logo"
