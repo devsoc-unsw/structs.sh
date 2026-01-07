@@ -2,9 +2,11 @@ import { Box, Container, Grid, Typography, Link } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Link as RouterLink } from 'react-router-dom';
 import structsLogo from '../../assets/img/structs.png';
-import janeStreetLogo from '../../assets/img/sponsors/JaneStreetWhite.png';
+import janeStreetLogo from '../../assets/img/sponsors/jane_street.svg';
 import aristaLogo from '../../assets/img/sponsors/arista.png';
 import theTradeDeskLogo from '../../assets/img/sponsors/thetradedesk.png';
+import lyraLogo from '../../assets/img/sponsors/lyra.svg';
+import airwallexLogo from '../../assets/img/sponsors/airwallex.avif';
 import scLogo from '../../assets/img/sponsors/sc.png';
 
 const StyledFooter = styled('footer')(({ theme }) => ({
@@ -79,21 +81,69 @@ const Footer = () => {
           </Grid>
           {/* New Grid item for Company Sponsors */}
           <Grid item xs={12} textAlign="center">
-            <Typography color="textPrimary" variant="h5" style={{ marginBottom: '0.7rem' }}>
+            <Typography color="textPrimary" variant="h5" style={{ marginBottom: '1.5rem' }}>
               Platinum Tier
             </Typography>
-            <Box display="flex" justifyContent="center" gap={8}>
+            <Box display="flex" justifyContent="center" gap={6} flexWrap="wrap" alignItems="center">
+              {/* Jane Street Logo */}
+              <Link href="https://www.janestreet.com/" target="_blank" rel="noopener noreferrer"
+                sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}>
+                <img
+                  src={janeStreetLogo}
+                  alt="Jane Street Logo"
+                  height={50}
+                  style={{ verticalAlign: 'middle' }}
+                />
+              </Link>
+
               {/* TTD logo */}
               <Link
                 href="https://careers.thetradedesk.com/"
                 target="_blank"
                 rel="noopener noreferrer"
+                sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
               >
                 <img
                   src={theTradeDeskLogo}
                   alt="The Trade Desk Logo"
+                  height={50}
+                  style={{ verticalAlign: 'middle' }}
+                />
+              </Link>
+
+              {/* Lyra logo */}
+              <Link
+                href="https://www.lyratechnologies.com.au/"
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
+              >
+                <img
+                  src={lyraLogo}
+                  alt="Lyra Technologies Logo"
+                  height={50}
+                  style={{ verticalAlign: 'middle' }}
+                />
+              </Link>
+            </Box>
+          </Grid>
+          <Grid item xs={12} textAlign="center">
+            <Typography color="textPrimary" variant="h5" style={{ marginBottom: '1.5rem' }}>
+              Gold Tier
+            </Typography>
+            <Box display="flex" justifyContent="center" gap={6} flexWrap="wrap" alignItems="center">
+              {/* Airwallex Logo */}
+              <Link
+                href="https://www.airwallex.com/au"
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
+              >
+                <img
+                  src={airwallexLogo}
+                  alt="Airwallex Logo"
                   height={40}
-                  style={{ marginRight: '2vw', verticalAlign: 'middle' }}
+                  style={{ verticalAlign: 'middle' }}
                 />
               </Link>
               {/* Arista Logo */}
@@ -101,42 +151,13 @@ const Footer = () => {
                 href="https://www.arista.com/en/"
                 target="_blank"
                 rel="noopener noreferrer"
-                sx={{ mr: 8 }}
+                sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
               >
                 <img
                   src={aristaLogo}
                   alt="Arista Logo"
                   height={40}
-                  style={{ verticalAlign: 'middle', marginBottom: '0px' }}
-                />
-              </Link>
-            </Box>
-          </Grid>
-          <Grid item xs={12} textAlign="center">
-            <Typography color="textPrimary" variant="h5" style={{ marginBottom: '0.7rem' }}>
-              Gold Tier
-            </Typography>
-            <Box display="flex" justifyContent="center" gap={8}>
-              {/* SafetyCulture Logo */}
-              <Link
-                href="https://safetyculture.com/home/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src={scLogo}
-                  alt="SafetyCulture Logo"
-                  height={60}
-                  style={{ verticalAlign: 'middle', marginBottom: '0px' }}
-                />
-              </Link>
-              {/* Jane Street Logo */}
-              <Link href="https://www.janestreet.com/" target="_blank" rel="noopener noreferrer">
-                <img
-                  src={janeStreetLogo}
-                  alt="Jane Street Logo"
-                  height={60}
-                  style={{ verticalAlign: 'middle', marginBottom: '0px' }}
+                  style={{ verticalAlign: 'middle' }}
                 />
               </Link>
             </Box>
