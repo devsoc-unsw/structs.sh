@@ -55,7 +55,7 @@ const Footer = () => {
             </Typography>
             <Typography color="textSecondary">
               <address>
-                <Link href="mailto:projects@csesoc.org.au" color="inherit">
+                <Link href="mailto:structs@devsoc.app" color="inherit">
                   Email Us
                 </Link>{' '}
               </address>
