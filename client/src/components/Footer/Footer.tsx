@@ -5,10 +5,10 @@ import structsLogo from '../../assets/img/structs.png';
 import janeStreetLogo from '../../assets/img/sponsors/jane_street.svg';
 import aristaLogo from '../../assets/img/sponsors/arista.png';
 import theTradeDeskLogo from '../../assets/img/sponsors/thetradedesk.png';
-import hrtLogo from '../../assets/img/sponsors/hrt.png'
+import hrtLogo from '../../assets/img/sponsors/hrt.png';
 import lyraLogo from '../../assets/img/sponsors/lyra.svg';
-import atlassianLogo from '../../assets/img/sponsors/atlassian.png'
-import qrtLogo from '../../assets/img/sponsors/qrt.svg'
+import atlassianLogo from '../../assets/img/sponsors/atlassian.png';
+import qrtLogo from '../../assets/img/sponsors/qrt.svg';
 import airwallexLogo from '../../assets/img/sponsors/airwallex.avif';
 
 const StyledFooter = styled('footer')(({ theme }) => ({
@@ -94,12 +94,7 @@ const Footer = () => {
                 rel="noopener noreferrer"
                 sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
               >
-                <img
-                  src={hrtLogo}
-                  alt="HRT Logo"
-                  height={50}
-                  style={{ verticalAlign: 'middle' }}
-                />
+                <img src={hrtLogo} alt="HRT Logo" height={50} style={{ verticalAlign: 'middle' }} />
               </Link>
 
               {/* Jane Street Logo */}
@@ -153,7 +148,7 @@ const Footer = () => {
               Gold Tier
             </Typography>
 
-            { /* Airwallex, Arista, Atlassian, QRT */}
+            {/* Airwallex, Arista, Atlassian, QRT */}
             <Box display="flex" justifyContent="center" gap={6} flexWrap="wrap" alignItems="center">
               {/* Airwallex Logo */}
               <Link
@@ -206,12 +201,7 @@ const Footer = () => {
                 rel="noopener noreferrer"
                 sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
               >
-                <img
-                  src={qrtLogo}
-                  alt="QRT Logo"
-                  height={40}
-                  style={{ verticalAlign: 'middle' }}
-                />
+                <img src={qrtLogo} alt="QRT Logo" height={40} style={{ verticalAlign: 'middle' }} />
               </Link>
             </Box>
           </Grid>
