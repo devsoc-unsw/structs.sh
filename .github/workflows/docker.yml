@@ -37,11 +37,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ github.token }}
-      - name: Extract Docker metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/devsoc-unsw/${{ env.IMAGE_NAME }}-${{ matrix.component }}
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
@@ -52,7 +47,6 @@ jobs:
           tags: |
             ghcr.io/devsoc-unsw/${{ env.IMAGE_NAME }}-${{ matrix.component }}:${{ github.sha }}
             ghcr.io/devsoc-unsw/${{ env.IMAGE_NAME }}-${{ matrix.component }}:latest
-          labels: ${{ steps.meta.outputs.labels }}
           build-args: "VITE_DEBUGGER_URL=https://structs.sh"
 
   deploy:
