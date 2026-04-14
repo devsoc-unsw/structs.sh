@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useEffect, useState } from 'react';
-import styles from 'styles/Configuration.module.css';
+import styles from '@/styles/Configuration.module.css';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { github, dark } from 'react-syntax-highlighter/dist/esm/styles/hljs';

@@ -1,10 +1,10 @@
 import { Polygon, SVG } from '@svgdotjs/svg.js';
-import AnimationProducer from 'visualiser-src/common/AnimationProducer';
-import { Documentation } from 'visualiser-src/common/typedefs';
-import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
-import { injectIds } from 'visualiser-src/common/helpers';
-import { CANVAS } from 'visualiser-src/linked-list-visualiser/util/constants';
-import { generateNumbers } from 'visualiser-src/common/RandomNumGenerator';
+import AnimationProducer from '@/visualiser-src/common/AnimationProducer';
+import { Documentation } from '@/visualiser-src/common/typedefs';
+import GraphicalDataStructure from '@/visualiser-src/common/GraphicalDataStructure';
+import { injectIds } from '@/visualiser-src/common/helpers';
+import { CANVAS } from '@/visualiser-src/linked-list-visualiser/util/constants';
+import { generateNumbers } from '@/visualiser-src/common/RandomNumGenerator';
 import GraphicalSortsElement from './GraphicalSortsElement';
 import SortsBubbleAnimationProducer from '../animation-producer/SortsBubbleAnimationProducer';
 import SortsMergeAnimationProducer from '../animation-producer/SortsMergeAnimationProducer';

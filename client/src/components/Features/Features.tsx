@@ -6,10 +6,10 @@ import { styled } from '@mui/material/styles';
 import BulletIcon from '@mui/icons-material/ArrowForwardIos';
 import VisualiserIcon from '@mui/icons-material/AutoFixHigh';
 import GradCapIcon from '@mui/icons-material/School';
-import visualiserDashboardCodeScreen from 'assets/demos/visualiser-dashboard-code.png';
-import structsLogo from 'assets/img/structs.png';
-import { LaptopFrame } from 'components/Frame';
-import HorizontalRule from 'components/HorizontalRule';
+import visualiserDashboardCodeScreen from '@/assets/demos/visualiser-dashboard-code.png';
+import structsLogo from '@/assets/img/structs.png';
+import { LaptopFrame } from '@/components/Frame';
+import HorizontalRule from '@/components/HorizontalRule';
 import FeatureItem from './FeatureItem';
 
 const variants = {

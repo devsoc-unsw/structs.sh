@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import PageLayout from 'components/PageLayout';
+import PageLayout from '@/components/PageLayout';
 import Container from '@mui/material/Container';
 
 const Feedback = () => (

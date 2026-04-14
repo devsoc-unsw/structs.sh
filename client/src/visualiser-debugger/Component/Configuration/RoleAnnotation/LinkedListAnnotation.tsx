@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import * as RadioGroup from '@radix-ui/react-radio-group';
-import styles from 'styles/Configuration.module.css';
+import styles from '@/styles/Configuration.module.css';
 import { AnnotationComponent, AnnotationProp } from './AnnotationComponentBase';
 import {
   DataStructureType,

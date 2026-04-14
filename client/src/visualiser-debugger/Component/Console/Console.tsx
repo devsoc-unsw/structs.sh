@@ -1,13 +1,13 @@
 // TODO: Proper rework on this file => we want to re-design this anyway. I can't fix lint now because it will potentially change functioanlity of the file
 import { useEffect, useRef, useState } from 'react';
-import styles from 'styles/Console.module.css';
+import styles from '@/styles/Console.module.css';
 import classNames from 'classnames';
-import { useGlobalStore } from 'visualiser-debugger/Store/globalStateStore';
-import { useFrontendStateStore } from 'visualiser-debugger/Store/frontendStateStore';
-import { useUserFsStateStore } from 'visualiser-debugger/Store/userFsStateStore';
-import useConsolePathStore from 'visualiser-debugger/Store/consolePathStore';
+import { useGlobalStore } from '@/visualiser-debugger/Store/globalStateStore';
+import { useFrontendStateStore } from '@/visualiser-debugger/Store/frontendStateStore';
+import { useUserFsStateStore } from '@/visualiser-debugger/Store/userFsStateStore';
+import useConsolePathStore from '@/visualiser-debugger/Store/consolePathStore';
 import CustomCaret from './CustomCaret';
-import { IFileFileNode } from '../FileTree/FS/IFileSystem';
+import { IFileFileNode } from '@/visualiser-debugger/Component/FileTree/FS/IFileSystem';
 
 type ConsoleProp = {
   scrollToBottom: () => void;

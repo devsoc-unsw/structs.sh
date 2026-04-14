@@ -1,6 +1,6 @@
 import GenericGraphicalTreeNode, {
   GenericGraphicalTreeNodeData,
-} from 'visualiser-src/common/GenericGraphicalTreeNode';
+} from '@/visualiser-src/common/GenericGraphicalTreeNode';
 
 export default class GraphicalAVLNode extends GenericGraphicalTreeNode {
   private _height: number;

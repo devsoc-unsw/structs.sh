@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import useSocketClientStore from 'Services/socketClient';
-import { useFrontendStateStore } from 'visualiser-debugger/Store/frontendStateStore';
-import { useGlobalStore } from 'visualiser-debugger/Store/globalStateStore';
+import useSocketClientStore from '@/Services/socketClient';
+import { useFrontendStateStore } from '@/visualiser-debugger/Store/frontendStateStore';
+import { useGlobalStore } from '@/visualiser-debugger/Store/globalStateStore';
 
 function useCursor(
   content: string,

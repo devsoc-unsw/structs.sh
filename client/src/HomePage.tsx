@@ -1,8 +1,8 @@
 import { Container, Theme, Typography, Box } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
-import Topics from 'components/Topics';
-import Features from 'components/Features';
-import PageLayout from 'components/PageLayout';
+import Topics from '@/components/Topics';
+import Features from '@/components/Features';
+import PageLayout from '@/components/PageLayout';
 import Helmet from 'react-helmet';
 
 const HeroBox = styled(Box)(({ theme }) => ({

@@ -1,7 +1,7 @@
 import { Button, Box } from '@mui/material';
 import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { titleToUrl } from 'utils/url';
+import { titleToUrl } from '@/utils/url';
 import styles from './TopicCard.module.scss';
 import binary from './topic-images/binary-search-tree-nobg.png';
 import linked from './topic-images/linked-list-nobg.png';

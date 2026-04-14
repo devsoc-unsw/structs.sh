@@ -1,5 +1,5 @@
 import React from 'react';
-import laptopImg from 'assets/img/laptop-frame.png';
+import laptopImg from '@/assets/img/laptop-frame.png';
 import { Box } from '@mui/material';
 import styles from './LaptopFrame.module.scss';
 

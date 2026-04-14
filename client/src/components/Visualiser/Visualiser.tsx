@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { CircularLoader } from 'components/Loader';
+import { CircularLoader } from '@/components/Loader';
 import VisualiserCanvas from './VisualiserCanvas';
 import VisualiserInterface from './VisualiserInterface/VisualiserInterface';
 

@@ -1,6 +1,6 @@
-import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
-import { Documentation } from 'visualiser-src/common/typedefs';
-import { injectIds } from 'visualiser-src/common/helpers';
+import GraphicalDataStructure from '@/visualiser-src/common/GraphicalDataStructure';
+import { Documentation } from '@/visualiser-src/common/typedefs';
+import { injectIds } from '@/visualiser-src/common/helpers';
 import BSTInsertAnimationProducer from '../animation-producer/BSTInsertAnimationProducer';
 import BSTRotateAnimationProducer from '../animation-producer/BSTRotateAnimationProducer';
 import GraphicalBSTNode from './GraphicalBSTNode';

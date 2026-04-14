@@ -1,10 +1,10 @@
-import AnimationProducer from 'visualiser-src/common/AnimationProducer';
+import AnimationProducer from '@/visualiser-src/common/AnimationProducer';
 import { SVG, Path, Svg } from '@svgdotjs/svg.js';
-import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
-import { Documentation } from 'visualiser-src/common/typedefs';
-import { VISUALISER_CANVAS } from 'visualiser-src/common/constants';
-import { injectIds } from 'visualiser-src/common/helpers';
-import { generateNumbers } from 'visualiser-src/common/RandomNumGenerator';
+import GraphicalDataStructure from '@/visualiser-src/common/GraphicalDataStructure';
+import { Documentation } from '@/visualiser-src/common/typedefs';
+import { VISUALISER_CANVAS } from '@/visualiser-src/common/constants';
+import { injectIds } from '@/visualiser-src/common/helpers';
+import { generateNumbers } from '@/visualiser-src/common/RandomNumGenerator';
 import currTextPath from '../assets/currTextPath';
 import prevTextPath from '../assets/prevTextPath';
 import { CURRENT, PREV } from '../util/constants';

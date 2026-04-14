@@ -1,6 +1,6 @@
 import { Container, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
-import TopNavbar from 'components/Navbars/TopNavbar';
+import TopNavbar from '@/components/Navbars/TopNavbar';
 import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';

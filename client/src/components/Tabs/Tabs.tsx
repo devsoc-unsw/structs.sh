@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import * as Internal from '@radix-ui/react-tabs';
-import styles from 'styles/Tabs.module.css';
+import styles from '@/styles/Tabs.module.css';
 
 export const Tabs = React.forwardRef<HTMLDivElement, Internal.TabsProps>(
   ({ children, ...props }, ref) => (

@@ -1,14 +1,14 @@
 import { useRef, useEffect } from 'react';
-import styles from 'styles/DevelopmentMode.module.css';
-import globalStyles from 'styles/global.module.css';
+import styles from '@/styles/DevelopmentMode.module.css';
+import globalStyles from '@/styles/global.module.css';
 import classNames from 'classnames';
-import { Tabs, Tab } from 'components/Tabs';
-import Console from 'visualiser-debugger/Component/Console/Console';
+import { Tabs, Tab } from '@/components/Tabs';
+import Console from '@/visualiser-debugger/Component/Console/Console';
 import Joyride from 'react-joyride';
-import DynamicTabs from 'components/TabResize/DynamicTabs';
-import useSocketClientStore from 'Services/socketClient';
+import DynamicTabs from '@/components/TabResize/DynamicTabs';
+import useSocketClientStore from '@/Services/socketClient';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material';
-import DevelopmentModeNavbar from '../components/Navbars/DevelopmentModeNavbar';
+import DevelopmentModeNavbar from '@/components/Navbars/DevelopmentModeNavbar';
 import Configuration from './Component/Configuration/Configuration';
 import Controls from './Component/Control/Controls';
 import CodeEditor from './Component/CodeEditor/CodeEditor';
@@ -19,7 +19,7 @@ import { useGlobalStore } from './Store/globalStateStore';
 import { useUserFsStateStore } from './Store/userFsStateStore';
 import { onboardingStore, handleJoyrideCallback, OPEN_FILE_STEP } from './Store/onboardingStore';
 import { ThemeProvider as CustomThemeProvider, useTheme } from './Contexts/ThemeContexts';
-import { createDebuggerTheme } from '../structsThemes';
+import { createDebuggerTheme } from '@/structsThemes';
 
 const DevelopmentModeContent = () => {
   const inputElement = useRef<HTMLInputElement>(null);

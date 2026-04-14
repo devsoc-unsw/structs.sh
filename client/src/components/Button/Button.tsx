@@ -1,5 +1,5 @@
 import React, { MouseEventHandler, ReactNode } from 'react';
-import styles from 'styles/Button.module.css';
+import styles from '@/styles/Button.module.css';
 import classNames from 'classnames';
 
 export const Button = ({

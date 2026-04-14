@@ -1,7 +1,7 @@
 import { Timeline, Runner } from '@svgdotjs/svg.js';
-import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
-import GraphicalDataStructureFactory from 'visualiser-src/common/GraphicalDataStructureFactory';
-import { Documentation } from 'visualiser-src/common/typedefs';
+import GraphicalDataStructure from '@/visualiser-src/common/GraphicalDataStructure';
+import GraphicalDataStructureFactory from '@/visualiser-src/common/GraphicalDataStructureFactory';
+import { Documentation } from '@/visualiser-src/common/typedefs';
 import { defaultSpeed } from '../common/constants';
 import AnimationProducer from '../common/AnimationProducer';
 

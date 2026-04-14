@@ -2,7 +2,7 @@ import { FC, KeyboardEvent, useState } from 'react';
 import { Button, Input } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
-import { SERVER_URL } from 'utils/constants';
+import { SERVER_URL } from '@/utils/constants';
 
 interface Props {
   handleLogon: any;

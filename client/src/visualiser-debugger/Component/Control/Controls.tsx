@@ -1,18 +1,18 @@
-import styles from 'styles/Timeline.module.css';
+import styles from '@/styles/Timeline.module.css';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import UndoIcon from '@mui/icons-material/Undo';
 import RedoIcon from '@mui/icons-material/Redo';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useEffect, useRef, useState } from 'react';
 import { Fade } from '@mui/material';
-import { handleCompileClicked } from 'visualiser-debugger/Store/onboardingStore';
-import { useSocketCommunication } from '../../../Services/useSocketCommunication';
-import { useFrontendStateStore } from '../../Store/frontendStateStore';
-import { Button } from '../../../components/Button';
-import Slider from '../../../components/Timeline/Slider';
-import { useGlobalStore } from '../../Store/globalStateStore';
-import { isInitialBackendState } from '../../Types/backendType';
-import { DEFAULT_MESSAGE_DURATION, useToastStateStore } from '../../Store/toastStateStore';
+import { handleCompileClicked } from '@/visualiser-debugger/Store/onboardingStore';
+import { useSocketCommunication } from '@/Services/useSocketCommunication';
+import { useFrontendStateStore } from '@/visualiser-debugger/Store/frontendStateStore';
+import { Button } from '@/components/Button';
+import Slider from '@/components/Timeline/Slider';
+import { useGlobalStore } from '@/visualiser-debugger/Store/globalStateStore';
+import { isInitialBackendState } from '@/visualiser-debugger/Types/backendType';
+import { DEFAULT_MESSAGE_DURATION, useToastStateStore } from '@/visualiser-debugger/Store/toastStateStore';
 
 const BUFFER_THRESHOLD = 30;
 const Controls = () => {

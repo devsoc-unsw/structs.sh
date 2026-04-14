@@ -4,8 +4,8 @@ import {
   FunctionStructure,
   isProgramEnd,
   ProgramEnd,
-} from 'visualiser-debugger/Types/backendType';
-import { DEFAULT_MESSAGE_DURATION } from 'visualiser-debugger/Store/toastStateStore';
+} from '@/visualiser-debugger/Types/backendType';
+import { DEFAULT_MESSAGE_DURATION } from '@/visualiser-debugger/Store/toastStateStore';
 import { ServerToClientEvent } from './socketClientType';
 
 type BuildSocketHandlerParams = {
