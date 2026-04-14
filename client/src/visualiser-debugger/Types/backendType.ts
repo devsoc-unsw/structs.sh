@@ -131,29 +131,23 @@ export type BackendTypeDeclaration = {
   };
 };
 
-export const isStructTypeName = (typeName: string): typeName is StructType['typeName'] => {
-  return typeName.startsWith('struct ');
-};
+export const isStructTypeName = (typeName: string): typeName is StructType['typeName'] =>
+  typeName.startsWith('struct ');
 
-export const isPointerType = (typeName: string): typeName is PointerType['typeName'] => {
-  return typeName.endsWith('*');
-};
+export const isPointerType = (typeName: string): typeName is PointerType['typeName'] =>
+  typeName.endsWith('*');
 
-export const isArrayType = (typeName: string): typeName is ArrayType['typeName'] => {
-  return typeName.endsWith('[]');
-};
+export const isArrayType = (typeName: string): typeName is ArrayType['typeName'] =>
+  typeName.endsWith('[]');
 
-export const isNativeTypeName = (typeName: string): typeName is NativeTypeName => {
-  return (
-    typeName === 'int' ||
-    typeName === 'float' ||
-    typeName === 'double' ||
-    typeName === 'char' ||
-    isStructTypeName(typeName) ||
-    isPointerType(typeName) ||
-    isArrayType(typeName)
-  );
-};
+export const isNativeTypeName = (typeName: string): typeName is NativeTypeName =>
+  typeName === 'int' ||
+  typeName === 'float' ||
+  typeName === 'double' ||
+  typeName === 'char' ||
+  isStructTypeName(typeName) ||
+  isPointerType(typeName) ||
+  isArrayType(typeName);
 
 export const INITIAL_BACKEND_STATE: BackendState = {
   frame_info: {

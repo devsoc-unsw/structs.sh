@@ -1,6 +1,6 @@
 import { Slider, styled } from '@mui/material';
 import { useMemo } from 'react';
-// eslint-disable-next-line import/no-extraneous-dependencies
+
 import clsx from 'clsx';
 
 const StyledSlider = styled(Slider)({

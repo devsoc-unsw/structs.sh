@@ -24,58 +24,56 @@ export const buildSocketEventHandler = ({
   updateTypeDeclaration,
   appendConsoleChunks,
   updateCurrFocusedTab,
-}: BuildSocketHandlerParams): ServerToClientEvent => {
-  return {
-    mainDebug: () => {
+}: BuildSocketHandlerParams): ServerToClientEvent => ({
+  mainDebug: () => {
+    setMessage({
+      content: 'Debug session started.',
+      colorTheme: 'info',
+      durationMs: DEFAULT_MESSAGE_DURATION,
+    });
+    setActive(true);
+  },
+
+  sendFunctionDeclaration: (_data: FunctionStructure) => {},
+
+  sendTypeDeclaration: (type: BackendTypeDeclaration) => {
+    if (type.typeName !== 'size_t') {
+      updateTypeDeclaration(type);
+    }
+  },
+
+  sendBackendStateToUser: (state: BackendState | ProgramEnd) => {
+    if (isProgramEnd(state)) {
       setMessage({
-        content: 'Debug session started.',
+        content: 'Debug session ended.',
         colorTheme: 'info',
         durationMs: DEFAULT_MESSAGE_DURATION,
       });
-      setActive(true);
-    },
+      setActive(false);
+      return;
+    }
 
-    sendFunctionDeclaration: (_data: FunctionStructure) => {},
+    updateNextFrame(state);
+  },
 
-    sendTypeDeclaration: (type: BackendTypeDeclaration) => {
-      if (type.typeName !== 'size_t') {
-        updateTypeDeclaration(type);
-      }
-    },
+  sendStdoutToUser: (output: string) => {
+    appendConsoleChunks([...output]);
+  },
 
-    sendBackendStateToUser: (state: BackendState | ProgramEnd) => {
-      if (isProgramEnd(state)) {
-        setMessage({
-          content: 'Debug session ended.',
-          colorTheme: 'info',
-          durationMs: DEFAULT_MESSAGE_DURATION,
-        });
-        setActive(false);
-        return;
-      }
+  programWaitingForInput: (_data: any) => {},
 
-      updateNextFrame(state);
-    },
+  acknowledgedEOF: () => {
+    console.log('Debugger sent acknowledged EOF signal');
+  },
 
-    sendStdoutToUser: (output: string) => {
-      appendConsoleChunks([...output]);
-    },
+  acknowledgedSIGINT: () => {
+    console.log('Debugger sent acknowledged SIGINT signal');
+  },
 
-    programWaitingForInput: (_data: any) => {},
+  compileError: (errors: string[]) => {
+    appendConsoleChunks([...errors]);
+    updateCurrFocusedTab('2');
+  },
 
-    acknowledgedEOF: () => {
-      console.log('Debugger sent acknowledged EOF signal');
-    },
-
-    acknowledgedSIGINT: () => {
-      console.log('Debugger sent acknowledged SIGINT signal');
-    },
-
-    compileError: (errors: string[]) => {
-      appendConsoleChunks([...errors]);
-      updateCurrFocusedTab('2');
-    },
-
-    send_stdin: (_data: string) => {},
-  };
-};
+  send_stdin: (_data: string) => {},
+});

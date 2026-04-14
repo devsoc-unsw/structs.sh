@@ -1,7 +1,7 @@
 import { generateNumbers } from '@/visualiser-src/common/RandomNumGenerator';
-import GraphicalBSTNode from './GraphicalBSTNode';
 import BSTCreateAnimationProducer from '@/visualiser-src/binary-search-tree-visualiser/animation-producer/BSTCreateAnimationProducer';
 import updateNodePositions from '@/visualiser-src/binary-search-tree-visualiser/util/helpers';
+import GraphicalBSTNode from './GraphicalBSTNode';
 
 export default class GraphicalTreeGenerate {
   // given a sorted array arr, inserts elements to num such that its linear insertion order

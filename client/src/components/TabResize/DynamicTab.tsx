@@ -7,8 +7,8 @@ interface DynamicTabProps {
   sx?: object;
 }
 
-const DynamicTab: React.FC<DynamicTabProps> = ({ children, sx }) => {
-  return <Box sx={{ border: '1px solid black', padding: '8px', ...sx }}>{children}</Box>;
-};
+const DynamicTab: React.FC<DynamicTabProps> = ({ children, sx }) => (
+  <Box sx={{ border: '1px solid black', padding: '8px', ...sx }}>{children}</Box>
+);
 
 export default DynamicTab;

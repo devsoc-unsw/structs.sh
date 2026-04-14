@@ -6,8 +6,8 @@ import { useGlobalStore } from '@/visualiser-debugger/Store/globalStateStore';
 import { useFrontendStateStore } from '@/visualiser-debugger/Store/frontendStateStore';
 import { useUserFsStateStore } from '@/visualiser-debugger/Store/userFsStateStore';
 import useConsolePathStore from '@/visualiser-debugger/Store/consolePathStore';
-import CustomCaret from './CustomCaret';
 import { IFileFileNode } from '@/visualiser-debugger/Component/FileTree/FS/IFileSystem';
+import CustomCaret from './CustomCaret';
 
 type ConsoleProp = {
   scrollToBottom: () => void;

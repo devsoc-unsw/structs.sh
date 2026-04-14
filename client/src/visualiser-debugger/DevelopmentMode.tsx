@@ -9,6 +9,7 @@ import DynamicTabs from '@/components/TabResize/DynamicTabs';
 import useSocketClientStore from '@/Services/socketClient';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material';
 import DevelopmentModeNavbar from '@/components/Navbars/DevelopmentModeNavbar';
+import { createDebuggerTheme } from '@/structsThemes';
 import Configuration from './Component/Configuration/Configuration';
 import Controls from './Component/Control/Controls';
 import CodeEditor from './Component/CodeEditor/CodeEditor';
@@ -19,7 +20,6 @@ import { useGlobalStore } from './Store/globalStateStore';
 import { useUserFsStateStore } from './Store/userFsStateStore';
 import { onboardingStore, handleJoyrideCallback, OPEN_FILE_STEP } from './Store/onboardingStore';
 import { ThemeProvider as CustomThemeProvider, useTheme } from './Contexts/ThemeContexts';
-import { createDebuggerTheme } from '@/structsThemes';
 
 const DevelopmentModeContent = () => {
   const inputElement = useRef<HTMLInputElement>(null);
@@ -138,12 +138,10 @@ const DevelopmentModeContent = () => {
   );
 };
 
-const DevelopmentMode = () => {
-  return (
-    <CustomThemeProvider>
-      <DevelopmentModeContent />
-    </CustomThemeProvider>
-  );
-};
+const DevelopmentMode = () => (
+  <CustomThemeProvider>
+    <DevelopmentModeContent />
+  </CustomThemeProvider>
+);
 
 export default DevelopmentMode;

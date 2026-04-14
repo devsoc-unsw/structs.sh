@@ -2,10 +2,10 @@ import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { useEffect, useState } from 'react';
 import styles from '@/styles/Configuration.module.css';
 import { useGlobalStore } from '@/visualiser-debugger/Store/globalStateStore';
+import { cloneSimple } from '@/visualiser-debugger/Component/Visualizer/Util/util';
 import { MotionCollapse } from './MotionCollapse';
 import { TypeAnnotation } from './TypeAnnotation';
 import { StackVarAnnotation } from './StackVarDeclaration';
-import { cloneSimple } from '@/visualiser-debugger/Component/Visualizer/Util/util';
 
 const Configuration = () => {
   const [isTypeAnnotationOpen, setIsAnnotationOpen] = useState(true);

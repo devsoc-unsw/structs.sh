@@ -12,7 +12,10 @@ import { Button } from '@/components/Button';
 import Slider from '@/components/Timeline/Slider';
 import { useGlobalStore } from '@/visualiser-debugger/Store/globalStateStore';
 import { isInitialBackendState } from '@/visualiser-debugger/Types/backendType';
-import { DEFAULT_MESSAGE_DURATION, useToastStateStore } from '@/visualiser-debugger/Store/toastStateStore';
+import {
+  DEFAULT_MESSAGE_DURATION,
+  useToastStateStore,
+} from '@/visualiser-debugger/Store/toastStateStore';
 
 const BUFFER_THRESHOLD = 30;
 const Controls = () => {

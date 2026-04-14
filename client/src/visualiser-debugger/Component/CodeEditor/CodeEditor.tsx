@@ -13,9 +13,7 @@ import { useFrontendStateStore } from '@/visualiser-debugger/Store/frontendState
 import { useTheme } from '@/visualiser-debugger/Contexts/ThemeContexts';
 
 const CodeEditor: React.FC = () => {
-  const currBackendState = useFrontendStateStore((store) => {
-    return store.currState().backendState;
-  });
+  const currBackendState = useFrontendStateStore((store) => store.currState().backendState);
   const { fileSystem, currFocusFilePath } = useUserFsStateStore();
   const { setOnboardingCurrFile } = onboardingStore();
   const [currFile, setCurrFile] = useState<IFileFileNode | undefined>(undefined);

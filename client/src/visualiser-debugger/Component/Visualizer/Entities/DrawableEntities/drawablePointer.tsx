@@ -5,14 +5,12 @@ import { AttachableEntity, getAttachableEntityShape } from '../CoreEntity/attach
 
 const animations = {
   enter: {
-    initialPosition: (x: number, y: number) => {
-      return {
-        x,
-        y,
-        opacity: 0,
-        transition: { duration: 1.5 },
-      };
-    },
+    initialPosition: (x: number, y: number) => ({
+      x,
+      y,
+      opacity: 0,
+      transition: { duration: 1.5 },
+    }),
   },
   exit: { opacity: 0, transition: { duration: 0.75 } },
   animate: {
@@ -68,9 +66,7 @@ const PointerDrawable: DrawablePointerComponent = (
     setCoords(res);
   }, [pos.x.val, pos.y.val]);
 
-  const splitLabels = (label: string) => {
-    return label.split(', ');
-  };
+  const splitLabels = (label: string) => label.split(', ');
 
   // Calculate the text's width using canvas
   // https://www.tutorialspoint.com/Calculate-text-width-with-JavaScript#:~:text=To%20calculate%20text%20width%2C%20we,method%20to%20measure%20the%20text.
