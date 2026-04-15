@@ -1,17 +1,17 @@
 import { ThemeProvider, Box } from '@mui/material';
 import { AnimatePresence } from 'framer-motion';
 import { Route, Routes } from 'react-router-dom';
-import Feedback from 'Feedback';
-import HomePage from 'HomePage';
-import Page404 from 'Page404';
-import VisualiserPage from 'VisualiserPage';
-import { structsTheme } from 'structsThemes';
+import Feedback from '@/Feedback';
+import HomePage from '@/HomePage';
+import Page404 from '@/Page404';
+import VisualiserPage from '@/VisualiserPage';
+import { structsTheme } from '@/structsThemes';
 import './App.scss';
-import DevelopmentMode from 'visualiser-debugger/DevelopmentMode';
-import { useGlobalStore } from 'visualiser-debugger/Store/globalStateStore';
+import DevelopmentMode from '@/visualiser-debugger/DevelopmentMode';
+import { useGlobalStore } from '@/visualiser-debugger/Store/globalStateStore';
 import { useEffect } from 'react';
-import { useFrontendStateStore } from 'visualiser-debugger/Store/frontendStateStore';
-import Toast from './visualiser-debugger/Component/Toast/Toast';
+import { useFrontendStateStore } from '@/visualiser-debugger/Store/frontendStateStore';
+import Toast from '@/visualiser-debugger/Component/Toast/Toast';
 
 const App = () => {
   useEffect(() => {

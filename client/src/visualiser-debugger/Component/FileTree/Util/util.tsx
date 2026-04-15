@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SERVER_URL } from 'utils/constants';
+import { SERVER_URL } from '@/utils/constants';
 
 export const PLACEHOLDER_WORKSPACE = 'LinkedListWorkspace';
 export const PLACEHOLDER_USERNAME = 'benp123';

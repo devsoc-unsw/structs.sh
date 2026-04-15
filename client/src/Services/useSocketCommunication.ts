@@ -122,16 +122,17 @@ export const useSocketCommunication = () => {
   const executeNextWithRetry = useCallback(() => {
     if (!socketClient) return Promise.resolve(false);
 
-    return queue(() => {
-      return new Promise<boolean>((resolve) => {
-        const handleBackendState = (state: BackendState | null) => {
-          resolve(!!state);
-        };
+    return queue(
+      () =>
+        new Promise<boolean>((resolve) => {
+          const handleBackendState = (state: BackendState | null) => {
+            resolve(!!state);
+          };
 
-        addEventListenerWithTimeout(handleBackendState, 5000);
-        socketClient.serverAction.executeNext();
-      });
-    });
+          addEventListenerWithTimeout(handleBackendState, 5000);
+          socketClient.serverAction.executeNext();
+        })
+    );
   }, [socketClient, queue]);
 
   // to call multiple next states in bulk

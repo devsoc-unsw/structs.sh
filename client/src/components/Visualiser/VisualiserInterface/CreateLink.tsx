@@ -1,6 +1,6 @@
 import { Typography, Button, TextField, Alert, Snackbar, Collapse } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useEffect, useContext, useState, useRef } from 'react';
+import { useEffect, useContext, useState, useRef, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import VisualiserContext from './VisualiserContext';
 
@@ -17,6 +17,8 @@ const CreateLink = () => {
   const [showLink, setShowLink] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
+  const location = useLocation();
+
   const alertCopy = () => {
     setShowAlert(true);
   };
@@ -30,8 +32,8 @@ const CreateLink = () => {
     }
   }, [showLink]);
 
-  const makeLink = () => {
-    const pieces = useLocation().pathname.split('/');
+  const makeLink = useCallback(() => {
+    const pieces = location.pathname.split('/');
 
     const rawDataString = controller.data;
     let newData: string = '';
@@ -48,7 +50,7 @@ const CreateLink = () => {
       inputRef.current.focus();
       inputRef.current.select();
     }
-  };
+  }, [location, controller.data]);
 
   return (
     <>

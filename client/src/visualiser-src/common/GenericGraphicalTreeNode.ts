@@ -4,7 +4,7 @@ import {
   nodeDiameter,
   pathD,
   VISUALISER_CANVAS,
-} from 'visualiser-src/common/constants';
+} from '@/visualiser-src/common/constants';
 import { lineStyle, nodeStyle, textStyle } from './settings';
 
 interface SVGData {

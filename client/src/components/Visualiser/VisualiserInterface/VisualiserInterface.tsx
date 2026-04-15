@@ -1,8 +1,8 @@
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { Documentation } from 'visualiser-src/common/typedefs';
-import VisualiserController from 'visualiser-src/controller/VisualiserController';
+import { Documentation } from '@/visualiser-src/common/typedefs';
+import VisualiserController from '@/visualiser-src/controller/VisualiserController';
 import { Box, List } from '@mui/material';
-import FloatingWindow from 'components/FloatingWindow';
+import FloatingWindow from '@/components/FloatingWindow';
 import VisualiserContext from './VisualiserContext';
 import Controls from './Controls';
 import CreateMenu from './CreateMenu';

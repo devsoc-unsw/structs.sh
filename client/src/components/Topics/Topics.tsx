@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Box } from '@mui/material';
-import { LineLoader } from 'components/Loader';
-import { getTopics } from '../../visualiser-src/common/helpers';
+import { LineLoader } from '@/components/Loader';
+import { getTopics } from '@/visualiser-src/common/helpers';
 import TopicCard from './TopicCard';
 
 interface Props {}

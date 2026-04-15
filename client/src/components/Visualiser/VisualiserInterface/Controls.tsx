@@ -22,7 +22,7 @@ import FastRewindIcon from '@mui/icons-material/FastRewind';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import SpeedIcon from '@mui/icons-material/Speed';
 import CheckIcon from '@mui/icons-material/Check';
-import { defaultSpeed } from 'visualiser-src/common/constants';
+import { defaultSpeed } from '@/visualiser-src/common/constants';
 import VisualiserContext from './VisualiserContext';
 
 const TimelineSlider = styled('input')({

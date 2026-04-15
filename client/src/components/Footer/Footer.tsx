@@ -21,199 +21,197 @@ const StyledFooter = styled('footer')(({ theme }) => ({
 /**
  * The footer of the page
  */
-const Footer = () => {
-  return (
-    <StyledFooter>
-      <Container maxWidth="lg">
-        <Box display="flex" justifyContent="center" paddingBottom={3}>
-          <img height={35} src={structsLogo} alt="Structs.sh logo" />
-          <Box display="inline-block" textAlign="left">
-            <Typography display="inline" variant="h6" color="textPrimary">
-              › Structs.sh
-            </Typography>
-          </Box>
+const Footer = () => (
+  <StyledFooter>
+    <Container maxWidth="lg">
+      <Box display="flex" justifyContent="center" paddingBottom={3}>
+        <img height={35} src={structsLogo} alt="Structs.sh logo" />
+        <Box display="inline-block" textAlign="left">
+          <Typography display="inline" variant="h6" color="textPrimary">
+            › Structs.sh
+          </Typography>
         </Box>
-        <Grid container spacing={5}>
-          <Grid item xs={12} sm={4} textAlign="center">
-            <Typography color="textPrimary" variant="h5">
-              Information
-            </Typography>
-            <Typography color="textSecondary">
-              <Link href="https://github.com/devsoc-unsw/structs.sh" color="inherit">
-                GitHub Repository
-              </Link>
-            </Typography>
-          </Grid>
-          <Grid item xs={12} sm={4} textAlign="center">
-            <Typography color="textPrimary" variant="h5">
-              Get Connected
-            </Typography>
-            <Typography color="textSecondary">
-              <Link component={RouterLink} to="/feedback" color="inherit">
-                Provide Feedback
-              </Link>
-            </Typography>
-            <Typography color="textSecondary">
-              <address>
-                <Link href="mailto:structs@devsoc.app" color="inherit">
-                  Email Us
-                </Link>{' '}
-              </address>
-            </Typography>
-          </Grid>
-          <Grid item xs={12} sm={4} textAlign="center">
-            <Typography color="textPrimary" variant="h5">
-              Social
-            </Typography>
-            <Typography color="textSecondary">
-              <Link href="https://devsoc.app/" color="inherit">
-                DevSoc Website
-              </Link>
-            </Typography>
-            <Typography color="textSecondary">
-              <Link href="https://www.facebook.com/devsocUNSW" color="inherit">
-                Facebook
-              </Link>
-            </Typography>
-          </Grid>
-          <Grid item xs={12} textAlign="center">
-            <Typography color="textPrimary" variant="h4" style={{ marginBottom: '0.7rem' }}>
-              Our Sponsors
-            </Typography>
-          </Grid>
-          {/* New Grid item for Company Sponsors */}
-          <Grid item xs={12} textAlign="center">
-            <Typography color="textPrimary" variant="h5" style={{ marginBottom: '1.5rem' }}>
-              Platinum Tier
-            </Typography>
-            <Box display="flex" justifyContent="center" gap={6} flexWrap="wrap" alignItems="center">
-              {/* HRT Logo */}
-              <Link
-                href="https://www.hudsonrivertrading.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
-              >
-                <img src={hrtLogo} alt="HRT Logo" height={50} style={{ verticalAlign: 'middle' }} />
-              </Link>
-
-              {/* Jane Street Logo */}
-              <Link
-                href="https://www.janestreet.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
-              >
-                <img
-                  src={janeStreetLogo}
-                  alt="Jane Street Logo"
-                  height={50}
-                  style={{ verticalAlign: 'middle' }}
-                />
-              </Link>
-
-              {/* Lyra logo */}
-              <Link
-                href="https://www.lyratechnologies.com.au/"
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
-              >
-                <img
-                  src={lyraLogo}
-                  alt="Lyra Technologies Logo"
-                  height={50}
-                  style={{ verticalAlign: 'middle' }}
-                />
-              </Link>
-
-              {/* TTD logo */}
-              <Link
-                href="https://careers.thetradedesk.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
-              >
-                <img
-                  src={theTradeDeskLogo}
-                  alt="The Trade Desk Logo"
-                  height={50}
-                  style={{ verticalAlign: 'middle' }}
-                />
-              </Link>
-            </Box>
-          </Grid>
-          <Grid item xs={12} textAlign="center">
-            <Typography color="textPrimary" variant="h5" style={{ marginBottom: '1.5rem' }}>
-              Gold Tier
-            </Typography>
-
-            {/* Airwallex, Arista, Atlassian, QRT */}
-            <Box display="flex" justifyContent="center" gap={6} flexWrap="wrap" alignItems="center">
-              {/* Airwallex Logo */}
-              <Link
-                href="https://www.airwallex.com/au"
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
-              >
-                <img
-                  src={airwallexLogo}
-                  alt="Airwallex Logo"
-                  height={40}
-                  style={{ verticalAlign: 'middle' }}
-                />
-              </Link>
-              {/* Arista Logo */}
-              <Link
-                href="https://www.arista.com/en/"
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
-              >
-                <img
-                  src={aristaLogo}
-                  alt="Arista Logo"
-                  height={40}
-                  style={{ verticalAlign: 'middle' }}
-                />
-              </Link>
-
-              {/* Atlassian Logo */}
-              <Link
-                href="https://www.atlassian.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
-              >
-                <img
-                  src={atlassianLogo}
-                  alt="Atlassian Logo"
-                  height={40}
-                  style={{ verticalAlign: 'middle' }}
-                />
-              </Link>
-
-              {/* QRT Logo */}
-              <Link
-                href="https://www.qube-rt.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
-              >
-                <img src={qrtLogo} alt="QRT Logo" height={40} style={{ verticalAlign: 'middle' }} />
-              </Link>
-            </Box>
-          </Grid>
-        </Grid>
-      </Container>
-      <Box textAlign="center" paddingTop={5}>
-        <Typography color="textSecondary">
-          © {new Date().getFullYear()} — Software Development Society (DevSoc)
-        </Typography>
       </Box>
-    </StyledFooter>
-  );
-};
+      <Grid container spacing={5}>
+        <Grid item xs={12} sm={4} textAlign="center">
+          <Typography color="textPrimary" variant="h5">
+            Information
+          </Typography>
+          <Typography color="textSecondary">
+            <Link href="https://github.com/devsoc-unsw/structs.sh" color="inherit">
+              GitHub Repository
+            </Link>
+          </Typography>
+        </Grid>
+        <Grid item xs={12} sm={4} textAlign="center">
+          <Typography color="textPrimary" variant="h5">
+            Get Connected
+          </Typography>
+          <Typography color="textSecondary">
+            <Link component={RouterLink} to="/feedback" color="inherit">
+              Provide Feedback
+            </Link>
+          </Typography>
+          <Typography color="textSecondary">
+            <address>
+              <Link href="mailto:structs@devsoc.app" color="inherit">
+                Email Us
+              </Link>{' '}
+            </address>
+          </Typography>
+        </Grid>
+        <Grid item xs={12} sm={4} textAlign="center">
+          <Typography color="textPrimary" variant="h5">
+            Social
+          </Typography>
+          <Typography color="textSecondary">
+            <Link href="https://devsoc.app/" color="inherit">
+              DevSoc Website
+            </Link>
+          </Typography>
+          <Typography color="textSecondary">
+            <Link href="https://www.facebook.com/devsocUNSW" color="inherit">
+              Facebook
+            </Link>
+          </Typography>
+        </Grid>
+        <Grid item xs={12} textAlign="center">
+          <Typography color="textPrimary" variant="h4" style={{ marginBottom: '0.7rem' }}>
+            Our Sponsors
+          </Typography>
+        </Grid>
+        {/* New Grid item for Company Sponsors */}
+        <Grid item xs={12} textAlign="center">
+          <Typography color="textPrimary" variant="h5" style={{ marginBottom: '1.5rem' }}>
+            Platinum Tier
+          </Typography>
+          <Box display="flex" justifyContent="center" gap={6} flexWrap="wrap" alignItems="center">
+            {/* HRT Logo */}
+            <Link
+              href="https://www.hudsonrivertrading.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
+            >
+              <img src={hrtLogo} alt="HRT Logo" height={50} style={{ verticalAlign: 'middle' }} />
+            </Link>
+
+            {/* Jane Street Logo */}
+            <Link
+              href="https://www.janestreet.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
+            >
+              <img
+                src={janeStreetLogo}
+                alt="Jane Street Logo"
+                height={50}
+                style={{ verticalAlign: 'middle' }}
+              />
+            </Link>
+
+            {/* Lyra logo */}
+            <Link
+              href="https://www.lyratechnologies.com.au/"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
+            >
+              <img
+                src={lyraLogo}
+                alt="Lyra Technologies Logo"
+                height={50}
+                style={{ verticalAlign: 'middle' }}
+              />
+            </Link>
+
+            {/* TTD logo */}
+            <Link
+              href="https://careers.thetradedesk.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
+            >
+              <img
+                src={theTradeDeskLogo}
+                alt="The Trade Desk Logo"
+                height={50}
+                style={{ verticalAlign: 'middle' }}
+              />
+            </Link>
+          </Box>
+        </Grid>
+        <Grid item xs={12} textAlign="center">
+          <Typography color="textPrimary" variant="h5" style={{ marginBottom: '1.5rem' }}>
+            Gold Tier
+          </Typography>
+
+          {/* Airwallex, Arista, Atlassian, QRT */}
+          <Box display="flex" justifyContent="center" gap={6} flexWrap="wrap" alignItems="center">
+            {/* Airwallex Logo */}
+            <Link
+              href="https://www.airwallex.com/au"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
+            >
+              <img
+                src={airwallexLogo}
+                alt="Airwallex Logo"
+                height={40}
+                style={{ verticalAlign: 'middle' }}
+              />
+            </Link>
+            {/* Arista Logo */}
+            <Link
+              href="https://www.arista.com/en/"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
+            >
+              <img
+                src={aristaLogo}
+                alt="Arista Logo"
+                height={40}
+                style={{ verticalAlign: 'middle' }}
+              />
+            </Link>
+
+            {/* Atlassian Logo */}
+            <Link
+              href="https://www.atlassian.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
+            >
+              <img
+                src={atlassianLogo}
+                alt="Atlassian Logo"
+                height={40}
+                style={{ verticalAlign: 'middle' }}
+              />
+            </Link>
+
+            {/* QRT Logo */}
+            <Link
+              href="https://www.qube-rt.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.1)' } }}
+            >
+              <img src={qrtLogo} alt="QRT Logo" height={40} style={{ verticalAlign: 'middle' }} />
+            </Link>
+          </Box>
+        </Grid>
+      </Grid>
+    </Container>
+    <Box textAlign="center" paddingTop={5}>
+      <Typography color="textSecondary">
+        © {new Date().getFullYear()} — Software Development Society (DevSoc)
+      </Typography>
+    </Box>
+  </StyledFooter>
+);
 
 export default Footer;

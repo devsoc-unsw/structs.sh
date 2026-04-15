@@ -15,9 +15,9 @@ import {
 } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CheckIcon from '@mui/icons-material/Check';
-import logo from 'assets/img/logo.png';
+import logo from '@/assets/img/logo.png';
 import { Link, useParams } from 'react-router-dom';
-import { titleToUrl, toTitleCase, urlToTitle } from 'utils/url';
+import { titleToUrl, toTitleCase, urlToTitle } from '@/utils/url';
 import { getTopics } from '../../visualiser-src/common/helpers';
 
 const LogoText = styled(Typography)({

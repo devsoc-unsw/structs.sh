@@ -1,21 +1,19 @@
 import AceEditor, { IMarker } from 'react-ace';
-import 'styles/CodeEditor.css';
+import '@/styles/CodeEditor.css';
 import 'ace-builds/src-noconflict/mode-c_cpp';
 import 'ace-builds/src-noconflict/snippets/c_cpp';
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/theme-tomorrow';
 import 'ace-builds/src-noconflict/theme-tomorrow_night';
 import { useState, useEffect } from 'react';
-import { onboardingStore } from 'visualiser-debugger/Store/onboardingStore';
-import { useUserFsStateStore } from '../../Store/userFsStateStore';
-import { IFileFileNode } from '../FileTree/FS/IFileSystem';
-import { useFrontendStateStore } from '../../Store/frontendStateStore';
-import { useTheme } from '../../Contexts/ThemeContexts';
+import { onboardingStore } from '@/visualiser-debugger/Store/onboardingStore';
+import { useUserFsStateStore } from '@/visualiser-debugger/Store/userFsStateStore';
+import { IFileFileNode } from '@/visualiser-debugger/Component/FileTree/FS/IFileSystem';
+import { useFrontendStateStore } from '@/visualiser-debugger/Store/frontendStateStore';
+import { useTheme } from '@/visualiser-debugger/Contexts/ThemeContexts';
 
 const CodeEditor: React.FC = () => {
-  const currBackendState = useFrontendStateStore((store) => {
-    return store.currState().backendState;
-  });
+  const currBackendState = useFrontendStateStore((store) => store.currState().backendState);
   const { fileSystem, currFocusFilePath } = useUserFsStateStore();
   const { setOnboardingCurrFile } = onboardingStore();
   const [currFile, setCurrFile] = useState<IFileFileNode | undefined>(undefined);

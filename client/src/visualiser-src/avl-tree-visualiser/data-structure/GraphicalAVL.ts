@@ -1,11 +1,11 @@
-import GraphicalTreeGenerate from 'visualiser-src/binary-search-tree-visualiser/data-structure/GraphicalTreeGenerate';
-import GraphicalDataStructure from 'visualiser-src/common/GraphicalDataStructure';
-import { Documentation } from 'visualiser-src/common/typedefs';
-import { injectIds } from 'visualiser-src/common/helpers';
-import GraphicalTreeTraversal from 'visualiser-src/binary-search-tree-visualiser/data-structure/GraphicalTreeTraversal';
-import BSTTraverseAnimationProducer from 'visualiser-src/binary-search-tree-visualiser/animation-producer/BSTTraverseAnimationProducer';
-import updateNodePositions from 'visualiser-src/binary-search-tree-visualiser/util/helpers';
-import AVLAnimationProducer from '../animation-producer/AVLAnimationProducer';
+import GraphicalTreeGenerate from '@/visualiser-src/binary-search-tree-visualiser/data-structure/GraphicalTreeGenerate';
+import GraphicalDataStructure from '@/visualiser-src/common/GraphicalDataStructure';
+import { Documentation } from '@/visualiser-src/common/typedefs';
+import { injectIds } from '@/visualiser-src/common/helpers';
+import GraphicalTreeTraversal from '@/visualiser-src/binary-search-tree-visualiser/data-structure/GraphicalTreeTraversal';
+import BSTTraverseAnimationProducer from '@/visualiser-src/binary-search-tree-visualiser/animation-producer/BSTTraverseAnimationProducer';
+import updateNodePositions from '@/visualiser-src/binary-search-tree-visualiser/util/helpers';
+import AVLAnimationProducer from '@/visualiser-src/avl-tree-visualiser/animation-producer/AVLAnimationProducer';
 import GraphicalAVLNode from './GraphicalAVLNode';
 
 // used for the actual implementation of the bst

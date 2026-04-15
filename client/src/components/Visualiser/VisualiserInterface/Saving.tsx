@@ -12,7 +12,7 @@ import React, {
   FocusEvent,
 } from 'react';
 import axios from 'axios';
-import { SERVER_URL } from 'utils/constants';
+import { SERVER_URL } from '@/utils/constants';
 import LoadOptions from './LoadOptions';
 import VisualiserContext from './VisualiserContext';
 

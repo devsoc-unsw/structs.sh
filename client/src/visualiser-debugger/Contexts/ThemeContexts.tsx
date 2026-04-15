@@ -41,9 +41,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setStoredTheme(darkMode);
   }, [darkMode]);
 
-  const value = useMemo(() => {
-    return { darkMode, toggleDarkMode };
-  }, [darkMode]);
+  const value = useMemo(() => ({ darkMode, toggleDarkMode }), [darkMode]);
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };

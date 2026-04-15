@@ -12,24 +12,20 @@ interface SvgComponentProps {
   children: React.ReactNode;
 }
 
-const ScaleBar = ({ scalePercentage }: { scalePercentage: number }) => {
-  return (
-    <div
-      style={{
-        position: 'fixed',
-        bottom: '10px',
-        right: '15px',
-        background: 'var(--bg-primary)',
-        padding: '5px',
-        borderRadius: '5px',
-      }}
-    >
-      <div style={{ fontSize: '12px', textAlign: 'center' }}>{`${Math.round(
-        scalePercentage
-      )}%`}</div>
-    </div>
-  );
-};
+const ScaleBar = ({ scalePercentage }: { scalePercentage: number }) => (
+  <div
+    style={{
+      position: 'fixed',
+      bottom: '10px',
+      right: '15px',
+      background: 'var(--bg-primary)',
+      padding: '5px',
+      borderRadius: '5px',
+    }}
+  >
+    <div style={{ fontSize: '12px', textAlign: 'center' }}>{`${Math.round(scalePercentage)}%`}</div>
+  </div>
+);
 
 const SvgComponent: React.FC<SvgComponentProps> = ({ children, centerCoord: centerCoordProp }) => {
   const [scalePercentage, setScalePercentage] = useState(100);

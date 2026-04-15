@@ -55,7 +55,7 @@ const VisualiserCanvas: React.FC = () => {
         const mouseFromWorkspaceOriginTransformed = vec2.transformMat3(
           vec2.create(),
           mouseFromWorkspaceOrigin,
-          mat3.invert(mat3.create(), prev)
+          mat3.invert(mat3.create(), prev) || mat3.create() // invert here *should* never fail
         );
 
         const newTransform = mat3.clone(prev);

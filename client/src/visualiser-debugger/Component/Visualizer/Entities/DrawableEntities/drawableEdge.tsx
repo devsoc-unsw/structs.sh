@@ -5,14 +5,12 @@ import HoverContent from '../../Util/hoverDebugger';
 
 const animations = {
   enter: {
-    initialPosition: (x: number, y: number) => {
-      return {
-        x,
-        y,
-        opacity: 0,
-        transition: { duration: 1.5 },
-      };
-    },
+    initialPosition: (x: number, y: number) => ({
+      x,
+      y,
+      opacity: 0,
+      transition: { duration: 1.5 },
+    }),
   },
   exit: { opacity: 0, transition: { duration: 0.75 } },
   animate: {

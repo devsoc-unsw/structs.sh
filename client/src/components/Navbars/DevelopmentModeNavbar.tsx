@@ -1,9 +1,9 @@
-import styles from 'styles/DevelopmentModeNavBar.module.css';
-import dialogStyles from 'styles/Dialog.module.css';
-import logo from 'assets/img/logo.png';
+import styles from '@/styles/DevelopmentModeNavBar.module.css';
+import dialogStyles from '@/styles/Dialog.module.css';
+import logo from '@/assets/img/logo.png';
 import { InfoCircledIcon } from '@radix-ui/react-icons';
-import Dialog, { DialogTitle, DialogDescription } from 'components/Dialog/Dialog';
-import AboutText from 'visualiser-debugger/Component/FileTree/AboutText';
+import Dialog, { DialogTitle, DialogDescription } from '@/components/Dialog/Dialog';
+import AboutText from '@/visualiser-debugger/Component/FileTree/AboutText';
 import BookIcon from '@mui/icons-material/Book';
 import classNames from 'classnames';
 import { Tooltip } from '@mui/material';

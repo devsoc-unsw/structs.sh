@@ -1,11 +1,11 @@
 import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Helmet from 'react-helmet';
-import { toTitleCase, urlToTitle } from 'utils/url';
-import 'visualiser-src/linked-list-visualiser/styles/visualiser.css';
-import { TopNavbar } from 'components/Navbars';
-import { LineLoader } from 'components/Loader';
-import Visualiser from 'components/Visualiser';
+import { toTitleCase, urlToTitle } from '@/utils/url';
+import '@/visualiser-src/linked-list-visualiser/styles/visualiser.css';
+import { TopNavbar } from '@/components/Navbars';
+import { LineLoader } from '@/components/Loader';
+import Visualiser from '@/components/Visualiser';
 import { Box } from '@mui/material';
 
 const containerVariants = {

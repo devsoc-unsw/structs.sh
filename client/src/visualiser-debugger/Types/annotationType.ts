@@ -92,16 +92,10 @@ export interface UserAnnotation {
 export const isLinkedListNode = (
   memoryValue: MemoryValue,
   linkedListAnnotation: LinkedListAnnotation
-) => {
-  return 'typeName' in memoryValue && memoryValue.typeName === linkedListAnnotation.typeName;
-};
+) => 'typeName' in memoryValue && memoryValue.typeName === linkedListAnnotation.typeName;
 
-export const isTreeNode = (
-  memoryValue: MemoryValue,
-  binaryTreeAnnotation: BinaryTreeAnnotation
-) => {
-  return 'typeName' in memoryValue && memoryValue.typeName === binaryTreeAnnotation.typeName;
-};
+export const isTreeNode = (memoryValue: MemoryValue, binaryTreeAnnotation: BinaryTreeAnnotation) =>
+  'typeName' in memoryValue && memoryValue.typeName === binaryTreeAnnotation.typeName;
 
 export enum FieldType {
   RECURSIVE,
