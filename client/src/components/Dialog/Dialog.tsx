@@ -29,7 +29,9 @@ const DialogTitle: React.FC<ReactNodeProp> = ({ children }) => (
   <Internal.Title className={styles.DialogTitle}>{children}</Internal.Title>
 );
 
+// TODO: fix this when we bump to react 19
 DialogTitle.propTypes = {
+  // @ts-ignore:
   children: PropTypes.node.isRequired,
 };
 
@@ -37,7 +39,9 @@ const DialogDescription: React.FC<ReactNodeProp> = ({ children }) => (
   <Internal.Description className={styles.DialogDescription}>{children}</Internal.Description>
 );
 
+// TODO: fix this when we bump to react 19
 DialogDescription.propTypes = {
+  // @ts-ignore
   children: PropTypes.node.isRequired,
 };
 

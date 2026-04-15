@@ -46,9 +46,6 @@ const animations = {
 
 type DrawableEdgeComponent = DrawableComponentBase<NodeProp>;
 const LinkedNode: DrawableEdgeComponent = ({ entity: nodeEntity, coord }: NodeProp, ref) => {
-  if (nodeEntity.type !== 'node' || !coord) return null;
-  const { colorHex, label: title, size } = nodeEntity;
-
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
 
@@ -56,6 +53,9 @@ const LinkedNode: DrawableEdgeComponent = ({ entity: nodeEntity, coord }: NodePr
     setX(coord.x.val);
     setY(coord.y.val);
   }, [coord.y.val, coord.x.val]);
+
+  if (nodeEntity.type !== 'node' || !coord) return null;
+  const { colorHex, label: title, size } = nodeEntity;
 
   return (
     <motion.g

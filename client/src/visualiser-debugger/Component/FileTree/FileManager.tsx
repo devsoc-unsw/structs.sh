@@ -12,9 +12,9 @@ import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { handleWorkspaceOpen } from '@/visualiser-debugger/Store/onboardingStore';
+import { useUserFsStateStore } from '@/visualiser-debugger/Store/userFsStateStore';
 import Folder from './Folder';
 import './css/WorkspaceSelector.css';
-import { useUserFsStateStore } from '@/visualiser-debugger/Store/userFsStateStore';
 import { IFileDirNode, IFileFileNode, IFileType } from './FS/IFileSystem';
 
 const WorkspaceSelector = () => {
