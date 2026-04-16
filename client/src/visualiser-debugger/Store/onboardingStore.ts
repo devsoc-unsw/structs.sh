@@ -1,5 +1,5 @@
 // onboardingStore
-import { ACTIONS, CallBackProps, EVENTS, STATUS, Step } from 'react-joyride';
+import { ACTIONS, EventData, EVENTS, STATUS, Step } from 'react-joyride';
 import create from 'zustand';
 
 function logGroup(type: string, data: any) {
@@ -22,8 +22,6 @@ const onboardingSteps: Step[] = [
     placement: 'center',
     target: 'body',
     title: 'Welcome to Structs.sh',
-    disableScrolling: true,
-    disableScrollParentFix: true,
   },
   // step 2
   {
@@ -33,13 +31,6 @@ const onboardingSteps: Step[] = [
     target: '.onboardingButton',
     title: 'The Onboarding Menu',
     spotlightPadding: 0,
-    styles: {
-      options: {
-        zIndex: 10000,
-      },
-    },
-    disableScrolling: true,
-    disableScrollParentFix: true,
   },
   // step 3
   {
@@ -47,14 +38,7 @@ const onboardingSteps: Step[] = [
     target: '.Onboarding-workspace',
     placement: 'right',
     spotlightPadding: 0,
-    styles: {
-      options: {
-        zIndex: 10000,
-      },
-    },
     title: 'Sidebar',
-    disableScrolling: true,
-    disableScrollParentFix: true,
   },
   // step 4
   {
@@ -63,13 +47,6 @@ const onboardingSteps: Step[] = [
     target: '.Onboarding-fileButton',
     title: 'File Creation',
     spotlightPadding: 0,
-    styles: {
-      options: {
-        zIndex: 10000,
-      },
-    },
-    disableScrolling: true,
-    disableScrollParentFix: true,
   },
   // step 5
   {
@@ -78,13 +55,6 @@ const onboardingSteps: Step[] = [
     target: '.Onboarding-folderButton',
     title: 'Folder Creation',
     spotlightPadding: 0,
-    styles: {
-      options: {
-        zIndex: 10000,
-      },
-    },
-    disableScrolling: true,
-    disableScrollParentFix: true,
   },
   // step 6
   {
@@ -94,13 +64,6 @@ const onboardingSteps: Step[] = [
     target: '.Onboarding-deleteButton',
     title: 'Deleting Files and Folders',
     spotlightPadding: 0,
-    styles: {
-      options: {
-        zIndex: 10000,
-      },
-    },
-    disableScrolling: true,
-    disableScrollParentFix: true,
   },
   // step 7
   {
@@ -109,13 +72,6 @@ const onboardingSteps: Step[] = [
     target: '.Onboarding-rootContent',
     title: 'The Root Directory',
     spotlightPadding: 0,
-    styles: {
-      options: {
-        zIndex: 10000,
-      },
-    },
-    disableScrolling: true,
-    disableScrollParentFix: true,
   },
   // step 8
   {
@@ -125,17 +81,8 @@ const onboardingSteps: Step[] = [
     target: '.Onboarding-rootContent',
     title: 'Opening the Root Directory',
     spotlightPadding: 0,
-    styles: {
-      options: {
-        zIndex: 10000,
-      },
-    },
-    disableOverlayClose: true,
-    hideCloseButton: true,
-    hideFooter: true,
-    spotlightClicks: true,
-    disableScrolling: true,
-    disableScrollParentFix: true,
+    overlayClickAction: false,
+    buttons: [],
   },
   // step 9
   {
@@ -145,13 +92,6 @@ const onboardingSteps: Step[] = [
     target: '.Onboarding-rootContent',
     title: 'Root Directory Content',
     spotlightPadding: 0,
-    styles: {
-      options: {
-        zIndex: 10000,
-      },
-    },
-    disableScrolling: true,
-    disableScrollParentFix: true,
   },
   // step 10
   {
@@ -160,17 +100,8 @@ const onboardingSteps: Step[] = [
     target: '.Onboarding-sidebar',
     title: 'Opening a file',
     spotlightPadding: 0,
-    styles: {
-      options: {
-        zIndex: 10000,
-      },
-    },
-    disableOverlayClose: true,
-    hideCloseButton: true,
-    hideFooter: true,
-    spotlightClicks: true,
-    disableScrolling: true,
-    disableScrollParentFix: true,
+    overlayClickAction: false,
+    buttons: [],
   },
   // step 11
   {
@@ -180,13 +111,6 @@ const onboardingSteps: Step[] = [
     target: '.Onboarding-codeEditor',
     title: 'The Code Editor',
     spotlightPadding: 0,
-    styles: {
-      options: {
-        zIndex: 10000,
-      },
-    },
-    disableScrolling: true,
-    disableScrollParentFix: true,
   },
   // step 12
   {
@@ -196,17 +120,8 @@ const onboardingSteps: Step[] = [
     target: '.Onboarding-compileButton',
     title: 'Compiling the Code',
     spotlightPadding: 0,
-    styles: {
-      options: {
-        zIndex: 10000,
-      },
-    },
-    disableOverlayClose: true,
-    hideCloseButton: true,
-    hideFooter: true,
-    spotlightClicks: true,
-    disableScrolling: true,
-    disableScrollParentFix: true,
+    overlayClickAction: false,
+    buttons: [],
   },
   // step 13
   {
@@ -215,13 +130,6 @@ const onboardingSteps: Step[] = [
     target: '.Onboarding-inspectionMenu',
     title: 'Compilation Results',
     spotlightPadding: 0,
-    styles: {
-      options: {
-        zIndex: 10000,
-      },
-    },
-    disableScrolling: true,
-    disableScrollParentFix: true,
   },
   // step 14
   {
@@ -231,13 +139,6 @@ const onboardingSteps: Step[] = [
     target: '.Onboarding-configureMenu',
     title: 'Configure Menu',
     spotlightPadding: 0,
-    styles: {
-      options: {
-        zIndex: 10000,
-      },
-    },
-    disableScrolling: true,
-    disableScrollParentFix: true,
   },
   // step 15
   {
@@ -246,13 +147,6 @@ const onboardingSteps: Step[] = [
     target: '.Onboarding-visualiserBox',
     title: 'Visualising the Code',
     spotlightPadding: 0,
-    styles: {
-      options: {
-        zIndex: 10000,
-      },
-    },
-    disableScrolling: true,
-    disableScrollParentFix: true,
   },
   // step 16
   {
@@ -262,13 +156,6 @@ const onboardingSteps: Step[] = [
     target: '.Onboarding-playButton',
     title: 'How to Visualise the Code',
     spotlightPadding: 0,
-    styles: {
-      options: {
-        zIndex: 10000,
-      },
-    },
-    disableScrolling: true,
-    disableScrollParentFix: true,
   },
   // step 17
   {
@@ -278,13 +165,6 @@ const onboardingSteps: Step[] = [
     target: '.Onboarding-configureMenu',
     title: 'Configure Menu Updates',
     spotlightPadding: 0,
-    styles: {
-      options: {
-        zIndex: 10000,
-      },
-    },
-    disableScrolling: true,
-    disableScrollParentFix: true,
   },
   // step 18
   {
@@ -293,8 +173,6 @@ const onboardingSteps: Step[] = [
     placement: 'center',
     target: 'body',
     title: 'Enjoy Structs.sh!',
-    disableScrolling: true,
-    disableScrollParentFix: true,
   },
 ];
 
@@ -341,7 +219,7 @@ export const handleClickStart = (event: React.MouseEvent<HTMLElement>) => {
   onboardingStore.getState().setRun(true);
 };
 
-export const handleJoyrideCallback = (data: CallBackProps) => {
+export const handleJoyrideCallback = (data: EventData) => {
   const { action, index, status, type } = data;
   if (([STATUS.FINISHED, STATUS.SKIPPED] as string[]).includes(status)) {
     onboardingStore.getState().setRun(false);

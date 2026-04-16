@@ -4,7 +4,7 @@ import globalStyles from '@/styles/global.module.css';
 import classNames from 'classnames';
 import { Tabs, Tab } from '@/components/Tabs';
 import Console from '@/visualiser-debugger/Component/Console/Console';
-import Joyride from 'react-joyride';
+import { Joyride } from 'react-joyride';
 import DynamicTabs from '@/components/TabResize/DynamicTabs';
 import useSocketClientStore from '@/Services/socketClient';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material';
@@ -72,18 +72,19 @@ const DevelopmentModeContent = () => {
     <div className={classNames(globalStyles.root, darkMode ? styles.dark : styles.light)}>
       <MuiThemeProvider theme={debuggerTheme}>
         <Joyride
-          callback={handleJoyrideCallback}
+          onEvent={handleJoyrideCallback}
           continuous
           run={run}
           scrollToFirstStep
-          showProgress
-          showSkipButton
           stepIndex={stepIndex}
           steps={steps}
-          styles={{
-            options: {
-              primaryColor: '#6955c8',
-            },
+          options={{
+            showProgress: true,
+            primaryColor: '#6955c8',
+            buttons: ['back', 'close', 'primary', 'skip'],
+            zIndex: 10000,
+            skipScroll: true,
+            spotlightPadding: 15,
           }}
         />
         <div className={styles.layout}>
