@@ -54,7 +54,7 @@ const SvgComponent: React.FC<SvgComponentProps> = ({ children, centerCoord: cent
     if (isLocked) {
       setCenterCoord(centerCoordProp);
     }
-  }, [centerCoordProp]);
+  }, [centerCoordProp, isLocked]);
 
   const handlePosSimulation = () => {
     if (isLocked) {
