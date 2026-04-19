@@ -54,7 +54,9 @@ class BaseDebugger:
             os.ttyname(self.fd_slave),
             "--args",
             str(executable_path),
-            stdin=PIPE, # process can't be None
+            # use pipes so Process.stdin and Process.stdout are not None
+            # https://docs.python.org/3/library/asyncio-subprocess.html#asyncio.subprocess.Process.stdin
+            stdin=PIPE,
             stdout=PIPE,
         )
 
