@@ -54,6 +54,8 @@ class BaseDebugger:
             os.ttyname(self.fd_slave),
             "--args",
             str(executable_path),
+            # use pipes so Process.stdin and Process.stdout are not None
+            # https://docs.python.org/3/library/asyncio-subprocess.html#asyncio.subprocess.Process.stdin
             stdin=PIPE,
             stdout=PIPE,
         )
@@ -61,12 +63,12 @@ class BaseDebugger:
         create_task(self._stdout_dispatch())
         create_task(self._inf_dispatch())
         self._did_init = True
-        return self
 
     async def deinit(self) -> None:
         if not self._did_init:
             return
 
+        assert self.process.stdin is not None
         self.process.stdin.write_eof()
         await self.process.stdin.drain()
         await self.process.wait()
@@ -80,6 +82,7 @@ class BaseDebugger:
     async def run_command(self, command: str):
         chan = self._inflight_cmds.make_chan()
 
+        assert self.process.stdin is not None
         self.process.stdin.write(f"{chan}{command}\n".encode())
         await self.process.stdin.drain()
 
@@ -120,6 +123,7 @@ class BaseDebugger:
         self._inferior_handler = _asyncify(func)
 
     async def _stdout_dispatch(self) -> None:
+        assert self.process.stdout is not None
         while line := await self.process.stdout.readline():
             for resp in mi.parse(line):
                 match resp:
