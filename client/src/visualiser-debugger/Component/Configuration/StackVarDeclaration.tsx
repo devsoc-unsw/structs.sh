@@ -46,7 +46,7 @@ export const StackVarAnnotation: React.FC<StackVariableAnnotationProp> = ({
     if (name in stackAnnotation && stackAnnotation[name] === null) {
       setSelectedRole(StackVariableRole.Empty);
     }
-  }, []);
+  }, [memoryValue.typeName, name, selectedRole, stackAnnotation, updateStackAnnotation]);
 
   return (
     <div style={{ paddingBottom: '8px' }}>

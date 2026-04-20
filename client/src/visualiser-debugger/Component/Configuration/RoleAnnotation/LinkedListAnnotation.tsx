@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import styles from '@/styles/Configuration.module.css';
 import { AnnotationComponent, AnnotationProp } from './AnnotationComponentBase';
@@ -63,38 +63,47 @@ export const LinkedListNodeAnnotation: AnnotationComponent = ({ backendType }: A
     useState<PossibleLinkedListAnnotation | null>(createPossibleLinkedListTypeDecl(backendType));
   const { updateUserAnnotation, visualizer } = useGlobalStore();
   const [nodeAnnotation, setNodeAnnotation] = useState<LinkedListAnnotation | null>(null);
-  const handleUpdateNodeAnnotation = (newAnnotation: LinkedListAnnotation) => {
-    updateUserAnnotation({
-      stackAnnotation: visualizer.userAnnotation.stackAnnotation,
-      typeAnnotation: {
-        ...visualizer.userAnnotation.typeAnnotation,
-        [newAnnotation.typeName]: newAnnotation,
-      },
-    });
-  };
-  const handleLinkedNodeAnnotation = (
-    possibleTypeAnnotation: PossibleLinkedListAnnotation | null
-  ) => {
-    if (possibleTypeAnnotation === null) return;
-    const linkedNodeAnnotation: LinkedListAnnotation = {
-      typeName: backendType.typeName as `struct ${string}`,
-      type: DataStructureType.LinkedList,
-      value: {
-        name: possibleTypeAnnotation.possibleValues[0].name,
-        typeName: possibleTypeAnnotation.possibleValues[0].typeName,
-      },
-      next: {
-        name: possibleTypeAnnotation.possibleNexts[0].name,
-        typeName: possibleTypeAnnotation.possibleNexts[0].typeName,
-      },
-    };
-    setNodeAnnotation(linkedNodeAnnotation);
-    handleUpdateNodeAnnotation(linkedNodeAnnotation);
-  };
+  const handleUpdateNodeAnnotation = useCallback(
+    (newAnnotation: LinkedListAnnotation) => {
+      updateUserAnnotation({
+        stackAnnotation: visualizer.userAnnotation.stackAnnotation,
+        typeAnnotation: {
+          ...visualizer.userAnnotation.typeAnnotation,
+          [newAnnotation.typeName]: newAnnotation,
+        },
+      });
+    },
+    [
+      updateUserAnnotation,
+      visualizer.userAnnotation.stackAnnotation,
+      visualizer.userAnnotation.typeAnnotation,
+    ]
+  );
+
+  const handleLinkedNodeAnnotation = useCallback(
+    (possibleTypeAnnotation: PossibleLinkedListAnnotation | null) => {
+      if (possibleTypeAnnotation === null) return;
+      const linkedNodeAnnotation: LinkedListAnnotation = {
+        typeName: backendType.typeName as `struct ${string}`,
+        type: DataStructureType.LinkedList,
+        value: {
+          name: possibleTypeAnnotation.possibleValues[0].name,
+          typeName: possibleTypeAnnotation.possibleValues[0].typeName,
+        },
+        next: {
+          name: possibleTypeAnnotation.possibleNexts[0].name,
+          typeName: possibleTypeAnnotation.possibleNexts[0].typeName,
+        },
+      };
+      setNodeAnnotation(linkedNodeAnnotation);
+      handleUpdateNodeAnnotation(linkedNodeAnnotation);
+    },
+    [backendType.typeName, handleUpdateNodeAnnotation]
+  );
 
   useEffect(() => {
     handleLinkedNodeAnnotation(possibleTypeDeclForLinkedList);
-  }, [possibleTypeDeclForLinkedList]);
+  }, [possibleTypeDeclForLinkedList, handleLinkedNodeAnnotation]);
 
   useEffect(() => {
     const possibleTypeDecls = createPossibleLinkedListTypeDecl(backendType);

@@ -124,12 +124,12 @@ const LinkedList: VisualizerComponent = ({ graphState }: VisualizerState) => {
     );
 
     setCenterCoord(center);
-  }, [graphState]);
+  }, [graphState, pos]);
 
   useEffect(() => {
     renderNodes();
     controls.start('visible');
-  }, [graphState]);
+  }, [graphState, controls, renderNodes]);
 
   return (
     <SvgComponent centerCoord={centerCoord}>

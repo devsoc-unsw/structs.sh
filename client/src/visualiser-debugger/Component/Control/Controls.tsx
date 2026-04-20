@@ -3,7 +3,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import UndoIcon from '@mui/icons-material/Undo';
 import RedoIcon from '@mui/icons-material/Redo';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { Fade } from '@mui/material';
 import { handleCompileClicked } from '@/visualiser-debugger/Store/onboardingStore';
 import { useSocketCommunication } from '@/Services/useSocketCommunication';
@@ -36,29 +36,32 @@ const Controls = () => {
     setBufferMode((mode) => !mode);
   };
 
-  const startBuffering = async (bufferSize: number) => {
-    if (bufferingRef.current) return;
-    bufferingRef.current = true;
-    setLoading(true);
+  const startBuffering = useCallback(
+    async (bufferSize: number) => {
+      if (bufferingRef.current) return;
+      bufferingRef.current = true;
+      setLoading(true);
 
-    setMessage({
-      content: 'Buffer started.',
-      colorTheme: 'warning',
-      durationMs: DEFAULT_MESSAGE_DURATION,
-    });
+      setMessage({
+        content: 'Buffer started.',
+        colorTheme: 'warning',
+        durationMs: DEFAULT_MESSAGE_DURATION,
+      });
 
-    await bulkSendNextStates(bufferSize);
+      await bulkSendNextStates(bufferSize);
 
-    setMessage({
-      content: 'Buffer completed.',
-      colorTheme: 'info',
-      durationMs: DEFAULT_MESSAGE_DURATION,
-    });
+      setMessage({
+        content: 'Buffer completed.',
+        colorTheme: 'info',
+        durationMs: DEFAULT_MESSAGE_DURATION,
+      });
 
-    setLoading(false);
-    setBufferMode(false);
-    bufferingRef.current = false;
-  };
+      setLoading(false);
+      setBufferMode(false);
+      bufferingRef.current = false;
+    },
+    [bulkSendNextStates, setMessage]
+  );
 
   useEffect(() => {
     if (!isActive) {
@@ -81,7 +84,7 @@ const Controls = () => {
 
       setBufferMode(false);
     }
-  }, [bufferMode]);
+  }, [bufferMode, currentIndex, setMessage, startBuffering, states.length]);
 
   const [autoNext, setAutoNext] = useState<boolean>(false);
   useEffect(() => {
@@ -106,7 +109,7 @@ const Controls = () => {
       }
       console.error(`Unable to parse backend state: ${issue} is undefined`);
     }
-  }, [currFrame, userAnnotation]);
+  }, [currFrame, userAnnotation, autoNext, parser, stepForward]);
 
   return (
     <div className={styles.timeline}>
