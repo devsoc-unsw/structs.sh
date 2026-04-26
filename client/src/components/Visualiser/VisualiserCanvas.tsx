@@ -1,5 +1,5 @@
 import React, { PointerEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { Box } from '@mui/material';
+import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import { mat3, vec2 } from 'gl-matrix';
 

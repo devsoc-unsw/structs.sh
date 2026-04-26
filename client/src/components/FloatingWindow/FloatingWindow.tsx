@@ -1,5 +1,7 @@
 import { ReactNode } from 'react';
-import { Box, Collapse, useTheme } from '@mui/material';
+import Box from '@mui/material/Box';
+import Collapse from '@mui/material/Collapse';
+import { useTheme } from '@mui/material/styles';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
 

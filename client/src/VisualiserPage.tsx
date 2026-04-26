@@ -6,7 +6,7 @@ import '@/visualiser-src/linked-list-visualiser/styles/visualiser.css';
 import { TopNavbar } from '@/components/Navbars';
 import { LineLoader } from '@/components/Loader';
 import Visualiser from '@/components/Visualiser';
-import { Box } from '@mui/material';
+import Box from '@mui/material/Box';
 
 const containerVariants = {
   hidden: {

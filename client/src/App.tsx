@@ -1,4 +1,5 @@
-import { ThemeProvider, Box } from '@mui/material';
+import Box from '@mui/material/Box';
+import { ThemeProvider } from '@mui/material/styles';
 import { AnimatePresence } from 'framer-motion';
 import { Route, Routes } from 'react-router-dom';
 import Feedback from '@/Feedback';

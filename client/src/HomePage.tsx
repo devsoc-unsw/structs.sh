@@ -1,4 +1,7 @@
-import { Container, Theme, Typography, Box } from '@mui/material';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import type { Theme } from '@mui/material/styles';
 import { useTheme, styled } from '@mui/material/styles';
 import Topics from '@/components/Topics';
 import Features from '@/components/Features';

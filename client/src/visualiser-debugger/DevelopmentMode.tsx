@@ -7,7 +7,7 @@ import Console from '@/visualiser-debugger/Component/Console/Console';
 import { Joyride } from 'react-joyride';
 import DynamicTabs from '@/components/TabResize/DynamicTabs';
 import useSocketClientStore from '@/Services/socketClient';
-import { ThemeProvider as MuiThemeProvider } from '@mui/material';
+import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import DevelopmentModeNavbar from '@/components/Navbars/DevelopmentModeNavbar';
 import { createDebuggerTheme } from '@/structsThemes';
 import Configuration from './Component/Configuration/Configuration';

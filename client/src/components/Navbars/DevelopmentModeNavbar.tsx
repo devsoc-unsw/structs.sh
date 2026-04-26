@@ -6,7 +6,7 @@ import Dialog, { DialogTitle, DialogDescription } from '@/components/Dialog/Dial
 import AboutText from '@/visualiser-debugger/Component/FileTree/AboutText';
 import BookIcon from '@mui/icons-material/Book';
 import classNames from 'classnames';
-import { Tooltip } from '@mui/material';
+import Tooltip from '@mui/material/Tooltip';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
