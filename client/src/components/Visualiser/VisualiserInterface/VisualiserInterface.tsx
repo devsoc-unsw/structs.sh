@@ -40,7 +40,7 @@ const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle, data })
     if (data) {
       controller.loadData(data);
     }
-  }, [topicTitle]);
+  }, [topicTitle, data]);
 
   const handleTimelineUpdate = useCallback((val: number) => {
     const timelineSlider = document.querySelector('#timelineSlider') as HTMLInputElement;
@@ -65,7 +65,7 @@ const VisualiserInterface: FC<VisualiserInterfaceProps> = ({ topicTitle, data })
     setIsPlaying(val);
   }, []);
 
-  const contextValue = useMemo(() => ({ controller }), [controller]);
+  const contextValue = useMemo(() => ({ controller }), []);
 
   return (
     <VisualiserContext.Provider value={contextValue}>
