@@ -7,7 +7,6 @@ import AboutText from '@/visualiser-debugger/Component/FileTree/AboutText';
 import BookIcon from '@mui/icons-material/Book';
 import classNames from 'classnames';
 import { Tooltip } from '@mui/material';
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
@@ -18,14 +17,7 @@ const DevelopmentModeNavbar = ({
 }: {
   onButtonClick: (event: React.MouseEvent<HTMLElement>) => void;
 }) => {
-  const [navigateHomePage, setNavigateHomePage] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (navigateHomePage) {
-      navigate('/');
-    }
-  }, [navigateHomePage]);
 
   const { darkMode, toggleDarkMode } = useTheme();
   const handleDarkModeToggle = (e: React.MouseEvent<HTMLElement>) => {
@@ -35,11 +27,7 @@ const DevelopmentModeNavbar = ({
 
   return (
     <div className={styles.navBar}>
-      <div
-        className={styles.navItem}
-        onClick={() => setNavigateHomePage(!navigateHomePage)}
-        aria-hidden="true"
-      >
+      <div className={styles.navItem} onClick={() => navigate('/')} aria-hidden="true">
         <img src={logo} alt="logo" height="30px" />
         <span>
           <h4>Structs.sh</h4>

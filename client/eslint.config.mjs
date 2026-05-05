@@ -122,7 +122,7 @@ const overrideConfig = defineConfig([
       }],
 
       // TODO: remove this and fix errors (the joy of tech debt amirite)
-      "react-hooks/exhaustive-deps": "warn",
+      "react-hooks/exhaustive-deps": "error",
     },
   }
 ])
