@@ -137,7 +137,7 @@ const Controls = () => {
           </Fade>
         )}
       </Button>
-  
+
       {/* Step Backward BTN */}
       <Button
         disabled={!isActive || currentIndex === 0}
