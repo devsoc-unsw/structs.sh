@@ -87,6 +87,7 @@ const Controls = () => {
   }, [bufferMode, currentIndex, setMessage, startBuffering, states.length]);
 
   const [autoNext, setAutoNext] = useState<boolean>(false);
+  // To Process new backend frame and store it into frontend state
   useEffect(() => {
     if (isInitialBackendState(currFrame)) {
       return;
@@ -136,6 +137,8 @@ const Controls = () => {
           </Fade>
         )}
       </Button>
+  
+      {/* Step Backward BTN */}
       <Button
         disabled={!isActive || currentIndex === 0}
         onClick={() => {
@@ -144,6 +147,8 @@ const Controls = () => {
       >
         <UndoIcon />
       </Button>
+
+      {/* Step Forward BTN */}
       <Button
         disabled={!isActive}
         onClick={async () => {
