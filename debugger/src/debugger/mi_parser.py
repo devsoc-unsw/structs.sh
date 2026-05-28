@@ -39,7 +39,7 @@ class MIParser():
         self.advance()
 
     def advance(self):
-        self._current_token=next(self._current_record_iter)
+        self._current_token=next(self._current_record_iter,None)
         
 
     def expect(self,expected: list|str):
@@ -50,14 +50,14 @@ class MIParser():
     
 
     def parse_result_record(self):
-        token= self.parse_token()
+        token= self.parse_token() if self._current_token!="^" else ""
         self.expect("^")
         kind=self.parse_result_class()
 
-        results=None
-        if self._current_token==",":
+        results=dict()
+        while self._current_token==",":
             self.advance()            
-            results=self.parse_results()   #na
+            results.update(self.parse_result())   #na
         
         return Result(token=token,kind=kind,results=results)
 
@@ -85,8 +85,90 @@ class MIParser():
 
         return "".join(kind)
     
-    def parse_results(self):  #na
-        pass
+    def parse_result(self):  #na
+        key=[]
+
+        while self._current_token.isalpha() or self._current_token in ["_","-"]:
+            key.append(self._current_token)
+            self.advance()
+        
+        self.expect("=")
+        value=self.parse_values()
+        variable="".join(key)
+        print(self._current_token)
+
+        return {variable:value}
+    
+
+
+    def parse_values(self):
+        temp_value=None
+        match self._current_token:
+            case "[":
+                #self.expect("[")
+                temp_value=self.parse_list()
+            case "{":
+                temp_value=self.parse_tuple()
+            case "\"":
+                temp_value=self.parse_cstring()
+            case _:
+                raise MIParserError
+            
+        return temp_value
+            
+                         
+        
+    def parse_list(self):
+        self.expect("[")
+        value_list=[]
+        match self._current_token:
+            case "]":
+                self.expect("]")
+                return value_list
+            case "[" | "\"" | "{":
+                value_list.append(self.parse_values())
+                while self._current_token==",":
+                    self.expect(",")
+                    value_list.append(self.parse_values())
+            case _:
+                value_list.append(self.parse_result())
+                while self._current_token==",":
+                    self.expect(",")
+                    value_list.append(self.parse_result())
+
+        self.expect("]")        
+
+        return value_list
+
+    # variable=[var:val,var1:[var2:val2]]
+                    
+
+    def parse_tuple(self):
+        self.expect("{")
+        value_tuple={}
+        match self._current_token:
+            case "}":
+                self.expect("}")
+                return value_tuple
+            case _:
+                value_tuple.update(self.parse_result())
+                while self._current_token==",":
+                    self.expect(",")
+                    value_tuple.update(self.parse_result())
+        
+        self.expect("}")
+        return value_tuple
+
+    def parse_cstring(self):
+        self.expect("\"")
+        cstring=[]
+        while self._current_token!="\"":
+            cstring.append(self._current_token)
+            self.advance()
+        self.expect("\"")
+        return "".join(cstring)
+      
+
 
         
 
@@ -120,11 +202,12 @@ if __name__=="__main__":
     )
     #new_text=text.split("\n(gdb) \n")
     #print(new_text,"\n")
+    #print(text)
 
     parse=MIParser(text)
 
     #print(parse._current_record)
-    parse.advance_sequence()
+    #parse.advance_sequence()
     print(parse._current_record,parse._current_token)
     temp=parse.parse_result_record()
     print(temp.token,temp.kind,temp.results)
