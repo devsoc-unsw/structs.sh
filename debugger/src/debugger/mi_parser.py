@@ -18,6 +18,42 @@ class Result:
     results: dict
 
 
+@fastdataclass
+class ExecAsync:
+    token: int | None
+    kind: str
+    output: dict
+
+
+@fastdataclass
+class StatusAsync:
+    token: int | None
+    kind: str
+    output: dict
+
+
+@fastdataclass
+class NotifyAsync:
+    token: int | None
+    kind: str
+    output: dict
+
+
+@fastdataclass
+class ConsoleStream:
+    msg: str
+
+
+@fastdataclass
+class TargetStream:
+    msg: str
+
+
+@fastdataclass
+class LogStream:
+    msg: str
+
+
 class MIParserError(Exception):
     pass
 
@@ -69,7 +105,7 @@ class MIParser():
             token.append(self._current_token)
             self.advance()
         
-        return int("".join(token))
+        return int("".join(token)) if token else None
 
 
     def parse_result_class(self):
@@ -167,11 +203,72 @@ class MIParser():
             self.advance()
         self.expect("\"")
         return "".join(cstring)
-      
-
-
+    
+    def parse_ofb_record(self):
+        match self._current_token:
+            case "~" | "@" | "&":
+                return self.parse_stream_record()
+            case _:
+                return self.parse_async_record()
         
 
+    def parse_async_record(self):
+        token=self.parse_token()
+        match self._current_token:
+            case "*":
+                self.expect("*")
+                kind,output=self.parse_async_output()
+                return ExecAsync(token=token,kind=kind,output=output)
+            case "+":
+                self.expect("+")
+                kind,output=self.parse_async_output()
+                return StatusAsync(token=token,kind=kind,output=output)
+            case "=":
+                self.expect("=")
+                kind,output=self.parse_async_output()
+                return NotifyAsync(token=token,kind=kind,output=output)
+            case _:
+                raise MIParserError
+
+    def parse_stream_record(self):
+        msg=None
+        match self._current_token:
+            case "~":
+                self.expect("~")
+                msg=self.parse_cstring()
+                return ConsoleStream(msg=msg)
+            case "@":
+                self.expect("@")
+                msg=self.parse_cstring()
+                return TargetStream(msg=msg)
+            case "&":
+                self.expect("&")
+                msg=self.parse_cstring()
+                return LogStream(msg=msg)
+            case _:
+                raise MIParserError   
+
+   
+    def parse_async_output(self):
+        async_class=self.parse_async_class()
+        output={}
+        
+        while self._current_token==",":
+            self.expect(",")
+            output.update(self.parse_result())
+        
+        return async_class,output
+
+    def parse_async_class(self):
+        async_class=[]
+        while self._current_token.isalpha() or self._current_token in ["_","-"]:
+            async_class.append(self._current_token)
+            self.advance()
+
+        return "".join(async_class)
+
+    
+      
 
 if __name__=="__main__":
     from textwrap import dedent
@@ -207,10 +304,17 @@ if __name__=="__main__":
     parse=MIParser(text)
 
     #print(parse._current_record)
-    #parse.advance_sequence()
+    parse.advance_sequence()
+    parse.advance_sequence()
+    parse.advance_sequence()
+    parse.advance_record()
+    parse.advance_record()
+    parse.advance_record()
+    parse.advance_record()
     print(parse._current_record,parse._current_token)
-    temp=parse.parse_result_record()
-    print(temp.token,temp.kind,temp.results)
+    temp=parse.parse_ofb_record()
+    #print(temp.token,temp.kind,temp.output)
+    print(temp,temp.msg)
     #or i in parse._records:
     #    print(i)
     #print(iter(new_text.splitlines()))
