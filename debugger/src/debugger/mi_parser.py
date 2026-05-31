@@ -81,12 +81,27 @@ class MIParser():
     def expect(self,expected: list|str):
         if self._current_token==expected or self._current_token in expected:
             self.advance()
-        #else:
-        #    raise MIParserError
+        else:
+            raise MIParserError
     
 
-    def parse_result_record(self):
-        token= self.parse_token() if self._current_token!="^" else ""
+    def parse(self):
+        while self._current_sequence and self._current_record:
+            token= self.parse_token() if self._current_token.isdigit() else ""
+            match self._current_token:
+                case "^":
+                    self.parse_result_record(token)
+                case _:
+                    self.parse_ofb_record(token)
+            try:
+                self.advance_record()
+            except StopIteration:
+                try:
+                    self.advance_sequence()
+                except StopIteration:
+                    break
+
+    def parse_result_record(self, token: str):
         self.expect("^")
         kind=self.parse_result_class()
 
@@ -204,12 +219,12 @@ class MIParser():
         self.expect("\"")
         return "".join(cstring)
     
-    def parse_ofb_record(self):
+    def parse_ofb_record(self, token: str):
         match self._current_token:
             case "~" | "@" | "&":
                 return self.parse_stream_record()
             case _:
-                return self.parse_async_record()
+                return self.parse_async_record(str)
         
 
     def parse_async_record(self):
