@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import orjson
 
 fastdataclass = lambda c: dataclass(
     repr=False,
@@ -87,12 +88,12 @@ class MIParser():
 
     def parse(self):
         while self._current_sequence and self._current_record:
-            token= self.parse_token() if self._current_token.isdigit() else ""
+            token= self.parse_token() if self._current_token and self._current_token.isdigit() else None
             match self._current_token:
                 case "^":
-                    self.parse_result_record(token)
+                    yield self.parse_result_record(token)
                 case _:
-                    self.parse_ofb_record(token)
+                    yield self.parse_ofb_record(token)
             try:
                 self.advance_record()
             except StopIteration:
@@ -125,18 +126,17 @@ class MIParser():
 
     def parse_result_class(self):
         kind=[]
-        print(self._current_token)
         while self._current_token is not None and self._current_token.isalpha():
             kind.append(self._current_token)
             self.advance()
         
-        #if not kind:
-            #raise MIParserError
+        if not kind:
+            raise MIParserError
         
 
         return "".join(kind)
     
-    def parse_result(self):  #na
+    def parse_result(self):  
         key=[]
 
         while self._current_token.isalpha() or self._current_token in ["_","-"]:
@@ -146,7 +146,6 @@ class MIParser():
         self.expect("=")
         value=self.parse_values()
         variable="".join(key)
-        print(self._current_token)
 
         return {variable:value}
     
@@ -182,10 +181,10 @@ class MIParser():
                     self.expect(",")
                     value_list.append(self.parse_values())
             case _:
-                value_list.append(self.parse_result())
+                value_list.extend(self.parse_result().values())
                 while self._current_token==",":
                     self.expect(",")
-                    value_list.append(self.parse_result())
+                    value_list.extend(self.parse_result().values())
 
         self.expect("]")        
 
@@ -212,23 +211,55 @@ class MIParser():
 
     def parse_cstring(self):
         self.expect("\"")
+        escape=False
         cstring=[]
-        while self._current_token!="\"":
+        while self._current_token:
+            if escape is False and self._current_token=="\"":
+                break
+
+            if escape:
+                oct_str=[]
+                cnt=0
+                while cnt<3:
+                    if self._current_token.isdigit() and 0<=int(self._current_token)<=7:
+                        oct_str.append(self._current_token)
+                        self.advance()
+                    else:
+                        break
+                    cnt+=1
+                
+                if cnt>0:
+                    cstring.append("u")
+                    oct_str=int("".join(oct_str),8)
+                    hex_str=f"{oct_str:04x}"
+                    cstring.extend(list(hex_str))
+                    
+                    escape=False    
+                    continue      
+
+            if self._current_token=="\\":
+                escape=True
+            else:
+                escape=False 
+                          
             cstring.append(self._current_token)
             self.advance()
+     
+        
         self.expect("\"")
-        return "".join(cstring)
-    
+        return orjson.loads('"'+"".join(cstring)+'"')
+
+
+
     def parse_ofb_record(self, token: str):
         match self._current_token:
             case "~" | "@" | "&":
                 return self.parse_stream_record()
             case _:
-                return self.parse_async_record(str)
+                return self.parse_async_record(token)
         
 
-    def parse_async_record(self):
-        token=self.parse_token()
+    def parse_async_record(self,token: str):
         match self._current_token:
             case "*":
                 self.expect("*")
@@ -291,10 +322,13 @@ if __name__=="__main__":
     text = (
         dedent(
             r"""
+            @"hehehhhehe\u0000\011\n"
+            ~"helloooo~!\n"
+            ~"\\asdf\"1\u0000\011'"
+            &"INFO:1337"
             12^done,stack=[frame={level="0",addr="0x0000555555555169",func="fibonacci",file="test_fibonacci.c",fullname="/app/src/debugger/test/test_fibonacci.c",line="6"},frame={level="1",addr="0x00005555555551f0",func="main",file="test_fibonacci.c",fullname="/app/src/debugger/test/test_fibonacci.c",line="16"}]
-            (gdb) 
             10^done,__aaabada__=[x="1",x="2",x=[[["\\asdf\"1\u0000\011'"]]]]
-            =thread-exited,id="1",group-id="i1"
+            13^done,a=[b=[[c="2"],[d="3"]]]
             0011111^running,_="\012h'e\u0000\tl\"lo!"
             (gdb) 
             10^done,__aaabada__=[x="1",x="2",x=[[["\\asdf\"1\u0000\011'"]]]]
@@ -302,35 +336,35 @@ if __name__=="__main__":
             10^done,x={main="0x0",crimson="\"\"]}"},y="zzz"
             1+stopped,y={}
             2*stopped,z={}
-            3=stopped,w={}
-            ~"helloooo~!\n"
-            @"hehehhhehe\n"
-            &"INFO:1337"
+            3=stopped,w={}            
             (gdb) 
-            """
-        )
+            ~"what\012"
+            (gdb) 
+            """)
         .lstrip()
         #.encode()
     )
-    #new_text=text.split("\n(gdb) \n")
-    #print(new_text,"\n")
-    #print(text)
 
-    parse=MIParser(text)
+    parse1=MIParser(text)
+    parse2=MIParser(text)
+    parse3=MIParser(text)
 
-    #print(parse._current_record)
-    parse.advance_sequence()
-    parse.advance_sequence()
-    parse.advance_sequence()
-    parse.advance_record()
-    parse.advance_record()
-    parse.advance_record()
-    parse.advance_record()
-    print(parse._current_record,parse._current_token)
-    temp=parse.parse_ofb_record()
-    #print(temp.token,temp.kind,temp.output)
-    print(temp,temp.msg)
-    #or i in parse._records:
-    #    print(i)
-    #print(iter(new_text.splitlines()))
-    #print(text,type(text))
+
+    temp1=parse1.parse()    
+    temp2=parse2.parse() 
+    temp3=parse3.parse() 
+    for i in temp1:
+        if isinstance(i,Result):
+            print(i)
+            print(i.token,i.kind,i.results)
+
+    for i in temp2:
+        if not isinstance(i,ConsoleStream) and not isinstance(i,LogStream) and not isinstance(i,TargetStream) and not isinstance(i,Result):
+            print(i)
+            print(i.token,i.kind,i.output)
+
+    for i in temp3:
+        if isinstance(i,ConsoleStream) or isinstance(i,LogStream) or isinstance(i,TargetStream):
+            print(i)
+            print(i.msg)
+    
