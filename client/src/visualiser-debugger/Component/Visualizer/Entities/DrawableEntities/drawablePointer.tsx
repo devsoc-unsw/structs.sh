@@ -64,7 +64,7 @@ const PointerDrawable: DrawablePointerComponent = (
   useEffect(() => {
     const res = calculateCoordinates(pos, attachedEntity);
     setCoords(res);
-  }, [pos.x.val, pos.y.val]);
+  }, [pos.x.val, pos.y.val, attachedEntity, pos]);
 
   const splitLabels = (label: string) => label.split(', ');
 

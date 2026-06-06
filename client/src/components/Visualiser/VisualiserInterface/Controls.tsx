@@ -93,33 +93,33 @@ const VisualiserControls = ({
   const handlePlay = useCallback(() => {
     controller.play();
     handleUpdateIsPlaying(true);
-  }, [controller]);
+  }, [controller, handleUpdateIsPlaying]);
 
   const handlePause = useCallback(() => {
     controller.pause();
     handleUpdateIsPlaying(false);
-  }, [controller]);
+  }, [controller, handleUpdateIsPlaying]);
 
   const handleReplay = useCallback(() => {
     controller.seekPercent(0);
     handlePlay();
-  }, [controller]);
+  }, [controller, handlePlay]);
 
   const handleStepForward = useCallback(() => {
     controller.stepForwards();
     // Stepforward pauses when animation is complete, so set state of isPlaying to false
     handleUpdateIsPlaying(false);
-  }, [controller, isPlaying]);
+  }, [controller, handleUpdateIsPlaying]);
 
   const handleStepBackward = useCallback(() => {
     handlePause();
     controller.stepBackwards();
-  }, [controller]);
+  }, [controller, handlePause]);
 
   const handleFastRewind = useCallback(() => {
     handlePause();
     controller.seekPercent(0);
-  }, [controller]);
+  }, [controller, handlePause]);
 
   const handleFastForward = useCallback(() => {
     controller.seekPercent(100);

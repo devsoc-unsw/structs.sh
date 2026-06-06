@@ -19,7 +19,7 @@ const App = () => {
     window.globalStore = useGlobalStore;
     // @ts-ignore
     window.frontendStore = useFrontendStateStore;
-  }, [useGlobalStore]);
+  }, []);
 
   return (
     <Box color={structsTheme.palette.text.primary}>

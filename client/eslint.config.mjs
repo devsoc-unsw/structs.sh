@@ -120,9 +120,6 @@ const overrideConfig = defineConfig([
       "prettier/prettier": ["error", {
         endOfLine: "auto",
       }],
-
-      // TODO: remove this and fix errors (the joy of tech debt amirite)
-      "react-hooks/exhaustive-deps": "warn",
     },
   }
 ])

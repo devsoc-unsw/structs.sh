@@ -61,7 +61,7 @@ const Edge: DrawableEdgeComponent = ({ entity: edge, from, to }: EdgeProp, ref) 
   useEffect(() => {
     const res = calculateCoordinates(from, to);
     setCoords(res);
-  }, [from.x.val, from.y.val, to.x.val, to.y.val]);
+  }, [from.x.val, from.y.val, to.x.val, to.y.val, from, to]);
 
   return (
     <motion.g

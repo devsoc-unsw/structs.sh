@@ -40,7 +40,7 @@ const Console = ({ scrollToBottom }: ConsoleProp) => {
     } else {
       setInput(prefix);
     }
-  }, [isCompiled, prefix]);
+  }, [isCompiled, prefix, appendConsoleChunks, currFocusFilePath, fileSystem]);
 
   // Every time when user add input to console, check the corresponding command
   useEffect(() => {
@@ -66,7 +66,17 @@ const Console = ({ scrollToBottom }: ConsoleProp) => {
       const fileName = command.replace('rm ', '');
       removeFile(fileName);
     }
-  }, [consoleChunks]);
+  }, [
+    consoleChunks,
+    changeDir,
+    clearConsole,
+    createNewDir,
+    createNewFile,
+    listFiles,
+    prefix,
+    printWorkingDir,
+    removeFile,
+  ]);
 
   const handleInput = async (currInput: string) => {
     if (isCompiled) {
