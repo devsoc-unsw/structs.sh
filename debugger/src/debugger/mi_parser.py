@@ -58,9 +58,9 @@ class LogStream:
 class MIParserError(Exception):
     pass
 
-class MIParser():
+class CursorParser():
     def __init__(self, text:str):
-        self.text=text
+        self.text=text.strip()
         self.split_text=self.text.split("\n(gdb) \n")
         self._sequences=iter([i.splitlines() for i in self.split_text])
         self.advance_sequence()
@@ -84,8 +84,9 @@ class MIParser():
             self.advance()
         else:
             raise MIParserError
-    
 
+
+class MIParser(CursorParser):
     def parse(self):
         while self._current_sequence and self._current_record:
             token= self.parse_token() if self._current_token and self._current_token.isdigit() else None
@@ -313,7 +314,81 @@ class MIParser():
 
         return "".join(async_class)
 
+
+class CValueParser(CursorParser):
+#     #"{data = 5, next = 0x0}
+#     def parse_c_values(self):
+#         match self._current_token:
+#             case :
+#                 pass
+#         self.expect("\"{")
+#         values={}
+#         values.update(self.parse_pair())
+#         if self._current_record==",":
+#             self.parse_pair()   
+
     
+        
+#         key="".join(key)
+
+        
+
+
+#     def parse_pair(self):
+#         #data = 5
+#         key=[]
+
+#         while self._current_token!="=":
+#             key.append(self._current_token)
+#             self.advance()
+        
+#         self.expect("=")
+
+
+
+    def parse_cvalue(self):
+        self.expect("\"")
+        
+        match self._current_token:
+            case t if t=="{":
+                results=dict()
+                results.update(self.parse_cvalues_struct())
+                while self._current_token==",":
+                    results.update(self.parse_cvalues_struct())
+                return results
+
+            case t if t.isdigit():
+                temp=self.text
+                if " " in self.text:
+                    temp=temp[:temp.index(" ")]
+                for j in temp:
+                    if j.isalpha():
+                        return temp
+            
+                return int(temp)  
+                    
+            case t if t.isalpha():
+                temp=self.text
+                if " " in self.text:
+                    temp=temp[:temp.index(" ")]
+                return temp
+            case _:
+                raise MIParserError(f"Unaddressed cvalue string: {text}")
+
+    def parse_cvalues_struct(self):  
+        key=[]
+
+        while self._current_token!=" ":
+            key.append(self._current_token)
+            self.advance()
+        
+        self.expect(" ")
+        self.expect("=")
+        self.expect(" ")
+
+        value=self.parse_cvalue()
+        
+        return {key:value}   
       
 
 if __name__=="__main__":
@@ -345,26 +420,30 @@ if __name__=="__main__":
         #.encode()
     )
 
+    text1=(dedent(r"""
+                  {"value": "{data = 5, next = 0x0}"}
+                  """)
+                  .lstrip()
+    )
+
     parse1=MIParser(text)
-    parse2=MIParser(text)
-    parse3=MIParser(text)
+    parse2=MIParser(text1)
 
+    # print(parse2._current_sequence)
+    # print(parse2._current_record,parse2._current_token)
 
+    
     temp1=parse1.parse()    
-    temp2=parse2.parse() 
-    temp3=parse3.parse() 
     for i in temp1:
         if isinstance(i,Result):
             print(i)
             print(i.token,i.kind,i.results)
-
-    for i in temp2:
-        if not isinstance(i,ConsoleStream) and not isinstance(i,LogStream) and not isinstance(i,TargetStream) and not isinstance(i,Result):
+        elif not isinstance(i,ConsoleStream) and not isinstance(i,LogStream) and not isinstance(i,TargetStream) and not isinstance(i,Result):
             print(i)
             print(i.token,i.kind,i.output)
-
-    for i in temp3:
-        if isinstance(i,ConsoleStream) or isinstance(i,LogStream) or isinstance(i,TargetStream):
+        elif isinstance(i,ConsoleStream) or isinstance(i,LogStream) or isinstance(i,TargetStream):
             print(i)
             print(i.msg)
     
+    print(type(parse_cvalue("098 'e' ")),parse_cvalue("098 'e' "))   
+    #print(parse_cvalue("\"{[0] = 10, [1] = 20}\""))    
