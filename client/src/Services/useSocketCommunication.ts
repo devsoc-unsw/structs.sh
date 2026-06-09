@@ -45,7 +45,15 @@ export const useSocketCommunication = () => {
     });
 
     socketClient.setupEventHandlers(handlers);
-  }, [socketClient]);
+  }, [
+    socketClient,
+    setActive,
+    updateNextFrame,
+    updateTypeDeclaration,
+    appendConsoleChunks,
+    updateCurrFocusedTab,
+    setToastMessage,
+  ]);
 
   // reset entire debuggin session
   const resetDebugSession = useCallback(() => {
@@ -64,15 +72,6 @@ export const useSocketCommunication = () => {
     resetConsoleChunks,
   ]);
 
-  // error handler for sending code
-  const handleSendCodeError = () => {
-    setToastMessage({
-      content: 'No file being selected',
-      colorTheme: 'warning',
-      durationMs: DEFAULT_MESSAGE_DURATION,
-    });
-  };
-
   // send code to backend to start debugging session
   const sendCode = useCallback(() => {
     if (!socketClient) return;
@@ -83,40 +82,44 @@ export const useSocketCommunication = () => {
     const file = fileSystem.getFileFromPath(currFocusFilePath);
 
     if (!file || file.path === 'root') {
-      handleSendCodeError();
+      setToastMessage({
+        content: 'No file being selected',
+        colorTheme: 'warning',
+        durationMs: DEFAULT_MESSAGE_DURATION,
+      });
       return;
     }
 
     socketClient.serverAction.initializeDebugSession(file.data);
-  }, [socketClient, resetDebugSession]);
+  }, [socketClient, resetDebugSession, setToastMessage]);
 
   // add event listener with timeout
-  const addEventListenerWithTimeout = (
-    listener: (state: BackendState | null) => void,
-    timeout: number
-  ) => {
-    if (!socketClient) return;
+  const addEventListenerWithTimeout = useCallback(
+    (listener: (state: BackendState | null) => void, timeout: number) => {
+      if (!socketClient) return;
 
-    let resolved = false;
+      let resolved = false;
 
-    const wrappedListener = (state: BackendState) => {
-      if (!resolved) {
-        resolved = true;
-        listener(state);
-        socketClient.socket.off('sendBackendStateToUser', wrappedListener);
-      }
-    };
+      const wrappedListener = (state: BackendState) => {
+        if (!resolved) {
+          resolved = true;
+          listener(state);
+          socketClient.socket.off('sendBackendStateToUser', wrappedListener);
+        }
+      };
 
-    socketClient.socket.on('sendBackendStateToUser', wrappedListener);
+      socketClient.socket.on('sendBackendStateToUser', wrappedListener);
 
-    setTimeout(() => {
-      if (!resolved) {
-        resolved = true;
-        listener(null);
-        socketClient.socket.off('sendBackendStateToUser', wrappedListener);
-      }
-    }, timeout);
-  };
+      setTimeout(() => {
+        if (!resolved) {
+          resolved = true;
+          listener(null);
+          socketClient.socket.off('sendBackendStateToUser', wrappedListener);
+        }
+      }, timeout);
+    },
+    [socketClient]
+  );
 
   // step debugger and wait for backend to respond
   const executeNextWithRetry = useCallback(() => {
@@ -133,7 +136,7 @@ export const useSocketCommunication = () => {
           socketClient.serverAction.executeNext();
         })
     );
-  }, [socketClient, queue]);
+  }, [socketClient, queue, addEventListenerWithTimeout]);
 
   // to call multiple next states in bulk
   const bulkSendNextStates = useCallback(

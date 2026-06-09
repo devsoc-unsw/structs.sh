@@ -28,7 +28,7 @@ export const TypeAnnotation: React.FC<TypeAnnotationProp> = ({
     if (createPossibleLinkedListTypeDecl(typeDeclaration) !== null) {
       setSelectedRole(BackendTypeRole.LinkedList);
     }
-  }, []);
+  }, [typeDeclaration]);
 
   return (
     <div style={{ paddingBottom: '8px' }}>

@@ -1,5 +1,5 @@
 import { PanInfo, motion, useAnimation } from 'framer-motion';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import LockIcon from '@mui/icons-material/Lock';
@@ -54,9 +54,9 @@ const SvgComponent: React.FC<SvgComponentProps> = ({ children, centerCoord: cent
     if (isLocked) {
       setCenterCoord(centerCoordProp);
     }
-  }, [centerCoordProp]);
+  }, [centerCoordProp, isLocked]);
 
-  const handlePosSimulation = () => {
+  const handlePosSimulation = useCallback(() => {
     if (isLocked) {
       setScalePercentage(100);
     }
@@ -81,10 +81,10 @@ const SvgComponent: React.FC<SvgComponentProps> = ({ children, centerCoord: cent
         });
       }
     }
-  };
+  }, [scalePercentage, controls, centerCoord, isLocked, viewBoxWidth, viewBoxHeight]);
   useEffect(() => {
     handlePosSimulation();
-  }, [scalePercentage, controls, centerCoord, isLocked]);
+  }, [handlePosSimulation]);
 
   /**
    * SVG Section
