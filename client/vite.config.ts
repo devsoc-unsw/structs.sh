@@ -10,20 +10,15 @@ import { structsTheme } from './src/structsThemes';
  */
 const pigmentConfig = {
   transformLibraries: ['@mui/material'],
-  theme: structsTheme
+  theme: structsTheme,
 };
 
 // https://vitejs.dev/config/
 export default defineConfig({
   optimizeDeps: {
-    include: ['@mui/material/Tooltip'],
+    exclude: ['@mui/material', '@mui/icons-material', '@mui/material-pigment-css'],
   },
-  plugins: [
-    pigment(pigmentConfig),
-    react(),
-    tsconfigPaths(),
-    checker({ typescript: true }),
-  ],
+  plugins: [pigment(pigmentConfig), react(), tsconfigPaths(), checker({ typescript: true })],
   build: { outDir: 'build' },
   server: { port: 3000 },
   css: {
