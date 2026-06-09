@@ -29,7 +29,7 @@ const Configuration = () => {
       stackAnnotation: userAnnotation.stackAnnotation,
       typeAnnotation: userAnnotation.typeAnnotation,
     });
-  }, [currFrame]);
+  }, [currFrame, userAnnotation.stackAnnotation, userAnnotation.typeAnnotation]);
 
   return (
     <div

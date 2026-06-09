@@ -29,7 +29,7 @@ const CodeEditor: React.FC = () => {
     setOnboardingCurrFile(file.name);
     setCurrFile(file);
     setCode(file?.data || '');
-  }, [currFocusFilePath, fileSystem]);
+  }, [currFocusFilePath, fileSystem, setOnboardingCurrFile]);
 
   const markers: IMarker[] = [
     {
