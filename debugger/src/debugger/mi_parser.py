@@ -73,10 +73,12 @@ class CursorParser():
     def advance_record(self):
         self._current_record=next(self._current_sequence_iter)
         self._current_record_iter=iter(self._current_record)
+        self._pos=-1
         self.advance()
 
     def advance(self):
         self._current_token=next(self._current_record_iter,None)
+        self._pos+=1
         
 
     def expect(self,expected: list|str):
@@ -316,69 +318,76 @@ class MIParser(CursorParser):
 
 
 class CValueParser(CursorParser):
-#     #"{data = 5, next = 0x0}
-#     def parse_c_values(self):
-#         match self._current_token:
-#             case :
-#                 pass
-#         self.expect("\"{")
-#         values={}
-#         values.update(self.parse_pair())
-#         if self._current_record==",":
-#             self.parse_pair()   
-
-    
-        
-#         key="".join(key)
-
-        
-
-
-#     def parse_pair(self):
-#         #data = 5
-#         key=[]
-
-#         while self._current_token!="=":
-#             key.append(self._current_token)
-#             self.advance()
-        
-#         self.expect("=")
-
+#     #"{data = 5, next = 0x0}"
 
 
     def parse_cvalue(self):
-        self.expect("\"")
         
         match self._current_token:
             case t if t=="{":
-                results=dict()
-                results.update(self.parse_cvalues_struct())
-                while self._current_token==",":
+                print("ss",self._current_token,self._pos)
+                self.expect("{")
+                is_struct=self.lookahead_is_struct()
+                print(is_struct,self._current_token,self._pos)
+                if not is_struct:
+                    results=[]
+                    results.append(self.parse_cvalue())
+                    while self._current_token==",":
+                        self.advance()
+                        self.expect(" ")
+                        results.append(self.parse_cvalue())
+                else:
+                    results=dict()
                     results.update(self.parse_cvalues_struct())
+                    while self._current_token==",":
+                        self.advance()
+                        self.expect(" ")
+                        results.update(self.parse_cvalues_struct())
+
+                self.expect("}")
                 return results
 
             case t if t.isdigit():
-                temp=self.text
-                if " " in self.text:
-                    temp=temp[:temp.index(" ")]
-                for j in temp:
-                    if j.isalpha():
-                        return temp
-            
-                return int(temp)  
+                alias=False
+                is_addr=False
+                sub_val=[]
+                while self._current_token!="," and self._current_token!="}" and self._current_token!=None:
+                    if self._current_token==" ":
+                        alias=True
+                    
+                    if alias:
+                        self.advance()
+                        continue
+
+                    if self._current_token.isalpha():
+                        is_addr=True                   
+
+                    sub_val.append(self._current_token)
+                    self.advance()
+
+                if is_addr:
+                    return "".join(sub_val)
+                else:
+                    return int("".join(sub_val))  
                     
             case t if t.isalpha():
-                temp=self.text
-                if " " in self.text:
-                    temp=temp[:temp.index(" ")]
-                return temp
+                sub_str=[]
+                while self._current_token!="," or self._current_token=="}" or self._current_token==None:
+                    sub_str.append(self._current_token)
+                    self.advance()    
+                return "".join("".join(sub_str))
+            
             case _:
                 raise MIParserError(f"Unaddressed cvalue string: {text}")
 
-    def parse_cvalues_struct(self):  
+    def parse_cvalues_struct(self):
         key=[]
 
         while self._current_token!=" ":
+            if self._current_record==",":
+                is_list=True
+                break
+    
             key.append(self._current_token)
             self.advance()
         
@@ -387,8 +396,23 @@ class CValueParser(CursorParser):
         self.expect(" ")
 
         value=self.parse_cvalue()
+        key="".join(key)
         
-        return {key:value}   
+        return {key:value}
+        
+    def lookahead_is_struct(self) -> bool:
+        i = self._pos+1
+        while i < len(self._current_record):
+            c = self._current_record[i]
+            if c == '=':
+                return True
+            if c in (',', '}', '{'):
+                return False
+            i += 1
+        return False
+
+
+
       
 
 if __name__=="__main__":
@@ -429,21 +453,24 @@ if __name__=="__main__":
     parse1=MIParser(text)
     parse2=MIParser(text1)
 
-    # print(parse2._current_sequence)
-    # print(parse2._current_record,parse2._current_token)
-
+    # temp1=parse1.parse()    
+    # for i in temp1:
+    #     if isinstance(i,Result):
+    #         print(i)
+    #         print(i.token,i.kind,i.results)
+    #     elif not isinstance(i,ConsoleStream) and not isinstance(i,LogStream) and not isinstance(i,TargetStream) and not isinstance(i,Result):
+    #         print(i)
+    #         print(i.token,i.kind,i.output)
+    #     elif isinstance(i,ConsoleStream) or isinstance(i,LogStream) or isinstance(i,TargetStream):
+    #         print(i)
+    #         print(i.msg)
     
-    temp1=parse1.parse()    
-    for i in temp1:
-        if isinstance(i,Result):
-            print(i)
-            print(i.token,i.kind,i.results)
-        elif not isinstance(i,ConsoleStream) and not isinstance(i,LogStream) and not isinstance(i,TargetStream) and not isinstance(i,Result):
-            print(i)
-            print(i.token,i.kind,i.output)
-        elif isinstance(i,ConsoleStream) or isinstance(i,LogStream) or isinstance(i,TargetStream):
-            print(i)
-            print(i.msg)
-    
-    print(type(parse_cvalue("098 'e' ")),parse_cvalue("098 'e' "))   
+    text="""10^done,value="{point = {x = 1, y = 2}, arr = {10, 20}, chk = {{x = 10, y = 20}, {x = 30, y = 40}, {x = 50, y = 60}}, ptr = 0x5555555592a0 ', ch = 101 'e'}" """.strip(" ")
+    value=MIParser(text).parse()
+    value=next(value).results['value']
+    print(value)
+    cparser=CValueParser(value)
+    print(cparser._current_token)
+    ans=cparser.parse_cvalue()
+    print(type(ans),ans)   
     #print(parse_cvalue("\"{[0] = 10, [1] = 20}\""))    
