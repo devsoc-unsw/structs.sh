@@ -60,7 +60,7 @@ class MIParserError(Exception):
 
 class CursorParser():
     def __init__(self, text:str):
-        self.text=text.strip()
+        self.text=text.lstrip()
         self.split_text=self.text.split("\n(gdb) \n")
         self._sequences=iter([i.splitlines() for i in self.split_text])
         self.advance_sequence()
@@ -129,7 +129,7 @@ class MIParser(CursorParser):
 
     def parse_result_class(self):
         kind=[]
-        while self._current_token is not None and self._current_token.isalpha():
+        while self._current_token is not None and (self._current_token.isalpha() or self._current_token == "-"):
             kind.append(self._current_token)
             self.advance()
         
@@ -318,15 +318,31 @@ class MIParser(CursorParser):
 
 
 class CValueParser(CursorParser):
-#     #"{data = 5, next = 0x0}"
+    def __init__(self, text: str):
+        self.text= text.strip()
+        self._current_record = self.text
+        self._current_record_iter = iter(self._current_record)
+        self._pos= -1
+        self.advance()
 
-
-    def parse_cvalue(self):
-        
+    def parse_cvalue(self):       
+        print("ss",self._current_token,self._pos) 
         match self._current_token:
             case t if t=="{":
-                print("ss",self._current_token,self._pos)
+                
                 self.expect("{")
+
+                if self._current_token=="{":
+                    results=[]
+                    results.append(self.parse_cvalue())
+                    while self._current_token==",":
+                        self.advance()
+                        self.expect(" ")
+                        results.append(self.parse_cvalue())
+                    
+                    self.expect("}")
+                    return results
+                    
                 is_struct=self.lookahead_is_struct()
                 print(is_struct,self._current_token,self._pos)
                 if not is_struct:
@@ -347,7 +363,7 @@ class CValueParser(CursorParser):
                 self.expect("}")
                 return results
 
-            case t if t.isdigit():
+            case t if t.isdigit() or t=="-":
                 alias=False
                 is_addr=False
                 sub_val=[]
@@ -368,11 +384,18 @@ class CValueParser(CursorParser):
                 if is_addr:
                     return "".join(sub_val)
                 else:
-                    return int("".join(sub_val))  
+                    val= "".join(sub_val)
+                    try:
+                        return int(val)
+                    except ValueError:
+                        try:
+                            return float(val)
+                        except ValueError:
+                            return val
                     
-            case t if t.isalpha():
+            case t if t.isalpha() or t == "\"":
                 sub_str=[]
-                while self._current_token!="," or self._current_token=="}" or self._current_token==None:
+                while self._current_token!="," and self._current_token!="}" and self._current_token!=None:
                     sub_str.append(self._current_token)
                     self.advance()    
                 return "".join("".join(sub_str))
@@ -381,13 +404,10 @@ class CValueParser(CursorParser):
                 raise MIParserError(f"Unaddressed cvalue string: {text}")
 
     def parse_cvalues_struct(self):
+        #print(self._current_token)
         key=[]
 
-        while self._current_token!=" ":
-            if self._current_record==",":
-                is_list=True
-                break
-    
+        while self._current_token!=" ":    
             key.append(self._current_token)
             self.advance()
         
@@ -397,7 +417,8 @@ class CValueParser(CursorParser):
 
         value=self.parse_cvalue()
         key="".join(key)
-        
+
+        print({key:value})        
         return {key:value}
         
     def lookahead_is_struct(self) -> bool:
@@ -422,6 +443,7 @@ if __name__=="__main__":
         dedent(
             r"""
             @"hehehhhehe\u0000\011\n"
+            ~"hello\012world"
             ~"helloooo~!\n"
             ~"\\asdf\"1\u0000\011'"
             &"INFO:1337"
@@ -435,7 +457,7 @@ if __name__=="__main__":
             10^done,x={main="0x0",crimson="\"\"]}"},y="zzz"
             1+stopped,y={}
             2*stopped,z={}
-            3=stopped,w={}            
+            3=stopped,w={}
             (gdb) 
             ~"what\012"
             (gdb) 
@@ -444,14 +466,8 @@ if __name__=="__main__":
         #.encode()
     )
 
-    text1=(dedent(r"""
-                  {"value": "{data = 5, next = 0x0}"}
-                  """)
-                  .lstrip()
-    )
-
     parse1=MIParser(text)
-    parse2=MIParser(text1)
+  
 
     # temp1=parse1.parse()    
     # for i in temp1:
@@ -463,14 +479,24 @@ if __name__=="__main__":
     #         print(i.token,i.kind,i.output)
     #     elif isinstance(i,ConsoleStream) or isinstance(i,LogStream) or isinstance(i,TargetStream):
     #         print(i)
-    #         print(i.msg)
+    #         print(repr(i.msg),i.msg)
     
-    text="""10^done,value="{point = {x = 1, y = 2}, arr = {10, 20}, chk = {{x = 10, y = 20}, {x = 30, y = 40}, {x = 50, y = 60}}, ptr = 0x5555555592a0 ', ch = 101 'e'}" """.strip(" ")
+ 
+    # text="""10^done,value="{point = {x = 1, y = 2}, arr = {10, 20}, chk = {{x = 10, y = 20}, {x = 30, y = 40}, {x = 50, y = 60}}, ptr = 0x5555555592a0 ', ch = 101 'e'}" """.strip(" ")
+    # value=MIParser(text).parse()
+    # value=next(value).results['value']
+    # print(value)
+    # cparser=CValueParser(value)
+    # print(cparser._current_token)
+    # ans=cparser.parse_cvalue()
+    # print(type(ans),ans)
+
+
+    text=dedent(r"""10^done,value="{scalar = 1, flag = 0, msg = \"hello\012world\", tab_str = \"col1\011col2\", null_str = \"null\000byte\", nested2 = {a = 1, b = 2}, nested3 = {outer = {mid = {inner = 42}}, sibling = 99}, vec3d = {x = 1.5, y = 2.5, z = 3.5}, transform = {pos = {x = 1.0, y = 2.0, z = 3.0}, rot = {x = 0.0, y = 0.0, z = 1.0}, scale = 2.5}, arr_int = {10, 20, 30}, arr_struct = {{x = 1, y = 2}, {x = 3, y = 4}, {x = 5, y = 6}}, arr_nested = {{p = {a = 1, b = 2}, q = 3}, {p = {a = 4, b = 5}, q = 6}}, mixed = {count = 3, data = {100, 200, 300}, info = {id = 7, val = 8}}, zero_addr = 0x0, neg = -42, big = 2147483647}" """.strip(" "))
+    #text=r"""10^done,value="10" """.strip()
     value=MIParser(text).parse()
     value=next(value).results['value']
-    print(value)
     cparser=CValueParser(value)
-    print(cparser._current_token)
-    ans=cparser.parse_cvalue()
+    ans=orjson.loads('"'+str(cparser.parse_cvalue())+'"')
     print(type(ans),ans)   
-    #print(parse_cvalue("\"{[0] = 10, [1] = 20}\""))    
+    # #print(parse_cvalue("\"{[0] = 10, [1] = 20}\""))    
