@@ -1,18 +1,15 @@
 import { FC, MouseEvent, useState } from 'react';
-import { styled } from '@mui/material/styles';
-import {
-  AppBar,
-  Box,
-  Grid,
-  Menu,
-  MenuItem,
-  Toolbar,
-  Typography,
-  ListItemText,
-  Button,
-  ListItemIcon,
-  useTheme,
-} from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CheckIcon from '@mui/icons-material/Check';
 import logo from '@/assets/img/logo.png';
@@ -22,6 +19,7 @@ import { getTopics } from '../../visualiser-src/common/helpers';
 
 const LogoText = styled(Typography)({
   textTransform: 'none',
+  fontFamily: 'CodeText, monospace',
 });
 
 const StyledCheckIcon = styled(CheckIcon)(({ theme }) => ({

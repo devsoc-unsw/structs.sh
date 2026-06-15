@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box } from '@mui/material';
+import Box from '@mui/material/Box';
 import { LineLoader } from '@/components/Loader';
 import { getTopics } from '@/visualiser-src/common/helpers';
 import TopicCard from './TopicCard';

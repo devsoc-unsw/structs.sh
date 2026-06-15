@@ -1,5 +1,5 @@
 import React, { useState, useReducer } from 'react';
-import { Tooltip } from '@mui/material';
+import Tooltip from '@mui/material/Tooltip';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';

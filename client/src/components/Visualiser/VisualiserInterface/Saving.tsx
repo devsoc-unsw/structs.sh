@@ -1,6 +1,12 @@
 /* eslint-disable */
 // TODO: Proper rework on this file => we want to re-design this anyway. I can't fix lint now because it will potentially change functioanlity of the file
-import { Box, Typography, Button, Alert, Snackbar, Collapse, TextField } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Collapse from '@mui/material/Collapse';
+import Snackbar from '@mui/material/Snackbar';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles';
 import React, {
   useContext,

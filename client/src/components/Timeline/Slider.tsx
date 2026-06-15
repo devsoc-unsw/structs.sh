@@ -1,4 +1,5 @@
-import { Slider, styled } from '@mui/material';
+import Slider from '@mui/material/Slider';
+import { styled } from '@mui/material/styles';
 import { useMemo } from 'react';
 
 import clsx from 'clsx';

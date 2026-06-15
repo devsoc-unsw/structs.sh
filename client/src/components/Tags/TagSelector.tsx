@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { FC } from 'react';
 import { TagList } from './TagList';
 

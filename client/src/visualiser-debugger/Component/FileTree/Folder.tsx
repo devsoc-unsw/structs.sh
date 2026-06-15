@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Box, IconButton, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import { IFileDirNode } from './FS/IFileSystem';
 import LeafFile from './LeafFile';
 import { useUserFsStateStore } from '../../Store/userFsStateStore';

@@ -1,4 +1,4 @@
-import { ThemeOptions } from '@mui/material';
+import type { ThemeOptions } from '@mui/material/styles';
 import { createTheme } from '@mui/material/styles';
 
 const baseOptions: ThemeOptions = {
@@ -33,6 +33,7 @@ const MUI_THEME_COLORS = {
 };
 
 export const structsTheme = createTheme({
+  cssVariables: true,
   typography: {
     ...baseOptions.typography,
   },
@@ -54,6 +55,7 @@ export const createDebuggerTheme = (darkMode: boolean) => {
   const colors = darkMode ? MUI_THEME_COLORS.dark : MUI_THEME_COLORS.light;
 
   return createTheme({
+    cssVariables: true,
     typography: {
       ...baseOptions.typography,
     },

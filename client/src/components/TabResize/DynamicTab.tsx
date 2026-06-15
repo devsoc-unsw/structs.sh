@@ -1,14 +1,16 @@
-// DynamicBox.tsx
+// DynamicTab.tsx
 import React, { ReactNode } from 'react';
 import Box from '@mui/material/Box';
 
 interface DynamicTabProps {
   children: ReactNode;
-  sx?: object;
+  style?: React.CSSProperties;
 }
 
-const DynamicTab: React.FC<DynamicTabProps> = ({ children, sx }) => (
-  <Box sx={{ border: '1px solid black', padding: '8px', ...sx }}>{children}</Box>
+const DynamicTab: React.FC<DynamicTabProps> = ({ children, style }) => (
+  <Box sx={{ border: '1px solid black', padding: '8px' }} style={style}>
+    {children}
+  </Box>
 );
 
 export default DynamicTab;

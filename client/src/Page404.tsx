@@ -1,4 +1,5 @@
-import { Container, Typography } from '@mui/material';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import TopNavbar from '@/components/Navbars/TopNavbar';
 import { motion } from 'framer-motion';

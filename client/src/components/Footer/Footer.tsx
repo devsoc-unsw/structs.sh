@@ -1,4 +1,8 @@
-import { Box, Container, Grid, Typography, Link } from '@mui/material';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { Link as RouterLink } from 'react-router-dom';
 import structsLogo from '../../assets/img/structs.png';

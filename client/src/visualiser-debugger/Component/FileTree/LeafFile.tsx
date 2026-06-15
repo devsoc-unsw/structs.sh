@@ -1,4 +1,5 @@
-import { Box, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { IFileFileNode } from './FS/IFileSystem';
 import { useUserFsStateStore } from '../../Store/userFsStateStore';

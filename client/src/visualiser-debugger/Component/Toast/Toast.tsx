@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { Alert, AlertProps } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import type { AlertProps } from '@mui/material/Alert';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToastStateStore } from '../../Store/toastStateStore';
 

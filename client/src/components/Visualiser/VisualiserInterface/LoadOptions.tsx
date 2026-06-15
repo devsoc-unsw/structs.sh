@@ -1,5 +1,7 @@
 import React, { FC, MouseEvent } from 'react';
-import { Box, Typography, Button } from '@mui/material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 
 interface Props {

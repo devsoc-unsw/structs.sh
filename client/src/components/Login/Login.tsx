@@ -1,5 +1,6 @@
 import { FC, KeyboardEvent, useState } from 'react';
-import { Button, Input } from '@mui/material';
+import Button from '@mui/material/Button';
+import Input from '@mui/material/Input';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import { SERVER_URL } from '@/utils/constants';

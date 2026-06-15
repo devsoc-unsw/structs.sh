@@ -89,7 +89,7 @@ const DynamicTabs: React.FC<DynamicTabsProps> = (props) => {
       {React.Children.map(children, (child, index) => (
         <React.Fragment key={index}>
           <DynamicTab
-            sx={{
+            style={{
               flexGrow: ratios[index],
               flexBasis: 0,
               display: 'flex',
