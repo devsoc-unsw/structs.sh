@@ -12,7 +12,7 @@ import { IFileFileNode } from '@/visualiser-debugger/Component/FileTree/FS/IFile
 import { useFrontendStateStore } from '@/visualiser-debugger/Store/frontendStateStore';
 import { useTheme } from '@/visualiser-debugger/Contexts/ThemeContexts';
 
-const AceEditor = (ReactAce as {default?: typeof ReactAce}).default ?? ReactAce;
+const AceEditor = (ReactAce as { default?: typeof ReactAce }).default ?? ReactAce;
 
 const CodeEditor: React.FC = () => {
   const currBackendState = useFrontendStateStore((store) => store.currState().backendState);
