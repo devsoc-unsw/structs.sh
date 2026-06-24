@@ -1,4 +1,4 @@
-import AceEditor, { IMarker } from 'react-ace';
+import ReactAce, { type IMarker } from 'react-ace';
 import '@/styles/CodeEditor.css';
 import 'ace-builds/src-noconflict/mode-c_cpp';
 import 'ace-builds/src-noconflict/snippets/c_cpp';
@@ -11,6 +11,8 @@ import { useUserFsStateStore } from '@/visualiser-debugger/Store/userFsStateStor
 import { IFileFileNode } from '@/visualiser-debugger/Component/FileTree/FS/IFileSystem';
 import { useFrontendStateStore } from '@/visualiser-debugger/Store/frontendStateStore';
 import { useTheme } from '@/visualiser-debugger/Contexts/ThemeContexts';
+
+const AceEditor = (ReactAce as {default?: typeof ReactAce}).default ?? ReactAce;
 
 const CodeEditor: React.FC = () => {
   const currBackendState = useFrontendStateStore((store) => store.currState().backendState);
