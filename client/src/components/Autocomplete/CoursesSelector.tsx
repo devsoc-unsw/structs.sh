@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import { COURSE_CODES } from '@/constants/ui'
 
 interface Props {
   addValue: (newValue: string) => void;
@@ -11,7 +12,7 @@ interface Option {
   label: string;
 }
 
-const options: Option[] = [{ label: 'COMP1511' }, { label: 'COMP2521' }, { label: 'COMP3121' }];
+const options: Option[] = COURSE_CODES.map((code) => ({ label: code }));
 
 const CoursesSelector: FC<Props> = ({ addValue, courses }) => {
   const optionsWithoutDuplicates = options.filter((option) => !courses.includes(option.label));
