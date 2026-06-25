@@ -21,6 +21,7 @@ import axios from 'axios';
 import { SERVER_URL } from '@/utils/constants';
 import LoadOptions from './LoadOptions';
 import VisualiserContext from './VisualiserContext';
+import { USER_KEY } from '@/constants/storage';
 
 const MenuButton = styled(Button)({
   backgroundColor: '#C81437',
@@ -92,7 +93,7 @@ const Saving = () => {
   };
 
   const handleSave = () => {
-    const owner = localStorage.getItem('user');
+    const owner = localStorage.getItem(USER_KEY);
     if (!owner) {
       makeFailedAlert('Please Log In to Save');
       return;
@@ -133,7 +134,7 @@ const Saving = () => {
   const handleLoad = () => {
     axios
       .get(`${SERVER_URL}/api/getOwnedData`, {
-        params: { topicTitle: controller.topic, user: localStorage.getItem('user') },
+        params: { topicTitle: controller.topic, user: localStorage.getItem(USER_KEY) },
       })
       .then((response) => {
         setLoadOptions(
