@@ -4,7 +4,13 @@ import Collapse from '@mui/material/Collapse';
 import { useTheme } from '@mui/material/styles';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
-import { FLOATING_WINDOW_BOTTOM, FLOATING_WINDOW_MAX_HEIGHT, FLOATING_WINDOW_PADDING, FLOATING_WINDOW_MIN_WIDTH, FLOATING_WINDOW_MAX_WIDTH } from '@/constants/ui';
+import {
+  FLOATING_WINDOW_BOTTOM,
+  FLOATING_WINDOW_MAX_HEIGHT,
+  FLOATING_WINDOW_PADDING,
+  FLOATING_WINDOW_MIN_WIDTH,
+  FLOATING_WINDOW_MAX_WIDTH,
+} from '@/constants/ui';
 
 interface FloatingWindowProps {
   children: ReactNode;
