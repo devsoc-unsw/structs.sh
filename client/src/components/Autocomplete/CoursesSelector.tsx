@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import { COURSE_CODES } from '@/constants/ui'
+import { COURSE_CODES } from '@/constants/ui';
 
 interface Props {
   addValue: (newValue: string) => void;
