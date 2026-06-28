@@ -44,16 +44,32 @@
       "addLabels": ["deps: vite"]
     },
     {
-      "extends": [":description=Base rule for all Vite-related packages"],
+      "description": "Vite-related packages: major updates",
+      "matchPackageNames": [
+        "vite",
+        "@vitejs/plugin-react",
+        "vite-plugin-checker",
+        "vite-tsconfig-paths"
+      ],
       "matchUpdateTypes": ["major"],
       "groupName": "vite & plugins (major)",
+      "enabled": true,
+      "addLabels": ["deps: vite"],
       "automerge": false,
       "schedule": ["before 5am on the first monday of every 5th month"]
     },
     {
-      "extends": [":description=Base rule for all Vite-related packages"],
+      "description": "Vite-related packages: minor/patch updates",
+      "matchPackageNames": [
+        "vite",
+        "@vitejs/plugin-react",
+        "vite-plugin-checker",
+        "vite-tsconfig-paths"
+      ],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "vite & plugins (minor/patch)",
+      "enabled": true,
+      "addLabels": ["deps: vite"],
       "automerge": false,
       "schedule": ["before 5am on the first monday of every 3rd month"]
     }
