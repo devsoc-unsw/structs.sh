@@ -2,26 +2,25 @@
   "extends": [],
   "lockFileMaintenance": { "enabled": true, "automerge": true },
   "prHourlyLimit": 4,
-  "prMonthlyLimit": 6,
   "labels": ["dependencies"],
   "reviewersFromCodeOwners": true,
   "packageRules": [
     {
-      "matchPackagePatterns": [".*"],
+      "matchPackagePatterns": ["/.*/"],
       "enabled": false
     },
     {
       "groupName": "ci-actions",
-      "managers": ["github-actions", "dockerfile"],
+      "matchManagers": ["github-actions", "dockerfile"],
       "enabled": true,
       "automerge": false,
       "automergeType": "branch",
       "addLabels": ["deps: ci-actions"],
-      "schedule": ["before 5am on the first monday of every 4th month"]
+      "schedule": ["* 0-4 * */4 1#1"]
     },
     {
       "matchPackageNames": ["actions/checkout", "actions/setup-node"],
-      "managers": ["github-actions"],
+      "matchManagers": ["github-actions"],
       "enabled": true,
       "automerge": true,
       "automergeType": "branch",
@@ -44,18 +43,34 @@
       "addLabels": ["deps: vite"]
     },
     {
-      "extends": [":description=Base rule for all Vite-related packages"],
+      "description": "Vite-related packages: major updates",
+      "matchPackageNames": [
+        "vite",
+        "@vitejs/plugin-react",
+        "vite-plugin-checker",
+        "vite-tsconfig-paths"
+      ],
       "matchUpdateTypes": ["major"],
       "groupName": "vite & plugins (major)",
+      "enabled": true,
+      "addLabels": ["deps: vite"],
       "automerge": false,
-      "schedule": ["before 5am on the first monday of every 5th month"]
+      "schedule": ["* 0-4 * */5 1#1"]
     },
     {
-      "extends": [":description=Base rule for all Vite-related packages"],
+      "description": "Vite-related packages: minor/patch updates",
+      "matchPackageNames": [
+        "vite",
+        "@vitejs/plugin-react",
+        "vite-plugin-checker",
+        "vite-tsconfig-paths"
+      ],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "vite & plugins (minor/patch)",
+      "enabled": true,
+      "addLabels": ["deps: vite"],
       "automerge": false,
-      "schedule": ["before 5am on the first monday of every 3rd month"]
+      "schedule": ["* 0-4 * */3 1#1"]
     }
   ]
 }
