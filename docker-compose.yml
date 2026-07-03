@@ -21,8 +21,6 @@ services:
     volumes:
       - ./debugger/src:/app/src
 
-volumes:
-  vite-cache:
   pyroscope:
     image: grafana/pyroscope:latest
     ports:
@@ -36,3 +34,8 @@ volumes:
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+
+volumes:
+  vite-cache:

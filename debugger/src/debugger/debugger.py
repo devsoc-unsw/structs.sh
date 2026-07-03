@@ -6,13 +6,17 @@ from pydantic import BaseModel
 
 from . import mi_parser as mi
 from .base_debugger import BaseDebugger
-
 import pyroscope
 
 pyroscope.configure(
-  application_name = "structs.sh", # replace this with some name for your application
-  server_address   = "http://localhost:4040", # replace this with the address of your Pyroscope server
+    application_name = "structs.sh",
+    server_address   = "http://pyroscope:4040"
 )
+
+try:
+    pyroscope.start()
+except Exception:
+    pass
 
 
 class Identity[T](BaseModel):  # legacy
