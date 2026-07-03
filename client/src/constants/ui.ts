@@ -13,6 +13,3 @@ export const FLOATING_WINDOW_MAX_HEIGHT = '80vh';
 export const FLOATING_WINDOW_PADDING = '10px';
 export const FLOATING_WINDOW_MIN_WIDTH = '30vw';
 export const FLOATING_WINDOW_MAX_WIDTH = '50vw';
-
-// CoursesSelector.tsx
-export const COURSE_CODES = ['COMP1511', 'COMP2521', 'COMP3121'];
