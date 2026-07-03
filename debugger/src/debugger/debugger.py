@@ -7,6 +7,13 @@ from pydantic import BaseModel
 from . import mi_parser as mi
 from .base_debugger import BaseDebugger
 
+import pyroscope
+
+pyroscope.configure(
+  application_name = "structs.sh", # replace this with some name for your application
+  server_address   = "http://localhost:4040", # replace this with the address of your Pyroscope server
+)
+
 
 class Identity[T](BaseModel):  # legacy
     item: T
@@ -154,60 +161,62 @@ class Debugger(BaseDebugger):
                     # It is a struct field
                     fmt_childs.append(f"({var}.{subname})")
             return fmt_childs
+        
+        with pyroscope.tag_wrapper({ "task": "generate_memory_graph" }):
 
-        frames = list[FrameInfo]()
-        mem = defaultdict[str, dict[str, MemObj]](dict)
-        legacy_fmt: dict[str, list[tuple[str | int, str]]] = {}  # legacy
+            frames = list[FrameInfo]()
+            mem = defaultdict[str, dict[str, MemObj]](dict)
+            legacy_fmt: dict[str, list[tuple[str | int, str]]] = {}  # legacy
 
-        for i, frame in enumerate(await self.frames()):
-            queue = deque()
+            for i, frame in enumerate(await self.frames()):
+                queue = deque()
 
-            variabs = dict[str, MemObj]()
-            for var in await self.variables(i):
-                kind, value, addr, childs = await self.var_details(var, i)
-                variabs[var] = MemObj(kind=kind, value=value, addr=addr)
-                mem[addr][kind] = MemObj(kind=kind, value=value, addr=addr)
-                if childs and not kind.endswith("*"):
-                    legacy_fmt[kind] = childs
-                if value != "0x0" and kind != "void *":
-                    queue.extend(follow(var, kind, childs))
-            frames.append(FrameInfo(frame=frame, vars=variabs))
-
-            while queue:
-                var = queue.popleft()
-                try:
+                variabs = dict[str, MemObj]()
+                for var in await self.variables(i):
                     kind, value, addr, childs = await self.var_details(var, i)
-                except ValueError:
-                    continue
-                if mem[addr].get(kind):
-                    continue
-                mem[addr][kind] = MemObj(kind=kind, value=value, addr=addr)
-                if (
-                    childs
-                    and not kind.endswith("*")
-                    and not kind.endswith("[]")
-                ):
-                    try:
+                    variabs[var] = MemObj(kind=kind, value=value, addr=addr)
+                    mem[addr][kind] = MemObj(kind=kind, value=value, addr=addr)
+                    if childs and not kind.endswith("*"):
                         legacy_fmt[kind] = childs
-                        mem[addr][kind] = MemObj(
-                            kind=kind,
-                            value={
-                                name: MemObj(
-                                    kind=kind, value=value[name], addr=None
-                                )
-                                for name, kind in childs
-                            },
-                            addr=addr,
-                        )  # legacy
-                    except Exception:
-                        assert False, (
-                            [(name, kind) for name, kind in childs],
-                            value,
-                        )
-                if value != "0x0" and kind != "void *":
-                    queue.extend(follow(var, kind, childs))
+                    if value != "0x0" and kind != "void *":
+                        queue.extend(follow(var, kind, childs))
+                frames.append(FrameInfo(frame=frame, vars=variabs))
 
-        return Trace(frames=frames, mem=mem, structs=legacy_fmt)
+                while queue:
+                    var = queue.popleft()
+                    try:
+                        kind, value, addr, childs = await self.var_details(var, i)
+                    except ValueError:
+                        continue
+                    if mem[addr].get(kind):
+                        continue
+                    mem[addr][kind] = MemObj(kind=kind, value=value, addr=addr)
+                    if (
+                        childs
+                        and not kind.endswith("*")
+                        and not kind.endswith("[]")
+                    ):
+                        try:
+                            legacy_fmt[kind] = childs
+                            mem[addr][kind] = MemObj(
+                                kind=kind,
+                                value={
+                                    name: MemObj(
+                                        kind=kind, value=value[name], addr=None
+                                    )
+                                    for name, kind in childs
+                                },
+                                addr=addr,
+                            )  # legacy
+                        except Exception:
+                            assert False, (
+                                [(name, kind) for name, kind in childs],
+                                value,
+                            )
+                    if value != "0x0" and kind != "void *":
+                        queue.extend(follow(var, kind, childs))
+
+            return Trace(frames=frames, mem=mem, structs=legacy_fmt)
 
     async def legacy_trace(self):
         frame = (await self.frames())[0]

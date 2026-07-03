@@ -28,3 +28,4 @@ typing_extensions==4.13.2
 uvicorn==0.34.0
 wsproto==1.2.0
 yappi==1.6.10
+pyroscope-io==1.0.5
