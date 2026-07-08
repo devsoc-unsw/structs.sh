@@ -5,7 +5,8 @@ import { styled } from '@mui/material/styles';
 import React, { useCallback, useContext } from 'react';
 import VisualiserContext from './VisualiserContext';
 import CreateLink from './CreateLink';
-import Saving from './Saving';
+import Save from './Save';
+import Load from './Load';
 import useGlobalState from '../../../store/globalStore';
 
 const MenuButton = styled(Button)({
@@ -59,7 +60,8 @@ const CreateMenu = () => {
       {/* TODO: Release this feature */}
       {inDev && (
         <>
-          <Saving />
+          <Save />
+          <Load />
           <CreateLink />
         </>
       )}
