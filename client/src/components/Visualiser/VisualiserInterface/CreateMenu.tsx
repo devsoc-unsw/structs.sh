@@ -1,13 +1,11 @@
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
 import React, { useCallback, useContext } from 'react';
 import VisualiserContext from './VisualiserContext';
 import CreateLink from './CreateLink';
 import Saving from './Saving';
 import useGlobalState from '../../../store/globalStore';
-import { GreenMenuButton } from './styled'
+import { GreenMenuButton } from './styled';
 
 /**
  * Contains the ability to reset and create new data structures
