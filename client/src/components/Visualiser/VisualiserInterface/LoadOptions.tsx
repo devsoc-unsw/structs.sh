@@ -1,21 +1,13 @@
 import React, { FC, MouseEvent } from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { RedMenuButton } from './styled';
 
 interface Props {
   options: any[];
   handleLoad: (e: MouseEvent<HTMLButtonElement>, data: number[]) => void;
   handleToggleExpansion: () => void;
 }
-
-const MenuButton = styled(Button)({
-  backgroundColor: '#C81437',
-  '&:hover': {
-    backgroundColor: '#F05C79',
-  },
-  maxWidth: '100%',
-  borderRadius: '0',
-});
 
 /**
  * Lists the data that can be loaded
@@ -29,7 +21,7 @@ const LoadOptions: FC<Props> = ({ options, handleLoad, handleToggleExpansion }) 
   return (
     <Box display="flex" flexDirection="column" gap="10px" marginTop="10px" marginBottom="10px">
       {options.map((option, index) => (
-        <MenuButton
+        <RedMenuButton
           key={index}
           onClick={(e) => {
             handleLoad(e, option.data);
@@ -38,9 +30,9 @@ const LoadOptions: FC<Props> = ({ options, handleLoad, handleToggleExpansion }) 
           <Typography color="textPrimary" whiteSpace="nowrap">
             {option.name}
           </Typography>
-        </MenuButton>
+        </RedMenuButton>
       ))}
-      <MenuButton
+      <RedMenuButton
         onClick={(e) => {
           handleClose(e);
         }}
@@ -48,7 +40,7 @@ const LoadOptions: FC<Props> = ({ options, handleLoad, handleToggleExpansion }) 
         <Typography color="textPrimary" whiteSpace="nowrap">
           Close
         </Typography>
-      </MenuButton>
+      </RedMenuButton>
     </Box>
   );
 };

@@ -1,17 +1,10 @@
-import { Box, Typography, Button } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Box, Typography } from '@mui/material';
 import React, { useCallback, useContext } from 'react';
 import VisualiserContext from './VisualiserContext';
 import CreateLink from './CreateLink';
 import Saving from './Saving';
 import useGlobalState from '../../../store/globalStore';
-
-const MenuButton = styled(Button)({
-  backgroundColor: '#46B693',
-  '&:hover': {
-    backgroundColor: '#2b6e5a',
-  },
-});
+import { GreenMenuButton } from './styled'
 
 /**
  * Contains the ability to reset and create new data structures
@@ -44,16 +37,16 @@ const CreateMenu = () => {
       right="10px"
       gap="10px"
     >
-      <MenuButton onClick={handleGenerate}>
+      <GreenMenuButton onClick={handleGenerate}>
         <Typography color="textPrimary" whiteSpace="nowrap">
           Create New
         </Typography>
-      </MenuButton>
-      <MenuButton onClick={handleReset}>
+      </GreenMenuButton>
+      <GreenMenuButton onClick={handleReset}>
         <Typography color="textPrimary" whiteSpace="nowrap">
           Reset All
         </Typography>
-      </MenuButton>
+      </GreenMenuButton>
       {/* TODO: Release this feature */}
       {inDev && (
         <>
