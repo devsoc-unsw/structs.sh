@@ -1,5 +1,9 @@
 import { ChangeEvent, FC, useContext, useState } from 'react';
-import { Box, Collapse, ListItem, Theme, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Collapse from '@mui/material/Collapse';
+import ListItem from '@mui/material/ListItem';
+import Typography from '@mui/material/Typography';
+import type { Theme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { styled, useTheme } from '@mui/material/styles';

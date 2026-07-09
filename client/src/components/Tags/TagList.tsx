@@ -1,5 +1,5 @@
-/** @jsxImportSource @emotion/react */
-import { Chip, Stack } from '@mui/material';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
 import React, { Fragment, useCallback } from 'react';
 
 interface TagListProps {

@@ -2,7 +2,8 @@ from asyncio import gather
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from debugger import c_compile, mi
+from debugger import c_compile
+from debugger import mi_parser as mi
 from debugger.debugger import Debugger
 
 

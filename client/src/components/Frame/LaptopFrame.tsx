@@ -1,6 +1,6 @@
 import React from 'react';
 import laptopImg from '@/assets/img/laptop-frame.png';
-import { Box } from '@mui/material';
+import Box from '@mui/material/Box';
 import styles from './LaptopFrame.module.scss';
 
 interface Props {
@@ -10,7 +10,11 @@ interface Props {
 const LaptopFrame: React.FC<Props> = ({ imageUrl }) => (
   <Box className={styles.computer}>
     <img src={laptopImg} alt="MacBook Computer Apple" />
-    <Box className={styles.screen} sx={{ background: `url(${imageUrl})` }} />
+    <Box
+      className={styles.screen}
+      sx={{ backgroundSize: 'cover', backgroundPosition: 'center' }}
+      style={{ backgroundImage: `url(${imageUrl})` }}
+    />
   </Box>
 );
 

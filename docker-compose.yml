@@ -7,8 +7,10 @@ services:
       - '3000:3000'
     environment:
       - FAST_REFRESH=false # Source: https://stackoverflow.com/questions/43274925/development-server-of-create-react-app-does-not-auto-refresh
+      - NODE_OPTIONS=--max-old-space-size=4096
     volumes:
       - ./client/src:/app/src
+      - vite-cache:/app/node_modules/.vite
   debugger:
     build:
       context: debugger
@@ -17,3 +19,6 @@ services:
       - '8000:8000'
     volumes:
       - ./debugger/src:/app/src
+
+volumes:
+  vite-cache:

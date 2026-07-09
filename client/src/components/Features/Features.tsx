@@ -1,7 +1,13 @@
 import { useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Box, Grid, Link, List, ListItem, ListItemIcon, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import BulletIcon from '@mui/icons-material/ArrowForwardIos';
 import VisualiserIcon from '@mui/icons-material/AutoFixHigh';
