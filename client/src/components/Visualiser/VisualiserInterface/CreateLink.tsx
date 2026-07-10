@@ -1,20 +1,8 @@
-import Alert from '@mui/material/Alert';
-import Button from '@mui/material/Button';
-import Collapse from '@mui/material/Collapse';
-import Snackbar from '@mui/material/Snackbar';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
+import { Typography, TextField, Alert, Snackbar, Collapse } from '@mui/material';
 import { useEffect, useContext, useState, useRef, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import VisualiserContext from './VisualiserContext';
-
-const MenuButton = styled(Button)({
-  backgroundColor: '#46B693',
-  '&:hover': {
-    backgroundColor: '#2b6e5a',
-  },
-});
+import { GreenMenuButton } from './styled';
 
 const CreateLink = () => {
   const { controller } = useContext(VisualiserContext);
@@ -59,11 +47,11 @@ const CreateLink = () => {
 
   return (
     <>
-      <MenuButton onClick={makeLink}>
+      <GreenMenuButton onClick={makeLink}>
         <Typography color="textPrimary" whiteSpace="nowrap">
           Create Link
         </Typography>
-      </MenuButton>
+      </GreenMenuButton>
 
       <Collapse in={showLink}>
         <TextField

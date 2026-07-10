@@ -1,4 +1,6 @@
 import os
+import logging
+
 from asyncio import (
     Event,
     Semaphore,
@@ -13,7 +15,7 @@ from pathlib import Path
 from termios import ECHO, TCSADRAIN, tcgetattr, tcsetattr
 from typing import Callable, Coroutine, assert_never
 
-from . import mi
+from . import mi_parser as mi
 from .tributary import Tributary
 
 
@@ -125,7 +127,11 @@ class BaseDebugger:
     async def _stdout_dispatch(self) -> None:
         assert self.process.stdout is not None
         while line := await self.process.stdout.readline():
-            for resp in mi.parse(line):
+            #logging.error("RAW GDB LINE: %r", line)
+            if line == b"(gdb) ":
+                continue
+            
+            for resp in mi.MIParser(line).parse():
                 match resp:
                     case mi.Result(token=t, kind=k, results=r):
                         await self._inflight_cmds.put(t, resp)
