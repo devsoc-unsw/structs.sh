@@ -4,6 +4,13 @@ import Collapse from '@mui/material/Collapse';
 import { useTheme } from '@mui/material/styles';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
 import ChevronRight from '@mui/icons-material/ChevronRight';
+import {
+  FLOATING_WINDOW_BOTTOM,
+  FLOATING_WINDOW_MAX_HEIGHT,
+  FLOATING_WINDOW_PADDING,
+  FLOATING_WINDOW_MIN_WIDTH,
+  FLOATING_WINDOW_MAX_WIDTH,
+} from '@/constants/ui';
 
 interface FloatingWindowProps {
   children: ReactNode;
@@ -24,7 +31,7 @@ const FloatingWindow = ({
   isExpanded,
   handleToggleExpansion,
   minHeight = undefined,
-  maxHeight = '80vh',
+  maxHeight = FLOATING_WINDOW_MAX_HEIGHT,
   flexDirection = 'row',
 }: FloatingWindowProps) => {
   const theme = useTheme();
@@ -34,7 +41,7 @@ const FloatingWindow = ({
       bgcolor={theme.palette.background.default}
       color={theme.palette.text.primary}
       position="absolute"
-      bottom="54px"
+      bottom={FLOATING_WINDOW_BOTTOM}
       minHeight={minHeight}
       maxHeight={maxHeight}
       display="flex"
@@ -62,12 +69,12 @@ const FloatingWindow = ({
       <Collapse in={isExpanded} orientation="horizontal">
         <Box
           boxSizing="border-box"
-          paddingLeft="10px"
-          paddingTop="10px"
-          paddingBottom="10px"
+          paddingLeft={FLOATING_WINDOW_PADDING}
+          paddingTop={FLOATING_WINDOW_PADDING}
+          paddingBottom={FLOATING_WINDOW_PADDING}
           height="100%"
-          minWidth="30vw"
-          maxWidth="50vw"
+          minWidth={FLOATING_WINDOW_MIN_WIDTH}
+          maxWidth={FLOATING_WINDOW_MAX_WIDTH}
           overflow="auto"
         >
           {children}

@@ -2,7 +2,6 @@
 // TODO: Proper rework on this file => we want to re-design this anyway. I can't fix lint now because it will potentially change functioanlity of the file
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
 import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
@@ -22,6 +21,7 @@ import { SERVER_URL } from '@/utils/constants';
 import LoadOptions from './LoadOptions';
 import VisualiserContext from './VisualiserContext';
 import { RedMenuButton } from './styled';
+import { USER_KEY } from '@/constants/storage';
 
 const SaveBox = styled(Box)({
   display: 'flex',
@@ -86,7 +86,7 @@ const Saving = () => {
   };
 
   const handleSave = () => {
-    const owner = localStorage.getItem('user');
+    const owner = localStorage.getItem(USER_KEY);
     if (!owner) {
       makeFailedAlert('Please Log In to Save');
       return;
@@ -127,7 +127,7 @@ const Saving = () => {
   const handleLoad = () => {
     axios
       .get(`${SERVER_URL}/api/getOwnedData`, {
-        params: { topicTitle: controller.topic, user: localStorage.getItem('user') },
+        params: { topicTitle: controller.topic, user: localStorage.getItem(USER_KEY) },
       })
       .then((response) => {
         setLoadOptions(
