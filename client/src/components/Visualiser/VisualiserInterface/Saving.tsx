@@ -21,13 +21,7 @@ import axios from 'axios';
 import { SERVER_URL } from '@/utils/constants';
 import LoadOptions from './LoadOptions';
 import VisualiserContext from './VisualiserContext';
-
-const MenuButton = styled(Button)({
-  backgroundColor: '#C81437',
-  '&:hover': {
-    backgroundColor: '#F05C79',
-  },
-});
+import { RedMenuButton } from './styled';
 
 const SaveBox = styled(Box)({
   display: 'flex',
@@ -207,11 +201,11 @@ const Saving = () => {
           />
         </Collapse>
         {toggleSave ? (
-          <MenuButton className="SAVEBUTTON" onClick={handleSave} style={{ marginBottom: '5px' }}>
+          <RedMenuButton className="SAVEBUTTON" onClick={handleSave} style={{ marginBottom: '5px' }}>
             <Typography color="textPrimary" whiteSpace="nowrap">
               SAVE
             </Typography>
-          </MenuButton>
+          </RedMenuButton>
         ) : (
           <Typography color="textPrimary" whiteSpace="nowrap">
             SAVE
