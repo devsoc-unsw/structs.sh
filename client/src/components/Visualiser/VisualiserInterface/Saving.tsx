@@ -23,6 +23,13 @@ import VisualiserContext from './VisualiserContext';
 import { RedMenuButton } from './styled';
 import { USER_KEY } from '@/constants/storage';
 
+interface SavedStructure {
+  owner: string;
+  type: string;
+  name: string;
+  data: number[];
+}
+
 const SaveBox = styled(Box)({
   display: 'flex',
   backgroundColor: '#C81437',
@@ -131,7 +138,7 @@ const Saving = () => {
       })
       .then((response) => {
         setLoadOptions(
-          response.data.map((item: any, index: number) => ({
+          response.data.map((item: SavedStructure, index: number) => ({
             key: index,
             owner: item.owner,
             type: item.type,
