@@ -2,8 +2,13 @@ import React, { FC, MouseEvent } from 'react';
 import { Box, Typography } from '@mui/material';
 import { RedMenuButton } from './styled';
 
+interface LoadOption {
+  name: string;
+  data: number[];
+}
+
 interface Props {
-  options: any[];
+  options: LoadOption[];
   handleLoad: (e: MouseEvent<HTMLButtonElement>, data: number[]) => void;
   handleToggleExpansion: () => void;
 }
