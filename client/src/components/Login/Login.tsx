@@ -6,8 +6,8 @@ import axios from 'axios';
 import { SERVER_URL } from '@/utils/constants';
 
 interface Props {
-  handleLogon: any;
-  onBack: any;
+  handleLogon: (loggedIn: boolean) => void;
+  onBack: () => void;
 }
 
 const LoginMenu = styled('div')({
