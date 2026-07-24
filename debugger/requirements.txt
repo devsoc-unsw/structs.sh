@@ -18,7 +18,7 @@ pybind11==2.13.6
 pydantic==2.11.3
 pydantic_core==2.33.1
 pyinstrument==5.0.1
-pytest==8.3.4
+pytest==9.0.3
 pytest-asyncio==0.25.0
 python-engineio==4.11.1
 python-socketio==5.12.0
