@@ -30,6 +30,9 @@ This feature must not reuse the hard-coded MongoDB connection currently present 
 
 ## Phase 1: Linked List POC
 
+The file-by-file delivery instructions are in
+[phase-1-implementation-guide.md](./phase-1-implementation-guide.md).
+
 ### Capture model
 
 1. Define one runtime-validated `SnapshotV1` contract shared by client and server where practical.
