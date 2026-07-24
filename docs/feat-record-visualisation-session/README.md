@@ -15,6 +15,7 @@ This feature is for the visualisers opened from the homepage. It is not a debugg
 - [PostgreSQL schema](./schema.sql): proposed tables, constraints, indexes, and public view.
 - [PostgreSQL operations](./postgresql-operations.md): configuration, migrations, retention, and production safeguards.
 - [Implementation plan](./implementation-plan.md): POC tasks, later algorithm-state work, tests, and acceptance criteria.
+- [Phase 1 implementation guide](./phase-1-implementation-guide.md): file-by-file instructions for the Linked List POC.
 
 ## Agreed delivery boundary
 

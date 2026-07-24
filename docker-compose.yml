@@ -1,16 +1,34 @@
 services:
   db:
-    image: postgres:latest
+    image: postgres:18.4
     container_name: postgres_db
     environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mysecretpassword
-      POSTGRES_DB: mydb
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql
 
+  server:
+    build:
+      context: server
+    environment: 
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      PUBLIC_APP_ORIGIN: http://localhost:3000
+      PORT: 8001
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - '8001:8001'
   client:
     build:
       context: client
