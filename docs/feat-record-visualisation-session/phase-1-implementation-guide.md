@@ -79,17 +79,68 @@ The hostname is `db` from inside Compose. A host process uses `localhost`.
 
 The client requires Node 22, while `server/Dockerfile` currently uses Node 20. Align the server container and developer tooling on Node 22 before choosing current migration tooling. This avoids a situation where migrations run on a developer machine but not in the server image.
 
-### 1.4 Decide how legacy MongoDB routes coexist
+### 1.4 Use PostgreSQL-only local snapshot mode
 
 Phase 1 moves **snapshot persistence** to PostgreSQL. Existing authentication and `/api/save` routes still import Mongoose models.
 
-Use one of these explicit transition approaches:
+**Selected decision: PostgreSQL-only local snapshot mode.**
 
-- recommended for a low-risk POC: retain legacy MongoDB temporarily through a `MONGODB_URI` secret while snapshots use PostgreSQL;
-- PostgreSQL-only local snapshot mode: mount the snapshot router without MongoDB, and return a clear `503` from unavailable legacy routes;
-- migrate legacy users/save-load separately before removing Mongoose.
+The local Phase 1 server must:
 
-Do not keep the hard-coded MongoDB URI in `server/src/index.ts`, and do not report the legacy endpoints as working if the server no longer connects to MongoDB.
+1. start after PostgreSQL readiness succeeds;
+2. never call `mongoose.connect`;
+3. mount the PostgreSQL snapshot router normally;
+4. return `503 LEGACY_DATABASE_UNAVAILABLE` from MongoDB-dependent routes;
+5. keep non-database filesystem/workspace routes available;
+6. create anonymous snapshots with `owner_subject = NULL`.
+
+The existing `server/src/routes/routes.ts` mixes MongoDB routes with filesystem
+workspace routes. Split it before disabling MongoDB:
+
+```text
+server/src/routes/
+  snapshotRoutes.ts       # PostgreSQL
+  legacyMongoRoutes.ts    # Mongoose; not mounted in local Phase 1
+  workspaceRoutes.ts      # Existing filesystem routes; remains mounted
+  unavailableRoutes.ts    # Explicit 503 responses for disabled Mongo routes
+```
+
+MongoDB-dependent routes currently include:
+
+```text
+GET    /api/getAll
+GET    /api/getOwnedData
+POST   /api/save
+DELETE /api/delete
+DELETE /api/deleteAll
+DELETE /api/deleteAllUsers
+GET    /api/getAllUsers
+POST   /auth/register
+POST   /auth/login
+```
+
+The file/workspace routes beginning with `/api/saveFile`, `/api/updateFile`,
+`/api/saveWorkspace`, and `/api/retrieve...` do not use MongoDB and should not
+be disabled accidentally.
+
+Use the same public response for every disabled Mongo route:
+
+```json
+{
+  "error": {
+    "code": "LEGACY_DATABASE_UNAVAILABLE",
+    "message": "This feature is unavailable in PostgreSQL-only local mode."
+  }
+}
+```
+
+Do not leave the old Mongo routes mounted without a connection. Mongoose may
+buffer operations, causing requests to wait and eventually time out instead of
+returning a useful response.
+
+Remove the hard-coded MongoDB URI from `server/src/index.ts`. Do not add a
+`MONGODB_URI` variable for this local mode because MongoDB is intentionally not
+part of the Phase 1 runtime.
 
 ### Preflight verification
 
@@ -186,7 +237,6 @@ server/src/
 - `DATABASE_POOL_MAX` — optional positive integer;
 - `SNAPSHOT_DEFAULT_TTL_DAYS` — optional positive integer;
 - `PORT` — optional, default `8001`;
-- `MONGODB_URI` — temporary and optional/required according to the transition choice above.
 
 Validate once at startup and export a typed configuration object. A missing value should fail startup with the variable name, never the variable value.
 
@@ -220,7 +270,8 @@ export const createApp = () => {
   app.use(cors(/* configured origin */));
   app.use(express.json({ limit: '32kb' }));
   app.use(snapshotRouter);
-  app.use(legacyRouter);
+  app.use(workspaceRouter);
+  app.use(unavailableLegacyMongoRouter);
   app.use(errorHandler);
   return app;
 };
@@ -230,11 +281,23 @@ Keep `server/src/index.ts` responsible for:
 
 1. validating configuration;
 2. checking PostgreSQL;
-3. connecting legacy MongoDB if retained;
-4. starting the HTTP listener;
-5. handling `SIGINT`/`SIGTERM`.
+3. starting the HTTP listener;
+4. handling `SIGINT`/`SIGTERM`.
 
 This separation allows API tests to import the Express app without opening a real listening port.
+
+In PostgreSQL-only local mode, `createApp()` mounts routers in this order:
+
+```text
+snapshot router
+workspace filesystem router
+explicit legacy-Mongo 503 router
+404 handler
+error handler
+```
+
+Route order matters: the broad fallback router must not intercept snapshot or
+workspace requests.
 
 ## 4. Implement the version 1 runtime contract
 
@@ -401,14 +464,15 @@ Validate the mapped public response before returning it. This catches corrupt or
 1. runtime-validate `req.body`;
 2. run replay-consistency validation;
 3. calculate `expires_at` from configured retention, or `null`;
-4. insert through the repository;
-5. build the public link with:
+4. set `owner_subject` to SQL `NULL`;
+5. insert through the repository;
+6. build the public link with:
 
    ```ts
    new URL(`/s/${shareId}`, env.publicAppOrigin).toString()
    ```
 
-6. return `shareId`, `shareUrl`, `createdAt`, and `expiresAt`.
+7. return `shareId`, `shareUrl`, `createdAt`, and `expiresAt`.
 
 Do not derive the public origin from the request `Host` header.
 
@@ -826,11 +890,15 @@ Each pull request should leave existing preset visualisers usable and should not
 - [ ] `db` health check passes.
 - [ ] Server receives `DATABASE_URL` and `PUBLIC_APP_ORIGIN`.
 - [ ] Hard-coded database credentials are removed from source.
+- [ ] Server starts without MongoDB or `MONGODB_URI`.
+- [ ] Mongo-dependent legacy routes return explicit `503` responses.
+- [ ] Filesystem workspace routes remain available.
 - [ ] Migration applies from an empty database.
 - [ ] Server uses one PostgreSQL pool.
 - [ ] POST and GET endpoints pass contract/integration tests.
 - [ ] Linked List operation capture uses copied pre-operation input.
 - [ ] Share stores state in PostgreSQL and returns an opaque URL.
+- [ ] Snapshot rows use `owner_subject = NULL` in the anonymous POC.
 - [ ] `/s/:shareId` restores static and algorithm snapshots.
 - [ ] Algorithm snapshots open paused at 0%.
 - [ ] Invalid/expired/unsupported snapshots have clear UI states.

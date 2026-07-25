@@ -16,7 +16,18 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql
-
+  
+  # migration initialises data schemas in postgresql
+  migrate:
+    build:
+      context: server
+    command: npm run migrate:up
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
   server:
     build:
       context: server
@@ -27,8 +38,11 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     ports:
       - '8001:8001'
+
   client:
     build:
       context: client

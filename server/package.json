@@ -6,22 +6,29 @@
     "dev": "ts-node-dev src/index.ts",
     "tsc": "tsc",
     "lint": "eslint --ext .js,.ts src/",
-    "lint-fix": "eslint --fix --ext .js,.ts src/"
+    "lint-fix": "eslint --fix --ext .js,.ts src/",
+    "migrate": "node-pg-migrate -j ts",
+    "migrate:up": "node-pg-migrate -j ts up",
+    "migrate:down": "node-pg-migrate -j ts down"
   },
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "express": "^4.18.2",
-    "mongoose": "^7.0.1"
+    "mongoose": "^7.0.1",
+    "pg": "^8.22.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.14",
     "@types/express": "^4.17.17",
     "@types/mongoose": "^5.11.97",
+    "@types/pg": "^8.20.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
     "eslint": "^8.49.0",
+    "node-pg-migrate": "^9.0.0",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.2.2"
