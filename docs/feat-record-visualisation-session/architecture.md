@@ -151,12 +151,12 @@ The client must continue to support known schema versions or fail with a clear �
 - Snapshot payloads contain visualiser state only. Do not store debugger memory, source files, access tokens, or arbitrary HTML/SVG.
 - Values and operation names are allow-listed and size-limited.
 - Snapshot rendering uses typed application data; it must not inject stored strings as markup.
-- Optional ownership is recorded as an opaque application subject, not returned by the public API.
+- Phase 1 creation is anonymous and stores `owner_subject` as `NULL`. Later authenticated ownership, if added, uses an opaque application subject that is not returned by the public API.
 - Revocation and expiry are represented in the schema even if the first POC only uses expiry.
 
 ## Decisions deferred from the POC
 
-- account-required versus anonymous creation;
+- authenticated ownership after the anonymous POC;
 - default expiry duration;
 - a “copy as video” export path;
 - snapshot history and editing;

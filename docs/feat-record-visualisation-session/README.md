@@ -22,12 +22,14 @@ This feature is for the visualisers opened from the homepage. It is not a debugg
 ### Linked List POC
 
 - PostgreSQL is the snapshot source of truth.
+- Local Phase 1 runs in PostgreSQL-only snapshot mode and does not require MongoDB.
 - A snapshot is immutable and addressed by an opaque share ID.
 - The share URL is `/s/:shareId`.
 - Linked List values are stored and restored.
 - An associated operation stores its stable name, named arguments, and pre-operation input.
 - An operation snapshot restores at the beginning of that operation and opens paused.
 - Static snapshots without an operation are supported.
+- Snapshot creation is anonymous in the POC, so `owner_subject` is `NULL`.
 
 ### Follow-up
 
