@@ -55,6 +55,7 @@ services:
     volumes:
       - ./client/src:/app/src
       - vite-cache:/app/node_modules/.vite
+      
   debugger:
     build:
       context: debugger
@@ -63,6 +64,22 @@ services:
       - '8000:8000'
     volumes:
       - ./debugger/src:/app/src
+
+  pyroscope:
+    image: grafana/pyroscope:latest
+    ports:
+      - "4040:4040"
+    command: ["server"]
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "9000:3000"
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
 
 volumes:
   postgres_data:
