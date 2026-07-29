@@ -42,6 +42,8 @@ services:
         condition: service_completed_successfully
     ports:
       - '8001:8001'
+    volumes:
+      - ./server/user-files:/app/user-files
 
   client:
     build:
