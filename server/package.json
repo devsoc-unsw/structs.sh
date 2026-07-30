@@ -4,12 +4,14 @@
   "main": "src/index.ts",
   "scripts": {
     "dev": "ts-node-dev src/index.ts",
-    "tsc": "tsc",
+    "tsc": "npm run typecheck:server && npm run typecheck:migrations",
+    "typecheck:server": "tsc -p tsconfig.json",
+    "typecheck:migrations": "tsc -p migrations/tsconfig.json",
     "lint": "eslint --ext .js,.ts src/",
     "lint-fix": "eslint --fix --ext .js,.ts src/",
-    "migrate": "node-pg-migrate -j ts",
-    "migrate:up": "node-pg-migrate -j ts up",
-    "migrate:down": "node-pg-migrate -j ts down"
+    "migrate:create": "node-pg-migrate create -j ts --ignore-pattern 'tsconfig[.]json'",
+    "migrate:up": "node-pg-migrate up --ignore-pattern 'tsconfig[.]json'",
+    "migrate:down": "node-pg-migrate down --ignore-pattern 'tsconfig[.]json'"
   },
   "license": "MIT",
   "dependencies": {
