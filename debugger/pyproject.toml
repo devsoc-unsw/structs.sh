@@ -1,2 +1,18 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "debugger"
+version = "0.1.0"
+requires-python = ">=3.13,<3.14"
+
+[project.scripts]
+check = "pyproject_commands:check"
+
+[tool.hatch.build.targets.wheel]
+packages = []
+only-include = ["pyproject_commands.py"]
+
 [tool.mypy]
 check_untyped_defs = true
