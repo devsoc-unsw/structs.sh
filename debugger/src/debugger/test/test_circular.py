@@ -1,4 +1,4 @@
-from tools import compile_run
+from .tools import compile_run
 
 
 async def test_circular():
