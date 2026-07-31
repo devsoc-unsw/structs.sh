@@ -9,7 +9,8 @@ authors = [
 requires-python = ">=3.13,<3.14"
 dependencies = [
     "mkdocs==1.6.1",
-    "mkdocs-terminal>=4,<5"
+    "mkdocs-macros-plugin>=1.5,<2",
+    "mkdocs-material>=9,<10",
 ]
 
 [tool.uv]
