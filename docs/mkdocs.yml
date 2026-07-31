@@ -1,2 +1,17 @@
-site_name: Structs.sh Documentation
+site_name: Structs.sh Docs
 repo_url: https://github.com/devsoc-unsw/structs.sh
+site_description: "Documentation for new contributors to structs or other curious people 😋"
+site_author: Structs.sh
+copyright: © 2026 UNSW Software Development Society
+
+theme:
+  name: terminal
+  highlightjs: true
+  hljs_languages:
+  - yaml
+  - python
+  - typescript
+  - javascript
+
+nav:
+- index.md
