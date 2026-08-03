@@ -13,6 +13,10 @@ The snapshot server reads configuration from the environment. Recommended names:
 | `SNAPSHOT_DEFAULT_TTL_DAYS` | No | Default retention; absent means the product decision is no automatic expiry |
 | `PUBLIC_APP_ORIGIN` | Yes | Trusted origin used to build returned share URLs |
 
+With the local Nginx gateway, `PUBLIC_APP_ORIGIN` is
+`http://localhost:8080`. In production it is the deployed HTTPS origin. It is
+never an internal Compose address such as `http://server:8001`.
+
 Do not:
 
 - hard-code a connection string;

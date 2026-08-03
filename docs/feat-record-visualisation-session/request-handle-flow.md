@@ -10,6 +10,7 @@ sequenceDiagram
   participant UI as Preset visualiser
   participant C as VisualiserController
   participant A as Capture adapter
+  participant N as Nginx
   participant API as Snapshot API
   participant DB as PostgreSQL
 
@@ -19,11 +20,13 @@ sequenceDiagram
   C-->>UI: Animation begins
   U->>UI: Share snapshot
   UI->>A: Capture type, current values and operation recipe
-  A->>API: POST /api/v1/snapshots
+  A->>N: POST /api/v1/snapshots
+  N->>API: Forward to server:8001
   API->>API: Validate version, limits and operation
   API->>DB: INSERT immutable snapshot
   DB-->>API: share_id
-  API-->>UI: 201 { shareId, shareUrl, expiresAt }
+  API-->>N: 201 { shareId, shareUrl, expiresAt }
+  N-->>UI: Return response
   UI-->>U: Copy /s/:shareId
 ```
 
@@ -60,20 +63,24 @@ If no operation is associated with the captured state, `algorithm` is omitted. T
 sequenceDiagram
   actor V as Viewer
   participant PAGE as /s/:shareId
+  participant N as Nginx
   participant API as Snapshot API
   participant DB as PostgreSQL
   participant C as VisualiserController
 
   V->>PAGE: Open shared URL
-  PAGE->>API: GET /api/v1/snapshots/:shareId
+  PAGE->>N: GET /api/v1/snapshots/:shareId
+  N->>API: Forward to server:8001
   API->>DB: SELECT active snapshot
   alt Missing, expired or revoked
     DB-->>API: No active row
-    API-->>PAGE: 404
+    API-->>N: 404
+    N-->>PAGE: 404
     PAGE-->>V: Snapshot unavailable
   else Supported snapshot
     DB-->>API: Snapshot row
-    API-->>PAGE: 200 public snapshot
+    API-->>N: 200 public snapshot
+    N-->>PAGE: Return response
     PAGE->>PAGE: Validate schema and renderer support
     PAGE->>C: applyTopicTitle("Linked Lists")
     alt Algorithm is present

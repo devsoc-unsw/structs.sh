@@ -4,6 +4,9 @@
 
 All new endpoints use `/api/v1/snapshots`. They are separate from the legacy `/api/save` and `/api/getOwnedData` routes.
 
+The browser calls this path on the current origin. Nginx forwards `/api/*` to
+the TypeScript server; clients do not need the server container's port.
+
 The examples use `https://structs.sh` as the public origin. The server should derive the actual origin from trusted configuration, not from an arbitrary request header.
 
 ## Create snapshot

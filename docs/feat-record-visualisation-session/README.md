@@ -14,6 +14,7 @@ This feature is for the visualisers opened from the homepage. It is not a debugg
 - [Request flows](./request-handle-flow.md): creation and restoration sequences.
 - [PostgreSQL schema](./schema.sql): proposed tables, constraints, indexes, and public view.
 - [PostgreSQL operations](./postgresql-operations.md): configuration, migrations, retention, and production safeguards.
+- [Nginx gateway](./nginx-gateway.md): one public origin for the client, TypeScript API, and Python debugger.
 - [Implementation plan](./implementation-plan.md): POC tasks, later algorithm-state work, tests, and acceptance criteria.
 - [Phase 1 implementation guide](./phase-1-implementation-guide.md): file-by-file instructions for the Linked List POC.
 
@@ -30,6 +31,7 @@ This feature is for the visualisers opened from the homepage. It is not a debugg
 - An operation snapshot restores at the beginning of that operation and opens paused.
 - Static snapshots without an operation are supported.
 - Snapshot creation is anonymous in the POC, so `owner_subject` is `NULL`.
+- Browser traffic uses one Nginx origin; `/api` reaches TypeScript and `/dapi` reaches Python.
 
 ### Follow-up
 

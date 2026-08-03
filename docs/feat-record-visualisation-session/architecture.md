@@ -53,7 +53,9 @@ The POC implements items 1 and 2 and restores the operation from its beginning. 
 
 ```mermaid
 flowchart LR
-  subgraph Browser["Preset visualiser (not debugger)"]
+  BROWSER["Browser"] --> GATEWAY["Nginx<br/>one public origin"]
+
+  subgraph Browser["Preset visualiser snapshot flow"]
     UI["Share snapshot UI"]
     VC["VisualiserController"]
     CAP["Snapshot capture adapter"]
@@ -74,11 +76,19 @@ flowchart LR
     SNAPSHOTS[("visualisation_snapshots")]
   end
 
-  CAP -->|"POST snapshot recipe"| ROUTES
+  GATEWAY -->|"/"| UI
+  GATEWAY -->|"/api/*"| ROUTES
+  GATEWAY -->|"/dapi/*"| DEBUGGER["Python debugger<br/>separate scope"]
+  CAP -->|"POST /api/v1/snapshots"| GATEWAY
   SERVICE --> SNAPSHOTS
-  SHARE["/s/:shareId"] -->|"GET by opaque share ID"| ROUTES
+  SHARE["/s/:shareId"] -->|"GET snapshot"| GATEWAY
   ROUTES --> RESTORE
 ```
+
+Nginx provides one public origin; it does not merge the services. It preserves
+`/api/...` for the TypeScript server and `/dapi/...` for the Python Socket.IO
+debugger. The debugger shares the gateway but never participates in snapshot
+capture or restore. See [nginx-gateway.md](./nginx-gateway.md).
 
 ### Frontend responsibilities
 
@@ -153,6 +163,9 @@ The client must continue to support known schema versions or fail with a clear â
 - Snapshot rendering uses typed application data; it must not inject stored strings as markup.
 - Phase 1 creation is anonymous and stores `owner_subject` as `NULL`. Later authenticated ownership, if added, uses an opaque application subject that is not returned by the public API.
 - Revocation and expiry are represented in the schema even if the first POC only uses expiry.
+- Public `/dapi` access executes untrusted C code and requires authentication,
+  rate/resource limits, and an enabled process sandbox; Nginx alone is not a
+  security boundary.
 
 ## Decisions deferred from the POC
 

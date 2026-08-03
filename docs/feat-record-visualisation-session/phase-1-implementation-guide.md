@@ -17,7 +17,7 @@ Exact mid-animation progress remains Phase 2.
 
 Implement and verify one boundary at a time:
 
-1. Compose/database preflight;
+1. Compose/database preflight and Nginx gateway;
 2. migration;
 3. PostgreSQL pool;
 4. server contract and repository;
@@ -31,7 +31,9 @@ Do not start with the Share button. Prove the API with `curl` before connecting 
 
 ## 1. Finish the Compose/database preflight
 
-The current Compose file creates `db`, but does not yet run the application server or supply it with `DATABASE_URL`.
+The Phase 1 Compose stack contains PostgreSQL, a one-shot migration service,
+the TypeScript server, the Python debugger, the client, and Nginx. Verify their
+configuration before adding snapshot endpoints.
 
 ### 1.1 Pin PostgreSQL
 
@@ -64,22 +66,40 @@ services:
       context: server
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
-      PUBLIC_APP_ORIGIN: http://localhost:3000
+      PUBLIC_APP_ORIGIN: http://localhost:8080
       PORT: 8001
     depends_on:
       db:
         condition: service_healthy
-    ports:
-      - "8001:8001"
+    expose:
+      - "8001"
 ```
 
 The hostname is `db` from inside Compose. A host process uses `localhost`.
 
-### 1.3 Align Node versions
+### 1.3 Add one public Nginx gateway
 
-The client requires Node 22, while `server/Dockerfile` currently uses Node 20. Align the server container and developer tooling on Node 22 before choosing current migration tooling. This avoids a situation where migrations run on a developer machine but not in the server image.
+Route browser traffic through `http://localhost:8080`:
 
-### 1.4 Use PostgreSQL-only local snapshot mode
+```text
+/          -> client:3000
+/api/*     -> server:8001
+/auth/*    -> server:8001
+/dapi/*    -> debugger:8000
+```
+
+Only Nginx publishes a browser-facing port. Use internal `expose` entries for
+the three upstream services. `/dapi` must forward WebSocket upgrade headers and
+must preserve the original path. Follow [nginx-gateway.md](./nginx-gateway.md)
+for the complete configuration and verification commands.
+
+### 1.4 Align Node versions
+
+Keep the client, TypeScript server, and migration service on Node 22. Using the
+same major version prevents migrations from working locally but failing in the
+server image.
+
+### 1.5 Use PostgreSQL-only local snapshot mode
 
 Phase 1 moves **snapshot persistence** to PostgreSQL. Existing authentication and `/api/save` routes still import Mongoose models.
 
@@ -155,6 +175,14 @@ docker compose exec db psql -U myuser -d mydb -c "select current_database(), cur
 
 Adjust the development user/database names to the values chosen by the team.
 
+After adding Nginx, also verify:
+
+```sh
+docker compose run --rm nginx nginx -t
+curl -i http://localhost:8080/
+curl -i "http://localhost:8080/dapi/?EIO=4&transport=polling"
+```
+
 ## 2. Add server dependencies and migrations
 
 From `server/`, add:
@@ -171,9 +199,9 @@ Add migration scripts to `server/package.json`:
 ```json
 {
   "scripts": {
-    "migrate": "node-pg-migrate -j ts",
-    "migrate:up": "node-pg-migrate -j ts up",
-    "migrate:down": "node-pg-migrate -j ts down"
+    "migrate:create": "node-pg-migrate create -j ts --ignore-pattern 'tsconfig[.]json'",
+    "migrate:up": "node-pg-migrate up --ignore-pattern 'tsconfig[.]json'",
+    "migrate:down": "node-pg-migrate down --ignore-pattern 'tsconfig[.]json'"
   }
 }
 ```
@@ -181,7 +209,7 @@ Add migration scripts to `server/package.json`:
 Create the first migration:
 
 ```sh
-npm run migrate -- create create-visualisation-snapshots
+npm run migrate:create -- create-visualisation-snapshots
 ```
 
 Implement its `up` migration from [schema.sql](./schema.sql). It must create:
@@ -196,7 +224,7 @@ The `down` migration should drop the view before the table. Do not drop `pgcrypt
 Run migrations through the server container so they use the same Node runtime and Compose-provided `DATABASE_URL`:
 
 ```sh
-docker compose run --rm server npm run migrate:up
+docker compose run --rm migrate
 ```
 
 Then verify:
@@ -516,7 +544,7 @@ Add `Location: /api/v1/snapshots/:shareId` on creation.
 
 ```sh
 curl --fail-with-body \
-  -X POST http://localhost:8001/api/v1/snapshots \
+  -X POST http://localhost:8080/api/v1/snapshots \
   -H 'Content-Type: application/json' \
   -d '{
     "schemaVersion": 1,
@@ -532,7 +560,7 @@ curl --fail-with-body \
 
 ```sh
 curl --fail-with-body \
-  -X POST http://localhost:8001/api/v1/snapshots \
+  -X POST http://localhost:8080/api/v1/snapshots \
   -H 'Content-Type: application/json' \
   -d '{
     "schemaVersion": 1,
@@ -553,7 +581,7 @@ Copy `shareId` from the response:
 
 ```sh
 curl --fail-with-body \
-  http://localhost:8001/api/v1/snapshots/<share-id>
+  http://localhost:8080/api/v1/snapshots/<share-id>
 ```
 
 Also prove rejection:
@@ -617,14 +645,17 @@ getSnapshot(shareId): Promise<SnapshotV1>
 
 Use the existing Axios dependency. Decode successful responses at runtime before returning them.
 
-Replace the hard-coded server origin in `client/src/utils/constants.ts` with a Vite environment value and a local fallback:
+Replace the hard-coded server origin in `client/src/utils/constants.ts`. The
+normal path is same-origin through Nginx; the environment variable is an
+optional direct-backend override:
 
 ```ts
 export const SERVER_URL =
-  import.meta.env.VITE_SERVER_URL ?? 'http://localhost:8001';
+  import.meta.env.VITE_SERVER_URL ?? '';
 ```
 
-Document `VITE_SERVER_URL` in an example environment file.
+Document `VITE_SERVER_URL` in an example environment file. Apply the same rule
+to Socket.IO: use the current origin by default and keep path `/dapi`.
 
 ## 11. Capture the algorithm recipe in the controller
 
@@ -855,9 +886,9 @@ Add `test` scripts as part of the test-runner setup.
 
 ## 15. End-to-end acceptance walkthrough
 
-1. Start `db`, `server`, and `client`.
+1. Start Compose, including `db`, both backends, `client`, and `nginx`.
 2. Apply all migrations.
-3. Open `/visualiser/linked-lists`.
+3. Open `http://localhost:8080/visualiser/linked-lists`.
 4. Create or load `[8, 13, 21]`.
 5. Run `insert(value=5, index=1)`.
 6. Select Share.
@@ -868,7 +899,8 @@ Add `test` scripts as part of the test-runner setup.
 11. Refresh and repeat to prove persistence.
 12. Stop/restart the containers without removing the database volume.
 13. Reopen the same URL and confirm it still works.
-14. Confirm `/debugger` was never loaded or called.
+14. Confirm snapshot capture/restore never calls `/dapi` or stores debugger state.
+15. Open `/debugger` separately and confirm its Socket.IO connection upgrades through `/dapi`.
 
 Also repeat with a static snapshot and each Linked List operation.
 
@@ -876,19 +908,23 @@ Also repeat with a static snapshot and each Linked List operation.
 
 Keep changes reviewable:
 
-1. **PostgreSQL foundation** — Compose health/server config, Node alignment, pool, migration.
+1. **Runtime foundation** — Compose health, Nginx gateway, Node alignment, pool, migration.
 2. **Snapshot API** — contract, consistency, repository, service, routes, API tests.
 3. **Snapshot capture/share** — controller recipe and Share UI.
 4. **Snapshot restore** — `/s/:shareId`, bootstrap flow, client tests.
 5. **POC hardening** — rate limits, observability, retention decision, accessibility and E2E.
 
-Each pull request should leave existing preset visualisers usable and should not modify debugger code.
+Each pull request should leave existing preset visualisers usable. Gateway work
+may change debugger connection/origin configuration, but snapshot code must not
+depend on debugger state.
 
 ## Phase 1 completion checklist
 
 - [ ] PostgreSQL image is pinned.
 - [ ] `db` health check passes.
 - [ ] Server receives `DATABASE_URL` and `PUBLIC_APP_ORIGIN`.
+- [ ] Nginx is the only browser-facing entry point.
+- [ ] `/api/*` reaches TypeScript and `/dapi/*` reaches Python Socket.IO.
 - [ ] Hard-coded database credentials are removed from source.
 - [ ] Server starts without MongoDB or `MONGODB_URI`.
 - [ ] Mongo-dependent legacy routes return explicit `503` responses.
@@ -903,4 +939,4 @@ Each pull request should leave existing preset visualisers usable and should not
 - [ ] Algorithm snapshots open paused at 0%.
 - [ ] Invalid/expired/unsupported snapshots have clear UI states.
 - [ ] Server/client type checks, lint, builds, and tests pass.
-- [ ] No debugger files or routes are involved.
+- [ ] Snapshot capture and restore do not use debugger state or `/dapi`.

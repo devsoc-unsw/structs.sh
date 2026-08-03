@@ -12,8 +12,10 @@ This is a design and delivery plan only. No application code is changed by this 
 | Operation invocation | `client/src/components/Visualiser/VisualiserInterface/OperationDetails.tsx` | Copy pre-operation values and named arguments before `doOperation` |
 | Existing link UI | `client/src/components/Visualiser/VisualiserInterface/CreateLink.tsx` | Replace inline value encoding with API-backed share creation |
 | Existing data restore | `GraphicalLinkedList.load` through `controller.loadData` | Restore Linked List input/state |
-| Server routes | `server/src/routes/routes.ts` | Add versioned snapshot endpoints |
+| Server routes | `server/src/snapshots/snapshotRoutes.ts` | Add versioned snapshot endpoints |
 | Server startup | `server/src/index.ts` | Use configured PostgreSQL connection for the snapshot repository |
+| Public gateway | `docker-compose.yml`, `nginx/nginx.dev.conf` | Route `/api` to TypeScript and `/dapi` to Python |
+| Client origins | `client/src/utils/constants.ts`, `client/src/Services/socketClient.ts` | Default HTTP and Socket.IO traffic to the current origin |
 
 The existing `Save`, `Load`, and `CreateLink` controls are development-gated by `inDev`. Product rollout must deliberately choose whether the new Share control remains gated.
 
@@ -25,8 +27,11 @@ The existing `Save`, `Load`, and `CreateLink` controls are development-gated by 
 4. Add a small snapshot repository with parameterised insert/read operations.
 5. Add startup health checks and graceful connection shutdown.
 6. Decide and configure snapshot retention.
+7. Add the Nginx gateway described in [nginx-gateway.md](./nginx-gateway.md).
+8. Publish only the gateway port; keep backend ports on the Compose network.
 
-This feature must not reuse the hard-coded MongoDB connection currently present in `server/src/index.ts`.
+Keep the Phase 1 runtime PostgreSQL-only; snapshot startup must not depend on
+MongoDB.
 
 ## Phase 1: Linked List POC
 
@@ -135,7 +140,8 @@ The existing numeric-array `data` getter is useful but must not automatically be
 - The snapshot persists in PostgreSQL and remains independent of the sender's browser.
 - The API and database reject malformed or unsupported snapshot data.
 - No `/debugger` state or code path participates in capture or restore.
-- Existing source files are unchanged until implementation work begins.
+- The browser reaches the client and both backends through one Nginx origin.
+- `/api/*` reaches TypeScript and `/dapi/*` supports Socket.IO polling and WebSocket upgrades.
 
 ## Rollout and observability
 
@@ -143,3 +149,4 @@ The existing numeric-array `data` getter is useful but must not automatically be
 - Track create success rate, restore success rate, not-found rate, payload size, and version incompatibility.
 - Gate creation separately from reading so shared links continue to work during a rollback.
 - Back up PostgreSQL and test restoration before promising long retention.
+- Monitor Nginx `4xx`/`5xx`, upstream failures, and debugger connection counts.
