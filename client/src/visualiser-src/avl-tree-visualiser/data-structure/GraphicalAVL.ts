@@ -32,7 +32,7 @@ class GraphicalAVL extends GraphicalDataStructure {
       args: ['value'],
       description:
         'Executes standard AVL deletion to remove the node with the given value from the tree.',
-    }
+    },
   });
 
   public root: GraphicalAVLNode | null = null;
@@ -50,6 +50,12 @@ class GraphicalAVL extends GraphicalDataStructure {
       // Recursively inserting
       this.doInsert(null, this.root, false, input, animationProducer);
     }
+    return animationProducer;
+  }
+
+  public delete(_input: number): AVLAnimationProducer {
+    const animationProducer: AVLAnimationProducer = new AVLAnimationProducer();
+    animationProducer.renderDeleteCode();
     return animationProducer;
   }
 
