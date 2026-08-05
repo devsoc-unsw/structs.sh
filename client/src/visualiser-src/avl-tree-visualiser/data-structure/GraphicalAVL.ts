@@ -134,7 +134,7 @@ class GraphicalAVL extends GraphicalDataStructure {
     root.updateHeight();
     if (root.balance > 1) {
       animationProducer.doAnimationAndHighlight(13, animationProducer.highlightNode, root);
-      if (input > root.left.value) {
+      if (root.left != null && input > root.left.value) {
         // Left Right Case
         animationProducer.doAnimationAndHighlight(14, animationProducer.highlightNode, root.left);
         animationProducer.highlightCode(15);
@@ -145,7 +145,7 @@ class GraphicalAVL extends GraphicalDataStructure {
       this.rotateRight(parent, root, isInsertLeft, animationProducer);
     } else if (root.balance < -1) {
       animationProducer.doAnimationAndHighlight(17, animationProducer.highlightNode, root);
-      if (input < root.right.value) {
+      if (root.right != null && input < root.right.value) {
         // Right Left Case
         animationProducer.doAnimationAndHighlight(18, animationProducer.highlightNode, root.right);
         animationProducer.highlightCode(19);

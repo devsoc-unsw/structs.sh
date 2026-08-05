@@ -18,7 +18,7 @@ export default class GraphicalAVLNode extends GenericGraphicalTreeNode {
     if (this.left === null && this.right === null) {
       this.height = 1;
     } else if (this.left === null) {
-      this.height = this.right.height + 1;
+      this.height = this.right!.height + 1;
     } else if (this.right === null) {
       this.height = this.left.height + 1;
     } else {
@@ -26,19 +26,19 @@ export default class GraphicalAVLNode extends GenericGraphicalTreeNode {
     }
   }
 
-  public get left(): GraphicalAVLNode {
-    return this._left as GraphicalAVLNode;
+  public get left(): GraphicalAVLNode | null {
+    return this._left as GraphicalAVLNode | null;
   }
 
-  public set left(left: GraphicalAVLNode) {
+  public set left(left: GraphicalAVLNode | null) {
     this._left = left;
   }
 
-  public get right(): GraphicalAVLNode {
-    return this._right as GraphicalAVLNode;
+  public get right(): GraphicalAVLNode | null {
+    return this._right as GraphicalAVLNode | null;
   }
 
-  public set right(right: GraphicalAVLNode) {
+  public set right(right: GraphicalAVLNode | null) {
     this._right = right;
   }
 
@@ -55,7 +55,7 @@ export default class GraphicalAVLNode extends GenericGraphicalTreeNode {
       return 0;
     }
     if (this.left === null) {
-      return -this.right.height;
+      return -this.right!.height;
     }
     if (this.right === null) {
       return this.left.height;
