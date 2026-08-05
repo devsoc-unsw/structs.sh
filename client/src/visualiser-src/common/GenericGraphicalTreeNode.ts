@@ -68,6 +68,10 @@ export default class GenericGraphicalTreeNode {
     return this._data.value;
   }
 
+  public set value(value: number) {
+    this._data.value = value;
+  }
+
   public get x() {
     return this._data.x;
   }
