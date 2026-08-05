@@ -28,6 +28,11 @@ class GraphicalAVL extends GraphicalDataStructure {
       args: [],
       description: 'Executes a postorder traversal on the tree.',
     },
+    delete: {
+      args: ['value'],
+      description:
+        'Executes standard AVL deletion to remove the node with the given value from the tree.',
+    }
   });
 
   public root: GraphicalAVLNode | null = null;
