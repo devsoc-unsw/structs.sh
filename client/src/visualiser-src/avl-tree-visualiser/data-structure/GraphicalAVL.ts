@@ -53,10 +53,89 @@ class GraphicalAVL extends GraphicalDataStructure {
     return animationProducer;
   }
 
-  public delete(_input: number): AVLAnimationProducer {
-    const animationProducer: AVLAnimationProducer = new AVLAnimationProducer();
+  public delete(input: number): AVLAnimationProducer {
+    const animationProducer = new AVLAnimationProducer();
     animationProducer.renderDeleteCode();
+
+    const nodeExists = GraphicalAVL.exists(this.root, input);
+    this.root = this.doDelete(this.root, null, input, animationProducer);
+
+    if (nodeExists) {
+      updateNodePositions(this.root);
+      animationProducer.doAnimation(animationProducer.updateBST, this.root);
+      animationProducer.doAnimation(animationProducer.unhighlightBST, this.root);
+    }
+
     return animationProducer;
+  }
+
+  private doDelete(
+    root: GraphicalAVLNode | null,
+    parent: GraphicalAVLNode | null,
+    input: number,
+    animationProducer: AVLAnimationProducer
+  ): GraphicalAVLNode | null {
+    if (root === null) {
+      animationProducer.doAnimationAndHighlight(3, animationProducer.unhighlightBST, this.root);
+      return null;
+    }
+
+    let newRoot: GraphicalAVLNode | null = root;
+
+    if (input < root.value) {
+      animationProducer.doAnimationAndHighlight(4, animationProducer.halfHighlightNode, root);
+      if (root.left !== null) {
+        animationProducer.doAnimationAndHighlight(
+          5,
+          animationProducer.highlightLine,
+          root.leftLineTarget,
+          root.leftArrowTarget,
+          true
+        );
+      }
+      root.left = this.doDelete(root.left, root, input, animationProducer);
+    } else if (input > root.value) {
+      animationProducer.doAnimationAndHighlight(6, animationProducer.halfHighlightNode, root);
+      if (root.right !== null) {
+        animationProducer.doAnimationAndHighlight(
+          7,
+          animationProducer.highlightLine,
+          root.rightLineTarget,
+          root.rightArrowTarget,
+          true
+        );
+      }
+      root.right = this.doDelete(root.right, root, input, animationProducer);
+    } else {
+      animationProducer.doAnimationAndHighlight(8, animationProducer.highlightNode, root);
+      if (root.left === null) {
+        newRoot = root.right;
+        animationProducer.doAnimationAndHighlight(
+          11,
+          animationProducer.freeNode,
+          root,
+          parent,
+          newRoot === null
+        );
+      } else if (root.right === null) {
+        newRoot = root.left;
+        animationProducer.doAnimationAndHighlight(
+          15,
+          animationProducer.freeNode,
+          root,
+          parent,
+          false
+        );
+      } else {
+        // todo
+      }
+    }
+
+    if (newRoot !== null) {
+      newRoot.updateHeight();
+    }
+
+    return newRoot;
   }
 
   public inorderTraversal(): BSTTraverseAnimationProducer {
@@ -299,6 +378,19 @@ class GraphicalAVL extends GraphicalDataStructure {
 
   public load(data: number[]): void {
     this.root = GraphicalTreeGenerate.loadTree<GraphicalAVLNode>(GraphicalAVLNode.from, data);
+  }
+
+  private static exists(root: GraphicalAVLNode | null, value: number): boolean {
+    if (root === null) {
+      return false;
+    }
+    if (value < root.value) {
+      return this.exists(root.left, value);
+    }
+    if (value > root.value) {
+      return this.exists(root.right, value);
+    }
+    return true;
   }
 }
 
