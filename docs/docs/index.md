@@ -48,4 +48,3 @@ Structs.sh aims to be a comprehensive educational resource for data structures a
 The project was inspired by **[Tactile-DS](https://github.com/Tymotex/Tactile-DS)**, a tutoring tool and reference implementation developed in 2020 for **[COMP2521](https://www.handbook.unsw.edu.au/undergraduate/courses/2022/COMP2521/?year=2022)**.
 
 Structs.sh exists to bridge the gap between a student's high-level understanding of computer science concepts and how those concepts translate into real code. It was started by students who felt there was a lack of tools that help build strong visual intuition for algorithmic thinking.
-

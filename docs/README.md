@@ -3,7 +3,7 @@
 - Install [uv](https://docs.astral.sh/uv/getting-started/installation/)
 - Run `uv run mkdocs serve`, and visit the URL from the command output. An example is shown below
 
-    ```
+    ```bash
     › uv run mkdocs serve
     INFO    -  Building documentation...
     INFO    -  Cleaning site directory
