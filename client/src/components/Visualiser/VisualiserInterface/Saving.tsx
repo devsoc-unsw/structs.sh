@@ -20,6 +20,14 @@ import LoadOptions from './LoadOptions';
 import VisualiserContext from './VisualiserContext';
 import { RedMenuButton } from './styled';
 import { useNotification } from './useNotification';
+import { USER_KEY } from '@/constants/storage';
+
+interface SavedStructure {
+  owner: string;
+  type: string;
+  name: string;
+  data: number[];
+}
 
 const SaveBox = styled(Box)({
   display: 'flex',
@@ -77,7 +85,7 @@ const Saving = () => {
   };
 
   const handleSave = () => {
-    const owner = localStorage.getItem('user');
+    const owner = localStorage.getItem(USER_KEY);
     if (!owner) {
       showNotification('Please Log In to Save', 'error');
       return;
@@ -118,11 +126,11 @@ const Saving = () => {
   const handleLoad = () => {
     axios
       .get(`${SERVER_URL}/api/getOwnedData`, {
-        params: { topicTitle: controller.topic, user: localStorage.getItem('user') },
+        params: { topicTitle: controller.topic, user: localStorage.getItem(USER_KEY) },
       })
       .then((response) => {
         setLoadOptions(
-          response.data.map((item: any, index: number) => ({
+          response.data.map((item: SavedStructure, index: number) => ({
             key: index,
             owner: item.owner,
             type: item.type,

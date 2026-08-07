@@ -3,7 +3,8 @@ import Typography from '@mui/material/Typography';
 import React, { useCallback, useContext } from 'react';
 import VisualiserContext from './VisualiserContext';
 import CreateLink from './CreateLink';
-import Saving from './Saving';
+import Save from './Save';
+import Load from './Load';
 import useGlobalState from '../../../store/globalStore';
 import { GreenMenuButton } from './styled';
 
@@ -51,7 +52,8 @@ const CreateMenu = () => {
       {/* TODO: Release this feature */}
       {inDev && (
         <>
-          <Saving />
+          <Save />
+          <Load />
           <CreateLink />
         </>
       )}

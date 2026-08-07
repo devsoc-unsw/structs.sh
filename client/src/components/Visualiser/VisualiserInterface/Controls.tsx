@@ -20,6 +20,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import SpeedIcon from '@mui/icons-material/Speed';
 import CheckIcon from '@mui/icons-material/Check';
 import { defaultSpeed } from '@/visualiser-src/common/constants';
+import { SPEED_OPTIONS } from '@/constants/ui';
 import VisualiserContext from './VisualiserContext';
 
 const TimelineSlider = styled('input')({
@@ -82,9 +83,8 @@ const VisualiserControls = ({
 
   const [speedMenuAnchorEl, setSpeedMenuAnchorEl] = useState<null | HTMLElement>(null);
   const speedMenuOpen = Boolean(speedMenuAnchorEl);
-  const speedOptions: number[] = [0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2];
   const [selectedIndex, setSelectedIndex] = useState<number>(
-    speedOptions.indexOf(defaultSpeed * 2)
+    SPEED_OPTIONS.indexOf(defaultSpeed * 2)
   );
 
   const handlePlay = useCallback(() => {
@@ -146,7 +146,7 @@ const VisualiserControls = ({
 
   const handleSelectSpeed = (_event: MouseEvent<HTMLElement>, index: number) => {
     setSelectedIndex(index);
-    handleSetSpeed(speedOptions[index] / 2);
+    handleSetSpeed(SPEED_OPTIONS[index] / 2);
     setSpeedMenuAnchorEl(null);
   };
 
@@ -219,7 +219,7 @@ const VisualiserControls = ({
         color="inherit"
         endIcon={<KeyboardArrowUpIcon />}
       >
-        <Typography>{speedOptions[selectedIndex]}</Typography>
+        <Typography>{SPEED_OPTIONS[selectedIndex]}</Typography>
       </SpeedMenuButton>
       <Menu
         open={speedMenuOpen}
@@ -234,7 +234,7 @@ const VisualiserControls = ({
           horizontal: 'center',
         }}
       >
-        {speedOptions.map((speedOption, index) => (
+        {SPEED_OPTIONS.map((speedOption, index) => (
           <MenuItem onClick={(event) => handleSelectSpeed(event, index)} key={index}>
             {index === selectedIndex ? (
               <>

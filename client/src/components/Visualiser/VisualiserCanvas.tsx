@@ -2,6 +2,7 @@ import React, { PointerEvent, useCallback, useEffect, useRef, useState } from 'r
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import { mat3, vec2 } from 'gl-matrix';
+import { ZOOM_SPEED, MAX_SCALE, MIN_SCALE, DEBUG } from '@/constants/ui';
 
 const ZoomableSvg = styled('svg')<{ transformMat: mat3 }>(({ transformMat }) => ({
   width: '100%',
@@ -10,11 +11,6 @@ const ZoomableSvg = styled('svg')<{ transformMat: mat3 }>(({ transformMat }) => 
   // transformOrigin: 'center',
   transform: `matrix(${transformMat[0]}, ${transformMat[1]}, ${transformMat[3]}, ${transformMat[4]}, ${transformMat[6]}, ${transformMat[7]})`,
 }));
-
-const ZOOM_SPEED = 0.0002;
-const MAX_SCALE = 4;
-const MIN_SCALE = 0.5;
-const DEBUG = false;
 
 /* -------------------------------------------------------------------------- */
 /*                        Visualiser-Specific Canvases                        */
