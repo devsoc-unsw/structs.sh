@@ -1,6 +1,6 @@
 import os
 
-from tools import compile_run
+from .tools import compile_run
 
 
 async def test_inf_eof():
