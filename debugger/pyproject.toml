@@ -1,18 +1,24 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["uv_build>=0.12.3,<0.13"]
+build-backend = "uv_build"
 
 [project]
 name = "debugger"
 version = "0.1.0"
 requires-python = ">=3.13,<3.14"
+dependencies = [
+  "aiofiles >=25, <26",
+  "python-socketio >=5.16, <5.17",
+  "uvicorn==0.52.0",
+  "pydantic >=2, <3",
+  "orjson >=3, <4",
+  "pyroscope-io >=1, <2"
+]
 
-[project.scripts]
-check = "pyproject_commands:check"
+[dependency-groups]
+dev = [
+  "pytest >=9.1, <9.2",
+  "mypy >=2.3, <2.4",
+  "ruff==0.16.2"
+]
 
-[tool.hatch.build.targets.wheel]
-packages = []
-only-include = ["pyproject_commands.py"]
-
-[tool.mypy]
-check_untyped_defs = true

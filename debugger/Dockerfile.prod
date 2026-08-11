@@ -1,14 +1,36 @@
-from python:3.13.3-bookworm
+# adapted from https://github.com/astral-sh/uv-docker-example/blob/main/Dockerfile
+from ghcr.io/astral-sh/uv:python3.13-trixie-slim
+
+run groupadd --system --gid 999 nonroot \
+ && useradd --system --gid 999 --uid 999 --create-home nonroot
 
 workdir /app
+
+env PYTHONUNBUFFERED=1
+env UV_COMPILE_BYTECODE=1
+env UV_LINK_MODE=copy
+env UV_NO_DEV=1
+env UV_TOOL_BIN_DIR=/usr/local/bin
+
 
 run apt-get update -y
 run apt-get install -y gdb libprotobuf32 libnl-3-200 libnl-route-3-200 flex bison protobuf-compiler libnl-genl-3-dev libnl-3-dev libnl-route-3-dev git
 
-copy requirements.txt .
-run pip3 install -r requirements.txt --root-user-action=ignore
+run --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv sync --locked --no-install-project
 
-copy . .
+copy . /app
+run --mount=type=cache,target=/root/.cache/uv \
+    uv sync --locked
+
+env PATH="/app/.venv/bin:$PATH"
+
+entrypoint []
+
+user nonroot
+
 workdir /app/src/debugger
 # run git clone https://github.com/google/nsjail.git
 # workdir /app/src/debugger/nsjail
@@ -16,4 +38,5 @@ workdir /app/src/debugger
 workdir /app
 
 expose 8000
-cmd ["python3", "src/serve.py"]
+cmd ["python", "src/serve.py"]
+
