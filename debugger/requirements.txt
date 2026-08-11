@@ -1,6 +1,0 @@
-aiofiles >=25, <26
-python-socketio >=5.16, <5.17
-uvicorn==0.52.0
-pydantic >=2, <3
-orjson >=3, <4
-pyroscope-io >=1, <2
