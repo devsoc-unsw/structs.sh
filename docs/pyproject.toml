@@ -1,0 +1,17 @@
+[project]
+name = "docs"
+version = "0.1.0"
+description = "structs.sh docs"
+readme = "README.md"
+authors = [
+    { name = "Structs", email = "structs@devsoc.app" }
+]
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "mkdocs==1.6.1",
+    "mkdocs-macros-plugin>=1.5,<2",
+    "mkdocs-material>=9,<10",
+]
+
+[tool.uv]
+package = false

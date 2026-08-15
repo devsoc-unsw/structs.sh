@@ -1,0 +1,34 @@
+site_name: Structs.sh Docs
+repo_url: https://github.com/devsoc-unsw/structs.sh
+site_description: "Documentation for new contributors to structs or other curious people 😋"
+site_author: Structs.sh
+copyright: © 2026 UNSW Software Development Society
+
+extra:
+  repo_clone_url: git@github.com:devsoc-unsw/structs.sh.git
+  github_team_url: https://github.com/orgs/devsoc-unsw/teams/structs-sh
+  email: structs@devsoc.app
+
+theme:
+  name: material
+  highlightjs: true
+  hljs_languages:
+  - yaml
+  - python
+  - typescript
+  - javascript
+  - bash
+
+plugins:
+- search
+- macros
+
+markdown_extensions:
+- admonition
+- pymdownx.details
+- pymdownx.superfences
+
+nav:
+- Home: index.md
+- Contributing: contributing.md
+- Explanations (wip): explanations.md
