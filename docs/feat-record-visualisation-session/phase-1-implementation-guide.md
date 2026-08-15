@@ -1,6 +1,6 @@
 # Phase 1 implementation guide: Linked List snapshots
 
-This guide starts after a PostgreSQL container has been added to Docker Compose. It describes implementation work; it does not change application code by itself.
+This guide records the Phase 1 implementation design. The PostgreSQL container, migration runner, backend container wiring, environment validation, connection pool, startup check, graceful shutdown, and legacy-route split are now present in the branch. Runtime verification and the snapshot API/client work remain outstanding; use [next-steps.md](./next-steps.md) as the active execution plan.
 
 The Phase 1 outcome is:
 
@@ -31,15 +31,26 @@ Do not start with the Share button. Prove the API with `curl` before connecting 
 
 ## 1. Finish the Compose/database preflight
 
-The current Compose file creates `db`, but does not yet run the application server or supply it with `DATABASE_URL`.
+### Current state
 
-### 1.1 Pin PostgreSQL
+The current Compose file already:
+
+- pins PostgreSQL to `postgres:18.4`;
+- persists `/var/lib/postgresql` in the `postgres_data` volume;
+- checks readiness with `pg_isready`;
+- runs `npm run migrate:up` in a one-shot `migrate` service;
+- supplies the backend with `DATABASE_URL`, `PUBLIC_APP_ORIGIN`, and `PORT`;
+- starts the backend only after PostgreSQL is healthy and the migration succeeds.
+
+The preflight is therefore implemented but not yet proven from an empty volume. The client, debugger, Grafana, and Pyroscope remain part of the existing Compose stack. PostgreSQL and the backend are additional services; the active plan does not separate, profile, or relocate the existing services.
+
+### 1.1 Pin PostgreSQL — implemented
 
 Replace `postgres:latest` with a team-selected, supported major tag. A floating tag can change the database major version when an image is pulled again, making local and CI behaviour non-reproducible.
 
 Do not put production credentials in Compose. Development defaults may be supplied through Compose interpolation, with real deployed values coming from the platform secret store.
 
-### 1.2 Add a database health check
+### 1.2 Add a database health check — implemented
 
 Use `pg_isready` with the configured database/user. The server should depend on `service_healthy`, not only container startup. “Container running” does not mean PostgreSQL is ready to accept connections.
 
@@ -75,37 +86,35 @@ services:
 
 The hostname is `db` from inside Compose. A host process uses `localhost`.
 
-### 1.3 Align Node versions
+### 1.3 Align Node versions — implemented
 
-The client requires Node 22, while `server/Dockerfile` currently uses Node 20. Align the server container and developer tooling on Node 22 before choosing current migration tooling. This avoids a situation where migrations run on a developer machine but not in the server image.
+The server container now uses Node 22. A production-oriented multi-stage image and reproducible `npm ci` installation are still required before deployment.
 
-### 1.4 Use PostgreSQL-only local snapshot mode
+### 1.4 Use PostgreSQL-only local snapshot mode — implemented in code
 
-Phase 1 moves **snapshot persistence** to PostgreSQL. Existing authentication and `/api/save` routes still import Mongoose models.
+Phase 1 moves **snapshot persistence** to PostgreSQL. The branch now represents the old authentication and save/load endpoints with an explicit unavailable router instead of importing or connecting Mongoose.
 
 **Selected decision: PostgreSQL-only local snapshot mode.**
 
-The local Phase 1 server must:
+The local Phase 1 server now:
 
-1. start after PostgreSQL readiness succeeds;
-2. never call `mongoose.connect`;
-3. mount the PostgreSQL snapshot router normally;
-4. return `503 LEGACY_DATABASE_UNAVAILABLE` from MongoDB-dependent routes;
-5. keep non-database filesystem/workspace routes available;
-6. create anonymous snapshots with `owner_subject = NULL`.
+1. starts after PostgreSQL readiness succeeds;
+2. does not call `mongoose.connect`;
+3. mounts the PostgreSQL snapshot router normally;
+4. returns `503 LEGACY_DATABASE_UNAVAILABLE` from MongoDB-dependent routes;
+5. keeps non-database filesystem/workspace routes available;
+6. will create anonymous snapshots with `owner_subject = NULL` after the repository is implemented.
 
-The existing `server/src/routes/routes.ts` mixes MongoDB routes with filesystem
-workspace routes. Split it before disabling MongoDB:
+The route split is implemented with this structure:
 
 ```text
-server/src/routes/
-  snapshotRoutes.ts       # PostgreSQL
-  legacyMongoRoutes.ts    # Mongoose; not mounted in local Phase 1
-  workspaceRoutes.ts      # Existing filesystem routes; remains mounted
-  unavailableRoutes.ts    # Explicit 503 responses for disabled Mongo routes
+server/src/
+  snapshots/snapshotRoutes.ts # PostgreSQL; mounted, API pending
+  routes/workspaceRoutes.ts   # Filesystem routes; mounted
+  routes/unavailableRoutes.ts # Explicit 503 responses for legacy routes
 ```
 
-MongoDB-dependent routes currently include:
+The explicit unavailable router covers:
 
 ```text
 GET    /api/getAll
@@ -120,8 +129,8 @@ POST   /auth/login
 ```
 
 The file/workspace routes beginning with `/api/saveFile`, `/api/updateFile`,
-`/api/saveWorkspace`, and `/api/retrieve...` do not use MongoDB and should not
-be disabled accidentally.
+`/api/saveWorkspace`, and `/api/retrieve...` do not use MongoDB and remain
+mounted.
 
 Use the same public response for every disabled Mongo route:
 
@@ -134,13 +143,9 @@ Use the same public response for every disabled Mongo route:
 }
 ```
 
-Do not leave the old Mongo routes mounted without a connection. Mongoose may
-buffer operations, causing requests to wait and eventually time out instead of
-returning a useful response.
-
-Remove the hard-coded MongoDB URI from `server/src/index.ts`. Do not add a
-`MONGODB_URI` variable for this local mode because MongoDB is intentionally not
-part of the Phase 1 runtime.
+The old Mongo routes are not mounted, and `server/src/index.ts` contains no
+hard-coded MongoDB URI. Do not add a `MONGODB_URI` variable for this local mode
+because MongoDB is intentionally not part of the Phase 1 runtime.
 
 ### Preflight verification
 
@@ -886,15 +891,15 @@ Each pull request should leave existing preset visualisers usable and should not
 
 ## Phase 1 completion checklist
 
-- [ ] PostgreSQL image is pinned.
-- [ ] `db` health check passes.
-- [ ] Server receives `DATABASE_URL` and `PUBLIC_APP_ORIGIN`.
-- [ ] Hard-coded database credentials are removed from source.
-- [ ] Server starts without MongoDB or `MONGODB_URI`.
-- [ ] Mongo-dependent legacy routes return explicit `503` responses.
-- [ ] Filesystem workspace routes remain available.
+- [x] PostgreSQL image is pinned.
+- [ ] `db` health check passes in a clean runtime test.
+- [x] Server receives `DATABASE_URL` and `PUBLIC_APP_ORIGIN` from Compose.
+- [x] Hard-coded database credentials are removed from source.
+- [x] Server code no longer requires MongoDB or `MONGODB_URI`.
+- [x] Mongo-dependent legacy routes return explicit `503` responses.
+- [x] Filesystem workspace routes remain available.
 - [ ] Migration applies from an empty database.
-- [ ] Server uses one PostgreSQL pool.
+- [x] Server uses one PostgreSQL pool.
 - [ ] POST and GET endpoints pass contract/integration tests.
 - [ ] Linked List operation capture uses copied pre-operation input.
 - [ ] Share stores state in PostgreSQL and returns an opaque URL.

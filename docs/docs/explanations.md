@@ -1,5 +1,0 @@
-# Explanations
-
-## Debugger
-
-## Client
