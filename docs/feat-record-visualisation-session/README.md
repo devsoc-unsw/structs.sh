@@ -16,6 +16,20 @@ This feature is for the visualisers opened from the homepage. It is not a debugg
 - [PostgreSQL operations](./postgresql-operations.md): configuration, migrations, retention, and production safeguards.
 - [Implementation plan](./implementation-plan.md): POC tasks, later algorithm-state work, tests, and acceptance criteria.
 - [Phase 1 implementation guide](./phase-1-implementation-guide.md): file-by-file instructions for the Linked List POC.
+- [Next steps](./next-steps.md): current implementation status and the ordered execution plan from container verification through the Linked List POC.
+
+## Current implementation status
+
+The PostgreSQL foundation is present on the `feat-record-visual` branch:
+
+- Compose defines a pinned PostgreSQL service with a persistent volume and readiness check;
+- a one-shot migration service runs before the backend;
+- the backend receives `DATABASE_URL` and `PUBLIC_APP_ORIGIN` from Compose;
+- the backend validates its environment, uses one PostgreSQL pool, checks the database during startup, and closes the pool during shutdown;
+- the initial `node-pg-migrate` migration defines the snapshot table, indexes, constraints, and public view;
+- MongoDB-dependent legacy endpoints return explicit `503` responses while filesystem workspace routes remain available.
+
+The foundation still needs an empty-database runtime test. The snapshot API and client capture/restore flow are not implemented yet. See [Next steps](./next-steps.md) for the execution order and completion criteria.
 
 ## Agreed delivery boundary
 

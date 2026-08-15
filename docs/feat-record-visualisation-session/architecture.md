@@ -26,7 +26,7 @@ The homepage renders topic cards from `DataStructure` in `client/src/visualiser-
 
 The preset visualiser already exposes serialisable semantic data through `controller.data` and restores it through `controller.loadData(data)`. The existing development-only `CreateLink` places that integer data directly in the URL. It does not preserve the algorithm, arguments, playback position, schema version, or values outside its two-character encoding assumptions.
 
-The server currently uses MongoDB/Mongoose for its unfinished save/load feature. This proposal does not describe MongoDB as a target architecture. New snapshot persistence uses PostgreSQL. Migrating unrelated user, workspace, or legacy save/load persistence is outside this feature.
+The Phase 1 backend now runs in PostgreSQL-only local mode. It mounts filesystem workspace routes, returns explicit `503 LEGACY_DATABASE_UNAVAILABLE` responses for the legacy MongoDB-dependent endpoints, and does not require a MongoDB connection. The snapshot router is mounted but remains a placeholder until the API phase is implemented. Migrating unrelated user, workspace, or legacy save/load persistence remains outside this feature.
 
 ## Important state-model constraint
 

@@ -1,6 +1,6 @@
 # Linked List POC implementation plan
 
-This is a design and delivery plan only. No application code is changed by this documentation task.
+This document describes the complete feature delivery. The PostgreSQL foundation is now implemented in the branch, while the snapshot API and client workflow remain to be completed. The current, ordered work queue is maintained in [next-steps.md](./next-steps.md).
 
 ## Current integration points
 
@@ -12,21 +12,20 @@ This is a design and delivery plan only. No application code is changed by this 
 | Operation invocation | `client/src/components/Visualiser/VisualiserInterface/OperationDetails.tsx` | Copy pre-operation values and named arguments before `doOperation` |
 | Existing link UI | `client/src/components/Visualiser/VisualiserInterface/CreateLink.tsx` | Replace inline value encoding with API-backed share creation |
 | Existing data restore | `GraphicalLinkedList.load` through `controller.loadData` | Restore Linked List input/state |
-| Server routes | `server/src/routes/routes.ts` | Add versioned snapshot endpoints |
-| Server startup | `server/src/index.ts` | Use configured PostgreSQL connection for the snapshot repository |
+| Server routes | `server/src/snapshots/snapshotRoutes.ts` | Implement the versioned snapshot endpoints; the router is currently a placeholder |
+| Server startup | `server/src/index.ts` | Already validates PostgreSQL connectivity and performs graceful pool shutdown |
 
 The existing `Save`, `Load`, and `CreateLink` controls are development-gated by `inDev`. Product rollout must deliberately choose whether the new Share control remains gated.
 
 ## Phase 0: persistence foundation
 
-1. Add PostgreSQL to local and deployed environments.
-2. Supply the connection string through an environment variable; do not commit credentials.
-3. Convert [schema.sql](./schema.sql) into the project's selected migration format.
-4. Add a small snapshot repository with parameterised insert/read operations.
-5. Add startup health checks and graceful connection shutdown.
-6. Decide and configure snapshot retention.
+Implementation status:
 
-This feature must not reuse the hard-coded MongoDB connection currently present in `server/src/index.ts`.
+- **Implemented in code:** local PostgreSQL service, pinned image, database health check, persistent volume, Compose-provided connection string, ordered migration, process-level pool, startup database check, and graceful pool shutdown.
+- **Still to verify:** migration and backend startup from a completely empty database, persistence across restarts, and failure behaviour when PostgreSQL is unavailable.
+- **Still to implement:** backend liveness/readiness endpoints, production image hardening, CI integration coverage, least-privilege deployment roles, and a retention decision.
+
+The repository and parameterised insert/read queries belong to Phase 1 because the snapshot repository files are currently empty.
 
 ## Phase 1: Linked List POC
 

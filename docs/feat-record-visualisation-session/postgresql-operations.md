@@ -1,6 +1,6 @@
 # PostgreSQL development and operations
 
-This document defines the database expectations for the snapshot feature. Exact commands depend on the migration and PostgreSQL client selected during implementation.
+This document defines the database expectations for the snapshot feature. The project has selected `node-pg-migrate`; the initial ordered migration is in `server/migrations/`.
 
 ## Configuration
 
@@ -34,12 +34,12 @@ The public browser never connects to PostgreSQL directly.
 
 ## Migration workflow
 
-1. Convert [schema.sql](./schema.sql) into an ordered migration; do not execute the documentation file automatically.
+1. Keep [schema.sql](./schema.sql) as design documentation; apply the ordered migration in `server/migrations/` instead.
 2. Review both the forward migration and rollback/roll-forward recovery plan.
-3. Apply migrations in development and CI before API tests.
+3. Prove the migration from an empty database and add that check to CI before API tests.
 4. Apply production migrations with the migration role before deploying code that writes the new shape.
 5. Keep reads backwards-compatible during rolling deployments.
-6. Record applied migrations in the chosen migration tool's history table.
+6. Use the `node-pg-migrate` history table as the migration record.
 
 The first migration enables `pgcrypto`, creates `visualisation_snapshots`, creates its indexes, and creates `public_visualisation_snapshots`.
 
@@ -93,10 +93,10 @@ Logs may include `share_id`, schema version, structure type, result, and latency
 
 ## PostgreSQL readiness checklist
 
-- [ ] PostgreSQL service exists in local/CI/deployed environments.
-- [ ] Secrets are injected through configuration.
+- [x] PostgreSQL service exists in the local Compose environment.
+- [x] Local credentials and the backend connection URL are injected through configuration.
 - [ ] Least-privilege roles are created.
-- [ ] Migration history is enabled.
+- [x] Migration history is enabled through `node-pg-migrate`.
 - [ ] Schema migration is tested from an empty database.
 - [ ] API round-trip tests run against PostgreSQL.
 - [ ] Backup and restore are tested.
