@@ -2,6 +2,17 @@ import { z } from 'zod';
 
 export const SNAPSHOT_SCHEMA_VERSION = 1 as const;
 
+export const SUPPORTED_RENDERER_VERSION =
+  'preset-visualiser-v1' as const;
+
+export const rendererVersionSchema = z.literal(
+  SUPPORTED_RENDERER_VERSION
+);
+
+export type RendererVersion = z.infer<
+  typeof rendererVersionSchema
+>;
+
 const linkedListValueSchema = z
   .number()
   .int()
@@ -75,14 +86,11 @@ export const linkedListStructureSchema = z.strictObject({
   state: linkedListStateSchema,
 });
 
+// currently only support v1 schema.
 export const snapshotV1Schema = z.strictObject({
   schemaVersion: z.literal(SNAPSHOT_SCHEMA_VERSION),
 
-  rendererVersion: z
-    .string()
-    .trim()
-    .min(1)
-    .max(100),
+  rendererVersion: rendererVersionSchema,
 
   title: z
     .string()
@@ -94,6 +102,20 @@ export const snapshotV1Schema = z.strictObject({
   structure: linkedListStructureSchema,
 
   algorithm: linkedListAlgorithmSchema.optional(),
+});
+
+// for snapshots returned by the public API.
+export const publicSnapshotV1Schema = z.strictObject({
+  shareId: z.uuid(),
+
+  ...snapshotV1Schema.shape,
+
+  createdAt: z.iso.datetime(),
+
+  expiresAt: z
+    .iso
+    .datetime()
+    .nullable(),
 });
 
 export type LinkedListStateV1 = z.infer<
@@ -109,3 +131,7 @@ export type LinkedListStructureV1 = z.infer<
 >;
 
 export type SnapshotV1 = z.infer<typeof snapshotV1Schema>;
+
+export type PublicSnapshotV1 = z.infer<
+  typeof publicSnapshotV1Schema
+>;
