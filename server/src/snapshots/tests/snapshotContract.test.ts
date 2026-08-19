@@ -4,7 +4,7 @@ import {
   SUPPORTED_RENDERER_VERSION,
   snapshotV1Schema,
   publicSnapshotV1Schema,
-} from './snapshotContract';
+} from '../snapshotContract';
 
 const createStaticSnapshot = () => ({
   schemaVersion: SNAPSHOT_SCHEMA_VERSION,

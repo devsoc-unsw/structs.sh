@@ -2,13 +2,13 @@ import { describe, expect, it } from 'vitest';
 import {
   applyLinkedListOperation,
   isSnapshotConsistent,
-} from './snapshotConsistency';
+} from '../snapshotConsistency';
 import {
   SNAPSHOT_SCHEMA_VERSION,
   SUPPORTED_RENDERER_VERSION,
   type LinkedListAlgorithmV1,
   type SnapshotV1,
-} from './snapshotContract';
+} from '../snapshotContract';
 
 interface OperationCase {
   description: string;
