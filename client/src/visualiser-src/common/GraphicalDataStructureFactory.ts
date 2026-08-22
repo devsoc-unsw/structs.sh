@@ -2,8 +2,8 @@ import GraphicalLinkedList from '@/visualiser-src/linked-list-visualiser/data-st
 import GraphicalBST from '@/visualiser-src/binary-search-tree-visualiser/data-structure/GraphicalBST';
 import GraphicalAVL from '@/visualiser-src/avl-tree-visualiser/data-structure/GraphicalAVL';
 import GraphicalSorts from '@/visualiser-src/sorting-visualiser/data-structure/GraphicalSorts';
+import GraphicalGraph from '@/visualiser-src/graph-visualiser/data-structure/GraphicalGraph';
 import GraphicalDataStructure from './GraphicalDataStructure';
-import GraphicalGraph from '../graph-visualiser/data-structure/GraphicalGraph';
 import { DataStructure } from './typedefs';
 
 class GraphicalDataStructureFactory {
