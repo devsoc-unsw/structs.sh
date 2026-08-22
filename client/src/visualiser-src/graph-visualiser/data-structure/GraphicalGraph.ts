@@ -12,6 +12,8 @@ export default class GraphicalGraph extends GraphicalDataStructure {
   }
 
   public generate(): void {
-    throw new Error('Method not implemented.');
+    // todo: implement
+    // alert('hello world!');
+    // throw new Error('Method not implemented.');
   }
 }
