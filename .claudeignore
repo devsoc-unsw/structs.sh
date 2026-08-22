@@ -1,0 +1,40 @@
+# Paths that agents should not read, search, or edit in this repo.
+# Keep in sync with .gitignore + client/.gitignore.
+
+# Dependencies and build output
+node_modules/
+client/node_modules/
+client/build/
+client/dist/
+docs/site/
+**/__pycache__/
+*.pyc
+
+# Lockfiles — huge, and never edited by hand
+package-lock.json
+client/package-lock.json
+debugger/uv.lock
+docs/uv.lock
+
+# Secrets and local environment
+.env
+.env.*
+*.pem
+*.key
+
+# Agent scratch space and stale worktrees
+.claude/worktrees/
+
+# Binary assets
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.psd
+*.ico
+*.woff
+*.woff2
+
+# Editor / OS noise
+.idea/
+.DS_Store
