@@ -1,30 +1,15 @@
-/**
- * An unweighted, undirected simple graph.
- *
- * Deliberately contains **no SVG.js, DOM, or React imports** — nothing in this file
- * knows it is being drawn. `GraphicalGraph` composes one of these and turns
- * successful mutations into animations; every "is this legal?" rule lives here so
- * the animation code never has to ask.
- *
- * Three invariants the implementation must hold:
- *
- * 1. **Undirected** — an edge is stored on *both* endpoints' lists.
- * 2. **Simple** — no self-loops, no duplicate edges in either direction.
- * 3. **Delete cascades** — removing a vertex removes every edge touching it, which
- *    means scrubbing it from all of its neighbours' lists too. Deleting only the key
- *    leaves dangling references, and `edges` would then report edges to a vertex
- *    that no longer exists.
- *
- * Every mutation returns whether it actually changed anything, so the caller can
- * skip animating a no-op.
- */
+// unweighted, undirected simple graph. no svg or react in here, it's just the data.
+// GraphicalGraph wraps one of these and turns the true/false results into animations.
+//
+// rules: every edge is stored on both vertices, no self loops, no duplicates, and
+// deleting a vertex also strips it out of its neighbours' lists.
 export default class Graph {
-  /** Vertex -> its neighbours. The only state; everything else is derived. */
+  // vertex -> its neighbours. everything else is derived from this
   private adjacency = new Map<number, number[]>();
 
   /* ---------- Mutations: return true only if the graph changed ---------- */
 
-  /** Adds an isolated vertex. False if it is already present. */
+  // adds a lone vertex. false if it's already there
   public insert(vertex: number): boolean {
     // check if the vertex exists
     if (this.adjacency.has(vertex)) return false;
@@ -33,19 +18,14 @@ export default class Graph {
     return true;
   }
 
-  /**
-   * Removes a vertex and every edge touching it. False if it is not present.
-   *
-   * Callers that need to animate the removed edges must read `neighbours(vertex)`
-   * *before* calling this — afterwards that information is gone.
-   */
+  // removes a vertex and every edge touching it. false if it doesn't exist.
+  // read neighbours() first if you want to animate those edges, they're gone after this
   public delete(vertex: number): boolean {
     const neighbours = this.adjacency.get(vertex);
     if (neighbours === undefined) return false;
 
-    // Scrub the vertex from both directions of every incident edge. Deleting only
-    // the key would leave each neighbour holding a dangling reference, and `edges`
-    // would keep reporting edges to a vertex that no longer exists.
+    // take the vertex out of each neighbour's list too, otherwise edges() keeps
+    // reporting edges to something that isn't there anymore
     neighbours.forEach((w) => {
       this.adjacency.set(
         w,
@@ -57,10 +37,7 @@ export default class Graph {
     return true;
   }
 
-  /**
-   * Adds one undirected edge. False if it would be a self-loop, if either endpoint
-   * is missing, or if the edge already exists in either direction.
-   */
+  // adds one undirected edge. false on a self loop, a missing vertex, or a duplicate
   public addEdge(a: number, b: number): boolean {
     if (a === b) return false;
 
@@ -68,8 +45,7 @@ export default class Graph {
     const neighboursB = this.adjacency.get(b);
     if (neighboursA === undefined || neighboursB === undefined) return false;
 
-    // Undirected, so `a` knowing `b` implies the reverse — checking one side is
-    // enough, and a disagreement between the two would be a bug worth surfacing.
+    // undirected, so if a knows b then b knows a. checking one side is enough
     if (neighboursA.includes(b)) return false;
 
     neighboursA.push(b);
@@ -77,7 +53,7 @@ export default class Graph {
     return true;
   }
 
-  /** Removes one undirected edge. False if either endpoint or the edge is missing. */
+  // removes one undirected edge. false if a vertex or the edge is missing
   public deleteEdge(a: number, b: number): boolean {
     // check that they're not the same
     if (a === b) {
@@ -91,8 +67,8 @@ export default class Graph {
     if (neighboursA === undefined || neighboursB === undefined) return false;
     if (!neighboursA.includes(b)) return false;
 
-    // `filter` returns a new array rather than mutating, so the results have to be
-    // written back into the map — unlike `addEdge`, where `push` mutates in place.
+    // filter makes a new array instead of mutating, so write it back into the map.
+    // addEdge doesn't need this because push edits in place
     this.adjacency.set(
       a,
       neighboursA.filter((x) => x !== b)
@@ -111,23 +87,18 @@ export default class Graph {
     return this.adjacency.has(vertex);
   }
 
-  /**
-   * This vertex's neighbours, ascending. Must return a **copy** — callers must not
-   * be able to mutate the adjacency list through the array they get back.
-   */
+  // ascending, and a copy. hand back the real array and callers can mutate our state
   public neighbours(vertex: number): number[] {
     return [...(this.adjacency.get(vertex) ?? [])].sort((x, y) => x - y);
   }
 
-  /** All vertices, ascending. The view turns this into circular positions. */
+  // ascending. the view feeds this into circularPositions()
   public get vertices(): number[] {
     return Array.from(this.adjacency.keys()).sort((a, b) => a - b);
   }
 
-  /**
-   * Every edge exactly once, each as a canonical `[min, max]` pair. This is what the
-   * renderer draws, so returning both `[a, b]` and `[b, a]` would double every line.
-   */
+  // each edge once, as [min, max]. returning both [a, b] and [b, a] would make the
+  // renderer draw every line twice
   public get edges(): [number, number][] {
     // we have a set to keep track of the edges so that they're not added twice.
     const seen = new Set<string>();
