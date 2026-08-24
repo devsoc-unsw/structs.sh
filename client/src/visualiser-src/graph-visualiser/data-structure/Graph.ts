@@ -106,17 +106,22 @@ export default class Graph {
   }
 
   /* ---------- Queries: how the view reads the graph ---------- */
+
+  public has(vertex: number): boolean {
+    return this.adjacency.has(vertex);
+  }
+
   /**
    * This vertex's neighbours, ascending. Must return a **copy** — callers must not
    * be able to mutate the adjacency list through the array they get back.
    */
   public neighbours(vertex: number): number[] {
-    throw new Error(`Graph.neighbours(${vertex}) not implemented`);
+    return [...(this.adjacency.get(vertex) ?? [])].sort((x, y) => x - y);
   }
 
   /** All vertices, ascending. The view turns this into circular positions. */
   public get vertices(): number[] {
-    throw new Error('Graph.vertices not implemented');
+    return Array.from(this.adjacency.keys()).sort((a, b) => a - b);
   }
 
   /**
@@ -124,6 +129,20 @@ export default class Graph {
    * renderer draws, so returning both `[a, b]` and `[b, a]` would double every line.
    */
   public get edges(): [number, number][] {
-    throw new Error('Graph.edges not implemented');
+    // we have a set to keep track of the edges so that they're not added twice.
+    const seen = new Set<string>();
+    const out: [number, number][] = [];
+    this.vertices.forEach((v) => {
+      this.neighbours(v).forEach((w) => {
+        // sorts the edges by ascending order of vertex number
+        const [lo, hi] = v < w ? [v, w] : [w, v];
+        const key = `${lo}-${hi}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          out.push([lo, hi]);
+        }
+      });
+    });
+    return out;
   }
 }
