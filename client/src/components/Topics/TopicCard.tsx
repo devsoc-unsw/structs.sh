@@ -7,24 +7,27 @@ import styles from './TopicCard.module.scss';
 import binary from './topic-images/binary-search-tree-nobg.png';
 import linked from './topic-images/linked-list-nobg.png';
 import sort from './topic-images/sorting-nobg.png';
+import graph from './topic-images/graph-nobg.png';
 
 interface Props {
   topic: string;
   index: number;
 }
 
-const images = [linked, binary, binary, sort];
+const images = [linked, binary, binary, sort, graph];
 const colors = [
   'rgba(248, 79, 121, 1)',
   'rgba(20, 201, 150, 1)',
   'rgba(120, 110, 243, 1)',
   'rgba(76, 201, 240, 1)',
+  'rgba(245, 239, 46,1)',
 ];
 const colorsFaded = [
   'rgba(248, 79, 121, 0.8)',
   'rgba(20, 201, 150, 0.8)',
   'rgba(120, 110, 243, 0.8)',
   'rgba(76, 201, 240, 0.8)',
+  'rgba(245, 239, 46, 0.8)',
 ];
 
 const TopicCard: FC<Props> = ({ topic, index }) => {
