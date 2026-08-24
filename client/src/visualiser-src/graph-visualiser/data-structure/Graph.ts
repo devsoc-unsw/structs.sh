@@ -1,3 +1,5 @@
+import { number } from 'prop-types';
+
 /**
  * An unweighted, undirected simple graph.
  *
@@ -26,7 +28,11 @@ export default class Graph {
 
   /** Adds an isolated vertex. False if it is already present. */
   public insert(vertex: number): boolean {
-    throw new Error(`Graph.insert(${vertex}) not implemented`);
+    // check if the vertex exists
+    if (this.adjacency.has(vertex)) return false;
+
+    this.adjacency.set(vertex, []);
+    return true;
   }
 
   /**
