@@ -1,5 +1,3 @@
-import { number } from 'prop-types';
-
 /**
  * An unweighted, undirected simple graph.
  *
@@ -42,7 +40,21 @@ export default class Graph {
    * *before* calling this — afterwards that information is gone.
    */
   public delete(vertex: number): boolean {
-    throw new Error(`Graph.delete(${vertex}) not implemented`);
+    const neighbours = this.adjacency.get(vertex);
+    if (neighbours === undefined) return false;
+
+    // Scrub the vertex from both directions of every incident edge. Deleting only
+    // the key would leave each neighbour holding a dangling reference, and `edges`
+    // would keep reporting edges to a vertex that no longer exists.
+    neighbours.forEach((w) => {
+      this.adjacency.set(
+        w,
+        (this.adjacency.get(w) ?? []).filter((x) => x !== vertex)
+      );
+    });
+
+    this.adjacency.delete(vertex);
+    return true;
   }
 
   /**
@@ -50,20 +62,50 @@ export default class Graph {
    * is missing, or if the edge already exists in either direction.
    */
   public addEdge(a: number, b: number): boolean {
-    throw new Error(`Graph.addEdge(${a}, ${b}) not implemented`);
+    if (a === b) return false;
+
+    const neighboursA = this.adjacency.get(a);
+    const neighboursB = this.adjacency.get(b);
+    if (neighboursA === undefined || neighboursB === undefined) return false;
+
+    // Undirected, so `a` knowing `b` implies the reverse — checking one side is
+    // enough, and a disagreement between the two would be a bug worth surfacing.
+    if (neighboursA.includes(b)) return false;
+
+    neighboursA.push(b);
+    neighboursB.push(a);
+    return true;
   }
 
   /** Removes one undirected edge. False if either endpoint or the edge is missing. */
   public deleteEdge(a: number, b: number): boolean {
-    throw new Error(`Graph.deleteEdge(${a}, ${b}) not implemented`);
+    // check that they're not the same
+    if (a === b) {
+      return false;
+    }
+
+    // check that both vertices exist
+    const neighboursA = this.adjacency.get(a);
+    const neighboursB = this.adjacency.get(b);
+
+    if (neighboursA === undefined || neighboursB === undefined) return false;
+    if (!neighboursA.includes(b)) return false;
+
+    // `filter` returns a new array rather than mutating, so the results have to be
+    // written back into the map — unlike `addEdge`, where `push` mutates in place.
+    this.adjacency.set(
+      a,
+      neighboursA.filter((x) => x !== b)
+    );
+    this.adjacency.set(
+      b,
+      neighboursB.filter((x) => x !== a)
+    );
+
+    return true;
   }
 
   /* ---------- Queries: how the view reads the graph ---------- */
-
-  public has(vertex: number): boolean {
-    throw new Error(`Graph.has(${vertex}) not implemented`);
-  }
-
   /**
    * This vertex's neighbours, ascending. Must return a **copy** — callers must not
    * be able to mutate the adjacency list through the array they get back.
