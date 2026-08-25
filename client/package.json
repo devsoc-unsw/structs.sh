@@ -3,13 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=22.19.0" },
+  "engines": {
+    "node": ">=22.19.0"
+  },
   "scripts": {
     "start": "vite --host",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint \"./src/**/*.{tsx,ts}\"",
     "lint-fix": "eslint './src/**/*.{tsx,ts,jsx,js}' --fix",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "tsc": "tsc"
   },
   "dependencies": {
@@ -65,6 +69,7 @@
     "socket.io-client": "^4.8.3",
     "uuid": "^10.0.0",
     "ws": "^8.20.0",
+    "zod": "^4.4.3",
     "zustand": "^4.5.5"
   },
   "devDependencies": {
@@ -90,10 +95,12 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "globals": "^17.5.0",
+    "jsdom": "^29.1.1",
     "prettier": "^3.8.3",
     "typescript": "^6.0.2",
     "vite": "^8.0.0",
-    "vite-plugin-checker": "^0.10.0"
+    "vite-plugin-checker": "^0.10.0",
+    "vitest": "^4.1.11"
   },
   "overrides": {
     "react-is": "^18.3.1",
