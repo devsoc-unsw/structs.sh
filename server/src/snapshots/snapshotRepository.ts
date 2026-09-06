@@ -2,7 +2,7 @@ import type { QueryResultRow } from 'pg';
 import { pool } from '../db/pool';
 import type { SnapshotV1 } from './snapshotContract';
 import type {
-  PublicSnapshotRow,
+    PublicSnapshotRow,
 } from './snapshotMapper';
 
 export interface InsertSnapshotOptions {
@@ -68,51 +68,51 @@ const FIND_PUBLIC_SNAPSHOT_SQL = `
 `;
 
 export const insertSnapshot = async (
-  snapshot: SnapshotV1,
-  options: InsertSnapshotOptions
+    snapshot: SnapshotV1,
+    options: InsertSnapshotOptions
 ): Promise<CreatedSnapshotRow> => {
-  const algorithm = snapshot.algorithm;
+    const algorithm = snapshot.algorithm;
 
-  const parameters = [
-    snapshot.schemaVersion,
-    snapshot.rendererVersion,
-    snapshot.title ?? null,
-    snapshot.structure.type,
-    JSON.stringify(snapshot.structure.state),
-    algorithm?.name ?? null,
-    algorithm
-      ? JSON.stringify(algorithm.arguments)
-      : null,
-    algorithm
-      ? JSON.stringify(algorithm.inputState)
-      : null,
-    options.expiresAt,
-  ];
+    const parameters = [
+        snapshot.schemaVersion,
+        snapshot.rendererVersion,
+        snapshot.title ?? null,
+        snapshot.structure.type,
+        JSON.stringify(snapshot.structure.state),
+        algorithm?.name ?? null,
+        algorithm
+            ? JSON.stringify(algorithm.arguments)
+            : null,
+        algorithm
+            ? JSON.stringify(algorithm.inputState)
+            : null,
+        options.expiresAt,
+    ];
 
-  const result = await pool.query<CreatedSnapshotRow>({
-    text: INSERT_SNAPSHOT_SQL,
-    values: parameters,
-  });
+    const result = await pool.query<CreatedSnapshotRow>({
+        text: INSERT_SNAPSHOT_SQL,
+        values: parameters,
+    });
 
-  const createdRow = result.rows[0];
+    const createdRow = result.rows[0];
 
-  if (!createdRow) {
-    throw new Error(
-      'Snapshot insert returned no database row.'
-    );
-  }
+    if (!createdRow) {
+        throw new Error(
+            'Snapshot insert returned no database row.'
+        );
+    }
 
-  return createdRow;
+    return createdRow;
 };
 
 export const findPublicSnapshot = async (
-  shareId: string
+    shareId: string
 ): Promise<PublicSnapshotRow | null> => {
-  const result =
+    const result =
     await pool.query<PublicSnapshotQueryRow>({
-      text: FIND_PUBLIC_SNAPSHOT_SQL,
-      values: [shareId],
+        text: FIND_PUBLIC_SNAPSHOT_SQL,
+        values: [shareId],
     });
 
-  return result.rows[0] ?? null;
+    return result.rows[0] ?? null;
 };

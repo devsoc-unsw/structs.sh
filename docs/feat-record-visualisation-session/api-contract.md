@@ -2,7 +2,7 @@
 
 ## Base path
 
-All new endpoints use `/api/v1/snapshots`. They are separate from the legacy `/api/save` and `/api/getOwnedData` routes.
+Snapshot endpoints use `/api/v1/snapshots`. They are separate from the legacy `/api/save` and `/api/getOwnedData` routes. Health endpoints use `/health`.
 
 The examples use `https://structs.sh` as the public origin. The server should derive the actual origin from trusted configuration, not from an arbitrary request header.
 
@@ -39,7 +39,7 @@ Creation validation:
 - structure and input values meet the contract limits;
 - algorithm is allow-listed for the structure;
 - arguments exactly match that algorithm's named arguments;
-- optional phase-2 state matches its versioned schema.
+- Phase 2 playback and algorithm-local state are rejected in the POC.
 
 The API generates `shareId`; clients cannot choose it. Retrying a timed-out create may produce another immutable snapshot. An idempotency key can be added later if duplicate rows become a practical issue.
 
@@ -77,8 +77,7 @@ Successful response:
 
 Read behaviour:
 
-- return `Cache-Control: public, max-age=300, immutable` only when snapshots have no expiry/revocation requirement that conflicts with caching;
-- otherwise use a short cache lifetime and revalidate;
+- return `Cache-Control: no-store` on snapshot responses, including successful reads and unavailable/error responses, because expiry and revocation can change availability;
 - do not return internal `id`, `owner_subject`, or revocation metadata;
 - return `404` for malformed, missing, expired, and revoked IDs so callers cannot distinguish them.
 
@@ -121,6 +120,38 @@ Field-level details may be returned for safe client-correctable validation error
 ```
 
 Never return SQL, stack traces, environment values, or raw validation-library output.
+
+## Response codes
+
+| Condition | Status | Code |
+|---|---:|---|
+| Malformed JSON | 400 | `INVALID_JSON` |
+| Malformed snapshot or inconsistent replay result | 400 | `INVALID_SNAPSHOT` |
+| Unsupported numeric schema version | 422 | `UNSUPPORTED_SCHEMA_VERSION` |
+| Unsupported string renderer, structure, or operation | 422 | `UNSUPPORTED_VISUALISATION` |
+| Oversized snapshot request body | 413 | `SNAPSHOT_TOO_LARGE` |
+| Malformed, missing, expired, or revoked share ID | 404 | `SNAPSHOT_NOT_FOUND` |
+| Unexpected server or persistence error | 500 | `INTERNAL_ERROR` |
+
+Missing or incorrectly typed identifiers remain schema validation errors.
+Unsupported-identifier checks precede full validation, with schema version first.
+
+The JSON body limit is 1 MiB (1,048,576 bytes). Unrelated endpoints retain
+`413 PAYLOAD_TOO_LARGE`. Exceeding the 100-item values-array limit is a separate
+schema violation and returns `400 INVALID_SNAPSHOT`.
+
+## Health endpoints
+
+- `GET /health/live` returns `200 {"status":"ok"}` without querying PostgreSQL.
+- `GET /health/ready` executes `SELECT 1` through the application pool.
+  Success returns `200 {"status":"ready"}`; failure returns
+  `503 {"status":"not_ready"}` without exposing database details.
+- Both endpoints return `Cache-Control: no-store`.
+- Pool connection acquisition and query response waits each have a five-second
+  timeout. A readiness request may incur both waits for a new connection.
+
+These endpoints report process responsiveness and current database connectivity.
+The existing startup database check remains in place.
 
 ## Database transaction
 

@@ -12,11 +12,9 @@ services:
       timeout: 5s
       retries: 10
 
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql
-  
+
   # migration initialises data schemas in postgresql
   migrate:
     build:
@@ -31,7 +29,7 @@ services:
   server:
     build:
       context: server
-    environment: 
+    environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
       PUBLIC_APP_ORIGIN: http://localhost:3000
       PORT: 8001
@@ -57,7 +55,7 @@ services:
     volumes:
       - ./client/src:/app/src
       - vite-cache:/app/node_modules/.vite
-      
+
   debugger:
     build:
       context: debugger

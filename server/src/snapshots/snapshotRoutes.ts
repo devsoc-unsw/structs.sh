@@ -1,15 +1,17 @@
 import {
-  Router,
-  type NextFunction,
-  type Request,
-  type RequestHandler,
-  type Response,
+    Router,
+    type NextFunction,
+    type Request,
+    type RequestHandler,
+    type Response,
 } from 'express';
 import {
-  createSnapshot,
-  getPublicSnapshot,
-  InconsistentSnapshotError,
-  InvalidSnapshotError,
+    createSnapshot,
+    getPublicSnapshot,
+    InconsistentSnapshotError,
+    InvalidSnapshotError,
+    UnsupportedSchemaVersionError,
+    UnsupportedVisualisationError,
 } from './snapshotService';
 
 type AsyncRequestHandler = (
@@ -19,57 +21,57 @@ type AsyncRequestHandler = (
 ) => Promise<void>;
 
 const asyncHandler = (
-  handler: AsyncRequestHandler
+    handler: AsyncRequestHandler
 ): RequestHandler =>
-  (request, response, next) => {
-    void handler(
-      request,
-      response,
-      next
-    ).catch(next);
-  };
+    (request, response, next) => {
+        void handler(
+            request,
+            response,
+            next
+        ).catch(next);
+    };
 
 export const snapshotRouter = Router();
 
 snapshotRouter.post(
-  '/api/v1/snapshots',
-  asyncHandler(async (request, response) => {
-    const created = await createSnapshot(
-      request.body
-    );
+    '/api/v1/snapshots',
+    asyncHandler(async (request, response) => {
+        const created = await createSnapshot(
+            request.body
+        );
 
-    response
-      .location(
-        `/api/v1/snapshots/${created.shareId}`
-      )
-      .status(201)
-      .json(created);
-  })
+        response
+            .location(
+                `/api/v1/snapshots/${created.shareId}`
+            )
+            .status(201)
+            .json(created);
+    })
 );
 
 snapshotRouter.get(
-  '/api/v1/snapshots/:shareId',
-  asyncHandler(async (request, response) => {
-    const snapshot = await getPublicSnapshot(
-      request.params.shareId
-    );
+    '/api/v1/snapshots/:shareId',
+    asyncHandler(async (request, response) => {
+        const snapshot = await getPublicSnapshot(
+            request.params.shareId
+        );
 
-    if (snapshot === null) {
-      response.status(404).json({
-        error: {
-          code: 'SNAPSHOT_NOT_FOUND',
-          message:
+        if (snapshot === null) {
+            response.status(404).json({
+                error: {
+                    code: 'SNAPSHOT_NOT_FOUND',
+                    message:
             'The requested snapshot is unavailable.',
-        },
-      });
+                },
+            });
 
-      return;
-    }
+            return;
+        }
 
-    response
-      .status(200)
-      .json(snapshot);
-  })
+        response
+            .status(200)
+            .json(snapshot);
+    })
 );
 
 /*
@@ -77,38 +79,51 @@ snapshotRouter.get(
  * Unexpected errors continue to the 500 handler at app level.
  */
 snapshotRouter.use(
-  (
-    error: unknown,
-    _request: Request,
-    response: Response,
-    next: NextFunction
-  ) => {
-    if (error instanceof InvalidSnapshotError) {
-      response.status(400).json({
-        error: {
-          code: 'INVALID_SNAPSHOT',
-          message: error.message,
-          fields: error.fields,
-        },
-      });
+    (
+        error: unknown,
+        _request: Request,
+        response: Response,
+        next: NextFunction
+    ) => {
+        if (error instanceof InvalidSnapshotError) {
+            response.status(400).json({
+                error: {
+                    code: 'INVALID_SNAPSHOT',
+                    message: error.message,
+                    fields: error.fields,
+                },
+            });
 
-      return;
-    }
+            return;
+        }
 
-    if (
-      error instanceof InconsistentSnapshotError
-    ) {
-      response.status(400).json({
-        error: {
-          code: 'INVALID_SNAPSHOT',
-          message:
+        if (
+            error instanceof InconsistentSnapshotError
+        ) {
+            response.status(400).json({
+                error: {
+                    code: 'INVALID_SNAPSHOT',
+                    message:
             'The snapshot could not be created.',
-        },
-      });
+                },
+            });
 
-      return;
+            return;
+        }
+
+        if (error instanceof UnsupportedSchemaVersionError ||
+            error instanceof UnsupportedVisualisationError) {
+            response.status(422).json({
+                error: {
+                    code: error instanceof UnsupportedSchemaVersionError
+                        ? 'UNSUPPORTED_SCHEMA_VERSION'
+                        : 'UNSUPPORTED_VISUALISATION',
+                    message: error.message,
+                },
+            });
+            return;
+        }
+
+        next(error);
     }
-
-    next(error);
-  }
 );
