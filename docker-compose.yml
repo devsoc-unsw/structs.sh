@@ -1,4 +1,48 @@
 services:
+  db:
+    image: postgres:18.4
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+  # migration initialises data schemas in postgresql
+  migrate:
+    build:
+      context: server
+    command: npm run migrate:up
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+  server:
+    build:
+      context: server
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      PUBLIC_APP_ORIGIN: http://localhost:3000
+      PORT: 8001
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - '8001:8001'
+    volumes:
+      - ./server/user-files:/app/user-files
+
   client:
     build:
       context: client
@@ -11,7 +55,7 @@ services:
     volumes:
       - ./client/src:/app/src
       - vite-cache:/app/node_modules/.vite
-      
+
   debugger:
     build:
       context: debugger
@@ -38,4 +82,5 @@ services:
       - ./grafana/provisioning:/etc/grafana/provisioning
 
 volumes:
+  postgres_data:
   vite-cache:

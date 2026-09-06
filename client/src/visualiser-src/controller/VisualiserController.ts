@@ -2,12 +2,29 @@ import { Timeline, Runner } from '@svgdotjs/svg.js';
 import GraphicalDataStructure from '@/visualiser-src/common/GraphicalDataStructure';
 import GraphicalDataStructureFactory from '@/visualiser-src/common/GraphicalDataStructureFactory';
 import { Documentation } from '@/visualiser-src/common/typedefs';
+import {
+  SNAPSHOT_SCHEMA_VERSION,
+  SUPPORTED_RENDERER_VERSION,
+  type LinkedListAlgorithmV1,
+  type SnapshotV1,
+} from '@/features/snapshots/snapshotTypes';
+import { topicToSnapshotStructureType } from '@/features/snapshots/snapshotTopicMap';
 import { defaultSpeed } from '../common/constants';
 import AnimationProducer from '../common/AnimationProducer';
 
 interface TimeEvent extends Event {
   detail?: number;
 }
+
+type OperationArgument = number | number[];
+
+type DataStructureOperation = (...args: OperationArgument[]) => AnimationProducer;
+
+type OperationCapableDataStructure = GraphicalDataStructure &
+  Partial<Record<string, DataStructureOperation>>;
+
+const isLinkedListOperation = (command: string): command is LinkedListAlgorithmV1['name'] =>
+  ['append', 'prepend', 'insert', 'search', 'delete'].includes(command);
 
 class VisualiserController {
   private dataStructure?: GraphicalDataStructure;
@@ -23,6 +40,8 @@ class VisualiserController {
   private speed: number = 1;
 
   private isStepMode: boolean = false;
+
+  private capturedOperation: LinkedListAlgorithmV1 | null = null;
 
   public constructor(topicTitle?: string) {
     this.setSpeed(defaultSpeed);
@@ -139,6 +158,7 @@ class VisualiserController {
   }
 
   public applyTopicTitle(topicTitle: string) {
+    this.capturedOperation = null;
     this.topicTitle = topicTitle;
     this.dataStructure = GraphicalDataStructureFactory.create(topicTitle);
     this.currentTimeline.finish();
@@ -189,25 +209,179 @@ class VisualiserController {
     ...args: string[]
   ): string {
     const errMessage = this.getErrorMessageIfInvalidInput(command, args);
+
     if (errMessage !== '') {
       return errMessage;
     }
 
+    if (!this.dataStructure) {
+      return 'Invalid data structure';
+    }
+
+    const inputValues = [...this.data];
+
+    const argumentNames = this.dataStructure.documentation[command].args;
+
+    const parsedArgs = args.map((argument, index) => {
+      if (argumentNames[index].endsWith('s')) {
+        return argument
+          .split(/,| /g)
+          .filter((value) => value !== '')
+          .map(Number);
+      }
+
+      return Number(argument);
+    });
+
     this.finish();
-    // @ts-ignore
-    const animationProducer: AnimationProducer = this.dataStructure[command](
-      ...args.map((arg, idx) => {
-        if (this.dataStructure?.documentation[command].args[idx].endsWith('s')) {
-          return arg
-            .split(/,| /g)
-            .filter((str) => str !== '')
-            .map((el) => Number(el));
-        }
-        return Number(arg);
-      })
-    );
+
+    // Existing dynamic operation dispatch.
+    const operation = (this.dataStructure as OperationCapableDataStructure)[command];
+
+    if (typeof operation !== 'function') {
+      return `Unsupported operation: ${command}`;
+    }
+
+    const animationProducer = operation.call(this.dataStructure, ...parsedArgs);
+
+    if (
+      topicToSnapshotStructureType(this.topicTitle ?? '') === 'linked-list' &&
+      isLinkedListOperation(command) &&
+      parsedArgs.every((value) => typeof value === 'number')
+    ) {
+      const namedArguments = Object.fromEntries(
+        argumentNames.map((name, index) => [name, parsedArgs[index] as number])
+      );
+
+      this.capturedOperation = this.buildCapturedOperation(command, namedArguments, inputValues);
+    }
+
     this.constructTimeline(animationProducer, updateSlider);
+
     return '';
+  }
+
+  private buildCapturedOperation(
+    name: LinkedListAlgorithmV1['name'],
+    args: Record<string, number>,
+    inputValues: number[]
+  ): LinkedListAlgorithmV1 {
+    const inputState = {
+      values: [...inputValues],
+    };
+
+    switch (name) {
+      case 'append':
+      case 'prepend':
+      case 'search':
+        return {
+          name,
+          arguments: {
+            value: args.value,
+          },
+          inputState,
+        };
+
+      case 'insert':
+        return {
+          name,
+          arguments: {
+            value: args.value,
+            index: args.index,
+          },
+          inputState,
+        };
+
+      case 'delete':
+        return {
+          name,
+          arguments: {
+            index: args.index,
+          },
+          inputState,
+        };
+
+      default:
+        throw new Error(`Unsupported Linked List operation: ${name}`);
+    }
+  }
+
+  private cloneCapturedOperation(): LinkedListAlgorithmV1 | undefined {
+    const operation = this.capturedOperation;
+
+    if (operation === null) {
+      return undefined;
+    }
+
+    const inputState = {
+      values: [...operation.inputState.values],
+    };
+
+    switch (operation.name) {
+      case 'append':
+      case 'prepend':
+      case 'search':
+        return {
+          name: operation.name,
+          arguments: {
+            value: operation.arguments.value,
+          },
+          inputState,
+        };
+
+      case 'insert':
+        return {
+          name: operation.name,
+          arguments: {
+            value: operation.arguments.value,
+            index: operation.arguments.index,
+          },
+          inputState,
+        };
+
+      case 'delete':
+        return {
+          name: operation.name,
+          arguments: {
+            index: operation.arguments.index,
+          },
+          inputState,
+        };
+
+      default: {
+        const exhaustiveCheck: never = operation;
+
+        throw new Error(`Unsupported operation: ${String(exhaustiveCheck)}`);
+      }
+    }
+  }
+
+  public buildSnapshotDraft(title?: string): SnapshotV1 {
+    const structureType = topicToSnapshotStructureType(this.topicTitle ?? '');
+
+    if (structureType === null) {
+      throw new Error('Snapshots are only supported for Linked Lists.');
+    }
+
+    const normalisedTitle = title?.trim();
+
+    const algorithm = this.cloneCapturedOperation();
+
+    return {
+      schemaVersion: SNAPSHOT_SCHEMA_VERSION,
+      rendererVersion: SUPPORTED_RENDERER_VERSION,
+
+      ...(normalisedTitle ? { title: normalisedTitle } : {}),
+
+      structure: {
+        type: structureType,
+        state: {
+          values: [...this.data],
+        },
+      },
+
+      ...(algorithm ? { algorithm } : {}),
+    };
   }
 
   public get documentation(): Documentation {
@@ -215,6 +389,7 @@ class VisualiserController {
   }
 
   public resetDataStructure(): void {
+    this.capturedOperation = null;
     if (this.topicTitle) {
       this.dataStructure = GraphicalDataStructureFactory.create(this.topicTitle);
     }
