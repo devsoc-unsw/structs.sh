@@ -17,7 +17,7 @@ import Toast from '@/visualiser-debugger/Component/Toast/Toast';
 const App = () => {
   useEffect(() => {
     // @ts-ignore
-    window.globalStore = useGlobalStore;
+            window.globalStore = useGlobalStore;
     // @ts-ignore
     window.frontendStore = useFrontendStateStore;
   }, []);
