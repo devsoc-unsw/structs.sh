@@ -12,7 +12,6 @@ export type LinkedListAlgorithmV1 =
       arguments: {
         value: number;
       };
-      inputState: LinkedListStateV1;
     }
   | {
       name: 'insert';
@@ -20,14 +19,12 @@ export type LinkedListAlgorithmV1 =
         value: number;
         index: number;
       };
-      inputState: LinkedListStateV1;
     }
   | {
       name: 'delete';
       arguments: {
         index: number;
       };
-      inputState: LinkedListStateV1;
     };
 
 export interface SnapshotV1 {
@@ -38,7 +35,7 @@ export interface SnapshotV1 {
     type: 'linked-list';
     state: LinkedListStateV1;
   };
-  algorithm?: LinkedListAlgorithmV1;
+  history: LinkedListHistoryV1;
 }
 
 export interface PublicSnapshotV1 extends SnapshotV1 {
@@ -52,4 +49,9 @@ export interface CreateSnapshotResponse {
   shareUrl: string;
   createdAt: string;
   expiresAt: string | null;
+}
+
+export interface LinkedListHistoryV1 {
+  initialState: LinkedListStateV1;
+  operations: LinkedListAlgorithmV1[];
 }

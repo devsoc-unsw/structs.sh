@@ -26,9 +26,7 @@ const INSERT_SNAPSHOT_SQL = `
     title,
     structure_type,
     structure_state,
-    algorithm_name,
-    algorithm_arguments,
-    algorithm_input_state,
+    operation_history,
     expires_at
   )
   VALUES (
@@ -37,10 +35,8 @@ const INSERT_SNAPSHOT_SQL = `
     $3,
     $4,
     $5::jsonb,
-    $6,
-    $7::jsonb,
-    $8::jsonb,
-    $9
+    $6::jsonb,
+    $7
   )
   RETURNING
     share_id,
@@ -56,11 +52,7 @@ const FIND_PUBLIC_SNAPSHOT_SQL = `
     title,
     structure_type,
     structure_state,
-    algorithm_name,
-    algorithm_arguments,
-    algorithm_input_state,
-    algorithm_state,
-    playback_state,
+    operation_history,
     created_at,
     expires_at
   FROM public_visualisation_snapshots
@@ -71,7 +63,6 @@ export const insertSnapshot = async (
   snapshot: SnapshotV1,
   options: InsertSnapshotOptions
 ): Promise<CreatedSnapshotRow> => {
-  const algorithm = snapshot.algorithm;
 
   const parameters = [
     snapshot.schemaVersion,
@@ -79,13 +70,7 @@ export const insertSnapshot = async (
     snapshot.title ?? null,
     snapshot.structure.type,
     JSON.stringify(snapshot.structure.state),
-    algorithm?.name ?? null,
-    algorithm
-      ? JSON.stringify(algorithm.arguments)
-      : null,
-    algorithm
-      ? JSON.stringify(algorithm.inputState)
-      : null,
+    JSON.stringify(snapshot.history),
     options.expiresAt,
   ];
 

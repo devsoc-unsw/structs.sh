@@ -3,135 +3,139 @@ import { z } from 'zod';
 export const SNAPSHOT_SCHEMA_VERSION = 1 as const;
 
 export const SUPPORTED_RENDERER_VERSION =
-  'preset-visualiser-v1' as const;
+	'preset-visualiser-v1' as const;
 
 export const rendererVersionSchema = z.literal(
-  SUPPORTED_RENDERER_VERSION
+    SUPPORTED_RENDERER_VERSION
 );
 
 export type RendererVersion = z.infer<
-  typeof rendererVersionSchema
+	typeof rendererVersionSchema
 >;
 
 const linkedListValueSchema = z
-  .number()
-  .int()
-  .min(0)
-  .max(99);
+    .number()
+    .int()
+    .min(0)
+    .max(99);
 
 const linkedListValuesSchema = z
-  .array(linkedListValueSchema)
-  .max(100);
+    .array(linkedListValueSchema)
+    .max(100);
 
 export const linkedListStateSchema = z.strictObject({
-  values: linkedListValuesSchema,
+    values: linkedListValuesSchema,
 });
 
 const nonNegativeIndexSchema = z
-  .number()
-  .int()
-  .nonnegative();
+    .number()
+    .int()
+    .nonnegative();
 
 const appendAlgorithmSchema = z.strictObject({
-  name: z.literal('append'),
-  arguments: z.strictObject({
-    value: linkedListValueSchema,
-  }),
-  inputState: linkedListStateSchema,
+    name: z.literal('append'),
+    arguments: z.strictObject({
+        value: linkedListValueSchema,
+    }),
 });
 
 const prependAlgorithmSchema = z.strictObject({
-  name: z.literal('prepend'),
-  arguments: z.strictObject({
-    value: linkedListValueSchema,
-  }),
-  inputState: linkedListStateSchema,
+    name: z.literal('prepend'),
+    arguments: z.strictObject({
+        value: linkedListValueSchema,
+    }),
 });
 
 const insertAlgorithmSchema = z.strictObject({
-  name: z.literal('insert'),
-  arguments: z.strictObject({
-    value: linkedListValueSchema,
-    index: nonNegativeIndexSchema,
-  }),
-  inputState: linkedListStateSchema,
+    name: z.literal('insert'),
+    arguments: z.strictObject({
+        value: linkedListValueSchema,
+        index: nonNegativeIndexSchema,
+    }),
 });
 
 const searchAlgorithmSchema = z.strictObject({
-  name: z.literal('search'),
-  arguments: z.strictObject({
-    value: linkedListValueSchema,
-  }),
-  inputState: linkedListStateSchema,
+    name: z.literal('search'),
+    arguments: z.strictObject({
+        value: linkedListValueSchema,
+    }),
 });
 
 const deleteAlgorithmSchema = z.strictObject({
-  name: z.literal('delete'),
-  arguments: z.strictObject({
-    index: nonNegativeIndexSchema,
-  }),
-  inputState: linkedListStateSchema,
+    name: z.literal('delete'),
+    arguments: z.strictObject({
+        index: nonNegativeIndexSchema,
+    }),
 });
 
 export const linkedListAlgorithmSchema = z.discriminatedUnion('name', [
-  appendAlgorithmSchema,
-  prependAlgorithmSchema,
-  insertAlgorithmSchema,
-  searchAlgorithmSchema,
-  deleteAlgorithmSchema,
+    appendAlgorithmSchema,
+    prependAlgorithmSchema,
+    insertAlgorithmSchema,
+    searchAlgorithmSchema,
+    deleteAlgorithmSchema,
 ]);
 
 export const linkedListStructureSchema = z.strictObject({
-  type: z.literal('linked-list'),
-  state: linkedListStateSchema,
+    type: z.literal('linked-list'),
+    state: linkedListStateSchema,
 });
+
+export const linkedListHistoryOperationsSchema = z
+    .array(linkedListAlgorithmSchema)
+    .max(150);
+
+export const linkedListHistorySchema = z.strictObject({
+    initialState: linkedListStateSchema,
+    operations: linkedListHistoryOperationsSchema,
+});
+
 
 // currently only support v1 schema.
 export const snapshotV1Schema = z.strictObject({
-  schemaVersion: z.literal(SNAPSHOT_SCHEMA_VERSION),
+    schemaVersion: z.literal(SNAPSHOT_SCHEMA_VERSION),
 
-  rendererVersion: rendererVersionSchema,
+    rendererVersion: rendererVersionSchema,
 
-  title: z
-    .string()
-    .trim()
-    .min(1)
-    .max(120)
-    .optional(),
+    title: z
+        .string()
+        .trim()
+        .min(1)
+        .max(120)
+        .optional(),
 
-  structure: linkedListStructureSchema,
-
-  algorithm: linkedListAlgorithmSchema.optional(),
+    structure: linkedListStructureSchema,
+    history: linkedListHistorySchema,
 });
 
 // for snapshots returned by the public API.
 export const publicSnapshotV1Schema = z.strictObject({
-  shareId: z.uuid(),
+    shareId: z.uuid(),
 
-  ...snapshotV1Schema.shape,
+    ...snapshotV1Schema.shape,
 
-  createdAt: z.iso.datetime(),
+    createdAt: z.iso.datetime(),
 
-  expiresAt: z
-    .iso
-    .datetime()
-    .nullable(),
+    expiresAt: z
+        .iso
+        .datetime()
+        .nullable(),
 });
 
 export type LinkedListStateV1 = z.infer<
-  typeof linkedListStateSchema
+	typeof linkedListStateSchema
 >;
 
 export type LinkedListAlgorithmV1 = z.infer<
-  typeof linkedListAlgorithmSchema
+	typeof linkedListAlgorithmSchema
 >;
 
 export type LinkedListStructureV1 = z.infer<
-  typeof linkedListStructureSchema
+	typeof linkedListStructureSchema
 >;
 
 export type SnapshotV1 = z.infer<typeof snapshotV1Schema>;
 
 export type PublicSnapshotV1 = z.infer<
-  typeof publicSnapshotV1Schema
+	typeof publicSnapshotV1Schema
 >;
