@@ -69,6 +69,7 @@ const CREATED_AT =
   new Date('2026-08-19T03:10:00.000Z');
 
 const staticSnapshot: SnapshotV1 = {
+  history: { initialState: { values: [8, 13, 21] }, operations: [] },
   schemaVersion: SNAPSHOT_SCHEMA_VERSION,
   rendererVersion: SUPPORTED_RENDERER_VERSION,
   structure: {
@@ -88,15 +89,12 @@ const operationSnapshot: SnapshotV1 = {
       values: [8, 5, 13, 21],
     },
   },
-  algorithm: {
-    name: 'insert',
-    arguments: {
-      value: 5,
-      index: 1,
-    },
-    inputState: {
-      values: [8, 13, 21],
-    },
+  history: {
+    initialState: { values: [8, 13, 21] },
+    operations: [
+      { name: 'insert', arguments: { value: 5, index: 1 } },
+      { name: 'search', arguments: { value: 13 } },
+    ],
   },
 };
 
@@ -110,16 +108,13 @@ const publicRow: PublicSnapshotRow = {
   structure_state: {
     values: [8, 13, 21],
   },
-  algorithm_name: null,
-  algorithm_arguments: null,
-  algorithm_input_state: null,
-  algorithm_state: null,
-  playback_state: null,
+  operation_history: staticSnapshot.history,
   created_at: CREATED_AT,
   expires_at: null,
 };
 
 const publicSnapshot: PublicSnapshotV1 = {
+  history: staticSnapshot.history,
   shareId: SHARE_ID,
   schemaVersion: SNAPSHOT_SCHEMA_VERSION,
   rendererVersion: SUPPORTED_RENDERER_VERSION,
@@ -266,14 +261,9 @@ describe('createSnapshot', () => {
           values: [1, 2, 99],
         },
       },
-      algorithm: {
-        name: 'append',
-        arguments: {
-          value: 3,
-        },
-        inputState: {
-          values: [1, 2],
-        },
+      history: {
+        initialState: { values: [1, 2] },
+        operations: [{ name: 'append', arguments: { value: 3 } }],
       },
     };
 

@@ -17,11 +17,7 @@ export interface PublicSnapshotRow {
   title: string | null;
   structure_type: string;
   structure_state: unknown;
-  algorithm_name: string | null;
-  algorithm_arguments: unknown | null;
-  algorithm_input_state: unknown | null;
-  algorithm_state: unknown | null;
-  playback_state: unknown | null;
+  operation_history: unknown;
   created_at: Date;
   expires_at: Date | null;
 }
@@ -51,23 +47,6 @@ const toIsoString = (
 export const mapPublicSnapshotRow = (
   row: PublicSnapshotRow
 ): PublicSnapshotV1 => {
-  const hasAlgorithmData = [
-    row.algorithm_name,
-    row.algorithm_arguments,
-    row.algorithm_input_state,
-    row.algorithm_state
-  ].some((value) => value != null);
-
-  const algorithm = hasAlgorithmData
-    ? {
-      name: row.algorithm_name,
-      arguments: row.algorithm_arguments,
-      inputState: row.algorithm_input_state,
-      ...(row.algorithm_state === null
-        ? {}
-        : { state: row.algorithm_state }),
-    }
-    : undefined;
 
   const mappedSnapshot: unknown = {
     shareId: row.share_id,
@@ -80,17 +59,8 @@ export const mapPublicSnapshotRow = (
     ...(row.title === null
       ? {}
       : { title: row.title }),
-    ...(algorithm === undefined
-      ? {}
-      : { algorithm }),
-
-    // Phase 1 rejects playback state.
-    ...(row.playback_state === null
-      ? {}
-      : { playback: row.playback_state }),
-
+    history: row.operation_history,
     createdAt: toIsoString(row.created_at, 'created_at'),
-
     expiresAt: row.expires_at === null
       ? null
       : toIsoString(row.expires_at, 'expires_at'),

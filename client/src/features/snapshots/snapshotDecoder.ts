@@ -70,7 +70,10 @@ export const publicSnapshotV1Schema = z.strictObject({
     type: z.literal('linked-list'),
     state: linkedListStateSchema,
   }),
-  algorithm: linkedListAlgorithmSchema.optional(),
+  history: z.strictObject({
+    initialState: linkedListStateSchema,
+    operations: z.array(linkedListAlgorithmSchema).max(150),
+  }),
   createdAt: z.iso.datetime(),
   expiresAt: z.iso.datetime().nullable(),
 });

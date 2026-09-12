@@ -26,6 +26,7 @@ import {
 const createdShareIds: string[] = [];
 
 const staticSnapshot: SnapshotV1 = {
+  history: { initialState: { values: [8, 13, 21] }, operations: [] },
   schemaVersion: SNAPSHOT_SCHEMA_VERSION,
   rendererVersion: SUPPORTED_RENDERER_VERSION,
   structure: {
@@ -46,15 +47,12 @@ const operationSnapshot: SnapshotV1 = {
       values: [8, 5, 13, 21],
     },
   },
-  algorithm: {
-    name: 'insert',
-    arguments: {
-      value: 5,
-      index: 1,
-    },
-    inputState: {
-      values: [8, 13, 21],
-    },
+  history: {
+    initialState: { values: [8, 13, 21] },
+    operations: [
+      { name: 'insert', arguments: { value: 5, index: 1 } },
+      { name: 'search', arguments: { value: 13 } },
+    ],
   },
 };
 
@@ -62,9 +60,7 @@ interface StoredSnapshotRow
   extends QueryResultRow {
   owner_subject: string | null;
   structure_state: unknown;
-  algorithm_name: string | null;
-  algorithm_arguments: unknown | null;
-  algorithm_input_state: unknown | null;
+  operation_history: unknown;
 }
 
 const remember = (shareId: string): void => {
@@ -114,9 +110,7 @@ describe('snapshotRepository', () => {
           SELECT
             owner_subject,
             structure_state,
-            algorithm_name,
-            algorithm_arguments,
-            algorithm_input_state
+            operation_history
           FROM visualisation_snapshots
           WHERE share_id = $1
         `,
@@ -128,13 +122,11 @@ describe('snapshotRepository', () => {
       structure_state: {
         values: [8, 13, 21],
       },
-      algorithm_name: null,
-      algorithm_arguments: null,
-      algorithm_input_state: null,
+      operation_history: staticSnapshot.history,
     });
   });
 
-  it('inserts and reads an operation snapshot', async () => {
+  it('inserts and reads an ordered multi-operation history', async () => {
     const created = await insertSnapshot(
       operationSnapshot,
       {
@@ -170,16 +162,7 @@ describe('snapshotRepository', () => {
           values: [8, 5, 13, 21],
         },
       },
-      algorithm: {
-        name: 'insert',
-        arguments: {
-          value: 5,
-          index: 1,
-        },
-        inputState: {
-          values: [8, 13, 21],
-        },
-      },
+      history: operationSnapshot.history,
       expiresAt: null,
     });
   });
