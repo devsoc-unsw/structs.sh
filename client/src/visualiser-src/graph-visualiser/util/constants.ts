@@ -9,6 +9,7 @@ import {
 } from '@/visualiser-src/linked-list-visualiser/util/constants';
 import { actualNodeDiameter } from '../../common/constants';
 
+// constants for our imaginary circle, nodes will "land" on the circumference of the circle.
 export const CENTRE_X = 400;
 export const CENTRE_Y = 300;
 export const NODE_GAP = 50;
