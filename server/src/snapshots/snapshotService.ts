@@ -46,7 +46,7 @@ export class InconsistentSnapshotError
   extends Error {
   constructor() {
     super(
-      'The captured state does not match the algorithm result.'
+      'The captured state does not match the operation history result.'
     );
     this.name = 'InconsistentSnapshotError';
   }

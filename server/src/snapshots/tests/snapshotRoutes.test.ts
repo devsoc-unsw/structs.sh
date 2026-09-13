@@ -39,7 +39,7 @@ const serviceMocks = vi.hoisted(() => {
     extends Error {
     constructor() {
       super(
-        'The captured state does not match the algorithm result.'
+        'The captured state does not match the operation history result.'
       );
 
       this.name =
@@ -135,6 +135,13 @@ describe('POST /api/v1/snapshots', () => {
         state: {
           values: [8, 13, 21],
         },
+      },
+      history: {
+        initialState: { values: [8] },
+        operations: [
+          { name: 'append', arguments: { value: 13 } },
+          { name: 'append', arguments: { value: 21 } },
+        ],
       },
     };
 
@@ -272,6 +279,13 @@ describe('GET /api/v1/snapshots/:shareId', () => {
       createdAt:
         '2026-08-19T03:10:00.000Z',
       expiresAt: null,
+      history: {
+        initialState: { values: [8] },
+        operations: [
+          { name: 'append', arguments: { value: 13 } },
+          { name: 'append', arguments: { value: 21 } },
+        ],
+      },
     };
 
     serviceMocks.getPublicSnapshot

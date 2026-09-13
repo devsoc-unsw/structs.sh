@@ -1,5 +1,5 @@
--- Proposed PostgreSQL schema for immutable, shareable preset-visualiser snapshots.
--- This is design documentation, not an applied migration.
+-- Resulting schema after both snapshot migrations; documentation only.
+-- Apply server/migrations with node-pg-migrate, not this file to an existing DB.
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
@@ -24,11 +24,7 @@ CREATE TABLE visualisation_snapshots (
     structure_state jsonb NOT NULL
         CHECK (jsonb_typeof(structure_state) = 'object'),
 
-    algorithm_name text,
-    algorithm_arguments jsonb,
-    algorithm_input_state jsonb,
-    algorithm_state jsonb,
-    playback_state jsonb,
+    operation_history jsonb NOT NULL,
 
     -- Opaque identifier from the application's auth boundary. It is optional
     -- for anonymous creation and is never returned by the public read API.
@@ -38,32 +34,20 @@ CREATE TABLE visualisation_snapshots (
     expires_at timestamptz,
     revoked_at timestamptz,
 
-    CHECK (
-        (algorithm_name IS NULL
-            AND algorithm_arguments IS NULL
-            AND algorithm_input_state IS NULL
-            AND algorithm_state IS NULL
-            AND playback_state IS NULL)
-        OR
-        (algorithm_name IS NOT NULL
-            AND algorithm_arguments IS NOT NULL
-            AND algorithm_input_state IS NOT NULL)
+    CONSTRAINT visualisation_snapshots_history_shape_check CHECK (
+        (
+            jsonb_typeof(operation_history) = 'object'
+            AND jsonb_typeof(operation_history -> 'initialState') = 'object'
+            AND jsonb_typeof(operation_history -> 'initialState' -> 'values') = 'array'
+            AND jsonb_typeof(operation_history -> 'operations') = 'array'
+            AND operation_history - 'initialState' - 'operations' = '{}'::jsonb
+        ) IS TRUE
     ),
-    CHECK (
-        algorithm_arguments IS NULL
-        OR jsonb_typeof(algorithm_arguments) = 'object'
-    ),
-    CHECK (
-        algorithm_input_state IS NULL
-        OR jsonb_typeof(algorithm_input_state) = 'object'
-    ),
-    CHECK (
-        algorithm_state IS NULL
-        OR jsonb_typeof(algorithm_state) = 'object'
-    ),
-    CHECK (
-        playback_state IS NULL
-        OR jsonb_typeof(playback_state) = 'object'
+    CONSTRAINT visualisation_snapshots_history_length_check CHECK (
+        CASE WHEN jsonb_typeof(operation_history -> 'operations') = 'array'
+            THEN jsonb_array_length(operation_history -> 'operations') <= 150
+            ELSE FALSE
+        END
     ),
     CHECK (expires_at IS NULL OR expires_at > created_at)
 );
@@ -88,11 +72,7 @@ SELECT
     title,
     structure_type,
     structure_state,
-    algorithm_name,
-    algorithm_arguments,
-    algorithm_input_state,
-    algorithm_state,
-    playback_state,
+    operation_history,
     created_at,
     expires_at
 FROM visualisation_snapshots
@@ -103,9 +83,5 @@ COMMENT ON TABLE visualisation_snapshots IS
     'Immutable replay recipes for homepage preset visualisers; excludes debugger state.';
 COMMENT ON COLUMN visualisation_snapshots.structure_state IS
     'Semantic structure state at capture time, using the versioned snapshot contract.';
-COMMENT ON COLUMN visualisation_snapshots.algorithm_input_state IS
-    'Semantic state immediately before the stored operation; used for deterministic replay.';
-COMMENT ON COLUMN visualisation_snapshots.algorithm_state IS
-    'Reserved for versioned algorithm-local variables or logical step data after the POC.';
-COMMENT ON COLUMN visualisation_snapshots.playback_state IS
-    'Reserved for normalised timeline progress and playback controls after the POC.';
+COMMENT ON COLUMN visualisation_snapshots.operation_history IS
+    'Initial semantic state and up to 150 ordered operations; detailed validation and replay consistency are enforced by the API.';

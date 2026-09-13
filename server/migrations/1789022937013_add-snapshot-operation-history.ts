@@ -1,4 +1,4 @@
-import type { MigrationBuilder } from 'node-pg-migrate';
+import type { MigrationBuilder } from 'node-pg-migrate' with { "resolution-mode": "import" };
 
 // Run using node-pg-migrate's default transaction; do not disable transactions.
 export async function up(pgm: MigrationBuilder): Promise<void> {

@@ -3,11 +3,20 @@ import GraphicalDataStructure from '@/visualiser-src/common/GraphicalDataStructu
 import GraphicalDataStructureFactory from '@/visualiser-src/common/GraphicalDataStructureFactory';
 import { Documentation } from '@/visualiser-src/common/typedefs';
 import {
-    LinkedListHistoryV1,
+    type LinkedListHistoryV1,
     SNAPSHOT_SCHEMA_VERSION,
     SUPPORTED_RENDERER_VERSION,
     type LinkedListAlgorithmV1,
     type SnapshotV1,
+} from '@/features/snapshots/snapshotTypes';
+import {
+  linkedListAlgorithmSchema,
+  linkedListStateSchema,
+  snapshotV1Schema,
+} from '@/features/snapshots/snapshotDecoder';
+import {
+  MAX_HISTORY_OPERATIONS,
+  MAX_LINKED_LIST_VALUES,
 } from '@/features/snapshots/snapshotTypes';
 import { topicToSnapshotStructureType } from '@/features/snapshots/snapshotTopicMap';
 import { defaultSpeed } from '../common/constants';
@@ -73,8 +82,12 @@ class VisualiserController {
 
     // Set data structure to loaded data
     public loadData(data: number[]): void {
+        if (topicToSnapshotStructureType(this.topicTitle ?? '') === 'linked-list') {
+            linkedListStateSchema.parse({ values: data });
+        }
         this.resetDataStructure();
-        this.dataStructure?.load(data);
+        this.dataStructure?.load([...data]);
+        this.startNewHistory();
     }
 
     public getCurrentTimeline(): Timeline {
@@ -169,10 +182,10 @@ class VisualiserController {
     }
 
     public applyTopicTitle(topicTitle: string) {
-        this.topicTitle = topicTitle;
-        this.dataStructure = GraphicalDataStructureFactory.create(topicTitle);
         this.currentTimeline.finish();
         this.currentTimeline.time(0);
+        this.topicTitle = topicTitle;
+        this.dataStructure = GraphicalDataStructureFactory.create(topicTitle);
         this.currentTimeline = new Timeline().persist(true);
         this.startNewHistory();
     }
@@ -181,7 +194,11 @@ class VisualiserController {
         if (!this.dataStructure) {
             return 'Invalid data structure';
         }
-        const expectedArgs = this.dataStructure.documentation[command].args;
+        const documentation = this.dataStructure.documentation;
+        if (!Object.prototype.hasOwnProperty.call(documentation, command)) {
+            return `Unsupported operation: ${command}`;
+        }
+        const expectedArgs = documentation[command].args;
         if (args.length !== expectedArgs.length) {
             return `Invalid arguments. Please provide ${args.join(', ')}`;
         }
@@ -192,9 +209,9 @@ class VisualiserController {
             !args.every((value, idx) =>
                 expectedArgs[idx].endsWith('s')
                     ? value
-                        .split(/,| /g)
-                        .filter((str) => str !== '')
-                        .every((el) => /^\d+$/.test(el))
+                            .split(/,| /g)
+                            .filter((str) => str !== '')
+                            .every((el) => /^\d+$/.test(el))
                     : /^\d+$/.test(value)
             )
         ) {
@@ -229,10 +246,7 @@ class VisualiserController {
             return 'Invalid data structure';
         }
 
-        const inputValues = [...this.data];
-
         const argumentNames = this.dataStructure.documentation[command].args;
-
         const parsedArgs = args.map((argument, index) => {
             if (argumentNames[index].endsWith('s')) {
                 return argument
@@ -240,130 +254,47 @@ class VisualiserController {
                     .filter((value) => value !== '')
                     .map(Number);
             }
-
             return Number(argument);
         });
-
-        this.finish();
-
-        // Existing dynamic operation dispatch.
         const operation = (this.dataStructure as OperationCapableDataStructure)[command];
-
         if (typeof operation !== 'function') {
             return `Unsupported operation: ${command}`;
         }
 
+        let captured: LinkedListAlgorithmV1 | undefined;
+        if (topicToSnapshotStructureType(this.topicTitle ?? '') === 'linked-list') {
+            if (!isLinkedListOperation(command)) {
+                return `Unsupported history operation: ${command}`;
+            }
+            if (this.history.operations.length >= MAX_HISTORY_OPERATIONS) {
+                return `History is limited to ${MAX_HISTORY_OPERATIONS} operations. Start a new history to continue.`;
+            }
+            const growsList = command === 'append' || command === 'prepend' || command === 'insert';
+            if (growsList && this.data.length >= MAX_LINKED_LIST_VALUES) {
+                return `Snapshots support at most ${MAX_LINKED_LIST_VALUES} list values.`;
+            }
+            const result = linkedListAlgorithmSchema.safeParse({
+                name: command,
+                arguments: Object.fromEntries(
+                    argumentNames.map((name, index) => [name, parsedArgs[index]])
+                ),
+            });
+            if (!result.success) {
+                return 'Invalid Linked List operation arguments.';
+            }
+            captured = result.data;
+        }
+
+        this.finish();
         const animationProducer = operation.call(this.dataStructure, ...parsedArgs);
-
-        if (
-            topicToSnapshotStructureType(this.topicTitle ?? '') === 'linked-list' &&
-            isLinkedListOperation(command) &&
-            parsedArgs.every((value) => typeof value === 'number')
-        ) {
-            const namedArguments = Object.fromEntries(
-                argumentNames.map((name, index) => [name, parsedArgs[index] as number])
-            );
-
-            this.capturedOperation = this.buildCapturedOperation(command, namedArguments, inputValues);
+        // Record only after successful execution; no-op operations still count.
+        if (captured) {
+            this.history.operations.push(captured);
         }
 
         this.constructTimeline(animationProducer, updateSlider);
 
         return '';
-    }
-
-    private buildCapturedOperation(
-        name: LinkedListAlgorithmV1['name'],
-        args: Record<string, number>,
-        inputValues: number[]
-    ): LinkedListAlgorithmV1 {
-        const inputState = {
-            values: [...inputValues],
-        };
-
-        switch (name) {
-            case 'append':
-            case 'prepend':
-            case 'search':
-                return {
-                    name,
-                    arguments: {
-                        value: args.value,
-                    },
-                };
-
-            case 'insert':
-                return {
-                    name,
-                    arguments: {
-                        value: args.value,
-                        index: args.index,
-                    },
-                };
-
-            case 'delete':
-                return {
-                    name,
-                    arguments: {
-                        index: args.index,
-                    },
-                };
-
-            default:
-                throw new Error(`Unsupported Linked List operation: ${name}`);
-        }
-    }
-
-    private cloneCapturedOperation(): LinkedListAlgorithmV1[] | undefined {
-        const { history } = this;
-
-        if (history.operations === null) {
-            return undefined;
-        }
-
-        let result: LinkedListAlgorithmV1[] = [];
-
-        // three different object types for LinkedListAlgorithmV1
-        for (const op of history.operations) {
-            switch (op.name) {
-                case 'append':
-                case 'prepend':
-                case 'search':
-                    result.push({
-                        name: op.name,
-                        arguments: {
-                            value: op.arguments.value
-                        }
-                    });
-                    break;
-                // return {
-                //     name: ,
-                //           arguments: {
-                //       value: operation.arguments.value,
-                //           },
-                //       };
-                case 'insert':
-                    result.push({
-                        name: op.name,
-                        arguments: {
-                            value: op.arguments.value,
-                            index: op.arguments.index,
-                        }
-                    })
-                    break;
-                case 'delete':
-                    result.push({
-                        name: op.name,
-                        arguments: {
-                            index: op.arguments.index,
-                        }
-                    });
-                    break;
-                default:
-                    return [];
-            }
-        }
-        return result;
     }
 
     public buildSnapshotDraft(title?: string): SnapshotV1 {
@@ -375,9 +306,7 @@ class VisualiserController {
 
         const normalisedTitle = title?.trim();
 
-        const algorithm = this.cloneCapturedOperation();
-
-        return {
+        return snapshotV1Schema.parse({
             schemaVersion: SNAPSHOT_SCHEMA_VERSION,
             rendererVersion: SUPPORTED_RENDERER_VERSION,
 
@@ -390,8 +319,8 @@ class VisualiserController {
                 },
             },
 
-            ...(algorithm ? { algorithm } : {}),
-        };
+            history: structuredClone(this.history),
+        });
     }
 
     public get documentation(): Documentation {
@@ -399,11 +328,11 @@ class VisualiserController {
     }
 
     public resetDataStructure(): void {
+        this.currentTimeline.finish();
+        this.currentTimeline.time(0);
         if (this.topicTitle) {
             this.dataStructure = GraphicalDataStructureFactory.create(this.topicTitle);
         }
-        this.currentTimeline.finish();
-        this.currentTimeline.time(0);
         this.currentTimeline = new Timeline().persist(true);
         this.startNewHistory();
     }
@@ -411,6 +340,7 @@ class VisualiserController {
     public generateDataStructure(): void {
         this.resetDataStructure();
         this.dataStructure?.generate();
+        this.startNewHistory();
     }
 
     private computePrevTimestamp(): number {

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { SNAPSHOT_SCHEMA_VERSION, SUPPORTED_RENDERER_VERSION } from './snapshotTypes';
+import { SNAPSHOT_SCHEMA_VERSION, SUPPORTED_RENDERER_VERSION, MAX_HISTORY_OPERATIONS, MAX_LINKED_LIST_VALUES } from './snapshotTypes';
 
 import type { CreateSnapshotResponse, PublicSnapshotV1 } from './snapshotTypes';
 
@@ -14,17 +14,16 @@ export const createSnapshotResponseSchema = z.strictObject({
 export const decodeCreateSnapshotResponse = (value: unknown): CreateSnapshotResponse =>
   createSnapshotResponseSchema.parse(value);
 
-const linkedListStateSchema = z.strictObject({
-  values: z.array(z.number().int().min(0).max(99)).max(100),
+export const linkedListStateSchema = z.strictObject({
+  values: z.array(z.number().int().min(0).max(99)).max(MAX_LINKED_LIST_VALUES),
 });
 
-const linkedListAlgorithmSchema = z.discriminatedUnion('name', [
+export const linkedListAlgorithmSchema = z.discriminatedUnion('name', [
   z.strictObject({
     name: z.literal('append'),
     arguments: z.strictObject({
       value: z.number().int().min(0).max(99),
     }),
-    inputState: linkedListStateSchema,
   }),
 
   z.strictObject({
@@ -32,7 +31,6 @@ const linkedListAlgorithmSchema = z.discriminatedUnion('name', [
     arguments: z.strictObject({
       value: z.number().int().min(0).max(99),
     }),
-    inputState: linkedListStateSchema,
   }),
 
   z.strictObject({
@@ -41,7 +39,6 @@ const linkedListAlgorithmSchema = z.discriminatedUnion('name', [
       value: z.number().int().min(0).max(99),
       index: z.number().int().nonnegative(),
     }),
-    inputState: linkedListStateSchema,
   }),
 
   z.strictObject({
@@ -49,7 +46,6 @@ const linkedListAlgorithmSchema = z.discriminatedUnion('name', [
     arguments: z.strictObject({
       value: z.number().int().min(0).max(99),
     }),
-    inputState: linkedListStateSchema,
   }),
 
   z.strictObject({
@@ -57,12 +53,10 @@ const linkedListAlgorithmSchema = z.discriminatedUnion('name', [
     arguments: z.strictObject({
       index: z.number().int().nonnegative(),
     }),
-    inputState: linkedListStateSchema,
   }),
 ]);
 
-export const publicSnapshotV1Schema = z.strictObject({
-  shareId: z.uuid(),
+export const snapshotV1Schema = z.strictObject({
   schemaVersion: z.literal(SNAPSHOT_SCHEMA_VERSION),
   rendererVersion: z.literal(SUPPORTED_RENDERER_VERSION),
   title: z.string().trim().min(1).max(120).optional(),
@@ -72,8 +66,13 @@ export const publicSnapshotV1Schema = z.strictObject({
   }),
   history: z.strictObject({
     initialState: linkedListStateSchema,
-    operations: z.array(linkedListAlgorithmSchema).max(150),
+    operations: z.array(linkedListAlgorithmSchema).max(MAX_HISTORY_OPERATIONS),
   }),
+});
+
+export const publicSnapshotV1Schema = z.strictObject({
+  ...snapshotV1Schema.shape,
+  shareId: z.uuid(),
   createdAt: z.iso.datetime(),
   expiresAt: z.iso.datetime().nullable(),
 });

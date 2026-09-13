@@ -1,5 +1,7 @@
 # Snapshot API contract
 
+Frontend builders: start with [the integration guide](./frontend-api-guide.md) for copyable requests, types, fetch usage, and error handling. This document describes implemented behaviour unless explicitly marked as future work.
+
 ## Base path
 
 All new endpoints use `/api/v1/snapshots`. They are separate from the legacy `/api/save` and `/api/getOwnedData` routes.
@@ -31,15 +33,16 @@ Content-Type: application/json
 
 Creation validation:
 
-- body is valid JSON and no larger than the configured request limit;
-- `schemaVersion` is supported;
-- `rendererVersion` is recognised and at most 100 characters;
+- body is valid JSON and at most 1 MiB (`JSON_BODY_LIMIT_BYTES` in `server/src/app.ts`);
+- `schemaVersion` is exactly `1`;
+- `rendererVersion` is exactly `preset-visualiser-v1`;
 - title is absent or 1–120 characters after trimming;
 - structure type is implemented by the snapshot feature;
-- structure and input values meet the contract limits;
-- algorithm is allow-listed for the structure;
-- arguments exactly match that algorithm's named arguments;
-- optional phase-2 state matches its versioned schema.
+- initial and final values meet the contract limits;
+- required `history` contains `initialState` and at most 150 ordered `operations`;
+- each operation is allow-listed with exactly matching named arguments;
+- replay validates every intermediate state and produces the submitted final state;
+- legacy `algorithm`, per-operation `inputState`, and playback fields are rejected.
 
 The API generates `shareId`; clients cannot choose it. Retrying a timed-out create may produce another immutable snapshot. An idempotency key can be added later if duplicate rows become a practical issue.
 
@@ -61,14 +64,14 @@ Successful response:
       "values": [10, 20, 30, 42]
     }
   },
-  "algorithm": {
-    "name": "append",
-    "arguments": {
-      "value": 42
-    },
-    "inputState": {
+  "history": {
+    "initialState": {
       "values": [10, 20, 30]
-    }
+    },
+    "operations": [
+      { "name": "append", "arguments": { "value": 42 } },
+      { "name": "search", "arguments": { "value": 20 } }
+    ]
   },
   "createdAt": "2026-07-24T03:10:00.000Z",
   "expiresAt": null
@@ -77,14 +80,13 @@ Successful response:
 
 Read behaviour:
 
-- return `Cache-Control: public, max-age=300, immutable` only when snapshots have no expiry/revocation requirement that conflicts with caching;
-- otherwise use a short cache lifetime and revalidate;
+- the current snapshot routes do not set an explicit `Cache-Control` policy; do not assume a permanent cache lifetime;
 - do not return internal `id`, `owner_subject`, or revocation metadata;
 - return `404` for malformed, missing, expired, and revoked IDs so callers cannot distinguish them.
 
 ## Optional owner operations
 
-These are not required for anonymous POC sharing:
+These are future ideas, **not implemented endpoints**:
 
 - `GET /api/v1/snapshots` lists the authenticated owner's snapshots;
 - `DELETE /api/v1/snapshots/:shareId` sets `revoked_at`;
@@ -112,7 +114,7 @@ Field-level details may be returned for safe client-correctable validation error
     "message": "The snapshot could not be created.",
     "fields": [
       {
-        "path": "algorithm.arguments.index",
+        "path": "history.operations.0.arguments.index",
         "message": "Expected a non-negative integer."
       }
     ]
