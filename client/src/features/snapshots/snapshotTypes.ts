@@ -1,5 +1,8 @@
 export const SNAPSHOT_SCHEMA_VERSION = 1 as const;
 
+export const MAX_HISTORY_OPERATIONS = 150;
+export const MAX_LINKED_LIST_VALUES = 100;
+
 export const SUPPORTED_RENDERER_VERSION = 'preset-visualiser-v1' as const;
 
 export interface LinkedListStateV1 {

@@ -1,6 +1,6 @@
 # Phase 1 implementation guide: Linked List snapshots
 
-This guide records the Phase 1 implementation design. The PostgreSQL container, migration runner, backend container wiring, environment validation, connection pool, startup check, graceful shutdown, and legacy-route split are now present in the branch. Runtime verification and the snapshot API/client work remain outstanding; use [next-steps.md](./next-steps.md) as the active execution plan.
+This guide preserves the original Phase 1 design, including historical single-operation examples. The backend now uses complete operation history instead. Use [snapshot-contract.md](./snapshot-contract.md) and [api-contract.md](./api-contract.md) for current payloads, [schema.sql](./schema.sql) for the resulting database shape, and [next-steps.md](./next-steps.md) for current backend status. Do not implement the legacy algorithm fields shown below.
 
 The Phase 1 outcome is:
 

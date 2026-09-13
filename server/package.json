@@ -13,7 +13,7 @@
     "migrate:up": "node-pg-migrate up --ignore-pattern 'tsconfig[.]json'",
     "migrate:down": "node-pg-migrate down --ignore-pattern 'tsconfig[.]json'",
     "test": "vitest run --exclude '**/*.integration.test.ts'",
-    "test:integration": "vitest run src/snapshots/tests/snapshotRepository.integration.test.ts --no-file-parallelism",
+    "test:integration": "vitest run src/snapshots/tests/snapshotRepository.integration.test.ts src/snapshots/tests/snapshotMigration.integration.test.ts --no-file-parallelism",
     "test:watch": "vitest --exclude '**/*.integration.test.ts'"
   },
   "license": "MIT",

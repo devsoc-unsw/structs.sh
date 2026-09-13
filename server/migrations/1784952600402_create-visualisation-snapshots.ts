@@ -1,4 +1,4 @@
-import type { ColumnDefinitions, MigrationBuilder } from 'node-pg-migrate';
+import type { ColumnDefinitions, MigrationBuilder } from 'node-pg-migrate' with { "resolution-mode": "import" };
 
 export const shorthands: ColumnDefinitions | undefined = undefined;
 
