@@ -29,6 +29,18 @@ export const showLineNumbers = false;
 export const defaultSpeed = 0.5;
 
 // just some HTML classes and IDs
+
+/**
+ * Where the data structure is being drawn on screen
+ */
 export const VISUALISER_CANVAS = '#visualiser-canvas';
+
+/**
+ * Canvas for the code panel on the RHS of the page
+ */
 export const CODE_CANVAS = '#code-canvas';
+
+/**
+ * A HTML <div> for wrapping the code canvas
+ */
 export const CODE_CONTAINER = 'code-container';
