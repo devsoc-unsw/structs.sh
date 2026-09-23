@@ -1,20 +1,17 @@
-import { Typography, TextField, Alert, Snackbar, Collapse } from '@mui/material';
+import { Typography, TextField, Collapse } from '@mui/material';
 import { useEffect, useContext, useState, useRef, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import VisualiserContext from './VisualiserContext';
 import { GreenMenuButton } from './styled';
+import { useNotification } from './useNotification';
 
 const CreateLink = () => {
   const { controller } = useContext(VisualiserContext);
   const [link, setLink] = useState('');
   const [showLink, setShowLink] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
+  const { showNotification, Notification } = useNotification();
 
   const location = useLocation();
-
-  const alertCopy = () => {
-    setShowAlert(true);
-  };
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -37,13 +34,14 @@ const CreateLink = () => {
     setLink(linkString);
     navigator.clipboard.writeText(linkString);
     setShowLink(true);
-    alertCopy();
+
+    showNotification('Link copied to Clipboard!', 'success');
 
     if (inputRef.current) {
       inputRef.current.focus();
       inputRef.current.select();
     }
-  }, [location, controller.data]);
+  }, [location, controller.data, showNotification]);
 
   return (
     <>
@@ -64,24 +62,7 @@ const CreateLink = () => {
           }}
         />
       </Collapse>
-      <Snackbar
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        open={showAlert}
-        onClose={() => {
-          setShowAlert(false);
-        }}
-        autoHideDuration={1500}
-      >
-        <Alert
-          onClose={() => {
-            setShowAlert(false);
-          }}
-          severity="success"
-          sx={{ width: '100%' }}
-        >
-          Link Copied to Clipboard!
-        </Alert>
-      </Snackbar>
+      <Notification />
     </>
   );
 };

@@ -1,9 +1,7 @@
 /* eslint-disable */
 // TODO: Proper rework on this file => we want to re-design this anyway. I can't fix lint now because it will potentially change functioanlity of the file
-import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
-import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles';
@@ -21,6 +19,7 @@ import { SERVER_URL } from '@/utils/constants';
 import LoadOptions from './LoadOptions';
 import VisualiserContext from './VisualiserContext';
 import { RedMenuButton } from './styled';
+import { useNotification } from './useNotification';
 import { USER_KEY } from '@/constants/storage';
 
 interface SavedStructure {
@@ -51,9 +50,7 @@ const Saving = () => {
   const [toggleSave, setToggleSave] = useState(false);
   const [toggleLoad, setToggleLoad] = useState(false);
 
-  const [errMsg, setErrMsg] = useState('');
-  const [showSavedAlert, setShowSavedAlert] = useState(false);
-  const [showFailedAlert, setShowFailedAlert] = useState(false);
+  const { showNotification, Notification } = useNotification();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -81,11 +78,6 @@ const Saving = () => {
     }
   };
 
-  const makeFailedAlert = (msg: string) => {
-    setErrMsg(msg);
-    setShowFailedAlert(true);
-  };
-
   const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       handleSave();
@@ -95,18 +87,18 @@ const Saving = () => {
   const handleSave = () => {
     const owner = localStorage.getItem(USER_KEY);
     if (!owner) {
-      makeFailedAlert('Please Log In to Save');
+      showNotification('Please Log In to Save', 'error');
       return;
     }
 
     if (saveName === '') {
-      makeFailedAlert('Please Give a Name');
+      showNotification('Please Give a Name', 'error');
       return;
     }
 
     const topic = controller.topic;
     if (!topic) {
-      makeFailedAlert('No topic selected');
+      showNotification('No topic selected', 'error');
     }
 
     const data = {
@@ -120,12 +112,12 @@ const Saving = () => {
       .post(`${SERVER_URL}/api/save`, data)
       .then((response) => {
         console.log('Data saved:', response.data);
-        setShowSavedAlert(true);
+        showNotification('Data Structure Saved!', 'success');
         setSaveName('');
         setToggleSave(false);
       })
       .catch((error) => {
-        setShowFailedAlert(true);
+        showNotification('Saving Failed. Problem on our End :(', 'error');
         console.error('Error saving data structure:', error);
       });
   };
@@ -150,7 +142,7 @@ const Saving = () => {
       })
       .catch((error) => {
         console.error('Error Loading data structure:', error);
-        makeFailedAlert('Saving Failed. Problem on our End :(');
+        showNotification('Saving Failed. Problem on our End :(', 'error');
       });
   };
 
@@ -219,42 +211,7 @@ const Saving = () => {
           </Typography>
         )}
       </SaveBox>
-      <Snackbar
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        open={showSavedAlert}
-        onClose={() => {
-          setShowSavedAlert(false);
-        }}
-        autoHideDuration={1500}
-      >
-        <Alert
-          onClose={() => {
-            setShowSavedAlert(false);
-          }}
-          severity="success"
-          sx={{ width: '100%' }}
-        >
-          Data Structure Saved!
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        open={showFailedAlert}
-        onClose={() => {
-          setShowFailedAlert(false);
-        }}
-        autoHideDuration={1500}
-      >
-        <Alert
-          onClose={() => {
-            setShowFailedAlert(false);
-          }}
-          severity="error"
-          sx={{ width: '100%' }}
-        >
-          {errMsg}
-        </Alert>
-      </Snackbar>
+      <Notification />
 
       <SaveBox
         tabIndex={0}
