@@ -63,7 +63,7 @@
     "resize-observer-polyfill": "^1.5.1",
     "sass": "^1.99.0",
     "socket.io-client": "^4.8.3",
-    "uuid": "^10.0.0",
+    "uuid": "^11.0.0",
     "ws": "^8.20.0",
     "zustand": "^4.5.5"
   },
