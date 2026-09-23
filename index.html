@@ -342,6 +342,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#building-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -491,6 +502,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#building-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -550,6 +572,31 @@
 <p>Structs.sh aims to be a comprehensive educational resource for data structures and algorithms, developed by passionate computer science and engineering students at UNSW.</p>
 <p>The project was inspired by <strong><a href="https://github.com/Tymotex/Tactile-DS">Tactile-DS</a></strong>, a tutoring tool and reference implementation developed in 2020 for <strong><a href="https://www.handbook.unsw.edu.au/undergraduate/courses/2022/COMP2521/?year=2022">COMP2521</a></strong>.</p>
 <p>Structs.sh exists to bridge the gap between a student's high-level understanding of computer science concepts and how those concepts translate into real code. It was started by students who felt there was a lack of tools that help build strong visual intuition for algorithmic thinking.</p>
+<h2 id="building-documentation">Building documentation</h2>
+<p>You can get a documentation server running locally as follows:</p>
+<ul>
+<li>Clone the <a href="https://github.com/devsoc-unsw/structs.sh">repo</a></li>
+<li>Install <a href="https://docs.astral.sh/uv/getting-started/installation/">uv</a></li>
+<li>Run <code>uv run mkdocs serve</code> in the <code>docs/</code> directory and visit the URL from the command output</li>
+</ul>
+<blockquote>
+<p>You may need to change the port using the <code>-a, --dev-addr</code> option if there are any
+conflicts with the ports of the other running services.</p>
+</blockquote>
+<p>An example is shown below:</p>
+<div class="highlight"><pre><span></span><code>›<span class="w"> </span>uv<span class="w"> </span>run<span class="w"> </span>mkdocs<span class="w"> </span>serve<span class="w"> </span>-a<span class="w"> </span>localhost:8080
+
+INFO<span class="w">    </span>-<span class="w">  </span>Building<span class="w"> </span>documentation...
+INFO<span class="w">    </span>-<span class="w">  </span><span class="o">[</span>macros<span class="o">]</span><span class="w"> </span>-<span class="w"> </span>No<span class="w"> </span>default<span class="w"> </span>module<span class="w"> </span><span class="sb">`</span>main<span class="sb">`</span><span class="w"> </span>found
+INFO<span class="w">    </span>-<span class="w">  </span><span class="o">[</span>macros<span class="o">]</span><span class="w"> </span>-<span class="w"> </span>Config<span class="w"> </span>variables:<span class="w"> </span><span class="o">[</span><span class="s1">&#39;extra&#39;</span>,<span class="w"> </span><span class="s1">&#39;config&#39;</span>,<span class="w"> </span><span class="s1">&#39;environment&#39;</span>,<span class="w"> </span><span class="s1">&#39;plugin&#39;</span>,<span class="w"> </span><span class="s1">&#39;git&#39;</span>,<span class="w"> </span><span class="s1">&#39;repo_clone_url&#39;</span>,<span class="w"> </span><span class="s1">&#39;github_team_url&#39;</span>,
+<span class="w">            </span><span class="s1">&#39;email&#39;</span>,<span class="w"> </span><span class="s1">&#39;macros&#39;</span>,<span class="w"> </span><span class="s1">&#39;filters&#39;</span>,<span class="w"> </span><span class="s1">&#39;filters_builtin&#39;</span><span class="o">]</span>
+INFO<span class="w">    </span>-<span class="w">  </span><span class="o">[</span>macros<span class="o">]</span><span class="w"> </span>-<span class="w"> </span>Config<span class="w"> </span>macros:<span class="w"> </span><span class="o">[</span><span class="s1">&#39;context&#39;</span>,<span class="w"> </span><span class="s1">&#39;macros_info&#39;</span>,<span class="w"> </span><span class="s1">&#39;now&#39;</span>,<span class="w"> </span><span class="s1">&#39;fix_url&#39;</span><span class="o">]</span>
+INFO<span class="w">    </span>-<span class="w">  </span><span class="o">[</span>macros<span class="o">]</span><span class="w"> </span>-<span class="w"> </span>Config<span class="w"> </span>filters:<span class="w"> </span><span class="o">[</span><span class="s1">&#39;pretty&#39;</span>,<span class="w"> </span><span class="s1">&#39;relative_url&#39;</span><span class="o">]</span>
+INFO<span class="w">    </span>-<span class="w">  </span>Cleaning<span class="w"> </span>site<span class="w"> </span>directory
+INFO<span class="w">    </span>-<span class="w">  </span>Documentation<span class="w"> </span>built<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span>.17<span class="w"> </span>seconds
+INFO<span class="w">    </span>-<span class="w">  </span><span class="o">[</span><span class="m">17</span>:32:26<span class="o">]</span><span class="w"> </span>Watching<span class="w"> </span>paths<span class="w"> </span><span class="k">for</span><span class="w"> </span>changes:<span class="w"> </span><span class="s1">&#39;docs&#39;</span>,<span class="w"> </span><span class="s1">&#39;mkdocs.yml&#39;</span>
+INFO<span class="w">    </span>-<span class="w">  </span><span class="o">[</span><span class="m">17</span>:32:26<span class="o">]</span><span class="w"> </span>Serving<span class="w"> </span>on<span class="w"> </span>http://localhost:8080/
+</code></pre></div>
 
 
 
