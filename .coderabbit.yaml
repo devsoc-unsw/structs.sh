@@ -1,0 +1,123 @@
+# yaml-language-server: $schema=https://storage.googleapis.com/coderabbit_public_assets/schema.v2.json
+
+language: "en-US"
+early_access: false
+
+tone_instructions: >
+  Be direct and specific. Point to exact lines/functions rather than
+  general remarks. Skip praise and filler.
+
+reviews:
+  profile: "chill"
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: true
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - "main"
+
+  path_filters:
+    - "!**/*.lock"
+    - "!uv.lock"
+    - "!**/__pycache__/**"
+    - "!**/.venv/**"
+    - "!**/dist/**"
+    - "!**/build/**"
+
+  path_instructions:
+    - path: "debugger/src/debugger/base_debugger.py"
+      instructions: >
+        This drives an interactive gdb subprocess over MI and a pty, and is
+        the seam where the (currently disabled) sandboxing lives. Flag:
+        any change to how the gdb/nsjail process is spawned or its
+        stdin/stdout/pty wiring; anything that could let user-controlled
+        input reach a shell or be interpolated into an MI/console command
+        without escaping (see `console()`'s f-string command construction);
+        changes to `run_command`/`_inflight_cmds` token handling that could
+        cause responses to be matched to the wrong caller; and any place
+        exceptions from the gdb subprocess could leave `deinit()` unable to
+        clean up fds or the process.
+
+    - path: "debugger/src/debugger/c_compile.py"
+      instructions: >
+        Compiles arbitrary user-submitted C source with `gcc` via
+        `create_subprocess_exec` (argv list, not shell — verify any change
+        keeps it that way). Flag if `source_path`/`output_path` or any new
+        compiler flags could allow argument injection, path traversal
+        outside a scratch dir, or resource-limit bypass (no timeout/rlimit
+        currently applied around the compile itself).
+
+    - path: "debugger/nsjail_gdb.cfg"
+      instructions: >
+        Sandbox policy for untrusted C execution. Flag overly permissive
+        mounts (read-write, broad host paths), missing namespace/seccomp
+        settings, and any relaxation of rlimits — cross-check against the
+        constraint that gdb needs ptrace on its own child but nothing
+        broader.
+
+    - path: "debugger/src/serve.py"
+      instructions: >
+        Per-connection Socket.IO handlers holding live gdb sessions and
+        temp files. Flag missing cleanup on error paths (temp file/exe
+        leaks if `deinit`/`unlink` isn't reached), unbounded per-socket
+        state growth (e.g. `user[sid].seen`), and any user-supplied `code`
+        or `sid` used without validation before reaching the filesystem or
+        subprocess layer.
+
+    - path: "debugger/src/debugger/mi_parser.py"
+      instructions: >
+        Hand-written recursive-descent parser for gdb/MI output plus a
+        separate C-value parser. Flag places that assume well-formed input
+        and could raise unhandled `StopIteration`/`IndexError` on malformed
+        or truncated MI records rather than a clean `MIParserError`, and
+        any accidental divergence in parsing behaviour from `alt_mi.py`
+        (the Lark grammar) or `mi.py` (the regex-based parser) if only one
+        of the three is edited.
+
+    - path: "debugger/src/debugger/alt_mi.py"
+      instructions: >
+        Lark-grammar implementation of the same MI parsing `mi_parser.py`
+        and `mi.py` do. If this file changes, check whether the other two
+        parser implementations need the same fix — three parallel parsers
+        for one format is a correctness-drift risk.
+
+    - path: "debugger/src/debugger/mi.py"
+      instructions: >
+        Regex/orjson-based MI parser, a third implementation alongside
+        `mi_parser.py` and `alt_mi.py`. Same note: check for drift across
+        the three when this changes.
+
+    - path: "debugger/src/debugger/test/**"
+      instructions: >
+        Test fixtures compile and run real C binaries via `compile_run`
+        (debugger/src/debugger/test/tools.py). Flag tests that don't clean
+        up the compiled `__exe__`/temp binary on failure, and flag new
+        `.c` fixtures that could hang the gdb session (infinite loops,
+        unbounded `scanf`) without a corresponding bounded interaction in
+        the `.py` test.
+
+    - path: "debugger/Dockerfile.prod"
+      instructions: >
+        Flag any drift between what's installed/enabled here (gdb, nsjail
+        build) and what `base_debugger.py`'s subprocess invocation and
+        `nsjail_gdb.cfg` actually assume at runtime.
+
+  tools:
+    ruff:
+      enabled: true
+    gitleaks:
+      enabled: true
+    languagetool:
+      enabled: false
+
+chat:
+  auto_reply: true
+
+knowledge_base:
+  learnings:
+    scope: "auto"
+  issues:
+    scope: "auto"

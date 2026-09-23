@@ -1,50 +1,29 @@
-# Structs.sh 💻
+{% include-markdown "../../README.md" rewrite-relative-urls=true %}
 
-<p align="center">
-  <img src="images/StructsBanner.png" alt="Structs.sh Banner">
-</p>
+## Building documentation
+You can get a documentation server running locally as follows:
 
-<p align="center">
-  <img src="https://img.shields.io/badge/DevSoc-blue" alt="DevSoc">
-  <img src="https://img.shields.io/github/issues/csesoc/structs.sh" alt="GitHub Issues">
-  <img src="https://img.shields.io/github/license/csesoc/structs.sh" alt="License">
-  <img src="https://img.shields.io/github/last-commit/csesoc/structs.sh" alt="Last Commit">
-</p>
+- Clone the [repo](https://github.com/devsoc-unsw/structs.sh)
+- Install [uv](https://docs.astral.sh/uv/getting-started/installation/)
+- Run `uv run mkdocs serve` in the `docs/` directory and visit the URL from the command output
 
-> Looking to contribute? See the **[Contributing guide](contributing.md)**.
+> You may need to change the port using the `-a, --dev-addr` option if there are any
+conflicts with the ports of the other running services.
 
-## About
+An example is shown below:
 
-Structs.sh is an interactive data structure and algorithm visualiser and educational platform for computer science students.
+```bash
+› uv run mkdocs serve -a localhost:8080
 
-## Features
+INFO    -  Building documentation...
+INFO    -  [macros] - No default module `main` found
+INFO    -  [macros] - Config variables: ['extra', 'config', 'environment', 'plugin', 'git', 'repo_clone_url', 'github_team_url',
+            'email', 'macros', 'filters', 'filters_builtin']
+INFO    -  [macros] - Config macros: ['context', 'macros_info', 'now', 'fix_url']
+INFO    -  [macros] - Config filters: ['pretty', 'relative_url']
+INFO    -  Cleaning site directory
+INFO    -  Documentation built in 0.17 seconds
+INFO    -  [17:32:26] Watching paths for changes: 'docs', 'mkdocs.yml'
+INFO    -  [17:32:26] Serving on http://localhost:8080/
+```
 
-### Algorithm Visualiser
-
-Interactive animated visualisations of classic data structures and algorithms, including (but not limited to):
-
-* Linked Lists
-* Binary Search Trees
-* AVL Trees
-* Graphs (in progress!)
-
-![Landing page](images/landing-page.png)
-
-![Tree Visualiser](images/tree-visualiser.png)
-
-### Visual Debugger
-
-* Debug and visualise data structures in your own C code.
-* Currently supports linked lists.
-
-![Linked List Debugger](images/debugger-linked-list.png)
-
----
-
-## Why Structs.sh?
-
-Structs.sh aims to be a comprehensive educational resource for data structures and algorithms, developed by passionate computer science and engineering students at UNSW.
-
-The project was inspired by **[Tactile-DS](https://github.com/Tymotex/Tactile-DS)**, a tutoring tool and reference implementation developed in 2020 for **[COMP2521](https://www.handbook.unsw.edu.au/undergraduate/courses/2022/COMP2521/?year=2022)**.
-
-Structs.sh exists to bridge the gap between a student's high-level understanding of computer science concepts and how those concepts translate into real code. It was started by students who felt there was a lack of tools that help build strong visual intuition for algorithmic thinking.
