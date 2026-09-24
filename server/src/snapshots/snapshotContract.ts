@@ -110,6 +110,7 @@ export const snapshotV1Schema = z.strictObject({
 
 // for snapshots returned by the public API.
 export const publicSnapshotV1Schema = z.strictObject({
+
   shareId: z.uuid(),
 
   ...snapshotV1Schema.shape,
