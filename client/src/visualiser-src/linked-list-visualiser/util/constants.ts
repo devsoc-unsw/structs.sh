@@ -18,7 +18,6 @@ export const topOffset = 150;
 export const insertedNodeTopOffset =
   topOffset + (actualNodeDiameter + pathLength) * Math.sin(Math.PI / 3);
 
-
 // HTML ids
 export const CURRENT = '#current';
 export const PREV = '#prev';

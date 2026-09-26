@@ -8,7 +8,7 @@ import { getPointerPath } from '../util/util';
 // Class that produces SVG.Runners animating general linked list operations
 export default class LinkedListAnimationProducer extends AnimationProducer {
   /**
-   * 
+   *
    * @param index -- the index you are trying to insert into
    * @param newNode -- the node you are trying to insert
    * @param length -- the current length of the linked list
@@ -26,7 +26,7 @@ export default class LinkedListAnimationProducer extends AnimationProducer {
       cx = length * nodePathWidth + actualNodeDiameter / 2;
       cy = topOffset;
     }
-    
+
     // SVG element wrappers
     newNode.boxTarget.cx(cx).cy(cy);
     newNode.numberTarget.cx(cx).cy(cy);
