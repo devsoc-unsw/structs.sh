@@ -138,6 +138,10 @@ export default class LinkedListAnimationProducer extends AnimationProducer {
     );
   }
 
+  /**
+   * Queues a fade-in of the head arrow.
+   * @param headPointer the arrow from the "head" label to the first node
+   */
   public initialiseHead(headPointer: Path) {
     this.addSequenceAnimation(headPointer.animate().attr({ opacity: 1 }));
   }

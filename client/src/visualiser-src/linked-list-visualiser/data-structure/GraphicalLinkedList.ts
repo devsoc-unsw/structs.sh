@@ -73,8 +73,14 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
     }
   }
 
+  /**
+   * The arrow from the "head" label
+   */
   public headPointer: Path;
 
+  /**
+   * The first node of the LL
+   */
   public head: GraphicalLinkedListNode | null = null;
 
   public length: number = 0;
@@ -242,6 +248,8 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
 
     const newNode: GraphicalLinkedListNode = GraphicalLinkedListNode.from(value);
     producer.doAnimationAndHighlight(2, producer.addNodeAt, index, newNode, this.length);
+
+    // prepending
     if (index === 0 && this.head !== null) {
       newNode.next = this.head;
       this.head = newNode;
@@ -252,10 +260,13 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
         this.headPointer,
         newNode
       );
-    } else if (this.head === null) {
+    }
+    // empty list
+    else if (this.head === null) {
       producer.doAnimationAndHighlight(8, producer.initialiseHead, this.headPointer);
     }
 
+    // empty list case
     if (index === 0 || this.head === null) {
       this.head = newNode;
       producer.doAnimationAndHighlight(9, producer.resetList, this.headPointer, this.head);
@@ -264,17 +275,26 @@ export default class GraphicalLinkedList extends GraphicalDataStructure {
 
     let curr = this.head;
     producer.doAnimationAndHighlight(13, producer.initialisePointer, CURRENT);
+
+    // iterate to the end
     for (let i = 0; i < index - 1 && curr.next !== null; i += 1) {
       curr = curr.next;
       producer.doAnimationAndHighlight(16, producer.movePointerToNext, CURRENT);
     }
+
+    // once we're at the position, we insert
     newNode.next = curr.next;
     curr.next = newNode;
+
+    // animation for inserting at the middle
     if (index < this.length - 1) {
       producer.doAnimationAndHighlight(19, producer.insertedNodePointToNext, newNode);
       producer.doAnimationAndHighlight(20, producer.pointToInsertedNode, curr);
       producer.doAnimation(producer.resetListAndColor, this.headPointer, this.head, newNode);
-    } else {
+    }
+
+    // animation for inserting at the end
+    else {
       producer.doAnimationAndHighlight(20, producer.linkLastToNew, curr);
       producer.doAnimation(producer.resetPointersAndColor, newNode);
     }
