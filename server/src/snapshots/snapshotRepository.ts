@@ -80,7 +80,7 @@ export const insertSnapshot = async (
   });
 
   const createdRow = result.rows[0];
-
+  
   if (!createdRow) {
     throw new Error(
       'Snapshot insert returned no database row.'

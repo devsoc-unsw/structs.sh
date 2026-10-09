@@ -82,6 +82,12 @@ const publicAppOriginSchema = z
   })
   .transform((value) => new URL(value).origin);
 
+// Environment values are strings; pg expects millisecond integers.
+const timeoutWithDefault = (milliseconds: number) => z.preprocess(
+  emptyStringToUndefined,
+  z.coerce.number().int().positive().max(2_147_483_647).default(milliseconds)
+);
+
 const environmentSchema = z.object({
   DATABASE_URL: postgresUrlSchema,
   PUBLIC_APP_ORIGIN: publicAppOriginSchema,
@@ -91,6 +97,9 @@ const environmentSchema = z.object({
     emptyStringToUndefined,
     z.coerce.number().int().min(1).max(65_535).default(8001)
   ),
+  STATEMENTTIMEOUT: timeoutWithDefault(10_000),
+  CONNECTIONTIMEOUT: timeoutWithDefault(5_000),
+  QUERYTIMEOUT: timeoutWithDefault(15_000),
 });
 
 export interface EnvironmentConfig {
@@ -99,6 +108,9 @@ export interface EnvironmentConfig {
   databasePoolMax: number;
   snapshotDefaultTtlDays?: number;
   port: number;
+  connectionTimeout: number;
+  statementTimeout: number;
+  queryTimeout: number;
 }
 
 export const readEnvironment = (
@@ -123,6 +135,9 @@ export const readEnvironment = (
     databasePoolMax: result.data.DATABASE_POOL_MAX,
     snapshotDefaultTtlDays: result.data.SNAPSHOT_DEFAULT_TTL_DAYS,
     port: result.data.PORT,
+    connectionTimeout: result.data.CONNECTIONTIMEOUT,
+    statementTimeout: result.data.STATEMENTTIMEOUT,
+    queryTimeout: result.data.QUERYTIMEOUT
   });
 };
 

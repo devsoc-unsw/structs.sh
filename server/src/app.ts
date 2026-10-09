@@ -1,5 +1,4 @@
 import cors from 'cors';
-import path from 'node:path';
 import express, {
   type NextFunction,
   type Request,
@@ -55,15 +54,6 @@ export const createApp = () => {
       limit: JSON_BODY_LIMIT_BYTES,
     })
   );
-
-  app.get('/openapi.yaml', (_request, response, next) => {
-    response.type('application/yaml').sendFile(
-      path.resolve(__dirname, '../openapi.yaml'),
-      (error) => {
-        if (error) next(error);
-      }
-    );
-  });
 
   app.use(snapshotRouter);
   app.use(workspaceRouter);

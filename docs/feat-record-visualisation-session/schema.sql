@@ -1,5 +1,5 @@
--- Resulting schema after both snapshot migrations; documentation only.
--- Apply server/migrations with node-pg-migrate, not this file to an existing DB.
+-- Initial version-1 schema reference; no migration history is required.
+-- For a new empty database only; this is not an upgrade script for existing DBs.
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 

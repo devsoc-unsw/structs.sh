@@ -1,0 +1,1 @@
+0 0 * * * cd /app && /usr/local/bin/node -r ts-node/register src/workers/cleanupExpiredSnapshots.ts >> /proc/1/fd/1 2>> /proc/1/fd/2

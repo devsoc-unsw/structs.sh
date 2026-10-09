@@ -16,8 +16,8 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql
-  
-  # migration initialises data schemas in postgresql
+
+  # Applies migration files when present; otherwise exits successfully without DB access.
   migrate:
     build:
       context: server
@@ -31,7 +31,7 @@ services:
   server:
     build:
       context: server
-    environment: 
+    environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
       PUBLIC_APP_ORIGIN: http://localhost:3000
       PORT: 8001
@@ -45,6 +45,25 @@ services:
     volumes:
       - ./server/user-files:/app/user-files
 
+  snapshot-cleaner:
+    build:
+      context: server
+    command: ["crond", "-f", "-d", "8"]
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      # The shared backend configuration validates this even for workers.
+      PUBLIC_APP_ORIGIN: http://localhost:3000
+      SNAPSHOT_CLEANUP_GRACE_HOURS: ${SNAPSHOT_CLEANUP_GRACE_HOURS:-24}
+      SNAPSHOT_CLEANUP_BATCH_SIZE: ${SNAPSHOT_CLEANUP_BATCH_SIZE:-500}
+      SNAPSHOT_CLEANUP_MAX_BATCHES: ${SNAPSHOT_CLEANUP_MAX_BATCHES:-100}
+      TZ: UTC
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
   client:
     build:
       context: client
@@ -57,7 +76,7 @@ services:
     volumes:
       - ./client/src:/app/src
       - vite-cache:/app/node_modules/.vite
-      
+
   debugger:
     build:
       context: debugger

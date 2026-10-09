@@ -32,4 +32,5 @@ markdown_extensions:
 nav:
 - Home: index.md
 - Contributing: contributing.md
+- Features: features.md
 - Explanations (wip): explanations.md
