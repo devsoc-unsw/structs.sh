@@ -1,4 +1,4 @@
-# Features reference
+# Features
 
 Reference documentation for the snapshot API, JSON models, and PostgreSQL storage used by the preset visualiser. Use these pages to build frontend integrations or maintain the backend.
 
