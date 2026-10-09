@@ -696,3 +696,125 @@ Build the cleaner image **before** testing it. The cleanup integration tests use
 From `server/`, run `npm test`, `npm run tsc`, and `npm run lint`. For local SQL tests, point `TEST_DATABASE_URL` at a disposable PostgreSQL database and run `npm run test:integration`.
 
 Before production deployment, configure least-privilege roles, backups, and restore procedures. Monitor connection/query failures, cleanup errors, and repeated batch-limit reports. Do not log credentials, connection URIs, or complete snapshot payloads. Restoring a database must preserve existing share IDs.
+
+<!-- Features-only enhancement: retain the theme and heading links, folding
+     only nested table-of-contents entries. Without JavaScript the TOC stays usable. -->
+<style>
+.features-toc-branch { position: relative; }
+.features-toc-branch > .md-nav__link { padding-right: 1.25rem; }
+.features-toc-branch > nav[hidden] { display: none; }
+.features-toc-toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.features-toc-toggle::before { content: "›"; display: inline-block; }
+.features-toc-toggle[aria-expanded="true"]::before { transform: rotate(90deg); }
+.features-toc-toggle:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+.features-toc-link.md-nav__link--active:not(.features-toc-current) { color: inherit; }
+.features-toc-link.features-toc-current { color: var(--md-primary-fg-color); }
+</style>
+
+<script>
+(() => {
+  const foldFeaturesToc = () => {
+    const branches = new Map();
+    const links = [...document.querySelectorAll('.md-nav--secondary a.md-nav__link[href^="#"]')];
+    let index = 0;
+    document.querySelectorAll('.md-nav--secondary .md-nav__item').forEach((item) => {
+      const link = item.querySelector(':scope > a.md-nav__link');
+      const children = item.querySelector(':scope > nav');
+      if (!link || !children || item.classList.contains('features-toc-branch')) return;
+
+      const title = link.textContent.trim();
+      children.id = `features-toc-group-${index++}`;
+      children.hidden = true;
+      item.classList.add('features-toc-branch');
+
+      const toggle = document.createElement('button');
+      toggle.type = 'button';
+      toggle.className = 'features-toc-toggle';
+      toggle.setAttribute('aria-controls', children.id);
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', `Expand ${title}`);
+      const setExpanded = (expanded) => {
+        children.hidden = !expanded;
+        toggle.setAttribute('aria-expanded', String(expanded));
+        toggle.setAttribute('aria-label', `${expanded ? 'Collapse' : 'Expand'} ${title}`);
+      };
+      branches.set(item, setExpanded);
+      toggle.addEventListener('click', () => setExpanded(children.hidden));
+      item.insertBefore(toggle, link);
+    });
+
+    const targetOf = (link) => document.getElementById(decodeURIComponent(link.hash.slice(1)));
+    const headings = [...new Set(links.map(targetOf).filter(Boolean))];
+    let activeHeading;
+    const activate = (heading, expandSelf = false) => {
+      const changed = activeHeading !== heading;
+      activeHeading = heading;
+      links.forEach((link) => {
+        const current = Boolean(heading) && targetOf(link) === heading;
+        link.classList.toggle('features-toc-current', current);
+        if (current) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+        if (!current || (!changed && !expandSelf)) return;
+
+        // Reveal the active heading's ancestors, but allow manual folding
+        // until the reader moves to a different section.
+        let item = link.parentElement;
+        if (expandSelf) branches.get(item)?.(true);
+        while ((item = item.parentElement?.closest('.md-nav__item'))) {
+          branches.get(item)?.(true);
+        }
+      });
+    };
+    links.forEach((link) => {
+      link.classList.add('features-toc-link');
+      link.addEventListener('click', () => activate(targetOf(link), true));
+    });
+
+    const syncHash = () => {
+      const link = links.find((entry) => entry.hash === window.location.hash);
+      if (link) activate(targetOf(link), true);
+    };
+    const syncScroll = () => {
+      const header = document.querySelector('.md-header');
+      const top = Math.max(0, header?.getBoundingClientRect().bottom ?? 0) + 24;
+      let current;
+      for (const heading of headings) {
+        if (heading.getBoundingClientRect().top > top) break;
+        current = heading;
+      }
+      activate(current);
+    };
+    let scheduled = false;
+    const scheduleScroll = () => {
+      if (scheduled) return;
+      scheduled = true;
+      requestAnimationFrame(() => {
+        scheduled = false;
+        syncScroll();
+      });
+    };
+    window.addEventListener('hashchange', syncHash);
+    window.addEventListener('scroll', scheduleScroll, { passive: true });
+    window.addEventListener('resize', scheduleScroll);
+    syncScroll();
+    syncHash();
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', foldFeaturesToc, { once: true });
+  } else {
+    foldFeaturesToc();
+  }
+})();
+</script>
