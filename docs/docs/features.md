@@ -26,8 +26,6 @@ Local API origin: `http://localhost:8001`. Use the configured deployment origin 
 
     Only Linked Lists, schema version `1`, and renderer `preset-visualiser-v1` are supported. There is no snapshot list, edit, delete, owner-management, or playback-position endpoint. The share page `/s/{shareId}` belongs to the frontend, not the API.
 
-This reference covers the snapshot feature, not debugger or filesystem-workspace APIs. It uses the parameter tables, model sections, examples, and source panels of the [FastAPI reference](https://fastapi.tiangolo.com/reference/), adapted to this Express/TypeScript backend. It is a documentation site, not an interactive Swagger console.
-
 
 ## Create snapshot
 
@@ -440,98 +438,18 @@ The complete initial SQL reference is included below.
 
 !!! warning "Initial provisioning is separate from migrations"
 
-    Version 1 intentionally has no migration files. An empty migration directory is a successful no-op, not database creation. Provision the table and view before serving API requests. The SQL below targets a new empty database; do not apply it blindly to an existing database.
+    Version 1 intentionally has no migration files. Compose mounts `server/schema/initial.sql` into PostgreSQL's initialization directory, so a **fresh database volume** gets the schema before PostgreSQL becomes ready. An empty migration directory remains a successful no-op.
+
+    PostgreSQL does not rerun initialization scripts for existing volumes. For an existing database with no snapshot table or view, provision it once using the command below. Do not run it against an already provisioned database or delete a populated volume to force initialization.
+
+    ```sh
+    docker compose exec -T db sh -c 'psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB"' < server/schema/initial.sql
+    ```
 
 ??? info "Source — initial SQL schema"
 
     ```sql
-    -- Initial version-1 schema reference; no migration history is required.
-    -- For a new empty database only; this is not an upgrade script for existing DBs.
-
-    CREATE EXTENSION IF NOT EXISTS pgcrypto;
-
-    CREATE TABLE visualisation_snapshots (
-        id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-        share_id uuid NOT NULL UNIQUE DEFAULT gen_random_uuid(),
-
-        schema_version smallint NOT NULL DEFAULT 1
-            CHECK (schema_version > 0),
-        renderer_version text NOT NULL
-            CHECK (char_length(renderer_version) BETWEEN 1 AND 100),
-
-        title text
-            CHECK (title IS NULL OR char_length(title) BETWEEN 1 AND 120),
-        structure_type text NOT NULL
-            CHECK (structure_type IN (
-                'linked-list',
-                'binary-search-tree',
-                'avl-tree',
-                'sorting'
-            )),
-        structure_state jsonb NOT NULL
-            CHECK (jsonb_typeof(structure_state) = 'object'),
-
-        operation_history jsonb NOT NULL,
-
-        -- Opaque identifier from the application's auth boundary. It is optional
-        -- for anonymous creation and is never returned by the public read API.
-        owner_subject text,
-
-        created_at timestamptz NOT NULL DEFAULT now(),
-        expires_at timestamptz,
-        revoked_at timestamptz,
-
-        CONSTRAINT visualisation_snapshots_history_shape_check CHECK (
-            (
-                jsonb_typeof(operation_history) = 'object'
-                AND jsonb_typeof(operation_history -> 'initialState') = 'object'
-                AND jsonb_typeof(operation_history -> 'initialState' -> 'values') = 'array'
-                AND jsonb_typeof(operation_history -> 'operations') = 'array'
-                AND operation_history - 'initialState' - 'operations' = '{}'::jsonb
-            ) IS TRUE
-        ),
-        CONSTRAINT visualisation_snapshots_history_length_check CHECK (
-            CASE WHEN jsonb_typeof(operation_history -> 'operations') = 'array'
-                THEN jsonb_array_length(operation_history -> 'operations') <= 150
-                ELSE FALSE
-            END
-        ),
-        CHECK (expires_at IS NULL OR expires_at > created_at)
-    );
-
-    -- Supports owner-facing listing without slowing down public reads.
-    CREATE INDEX visualisation_snapshots_owner_created_idx
-        ON visualisation_snapshots (owner_subject, created_at DESC)
-        WHERE owner_subject IS NOT NULL;
-
-    -- Supports scheduled cleanup of expired rows.
-    CREATE INDEX visualisation_snapshots_expires_idx
-        ON visualisation_snapshots (expires_at)
-        WHERE expires_at IS NOT NULL;
-
-    -- Public reads should use this shape so internal IDs and owner metadata cannot
-    -- be selected accidentally by the route.
-    CREATE VIEW public_visualisation_snapshots AS
-    SELECT
-        share_id,
-        schema_version,
-        renderer_version,
-        title,
-        structure_type,
-        structure_state,
-        operation_history,
-        created_at,
-        expires_at
-    FROM visualisation_snapshots
-    WHERE revoked_at IS NULL
-      AND (expires_at IS NULL OR expires_at > now());
-
-    COMMENT ON TABLE visualisation_snapshots IS
-        'Immutable replay recipes for homepage preset visualisers; excludes debugger state.';
-    COMMENT ON COLUMN visualisation_snapshots.structure_state IS
-        'Semantic structure state at capture time, using the versioned snapshot contract.';
-    COMMENT ON COLUMN visualisation_snapshots.operation_history IS
-        'Initial semantic state and up to 150 ordered operations; detailed validation and replay consistency are enforced by the API.';
+    {% include-markdown "../../server/schema/initial.sql" comments=false %}
     ```
 
 
@@ -646,7 +564,7 @@ Type checking skips if no TypeScript migrations exist. Otherwise it uses the mig
 
 !!! warning "No migrations does not mean no schema"
 
-    Provision the [initial database schema](#postgresql-schema) separately. Backend startup currently checks database connectivity, not table/view existence. Review and test future upgrades before deploying code that requires them.
+    Compose provisions the [initial database schema](#postgresql-schema) on fresh volumes; existing databases require the documented one-time provisioning step. Backend startup currently checks database connectivity, not table/view existence. Review and test future upgrades before deploying code that requires them.
 
 ### Expiration and revocation
 
@@ -671,6 +589,8 @@ Non-expiring rows are never selected. Remaining or locked rows wait for a later 
 ### Container verification
 
 From the repository root:
+
+Set both `POSTGRES_PASSWORD` (raw database password) and `POSTGRES_PASSWORD_URLENCODED` (the same password percent-encoded for URL userinfo) in `.env`. For example, raw `demo#/?` becomes `demo%23%2F%3F`. The encoded variable is required for all three backend services; do not change the raw password on `db`. Keep both values secret. Use URL-safe usernames and database names with this Compose configuration.
 
 ```sh
 docker compose up -d --wait db

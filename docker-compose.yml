@@ -16,6 +16,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql
+      - ./server/schema/initial.sql:/docker-entrypoint-initdb.d/001-snapshots.sql:ro
 
   # Applies migration files when present; otherwise exits successfully without DB access.
   migrate:
@@ -23,7 +24,7 @@ services:
       context: server
     command: npm run migrate:up
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD_URLENCODED:?Set the URL-encoded PostgreSQL password}@db:5432/${POSTGRES_DB}
     depends_on:
       db:
         condition: service_healthy
@@ -32,7 +33,7 @@ services:
     build:
       context: server
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD_URLENCODED:?Set the URL-encoded PostgreSQL password}@db:5432/${POSTGRES_DB}
       PUBLIC_APP_ORIGIN: http://localhost:3000
       PORT: 8001
     depends_on:
@@ -50,7 +51,7 @@ services:
       context: server
     command: ["crond", "-f", "-d", "8"]
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD_URLENCODED:?Set the URL-encoded PostgreSQL password}@db:5432/${POSTGRES_DB}
       # The shared backend configuration validates this even for workers.
       PUBLIC_APP_ORIGIN: http://localhost:3000
       SNAPSHOT_CLEANUP_GRACE_HOURS: ${SNAPSHOT_CLEANUP_GRACE_HOURS:-24}
