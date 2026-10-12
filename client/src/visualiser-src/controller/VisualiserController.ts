@@ -2,12 +2,36 @@ import { Timeline, Runner } from '@svgdotjs/svg.js';
 import GraphicalDataStructure from '@/visualiser-src/common/GraphicalDataStructure';
 import GraphicalDataStructureFactory from '@/visualiser-src/common/GraphicalDataStructureFactory';
 import { Documentation } from '@/visualiser-src/common/typedefs';
+import {
+  type LinkedListHistoryV1,
+  SNAPSHOT_SCHEMA_VERSION,
+  SUPPORTED_RENDERER_VERSION,
+  type LinkedListAlgorithmV1,
+  type SnapshotV1,
+} from '@/features/snapshots/snapshotTypes';
+import {
+  linkedListAlgorithmSchema,
+  linkedListStateSchema,
+  snapshotV1Schema,
+} from '@/features/snapshots/snapshotDecoder';
+import { MAX_HISTORY_OPERATIONS, MAX_LINKED_LIST_VALUES } from '@/features/snapshots/snapshotTypes';
+import { topicToSnapshotStructureType } from '@/features/snapshots/snapshotTopicMap';
 import { defaultSpeed } from '../common/constants';
 import AnimationProducer from '../common/AnimationProducer';
 
 interface TimeEvent extends Event {
   detail?: number;
 }
+
+type OperationArgument = number | number[];
+
+type DataStructureOperation = (...args: OperationArgument[]) => AnimationProducer;
+
+type OperationCapableDataStructure = GraphicalDataStructure &
+  Partial<Record<string, DataStructureOperation>>;
+
+const isLinkedListOperation = (command: string): command is LinkedListAlgorithmV1['name'] =>
+  ['append', 'prepend', 'insert', 'search', 'delete'].includes(command);
 
 class VisualiserController {
   private dataStructure?: GraphicalDataStructure;
@@ -23,6 +47,18 @@ class VisualiserController {
   private speed: number = 1;
 
   private isStepMode: boolean = false;
+
+  private history: LinkedListHistoryV1 = {
+    initialState: { values: [] },
+    operations: [],
+  };
+
+  private startNewHistory(): void {
+    this.history = {
+      initialState: { values: [...this.data] },
+      operations: [],
+    };
+  }
 
   public constructor(topicTitle?: string) {
     this.setSpeed(defaultSpeed);
@@ -43,8 +79,12 @@ class VisualiserController {
 
   // Set data structure to loaded data
   public loadData(data: number[]): void {
+    if (topicToSnapshotStructureType(this.topicTitle ?? '') === 'linked-list') {
+      linkedListStateSchema.parse({ values: data });
+    }
     this.resetDataStructure();
-    this.dataStructure?.load(data);
+    this.dataStructure?.load([...data]);
+    this.startNewHistory();
   }
 
   public getCurrentTimeline(): Timeline {
@@ -139,18 +179,23 @@ class VisualiserController {
   }
 
   public applyTopicTitle(topicTitle: string) {
-    this.topicTitle = topicTitle;
-    this.dataStructure = GraphicalDataStructureFactory.create(topicTitle);
     this.currentTimeline.finish();
     this.currentTimeline.time(0);
+    this.topicTitle = topicTitle;
+    this.dataStructure = GraphicalDataStructureFactory.create(topicTitle);
     this.currentTimeline = new Timeline().persist(true);
+    this.startNewHistory();
   }
 
   private getErrorMessageIfInvalidInput(command: string, args: string[]): string {
     if (!this.dataStructure) {
       return 'Invalid data structure';
     }
-    const expectedArgs = this.dataStructure.documentation[command].args;
+    const { documentation } = this.dataStructure;
+    if (!Object.prototype.hasOwnProperty.call(documentation, command)) {
+      return `Unsupported operation: ${command}`;
+    }
+    const expectedArgs = documentation[command].args;
     if (args.length !== expectedArgs.length) {
       return `Invalid arguments. Please provide ${args.join(', ')}`;
     }
@@ -189,25 +234,90 @@ class VisualiserController {
     ...args: string[]
   ): string {
     const errMessage = this.getErrorMessageIfInvalidInput(command, args);
+
     if (errMessage !== '') {
       return errMessage;
     }
 
+    if (!this.dataStructure) {
+      return 'Invalid data structure';
+    }
+
+    const argumentNames = this.dataStructure.documentation[command].args;
+    const parsedArgs = args.map((argument, index) => {
+      if (argumentNames[index].endsWith('s')) {
+        return argument
+          .split(/,| /g)
+          .filter((value) => value !== '')
+          .map(Number);
+      }
+      return Number(argument);
+    });
+    const operation = (this.dataStructure as OperationCapableDataStructure)[command];
+    if (typeof operation !== 'function') {
+      return `Unsupported operation: ${command}`;
+    }
+
+    let captured: LinkedListAlgorithmV1 | undefined;
+    if (topicToSnapshotStructureType(this.topicTitle ?? '') === 'linked-list') {
+      if (!isLinkedListOperation(command)) {
+        return `Unsupported history operation: ${command}`;
+      }
+      if (this.history.operations.length >= MAX_HISTORY_OPERATIONS) {
+        return `History is limited to ${MAX_HISTORY_OPERATIONS} operations. Start a new history to continue.`;
+      }
+      const growsList = command === 'append' || command === 'prepend' || command === 'insert';
+      if (growsList && this.data.length >= MAX_LINKED_LIST_VALUES) {
+        return `Snapshots support at most ${MAX_LINKED_LIST_VALUES} list values.`;
+      }
+      const result = linkedListAlgorithmSchema.safeParse({
+        name: command,
+        arguments: Object.fromEntries(
+          argumentNames.map((name, index) => [name, parsedArgs[index]])
+        ),
+      });
+      if (!result.success) {
+        return 'Invalid Linked List operation arguments.';
+      }
+      captured = result.data;
+    }
+
     this.finish();
-    // @ts-ignore
-    const animationProducer: AnimationProducer = this.dataStructure[command](
-      ...args.map((arg, idx) => {
-        if (this.dataStructure?.documentation[command].args[idx].endsWith('s')) {
-          return arg
-            .split(/,| /g)
-            .filter((str) => str !== '')
-            .map((el) => Number(el));
-        }
-        return Number(arg);
-      })
-    );
+    const animationProducer = operation.call(this.dataStructure, ...parsedArgs);
+    // Record only after successful execution; no-op operations still count.
+    if (captured) {
+      this.history.operations.push(captured);
+    }
+
     this.constructTimeline(animationProducer, updateSlider);
+
     return '';
+  }
+
+  public buildSnapshotDraft(title?: string): SnapshotV1 {
+    const structureType = topicToSnapshotStructureType(this.topicTitle ?? '');
+
+    if (structureType === null) {
+      throw new Error('Snapshots are only supported for Linked Lists.');
+    }
+
+    const normalisedTitle = title?.trim();
+
+    return snapshotV1Schema.parse({
+      schemaVersion: SNAPSHOT_SCHEMA_VERSION,
+      rendererVersion: SUPPORTED_RENDERER_VERSION,
+
+      ...(normalisedTitle ? { title: normalisedTitle } : {}),
+
+      structure: {
+        type: structureType,
+        state: {
+          values: [...this.data],
+        },
+      },
+
+      history: structuredClone(this.history),
+    });
   }
 
   public get documentation(): Documentation {
@@ -215,17 +325,19 @@ class VisualiserController {
   }
 
   public resetDataStructure(): void {
+    this.currentTimeline.finish();
+    this.currentTimeline.time(0);
     if (this.topicTitle) {
       this.dataStructure = GraphicalDataStructureFactory.create(this.topicTitle);
     }
-    this.currentTimeline.finish();
-    this.currentTimeline.time(0);
     this.currentTimeline = new Timeline().persist(true);
+    this.startNewHistory();
   }
 
   public generateDataStructure(): void {
     this.resetDataStructure();
     this.dataStructure?.generate();
+    this.startNewHistory();
   }
 
   private computePrevTimestamp(): number {

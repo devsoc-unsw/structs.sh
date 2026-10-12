@@ -1,0 +1,86 @@
+import { z } from 'zod';
+
+import {
+  SNAPSHOT_SCHEMA_VERSION,
+  SUPPORTED_RENDERER_VERSION,
+  MAX_HISTORY_OPERATIONS,
+  MAX_LINKED_LIST_VALUES,
+} from './snapshotTypes';
+
+import type { CreateSnapshotResponse, PublicSnapshotV1 } from './snapshotTypes';
+
+export const createSnapshotResponseSchema = z.strictObject({
+  shareId: z.uuid(),
+  shareUrl: z.url(),
+  createdAt: z.iso.datetime(),
+  expiresAt: z.iso.datetime().nullable(),
+});
+
+export const decodeCreateSnapshotResponse = (value: unknown): CreateSnapshotResponse =>
+  createSnapshotResponseSchema.parse(value);
+
+export const linkedListStateSchema = z.strictObject({
+  values: z.array(z.number().int().min(0).max(99)).max(MAX_LINKED_LIST_VALUES),
+});
+
+export const linkedListAlgorithmSchema = z.discriminatedUnion('name', [
+  z.strictObject({
+    name: z.literal('append'),
+    arguments: z.strictObject({
+      value: z.number().int().min(0).max(99),
+    }),
+  }),
+
+  z.strictObject({
+    name: z.literal('prepend'),
+    arguments: z.strictObject({
+      value: z.number().int().min(0).max(99),
+    }),
+  }),
+
+  z.strictObject({
+    name: z.literal('insert'),
+    arguments: z.strictObject({
+      value: z.number().int().min(0).max(99),
+      index: z.number().int().nonnegative(),
+    }),
+  }),
+
+  z.strictObject({
+    name: z.literal('search'),
+    arguments: z.strictObject({
+      value: z.number().int().min(0).max(99),
+    }),
+  }),
+
+  z.strictObject({
+    name: z.literal('delete'),
+    arguments: z.strictObject({
+      index: z.number().int().nonnegative(),
+    }),
+  }),
+]);
+
+export const snapshotV1Schema = z.strictObject({
+  schemaVersion: z.literal(SNAPSHOT_SCHEMA_VERSION),
+  rendererVersion: z.literal(SUPPORTED_RENDERER_VERSION),
+  title: z.string().trim().min(1).max(120).optional(),
+  structure: z.strictObject({
+    type: z.literal('linked-list'),
+    state: linkedListStateSchema,
+  }),
+  history: z.strictObject({
+    initialState: linkedListStateSchema,
+    operations: z.array(linkedListAlgorithmSchema).max(MAX_HISTORY_OPERATIONS),
+  }),
+});
+
+export const publicSnapshotV1Schema = z.strictObject({
+  ...snapshotV1Schema.shape,
+  shareId: z.uuid(),
+  createdAt: z.iso.datetime(),
+  expiresAt: z.iso.datetime().nullable(),
+});
+
+export const decodePublicSnapshot = (value: unknown): PublicSnapshotV1 =>
+  publicSnapshotV1Schema.parse(value);
