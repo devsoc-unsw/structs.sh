@@ -17,3 +17,28 @@ describe('snapshotTopicMap', () => {
     expect(snapshotStructureTypeToTopic('linked-list')).toBe(DataStructure.LINKED_LISTS);
   });
 });
+
+describe('snapshot topic boundaries', () => {
+  it.each(['linked lists', 'LINKED LISTS', 'LiNkEd LiStS'])(
+    'matches supported topic case-insensitively: %s',
+    (topic) => {
+      expect(topicToSnapshotStructureType(topic)).toBe('linked-list');
+    }
+  );
+
+  it.each([
+    '',
+    'linked-list',
+    ' Linked Lists ',
+    DataStructure.BINARY_SEARCH_TREE,
+    DataStructure.SORTING,
+  ])('rejects unsupported topic %j', (topic) => {
+    expect(topicToSnapshotStructureType(topic)).toBeNull();
+  });
+
+  it('returns null for an unsupported structure type received at runtime', () => {
+    expect(
+      snapshotStructureTypeToTopic('tree' as Parameters<typeof snapshotStructureTypeToTopic>[0])
+    ).toBeNull();
+  });
+});
