@@ -564,7 +564,7 @@ Type checking skips if no TypeScript migrations exist. Otherwise it uses the mig
 
 !!! warning "No migrations does not mean no schema"
 
-    Compose provisions the [initial database schema](#postgresql-schema) on fresh volumes; existing databases require the documented one-time provisioning step. Backend startup currently checks database connectivity, not table/view existence. Review and test future upgrades before deploying code that requires them.
+    Compose provisions the [initial database schema](#postgresql-schema) on fresh volumes; only existing databases with no snapshot table or view require the documented one-time provisioning step. Backend startup currently checks database connectivity, not table/view existence. Review and test future upgrades before deploying code that requires them.
 
 ### Expiration and revocation
 
