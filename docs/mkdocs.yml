@@ -22,6 +22,7 @@ theme:
 plugins:
 - search
 - macros
+- include-markdown
 
 markdown_extensions:
 - admonition
