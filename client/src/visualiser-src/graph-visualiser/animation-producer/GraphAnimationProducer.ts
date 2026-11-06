@@ -1,8 +1,7 @@
 import AnimationProducer from '@/visualiser-src/common/AnimationProducer';
-import GraphicalGraphNode from '../data-structure/GraphicalGraphNode';
-import { Point } from '../util/util';
-import { getEdgePath } from '../util/util';
 import { Path } from '@svgdotjs/svg.js';
+import GraphicalGraphNode from '../data-structure/GraphicalGraphNode';
+import { Point, getEdgePath } from '../util/util';
 import { NODE_FILL, EDGE_STROKE } from '../util/constants';
 
 // Base class for SVG.Runners animating graph operations.
@@ -23,10 +22,9 @@ export default class GraphAnimationProducer extends AnimationProducer {
    * @param positions -- hashmap of vertex index to specified position (x, y)
    */
   public applyLayout(nodes: GraphicalGraphNode[], positions: Map<number, Point>): void {
-    for (const node of nodes) {
-      // node contains vertex number, placed flag and 2 drawings: boxTarget the SVG circle and numberTarget the SVG text
+    nodes.forEach((node) => {
       const targetPosition = positions.get(node.index)!;
-      if (node.placed == false) {
+      if (node.placed === false) {
         // Move centres to specified position for both circle and label instantly
         // Queue opacity immediately 0 to 1 on both
         node.boxTarget.center(targetPosition.x, targetPosition.y);
@@ -36,10 +34,14 @@ export default class GraphAnimationProducer extends AnimationProducer {
         node.placed = true;
       } else {
         // Otherwise queue animated center(x, y) glides on both
-        this.addSequenceAnimation(node.boxTarget.animate().center(targetPosition.x, targetPosition.y));
-        this.addSequenceAnimation(node.numberTarget.animate().center(targetPosition.x, targetPosition.y));
+        this.addSequenceAnimation(
+          node.boxTarget.animate().center(targetPosition.x, targetPosition.y)
+        );
+        this.addSequenceAnimation(
+          node.numberTarget.animate().center(targetPosition.x, targetPosition.y)
+        );
       }
-    }
+    });
   }
 
   /**
@@ -69,9 +71,9 @@ export default class GraphAnimationProducer extends AnimationProducer {
    * @param edges -- array of SVG drawings of the edges
    */
   public fadeOutEdges(edges: Path[]): void {
-    for (const edge of edges) {
+    edges.forEach((edge) => {
       this.addSequenceAnimation(edge.animate().attr({ opacity: 0 }));
-    }
+    });
   }
 
   /**
@@ -80,11 +82,12 @@ export default class GraphAnimationProducer extends AnimationProducer {
    * @param edges -- array of SVG drawings of the edges
    */
   public resetColours(nodes: GraphicalGraphNode[], edges: Path[]): void {
-    for (const node of nodes) {
+    nodes.forEach((node) => {
       this.addSequenceAnimation(node.boxTarget.animate().attr({ fill: NODE_FILL }));
-    }
-    for (const edge of edges) {
+    });
+
+    edges.forEach((edge) => {
       this.addSequenceAnimation(edge.animate().attr({ stroke: EDGE_STROKE }));
-    }
+    });
   }
 }
