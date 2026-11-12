@@ -8,15 +8,6 @@ import { NODE_FILL, EDGE_STROKE } from '../util/constants';
 // Shared node/edge animations (layout, fade, highlight) live here.
 export default class GraphAnimationProducer extends AnimationProducer {
   /**
-   * highlightNode queues an animated fill change on the node's circle.
-   * @param node -- the node to recolour
-   * @param colour -- the new fill colour
-   */
-  public highlightNode(node: GraphicalGraphNode, colour: string): void {
-    this.addSequenceAnimation(node.boxTarget.animate().attr({ fill: colour }));
-  }
-
-  /**
    * applyLayout: moves every vertex to its spot on the circle.
    * @param nodes -- the nodes to layout
    * @param positions -- hashmap of vertex index to specified position (x, y)
@@ -45,7 +36,7 @@ export default class GraphAnimationProducer extends AnimationProducer {
   }
 
   /**
-   * drawEdge: set the path's shape instantly, since it's invisible anyway, then queue opacity 0 to 1
+   * drawEdge: set the path's shape instantly, then queue opacity 0 to 1 (line just created)
    * @param edge -- SVG drawing of the edge
    * @param from -- Coordinates of the centre of the start node
    * @param to -- Coordinates of the centre of the end node
@@ -54,6 +45,34 @@ export default class GraphAnimationProducer extends AnimationProducer {
     // getEdgePath works out the shape string for the invisible edge, which we use to plot the path
     edge.plot(getEdgePath(from, to));
     this.addSequenceAnimation(edge.animate().attr({ opacity: 1 }));
+  }
+
+  /**
+   * moveEdge: queue an animated reshape to the new path (line alrdy visible)
+   * @param edge -- SVG drawing of the edge
+   * @param from -- Coordinates of the centre of the start node
+   * @param to -- Coordinates of the centre of the end node
+   */
+  public moveEdge(edge: Path, from: Point, to: Point): void {
+    this.addSequenceAnimation(edge.animate().plot(getEdgePath(from, to) as any));
+  }
+
+  /**
+   * highlightNode queues an animated fill change on the node's circle.
+   * @param node -- the node to recolour
+   * @param colour -- the new fill colour
+   */
+  public highlightNode(node: GraphicalGraphNode, colour: string): void {
+    this.addSequenceAnimation(node.boxTarget.animate().attr({ fill: colour }));
+  }
+
+  /**
+   * highlightEdge: queue an animated stroke change
+   * @param edge -- SVG drawing of the edge
+   * @param colour -- the new stroke colour
+   */
+  public highlightEdge(edge: Path, colour: string): void {
+    this.addSequenceAnimation(edge.animate().attr({ stroke: colour }));
   }
 
   /**
