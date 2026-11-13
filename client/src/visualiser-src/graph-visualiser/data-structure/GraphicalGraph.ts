@@ -8,9 +8,10 @@ import Graph from './Graph';
 import GraphicalGraphNode from './GraphicalGraphNode';
 import GraphAnimationProducer from '../animation-producer/GraphAnimationProducer';
 import GraphInsertAnimationProducer from '../animation-producer/GraphInsertAnimationProducer';
+import GraphDeleteAnimationProducer from '../animation-producer/GraphDeleteAnimationProducer';
 import GraphAddEdgeAnimationProducer from '../animation-producer/GraphAddEdgeAnimationProducer';
 import { Point, circularPositions } from '../util/util';
-import { EDGE_STROKE, INSERT_COLOUR, pathAttributes } from '../util/constants';
+import { DELETE_COLOUR, EDGE_STROKE, INSERT_COLOUR, pathAttributes } from '../util/constants';
 
 /**
  * The graph the app talks to.
@@ -22,6 +23,10 @@ export default class GraphicalGraph extends GraphicalDataStructure {
     insert: {
       args: ['vertex'],
       description: 'Insert a vertex with the given number.',
+    },
+    delete: {
+      args: ['vertex'],
+      description: 'Delete a vertex and every edge touching it.',
     },
     addEdge: {
       args: ['nodeA', 'nodeB'],
@@ -72,6 +77,35 @@ export default class GraphicalGraph extends GraphicalDataStructure {
   }
 
   /**
+   * Looks up the SVG drawing of a vertex.
+   * @param vertex -- the vertex number
+   * @returns the vertex's drawing
+   * @throws Error if the vertex has no drawing
+   */
+  private nodeAt(vertex: number): GraphicalGraphNode {
+    const node = this.svgNodes.get(vertex);
+    if (node === undefined) {
+      throw new Error(`No drawing for vertex ${vertex}`);
+    }
+    return node;
+  }
+
+  /**
+   * Looks up the SVG drawing of an edge.
+   * @param a -- one end of the edge
+   * @param b -- the other end of the edge
+   * @returns the edge's drawing
+   * @throws Error if the edge has no drawing
+   */
+  private edgeBetween(a: number, b: number): Path {
+    const edge = this.svgEdges.get(this.edgeKey(a, b));
+    if (edge === undefined) {
+      throw new Error(`No drawing for edge ${a}-${b}`);
+    }
+    return edge;
+  }
+
+  /**
    * Re-spaces the vertices on the circle and slides every edge to follow them.
    * Vertices and edges move together in one animation step.
    * @param producer -- the producer to queue the animations on
@@ -84,8 +118,7 @@ export default class GraphicalGraph extends GraphicalDataStructure {
     producer.highlightCode(line);
     producer.applyLayout(Array.from(this.svgNodes.values()), this.positions);
     this.model.edges.forEach(([a, b]) => {
-      const edge = this.svgEdges.get(this.edgeKey(a, b))!;
-      producer.moveEdge(edge, this.point(a), this.point(b));
+      producer.moveEdge(this.edgeBetween(a, b), this.point(a), this.point(b));
     });
     producer.finishSequence();
   }
@@ -113,6 +146,42 @@ export default class GraphicalGraph extends GraphicalDataStructure {
       Array.from(this.svgNodes.values()),
       Array.from(this.svgEdges.values())
     );
+    return producer;
+  }
+
+  /**
+   * Deletes a vertex and every edge touching it, then re-spaces the circle.
+   * @param vertex -- the vertex number
+   * @returns the animations. Empty if the vertex doesn't exist.
+   */
+  public delete(vertex: number): AnimationProducer {
+    const producer = new GraphDeleteAnimationProducer();
+    producer.renderDeleteCode();
+
+    if (!this.model.has(vertex)) return producer;
+
+    // grab the edges now, the model forgets them once the vertex is deleted
+    const node = this.nodeAt(vertex);
+    const edgesToFade: Path[] = [];
+    const edgeKeysToForget: string[] = [];
+    this.model.neighbours(vertex).forEach((neighbour) => {
+      edgesToFade.push(this.edgeBetween(vertex, neighbour));
+      edgeKeysToForget.push(this.edgeKey(vertex, neighbour));
+    });
+
+    // queue the animations first, nothing plays until the whole list is built
+    producer.doAnimationAndHighlight(2, producer.highlightNode, node, DELETE_COLOUR);
+    if (edgesToFade.length > 0) {
+      producer.doAnimationAndHighlight(3, producer.fadeOutEdges, edgesToFade);
+    }
+    producer.doAnimationAndHighlight(5, producer.fadeOutNode, node);
+
+    // now change the data. The faded drawings stay on the canvas for stepping backwards
+    this.model.delete(vertex);
+    this.svgNodes.delete(vertex);
+    edgeKeysToForget.forEach((key) => this.svgEdges.delete(key));
+
+    this.relayout(producer, 7);
     return producer;
   }
 
