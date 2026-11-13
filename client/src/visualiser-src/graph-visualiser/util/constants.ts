@@ -10,8 +10,19 @@ import {
 import { actualNodeDiameter } from '../../common/constants';
 
 // constants for our imaginary circle, nodes will "land" on the circumference of the circle.
-export const CENTRE_X = 400;
-export const CENTRE_Y = 300;
+/** Height of the navbar, which covers the top of the canvas. */
+const NAVBAR_HEIGHT = 64;
+
+/** Height of the play controls, which cover the bottom of the window. */
+const CONTROL_BAR_HEIGHT = 51;
+
+/**
+ * Centre of the circle. The canvas is as big as the window,
+ * so this is the middle of what the navbar and controls leave free.
+ * Read once on load, so resize the window and refresh to re-centre.
+ */
+export const CENTRE_X = window.innerWidth / 2;
+export const CENTRE_Y = (window.innerHeight - NAVBAR_HEIGHT - CONTROL_BAR_HEIGHT) / 2;
 export const NODE_GAP = 50;
 export const MIN_NODE_SPACING = actualNodeDiameter + NODE_GAP;
 
