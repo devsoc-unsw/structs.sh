@@ -56,7 +56,7 @@ classDiagram
     style GraphicalGraphNode fill:#dff5e6,stroke:#2e7d4f
     style util fill:#dff5e6,stroke:#2e7d4f
     style GraphicalGraph fill:#fff4d6,stroke:#b8860b,stroke-dasharray:4 3
-    style GraphAnimationProducer fill:#fff4d6,stroke:#b8860b,stroke-dasharray:4 3
+    style GraphAnimationProducer fill:#dff5e6,stroke:#2e7d4f
     style PerOperationProducers fill:#fff4d6,stroke:#b8860b,stroke-dasharray:4 3
 ```
 
