@@ -402,7 +402,7 @@ The name `documentation` is worth a word. It really is documentation: the argume
 What the class needs, with `GraphicalLinkedList` and `GraphicalAVL` as references for the shape:
 
 - extends `GraphicalDataStructure`, with a constructor that calls `super()`
-- a static `documentation`, wrapped in `injectIds`, with keys exactly `insert` (argument `['index']`), `delete` (`['index']`), `addEdge` (`['nodeA', 'nodeB']`), `deleteEdge` (`['nodeA', 'nodeB']`)
+- a static `documentation`, wrapped in `injectIds`, with keys exactly `insert` (argument `['vertex']`), `delete` (`['vertex']`), `addEdge` (`['nodeA', 'nodeB']`), `deleteEdge` (`['nodeA', 'nodeB']`)
 - private state: a `Graph` instance held as a field rather than inherited from, using the default import; `svgNodes` mapping vertex number to `GraphicalGraphNode`; `svgEdges` mapping a `"min-max"` string to `Path`; and `positions` mapping vertex number to `Point`
 - a private `edgeKey(a, b)` returning the canonical `"min-max"` string
 - a private `point(v)` reading a position out of the lookup

@@ -20,7 +20,7 @@ export default class GraphicalGraph extends GraphicalDataStructure {
   /** The text shown in the operations panel. Keys must match the method names below. */
   private static documentation: Documentation = injectIds({
     insert: {
-      args: ['index'],
+      args: ['vertex'],
       description: 'Insert a vertex with the given number.',
     },
     addEdge: {
@@ -92,19 +92,19 @@ export default class GraphicalGraph extends GraphicalDataStructure {
 
   /**
    * Inserts a vertex, then re-spaces the circle.
-   * @param index -- the vertex number
+   * @param vertex -- the vertex number
    * @returns the animations. Empty if the vertex already exists.
    */
-  public insert(index: number): AnimationProducer {
+  public insert(vertex: number): AnimationProducer {
     const producer = new GraphInsertAnimationProducer();
     producer.renderInsertCode();
 
     // already there, so nothing to animate
-    if (!this.model.insert(index)) return producer;
+    if (!this.model.insert(vertex)) return producer;
 
     // overwrite any old entry, a deleted vertex's circle must never come back
-    const newNode = GraphicalGraphNode.from(index);
-    this.svgNodes.set(index, newNode);
+    const newNode = GraphicalGraphNode.from(vertex);
+    this.svgNodes.set(vertex, newNode);
 
     this.relayout(producer, 3);
     producer.doAnimation(producer.highlightNode, newNode, INSERT_COLOUR);
