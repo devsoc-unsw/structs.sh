@@ -17,7 +17,8 @@ export const MIN_NODE_SPACING = actualNodeDiameter + NODE_GAP;
 
 // todo: maybe move these into the common later
 export const NODE_FILL = '#EBE8F4';
-export const EDGE_STROKE = 'black';
+// hex on purpose: svg.js can't animate a named colour like 'black', the edge goes invisible
+export const EDGE_STROKE = '#000000';
 export const INSERT_COLOUR = '#39AF8E';
 export const DELETE_COLOUR = '#F84F79';
 
