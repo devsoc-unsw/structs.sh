@@ -12,6 +12,7 @@ import GraphDeleteAnimationProducer from '../animation-producer/GraphDeleteAnima
 import GraphAddEdgeAnimationProducer from '../animation-producer/GraphAddEdgeAnimationProducer';
 import { Point, circularPositions } from '../util/util';
 import { DELETE_COLOUR, EDGE_STROKE, INSERT_COLOUR, pathAttributes } from '../util/constants';
+import GraphDeleteEdgeAnimationProducer from '../animation-producer/GraphDeleteEdgeAnimationProducer';
 
 /**
  * The graph the app talks to.
@@ -32,6 +33,10 @@ export default class GraphicalGraph extends GraphicalDataStructure {
       args: ['nodeA', 'nodeB'],
       description: 'Add an edge between two vertices.',
     },
+    deleteEdge: {
+      args: ['nodeA', 'nodeB'],
+      description: 'Delete the edge between two vertices.',
+    },
   });
 
   /** The data and the rules. No SVG in here. */
@@ -45,6 +50,21 @@ export default class GraphicalGraph extends GraphicalDataStructure {
 
   /** Vertex number to where it sits on the circle right now. */
   private positions = new Map<number, Point>();
+
+  /** The SVG layer every vertex and edge is drawn into. Its (0, 0) is the canvas middle. */
+  private graphLayer: Svg;
+
+  /**
+   * Clears the canvas and makes the layer the graph is drawn into.
+   */
+  public constructor() {
+    super();
+    // a nested <svg> at 50%, 50% puts (0, 0) in the middle of the canvas,
+    // and the browser keeps it there when the window resizes.
+    // overflow visible, otherwise everything outside its 0x0 box gets clipped
+    const canvas = SVG(VISUALISER_CANVAS) as Svg;
+    this.graphLayer = canvas.nested().attr({ x: '50%', y: '50%', overflow: 'visible' });
+  }
 
   public get documentation(): Documentation {
     return GraphicalGraph.documentation;
@@ -136,7 +156,7 @@ export default class GraphicalGraph extends GraphicalDataStructure {
     if (!this.model.insert(vertex)) return producer;
 
     // overwrite any old entry, a deleted vertex's circle must never come back
-    const newNode = GraphicalGraphNode.from(vertex);
+    const newNode = GraphicalGraphNode.from(vertex, this.graphLayer);
     this.svgNodes.set(vertex, newNode);
 
     this.relayout(producer, 3);
@@ -198,8 +218,7 @@ export default class GraphicalGraph extends GraphicalDataStructure {
     if (!this.model.addEdge(nodeA, nodeB)) return producer;
 
     // starts invisible (pathAttributes), drawEdge fades it in
-    const canvas = SVG(VISUALISER_CANVAS) as Svg;
-    const edge = canvas.path().attr({ ...pathAttributes, stroke: EDGE_STROKE });
+    const edge = this.graphLayer.path().attr({ ...pathAttributes, stroke: EDGE_STROKE });
     this.svgEdges.set(this.edgeKey(nodeA, nodeB), edge);
 
     // no relayout, the vertex count hasn't changed
@@ -210,6 +229,28 @@ export default class GraphicalGraph extends GraphicalDataStructure {
       this.point(nodeA),
       this.point(nodeB)
     );
+    return producer;
+  }
+
+  /**
+   * Deletes the edge between two vertices.
+   * @param nodeA -- one end of the edge
+   * @param nodeB -- the other end of the edge
+   * @returns the animations. Empty if the edge or a vertex doesn't exist.
+   */
+  public deleteEdge(nodeA: number, nodeB: number): AnimationProducer {
+    const producer = new GraphDeleteEdgeAnimationProducer();
+    producer.renderDeleteEdgeCode();
+
+    if (!this.model.deleteEdge(nodeA, nodeB)) return producer;
+
+    const edge = this.edgeBetween(nodeA, nodeB);
+    producer.doAnimationAndHighlight(2, producer.highlightEdge, edge, DELETE_COLOUR);
+    producer.doAnimationAndHighlight(3, producer.fadeOutEdges, [edge]);
+
+    // the faded drawing stays on the canvas for stepping backwards
+    // no relayout, the vertex count hasn't changed
+    this.svgEdges.delete(this.edgeKey(nodeA, nodeB));
     return producer;
   }
 

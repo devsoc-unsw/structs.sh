@@ -1,7 +1,7 @@
 // we need a function to evenly space out the vertices
 
 import { actualNodeDiameter } from '@/visualiser-src/common/constants';
-import { CENTRE_X, CENTRE_Y, MIN_NODE_SPACING } from './constants';
+import { MIN_NODE_SPACING } from './constants';
 
 /**
  * An interface to represent the x and y coords of a graph node
@@ -22,6 +22,11 @@ export const circularPositions = (indices: number[]): Map<number, Point> => {
   /** Map each index to its position */
   const map = new Map<number, Point>();
 
+  // the circle sits around (0, 0). GraphicalGraph draws into a layer whose origin is the
+  // middle of the canvas, so the browser keeps it centred when the window resizes
+  const centreX = 0;
+  const centreY = 0;
+
   if (!indices.length) {
     return map;
   }
@@ -29,8 +34,8 @@ export const circularPositions = (indices: number[]): Map<number, Point> => {
   // if its length of 1, just return that thing.
   if (indices.length === 1) {
     const P: Point = {
-      x: CENTRE_X,
-      y: CENTRE_Y,
+      x: centreX,
+      y: centreY,
     };
     map.set(indices[0], P);
     return map;
@@ -42,8 +47,8 @@ export const circularPositions = (indices: number[]): Map<number, Point> => {
   for (let i = 0; i < indices.length; i++) {
     const angle = (2 * Math.PI * i) / indices.length - Math.PI / 2;
 
-    const xCoord = CENTRE_X + radius * Math.cos(angle);
-    const yCoord = CENTRE_Y + radius * Math.sin(angle);
+    const xCoord = centreX + radius * Math.cos(angle);
+    const yCoord = centreY + radius * Math.sin(angle);
 
     const P: Point = {
       x: xCoord,

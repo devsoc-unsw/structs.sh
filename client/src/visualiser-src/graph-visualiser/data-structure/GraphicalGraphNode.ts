@@ -1,5 +1,4 @@
-import { VISUALISER_CANVAS } from '@/visualiser-src/common/constants';
-import { SVG, Svg, Circle, Text } from '@svgdotjs/svg.js';
+import { Svg, Circle, Text } from '@svgdotjs/svg.js';
 import { shapeAttributes, textAttributes } from '../util/constants';
 
 export default class GraphicalGraphNode {
@@ -20,10 +19,15 @@ export default class GraphicalGraphNode {
     this.label = label;
   }
 
-  public static from(index: number): GraphicalGraphNode {
-    const canvas = SVG(VISUALISER_CANVAS) as Svg;
-    const circle = canvas.circle().attr(shapeAttributes);
-    const label = canvas.text(String(index)).attr(textAttributes);
+  /**
+   * Makes the invisible circle and label for one vertex.
+   * @param index -- the vertex number
+   * @param layer -- the SVG layer to draw into
+   * @returns the new vertex drawing
+   */
+  public static from(index: number, layer: Svg): GraphicalGraphNode {
+    const circle = layer.circle().attr(shapeAttributes);
+    const label = layer.text(String(index)).attr(textAttributes);
     return new GraphicalGraphNode(index, circle, label);
   }
 
